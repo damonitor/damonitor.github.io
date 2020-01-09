@@ -1,1 +1,419 @@
-Hello, I'm DAMON
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>DAMON: Data Access MONitor &mdash; The Linux Kernel  documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript">
+          var DOCUMENTATION_OPTIONS = {
+              URL_ROOT:'./',
+              VERSION:'',
+              LANGUAGE:'None',
+              COLLAPSE_INDEX:false,
+              FILE_SUFFIX:'.html',
+              HAS_SOURCE:  true,
+              SOURCELINK_SUFFIX: '.txt'
+          };
+      </script>
+        <script type="text/javascript" src="_static/jquery.js"></script>
+        <script type="text/javascript" src="_static/underscore.js"></script>
+        <script type="text/javascript" src="_static/doctools.js"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="_static/theme_overrides.css" type="text/css" />
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="#" class="icon icon-home"> The Linux Kernel
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                5.4.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <!-- Local TOC -->
+              <div class="local-toc"><ul>
+<li><a class="reference internal" href="#">DAMON: Data Access MONitor</a><ul>
+<li><a class="reference internal" href="#too-long-don-t-read">Too Long; Don’t Read</a></li>
+<li><a class="reference internal" href="#background">Background</a></li>
+<li><a class="reference internal" href="#expected-use-cases">Expected Use-cases</a></li>
+<li><a class="reference internal" href="#mechanisms-of-damon">Mechanisms of DAMON</a><ul>
+<li><a class="reference internal" href="#basic-access-check">Basic Access Check</a></li>
+<li><a class="reference internal" href="#region-based-sampling">Region Based Sampling</a></li>
+<li><a class="reference internal" href="#adaptive-regions-adjustment">Adaptive Regions Adjustment</a></li>
+<li><a class="reference internal" href="#applying-dynamic-memory-mappings">Applying Dynamic Memory Mappings</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#user-interface">User Interface</a><ul>
+<li><a class="reference internal" href="#attributes">Attributes</a></li>
+<li><a class="reference internal" href="#target-pids">Target PIDs</a></li>
+<li><a class="reference internal" href="#turning-on-off">Turning On/Off</a></li>
+<li><a class="reference internal" href="#user-space-wrapper">User Space Wrapper</a></li>
+<li><a class="reference internal" href="#quick-tutorial">Quick Tutorial</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="#">The Linux Kernel</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="#">Docs</a> &raquo;</li>
+        
+      <li>DAMON: Data Access MONitor</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/index.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="damon-data-access-monitor">
+<span id="data-access-monitor"></span><h1>DAMON: Data Access MONitor<a class="headerlink" href="#damon-data-access-monitor" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="too-long-don-t-read">
+<h2>Too Long; Don’t Read<a class="headerlink" href="#too-long-don-t-read" title="Permalink to this headline">¶</a></h2>
+<p>DAMON is a kernel module that allows users to monitor the actual memory access
+pattern of specific user-space processes.  It aims to be 1) sufficiently
+accurate to be useful for performance-centric optimizations, and 2)
+light-weight enough so that it can be applied online.</p>
+<p>For the goals, DAMON utilizes its two core mechanisms, called region-based
+sampling and adaptive regions adjustment.  The region-based sampling allows
+users to make their own trade-off between the quality and the overhead of the
+monitoring.  Therefore, users can set the upperbound of the monitoring
+overhead.  Further, the adaptive regions adjustment mechanism makes DAMON to
+maximize the quality and minimize the overhead with its best efforts while
+preserving the users configured trade-off.</p>
+</div>
+<div class="section" id="background">
+<h2>Background<a class="headerlink" href="#background" title="Permalink to this headline">¶</a></h2>
+<p>For performance-centric analysis and optimization of memory management schemes
+(either that of kernel space or user space), the actual data access pattern of
+the workloads is highly useful.  The information need to be only reasonable
+rather than strictly correct, because some level of incorrectness can be
+handled in performance-centric domains, depending on the goals.  It also need
+to be taken within reasonably short time with only light-weight overhead.</p>
+<p>Manually extracting such data is not easy and time consuming if the target
+workload is huge and complex, even for the developers of the programs.  There
+are a range of tools and techniques developed for general memory access
+investigations, and some of those could be partially used for this purpose.
+However, most of those are not practical or unscalable, mainly because those
+are designed with no consideration about the trade-off between the accuracy of
+the output and the overhead.</p>
+<p>The memory access instrumentation techniques which is applied to many tools
+such as Intel PIN is essential for correctness required cases such as bug
+detections.  However, those usually incur high overhead which is unacceptable
+for many of the performance-centric domains.  Periodic access checks based on
+H/W or S/W access counting features (e.g., the Accessed bits of PTEs or the
+PG_Idle flags of pages) can dramatically decrease the overhead by forgiving
+some of the quality, compared to the instrumentation based techniques.  The
+reduced quality is still useful for many of the domains, but the overhead can
+arbitrarily increase as the size of the target workload grows.  Miniature-like
+static region based sampling can set the upperbound of the overhead, but it
+will now decrease the quality of the output as the size of the workload grows.</p>
+</div>
+<div class="section" id="expected-use-cases">
+<h2>Expected Use-cases<a class="headerlink" href="#expected-use-cases" title="Permalink to this headline">¶</a></h2>
+<p>DAMON can be used to analyze the behavior of the program.  With the DAMON
+output, users can confirm whether the program is running as intended or not.
+This can be useful for debugging and tests of design points.</p>
+<p>The monitored results can also be used to count and predict the dynamic working
+set size.  For the administration of memory overcommitted systems or selection
+of the environments (e.g., containers providing different amount of memory) for
+your workloads, this will be useful.</p>
+<p>If you are a programmer, you can optimize your program by managing the memory
+based on the actual data access pattern.  For example, you can identify the
+dynamic hotness of your data using DAMON and call <code class="docutils literal notranslate"><span class="pre">mlock()</span></code> to keep your hot
+data in DRAM, or <code class="docutils literal notranslate"><span class="pre">madvise()</span></code> with <code class="docutils literal notranslate"><span class="pre">MADV_PAGEOUT</span></code> to proactively reclaim
+cold data.  Even though your program is guaranteed to not encounter memory
+pressure, you can still improve the performance by applying the DAMON outputs
+for call of <code class="docutils literal notranslate"><span class="pre">MADV_HUGEPAGE</span></code> and <code class="docutils literal notranslate"><span class="pre">MADV_NOHUGEPAGE</span></code>.  More creative
+optimizations would be possible.  Our evaluations of DAMON includes a
+straightforward optimization using the <code class="docutils literal notranslate"><span class="pre">mlock()</span></code>.  Please refer to the below
+Evaluation section for more detail.</p>
+<p>As DAMON incurs very low overhead, such optimizations can be applied not only
+offline, but also online.  Also, there is no reason to limit such optimizations
+to the user space.  Several parts of the kernel’s memory management mechanisms
+could be also optimized using DAMON. The reclamation, the THP (de)promotion
+decisions, and the compaction would be such a candidates.</p>
+</div>
+<div class="section" id="mechanisms-of-damon">
+<h2>Mechanisms of DAMON<a class="headerlink" href="#mechanisms-of-damon" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="basic-access-check">
+<h3>Basic Access Check<a class="headerlink" href="#basic-access-check" title="Permalink to this headline">¶</a></h3>
+<p>DAMON basically reports what pages are how frequently accessed.  The report is
+passed to users in binary format via a <code class="docutils literal notranslate"><span class="pre">result</span> <span class="pre">file</span></code> which users can set it’s
+path.  Note that the frequency is not an absolute number of accesses, but a
+relative frequency among the pages of the target workloads.</p>
+<p>Users can also control the resolution of the reports by setting two time
+intervals, <code class="docutils literal notranslate"><span class="pre">sampling</span> <span class="pre">interval</span></code> and <code class="docutils literal notranslate"><span class="pre">aggregation</span> <span class="pre">interval</span></code>.  In detail,
+DAMON checks access to each page per <code class="docutils literal notranslate"><span class="pre">sampling</span> <span class="pre">interval</span></code>, aggregates the
+results (counts the number of the accesses to each page), and reports the
+aggregated results per <code class="docutils literal notranslate"><span class="pre">aggregation</span> <span class="pre">interval</span></code>.  For the access check of each
+page, DAMON uses the Accessed bits of PTEs.</p>
+<p>This is thus similar to the previously mentioned periodic access checks based
+mechanisms, which overhead is increasing as the size of the target process
+grows.</p>
+</div>
+<div class="section" id="region-based-sampling">
+<h3>Region Based Sampling<a class="headerlink" href="#region-based-sampling" title="Permalink to this headline">¶</a></h3>
+<p>To avoid the unbounded increase of the overhead, DAMON groups a number of
+adjacent pages that assumed to have same access frequencies into a region.  As
+long as the assumption (pages in a region have same access frequencies) is
+kept, only one page in the region is necessary to be checked.  Thus, for each
+<code class="docutils literal notranslate"><span class="pre">sampling</span> <span class="pre">interval</span></code>, DAMON randomly picks one page in each region and clears
+its Accessed bit.  After one more <code class="docutils literal notranslate"><span class="pre">sampling</span> <span class="pre">interval</span></code>, DAMON reads the
+Accessed bit of the page and increases the access frequency of the region if
+the bit has set meanwhile.  Therefore, the monitoring overhead is controllable
+by setting the number of regions.  DAMON allows users to set the minimal and
+maximum number of regions for the trade-off.</p>
+<p>Except the assumption, this is almost same with the above-mentioned
+miniature-like static region based sampling.  In other words, this scheme
+cannot preserve the quality of the output if the assumption is not guaranteed.</p>
+</div>
+<div class="section" id="adaptive-regions-adjustment">
+<h3>Adaptive Regions Adjustment<a class="headerlink" href="#adaptive-regions-adjustment" title="Permalink to this headline">¶</a></h3>
+<p>At the beginning of the monitoring, DAMON creates initial regions by evenly
+splitting the memory mapped address space of the process into the
+user-specified minimal number of regions.  In this initial state, the
+assumption is normally not kept and thus the quality could be low.  To keep the
+assumption as much as possible, DAMON adaptively merges and splits each region.
+For each <code class="docutils literal notranslate"><span class="pre">aggregation</span> <span class="pre">interval</span></code>, it compares the access frequencies of
+adjacent regions and merges if the difference is small.  Then, after it reports
+and clears the aggregated access frequency of each region, it splits each
+region into two regions if the total number of regions is smaller than the half
+of the user-specified maximum number of regions.</p>
+<p>In this way, DAMON provides its best-effort quality and minimal overhead while
+keeping the bounds users set for their trade-off.</p>
+</div>
+<div class="section" id="applying-dynamic-memory-mappings">
+<h3>Applying Dynamic Memory Mappings<a class="headerlink" href="#applying-dynamic-memory-mappings" title="Permalink to this headline">¶</a></h3>
+<p>Only a small portions of the super-huge virtual address space of processes is
+mapped to physical memory and used.  Thus, tracking the unmapped address
+regions is just wasteful.  However, tracking every memory mapping change might
+incur high overhead.  For the reason, DAMON applies the dynamic memory mapping
+changes to the tracking regions for each of an user-specified time interval
+(<code class="docutils literal notranslate"><span class="pre">regions</span> <span class="pre">update</span> <span class="pre">interval</span></code>).</p>
+</div>
+</div>
+<div class="section" id="user-interface">
+<h2>User Interface<a class="headerlink" href="#user-interface" title="Permalink to this headline">¶</a></h2>
+<p>DAMON exports three files, <code class="docutils literal notranslate"><span class="pre">attrs</span></code>, <code class="docutils literal notranslate"><span class="pre">pids</span></code>, and <code class="docutils literal notranslate"><span class="pre">monitor_on</span></code> under its
+debugfs directory, <code class="docutils literal notranslate"><span class="pre">&lt;debugfs&gt;/damon/</span></code>.</p>
+<div class="section" id="attributes">
+<h3>Attributes<a class="headerlink" href="#attributes" title="Permalink to this headline">¶</a></h3>
+<p>Users can read and write the <code class="docutils literal notranslate"><span class="pre">sampling</span> <span class="pre">interval</span></code>, <code class="docutils literal notranslate"><span class="pre">aggregation</span> <span class="pre">interval</span></code>,
+<code class="docutils literal notranslate"><span class="pre">regions</span> <span class="pre">update</span> <span class="pre">interval</span></code>, min/max number of regions, and the path to
+<code class="docutils literal notranslate"><span class="pre">result</span> <span class="pre">file</span></code> by reading from and writing to the <code class="docutils literal notranslate"><span class="pre">attrs</span></code> file.  For
+example, below commands set those values to 5 ms, 100 ms, 1,000 ms, 10, 1000,
+and <code class="docutils literal notranslate"><span class="pre">/damon.data</span></code> and check it again:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span># cd &lt;debugfs&gt;/damon
+# echo 5000 100000 1000000 10 1000 /damon.data &gt; attrs
+# cat attrs
+5000 100000 1000000 10 1000 /damon.data
+</pre></div>
+</div>
+</div>
+<div class="section" id="target-pids">
+<h3>Target PIDs<a class="headerlink" href="#target-pids" title="Permalink to this headline">¶</a></h3>
+<p>Users can read and write the pids of current monitoring target processes by
+reading from and writing to the <cite>pids</cite> file.  For example, below commands set
+processes having pids 42 and 4242 as the processes to be monitored and check
+it again:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span># cd &lt;debugfs&gt;/damon
+# echo 42 4242 &gt; pids
+# cat pids
+42 4242
+</pre></div>
+</div>
+<p>Note that setting the pids doesn’t starts the monitoring.</p>
+</div>
+<div class="section" id="turning-on-off">
+<h3>Turning On/Off<a class="headerlink" href="#turning-on-off" title="Permalink to this headline">¶</a></h3>
+<p>You can check current status, start and stop the monitoring by reading from and
+writing to the <code class="docutils literal notranslate"><span class="pre">monitor_on</span></code> file.  Writing <code class="docutils literal notranslate"><span class="pre">on</span></code> to the file starts DAMON to
+monitor the target processes with the attributes.  Writing <code class="docutils literal notranslate"><span class="pre">off</span></code> to the file
+stops DAMON.  DAMON also stops if every target processes is be terminated.
+Below example commands turn on, off, and check status of DAMON:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span># cd &lt;debugfs&gt;/damon
+# echo on &gt; monitor_on
+# echo off &gt; monitor_on
+# cat monitor_on
+off
+</pre></div>
+</div>
+<p>Please note that you cannot write to the <code class="docutils literal notranslate"><span class="pre">attrs</span></code> and <code class="docutils literal notranslate"><span class="pre">pids</span></code> files while the
+monitoring is turned on.  If you write to the files while DAMON is running,
+<code class="docutils literal notranslate"><span class="pre">-EINVAL</span></code> will be returned.</p>
+</div>
+<div class="section" id="user-space-wrapper">
+<h3>User Space Wrapper<a class="headerlink" href="#user-space-wrapper" title="Permalink to this headline">¶</a></h3>
+<p>DAMON has a shallow wrapper python script, <code class="docutils literal notranslate"><span class="pre">/tools/damon/damn</span></code> that provides
+more convenient interface for the user space.  Note that it is only aimed to be
+used for minimal reference of the DAMON’s raw interfaces and for debugging of
+the DAMON itself.  Based on the debugfs interface, you can create another cool
+and more convenient user space tools.</p>
+</div>
+<div class="section" id="quick-tutorial">
+<h3>Quick Tutorial<a class="headerlink" href="#quick-tutorial" title="Permalink to this headline">¶</a></h3>
+<p>To test DAMON on your system,</p>
+<ol class="arabic simple">
+<li>Ensure your kernel is built with CONFIG_DAMON turned on, and debugfs is
+mounted at <code class="docutils literal notranslate"><span class="pre">/sys/kernel/debug/</span></code>.</li>
+<li><code class="docutils literal notranslate"><span class="pre">&lt;your</span> <span class="pre">kernel</span> <span class="pre">source</span> <span class="pre">tree&gt;/tools/damon/damn</span> <span class="pre">-h</span></code></li>
+</ol>
+</div>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright The kernel development community
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>
