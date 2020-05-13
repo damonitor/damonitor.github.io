@@ -1,0 +1,59 @@
+.. SPDX-License-Identifier: GPL-2.0
+
+===============
+Getting Started
+===============
+
+This section briefly describes how you can use the main features of DAMON using
+the user space tool, DAMO.
+
+
+Prerequisites
+=============
+
+Before start, you should ensure your kernel is built with ``CONFIG_DAMON``
+enabled and ``tools/damon/`` of the kernel source tree is in ``$PATH``, so that
+``which damo`` success.
+
+
+Recording Data Access Pattern
+=============================
+
+Record the data access pattern of your workload in a binary file::
+
+    $ sudo damo record <pidof your workload>
+
+
+Visualizing The Recorded Access Patterns
+========================================
+
+Visualize and save the data access pattern heatmap, which shows when (x-axis)
+what memory region (y-axis) is how frequently accessed (color), in
+'access_pattern_heatmap.png', distribution of the working set size in
+'wss_dist.png', and chronological changes of the working set size in
+'wss_chron_change.png'::
+
+    $ damo report heats --heatmap access_pattern_heatmap.png
+    $ damo report wss --range 0 101 1 --plot wss_dist.png
+    $ damo report wss --range 0 101 1 --sortby time --plot wss_chron_change.png
+
+Below are the three files for an example workload, splash2x.water_nsquared.
+You can show those of other realistic workloads at
+https://damonitor.github.io/reports/latest/by_image/heatmap.1.png.html,
+https://damonitor.github.io/reports/latest/by_image/wss_sz.png.html, and
+https://damonitor.github.io/reports/latest/by_image/wss_time.png.html.
+
+.. kernel-figure::  damon_heatmap.png
+   :alt:    the access pattern in heatmap format
+
+   The access pattern in heatmap format.
+
+.. kernel-figure::  damon_wss_dist.png
+   :alt:    the distribution of working set size
+
+   The distribution of working set size.
+
+.. kernel-figure::  damon_wss_change.png
+   :alt:    the chronological changes of working set size
+
+   The chronological changes of working set size.

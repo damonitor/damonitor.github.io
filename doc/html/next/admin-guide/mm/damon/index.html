@@ -1,0 +1,288 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>DAMON: Data Access MONitor &mdash; The Linux Kernel  documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript">
+          var DOCUMENTATION_OPTIONS = {
+              URL_ROOT:'../../../',
+              VERSION:'',
+              LANGUAGE:'None',
+              COLLAPSE_INDEX:false,
+              FILE_SUFFIX:'.html',
+              HAS_SOURCE:  true,
+              SOURCELINK_SUFFIX: '.txt'
+          };
+      </script>
+        <script type="text/javascript" src="../../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/theme_overrides.css" type="text/css" />
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+    <link rel="next" title="Frequently Asked Questions" href="faq.html" />
+    <link rel="prev" title="The DAMON documentation" href="../../../index.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home"> The Linux Kernel
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                5.6.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">DAMON: Data Access MONitor</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#introduction">Introduction</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="faq.html">Frequently Asked Questions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="start.html">Getting Started</a></li>
+<li class="toctree-l3"><a class="reference internal" href="usage.html">DAMON User Interfaces</a></li>
+<li class="toctree-l3"><a class="reference internal" href="mechanisms.html">Mechanisms of DAMON</a></li>
+<li class="toctree-l3"><a class="reference internal" href="plans.html">Future Plans</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">The Linux Kernel</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../index.html">Docs</a> &raquo;</li>
+        
+      <li>DAMON: Data Access MONitor</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../../../_sources/admin-guide/mm/damon/index.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="damon-data-access-monitor">
+<h1>DAMON: Data Access MONitor<a class="headerlink" href="#damon-data-access-monitor" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="introduction">
+<h2>Introduction<a class="headerlink" href="#introduction" title="Permalink to this headline">¶</a></h2>
+<p>Optimal placement of each data object under accurate future data access pattern
+predictions is one of the biggest and important goal of the memory management.
+However, most of the predictions rely on only coarse information to keep the
+instrumentation overhead minimal.  As a consequence, a number of memory
+management optimization works consistently say the predictions are far from the
+optimal.  However, none of those works has successfully adopted into the Linux
+kernel mainly due to the absence of the scalable instrumentation solution.
+That is, the instrumentation overhead can arbitrarily increase as the size of
+target workload grows.</p>
+<p>DAMON is a data access monitoring subsystem that designed to mitigate the
+problem.  Therefore, DAMON users can efficiently collect the fine data access
+pattern and effectiely optimize their memory management mechanisms via the
+pattern based predictions.</p>
+<p>Unlike the other mechanisms for data access monitoring, DAMON is</p>
+<ul class="simple">
+<li><em>accurate</em> enough to be used for the DRAM level memory management,</li>
+<li><em>light-weight</em> so that it can be applied online and</li>
+<li><em>scalable</em> to wide area of workloads as it allow users to set upper-bound of
+the overhead regardless of the size of target workloads.</li>
+</ul>
+<p>This three characteristics are available due to it’s core mechanisms called
+‘regions based sampling’ and ‘adaptive regions adjustment’.  Refer to
+<a class="reference internal" href="mechanisms.html"><span class="doc">Mechanisms of DAMON</span></a> for detail.</p>
+<p>To quickly know how you can use DAMON, starts from <a class="reference internal" href="start.html"><span class="doc">Getting Started</span></a>.</p>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="faq.html">Frequently Asked Questions</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="faq.html#why-a-new-module-instead-of-extending-perf-or-other-user-space-tools">Why a new module, instead of extending perf or other user space tools?</a></li>
+<li class="toctree-l2"><a class="reference internal" href="faq.html#can-idle-pages-tracking-or-perf-mem-substitute-damon">Can ‘idle pages tracking’ or ‘perf mem’ substitute DAMON?</a></li>
+<li class="toctree-l2"><a class="reference internal" href="faq.html#does-damon-supports-virtual-memory-only">Does DAMON supports virtual memory only?</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="start.html">Getting Started</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="start.html#prerequisites">Prerequisites</a></li>
+<li class="toctree-l2"><a class="reference internal" href="start.html#recording-data-access-pattern">Recording Data Access Pattern</a></li>
+<li class="toctree-l2"><a class="reference internal" href="start.html#visualizing-the-recorded-access-patterns">Visualizing The Recorded Access Patterns</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="usage.html">DAMON User Interfaces</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="usage.html#what-interface-to-use">What Interface to Use?</a></li>
+<li class="toctree-l2"><a class="reference internal" href="usage.html#debugfs-interface">debugfs Interface</a></li>
+<li class="toctree-l2"><a class="reference internal" href="usage.html#user-space-tool-for-damon">User Space Tool for DAMON</a></li>
+<li class="toctree-l2"><a class="reference internal" href="usage.html#kernel-space-programming-interface">Kernel Space Programming Interface</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="mechanisms.html">Mechanisms of DAMON</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="mechanisms.html#basic-access-check">Basic Access Check</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mechanisms.html#region-based-sampling">Region Based Sampling</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mechanisms.html#adaptive-regions-adjustment">Adaptive Regions Adjustment</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mechanisms.html#applying-complex-and-dynamic-memory-mappings">Applying Complex and Dynamic Memory Mappings</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="plans.html">Future Plans</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="plans.html#automate-data-access-monitoring-based-memory-operation-schemes-execution">Automate Data Access Monitoring-based Memory Operation Schemes Execution</a></li>
+<li class="toctree-l2"><a class="reference internal" href="plans.html#support-various-address-spaces">Support Various Address Spaces</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="faq.html" class="btn btn-neutral float-right" title="Frequently Asked Questions" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="../../../index.html" class="btn btn-neutral float-left" title="The DAMON documentation" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright The kernel development community
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

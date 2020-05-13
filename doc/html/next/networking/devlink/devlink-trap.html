@@ -1,0 +1,525 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Devlink Trap &mdash; The Linux Kernel  documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript">
+          var DOCUMENTATION_OPTIONS = {
+              URL_ROOT:'../../',
+              VERSION:'',
+              LANGUAGE:'None',
+              COLLAPSE_INDEX:false,
+              FILE_SUFFIX:'.html',
+              HAS_SOURCE:  true,
+              SOURCELINK_SUFFIX: '.txt'
+          };
+      </script>
+        <script type="text/javascript" src="../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../_static/doctools.js"></script>
+    
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/theme_overrides.css" type="text/css" />
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../index.html" class="icon icon-home"> The Linux Kernel
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                5.6.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../admin-guide/mm/damon/index.html">DAMON: Data Access MONitor</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">The Linux Kernel</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html">Docs</a> &raquo;</li>
+        
+      <li>Devlink Trap</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../../_sources/networking/devlink/devlink-trap.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="devlink-trap">
+<h1>Devlink Trap<a class="headerlink" href="#devlink-trap" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="background">
+<h2>Background<a class="headerlink" href="#background" title="Permalink to this headline">¶</a></h2>
+<p>Devices capable of offloading the kernel’s datapath and perform functions such
+as bridging and routing must also be able to send specific packets to the
+kernel (i.e., the CPU) for processing.</p>
+<p>For example, a device acting as a multicast-aware bridge must be able to send
+IGMP membership reports to the kernel for processing by the bridge module.
+Without processing such packets, the bridge module could never populate its
+MDB.</p>
+<p>As another example, consider a device acting as router which has received an IP
+packet with a TTL of 1. Upon routing the packet the device must send it to the
+kernel so that it will route it as well and generate an ICMP Time Exceeded
+error datagram. Without letting the kernel route such packets itself, utilities
+such as <code class="docutils literal notranslate"><span class="pre">traceroute</span></code> could never work.</p>
+<p>The fundamental ability of sending certain packets to the kernel for processing
+is called “packet trapping”.</p>
+</div>
+<div class="section" id="overview">
+<h2>Overview<a class="headerlink" href="#overview" title="Permalink to this headline">¶</a></h2>
+<p>The <code class="docutils literal notranslate"><span class="pre">devlink-trap</span></code> mechanism allows capable device drivers to register their
+supported packet traps with <code class="docutils literal notranslate"><span class="pre">devlink</span></code> and report trapped packets to
+<code class="docutils literal notranslate"><span class="pre">devlink</span></code> for further analysis.</p>
+<p>Upon receiving trapped packets, <code class="docutils literal notranslate"><span class="pre">devlink</span></code> will perform a per-trap packets and
+bytes accounting and potentially report the packet to user space via a netlink
+event along with all the provided metadata (e.g., trap reason, timestamp, input
+port). This is especially useful for drop traps (see <a class="reference internal" href="#trap-types"><span class="std std-ref">Trap Types</span></a>)
+as it allows users to obtain further visibility into packet drops that would
+otherwise be invisible.</p>
+<p>The following diagram provides a general overview of <code class="docutils literal notranslate"><span class="pre">devlink-trap</span></code>:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>                            Netlink event: Packet w/ metadata
+                                           Or a summary of recent drops
+                          ^
+                          |
+ Userspace                |
++---------------------------------------------------+
+ Kernel                   |
+                          |
+                  +-------+--------+
+                  |                |
+                  |  drop_monitor  |
+                  |                |
+                  +-------^--------+
+                          |
+                          |
+                          |
+                     +----+----+
+                     |         |      Kernel&#39;s Rx path
+                     | devlink |      (non-drop traps)
+                     |         |
+                     +----^----+      ^
+                          |           |
+                          +-----------+
+                          |
+                  +-------+-------+
+                  |               |
+                  | Device driver |
+                  |               |
+                  +-------^-------+
+ Kernel                   |
++---------------------------------------------------+
+ Hardware                 |
+                          | Trapped packet
+                          |
+                       +--+---+
+                       |      |
+                       | ASIC |
+                       |      |
+                       +------+
+</pre></div>
+</div>
+</div>
+<div class="section" id="trap-types">
+<span id="id1"></span><h2>Trap Types<a class="headerlink" href="#trap-types" title="Permalink to this headline">¶</a></h2>
+<p>The <code class="docutils literal notranslate"><span class="pre">devlink-trap</span></code> mechanism supports the following packet trap types:</p>
+<blockquote>
+<div><ul class="simple">
+<li><code class="docutils literal notranslate"><span class="pre">drop</span></code>: Trapped packets were dropped by the underlying device. Packets
+are only processed by <code class="docutils literal notranslate"><span class="pre">devlink</span></code> and not injected to the kernel’s Rx path.
+The trap action (see <a class="reference internal" href="#trap-actions"><span class="std std-ref">Trap Actions</span></a>) can be changed.</li>
+<li><code class="docutils literal notranslate"><span class="pre">exception</span></code>: Trapped packets were not forwarded as intended by the
+underlying device due to an exception (e.g., TTL error, missing neighbour
+entry) and trapped to the control plane for resolution. Packets are
+processed by <code class="docutils literal notranslate"><span class="pre">devlink</span></code> and injected to the kernel’s Rx path. Changing the
+action of such traps is not allowed, as it can easily break the control
+plane.</li>
+</ul>
+</div></blockquote>
+</div>
+<div class="section" id="trap-actions">
+<span id="id2"></span><h2>Trap Actions<a class="headerlink" href="#trap-actions" title="Permalink to this headline">¶</a></h2>
+<p>The <code class="docutils literal notranslate"><span class="pre">devlink-trap</span></code> mechanism supports the following packet trap actions:</p>
+<blockquote>
+<div><ul class="simple">
+<li><code class="docutils literal notranslate"><span class="pre">trap</span></code>: The sole copy of the packet is sent to the CPU.</li>
+<li><code class="docutils literal notranslate"><span class="pre">drop</span></code>: The packet is dropped by the underlying device and a copy is not
+sent to the CPU.</li>
+</ul>
+</div></blockquote>
+</div>
+<div class="section" id="generic-packet-traps">
+<h2>Generic Packet Traps<a class="headerlink" href="#generic-packet-traps" title="Permalink to this headline">¶</a></h2>
+<p>Generic packet traps are used to describe traps that trap well-defined packets
+or packets that are trapped due to well-defined conditions (e.g., TTL error).
+Such traps can be shared by multiple device drivers and their description must
+be added to the following table:</p>
+<table border="1" class="colwidths-given docutils" id="id3">
+<caption><span class="caption-text">List of Generic Packet Traps</span><a class="headerlink" href="#id3" title="Permalink to this table">¶</a></caption>
+<colgroup>
+<col width="5%" />
+<col width="5%" />
+<col width="90%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td>Name</td>
+<td>Type</td>
+<td>Description</td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal notranslate"><span class="pre">source_mac_is_multicast</span></code></td>
+<td><code class="docutils literal notranslate"><span class="pre">drop</span></code></td>
+<td>Traps incoming packets that the device decided to drop because of a
+multicast source MAC</td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal notranslate"><span class="pre">vlan_tag_mismatch</span></code></td>
+<td><code class="docutils literal notranslate"><span class="pre">drop</span></code></td>
+<td>Traps incoming packets that the device decided to drop in case of VLAN
+tag mismatch: The ingress bridge port is not configured with a PVID and
+the packet is untagged or prio-tagged</td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal notranslate"><span class="pre">ingress_vlan_filter</span></code></td>
+<td><code class="docutils literal notranslate"><span class="pre">drop</span></code></td>
+<td>Traps incoming packets that the device decided to drop in case they are
+tagged with a VLAN that is not configured on the ingress bridge port</td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal notranslate"><span class="pre">ingress_spanning_tree_filter</span></code></td>
+<td><code class="docutils literal notranslate"><span class="pre">drop</span></code></td>
+<td>Traps incoming packets that the device decided to drop in case the STP
+state of the ingress bridge port is not “forwarding”</td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal notranslate"><span class="pre">port_list_is_empty</span></code></td>
+<td><code class="docutils literal notranslate"><span class="pre">drop</span></code></td>
+<td>Traps packets that the device decided to drop in case they need to be
+flooded (e.g., unknown unicast, unregistered multicast) and there are
+no ports the packets should be flooded to</td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal notranslate"><span class="pre">port_loopback_filter</span></code></td>
+<td><code class="docutils literal notranslate"><span class="pre">drop</span></code></td>
+<td>Traps packets that the device decided to drop in case after layer 2
+forwarding the only port from which they should be transmitted through
+is the port from which they were received</td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal notranslate"><span class="pre">blackhole_route</span></code></td>
+<td><code class="docutils literal notranslate"><span class="pre">drop</span></code></td>
+<td>Traps packets that the device decided to drop in case they hit a
+blackhole route</td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal notranslate"><span class="pre">ttl_value_is_too_small</span></code></td>
+<td><code class="docutils literal notranslate"><span class="pre">exception</span></code></td>
+<td>Traps unicast packets that should be forwarded by the device whose TTL
+was decremented to 0 or less</td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal notranslate"><span class="pre">tail_drop</span></code></td>
+<td><code class="docutils literal notranslate"><span class="pre">drop</span></code></td>
+<td>Traps packets that the device decided to drop because they could not be
+enqueued to a transmission queue which is full</td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal notranslate"><span class="pre">non_ip</span></code></td>
+<td><code class="docutils literal notranslate"><span class="pre">drop</span></code></td>
+<td>Traps packets that the device decided to drop because they need to
+undergo a layer 3 lookup, but are not IP or MPLS packets</td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal notranslate"><span class="pre">uc_dip_over_mc_dmac</span></code></td>
+<td><code class="docutils literal notranslate"><span class="pre">drop</span></code></td>
+<td>Traps packets that the device decided to drop because they need to be
+routed and they have a unicast destination IP and a multicast destination
+MAC</td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal notranslate"><span class="pre">dip_is_loopback_address</span></code></td>
+<td><code class="docutils literal notranslate"><span class="pre">drop</span></code></td>
+<td>Traps packets that the device decided to drop because they need to be
+routed and their destination IP is the loopback address (i.e., 127.0.0.0/8
+and ::1/128)</td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal notranslate"><span class="pre">sip_is_mc</span></code></td>
+<td><code class="docutils literal notranslate"><span class="pre">drop</span></code></td>
+<td>Traps packets that the device decided to drop because they need to be
+routed and their source IP is multicast (i.e., 224.0.0.0/8 and ff::/8)</td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal notranslate"><span class="pre">sip_is_loopback_address</span></code></td>
+<td><code class="docutils literal notranslate"><span class="pre">drop</span></code></td>
+<td>Traps packets that the device decided to drop because they need to be
+routed and their source IP is the loopback address (i.e., 127.0.0.0/8 and ::1/128)</td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal notranslate"><span class="pre">ip_header_corrupted</span></code></td>
+<td><code class="docutils literal notranslate"><span class="pre">drop</span></code></td>
+<td>Traps packets that the device decided to drop because they need to be
+routed and their IP header is corrupted: wrong checksum, wrong IP version
+or too short Internet Header Length (IHL)</td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal notranslate"><span class="pre">ipv4_sip_is_limited_bc</span></code></td>
+<td><code class="docutils literal notranslate"><span class="pre">drop</span></code></td>
+<td>Traps packets that the device decided to drop because they need to be
+routed and their source IP is limited broadcast (i.e., 255.255.255.255/32)</td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal notranslate"><span class="pre">ipv6_mc_dip_reserved_scope</span></code></td>
+<td><code class="docutils literal notranslate"><span class="pre">drop</span></code></td>
+<td>Traps IPv6 packets that the device decided to drop because they need to
+be routed and their IPv6 multicast destination IP has a reserved scope
+(i.e., ffx0::/16)</td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal notranslate"><span class="pre">ipv6_mc_dip_interface_local_scope</span></code></td>
+<td><code class="docutils literal notranslate"><span class="pre">drop</span></code></td>
+<td>Traps IPv6 packets that the device decided to drop because they need to
+be routed and their IPv6 multicast destination IP has an interface-local scope
+(i.e., ffx1::/16)</td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal notranslate"><span class="pre">mtu_value_is_too_small</span></code></td>
+<td><code class="docutils literal notranslate"><span class="pre">exception</span></code></td>
+<td>Traps packets that should have been routed by the device, but were bigger
+than the MTU of the egress interface</td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal notranslate"><span class="pre">unresolved_neigh</span></code></td>
+<td><code class="docutils literal notranslate"><span class="pre">exception</span></code></td>
+<td>Traps packets that did not have a matching IP neighbour after routing</td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal notranslate"><span class="pre">mc_reverse_path_forwarding</span></code></td>
+<td><code class="docutils literal notranslate"><span class="pre">exception</span></code></td>
+<td>Traps multicast IP packets that failed reverse-path forwarding (RPF)
+check during multicast routing</td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal notranslate"><span class="pre">reject_route</span></code></td>
+<td><code class="docutils literal notranslate"><span class="pre">exception</span></code></td>
+<td>Traps packets that hit reject routes (i.e., “unreachable”, “prohibit”)</td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal notranslate"><span class="pre">ipv4_lpm_miss</span></code></td>
+<td><code class="docutils literal notranslate"><span class="pre">exception</span></code></td>
+<td>Traps unicast IPv4 packets that did not match any route</td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal notranslate"><span class="pre">ipv6_lpm_miss</span></code></td>
+<td><code class="docutils literal notranslate"><span class="pre">exception</span></code></td>
+<td>Traps unicast IPv6 packets that did not match any route</td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal notranslate"><span class="pre">non_routable_packet</span></code></td>
+<td><code class="docutils literal notranslate"><span class="pre">drop</span></code></td>
+<td>Traps packets that the device decided to drop because they are not
+supposed to be routed. For example, IGMP queries can be flooded by the
+device in layer 2 and reach the router. Such packets should not be
+routed and instead dropped</td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal notranslate"><span class="pre">decap_error</span></code></td>
+<td><code class="docutils literal notranslate"><span class="pre">exception</span></code></td>
+<td>Traps NVE and IPinIP packets that the device decided to drop because of
+failure during decapsulation (e.g., packet being too short, reserved
+bits set in VXLAN header)</td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal notranslate"><span class="pre">overlay_smac_is_mc</span></code></td>
+<td><code class="docutils literal notranslate"><span class="pre">drop</span></code></td>
+<td>Traps NVE packets that the device decided to drop because their overlay
+source MAC is multicast</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="driver-specific-packet-traps">
+<h2>Driver-specific Packet Traps<a class="headerlink" href="#driver-specific-packet-traps" title="Permalink to this headline">¶</a></h2>
+<p>Device drivers can register driver-specific packet traps, but these must be
+clearly documented. Such traps can correspond to device-specific exceptions and
+help debug packet drops caused by these exceptions. The following list includes
+links to the description of driver-specific traps registered by various device
+drivers:</p>
+<blockquote>
+<div><ul class="simple">
+<li><a class="reference internal" href="netdevsim.html"><span class="doc">netdevsim devlink support</span></a></li>
+<li><a class="reference internal" href="mlxsw.html"><span class="doc">mlxsw devlink support</span></a></li>
+</ul>
+</div></blockquote>
+</div>
+<div class="section" id="generic-packet-trap-groups">
+<h2>Generic Packet Trap Groups<a class="headerlink" href="#generic-packet-trap-groups" title="Permalink to this headline">¶</a></h2>
+<p>Generic packet trap groups are used to aggregate logically related packet
+traps. These groups allow the user to batch operations such as setting the trap
+action of all member traps. In addition, <code class="docutils literal notranslate"><span class="pre">devlink-trap</span></code> can report aggregated
+per-group packets and bytes statistics, in case per-trap statistics are too
+narrow. The description of these groups must be added to the following table:</p>
+<table border="1" class="colwidths-given docutils" id="id4">
+<caption><span class="caption-text">List of Generic Packet Trap Groups</span><a class="headerlink" href="#id4" title="Permalink to this table">¶</a></caption>
+<colgroup>
+<col width="10%" />
+<col width="90%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td>Name</td>
+<td>Description</td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal notranslate"><span class="pre">l2_drops</span></code></td>
+<td>Contains packet traps for packets that were dropped by the device during
+layer 2 forwarding (i.e., bridge)</td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal notranslate"><span class="pre">l3_drops</span></code></td>
+<td>Contains packet traps for packets that were dropped by the device or hit
+an exception (e.g., TTL error) during layer 3 forwarding</td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal notranslate"><span class="pre">buffer_drops</span></code></td>
+<td>Contains packet traps for packets that were dropped by the device due to
+an enqueue decision</td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal notranslate"><span class="pre">tunnel_drops</span></code></td>
+<td>Contains packet traps for packets that were dropped by the device during
+tunnel encapsulation / decapsulation</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="testing">
+<h2>Testing<a class="headerlink" href="#testing" title="Permalink to this headline">¶</a></h2>
+<p>See <code class="docutils literal notranslate"><span class="pre">tools/testing/selftests/drivers/net/netdevsim/devlink_trap.sh</span></code> for a
+test covering the core infrastructure. Test cases should be added for any new
+functionality.</p>
+<p>Device drivers should focus their tests on device-specific functionality, such
+as the triggering of supported packet traps.</p>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright The kernel development community
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

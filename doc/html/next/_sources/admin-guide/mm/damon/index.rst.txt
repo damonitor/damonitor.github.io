@@ -1,0 +1,45 @@
+.. SPDX-License-Identifier: GPL-2.0
+
+==========================
+DAMON: Data Access MONitor
+==========================
+
+Introduction
+============
+
+Optimal placement of each data object under accurate future data access pattern
+predictions is one of the biggest and important goal of the memory management.
+However, most of the predictions rely on only coarse information to keep the
+instrumentation overhead minimal.  As a consequence, a number of memory
+management optimization works consistently say the predictions are far from the
+optimal.  However, none of those works has successfully adopted into the Linux
+kernel mainly due to the absence of the scalable instrumentation solution.
+That is, the instrumentation overhead can arbitrarily increase as the size of
+target workload grows.
+
+DAMON is a data access monitoring subsystem that designed to mitigate the
+problem.  Therefore, DAMON users can efficiently collect the fine data access
+pattern and effectiely optimize their memory management mechanisms via the
+pattern based predictions.
+
+Unlike the other mechanisms for data access monitoring, DAMON is
+
+- *accurate* enough to be used for the DRAM level memory management,
+- *light-weight* so that it can be applied online and
+- *scalable* to wide area of workloads as it allow users to set upper-bound of
+  the overhead regardless of the size of target workloads.
+
+This three characteristics are available due to it's core mechanisms called
+'regions based sampling' and 'adaptive regions adjustment'.  Refer to
+:doc:`mechanisms` for detail.
+
+To quickly know how you can use DAMON, starts from :doc:`start`.
+
+.. toctree::
+   :maxdepth: 2
+
+   faq
+   start
+   usage
+   mechanisms
+   plans
