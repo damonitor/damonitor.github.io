@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>DAMON User Interfaces &mdash; The Linux Kernel  documentation</title>
+  <title>Detailed Usages &mdash; The Linux Kernel  documentation</title>
   
 
   
@@ -45,7 +45,7 @@
   <link rel="stylesheet" href="../../../_static/theme_overrides.css" type="text/css" />
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" />
-    <link rel="next" title="Mechanisms of DAMON" href="mechanisms.html" />
+    <link rel="next" title="API Reference" href="api.html" />
     <link rel="prev" title="Getting Started" href="start.html" /> 
 </head>
 
@@ -97,7 +97,7 @@
               <ul class="current">
 <li class="toctree-l1 current"><a class="reference internal" href="index.html">DAMON: Data Access MONitor</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="start.html">Getting Started</a></li>
-<li class="toctree-l2 current"><a class="current reference internal" href="#">DAMON User Interfaces</a><ul>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Detailed Usages</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#what-interface-to-use">What Interface to Use?</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#debugfs-interface">debugfs Interface</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#attributes">Attributes</a></li>
@@ -113,14 +113,12 @@
 <li class="toctree-l4"><a class="reference internal" href="#damon-based-operation-schemes">DAMON-based Operation Schemes</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="#kernel-space-programming-interface">Kernel Space Programming Interface</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="mechanisms.html">Mechanisms of DAMON</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api.html">API Reference</a></li>
+<li class="toctree-l2"><a class="reference internal" href="faq.html">Frequently Asked Questions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mechanisms.html">Mechanisms</a></li>
 <li class="toctree-l2"><a class="reference internal" href="plans.html">Future Plans</a></li>
-<li class="toctree-l2"><a class="reference internal" href="index.html#introduction">Introduction</a></li>
-<li class="toctree-l2"><a class="reference internal" href="index.html#frequently-asked-questions">Frequently Asked Questions</a></li>
-<li class="toctree-l2"><a class="reference internal" href="index.html#more-documents-to-read">More Documents To Read</a></li>
 </ul>
 </li>
 </ul>
@@ -170,7 +168,7 @@
         
           <li><a href="index.html">DAMON: Data Access MONitor</a> &raquo;</li>
         
-      <li>DAMON User Interfaces</li>
+      <li>Detailed Usages</li>
     
     
       <li class="wy-breadcrumbs-aside">
@@ -189,8 +187,8 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="damon-user-interfaces">
-<h1>DAMON User Interfaces<a class="headerlink" href="#damon-user-interfaces" title="Permalink to this headline">¶</a></h1>
+  <div class="section" id="detailed-usages">
+<h1>Detailed Usages<a class="headerlink" href="#detailed-usages" title="Permalink to this headline">¶</a></h1>
 <p>This document describes how you can use DAMON via its user interfaces.</p>
 <p>DAMON provides following three user interfaces, kernel space programming
 interface, debugfs interface and user space tool for various use cases.</p>
@@ -198,7 +196,7 @@ interface, debugfs interface and user space tool for various use cases.</p>
 <li><em>Kernel Space Programming Interface.</em>
 This is for kernel space programmers.  Using this, you can utilize every
 feature of DAMON in most flexible and efficient way by writing kernel space
-DAMON application programs for you.</li>
+DAMON application programs for you.  Please refer to <a class="reference internal" href="api.html"><span class="doc">API Reference</span></a> for detail.</li>
 <li><em>debugfs interface.</em>
 This is for user space programmers who want optimized use of DAMON. Using
 this interface, you can use DAMON’s major features by reading from and
@@ -545,138 +543,6 @@ $ ./damo schemes --schemes my_thp_scheme `pidof foo`
 </div>
 </div>
 </div>
-<div class="section" id="kernel-space-programming-interface">
-<h2>Kernel Space Programming Interface<a class="headerlink" href="#kernel-space-programming-interface" title="Permalink to this headline">¶</a></h2>
-<dl class="function">
-<dt id="c.damon_check_reset_time_interval">
-bool <code class="descname">damon_check_reset_time_interval</code><span class="sig-paren">(</span>struct timespec64 *<em>&nbsp;baseline</em>, unsigned long<em>&nbsp;interval</em><span class="sig-paren">)</span><a class="headerlink" href="#c.damon_check_reset_time_interval" title="Permalink to this definition">¶</a></dt>
-<dd><p>Check if a time interval is elapsed.</p>
-</dd></dl>
-
-<p><strong>Parameters</strong></p>
-<dl class="docutils">
-<dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">timespec64</span> <span class="pre">*</span> <span class="pre">baseline</span></code></dt>
-<dd>the time to check whether the interval has elapsed since</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">unsigned</span> <span class="pre">long</span> <span class="pre">interval</span></code></dt>
-<dd>the time interval (microseconds)</dd>
-</dl>
-<p><strong>Description</strong></p>
-<p>See whether the given time interval has passed since the given baseline
-time.  If so, it also updates the baseline to current time for next check.</p>
-<p><strong>Return</strong></p>
-<p>true if the time interval has passed, or false otherwise.</p>
-<dl class="function">
-<dt id="c.damon_start">
-int <code class="descname">damon_start</code><span class="sig-paren">(</span>struct damon_ctx *<em>&nbsp;ctx</em><span class="sig-paren">)</span><a class="headerlink" href="#c.damon_start" title="Permalink to this definition">¶</a></dt>
-<dd><p>Starts monitoring with given context.</p>
-</dd></dl>
-
-<p><strong>Parameters</strong></p>
-<dl class="docutils">
-<dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">damon_ctx</span> <span class="pre">*</span> <span class="pre">ctx</span></code></dt>
-<dd>monitoring context</dd>
-</dl>
-<p><strong>Return</strong></p>
-<p>0 on success, negative error code otherwise.</p>
-<dl class="function">
-<dt id="c.damon_stop">
-int <code class="descname">damon_stop</code><span class="sig-paren">(</span>struct damon_ctx *<em>&nbsp;ctx</em><span class="sig-paren">)</span><a class="headerlink" href="#c.damon_stop" title="Permalink to this definition">¶</a></dt>
-<dd><p>Stops monitoring of given context.</p>
-</dd></dl>
-
-<p><strong>Parameters</strong></p>
-<dl class="docutils">
-<dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">damon_ctx</span> <span class="pre">*</span> <span class="pre">ctx</span></code></dt>
-<dd>monitoring context</dd>
-</dl>
-<p><strong>Return</strong></p>
-<p>0 on success, negative error code otherwise.</p>
-<dl class="function">
-<dt id="c.damon_set_schemes">
-int <code class="descname">damon_set_schemes</code><span class="sig-paren">(</span>struct damon_ctx *<em>&nbsp;ctx</em>, struct damos **<em>&nbsp;schemes</em>, ssize_t<em>&nbsp;nr_schemes</em><span class="sig-paren">)</span><a class="headerlink" href="#c.damon_set_schemes" title="Permalink to this definition">¶</a></dt>
-<dd><p>Set data access monitoring based operation schemes.</p>
-</dd></dl>
-
-<p><strong>Parameters</strong></p>
-<dl class="docutils">
-<dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">damon_ctx</span> <span class="pre">*</span> <span class="pre">ctx</span></code></dt>
-<dd>monitoring context</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">damos</span> <span class="pre">**</span> <span class="pre">schemes</span></code></dt>
-<dd>array of the schemes</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">ssize_t</span> <span class="pre">nr_schemes</span></code></dt>
-<dd>number of entries in <strong>schemes</strong></dd>
-</dl>
-<p><strong>Description</strong></p>
-<p>This function should not be called while the kdamond of the context is
-running.</p>
-<p><strong>Return</strong></p>
-<p>0 if success, or negative error code otherwise.</p>
-<dl class="function">
-<dt id="c.damon_set_pids">
-int <code class="descname">damon_set_pids</code><span class="sig-paren">(</span>struct damon_ctx *<em>&nbsp;ctx</em>, int *<em>&nbsp;pids</em>, ssize_t<em>&nbsp;nr_pids</em><span class="sig-paren">)</span><a class="headerlink" href="#c.damon_set_pids" title="Permalink to this definition">¶</a></dt>
-<dd><p>Set monitoring target processes.</p>
-</dd></dl>
-
-<p><strong>Parameters</strong></p>
-<dl class="docutils">
-<dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">damon_ctx</span> <span class="pre">*</span> <span class="pre">ctx</span></code></dt>
-<dd>monitoring context</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">int</span> <span class="pre">*</span> <span class="pre">pids</span></code></dt>
-<dd>array of target processes pids</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">ssize_t</span> <span class="pre">nr_pids</span></code></dt>
-<dd>number of entries in <strong>pids</strong></dd>
-</dl>
-<p><strong>Description</strong></p>
-<p>This function should not be called while the kdamond is running.</p>
-<p><strong>Return</strong></p>
-<p>0 on success, negative error code otherwise.</p>
-<dl class="function">
-<dt id="c.damon_set_recording">
-int <code class="descname">damon_set_recording</code><span class="sig-paren">(</span>struct damon_ctx *<em>&nbsp;ctx</em>, unsigned int<em>&nbsp;rbuf_len</em>, char *<em>&nbsp;rfile_path</em><span class="sig-paren">)</span><a class="headerlink" href="#c.damon_set_recording" title="Permalink to this definition">¶</a></dt>
-<dd><p>Set attributes for the recording.</p>
-</dd></dl>
-
-<p><strong>Parameters</strong></p>
-<dl class="docutils">
-<dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">damon_ctx</span> <span class="pre">*</span> <span class="pre">ctx</span></code></dt>
-<dd>target kdamond context</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">unsigned</span> <span class="pre">int</span> <span class="pre">rbuf_len</span></code></dt>
-<dd>length of the result buffer</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">char</span> <span class="pre">*</span> <span class="pre">rfile_path</span></code></dt>
-<dd>path to the monitor result files</dd>
-</dl>
-<p><strong>Description</strong></p>
-<p>Setting ‘rbuf_len’ 0 disables recording.</p>
-<p>This function should not be called while the kdamond is running.</p>
-<p><strong>Return</strong></p>
-<p>0 on success, negative error code otherwise.</p>
-<dl class="function">
-<dt id="c.damon_set_attrs">
-int <code class="descname">damon_set_attrs</code><span class="sig-paren">(</span>struct damon_ctx *<em>&nbsp;ctx</em>, unsigned long<em>&nbsp;sample_int</em>, unsigned long<em>&nbsp;aggr_int</em>, unsigned long<em>&nbsp;regions_update_int</em>, unsigned long<em>&nbsp;min_nr_reg</em>, unsigned long<em>&nbsp;max_nr_reg</em><span class="sig-paren">)</span><a class="headerlink" href="#c.damon_set_attrs" title="Permalink to this definition">¶</a></dt>
-<dd><p>Set attributes for the monitoring.</p>
-</dd></dl>
-
-<p><strong>Parameters</strong></p>
-<dl class="docutils">
-<dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">damon_ctx</span> <span class="pre">*</span> <span class="pre">ctx</span></code></dt>
-<dd>monitoring context</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">unsigned</span> <span class="pre">long</span> <span class="pre">sample_int</span></code></dt>
-<dd>time interval between samplings</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">unsigned</span> <span class="pre">long</span> <span class="pre">aggr_int</span></code></dt>
-<dd>time interval between aggregations</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">unsigned</span> <span class="pre">long</span> <span class="pre">regions_update_int</span></code></dt>
-<dd>time interval between vma update checks</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">unsigned</span> <span class="pre">long</span> <span class="pre">min_nr_reg</span></code></dt>
-<dd>minimal number of regions</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">unsigned</span> <span class="pre">long</span> <span class="pre">max_nr_reg</span></code></dt>
-<dd>maximum number of regions</dd>
-</dl>
-<p><strong>Description</strong></p>
-<p>This function should not be called while the kdamond is running.
-Every time interval is in micro-seconds.</p>
-<p><strong>Return</strong></p>
-<p>0 on success, negative error code otherwise.</p>
-</div>
 </div>
 
 
@@ -687,7 +553,7 @@ Every time interval is in micro-seconds.</p>
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="mechanisms.html" class="btn btn-neutral float-right" title="Mechanisms of DAMON" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="api.html" class="btn btn-neutral float-right" title="API Reference" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
         <a href="start.html" class="btn btn-neutral float-left" title="Getting Started" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>

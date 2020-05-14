@@ -4,42 +4,46 @@
 DAMON: Data Access MONitor
 ==========================
 
-Introduction
-============
-
 Optimal placement of each data object under accurate future data access pattern
-predictions is one of the biggest and important goal of the memory management.
-However, most of the predictions rely on only coarse information to keep the
+predictions is one of the biggest goal of the memory management.  However, most
+of the predictions rely on only coarse information such as LRU to keep the
 instrumentation overhead minimal.  As a consequence, a number of memory
-management optimization works consistently say the predictions are far from the
-optimal.  However, none of those works has successfully adopted into the Linux
-kernel mainly due to the absence of the scalable instrumentation solution.
-That is, the instrumentation overhead can arbitrarily increase as the size of
-target workload grows.
+management optimization works consistently say the management is far from the
+optimal.  However, a number of such optimization works have failed being
+adopted into the mainline Linux kernel mainly due to the limitations of their
+instrumentation mechanisms.
 
-DAMON is a data access monitoring subsystem that designed to mitigate the
-problem.  Therefore, DAMON users can efficiently collect the fine data access
-pattern and effectiely optimize their memory management mechanisms via the
-pattern based predictions.
+The limitations can be translated into below three requirements that essential
+for the instrumentation mechanisms to be adopted in a wide range of production
+environments.
 
-Unlike the other mechanisms for data access monitoring, DAMON is
+- *accuracy*.  The instrumented information should be useful for the DRAM level
+  memory management.  Cache-level accuracy is not required, though.
+- *light-weight overhead*.  The instrumentation overhead should be low enough
+  to be applied online while making no impact to the performance of the main
+  workloads.
+- *scalability*.  Envrionmental changes such as size of instrumentation target
+  workloads should not be able to make the instrumentation overhead arbitrarily
+  increase.
 
-- *accurate* enough to be used for the DRAM level memory management,
-- *light-weight* so that it can be applied online and
-- *scalable* to wide area of workloads as it allow users to set upper-bound of
-  the overhead regardless of the size of target workloads.
-
-This three characteristics are available due to it's core mechanisms called
-'regions based sampling' and 'adaptive regions adjustment'.  Refer to
-:doc:`mechanisms` for detail.
-
-To quickly know how you can use DAMON, starts from :doc:`start`.
+DAMON is a data access monitoring framework subsystem for the Linux kernel.
+The core mechanisms of DAMON called 'region based sampling' and adaptive
+regions adjustment' (refer to :doc:`mechanisms` for the detail), which are
+designed for the three requirements, make it fulfill the requirements.  Using
+this framework, therefore, the kernel's core memory management mechanisms
+including reclmation and THP can be optimized for better memory management.
+The above-mentioned memory management optimization works that have not merged
+into mainline will be able to have another try.  In user space, meanwhile,
+users who have some special workloads will be able to write personalized tools
+or applications for more understanding and specialized optimizations using the
+DAMON framework.
 
 .. toctree::
    :maxdepth: 2
 
-   faq
    start
    usage
+   api
+   faq
    mechanisms
    plans
