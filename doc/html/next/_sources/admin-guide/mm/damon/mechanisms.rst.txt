@@ -4,6 +4,11 @@
 Mechanisms
 ==========
 
+This document describes the core mechanisms of DAMON and the five knobs for
+tuning.  The knobs are ``sampling interval``, ``aggregation interval``,
+``regions update interval``, ``minimum number of regions`` and ``maximum number
+of regions``.
+
 
 Basic Access Check
 ==================
@@ -68,11 +73,11 @@ In this way, DAMON provides its best-effort quality and minimal overhead while
 keeping the bounds users set for their trade-off.
 
 
-Applying Complex and Dynamic Memory Mappings
-============================================
+Handling Complex and Dynamic Virtual Memory Mappings
+====================================================
 
 This is for monitoring of virtual memory address space only, which is the only
-one address space that supported by DAMON.
+one address space that supported by DAMON as of now.
 
 Only a number of small parts in the super-huge virtual address space of the
 processes is mapped to physical memory and accessed.  Thus, tracking the
@@ -90,12 +95,13 @@ space.  The two biggest unmapped areas might be the gap between the heap and
 the uppermost mmap()-ed region, and the gap between the lowermost mmap()-ed
 region and the stack will be two biggest unmapped regions.  Because these gaps
 are exceptionally huge areas in usual address space, excluding these two
-biggest unmapped regions will be sufficient to make a trade-off.::
+biggest unmapped regions will be sufficient to make a trade-off.  Below shows
+this in detail::
 
     <heap>
     <BIG UNMAPPED REGION 1>
     <uppermost mmap()-ed region>
-    (other mmap()-ed regions and small unmapped regions)
+    (small mmap()-ed regions and munmap()-ed regions)
     <lowermost mmap()-ed region>
     <BIG UNMAPPED REGION 2>
     <stack>

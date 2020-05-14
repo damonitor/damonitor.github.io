@@ -97,6 +97,7 @@
               <ul class="current">
 <li class="toctree-l1 current"><a class="reference internal" href="index.html">DAMON: Data Access MONitor</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="start.html">Getting Started</a></li>
+<li class="toctree-l2"><a class="reference internal" href="guide.html">The Beginner’s Guide</a></li>
 <li class="toctree-l2"><a class="reference internal" href="usage.html">Detailed Usages</a></li>
 <li class="toctree-l2"><a class="reference internal" href="api.html">API Reference</a></li>
 <li class="toctree-l2"><a class="reference internal" href="faq.html">Frequently Asked Questions</a></li>
@@ -104,7 +105,7 @@
 <li class="toctree-l3"><a class="reference internal" href="#basic-access-check">Basic Access Check</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#region-based-sampling">Region Based Sampling</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#adaptive-regions-adjustment">Adaptive Regions Adjustment</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#applying-complex-and-dynamic-memory-mappings">Applying Complex and Dynamic Memory Mappings</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#handling-complex-and-dynamic-virtual-memory-mappings">Handling Complex and Dynamic Virtual Memory Mappings</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="plans.html">Future Plans</a></li>
@@ -178,6 +179,10 @@
             
   <div class="section" id="mechanisms">
 <h1>Mechanisms<a class="headerlink" href="#mechanisms" title="Permalink to this headline">¶</a></h1>
+<p>This document describes the core mechanisms of DAMON and the five knobs for
+tuning.  The knobs are <code class="docutils literal notranslate"><span class="pre">sampling</span> <span class="pre">interval</span></code>, <code class="docutils literal notranslate"><span class="pre">aggregation</span> <span class="pre">interval</span></code>,
+<code class="docutils literal notranslate"><span class="pre">regions</span> <span class="pre">update</span> <span class="pre">interval</span></code>, <code class="docutils literal notranslate"><span class="pre">minimum</span> <span class="pre">number</span> <span class="pre">of</span> <span class="pre">regions</span></code> and <code class="docutils literal notranslate"><span class="pre">maximum</span> <span class="pre">number</span>
+<span class="pre">of</span> <span class="pre">regions</span></code>.</p>
 <div class="section" id="basic-access-check">
 <h2>Basic Access Check<a class="headerlink" href="#basic-access-check" title="Permalink to this headline">¶</a></h2>
 <p>The output of DAMON says what pages are how frequently accessed for a given
@@ -232,10 +237,10 @@ will not exceed the user-specified maximum number of regions after the split.</p
 <p>In this way, DAMON provides its best-effort quality and minimal overhead while
 keeping the bounds users set for their trade-off.</p>
 </div>
-<div class="section" id="applying-complex-and-dynamic-memory-mappings">
-<h2>Applying Complex and Dynamic Memory Mappings<a class="headerlink" href="#applying-complex-and-dynamic-memory-mappings" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="handling-complex-and-dynamic-virtual-memory-mappings">
+<h2>Handling Complex and Dynamic Virtual Memory Mappings<a class="headerlink" href="#handling-complex-and-dynamic-virtual-memory-mappings" title="Permalink to this headline">¶</a></h2>
 <p>This is for monitoring of virtual memory address space only, which is the only
-one address space that supported by DAMON.</p>
+one address space that supported by DAMON as of now.</p>
 <p>Only a number of small parts in the super-huge virtual address space of the
 processes is mapped to physical memory and accessed.  Thus, tracking the
 unmapped address regions is just wasteful.  However, because DAMON can deal
@@ -251,11 +256,12 @@ space.  The two biggest unmapped areas might be the gap between the heap and
 the uppermost mmap()-ed region, and the gap between the lowermost mmap()-ed
 region and the stack will be two biggest unmapped regions.  Because these gaps
 are exceptionally huge areas in usual address space, excluding these two
-biggest unmapped regions will be sufficient to make a trade-off.:</p>
+biggest unmapped regions will be sufficient to make a trade-off.  Below shows
+this in detail:</p>
 <div class="highlight-none notranslate"><div class="highlight"><pre><span></span>&lt;heap&gt;
 &lt;BIG UNMAPPED REGION 1&gt;
 &lt;uppermost mmap()-ed region&gt;
-(other mmap()-ed regions and small unmapped regions)
+(small mmap()-ed regions and munmap()-ed regions)
 &lt;lowermost mmap()-ed region&gt;
 &lt;BIG UNMAPPED REGION 2&gt;
 &lt;stack&gt;
