@@ -222,16 +222,16 @@ workloads using DAMON.  Find major workloads on your systems and analyze their
 data access pattern to find something wrong or can be improved.  The DAMON user
 space tool (<code class="docutils literal notranslate"><span class="pre">damo</span></code>) will be enough for this.</p>
 <p>We recommend you to start from working set size distribution check using <code class="docutils literal notranslate"><span class="pre">damo</span>
-<span class="pre">report</span> <span class="pre">wss</span></code>.  If the distribution is ununiform, you could consider <a class="reference internal" href="#memory-configuration">Memory
-Configuration</a> optimization.</p>
+<span class="pre">report</span> <span class="pre">wss</span></code>.  If the distribution is ununiform or quite different from what
+you estimated, you could consider <a class="reference internal" href="#memory-configuration">Memory Configuration</a> optimization.</p>
 <p>Then, review the overall access pattern in heatmap form using <code class="docutils literal notranslate"><span class="pre">damo</span> <span class="pre">report</span>
 <span class="pre">heats</span></code>.  If it shows a simple pattern consists with small number of memory
 regions having high contrast of access temperature, you could consider <a href="#id22"><span class="problematic" id="id23">`Manual
 Program Optimization`_</span></a>.</p>
 <p>If the access pattern is very frequently changing so that you cannot figure out
-what is the performance important region and not using your human eye,
-<a class="reference internal" href="#automated-damon-based-memory-operations">Automated DAMON-based Memory Operations</a> might help owing to its machine
-level micro scope view.</p>
+what is the performance important region using your human eye, <a class="reference internal" href="#automated-damon-based-memory-operations">Automated
+DAMON-based Memory Operations</a> might help owing to its machine level micro
+scope view.</p>
 <p>You don’t need to take only one approach among above plans, but you could use
 multiple of above approaches to maximize the benefit.  If you still want to
 absorb more benefit, you should develop <a class="reference internal" href="#personalized-damon-application">Personalized DAMON Application</a> for
@@ -239,30 +239,30 @@ your special case.</p>
 </div>
 <div class="section" id="optimize">
 <h2>Optimize<a class="headerlink" href="#optimize" title="Permalink to this headline">¶</a></h2>
-<p>If you have confirmed the sign and the profiling result also says it’s worth to
-try some optimization, you could consider below optimizations.  Note that most
-of below sections assume that your system has configured swap device or other
-types of auxiliary memory so that you don’t need to accommodate whole working
-set in the main memory.  Most of the detailed optimization should be made on
-your concrete understanding about the swap or the auxiliary memory performance.</p>
+<p>If the profiling result also says it’s worth to try some optimization, you
+could consider below approaches.  Note that most of below approaches assume
+that your systems are configured with swap device or other types of auxiliary
+memory so that you don’t need to accommodate whole working set in the main
+memory.  Most of the detailed optimization should be made on your concrete
+understanding about your swap and/or your auxiliary memory performance.</p>
 <div class="section" id="memory-configuration">
 <h3>Memory Configuration<a class="headerlink" href="#memory-configuration" title="Permalink to this headline">¶</a></h3>
 <p>DRAM is highly performance critical but expensive and heavily consumes the
 power.  However, knowing the real important working set size is hard and thus
-people usually equips unnecessarily large DRAM or too small DRAM.  Actually,
-so many memory management problem comes from this wrong configuration.</p>
+people usually equips unnecessarily large or too small DRAM.  Actually, so many
+problems come from such wrong configurations.</p>
 <p>Using the working set size distribution report provided by <code class="docutils literal notranslate"><span class="pre">damo</span> <span class="pre">report</span> <span class="pre">wss</span></code>,
-you can know the real needs and further make various tradeoff.  For example,
+you can know the real needs and make reasonable tradeoffs.  For example,
 roughly speaking, if you care only 95 percentile latency, you don’t need to
 equip DRAM of size larger than 95 percentile working set size.  If you were
 suffered from frequent memory pressure, you will also easily know how much DRAM
 you should buy.</p>
 <p>Let’s see a realistic example.  Below is the heatmap and the working set size
 distributions/changes of <code class="docutils literal notranslate"><span class="pre">freqmine</span></code> workload in PARSEC3 benchmark suite.  The
-working set is about 700 MiB at most, but less than 100 MiB for more than 95%
-of the time.  Even though you give only 100 MiB of memory space to the
-workload, it will work well for 95% of time, while you can save the 600 MiB of
-memory space.</p>
+working set size spikes up to 700 MiB, but keeps smaller than 100 MiB for more
+than 95% of the time.  Even though you give only 100 MiB of memory space to the
+workload, it will work well for 95% of the time.  Meanwhile, you can save the
+600 MiB of memory space.</p>
 <table border="1" class="docutils">
 <colgroup>
 <col width="33%" />
@@ -356,15 +356,16 @@ automating this optimal parameter could be an option.</p>
 </div>
 <div class="section" id="personalized-damon-application">
 <h3>Personalized DAMON Application<a class="headerlink" href="#personalized-damon-application" title="Permalink to this headline">¶</a></h3>
-<p>DAMOS will work well for many cases, but would not be able to squeeze the last
-benefit in some special cases because only very simple schemes are specifiable.
-The parameter tuning problem is also one of the example.</p>
-<p>To mitigate this limitation, you should forgive the comfortable use of the user
-space tool and start use of the debugfs interface.  You will be able to write
-your personalized DAMON application that interact with DAMON via the debugfs
-interface (refer to <a class="reference internal" href="usage.html"><span class="doc">Detailed Usages</span></a> for detail).  Using this, you will be able to
-overcome the limitation of the simple DAMOS specification and make more
-creative and wise optimizations.</p>
+<p>Below approaches will work well for many cases, but would not be able to
+squeeze the last benefit in some special cases because only very simple
+optimizations are available.</p>
+<p>If this is the case, it might be the time to forget the comfortable use of the
+user space tool and dive into the debugfs interface (refer to <a class="reference internal" href="usage.html"><span class="doc">Detailed Usages</span></a> for
+the detail) of DAMON.  Using the interface, you can control the DAMON in more
+flexible way.  Therefore, you can write your personalized DAMON application
+that controls the monitoring via the debugfs interface, analyzes the result,
+and apply complex optimizations itself.  Using this, you will be able to make
+more creative and wise optimizations.</p>
 <p>If you are kernel space programmer, writing kernel space DAMON applications
 using the API (refer to <a class="reference internal" href="api.html"><span class="doc">API Reference</span></a> for more detail) would be also an option.</p>
 </div>
@@ -372,12 +373,12 @@ using the API (refer to <a class="reference internal" href="api.html"><span clas
 <div class="section" id="previous-practices-for-references">
 <h2>Previous Practices for References<a class="headerlink" href="#previous-practices-for-references" title="Permalink to this headline">¶</a></h2>
 <p>Referencing previously done successful practices could help you getting the
-sense for this kind of optimizations.
-There is an academic paper <a class="footnote-reference" href="#id10" id="id4">[1]</a> previously reported the visualized access
-pattern and <a href="#id24"><span class="problematic" id="id25">`Manual Program Optimization`_</span></a> results for a number of realistic
-workloads.  You can also get the visualized access pattern <a class="footnote-reference" href="#id13" id="id5">[4]</a>, <a class="footnote-reference" href="#id14" id="id6">[5]</a>, <a class="footnote-reference" href="#id15" id="id7">[6]</a> and
-<a class="reference internal" href="#automated-damon-based-memory-operations">Automated DAMON-based Memory Operations</a> results for other realistic
-workloads that collected with latest version of DAMON <a class="footnote-reference" href="#id11" id="id8">[2]</a>, <a class="footnote-reference" href="#id12" id="id9">[3]</a>.</p>
+sense for this kind of optimizations.  There is an academic paper <a class="footnote-reference" href="#id10" id="id4">[1]</a>
+previously reported the visualized access pattern and <a href="#id24"><span class="problematic" id="id25">`Manual Program
+Optimization`_</span></a> results for a number of realistic workloads.  You can also get
+the visualized access pattern <a class="footnote-reference" href="#id13" id="id5">[4]</a>, <a class="footnote-reference" href="#id14" id="id6">[5]</a>, <a class="footnote-reference" href="#id15" id="id7">[6]</a> and <a class="reference internal" href="#automated-damon-based-memory-operations">Automated DAMON-based
+Memory Operations</a> results for other realistic workloads that collected with
+latest version of DAMON <a class="footnote-reference" href="#id11" id="id8">[2]</a>, <a class="footnote-reference" href="#id12" id="id9">[3]</a>.</p>
 <table class="docutils footnote" frame="void" id="id10" rules="none">
 <colgroup><col class="label" /><col /></colgroup>
 <tbody valign="top">
