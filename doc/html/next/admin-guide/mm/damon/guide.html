@@ -98,19 +98,16 @@
 <li class="toctree-l1 current"><a class="reference internal" href="index.html">DAMON: Data Access MONitor</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="start.html">Getting Started</a></li>
 <li class="toctree-l2 current"><a class="current reference internal" href="#">The Beginner’s Guide</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#check-the-signs-of-potential-benefits">Check The Signs of Potential Benefits</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#low-ipc-and-high-tlb-misses">Low IPC and High TLB Misses</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#memory-over-commitment-and-unknown-users">Memory Over-commitment and Unknown Users</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#frequent-memory-pressure">Frequent Memory Pressure</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#heterogeneous-memory-system">Heterogeneous Memory System</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#check-the-signs">Check The Signs</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#profile">Profile</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#optimize">Optimize</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#memory-configuration">Memory Configuration</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#program-modification">Program Modification</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#automated-damon-based-memory-operations">Automated DAMON-based Memory Operations</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#personalized-damon-application">Personalized DAMON Application</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="#profile-the-data-access-patterns">Profile The Data Access Patterns</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#memory-configuration">Memory Configuration</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#manual-program-optimization">Manual Program Optimization</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#automated-damon-based-memory-operations">Automated DAMON-based Memory Operations</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#personalized-damon-application">Personalized DAMON Application</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#previous-works-for-reference">Previous Works for Reference</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#previous-practices-for-references">Previous Practices for References</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="usage.html">Detailed Usages</a></li>
@@ -191,40 +188,35 @@
 <p>This document is to help you estimating amount of benefit that you could get
 from DAMON, and to let you know how you could maximize the improvement.  You
 are assumed to already read <a class="reference internal" href="start.html"><span class="doc">Getting Started</span></a>.</p>
-<div class="section" id="check-the-signs-of-potential-benefits">
-<h2>Check The Signs of Potential Benefits<a class="headerlink" href="#check-the-signs-of-potential-benefits" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="check-the-signs">
+<h2>Check The Signs<a class="headerlink" href="#check-the-signs" title="Permalink to this headline">¶</a></h2>
 <p>DAMON cannot provide the same amount of benefit to every workload.  Therefore
 you should first guess how much improvements you could get using DAMON.  If
 some of below conditions match to your situation, you could consider use of
 DAMON.</p>
-<div class="section" id="low-ipc-and-high-tlb-misses">
-<h3>Low IPC and High TLB Misses<a class="headerlink" href="#low-ipc-and-high-tlb-misses" title="Permalink to this headline">¶</a></h3>
-<p>Low IPC means most of CPU time is spend waiting for completion of time
-consuming operations such as memory access, while high TLB misses means the TLB
-cache needs more help.  You can help TLB by utilizing huge pages based on
-DAMON.</p>
+<ul class="simple">
+<li><em>Low IPC and High Cache Miss Ratios.</em>  Low IPC means most of CPU time is
+spend waiting for completion of time consuming operations such as memory
+access, while high cache miss ratios means the caches doesn’t help it well.
+DAMON is not for cache level optimization, but for DRAM level.  However,
+improving DRAM management will also help this case by reducing the memory
+operation latency.</li>
+<li><em>Memory Over-commitment and Unknown Users.</em>  If you are doing memory
+overcommitment and you cannot control every user of your system, memory bank
+run could happen at anytime.  You can estimate when it will happen based on
+DAMON’s monitoring results and act earlier to avoid or deal better with the
+crisis.</li>
+<li><em>Frequent Memory Pressure.</em>  Frequent memory pressure means wrong
+configuration or existance of memory hogs.  DAMON will help you finding right
+configuration and/or the criminals.</li>
+<li><em>Heterogeneous Memory System.</em>  If your system is utilizing memory devices
+that placed between DRAM and traditional hard disk, such as non-volatile
+memory or fast SSDs, DAMON could help you utilizing the devices more
+efficiently.</li>
+</ul>
 </div>
-<div class="section" id="memory-over-commitment-and-unknown-users">
-<h3>Memory Over-commitment and Unknown Users<a class="headerlink" href="#memory-over-commitment-and-unknown-users" title="Permalink to this headline">¶</a></h3>
-<p>If you are doing memory overcommitment and you cannot control every user of
-your system, memory bank run could happen at anytime.  You can estimate when it
-will happen based on DAMON’s monitoring results and act earlier to avoid the
-pressure.</p>
-</div>
-<div class="section" id="frequent-memory-pressure">
-<h3>Frequent Memory Pressure<a class="headerlink" href="#frequent-memory-pressure" title="Permalink to this headline">¶</a></h3>
-<p>Frequent memory pressure means wrong configuration or existance of memory hog.
-DAMON will help you finding right configuration and/or the criminal.</p>
-</div>
-<div class="section" id="heterogeneous-memory-system">
-<h3>Heterogeneous Memory System<a class="headerlink" href="#heterogeneous-memory-system" title="Permalink to this headline">¶</a></h3>
-<p>If your system is utilizing memory devices that placed between DRAM and
-traditional hard disk, such as non-volatile memory or fast SSDs, DAMON could
-help you utilizing the devices more efficiently.</p>
-</div>
-</div>
-<div class="section" id="profile-the-data-access-patterns">
-<h2>Profile The Data Access Patterns<a class="headerlink" href="#profile-the-data-access-patterns" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="profile">
+<h2>Profile<a class="headerlink" href="#profile" title="Permalink to this headline">¶</a></h2>
 <p>If you found some positive signals, you could start from profiling your
 workloads using DAMON.  Find major workloads on your systems and analyze their
 data access pattern to find something wrong or can be improved.  The DAMON user
@@ -234,51 +226,125 @@ space tool (<code class="docutils literal notranslate"><span class="pre">damo</s
 Configuration</a> optimization.</p>
 <p>Then, review the overall access pattern in heatmap form using <code class="docutils literal notranslate"><span class="pre">damo</span> <span class="pre">report</span>
 <span class="pre">heats</span></code>.  If it shows a simple pattern consists with small number of memory
-regions having high contrast of access temperature, you could consider <a class="reference internal" href="#manual-program-optimization">Manual
-Program Optimization</a>.</p>
+regions having high contrast of access temperature, you could consider <a href="#id22"><span class="problematic" id="id23">`Manual
+Program Optimization`_</span></a>.</p>
 <p>If the access pattern is very frequently changing so that you cannot figure out
 what is the performance important region and not using your human eye,
 <a class="reference internal" href="#automated-damon-based-memory-operations">Automated DAMON-based Memory Operations</a> might help owing to its machine
 level micro scope view.</p>
-<p>You don’t need to take only one approach but you could use multiple of above
-approaches to maximize the benefit.  If you still want to absorb more benefit,
-you should develop <a class="reference internal" href="#personalized-damon-application">Personalized DAMON Application</a> for your special case.</p>
+<p>You don’t need to take only one approach among above plans, but you could use
+multiple of above approaches to maximize the benefit.  If you still want to
+absorb more benefit, you should develop <a class="reference internal" href="#personalized-damon-application">Personalized DAMON Application</a> for
+your special case.</p>
 </div>
+<div class="section" id="optimize">
+<h2>Optimize<a class="headerlink" href="#optimize" title="Permalink to this headline">¶</a></h2>
+<p>If you have confirmed the sign and the profiling result also says it’s worth to
+try some optimization, you could consider below optimizations.  Note that most
+of below sections assume that your system has configured swap device or other
+types of auxiliary memory so that you don’t need to accommodate whole working
+set in the main memory.  Most of the detailed optimization should be made on
+your concrete understanding about the swap or the auxiliary memory performance.</p>
 <div class="section" id="memory-configuration">
-<h2>Memory Configuration<a class="headerlink" href="#memory-configuration" title="Permalink to this headline">¶</a></h2>
+<h3>Memory Configuration<a class="headerlink" href="#memory-configuration" title="Permalink to this headline">¶</a></h3>
 <p>DRAM is highly performance critical but expensive and heavily consumes the
-power.  You can therefore save more money and power if you can know how large
-DRAM you really need.</p>
+power.  However, knowing the real important working set size is hard and thus
+people usually equips unnecessarily large DRAM or too small DRAM.  Actually,
+so many memory management problem comes from this wrong configuration.</p>
 <p>Using the working set size distribution report provided by <code class="docutils literal notranslate"><span class="pre">damo</span> <span class="pre">report</span> <span class="pre">wss</span></code>,
-you can know the real needs and further make various tradeoff.
-For example, roughly speaking, if you care only 95 percentile latency, you
-don’t need to equip DRAM of size larger than 95 percentile working set size.
-If you were suffered from frequent memory pressure, you will also easily know
-how much DRAM you should buy.</p>
+you can know the real needs and further make various tradeoff.  For example,
+roughly speaking, if you care only 95 percentile latency, you don’t need to
+equip DRAM of size larger than 95 percentile working set size.  If you were
+suffered from frequent memory pressure, you will also easily know how much DRAM
+you should buy.</p>
+<p>Let’s see a realistic example.  Below is the heatmap and the working set size
+distributions/changes of <code class="docutils literal notranslate"><span class="pre">freqmine</span></code> workload in PARSEC3 benchmark suite.  The
+working set is about 700 MiB at most, but less than 100 MiB for more than 95%
+of the time.  Even though you give only 100 MiB of memory space to the
+workload, it will work well for 95% of time, while you can save the 600 MiB of
+memory space.</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="33%" />
+<col width="33%" />
+<col width="33%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><div class="figure align-center" id="id16">
+<img alt="the access pattern in heatmap format" src="../../../_images/freqmine_heatmap.png" />
+<p class="caption"><span class="caption-text">The access pattern in heatmap format.</span></p>
 </div>
-<div class="section" id="manual-program-optimization">
-<h2>Manual Program Optimization<a class="headerlink" href="#manual-program-optimization" title="Permalink to this headline">¶</a></h2>
+</td>
+<td><div class="figure align-center" id="id17">
+<img alt="the distribution of working set size" src="../../../_images/freqmine_wss_sz.png" />
+<p class="caption"><span class="caption-text">The distribution of working set size.</span></p>
+</div>
+</td>
+<td><div class="figure align-center" id="id18">
+<img alt="the chronological changes of working set size" src="../../../_images/freqmine_wss_time.png" />
+<p class="caption"><span class="caption-text">The chronological changes of working set size.</span></p>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="program-modification">
+<h3>Program Modification<a class="headerlink" href="#program-modification" title="Permalink to this headline">¶</a></h3>
 <p>If the data access pattern heatmap plotted using <code class="docutils literal notranslate"><span class="pre">damo</span> <span class="pre">report</span> <span class="pre">heats</span></code> is quite
 simple and clear, you could be able to know how thing is going in the workload,
 and how you could make optimize memory management.</p>
 <p>For example, suppose that the workload has two big memory object but only one
-object is frequently accessed while the other is occasionally scanned.  And,
-you can buy DRAM size of the hot object.  Than, you could modify the program
-source code to invoke <code class="docutils literal notranslate"><span class="pre">mlock()</span></code> system call for the hot object.</p>
-<p>A previous work <a class="footnote-reference" href="#id10" id="id1">[1]</a> using this method achieved up to 2.55x performance
+object is frequently accessed while the other is only occasionally scanned.
+Than, you could modify the program source code to invoke <code class="docutils literal notranslate"><span class="pre">mlock()</span></code> or
+<code class="docutils literal notranslate"><span class="pre">madvise()</span></code> with <code class="docutils literal notranslate"><span class="pre">WILLNEED</span></code> system call for the hot object.  Or, you could
+use <code class="docutils literal notranslate"><span class="pre">madvise()</span></code> with <code class="docutils literal notranslate"><span class="pre">MADV_COLD</span></code> or <code class="docutils literal notranslate"><span class="pre">MADV_PAGEOUT</span></code> for the cold objects.
+Using both together would be also worth to try.</p>
+<p>A previous work <a class="footnote-reference" href="#id10" id="id1">[1]</a> using the <code class="docutils literal notranslate"><span class="pre">mlock()</span></code> achieved up to 2.55x performance
 speedup.</p>
+<p>Let’s see another realistic example access pattern for this kind of
+optimizations.  Below are the visualized access pattern of streamcluster
+workload in PARSEC3 benchmark suite.  We can easily see a 100 MiB sized memory
+object is the hot object.</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="33%" />
+<col width="33%" />
+<col width="33%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><div class="figure align-center" id="id19">
+<img alt="the access pattern in heatmap format" src="../../../_images/streamcluster_heatmap.png" />
+<p class="caption"><span class="caption-text">The access pattern in heatmap format.</span></p>
+</div>
+</td>
+<td><div class="figure align-center" id="id20">
+<img alt="the distribution of working set size" src="../../../_images/streamcluster_wss_sz.png" />
+<p class="caption"><span class="caption-text">The distribution of working set size.</span></p>
+</div>
+</td>
+<td><div class="figure align-center" id="id21">
+<img alt="the chronological changes of working set size" src="../../../_images/streamcluster_wss_time.png" />
+<p class="caption"><span class="caption-text">The chronological changes of working set size.</span></p>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="section" id="automated-damon-based-memory-operations">
-<h2>Automated DAMON-based Memory Operations<a class="headerlink" href="#automated-damon-based-memory-operations" title="Permalink to this headline">¶</a></h2>
+<h3>Automated DAMON-based Memory Operations<a class="headerlink" href="#automated-damon-based-memory-operations" title="Permalink to this headline">¶</a></h3>
 <p>Though <cite>Manual Program Optimization</cite> works well in many cases and DAMON can
-help it, modifying the source code is still cumbersome and the source code
-could be unavailable or too old in many cases.  First of all, many workloads
+help it, modifying the source code is not a good option in many cases.  First
+of all, the source code could be too old or unavailable.  And, many workloads
 will have complex data access pattern that even hard to distinguish hot memory
-objects and cold memory objects with human eye.</p>
-<p>Using DAMON-based operation schemes (DAMOS) via <code class="docutils literal notranslate"><span class="pre">damo</span> <span class="pre">schemes</span></code>, you will be
-able to easily optimize your workload.  Our example schemes called ‘efficient
-THP’ and ‘proactive reclamation’ achieved significant speedup and memory space
-save against 25 realistic workloads <a class="footnote-reference" href="#id11" id="id2">[2]</a>, <a class="footnote-reference" href="#id12" id="id3">[3]</a>.</p>
+objects and cold memory objects with human eye.  Finding the mapping from the
+visualized access pattern to the source code and injecting the hinting system
+calls inside the code will also be quite challenging.</p>
+<p>By using DAMON-based operation schemes (DAMOS) via <code class="docutils literal notranslate"><span class="pre">damo</span> <span class="pre">schemes</span></code>, you will
+be able to easily optimize your workload in such a cases.  Our example schemes
+called ‘efficient THP’ and ‘proactive reclamation’ achieved significant speedup
+and memory space save against 25 realistic workloads <a class="footnote-reference" href="#id11" id="id2">[2]</a>, <a class="footnote-reference" href="#id12" id="id3">[3]</a>.</p>
 <p>That said, note that you need careful tune of the schemes (e.g., target region
 size and age) and monitoring attributes for successful use of this approach.
 Because the optimal values of the parameters will be dependent on each system
@@ -289,7 +355,7 @@ misses, and swap in/out events for varying parameters.  Writing a program
 automating this optimal parameter could be an option.</p>
 </div>
 <div class="section" id="personalized-damon-application">
-<h2>Personalized DAMON Application<a class="headerlink" href="#personalized-damon-application" title="Permalink to this headline">¶</a></h2>
+<h3>Personalized DAMON Application<a class="headerlink" href="#personalized-damon-application" title="Permalink to this headline">¶</a></h3>
 <p>DAMOS will work well for many cases, but would not be able to squeeze the last
 benefit in some special cases because only very simple schemes are specifiable.
 The parameter tuning problem is also one of the example.</p>
@@ -302,15 +368,16 @@ creative and wise optimizations.</p>
 <p>If you are kernel space programmer, writing kernel space DAMON applications
 using the API (refer to <a class="reference internal" href="api.html"><span class="doc">API Reference</span></a> for more detail) would be also an option.</p>
 </div>
-<div class="section" id="previous-works-for-reference">
-<h2>Previous Works for Reference<a class="headerlink" href="#previous-works-for-reference" title="Permalink to this headline">¶</a></h2>
-<p>There is an academic paper <a class="footnote-reference" href="#id10" id="id4">[1]</a> previously reported the visualized access
-pattern and <a class="reference internal" href="#manual-program-optimization">Manual Program Optimization</a> results for a number of realistic
+</div>
+<div class="section" id="previous-practices-for-references">
+<h2>Previous Practices for References<a class="headerlink" href="#previous-practices-for-references" title="Permalink to this headline">¶</a></h2>
+<p>Referencing previously done successful practices could help you getting the
+sense for this kind of optimizations.
+There is an academic paper <a class="footnote-reference" href="#id10" id="id4">[1]</a> previously reported the visualized access
+pattern and <a href="#id24"><span class="problematic" id="id25">`Manual Program Optimization`_</span></a> results for a number of realistic
 workloads.  You can also get the visualized access pattern <a class="footnote-reference" href="#id13" id="id5">[4]</a>, <a class="footnote-reference" href="#id14" id="id6">[5]</a>, <a class="footnote-reference" href="#id15" id="id7">[6]</a> and
 <a class="reference internal" href="#automated-damon-based-memory-operations">Automated DAMON-based Memory Operations</a> results for other realistic
-workloads that collected with latest version of DAMON <a class="footnote-reference" href="#id11" id="id8">[2]</a>, <a class="footnote-reference" href="#id12" id="id9">[3]</a>.  Watching the
-visualizations and optimization results could help you getting the sense for
-this kind of optimizations.</p>
+workloads that collected with latest version of DAMON <a class="footnote-reference" href="#id11" id="id8">[2]</a>, <a class="footnote-reference" href="#id12" id="id9">[3]</a>.</p>
 <table class="docutils footnote" frame="void" id="id10" rules="none">
 <colgroup><col class="label" /><col /></colgroup>
 <tbody valign="top">

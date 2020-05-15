@@ -97,13 +97,14 @@
               <ul class="current">
 <li class="toctree-l1 current"><a class="reference internal" href="index.html">DAMON: Data Access MONitor</a><ul class="current">
 <li class="toctree-l2 current"><a class="current reference internal" href="#">Getting Started</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#tl-dr">TL; DR</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#prerequisites">Prerequisites</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#damon-enabled-kernel">DAMON-enabled Kernel</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#damo-damon-operator">DAMO: DAMON Operator</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#kernel">Kernel</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#user-space-tool">User Space Tool</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="#recording-data-access-patterns">Recording Data Access Patterns</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#visualizing-the-recorded-access-patterns">Visualizing The Recorded Access Patterns</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#visualizing-recorded-patterns">Visualizing Recorded Patterns</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="guide.html">The Beginner’s Guide</a></li>
@@ -182,14 +183,26 @@
             
   <div class="section" id="getting-started">
 <h1>Getting Started<a class="headerlink" href="#getting-started" title="Permalink to this headline">¶</a></h1>
-<p>This document briefly describes how you can use the main features of DAMON by
-demonstrating use of a DAMON user space tool.  Please note that this document
-describes only a part of the features for brevity.  Refer to <a class="reference internal" href="usage.html"><span class="doc">Detailed Usages</span></a> for
-the full description.</p>
+<p>This document briefly describes how you can use DAMON by demonstrating use of a
+user space tool.  Please note that this document describes only a part of the
+features for brevity.  Please refer to <a class="reference internal" href="usage.html"><span class="doc">Detailed Usages</span></a> for more details.</p>
+<div class="section" id="tl-dr">
+<h2>TL; DR<a class="headerlink" href="#tl-dr" title="Permalink to this headline">¶</a></h2>
+<p>Simply follow below 5 lines of code.  Don’t forget replacing <code class="docutils literal notranslate"><span class="pre">&lt;your</span>
+<span class="pre">workload&gt;</span></code> with your <em>real</em> workload, though.</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>$ git clone https://github.com/sjp38/linux -b damon/master
+/* build the kernel with CONFIG_DAMON=y, install, reboot */
+$ cd linux/tools/damon
+$ ./damo record $(pidof &lt;your workload&gt;)
+$ ./damo report heats --heatmap access_pattern.pdf
+$ ./damo report wss --range 0 101 1 --plot wss_dist.pdf
+</pre></div>
+</div>
+</div>
 <div class="section" id="prerequisites">
 <h2>Prerequisites<a class="headerlink" href="#prerequisites" title="Permalink to this headline">¶</a></h2>
-<div class="section" id="damon-enabled-kernel">
-<h3>DAMON-enabled Kernel<a class="headerlink" href="#damon-enabled-kernel" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="kernel">
+<h3>Kernel<a class="headerlink" href="#kernel" title="Permalink to this headline">¶</a></h3>
 <p>You should first ensure your system is running on a kernel built with
 <code class="docutils literal notranslate"><span class="pre">CONFIG_DAMON</span></code>.  If the value is set as <code class="docutils literal notranslate"><span class="pre">m</span></code>, you should load the module
 first:</p>
@@ -197,12 +210,13 @@ first:</p>
 </pre></div>
 </div>
 </div>
-<div class="section" id="damo-damon-operator">
-<h3>DAMO: DAMON Operator<a class="headerlink" href="#damo-damon-operator" title="Permalink to this headline">¶</a></h3>
-<p>For the demonstration, we will use DAMON Operator (DAMO), the reference
-implementation of the DAMON user space tool.  It is located at
-<code class="docutils literal notranslate"><span class="pre">tools/damon/damo</span></code> of the kernel source tree.  We assume that you set
-<code class="docutils literal notranslate"><span class="pre">$PATH</span></code> to point it.  The <code class="docutils literal notranslate"><span class="pre">$PATH</span></code> setting is not mandatory, though.</p>
+<div class="section" id="user-space-tool">
+<h3>User Space Tool<a class="headerlink" href="#user-space-tool" title="Permalink to this headline">¶</a></h3>
+<p>For the demonstration, we will use a user space tool for convenient use of
+DAMON, called DAMON Operator (DAMO).  It is located at <code class="docutils literal notranslate"><span class="pre">tools/damon/damo</span></code> of
+the kernel source tree.  We assume that you set <code class="docutils literal notranslate"><span class="pre">$PATH</span></code> to point it.  The
+<code class="docutils literal notranslate"><span class="pre">$PATH</span></code> setting is not mandatory but we make the assumption here for brevity
+of below examples.</p>
 <p>Because DAMO is using the debugfs interface (refer to <a class="reference internal" href="usage.html"><span class="doc">Detailed Usages</span></a> for the
 detail) of DAMON, you should also ensure debugfs is mounted.  Mount it manually
 as below:</p>
@@ -218,34 +232,38 @@ automatically mount debugfs from next booting:</p>
 </div>
 <div class="section" id="recording-data-access-patterns">
 <h2>Recording Data Access Patterns<a class="headerlink" href="#recording-data-access-patterns" title="Permalink to this headline">¶</a></h2>
-<p>Below commands record memory access pattern of an artifical memory access
-generator program in a binary file, <code class="docutils literal notranslate"><span class="pre">damon.data</span></code>.  The program will access
-two 100 MiB memory regions in rotation.:</p>
+<p>Below commands record memory access pattern of a program, <code class="docutils literal notranslate"><span class="pre">masim</span></code> and save it
+in a file, <code class="docutils literal notranslate"><span class="pre">damon.data</span></code>.  The program will access two 100 MiB memory regions
+one by one.</p>
 <div class="highlight-none notranslate"><div class="highlight"><pre><span></span>$ git clone https://github.com/sjp38/masim
-$ cd masim; make; ./masim ./configs/zigzag.cfg
-$ damo record -o damon.data $(pidof masim)
+$ cd masim; make; ./masim ./configs/zigzag.cfg &amp;
+$ sudo damo record -o damon.data $(pidof masim)
 </pre></div>
 </div>
+<p>The first two lines of commands start the monitoring target process in
+background.  You can substitute this with your real workload.  The last line
+asks <code class="docutils literal notranslate"><span class="pre">damo</span> <span class="pre">record</span></code> to record the access pattern by passing the process id.</p>
 </div>
-<div class="section" id="visualizing-the-recorded-access-patterns">
-<h2>Visualizing The Recorded Access Patterns<a class="headerlink" href="#visualizing-the-recorded-access-patterns" title="Permalink to this headline">¶</a></h2>
-<p>Below three commands visualizes the recorded access patterns file into three
-image files, namely <code class="docutils literal notranslate"><span class="pre">access_pattern_heatmap.png</span></code>, <code class="docutils literal notranslate"><span class="pre">wss_dist.png</span></code> and
-<code class="docutils literal notranslate"><span class="pre">wss_chron_change.png</span></code>.:</p>
-<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>$ damo report heats --heatmap access_pattern_heatmap.png
+<div class="section" id="visualizing-recorded-patterns">
+<h2>Visualizing Recorded Patterns<a class="headerlink" href="#visualizing-recorded-patterns" title="Permalink to this headline">¶</a></h2>
+<p>Below three commands visualize the recorded access patterns into three
+image files, <code class="docutils literal notranslate"><span class="pre">access_pattern_heatmap.png</span></code>, <code class="docutils literal notranslate"><span class="pre">wss_dist.png</span></code> and
+<code class="docutils literal notranslate"><span class="pre">wss_chron_change.png</span></code>.</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>$ damo report heats --heatmap -i damon.data access_pattern_heatmap.png
 $ damo report wss --range 0 101 1 --plot wss_dist.png
 $ damo report wss --range 0 101 1 --sortby time --plot wss_chron_change.png
 </pre></div>
 </div>
-<p><code class="docutils literal notranslate"><span class="pre">access_pattern_heatmap.png</span></code> will show the data access pattern in heatmap,
+<ul class="simple">
+<li><code class="docutils literal notranslate"><span class="pre">access_pattern_heatmap.png</span></code> will show the data access pattern in heatmap,
 which shows when (x-axis) what memory region (y-axis) is how frequently
-accessed (color).
-<code class="docutils literal notranslate"><span class="pre">wss_dist.png</span></code> will show the distribution of the working set size.
-<code class="docutils literal notranslate"><span class="pre">wss_chron_change.png</span></code> will show how the working set size has chronologically
-changed.</p>
-<p>Below are the three images made by above commands.
-You can show those made with other realistic workloads at external web pages
-<a class="footnote-reference" href="#id4" id="id1">[1]</a>, <a class="footnote-reference" href="#id5" id="id2">[2]</a>, and <a class="footnote-reference" href="#id6" id="id3">[3]</a>.</p>
+accessed (color).</li>
+<li><code class="docutils literal notranslate"><span class="pre">wss_dist.png</span></code> will show the distribution of the working set size.</li>
+<li><code class="docutils literal notranslate"><span class="pre">wss_chron_change.png</span></code> will show how the working set size has
+chronologically changed.</li>
+</ul>
+<p>Below are the three images.  You can show those made with other realistic
+workloads at external web pages <a class="footnote-reference" href="#id4" id="id1">[1]</a>, <a class="footnote-reference" href="#id5" id="id2">[2]</a>, <a class="footnote-reference" href="#id6" id="id3">[3]</a>.</p>
 <table border="1" class="docutils">
 <colgroup>
 <col width="33%" />

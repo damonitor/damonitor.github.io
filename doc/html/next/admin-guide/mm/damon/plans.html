@@ -194,14 +194,17 @@ seen in an external web page <a class="footnote-reference" href="#id4" id="id1">
 <div class="section" id="support-various-address-spaces">
 <h2>Support Various Address Spaces<a class="headerlink" href="#support-various-address-spaces" title="Permalink to this headline">¶</a></h2>
 <p>Currently, DAMON supports only virtual memory address spaces because it
-utilizes PTE Accessed bits as its low level access check primitive.  However,
-the core design of DAMON is in separated higher layer.  In a future, therefore,
-DAMON will entirely decouple those layers and make the lower level configurable
-so that it can support various address spaces including physical memory.  The
-configuration will be highly flexible so that users can assemble the primitives
-implemented by themselves for their special usecase.</p>
-<p>Monitoring of clean/dirty/entire page cache, NUMA nodes, specific files, or
-block devices would be examples of such usecases.</p>
+utilizes PTE Accessed bits as its low level access check primitive and <code class="docutils literal notranslate"><span class="pre">struct</span>
+<span class="pre">vma</span></code> as a way to address the monitoring target regions.  However, the core
+idea of DAMON is in separated higher layer.  Therefore, DAMON can support other
+various address spaces by chaning the two low primitives to others for the
+address spaces.</p>
+<p>In a future, DAMON will make the lower level primitives configurable so that it
+can support various address spaces including physical memory.  The
+configuration will be highly flexible so that users can even implement the
+primitives by themselves for their special usecase.  Monitoring of
+clean/dirty/entire page cache, NUMA nodes, specific files, or block devices
+would be examples of such usecases.</p>
 <p>An RFC patchset for this plan is available <a class="footnote-reference" href="#id6" id="id3">[3]</a>.</p>
 <table class="docutils footnote" frame="void" id="id4" rules="none">
 <colgroup><col class="label" /><col /></colgroup>
