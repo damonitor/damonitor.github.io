@@ -1,0 +1,363 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Graphs &mdash; The Linux Kernel  documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript">
+          var DOCUMENTATION_OPTIONS = {
+              URL_ROOT:'../../../',
+              VERSION:'',
+              LANGUAGE:'None',
+              COLLAPSE_INDEX:false,
+              FILE_SUFFIX:'.html',
+              HAS_SOURCE:  true,
+              SOURCELINK_SUFFIX: '.txt'
+          };
+      </script>
+        <script type="text/javascript" src="../../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/theme_overrides.css" type="text/css" />
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home"> The Linux Kernel
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                5.6.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../admin-guide/mm/damon/index.html">DAMON: Data Access MONitor</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">The Linux Kernel</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../index.html">Docs</a> &raquo;</li>
+        
+      <li>Graphs</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../../../_sources/firmware-guide/acpi/dsd/graph.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="graphs">
+<h1>Graphs<a class="headerlink" href="#graphs" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="dsd">
+<h2>_DSD<a class="headerlink" href="#dsd" title="Permalink to this headline">¶</a></h2>
+<p>_DSD (Device Specific Data) [7] is a predefined ACPI device
+configuration object that can be used to convey information on
+hardware features which are not specifically covered by the ACPI
+specification [1][6]. There are two _DSD extensions that are relevant
+for graphs: property [4] and hierarchical data extensions [5]. The
+property extension provides generic key-value pairs whereas the
+hierarchical data extension supports nodes with references to other
+nodes, forming a tree. The nodes in the tree may contain properties as
+defined by the property extension. The two extensions together provide
+a tree-like structure with zero or more properties (key-value pairs)
+in each node of the tree.</p>
+<p>The data structure may be accessed at runtime by using the device_*
+and fwnode_* functions defined in include/linux/fwnode.h .</p>
+<p>Fwnode represents a generic firmware node object. It is independent on
+the firmware type. In ACPI, fwnodes are _DSD hierarchical data
+extensions objects. A device’s _DSD object is represented by an
+fwnode.</p>
+<p>The data structure may be referenced to elsewhere in the ACPI tables
+by using a hard reference to the device itself and an index to the
+hierarchical data extension array on each depth.</p>
+</div>
+<div class="section" id="ports-and-endpoints">
+<h2>Ports and endpoints<a class="headerlink" href="#ports-and-endpoints" title="Permalink to this headline">¶</a></h2>
+<p>The port and endpoint concepts are very similar to those in Devicetree
+[3]. A port represents an interface in a device, and an endpoint
+represents a connection to that interface.</p>
+<p>All port nodes are located under the device’s “_DSD” node in the hierarchical
+data extension tree. The data extension related to each port node must begin
+with “port” and must be followed by the “&#64;” character and the number of the
+port as its key. The target object it refers to should be called “PRTX”, where
+“X” is the number of the port. An example of such a package would be:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>Package() { &quot;port@4&quot;, &quot;PRT4&quot; }
+</pre></div>
+</div>
+<p>Further on, endpoints are located under the port nodes. The hierarchical
+data extension key of the endpoint nodes must begin with
+“endpoint” and must be followed by the “&#64;” character and the number of the
+endpoint. The object it refers to should be called “EPXY”, where “X” is the
+number of the port and “Y” is the number of the endpoint. An example of such a
+package would be:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>Package() { &quot;endpoint@0&quot;, &quot;EP40&quot; }
+</pre></div>
+</div>
+<p>Each port node contains a property extension key “port”, the value of which is
+the number of the port. Each endpoint is similarly numbered with a property
+extension key “reg”, the value of which is the number of the endpoint. Port
+numbers must be unique within a device and endpoint numbers must be unique
+within a port. If a device object may only has a single port, then the number
+of that port shall be zero. Similarly, if a port may only have a single
+endpoint, the number of that endpoint shall be zero.</p>
+<p>The endpoint reference uses property extension with “remote-endpoint” property
+name followed by a reference in the same package. Such references consist of
+the remote device reference, the first package entry of the port data extension
+reference under the device and finally the first package entry of the endpoint
+data extension reference under the port. Individual references thus appear as:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>Package() { device, &quot;port@X&quot;, &quot;endpoint@Y&quot; }
+</pre></div>
+</div>
+<p>In the above example, “X” is the number of the port and “Y” is the number of
+the endpoint.</p>
+<p>The references to endpoints must be always done both ways, to the
+remote endpoint and back from the referred remote endpoint node.</p>
+<p>A simple example of this is show below:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>Scope (\_SB.PCI0.I2C2)
+{
+    Device (CAM0)
+    {
+        Name (_DSD, Package () {
+            ToUUID(&quot;daffd814-6eba-4d8c-8a91-bc9bbf4aa301&quot;),
+            Package () {
+                Package () { &quot;compatible&quot;, Package () { &quot;nokia,smia&quot; } },
+            },
+            ToUUID(&quot;dbb8e3e6-5886-4ba6-8795-1319f52a966b&quot;),
+            Package () {
+                Package () { &quot;port@0&quot;, &quot;PRT0&quot; },
+            }
+        })
+        Name (PRT0, Package() {
+            ToUUID(&quot;daffd814-6eba-4d8c-8a91-bc9bbf4aa301&quot;),
+            Package () {
+                Package () { &quot;reg&quot;, 0 },
+            },
+            ToUUID(&quot;dbb8e3e6-5886-4ba6-8795-1319f52a966b&quot;),
+            Package () {
+                Package () { &quot;endpoint@0&quot;, &quot;EP00&quot; },
+            }
+        })
+        Name (EP00, Package() {
+            ToUUID(&quot;daffd814-6eba-4d8c-8a91-bc9bbf4aa301&quot;),
+            Package () {
+                Package () { &quot;reg&quot;, 0 },
+                Package () { &quot;remote-endpoint&quot;, Package() { \_SB.PCI0.ISP, &quot;port@4&quot;, &quot;endpoint@0&quot; } },
+            }
+        })
+    }
+}
+
+Scope (\_SB.PCI0)
+{
+    Device (ISP)
+    {
+        Name (_DSD, Package () {
+            ToUUID(&quot;dbb8e3e6-5886-4ba6-8795-1319f52a966b&quot;),
+            Package () {
+                Package () { &quot;port@4&quot;, &quot;PRT4&quot; },
+            }
+        })
+
+        Name (PRT4, Package() {
+            ToUUID(&quot;daffd814-6eba-4d8c-8a91-bc9bbf4aa301&quot;),
+            Package () {
+                Package () { &quot;reg&quot;, 4 }, /* CSI-2 port number */
+            },
+            ToUUID(&quot;dbb8e3e6-5886-4ba6-8795-1319f52a966b&quot;),
+            Package () {
+                Package () { &quot;endpoint@0&quot;, &quot;EP40&quot; },
+            }
+        })
+
+        Name (EP40, Package() {
+            ToUUID(&quot;daffd814-6eba-4d8c-8a91-bc9bbf4aa301&quot;),
+            Package () {
+                Package () { &quot;reg&quot;, 0 },
+                Package () { &quot;remote-endpoint&quot;, Package () { \_SB.PCI0.I2C2.CAM0, &quot;port@0&quot;, &quot;endpoint@0&quot; } },
+            }
+        })
+    }
+}
+</pre></div>
+</div>
+<p>Here, the port 0 of the “CAM0” device is connected to the port 4 of
+the “ISP” device and vice versa.</p>
+</div>
+<div class="section" id="references">
+<h2>References<a class="headerlink" href="#references" title="Permalink to this headline">¶</a></h2>
+<dl class="docutils">
+<dt>[1] _DSD (Device Specific Data) Implementation Guide.</dt>
+<dd><a class="reference external" href="http://www.uefi.org/sites/default/files/resources/_DSD-implementation-guide-toplevel-1_1.htm">http://www.uefi.org/sites/default/files/resources/_DSD-implementation-guide-toplevel-1_1.htm</a>,
+referenced 2016-10-03.</dd>
+</dl>
+<p>[2] Devicetree. <a class="reference external" href="http://www.devicetree.org">http://www.devicetree.org</a>, referenced 2016-10-03.</p>
+<p>[3]&nbsp;Documentation/devicetree/bindings/graph.txt</p>
+<dl class="docutils">
+<dt>[4] Device Properties UUID For _DSD.</dt>
+<dd><a class="reference external" href="http://www.uefi.org/sites/default/files/resources/_DSD-device-properties-UUID.pdf">http://www.uefi.org/sites/default/files/resources/_DSD-device-properties-UUID.pdf</a>,
+referenced 2016-10-04.</dd>
+<dt>[5] Hierarchical Data Extension UUID For _DSD.</dt>
+<dd><a class="reference external" href="http://www.uefi.org/sites/default/files/resources/_DSD-hierarchical-data-extension-UUID-v1.1.pdf">http://www.uefi.org/sites/default/files/resources/_DSD-hierarchical-data-extension-UUID-v1.1.pdf</a>,
+referenced 2016-10-04.</dd>
+<dt>[6] Advanced Configuration and Power Interface Specification.</dt>
+<dd><a class="reference external" href="http://www.uefi.org/sites/default/files/resources/ACPI_6_1.pdf">http://www.uefi.org/sites/default/files/resources/ACPI_6_1.pdf</a>,
+referenced 2016-10-04.</dd>
+<dt>[7] _DSD Device Properties Usage Rules.</dt>
+<dd><a class="reference internal" href="../DSD-properties-rules.html"><span class="doc">_DSD Device Properties Usage Rules</span></a></dd>
+</dl>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright The kernel development community
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>
