@@ -178,6 +178,9 @@
             
   <div class="section" id="api-reference">
 <h1>API Reference<a class="headerlink" href="#api-reference" title="Permalink to this headline">¶</a></h1>
+<p>Kernel space programs can use every feature of DAMON using below APIs.  All you
+need to do is including <code class="docutils literal notranslate"><span class="pre">damon.h</span></code>, which is located in <code class="docutils literal notranslate"><span class="pre">include/linux/</span></code> of
+the source tree.</p>
 <div class="section" id="structures">
 <h2>Structures<a class="headerlink" href="#structures" title="Permalink to this headline">¶</a></h2>
 <dl class="type">
@@ -269,15 +272,15 @@ enum <code class="descname">damos_action</code><a class="headerlink" href="#c.da
 <p><strong>Constants</strong></p>
 <dl class="docutils">
 <dt><code class="docutils literal notranslate"><span class="pre">DAMOS_WILLNEED</span></code></dt>
-<dd>Call madvise() for the region with MADV_WILLNEED.</dd>
+<dd>Call <code class="docutils literal notranslate"><span class="pre">madvise()</span></code> for the region with MADV_WILLNEED.</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">DAMOS_COLD</span></code></dt>
-<dd>Call madvise() for the region with MADV_COLD.</dd>
+<dd>Call <code class="docutils literal notranslate"><span class="pre">madvise()</span></code> for the region with MADV_COLD.</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">DAMOS_PAGEOUT</span></code></dt>
-<dd>Call madvise() for the region with MADV_PAGEOUT.</dd>
+<dd>Call <code class="docutils literal notranslate"><span class="pre">madvise()</span></code> for the region with MADV_PAGEOUT.</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">DAMOS_HUGEPAGE</span></code></dt>
-<dd>Call madvise() for the region with MADV_HUGEPAGE.</dd>
+<dd>Call <code class="docutils literal notranslate"><span class="pre">madvise()</span></code> for the region with MADV_HUGEPAGE.</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">DAMOS_NOHUGEPAGE</span></code></dt>
-<dd>Call madvise() for the region with MADV_NOHUGEPAGE.</dd>
+<dd>Call <code class="docutils literal notranslate"><span class="pre">madvise()</span></code> for the region with MADV_NOHUGEPAGE.</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">DAMOS_STAT</span></code></dt>
 <dd>Do nothing but count the stat.</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">DAMOS_ACTION_LEN</span></code></dt>
@@ -311,9 +314,9 @@ struct <code class="descname">damos</code><a class="headerlink" href="#c.damos" 
 <dt><code class="docutils literal notranslate"><span class="pre">max_sz_region</span></code></dt>
 <dd>Maximum size of target regions.</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">min_nr_accesses</span></code></dt>
-<dd>Minimum ‘-&gt;nr_accesses’ of target regions.</dd>
+<dd>Minimum <code class="docutils literal notranslate"><span class="pre">-&gt;nr_accesses</span></code> of target regions.</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">max_nr_accesses</span></code></dt>
-<dd>Maximum ‘-&gt;nr_accesses’ of target regions.</dd>
+<dd>Maximum <code class="docutils literal notranslate"><span class="pre">-&gt;nr_accesses</span></code> of target regions.</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">min_age_region</span></code></dt>
 <dd>Minimum age of target regions.</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">max_age_region</span></code></dt>
@@ -325,7 +328,7 @@ struct <code class="descname">damos</code><a class="headerlink" href="#c.damos" 
 <dt><code class="docutils literal notranslate"><span class="pre">stat_sz</span></code></dt>
 <dd>Total size of regions that this scheme is applied.</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">list</span></code></dt>
-<dd>Link for sibling schemes.</dd>
+<dd>List head for sibling schemes.</dd>
 </dl>
 <p><strong>Description</strong></p>
 <p>For each aggregation interval, DAMON applies <strong>action</strong> to monitoring target
@@ -407,15 +410,14 @@ struct <code class="descname">damon_ctx</code><a class="headerlink" href="#c.dam
 <dd>Called for each aggregation interval.</dd>
 </dl>
 <p><strong>Description</strong></p>
-<p>For each monitoring request (<code class="docutils literal notranslate"><span class="pre">start_damon()</span></code>), a kernel thread for the
+<p>For each monitoring request (<a class="reference internal" href="#c.damon_start" title="damon_start"><code class="xref c c-func docutils literal notranslate"><span class="pre">damon_start()</span></code></a>), a kernel thread for the
 monitoring is created.  The pointer to the thread is stored in <strong>kdamond</strong>.</p>
 <p>For each <strong>sample_interval</strong>, DAMON checks whether each region is accessed or
 not.  It aggregates and keeps the access information (number of accesses to
 each region) for <strong>aggr_interval</strong> time.  DAMON also checks whether the target
-memory regions need update (e.g., by mmap() calls from the application, in
-case of virtual memory monitoring) and applies the changes for each
-<strong>regions_update_interval</strong>.
-All time intervals are in micro-seconds.</p>
+memory regions need update (e.g., by <code class="docutils literal notranslate"><span class="pre">mmap()</span></code> calls from the application,
+in case of virtual memory monitoring) and applies the changes for each
+<strong>regions_update_interval</strong>.  All time intervals are in micro-seconds.</p>
 <p>If <strong>rbuf</strong>, <strong>rbuf_len</strong>, and <strong>rfile_path</strong> are set, the monitored results are
 automatically stored in <strong>rfile_path</strong> file.</p>
 <p>The monitoring thread sets <strong>kdamond</strong> to NULL when it terminates.  Therefore,
