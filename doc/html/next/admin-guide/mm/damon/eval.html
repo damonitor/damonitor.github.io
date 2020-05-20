@@ -189,20 +189,17 @@
 <h1>Evaluation<a class="headerlink" href="#evaluation" title="Permalink to this headline">¶</a></h1>
 <div class="section" id="setup">
 <h2>Setup<a class="headerlink" href="#setup" title="Permalink to this headline">¶</a></h2>
-<p>On my personal QEMU/KVM based virtual machine on an Intel i7 host machine
-running Ubuntu 18.04, I measure runtime and consumed system memory while
-running various realistic workloads with several configurations.  I use 13 and
-12 workloads in PARSEC3 <a class="footnote-reference" href="#id9" id="id1">[3]</a> and SPLASH-2X <a class="footnote-reference" href="#id10" id="id2">[4]</a> benchmark suites, respectively.  I
-personally use another wrapper scripts <a class="footnote-reference" href="#id11" id="id3">[5]</a> for setup and run of the workloads.
-On top of this patchset, we also applied the DAMON-based operation schemes
-patchset <a class="footnote-reference" href="#id12" id="id4">[6]</a> for this evaluation.</p>
+<p>On a QEMU/KVM based virtual machine hosted by an Intel i7 host machine running
+Ubuntu 18.04, I measure runtime and consumed system memory while running
+various realistic workloads with several configurations.  I use 13 and 12
+workloads in PARSEC3 <a class="footnote-reference" href="#id7" id="id1">[3]</a> and SPLASH-2X <a class="footnote-reference" href="#id8" id="id2">[4]</a> benchmark suites, respectively.  I
+use another wrapper scripts <a class="footnote-reference" href="#id9" id="id3">[5]</a> for convenient setup and run of the workloads.</p>
 <div class="section" id="measurement">
 <h3>Measurement<a class="headerlink" href="#measurement" title="Permalink to this headline">¶</a></h3>
 <p>For the measurement of the amount of consumed memory in system global scope, I
 drop caches before starting each of the workloads and monitor ‘MemFree’ in the
 ‘/proc/meminfo’ file.  To make results more stable, I repeat the runs 5 times
-and average results.  You can get stdev, min, and max of the numbers among the
-repeated runs in appendix below.</p>
+and average results.</p>
 </div>
 <div class="section" id="configurations">
 <h3>Configurations<a class="headerlink" href="#configurations" title="Permalink to this headline">¶</a></h3>
@@ -211,13 +208,13 @@ repeated runs in appendix below.</p>
 <li>orig: Linux v5.5 with ‘madvise’ THP policy</li>
 <li>rec: ‘orig’ plus DAMON running with record feature</li>
 <li>thp: same with ‘orig’, but use ‘always’ THP policy</li>
-<li>ethp: ‘orig’ plus a DAMON operation scheme <a class="footnote-reference" href="#id12" id="id5">[6]</a>, ‘efficient THP’</li>
-<li>prcl: ‘orig’ plus a DAMON operation scheme, ‘proactive reclaim <a class="footnote-reference" href="#id13" id="id6">[7]</a>’</li>
+<li>ethp: ‘orig’ plus a DAMON operation scheme, ‘efficient THP’</li>
+<li>prcl: ‘orig’ plus a DAMON operation scheme, ‘proactive reclaim <a class="footnote-reference" href="#id10" id="id4">[6]</a>’</li>
 </ul>
 <p>I use ‘rec’ for measurement of DAMON overheads to target workloads and system
 memory.  The remaining configs including ‘thp’, ‘ethp’, and ‘prcl’ are for
 measurement of DAMON monitoring accuracy.</p>
-<p>‘ethp’ and ‘prcl’ is simple DAMON-based operation schemes developed for
+<p>‘ethp’ and ‘prcl’ are simple DAMON-based operation schemes developed for
 proof of concepts of DAMON.  ‘ethp’ reduces memory space waste of THP by using
 DAMON for decision of promotions and demotion for huge pages, while ‘prcl’ is
 as similar as the original work.  Those are implemented as below:</p>
@@ -234,56 +231,56 @@ as similar as the original work.  Those are implemented as below:</p>
 <p>Note that both ‘ethp’ and ‘prcl’ are designed with my only straightforward
 intuition, because those are for only proof of concepts and monitoring accuracy
 of DAMON.  In other words, those are not for production.  For production use,
-those should be tuned more.</p>
-<table class="docutils footnote" frame="void" id="id7" rules="none">
+those should be more tuned.</p>
+<table class="docutils footnote" frame="void" id="id5" rules="none">
 <colgroup><col class="label" /><col /></colgroup>
 <tbody valign="top">
 <tr><td class="label">[1]</td><td>“Redis latency problems troubleshooting”, <a class="reference external" href="https://redis.io/topics/latency">https://redis.io/topics/latency</a></td></tr>
 </tbody>
 </table>
-<table class="docutils footnote" frame="void" id="id8" rules="none">
+<table class="docutils footnote" frame="void" id="id6" rules="none">
 <colgroup><col class="label" /><col /></colgroup>
 <tbody valign="top">
 <tr><td class="label">[2]</td><td>“Disable Transparent Huge Pages (THP)”,
 <a class="reference external" href="https://docs.mongodb.com/manual/tutorial/transparent-huge-pages/">https://docs.mongodb.com/manual/tutorial/transparent-huge-pages/</a></td></tr>
 </tbody>
 </table>
-<table class="docutils footnote" frame="void" id="id9" rules="none">
+<table class="docutils footnote" frame="void" id="id7" rules="none">
 <colgroup><col class="label" /><col /></colgroup>
 <tbody valign="top">
 <tr><td class="label"><a class="fn-backref" href="#id1">[3]</a></td><td>“The PARSEC Becnhmark Suite”, <a class="reference external" href="https://parsec.cs.princeton.edu/index.htm">https://parsec.cs.princeton.edu/index.htm</a></td></tr>
 </tbody>
 </table>
-<table class="docutils footnote" frame="void" id="id10" rules="none">
+<table class="docutils footnote" frame="void" id="id8" rules="none">
 <colgroup><col class="label" /><col /></colgroup>
 <tbody valign="top">
 <tr><td class="label"><a class="fn-backref" href="#id2">[4]</a></td><td>“SPLASH-2x”, <a class="reference external" href="https://parsec.cs.princeton.edu/parsec3-doc.htm#splash2x">https://parsec.cs.princeton.edu/parsec3-doc.htm#splash2x</a></td></tr>
 </tbody>
 </table>
-<table class="docutils footnote" frame="void" id="id11" rules="none">
+<table class="docutils footnote" frame="void" id="id9" rules="none">
 <colgroup><col class="label" /><col /></colgroup>
 <tbody valign="top">
 <tr><td class="label"><a class="fn-backref" href="#id3">[5]</a></td><td>“parsec3_on_ubuntu”, <a class="reference external" href="https://github.com/sjp38/parsec3_on_ubuntu">https://github.com/sjp38/parsec3_on_ubuntu</a></td></tr>
 </tbody>
 </table>
-<table class="docutils footnote" frame="void" id="id12" rules="none">
+<table class="docutils footnote" frame="void" id="id10" rules="none">
 <colgroup><col class="label" /><col /></colgroup>
 <tbody valign="top">
-<tr><td class="label">[6]</td><td><em>(<a class="fn-backref" href="#id4">1</a>, <a class="fn-backref" href="#id5">2</a>)</em> “[RFC v4 0/7] Implement Data Access Monitoring-based Memory Operation
-Schemes”,
-<a class="reference external" href="https://lore.kernel.org/linux-mm/20200303121406.20954-1-sjpark&#64;amazon.com/">https://lore.kernel.org/linux-mm/20200303121406.20954-1-sjpark&#64;amazon.com/</a></td></tr>
-</tbody>
-</table>
-<table class="docutils footnote" frame="void" id="id13" rules="none">
-<colgroup><col class="label" /><col /></colgroup>
-<tbody valign="top">
-<tr><td class="label"><a class="fn-backref" href="#id6">[7]</a></td><td>“Proactively reclaiming idle memory”, <a class="reference external" href="https://lwn.net/Articles/787611/">https://lwn.net/Articles/787611/</a></td></tr>
+<tr><td class="label"><a class="fn-backref" href="#id4">[6]</a></td><td>“Proactively reclaiming idle memory”, <a class="reference external" href="https://lwn.net/Articles/787611/">https://lwn.net/Articles/787611/</a></td></tr>
 </tbody>
 </table>
 </div>
 </div>
 <div class="section" id="results">
 <h2>Results<a class="headerlink" href="#results" title="Permalink to this headline">¶</a></h2>
+<p>DAMON is lightweight.  It increases system memory usage by only 0.03% and
+consumes less than 1% CPU time.  It slows target worloads down by only 0.7%.</p>
+<p>DAMON is accurate and useful for memory management optimizations.  The
+experimental DAMON-based operation scheme for THP, ‘ethp’, removes 63.12% of
+THP memory overheads while preserving 49.15% of THP speedup.  Another
+experimental DAMON-based ‘proactive reclamation’ implementation, ‘prcl’,
+reduces 85.85% of residentail sets and 21.98% of system memory footprint while
+incurring only 2.42% runtime overhead in best case (parsec3/freqmine).</p>
 <p>Below two tables show the measurement results.  The runtimes are in seconds
 while the memory usages are in KiB.  Each configurations except ‘orig’ shows
 its overhead relative to ‘orig’ in percent within parenthesises.:</p>
