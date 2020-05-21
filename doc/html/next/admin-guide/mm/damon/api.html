@@ -223,13 +223,13 @@ struct <code class="descname">damon_region</code><a class="headerlink" href="#c.
 <p><strong>Members</strong></p>
 <dl class="docutils">
 <dt><code class="docutils literal notranslate"><span class="pre">ar</span></code></dt>
-<dd>Address range of the region.</dd>
+<dd>The address range of the region.</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">sampling_addr</span></code></dt>
-<dd>Address of the sample for next access check.</dd>
+<dd>Address of the sample for the next access check.</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">nr_accesses</span></code></dt>
 <dd>Access frequency of this region.</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">list</span></code></dt>
-<dd>List head for sibling regions.</dd>
+<dd>List head for siblings.</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">age</span></code></dt>
 <dd>Age of this region.</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">last_nr_accesses</span></code></dt>
@@ -261,7 +261,7 @@ struct <code class="descname">damon_task</code><a class="headerlink" href="#c.da
 <dt><code class="docutils literal notranslate"><span class="pre">regions_list</span></code></dt>
 <dd>Head of the monitoring target regions of this task.</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">list</span></code></dt>
-<dd>List head for sibling tasks.</dd>
+<dd>List head for siblings.</dd>
 </dl>
 <dl class="type">
 <dt id="c.damos_action">
@@ -322,7 +322,7 @@ struct <code class="descname">damos</code><a class="headerlink" href="#c.damos" 
 <dt><code class="docutils literal notranslate"><span class="pre">max_age_region</span></code></dt>
 <dd>Maximum age of target regions.</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">action</span></code></dt>
-<dd>‘damo_action’ to be applied to the target regions.</dd>
+<dd><code class="xref c c-type docutils literal notranslate"><span class="pre">damo_action</span></code> to be applied to the target regions.</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">stat_count</span></code></dt>
 <dd>Total number of regions that this scheme is applied.</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">stat_sz</span></code></dt>
@@ -336,7 +336,7 @@ regions fit in the condition and updates the statistics.</p>
 <dl class="type">
 <dt id="c.damon_ctx">
 struct <code class="descname">damon_ctx</code><a class="headerlink" href="#c.damon_ctx" title="Permalink to this definition">¶</a></dt>
-<dd><p>Represents a context for each monitoring. This is the main interface that allows users set the attributes and get the results of the monitoring.</p>
+<dd><p>Represents a context for each monitoring. This is the main interface that allows users to set the attributes and get the results of the monitoring.</p>
 </dd></dl>
 
 <p><strong>Definition</strong></p>
@@ -369,15 +369,15 @@ struct <code class="descname">damon_ctx</code><a class="headerlink" href="#c.dam
 <p><strong>Members</strong></p>
 <dl class="docutils">
 <dt><code class="docutils literal notranslate"><span class="pre">sample_interval</span></code></dt>
-<dd>Time between each access sampling.</dd>
+<dd>The time between access samplings.</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">aggr_interval</span></code></dt>
-<dd>Time between monitoring results aggregation.</dd>
+<dd>The time between monitor results aggregations.</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">regions_update_interval</span></code></dt>
-<dd>Time between monitoring target region update.</dd>
+<dd>The time between monitor regions updates.</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">min_nr_regions</span></code></dt>
-<dd>Number of initial monitoring target regions.</dd>
+<dd>The number of initial monitoring regions.</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">max_nr_regions</span></code></dt>
-<dd>Maximum number of monitoring target regions.</dd>
+<dd>The maximum number of monitoring regions.</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">rbuf</span></code></dt>
 <dd>In-memory buffer for monitoring result recording.</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">rbuf_len</span></code></dt>
@@ -393,9 +393,9 @@ struct <code class="descname">damon_ctx</code><a class="headerlink" href="#c.dam
 <dt><code class="docutils literal notranslate"><span class="pre">kdamond_lock</span></code></dt>
 <dd>Mutex for the synchronizations with <strong>kdamond</strong>.</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">tasks_list</span></code></dt>
-<dd>Head of ‘struct damon_task’ list.</dd>
+<dd>Head of monitring target tasks (<a class="reference internal" href="#c.damon_task" title="damon_task"><code class="xref c c-type docutils literal notranslate"><span class="pre">damon_task</span></code></a>) list.</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">schemes_list</span></code></dt>
-<dd>Head of ‘struct damos’ list.</dd>
+<dd>Head of schemes (<a class="reference internal" href="#c.damos" title="damos"><code class="xref c c-type docutils literal notranslate"><span class="pre">damos</span></code></a>) list.</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">init_target_regions</span></code></dt>
 <dd>Constructs initial monitoring target regions.</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">update_target_regions</span></code></dt>

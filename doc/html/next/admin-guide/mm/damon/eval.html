@@ -187,6 +187,14 @@
             
   <div class="section" id="evaluation">
 <h1>Evaluation<a class="headerlink" href="#evaluation" title="Permalink to this headline">¶</a></h1>
+<p>DAMON is lightweight.  It increases system memory usage by only 0.03% and
+consumes less than 1% CPU time.  It slows target workloads down by only 0.7%.</p>
+<p>DAMON is accurate and useful for memory management optimizations.  An
+experimental DAMON-based operation scheme for THP, ‘ethp’, removes 63.12% of
+THP memory overheads while preserving 49.15% of THP speedup.  Another
+experimental DAMON-based ‘proactive reclamation’ implementation, ‘prcl’,
+reduces 85.85% of residential sets and 21.98% of system memory footprint while
+incurring only 2.42% runtime overhead in the best case (parsec3/freqmine).</p>
 <div class="section" id="setup">
 <h2>Setup<a class="headerlink" href="#setup" title="Permalink to this headline">¶</a></h2>
 <p>On a QEMU/KVM based virtual machine hosted by an Intel i7 host machine running
@@ -216,8 +224,8 @@ memory.  The remaining configs including ‘thp’, ‘ethp’, and ‘prcl’ a
 measurement of DAMON monitoring accuracy.</p>
 <p>‘ethp’ and ‘prcl’ are simple DAMON-based operation schemes developed for
 proof of concepts of DAMON.  ‘ethp’ reduces memory space waste of THP by using
-DAMON for decision of promotions and demotion for huge pages, while ‘prcl’ is
-as similar as the original work.  Those are implemented as below:</p>
+DAMON for the decision of promotions and demotion for huge pages, while ‘prcl’
+is as similar as the original work.  Those are implemented as below:</p>
 <div class="highlight-none notranslate"><div class="highlight"><pre><span></span># format: &lt;min/max size&gt; &lt;min/max frequency (0-100)&gt; &lt;min/max age&gt; &lt;action&gt;
 # ethp: Use huge pages if a region &gt;2MB shows &gt;5% access rate, use regular
 # pages if a region &gt;2MB shows &lt;5% access rate for &gt;1 second
@@ -229,7 +237,7 @@ as similar as the original work.  Those are implemented as below:</p>
 </pre></div>
 </div>
 <p>Note that both ‘ethp’ and ‘prcl’ are designed with my only straightforward
-intuition, because those are for only proof of concepts and monitoring accuracy
+intuition because those are for only proof of concepts and monitoring accuracy
 of DAMON.  In other words, those are not for production.  For production use,
 those should be more tuned.</p>
 <table class="docutils footnote" frame="void" id="id5" rules="none">
@@ -273,17 +281,9 @@ those should be more tuned.</p>
 </div>
 <div class="section" id="results">
 <h2>Results<a class="headerlink" href="#results" title="Permalink to this headline">¶</a></h2>
-<p>DAMON is lightweight.  It increases system memory usage by only 0.03% and
-consumes less than 1% CPU time.  It slows target worloads down by only 0.7%.</p>
-<p>DAMON is accurate and useful for memory management optimizations.  The
-experimental DAMON-based operation scheme for THP, ‘ethp’, removes 63.12% of
-THP memory overheads while preserving 49.15% of THP speedup.  Another
-experimental DAMON-based ‘proactive reclamation’ implementation, ‘prcl’,
-reduces 85.85% of residentail sets and 21.98% of system memory footprint while
-incurring only 2.42% runtime overhead in best case (parsec3/freqmine).</p>
 <p>Below two tables show the measurement results.  The runtimes are in seconds
-while the memory usages are in KiB.  Each configurations except ‘orig’ shows
-its overhead relative to ‘orig’ in percent within parenthesises.:</p>
+while the memory usages are in KiB.  Each configuration except ‘orig’ shows
+its overhead relative to ‘orig’ in percent within parenthesizes.:</p>
 <div class="highlight-none notranslate"><div class="highlight"><pre><span></span>runtime                 orig     rec      (overhead) thp      (overhead) ethp     (overhead) prcl     (overhead)
 parsec3/blackscholes    107.065  107.478  (0.39)     106.682  (-0.36)    107.365  (0.28)     111.811  (4.43)
 parsec3/bodytrack       79.256   79.450   (0.25)     78.645   (-0.77)    79.314   (0.07)     80.305   (1.32)
@@ -346,23 +346,23 @@ total                   40062200.000 40073700.000 (0.03)     42888000.000 (7.05)
 <h3>DAMON Overheads<a class="headerlink" href="#damon-overheads" title="Permalink to this headline">¶</a></h3>
 <p>In total, DAMON recording feature incurs 0.70% runtime overhead and 0.03%
 memory space overhead.</p>
-<p>For convenience test run of ‘rec’, I use a Python wrapper.  The wrapper
-constantly consumes about 10-15MB of memory.  This becomes high memory overhead
-if the target workload has small memory footprint.  Nonetheless, the overheads
-are not from DAMON, but from the wrapper, and thus should be ignored.  This
-fake memory overhead continues in ‘ethp’ and ‘prcl’, as those configurations
-are also using the Python wrapper.</p>
+<p>For a convenience test run of ‘rec’, I use a Python wrapper.  The wrapper
+constantly consumes about 10-15MB of memory.  This becomes a high memory
+overhead if the target workload has a small memory footprint.  Nonetheless, the
+overheads are not from DAMON, but from the wrapper, and thus should be ignored.
+This fake memory overhead continues in ‘ethp’ and ‘prcl’, as those
+configurations are also using the Python wrapper.</p>
 </div>
 <div class="section" id="efficient-thp">
 <h3>Efficient THP<a class="headerlink" href="#efficient-thp" title="Permalink to this headline">¶</a></h3>
 <p>THP ‘always’ enabled policy achieves 4.76% speedup but incurs 7.05% memory
-overhead.  It achieves 37.37% speedup in best case, but 81.79% memory overhead
-in worst case.  Interestingly, both the best and worst case are with
-‘splash2x/ocean_ncp’).</p>
+overhead.  It achieves 37.37% speedup in the best case, but 81.79% memory
+overhead in the worst case.  Interestingly, both the best and worst-case are
+with ‘splash2x/ocean_ncp’).</p>
 <p>The 2-lines implementation of data access monitoring based THP version (‘ethp’)
 shows 2.34% speedup and 2.60% memory overhead.  In other words, ‘ethp’ removes
 63.12% of THP memory waste while preserving 49.15% of THP speedup in total.  In
-case of the ‘splash2x/ocean_ncp’, ‘ethp’ removes 62.94% of THP memory waste
+the case of the ‘splash2x/ocean_ncp’, ‘ethp’ removes 62.94% of THP memory waste
 while preserving 57.37% of THP speedup.</p>
 </div>
 <div class="section" id="proactive-reclamation">
