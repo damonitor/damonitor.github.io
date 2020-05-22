@@ -504,25 +504,29 @@ saved in <code class="docutils literal notranslate"><span class="pre">/damon.dat
 would simply want the system to apply a memory management action to a memory
 region of a specific size having a specific access frequency for a specific
 time.  DAMON receives such formalized operation schemes from the user and
-applies those to the target processes.</p>
+applies those to the target processes.  It also counts the total number and
+size of regions that each scheme is applied.  This statistics can be used for
+online analysis or tuning of the schemes.</p>
 <p>Users can get and set the schemes by reading from and writing to <code class="docutils literal notranslate"><span class="pre">schemes</span></code>
-debugfs file.  To the file, each of the schemes should be represented in each
-line in below form:</p>
+debugfs file.  Reading the file also shows the statistics of each scheme.  To
+the file, each of the schemes should be represented in each line in below form:</p>
 <blockquote>
 <div>min-size max-size min-acc max-acc min-age max-age action</div></blockquote>
 <p>Bytes for the size of regions (<code class="docutils literal notranslate"><span class="pre">min-size</span></code> and <code class="docutils literal notranslate"><span class="pre">max-size</span></code>), number of
 monitored accesses per aggregate interval for access frequency (<code class="docutils literal notranslate"><span class="pre">min-acc</span></code> and
 <code class="docutils literal notranslate"><span class="pre">max-acc</span></code>), number of aggregate intervals for the age of regions (<code class="docutils literal notranslate"><span class="pre">min-age</span></code>
 and <code class="docutils literal notranslate"><span class="pre">max-age</span></code>), and a predefined integer for memory management actions should
-be used.  <code class="docutils literal notranslate"><span class="pre">madvise()</span></code> system calls with specific hints are currently
-available.  The numbers and their representing memory hints are as below:</p>
-<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>0   MADV_WILLNEED
-1   MADV_COLD
-2   MADV_PAGEOUT
-3   MADV_HUGEPAGE
-4   MADV_NOHUGEPAGE
-</pre></div>
-</div>
+be used.  The supported numbers and their meanings are as below.</p>
+<blockquote>
+<div><ul class="simple">
+<li>0: Call <code class="docutils literal notranslate"><span class="pre">madvise()</span></code> for the region with <code class="docutils literal notranslate"><span class="pre">MADV_WILLNEED</span></code></li>
+<li>1: Call <code class="docutils literal notranslate"><span class="pre">madvise()</span></code> for the region with <code class="docutils literal notranslate"><span class="pre">MADV_COLD</span></code></li>
+<li>2: Call <code class="docutils literal notranslate"><span class="pre">madvise()</span></code> for the region with <code class="docutils literal notranslate"><span class="pre">MADV_PAGEOUT</span></code></li>
+<li>3: Call <code class="docutils literal notranslate"><span class="pre">madvise()</span></code> for the region with <code class="docutils literal notranslate"><span class="pre">MADV_HUGEPAGE</span></code></li>
+<li>4: Call <code class="docutils literal notranslate"><span class="pre">madvise()</span></code> for the region with <code class="docutils literal notranslate"><span class="pre">MADV_NOHUGEPAGE</span></code></li>
+<li>5: Do nothing but count the statistics</li>
+</ul>
+</div></blockquote>
 <p>You can disable schemes by simply writing an empty string to the file.  For
 example, below commands applies a scheme saying “If a memory region larger than
 4 KiB (4096 0) is showing less than 5 accesses per aggregate interval (0 5) for
@@ -531,10 +535,12 @@ entered scheme again, and finally remove the scheme.</p>
 <div class="highlight-none notranslate"><div class="highlight"><pre><span></span># cd &lt;debugfs&gt;/damon
 # echo &quot;4096 0 0 5 5 0 2&quot; &gt; schemes
 # cat schemes
-4096 0 0 5 5 0 2
+4096 0 0 5 5 0 2 0 0
 # echo &gt; schemes
 </pre></div>
 </div>
+<p>The last two integers in the 4th line of above example is the total number and
+the total size of the regions that the scheme is applied.</p>
 </div>
 <div class="section" id="turning-on-off">
 <h3>Turning On/Off<a class="headerlink" href="#turning-on-off" title="Permalink to this headline">¶</a></h3>
