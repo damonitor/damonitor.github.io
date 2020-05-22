@@ -1,0 +1,451 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Queue sysfs files &mdash; The Linux Kernel  documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript">
+          var DOCUMENTATION_OPTIONS = {
+              URL_ROOT:'../',
+              VERSION:'',
+              LANGUAGE:'None',
+              COLLAPSE_INDEX:false,
+              FILE_SUFFIX:'.html',
+              HAS_SOURCE:  true,
+              SOURCELINK_SUFFIX: '.txt'
+          };
+      </script>
+        <script type="text/javascript" src="../_static/jquery.js"></script>
+        <script type="text/javascript" src="../_static/underscore.js"></script>
+        <script type="text/javascript" src="../_static/doctools.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/theme_overrides.css" type="text/css" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> The Linux Kernel
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                5.6.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../admin-guide/mm/damon/index.html">DAMON: Data Access MONitor</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">The Linux Kernel</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+      <li>Queue sysfs files</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/block/queue-sysfs.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="queue-sysfs-files">
+<h1>Queue sysfs files<a class="headerlink" href="#queue-sysfs-files" title="Permalink to this headline">¶</a></h1>
+<p>This text file will detail the queue files that are located in the sysfs tree
+for each block device. Note that stacked devices typically do not export
+any settings, since their queue merely functions are a remapping target.
+These files are the ones found in the /sys/block/xxx/queue/ directory.</p>
+<p>Files denoted with a RO postfix are readonly and the RW postfix means
+read-write.</p>
+<div class="section" id="add-random-rw">
+<h2>add_random (RW)<a class="headerlink" href="#add-random-rw" title="Permalink to this headline">¶</a></h2>
+<p>This file allows to turn off the disk entropy contribution. Default
+value of this file is ‘1’(on).</p>
+</div>
+<div class="section" id="chunk-sectors-ro">
+<h2>chunk_sectors (RO)<a class="headerlink" href="#chunk-sectors-ro" title="Permalink to this headline">¶</a></h2>
+<p>This has different meaning depending on the type of the block device.
+For a RAID device (dm-raid), chunk_sectors indicates the size in 512B sectors
+of the RAID volume stripe segment. For a zoned block device, either host-aware
+or host-managed, chunk_sectors indicates the size in 512B sectors of the zones
+of the device, with the eventual exception of the last zone of the device which
+may be smaller.</p>
+</div>
+<div class="section" id="dax-ro">
+<h2>dax (RO)<a class="headerlink" href="#dax-ro" title="Permalink to this headline">¶</a></h2>
+<p>This file indicates whether the device supports Direct Access (DAX),
+used by CPU-addressable storage to bypass the pagecache.  It shows ‘1’
+if true, ‘0’ if not.</p>
+</div>
+<div class="section" id="discard-granularity-ro">
+<h2>discard_granularity (RO)<a class="headerlink" href="#discard-granularity-ro" title="Permalink to this headline">¶</a></h2>
+<p>This shows the size of internal allocation of the device in bytes, if
+reported by the device. A value of ‘0’ means device does not support
+the discard functionality.</p>
+</div>
+<div class="section" id="discard-max-hw-bytes-ro">
+<h2>discard_max_hw_bytes (RO)<a class="headerlink" href="#discard-max-hw-bytes-ro" title="Permalink to this headline">¶</a></h2>
+<p>Devices that support discard functionality may have internal limits on
+the number of bytes that can be trimmed or unmapped in a single operation.
+The discard_max_bytes parameter is set by the device driver to the maximum
+number of bytes that can be discarded in a single operation. Discard
+requests issued to the device must not exceed this limit. A discard_max_bytes
+value of 0 means that the device does not support discard functionality.</p>
+</div>
+<div class="section" id="discard-max-bytes-rw">
+<h2>discard_max_bytes (RW)<a class="headerlink" href="#discard-max-bytes-rw" title="Permalink to this headline">¶</a></h2>
+<p>While discard_max_hw_bytes is the hardware limit for the device, this
+setting is the software limit. Some devices exhibit large latencies when
+large discards are issued, setting this value lower will make Linux issue
+smaller discards and potentially help reduce latencies induced by large
+discard operations.</p>
+</div>
+<div class="section" id="discard-zeroes-data-ro">
+<h2>discard_zeroes_data (RO)<a class="headerlink" href="#discard-zeroes-data-ro" title="Permalink to this headline">¶</a></h2>
+<p>Obsolete. Always zero.</p>
+</div>
+<div class="section" id="fua-ro">
+<h2>fua (RO)<a class="headerlink" href="#fua-ro" title="Permalink to this headline">¶</a></h2>
+<p>Whether or not the block driver supports the FUA flag for write requests.
+FUA stands for Force Unit Access. If the FUA flag is set that means that
+write requests must bypass the volatile cache of the storage device.</p>
+</div>
+<div class="section" id="hw-sector-size-ro">
+<h2>hw_sector_size (RO)<a class="headerlink" href="#hw-sector-size-ro" title="Permalink to this headline">¶</a></h2>
+<p>This is the hardware sector size of the device, in bytes.</p>
+</div>
+<div class="section" id="io-poll-rw">
+<h2>io_poll (RW)<a class="headerlink" href="#io-poll-rw" title="Permalink to this headline">¶</a></h2>
+<p>When read, this file shows whether polling is enabled (1) or disabled
+(0).  Writing ‘0’ to this file will disable polling for this device.
+Writing any non-zero value will enable this feature.</p>
+</div>
+<div class="section" id="io-poll-delay-rw">
+<h2>io_poll_delay (RW)<a class="headerlink" href="#io-poll-delay-rw" title="Permalink to this headline">¶</a></h2>
+<p>If polling is enabled, this controls what kind of polling will be
+performed. It defaults to -1, which is classic polling. In this mode,
+the CPU will repeatedly ask for completions without giving up any time.
+If set to 0, a hybrid polling mode is used, where the kernel will attempt
+to make an educated guess at when the IO will complete. Based on this
+guess, the kernel will put the process issuing IO to sleep for an amount
+of time, before entering a classic poll loop. This mode might be a
+little slower than pure classic polling, but it will be more efficient.
+If set to a value larger than 0, the kernel will put the process issuing
+IO to sleep for this amount of microseconds before entering classic
+polling.</p>
+</div>
+<div class="section" id="io-timeout-rw">
+<h2>io_timeout (RW)<a class="headerlink" href="#io-timeout-rw" title="Permalink to this headline">¶</a></h2>
+<p>io_timeout is the request timeout in milliseconds. If a request does not
+complete in this time then the block driver timeout handler is invoked.
+That timeout handler can decide to retry the request, to fail it or to start
+a device recovery strategy.</p>
+</div>
+<div class="section" id="iostats-rw">
+<h2>iostats (RW)<a class="headerlink" href="#iostats-rw" title="Permalink to this headline">¶</a></h2>
+<p>This file is used to control (on/off) the iostats accounting of the
+disk.</p>
+</div>
+<div class="section" id="logical-block-size-ro">
+<h2>logical_block_size (RO)<a class="headerlink" href="#logical-block-size-ro" title="Permalink to this headline">¶</a></h2>
+<p>This is the logical block size of the device, in bytes.</p>
+</div>
+<div class="section" id="max-discard-segments-ro">
+<h2>max_discard_segments (RO)<a class="headerlink" href="#max-discard-segments-ro" title="Permalink to this headline">¶</a></h2>
+<p>The maximum number of DMA scatter/gather entries in a discard request.</p>
+</div>
+<div class="section" id="max-hw-sectors-kb-ro">
+<h2>max_hw_sectors_kb (RO)<a class="headerlink" href="#max-hw-sectors-kb-ro" title="Permalink to this headline">¶</a></h2>
+<p>This is the maximum number of kilobytes supported in a single data transfer.</p>
+</div>
+<div class="section" id="max-integrity-segments-ro">
+<h2>max_integrity_segments (RO)<a class="headerlink" href="#max-integrity-segments-ro" title="Permalink to this headline">¶</a></h2>
+<p>Maximum number of elements in a DMA scatter/gather list with integrity
+data that will be submitted by the block layer core to the associated
+block driver.</p>
+</div>
+<div class="section" id="max-sectors-kb-rw">
+<h2>max_sectors_kb (RW)<a class="headerlink" href="#max-sectors-kb-rw" title="Permalink to this headline">¶</a></h2>
+<p>This is the maximum number of kilobytes that the block layer will allow
+for a filesystem request. Must be smaller than or equal to the maximum
+size allowed by the hardware.</p>
+</div>
+<div class="section" id="max-segments-ro">
+<h2>max_segments (RO)<a class="headerlink" href="#max-segments-ro" title="Permalink to this headline">¶</a></h2>
+<p>Maximum number of elements in a DMA scatter/gather list that is submitted
+to the associated block driver.</p>
+</div>
+<div class="section" id="max-segment-size-ro">
+<h2>max_segment_size (RO)<a class="headerlink" href="#max-segment-size-ro" title="Permalink to this headline">¶</a></h2>
+<p>Maximum size in bytes of a single element in a DMA scatter/gather list.</p>
+</div>
+<div class="section" id="minimum-io-size-ro">
+<h2>minimum_io_size (RO)<a class="headerlink" href="#minimum-io-size-ro" title="Permalink to this headline">¶</a></h2>
+<p>This is the smallest preferred IO size reported by the device.</p>
+</div>
+<div class="section" id="nomerges-rw">
+<h2>nomerges (RW)<a class="headerlink" href="#nomerges-rw" title="Permalink to this headline">¶</a></h2>
+<p>This enables the user to disable the lookup logic involved with IO
+merging requests in the block layer. By default (0) all merges are
+enabled. When set to 1 only simple one-hit merges will be tried. When
+set to 2 no merge algorithms will be tried (including one-hit or more
+complex tree/hash lookups).</p>
+</div>
+<div class="section" id="nr-requests-rw">
+<h2>nr_requests (RW)<a class="headerlink" href="#nr-requests-rw" title="Permalink to this headline">¶</a></h2>
+<p>This controls how many requests may be allocated in the block layer for
+read or write requests. Note that the total allocated number may be twice
+this amount, since it applies only to reads or writes (not the accumulated
+sum).</p>
+<p>To avoid priority inversion through request starvation, a request
+queue maintains a separate request pool per each cgroup when
+CONFIG_BLK_CGROUP is enabled, and this parameter applies to each such
+per-block-cgroup request pool.  IOW, if there are N block cgroups,
+each request queue may have up to N request pools, each independently
+regulated by nr_requests.</p>
+</div>
+<div class="section" id="nr-zones-ro">
+<h2>nr_zones (RO)<a class="headerlink" href="#nr-zones-ro" title="Permalink to this headline">¶</a></h2>
+<p>For zoned block devices (zoned attribute indicating “host-managed” or
+“host-aware”), this indicates the total number of zones of the device.
+This is always 0 for regular block devices.</p>
+</div>
+<div class="section" id="optimal-io-size-ro">
+<h2>optimal_io_size (RO)<a class="headerlink" href="#optimal-io-size-ro" title="Permalink to this headline">¶</a></h2>
+<p>This is the optimal IO size reported by the device.</p>
+</div>
+<div class="section" id="physical-block-size-ro">
+<h2>physical_block_size (RO)<a class="headerlink" href="#physical-block-size-ro" title="Permalink to this headline">¶</a></h2>
+<p>This is the physical block size of device, in bytes.</p>
+</div>
+<div class="section" id="read-ahead-kb-rw">
+<h2>read_ahead_kb (RW)<a class="headerlink" href="#read-ahead-kb-rw" title="Permalink to this headline">¶</a></h2>
+<p>Maximum number of kilobytes to read-ahead for filesystems on this block
+device.</p>
+</div>
+<div class="section" id="rotational-rw">
+<h2>rotational (RW)<a class="headerlink" href="#rotational-rw" title="Permalink to this headline">¶</a></h2>
+<p>This file is used to stat if the device is of rotational type or
+non-rotational type.</p>
+</div>
+<div class="section" id="rq-affinity-rw">
+<h2>rq_affinity (RW)<a class="headerlink" href="#rq-affinity-rw" title="Permalink to this headline">¶</a></h2>
+<p>If this option is ‘1’, the block layer will migrate request completions to the
+cpu “group” that originally submitted the request. For some workloads this
+provides a significant reduction in CPU cycles due to caching effects.</p>
+<p>For storage configurations that need to maximize distribution of completion
+processing setting this option to ‘2’ forces the completion to run on the
+requesting cpu (bypassing the “group” aggregation logic).</p>
+</div>
+<div class="section" id="scheduler-rw">
+<h2>scheduler (RW)<a class="headerlink" href="#scheduler-rw" title="Permalink to this headline">¶</a></h2>
+<p>When read, this file will display the current and available IO schedulers
+for this block device. The currently active IO scheduler will be enclosed
+in [] brackets. Writing an IO scheduler name to this file will switch
+control of this block device to that new IO scheduler. Note that writing
+an IO scheduler name to this file will attempt to load that IO scheduler
+module, if it isn’t already present in the system.</p>
+</div>
+<div class="section" id="write-cache-rw">
+<h2>write_cache (RW)<a class="headerlink" href="#write-cache-rw" title="Permalink to this headline">¶</a></h2>
+<p>When read, this file will display whether the device has write back
+caching enabled or not. It will return “write back” for the former
+case, and “write through” for the latter. Writing to this file can
+change the kernels view of the device, but it doesn’t alter the
+device state. This means that it might not be safe to toggle the
+setting from “write back” to “write through”, since that will also
+eliminate cache flushes issued by the kernel.</p>
+</div>
+<div class="section" id="write-same-max-bytes-ro">
+<h2>write_same_max_bytes (RO)<a class="headerlink" href="#write-same-max-bytes-ro" title="Permalink to this headline">¶</a></h2>
+<p>This is the number of bytes the device can write in a single write-same
+command.  A value of ‘0’ means write-same is not supported by this
+device.</p>
+</div>
+<div class="section" id="wbt-lat-usec-rw">
+<h2>wbt_lat_usec (RW)<a class="headerlink" href="#wbt-lat-usec-rw" title="Permalink to this headline">¶</a></h2>
+<p>If the device is registered for writeback throttling, then this file shows
+the target minimum read latency. If this latency is exceeded in a given
+window of time (see wb_window_usec), then the writeback throttling will start
+scaling back writes. Writing a value of ‘0’ to this file disables the
+feature. Writing a value of ‘-1’ to this file resets the value to the
+default setting.</p>
+</div>
+<div class="section" id="throttle-sample-time-rw">
+<h2>throttle_sample_time (RW)<a class="headerlink" href="#throttle-sample-time-rw" title="Permalink to this headline">¶</a></h2>
+<p>This is the time window that blk-throttle samples data, in millisecond.
+blk-throttle makes decision based on the samplings. Lower time means cgroups
+have more smooth throughput, but higher CPU overhead. This exists only when
+CONFIG_BLK_DEV_THROTTLING_LOW is enabled.</p>
+</div>
+<div class="section" id="write-zeroes-max-bytes-ro">
+<h2>write_zeroes_max_bytes (RO)<a class="headerlink" href="#write-zeroes-max-bytes-ro" title="Permalink to this headline">¶</a></h2>
+<p>For block drivers that support REQ_OP_WRITE_ZEROES, the maximum number of
+bytes that can be zeroed at once. The value 0 means that REQ_OP_WRITE_ZEROES
+is not supported.</p>
+</div>
+<div class="section" id="zoned-ro">
+<h2>zoned (RO)<a class="headerlink" href="#zoned-ro" title="Permalink to this headline">¶</a></h2>
+<p>This indicates if the device is a zoned block device and the zone model of the
+device if it is indeed zoned. The possible values indicated by zoned are
+“none” for regular block devices and “host-aware” or “host-managed” for zoned
+block devices. The characteristics of host-aware and host-managed zoned block
+devices are described in the ZBC (Zoned Block Commands) and ZAC
+(Zoned Device ATA Command Set) standards. These standards also define the
+“drive-managed” zone model. However, since drive-managed zoned block devices
+do not support zone commands, they will be treated as regular block devices
+and zoned will report “none”.</p>
+<p>Jens Axboe &lt;<a class="reference external" href="mailto:jens&#46;axboe&#37;&#52;&#48;oracle&#46;com">jens<span>&#46;</span>axboe<span>&#64;</span>oracle<span>&#46;</span>com</a>&gt;, February 2009</p>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright The kernel development community
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>
