@@ -1,0 +1,400 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Kernel driver ucd9200 &mdash; The Linux Kernel  documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript">
+          var DOCUMENTATION_OPTIONS = {
+              URL_ROOT:'../',
+              VERSION:'',
+              LANGUAGE:'None',
+              COLLAPSE_INDEX:false,
+              FILE_SUFFIX:'.html',
+              HAS_SOURCE:  true,
+              SOURCELINK_SUFFIX: '.txt'
+          };
+      </script>
+        <script type="text/javascript" src="../_static/jquery.js"></script>
+        <script type="text/javascript" src="../_static/underscore.js"></script>
+        <script type="text/javascript" src="../_static/doctools.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/theme_overrides.css" type="text/css" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> The Linux Kernel
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                5.6.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../admin-guide/mm/damon/index.html">DAMON: Data Access MONitor</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">The Linux Kernel</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+      <li>Kernel driver ucd9200</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/hwmon/ucd9200.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="kernel-driver-ucd9200">
+<h1>Kernel driver ucd9200<a class="headerlink" href="#kernel-driver-ucd9200" title="Permalink to this headline">¶</a></h1>
+<p>Supported chips:</p>
+<blockquote>
+<div><ul>
+<li><p class="first">TI UCD9220, UCD9222, UCD9224, UCD9240, UCD9244, UCD9246, and UCD9248</p>
+<p>Prefixes: ‘ucd9220’, ‘ucd9222’, ‘ucd9224’, ‘ucd9240’, ‘ucd9244’, ‘ucd9246’,
+‘ucd9248’</p>
+<p>Addresses scanned: -</p>
+<p>Datasheets:</p>
+<blockquote>
+<div><ul class="simple">
+<li><a class="reference external" href="http://focus.ti.com/lit/ds/symlink/ucd9220.pdf">http://focus.ti.com/lit/ds/symlink/ucd9220.pdf</a></li>
+<li><a class="reference external" href="http://focus.ti.com/lit/ds/symlink/ucd9222.pdf">http://focus.ti.com/lit/ds/symlink/ucd9222.pdf</a></li>
+<li><a class="reference external" href="http://focus.ti.com/lit/ds/symlink/ucd9224.pdf">http://focus.ti.com/lit/ds/symlink/ucd9224.pdf</a></li>
+<li><a class="reference external" href="http://focus.ti.com/lit/ds/symlink/ucd9240.pdf">http://focus.ti.com/lit/ds/symlink/ucd9240.pdf</a></li>
+<li><a class="reference external" href="http://focus.ti.com/lit/ds/symlink/ucd9244.pdf">http://focus.ti.com/lit/ds/symlink/ucd9244.pdf</a></li>
+<li><a class="reference external" href="http://focus.ti.com/lit/ds/symlink/ucd9246.pdf">http://focus.ti.com/lit/ds/symlink/ucd9246.pdf</a></li>
+<li><a class="reference external" href="http://focus.ti.com/lit/ds/symlink/ucd9248.pdf">http://focus.ti.com/lit/ds/symlink/ucd9248.pdf</a></li>
+</ul>
+</div></blockquote>
+</li>
+</ul>
+</div></blockquote>
+<p>Author: Guenter Roeck &lt;<a class="reference external" href="mailto:linux&#37;&#52;&#48;roeck-us&#46;net">linux<span>&#64;</span>roeck-us<span>&#46;</span>net</a>&gt;</p>
+<div class="section" id="description">
+<h2>Description<a class="headerlink" href="#description" title="Permalink to this headline">¶</a></h2>
+<p>[From datasheets] UCD9220, UCD9222, UCD9224, UCD9240, UCD9244, UCD9246, and
+UCD9248 are multi-rail, multi-phase synchronous buck digital PWM controllers
+designed for non-isolated DC/DC power applications. The devices integrate
+dedicated circuitry for DC/DC loop management with flash memory and a serial
+interface to support configuration, monitoring and management.</p>
+<p>This driver is a client driver to the core PMBus driver. Please see
+Documentation/hwmon/pmbus.rst for details on PMBus client drivers.</p>
+</div>
+<div class="section" id="usage-notes">
+<h2>Usage Notes<a class="headerlink" href="#usage-notes" title="Permalink to this headline">¶</a></h2>
+<p>This driver does not auto-detect devices. You will have to instantiate the
+devices explicitly. Please see Documentation/i2c/instantiating-devices.rst for
+details.</p>
+</div>
+<div class="section" id="platform-data-support">
+<h2>Platform data support<a class="headerlink" href="#platform-data-support" title="Permalink to this headline">¶</a></h2>
+<p>The driver supports standard PMBus driver platform data. Please see
+Documentation/hwmon/pmbus.rst for details.</p>
+</div>
+<div class="section" id="sysfs-entries">
+<h2>Sysfs entries<a class="headerlink" href="#sysfs-entries" title="Permalink to this headline">¶</a></h2>
+<p>The following attributes are supported. Limits are read-write; all other
+attributes are read-only.</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="29%" />
+<col width="71%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td>in1_label</td>
+<td>“vin”.</td>
+</tr>
+<tr class="row-even"><td>in1_input</td>
+<td>Measured voltage. From READ_VIN register.</td>
+</tr>
+<tr class="row-odd"><td>in1_min</td>
+<td>Minimum Voltage. From VIN_UV_WARN_LIMIT register.</td>
+</tr>
+<tr class="row-even"><td>in1_max</td>
+<td>Maximum voltage. From VIN_OV_WARN_LIMIT register.</td>
+</tr>
+<tr class="row-odd"><td>in1_lcrit</td>
+<td>Critical minimum Voltage. VIN_UV_FAULT_LIMIT register.</td>
+</tr>
+<tr class="row-even"><td>in1_crit</td>
+<td>Critical maximum voltage. From VIN_OV_FAULT_LIMIT
+register.</td>
+</tr>
+<tr class="row-odd"><td>in1_min_alarm</td>
+<td>Voltage low alarm. From VIN_UV_WARNING status.</td>
+</tr>
+<tr class="row-even"><td>in1_max_alarm</td>
+<td>Voltage high alarm. From VIN_OV_WARNING status.</td>
+</tr>
+<tr class="row-odd"><td>in1_lcrit_alarm</td>
+<td>Voltage critical low alarm. From VIN_UV_FAULT status.</td>
+</tr>
+<tr class="row-even"><td>in1_crit_alarm</td>
+<td>Voltage critical high alarm. From VIN_OV_FAULT status.</td>
+</tr>
+<tr class="row-odd"><td>in[2-5]_label</td>
+<td>“vout[1-4]”.</td>
+</tr>
+<tr class="row-even"><td>in[2-5]_input</td>
+<td>Measured voltage. From READ_VOUT register.</td>
+</tr>
+<tr class="row-odd"><td>in[2-5]_min</td>
+<td>Minimum Voltage. From VOUT_UV_WARN_LIMIT register.</td>
+</tr>
+<tr class="row-even"><td>in[2-5]_max</td>
+<td>Maximum voltage. From VOUT_OV_WARN_LIMIT register.</td>
+</tr>
+<tr class="row-odd"><td>in[2-5]_lcrit</td>
+<td>Critical minimum Voltage. VOUT_UV_FAULT_LIMIT register.</td>
+</tr>
+<tr class="row-even"><td>in[2-5]_crit</td>
+<td>Critical maximum voltage. From VOUT_OV_FAULT_LIMIT
+register.</td>
+</tr>
+<tr class="row-odd"><td>in[2-5]_min_alarm</td>
+<td>Voltage low alarm. From VOLTAGE_UV_WARNING status.</td>
+</tr>
+<tr class="row-even"><td>in[2-5]_max_alarm</td>
+<td>Voltage high alarm. From VOLTAGE_OV_WARNING status.</td>
+</tr>
+<tr class="row-odd"><td>in[2-5]_lcrit_alarm</td>
+<td>Voltage critical low alarm. From VOLTAGE_UV_FAULT
+status.</td>
+</tr>
+<tr class="row-even"><td>in[2-5]_crit_alarm</td>
+<td>Voltage critical high alarm. From VOLTAGE_OV_FAULT
+status.</td>
+</tr>
+<tr class="row-odd"><td>curr1_label</td>
+<td>“iin”.</td>
+</tr>
+<tr class="row-even"><td>curr1_input</td>
+<td>Measured current. From READ_IIN register.</td>
+</tr>
+<tr class="row-odd"><td>curr[2-5]_label</td>
+<td>“iout[1-4]”.</td>
+</tr>
+<tr class="row-even"><td>curr[2-5]_input</td>
+<td>Measured current. From READ_IOUT register.</td>
+</tr>
+<tr class="row-odd"><td>curr[2-5]_max</td>
+<td>Maximum current. From IOUT_OC_WARN_LIMIT register.</td>
+</tr>
+<tr class="row-even"><td>curr[2-5]_lcrit</td>
+<td>Critical minimum output current. From
+IOUT_UC_FAULT_LIMIT register.</td>
+</tr>
+<tr class="row-odd"><td>curr[2-5]_crit</td>
+<td>Critical maximum current. From IOUT_OC_FAULT_LIMIT
+register.</td>
+</tr>
+<tr class="row-even"><td>curr[2-5]_max_alarm</td>
+<td>Current high alarm. From IOUT_OC_WARNING status.</td>
+</tr>
+<tr class="row-odd"><td>curr[2-5]_crit_alarm</td>
+<td>Current critical high alarm. From IOUT_OC_FAULT status.</td>
+</tr>
+<tr class="row-even"><td>power1_input</td>
+<td>Measured input power. From READ_PIN register.</td>
+</tr>
+<tr class="row-odd"><td>power1_label</td>
+<td>“pin”</td>
+</tr>
+<tr class="row-even"><td>power[2-5]_input</td>
+<td>Measured output power. From READ_POUT register.</td>
+</tr>
+<tr class="row-odd"><td>power[2-5]_label</td>
+<td><p class="first">“pout[1-4]”</p>
+<p class="last">The number of output voltage, current, and power
+attribute sets is determined by the number of enabled
+rails. See chip datasheets for details.</p>
+</td>
+</tr>
+<tr class="row-even"><td>temp[1-5]_input</td>
+<td>Measured temperatures. From READ_TEMPERATURE_1 and
+READ_TEMPERATURE_2 registers.
+temp1 is the chip internal temperature. temp[2-5] are
+rail temperatures.  temp[2-5] attributes are only
+created for enabled rails. See chip datasheets for
+details.</td>
+</tr>
+<tr class="row-odd"><td>temp[1-5]_max</td>
+<td>Maximum temperature. From OT_WARN_LIMIT register.</td>
+</tr>
+<tr class="row-even"><td>temp[1-5]_crit</td>
+<td>Critical high temperature. From OT_FAULT_LIMIT register.</td>
+</tr>
+<tr class="row-odd"><td>temp[1-5]_max_alarm</td>
+<td>Temperature high alarm.</td>
+</tr>
+<tr class="row-even"><td>temp[1-5]_crit_alarm</td>
+<td>Temperature critical high alarm.</td>
+</tr>
+<tr class="row-odd"><td>fan1_input</td>
+<td>Fan RPM. ucd9240 only.</td>
+</tr>
+<tr class="row-even"><td>fan1_alarm</td>
+<td>Fan alarm. ucd9240 only.</td>
+</tr>
+<tr class="row-odd"><td>fan1_fault</td>
+<td>Fan fault. ucd9240 only.</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright The kernel development community
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

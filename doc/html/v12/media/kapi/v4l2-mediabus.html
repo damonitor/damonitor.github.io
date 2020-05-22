@@ -1,0 +1,303 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>1.19. V4L2 Media Bus functions and data structures &mdash; The Linux Kernel  documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript">
+          var DOCUMENTATION_OPTIONS = {
+              URL_ROOT:'../../',
+              VERSION:'',
+              LANGUAGE:'None',
+              COLLAPSE_INDEX:false,
+              FILE_SUFFIX:'.html',
+              HAS_SOURCE:  true,
+              SOURCELINK_SUFFIX: '.txt'
+          };
+      </script>
+        <script type="text/javascript" src="../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../_static/doctools.js"></script>
+    
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/theme_overrides.css" type="text/css" />
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../index.html" class="icon icon-home"> The Linux Kernel
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                5.6.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../admin-guide/mm/damon/index.html">DAMON: Data Access MONitor</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">The Linux Kernel</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html">Docs</a> &raquo;</li>
+        
+      <li>1.19. V4L2 Media Bus functions and data structures</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../../_sources/media/kapi/v4l2-mediabus.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="v4l2-media-bus-functions-and-data-structures">
+<h1>1.19. V4L2 Media Bus functions and data structures<a class="headerlink" href="#v4l2-media-bus-functions-and-data-structures" title="Permalink to this headline">¶</a></h1>
+<dl class="type">
+<dt id="c.v4l2_mbus_type">
+enum <code class="descname">v4l2_mbus_type</code><a class="headerlink" href="#c.v4l2_mbus_type" title="Permalink to this definition">¶</a></dt>
+<dd><p>media bus type</p>
+</dd></dl>
+
+<p><strong>Constants</strong></p>
+<dl class="docutils">
+<dt><code class="docutils literal notranslate"><span class="pre">V4L2_MBUS_UNKNOWN</span></code></dt>
+<dd>unknown bus type, no V4L2 mediabus configuration</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">V4L2_MBUS_PARALLEL</span></code></dt>
+<dd>parallel interface with hsync and vsync</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">V4L2_MBUS_BT656</span></code></dt>
+<dd>parallel interface with embedded synchronisation, can
+also be used for BT.1120</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">V4L2_MBUS_CSI1</span></code></dt>
+<dd>MIPI CSI-1 serial interface</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">V4L2_MBUS_CCP2</span></code></dt>
+<dd>CCP2 (Compact Camera Port 2)</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">V4L2_MBUS_CSI2_DPHY</span></code></dt>
+<dd>MIPI CSI-2 serial interface, with D-PHY</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">V4L2_MBUS_CSI2_CPHY</span></code></dt>
+<dd>MIPI CSI-2 serial interface, with C-PHY</dd>
+</dl>
+<dl class="type">
+<dt id="c.v4l2_mbus_config">
+struct <code class="descname">v4l2_mbus_config</code><a class="headerlink" href="#c.v4l2_mbus_config" title="Permalink to this definition">¶</a></dt>
+<dd><p>media bus configuration</p>
+</dd></dl>
+
+<p><strong>Definition</strong></p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>struct v4l2_mbus_config {
+  enum v4l2_mbus_type type;
+  unsigned int flags;
+};
+</pre></div>
+</div>
+<p><strong>Members</strong></p>
+<dl class="docutils">
+<dt><code class="docutils literal notranslate"><span class="pre">type</span></code></dt>
+<dd>in: interface type</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">flags</span></code></dt>
+<dd>in / out: configuration flags, depending on <strong>type</strong></dd>
+</dl>
+<dl class="function">
+<dt id="c.v4l2_fill_pix_format">
+void <code class="descname">v4l2_fill_pix_format</code><span class="sig-paren">(</span>struct <a class="reference internal" href="../uapi/v4l/pixfmt-v4l2.html#c.v4l2_pix_format" title="v4l2_pix_format">v4l2_pix_format</a> *<em>&nbsp;pix_fmt</em>, const struct <a class="reference internal" href="../uapi/v4l/subdev-formats.html#c.v4l2_mbus_framefmt" title="v4l2_mbus_framefmt">v4l2_mbus_framefmt</a> *<em>&nbsp;mbus_fmt</em><span class="sig-paren">)</span><a class="headerlink" href="#c.v4l2_fill_pix_format" title="Permalink to this definition">¶</a></dt>
+<dd><p>Ancillary routine that fills a <a class="reference internal" href="../uapi/v4l/pixfmt-v4l2.html#c.v4l2_pix_format" title="v4l2_pix_format"><code class="xref c c-type docutils literal notranslate"><span class="pre">struct</span> <span class="pre">v4l2_pix_format</span></code></a> fields from a <a class="reference internal" href="../uapi/v4l/subdev-formats.html#c.v4l2_mbus_framefmt" title="v4l2_mbus_framefmt"><code class="xref c c-type docutils literal notranslate"><span class="pre">struct</span> <span class="pre">v4l2_mbus_framefmt</span></code></a>.</p>
+</dd></dl>
+
+<p><strong>Parameters</strong></p>
+<dl class="docutils">
+<dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">v4l2_pix_format</span> <span class="pre">*</span> <span class="pre">pix_fmt</span></code></dt>
+<dd>pointer to <a class="reference internal" href="../uapi/v4l/pixfmt-v4l2.html#c.v4l2_pix_format" title="v4l2_pix_format"><code class="xref c c-type docutils literal notranslate"><span class="pre">struct</span> <span class="pre">v4l2_pix_format</span></code></a> to be filled</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">const</span> <span class="pre">struct</span> <span class="pre">v4l2_mbus_framefmt</span> <span class="pre">*</span> <span class="pre">mbus_fmt</span></code></dt>
+<dd>pointer to <a class="reference internal" href="../uapi/v4l/subdev-formats.html#c.v4l2_mbus_framefmt" title="v4l2_mbus_framefmt"><code class="xref c c-type docutils literal notranslate"><span class="pre">struct</span> <span class="pre">v4l2_mbus_framefmt</span></code></a> to be used as model</dd>
+</dl>
+<dl class="function">
+<dt id="c.v4l2_fill_mbus_format">
+void <code class="descname">v4l2_fill_mbus_format</code><span class="sig-paren">(</span>struct <a class="reference internal" href="../uapi/v4l/subdev-formats.html#c.v4l2_mbus_framefmt" title="v4l2_mbus_framefmt">v4l2_mbus_framefmt</a> *<em>&nbsp;mbus_fmt</em>, const struct <a class="reference internal" href="../uapi/v4l/pixfmt-v4l2.html#c.v4l2_pix_format" title="v4l2_pix_format">v4l2_pix_format</a> *<em>&nbsp;pix_fmt</em>, u32<em>&nbsp;code</em><span class="sig-paren">)</span><a class="headerlink" href="#c.v4l2_fill_mbus_format" title="Permalink to this definition">¶</a></dt>
+<dd><p>Ancillary routine that fills a <a class="reference internal" href="../uapi/v4l/subdev-formats.html#c.v4l2_mbus_framefmt" title="v4l2_mbus_framefmt"><code class="xref c c-type docutils literal notranslate"><span class="pre">struct</span> <span class="pre">v4l2_mbus_framefmt</span></code></a> from a <a class="reference internal" href="../uapi/v4l/pixfmt-v4l2.html#c.v4l2_pix_format" title="v4l2_pix_format"><code class="xref c c-type docutils literal notranslate"><span class="pre">struct</span> <span class="pre">v4l2_pix_format</span></code></a> and a data format code.</p>
+</dd></dl>
+
+<p><strong>Parameters</strong></p>
+<dl class="docutils">
+<dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">v4l2_mbus_framefmt</span> <span class="pre">*</span> <span class="pre">mbus_fmt</span></code></dt>
+<dd>pointer to <a class="reference internal" href="../uapi/v4l/subdev-formats.html#c.v4l2_mbus_framefmt" title="v4l2_mbus_framefmt"><code class="xref c c-type docutils literal notranslate"><span class="pre">struct</span> <span class="pre">v4l2_mbus_framefmt</span></code></a> to be filled</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">const</span> <span class="pre">struct</span> <span class="pre">v4l2_pix_format</span> <span class="pre">*</span> <span class="pre">pix_fmt</span></code></dt>
+<dd>pointer to <a class="reference internal" href="../uapi/v4l/pixfmt-v4l2.html#c.v4l2_pix_format" title="v4l2_pix_format"><code class="xref c c-type docutils literal notranslate"><span class="pre">struct</span> <span class="pre">v4l2_pix_format</span></code></a> to be used as model</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">u32</span> <span class="pre">code</span></code></dt>
+<dd>data format code (from <code class="xref c c-type docutils literal notranslate"><span class="pre">enum</span> <span class="pre">v4l2_mbus_pixelcode</span></code>)</dd>
+</dl>
+<dl class="function">
+<dt id="c.v4l2_fill_pix_format_mplane">
+void <code class="descname">v4l2_fill_pix_format_mplane</code><span class="sig-paren">(</span>struct <a class="reference internal" href="../uapi/v4l/pixfmt-v4l2-mplane.html#c.v4l2_pix_format_mplane" title="v4l2_pix_format_mplane">v4l2_pix_format_mplane</a> *<em>&nbsp;pix_mp_fmt</em>, const struct <a class="reference internal" href="../uapi/v4l/subdev-formats.html#c.v4l2_mbus_framefmt" title="v4l2_mbus_framefmt">v4l2_mbus_framefmt</a> *<em>&nbsp;mbus_fmt</em><span class="sig-paren">)</span><a class="headerlink" href="#c.v4l2_fill_pix_format_mplane" title="Permalink to this definition">¶</a></dt>
+<dd><p>Ancillary routine that fills a <a class="reference internal" href="../uapi/v4l/pixfmt-v4l2-mplane.html#c.v4l2_pix_format_mplane" title="v4l2_pix_format_mplane"><code class="xref c c-type docutils literal notranslate"><span class="pre">struct</span> <span class="pre">v4l2_pix_format_mplane</span></code></a> fields from a media bus structure.</p>
+</dd></dl>
+
+<p><strong>Parameters</strong></p>
+<dl class="docutils">
+<dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">v4l2_pix_format_mplane</span> <span class="pre">*</span> <span class="pre">pix_mp_fmt</span></code></dt>
+<dd>pointer to <a class="reference internal" href="../uapi/v4l/pixfmt-v4l2-mplane.html#c.v4l2_pix_format_mplane" title="v4l2_pix_format_mplane"><code class="xref c c-type docutils literal notranslate"><span class="pre">struct</span> <span class="pre">v4l2_pix_format_mplane</span></code></a> to be filled</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">const</span> <span class="pre">struct</span> <span class="pre">v4l2_mbus_framefmt</span> <span class="pre">*</span> <span class="pre">mbus_fmt</span></code></dt>
+<dd>pointer to <a class="reference internal" href="../uapi/v4l/subdev-formats.html#c.v4l2_mbus_framefmt" title="v4l2_mbus_framefmt"><code class="xref c c-type docutils literal notranslate"><span class="pre">struct</span> <span class="pre">v4l2_mbus_framefmt</span></code></a> to be used as model</dd>
+</dl>
+<dl class="function">
+<dt id="c.v4l2_fill_mbus_format_mplane">
+void <code class="descname">v4l2_fill_mbus_format_mplane</code><span class="sig-paren">(</span>struct <a class="reference internal" href="../uapi/v4l/subdev-formats.html#c.v4l2_mbus_framefmt" title="v4l2_mbus_framefmt">v4l2_mbus_framefmt</a> *<em>&nbsp;mbus_fmt</em>, const struct <a class="reference internal" href="../uapi/v4l/pixfmt-v4l2-mplane.html#c.v4l2_pix_format_mplane" title="v4l2_pix_format_mplane">v4l2_pix_format_mplane</a> *<em>&nbsp;pix_mp_fmt</em><span class="sig-paren">)</span><a class="headerlink" href="#c.v4l2_fill_mbus_format_mplane" title="Permalink to this definition">¶</a></dt>
+<dd><p>Ancillary routine that fills a <a class="reference internal" href="../uapi/v4l/subdev-formats.html#c.v4l2_mbus_framefmt" title="v4l2_mbus_framefmt"><code class="xref c c-type docutils literal notranslate"><span class="pre">struct</span> <span class="pre">v4l2_mbus_framefmt</span></code></a> from a <a class="reference internal" href="../uapi/v4l/pixfmt-v4l2-mplane.html#c.v4l2_pix_format_mplane" title="v4l2_pix_format_mplane"><code class="xref c c-type docutils literal notranslate"><span class="pre">struct</span> <span class="pre">v4l2_pix_format_mplane</span></code></a>.</p>
+</dd></dl>
+
+<p><strong>Parameters</strong></p>
+<dl class="docutils">
+<dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">v4l2_mbus_framefmt</span> <span class="pre">*</span> <span class="pre">mbus_fmt</span></code></dt>
+<dd>pointer to <a class="reference internal" href="../uapi/v4l/subdev-formats.html#c.v4l2_mbus_framefmt" title="v4l2_mbus_framefmt"><code class="xref c c-type docutils literal notranslate"><span class="pre">struct</span> <span class="pre">v4l2_mbus_framefmt</span></code></a> to be filled</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">const</span> <span class="pre">struct</span> <span class="pre">v4l2_pix_format_mplane</span> <span class="pre">*</span> <span class="pre">pix_mp_fmt</span></code></dt>
+<dd>pointer to <a class="reference internal" href="../uapi/v4l/pixfmt-v4l2-mplane.html#c.v4l2_pix_format_mplane" title="v4l2_pix_format_mplane"><code class="xref c c-type docutils literal notranslate"><span class="pre">struct</span> <span class="pre">v4l2_pix_format_mplane</span></code></a> to be used as model</dd>
+</dl>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright The kernel development community
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

@@ -1,0 +1,314 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>btmrvl driver &mdash; The Linux Kernel  documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript">
+          var DOCUMENTATION_OPTIONS = {
+              URL_ROOT:'../',
+              VERSION:'',
+              LANGUAGE:'None',
+              COLLAPSE_INDEX:false,
+              FILE_SUFFIX:'.html',
+              HAS_SOURCE:  true,
+              SOURCELINK_SUFFIX: '.txt'
+          };
+      </script>
+        <script type="text/javascript" src="../_static/jquery.js"></script>
+        <script type="text/javascript" src="../_static/underscore.js"></script>
+        <script type="text/javascript" src="../_static/doctools.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/theme_overrides.css" type="text/css" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> The Linux Kernel
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                5.6.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="mm/damon/index.html">DAMON: Data Access MONitor</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">The Linux Kernel</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+      <li>btmrvl driver</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/admin-guide/btmrvl.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="btmrvl-driver">
+<h1>btmrvl driver<a class="headerlink" href="#btmrvl-driver" title="Permalink to this headline">¶</a></h1>
+<p>All commands are used via debugfs interface.</p>
+<div class="section" id="set-get-driver-configurations">
+<h2>Set/get driver configurations<a class="headerlink" href="#set-get-driver-configurations" title="Permalink to this headline">¶</a></h2>
+<p>Path:   /debug/btmrvl/config/</p>
+<dl class="docutils">
+<dt>gpiogap=[n], hscfgcmd</dt>
+<dd><p class="first">These commands are used to configure the host sleep parameters::
+bit 8:0  – Gap
+bit 16:8 – GPIO</p>
+<p>where GPIO is the pin number of GPIO used to wake up the host.
+It could be any valid GPIO pin# (e.g. 0-7) or 0xff (SDIO interface
+wakeup will be used instead).</p>
+<p>where Gap is the gap in milli seconds between wakeup signal and
+wakeup event, or 0xff for special host sleep setting.</p>
+<p>Usage:</p>
+<div class="last highlight-none notranslate"><div class="highlight"><pre><span></span># Use SDIO interface to wake up the host and set GAP to 0x80:
+echo 0xff80 &gt; /debug/btmrvl/config/gpiogap
+echo 1 &gt; /debug/btmrvl/config/hscfgcmd
+
+# Use GPIO pin #3 to wake up the host and set GAP to 0xff:
+echo 0x03ff &gt;  /debug/btmrvl/config/gpiogap
+echo 1 &gt; /debug/btmrvl/config/hscfgcmd
+</pre></div>
+</div>
+</dd>
+<dt>psmode=[n], pscmd</dt>
+<dd><p class="first">These commands are used to enable/disable auto sleep mode</p>
+<p>where the option is:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>1       -- Enable auto sleep mode
+0       -- Disable auto sleep mode
+</pre></div>
+</div>
+<p>Usage:</p>
+<div class="last highlight-none notranslate"><div class="highlight"><pre><span></span># Enable auto sleep mode
+echo 1 &gt; /debug/btmrvl/config/psmode
+echo 1 &gt; /debug/btmrvl/config/pscmd
+
+# Disable auto sleep mode
+echo 0 &gt; /debug/btmrvl/config/psmode
+echo 1 &gt; /debug/btmrvl/config/pscmd
+</pre></div>
+</div>
+</dd>
+<dt>hsmode=[n], hscmd</dt>
+<dd><p class="first">These commands are used to enable host sleep or wake up firmware</p>
+<p>where the option is:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>1       -- Enable host sleep
+0       -- Wake up firmware
+</pre></div>
+</div>
+<p>Usage:</p>
+<div class="last highlight-none notranslate"><div class="highlight"><pre><span></span># Enable host sleep
+echo 1 &gt; /debug/btmrvl/config/hsmode
+echo 1 &gt; /debug/btmrvl/config/hscmd
+
+# Wake up firmware
+echo 0 &gt; /debug/btmrvl/config/hsmode
+echo 1 &gt; /debug/btmrvl/config/hscmd
+</pre></div>
+</div>
+</dd>
+</dl>
+</div>
+<div class="section" id="get-driver-status">
+<h2>Get driver status<a class="headerlink" href="#get-driver-status" title="Permalink to this headline">¶</a></h2>
+<p>Path:   /debug/btmrvl/status/</p>
+<p>Usage:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>cat /debug/btmrvl/status/&lt;args&gt;
+</pre></div>
+</div>
+<p>where the args are:</p>
+<dl class="docutils">
+<dt>curpsmode</dt>
+<dd>This command displays current auto sleep status.</dd>
+<dt>psstate</dt>
+<dd>This command display the power save state.</dd>
+<dt>hsstate</dt>
+<dd>This command display the host sleep state.</dd>
+<dt>txdnldrdy</dt>
+<dd>This command displays the value of Tx download ready flag.</dd>
+</dl>
+</div>
+<div class="section" id="issuing-a-raw-hci-command">
+<h2>Issuing a raw hci command<a class="headerlink" href="#issuing-a-raw-hci-command" title="Permalink to this headline">¶</a></h2>
+<p>Use hcitool to issue raw hci command, refer to hcitool manual</p>
+<p>Usage:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>Hcitool cmd &lt;ogf&gt; &lt;ocf&gt; [Parameters]
+</pre></div>
+</div>
+<p>Interface Control Command:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>hcitool cmd 0x3f 0x5b 0xf5 0x01 0x00    --Enable All interface
+hcitool cmd 0x3f 0x5b 0xf5 0x01 0x01    --Enable Wlan interface
+hcitool cmd 0x3f 0x5b 0xf5 0x01 0x02    --Enable BT interface
+hcitool cmd 0x3f 0x5b 0xf5 0x00 0x00    --Disable All interface
+hcitool cmd 0x3f 0x5b 0xf5 0x00 0x01    --Disable Wlan interface
+hcitool cmd 0x3f 0x5b 0xf5 0x00 0x02    --Disable BT interface
+</pre></div>
+</div>
+</div>
+<div class="section" id="sd8688-firmware">
+<h2>SD8688 firmware<a class="headerlink" href="#sd8688-firmware" title="Permalink to this headline">¶</a></h2>
+<p>Images:</p>
+<ul class="simple">
+<li>/lib/firmware/sd8688_helper.bin</li>
+<li>/lib/firmware/sd8688.bin</li>
+</ul>
+<p>The images can be downloaded from:</p>
+<p>git.infradead.org/users/dwmw2/linux-firmware.git/libertas/</p>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright The kernel development community
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

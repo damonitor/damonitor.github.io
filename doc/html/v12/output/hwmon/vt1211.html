@@ -1,0 +1,608 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Kernel driver vt1211 &mdash; The Linux Kernel  documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript">
+          var DOCUMENTATION_OPTIONS = {
+              URL_ROOT:'../',
+              VERSION:'',
+              LANGUAGE:'None',
+              COLLAPSE_INDEX:false,
+              FILE_SUFFIX:'.html',
+              HAS_SOURCE:  true,
+              SOURCELINK_SUFFIX: '.txt'
+          };
+      </script>
+        <script type="text/javascript" src="../_static/jquery.js"></script>
+        <script type="text/javascript" src="../_static/underscore.js"></script>
+        <script type="text/javascript" src="../_static/doctools.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/theme_overrides.css" type="text/css" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> The Linux Kernel
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                5.6.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../admin-guide/mm/damon/index.html">DAMON: Data Access MONitor</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">The Linux Kernel</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+      <li>Kernel driver vt1211</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/hwmon/vt1211.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="kernel-driver-vt1211">
+<h1>Kernel driver vt1211<a class="headerlink" href="#kernel-driver-vt1211" title="Permalink to this headline">¶</a></h1>
+<p>Supported chips:</p>
+<blockquote>
+<div><ul>
+<li><p class="first">VIA VT1211</p>
+<p>Prefix: ‘vt1211’</p>
+<p>Addresses scanned: none, address read from Super-I/O config space</p>
+<p>Datasheet: Provided by VIA upon request and under NDA</p>
+</li>
+</ul>
+</div></blockquote>
+<p>Authors: Juerg Haefliger &lt;<a class="reference external" href="mailto:juergh&#37;&#52;&#48;gmail&#46;com">juergh<span>&#64;</span>gmail<span>&#46;</span>com</a>&gt;</p>
+<p>This driver is based on the driver for kernel 2.4 by Mark D. Studebaker and
+its port to kernel 2.6 by Lars Ekman.</p>
+<p>Thanks to Joseph Chan and Fiona Gatt from VIA for providing documentation and
+technical support.</p>
+<div class="section" id="module-parameters">
+<h2>Module Parameters<a class="headerlink" href="#module-parameters" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><dl class="first docutils">
+<dt>uch_config: int</dt>
+<dd>Override the BIOS default universal channel (UCH)
+configuration for channels 1-5.
+Legal values are in the range of 0-31. Bit 0 maps to
+UCH1, bit 1 maps to UCH2 and so on. Setting a bit to 1
+enables the thermal input of that particular UCH and
+setting a bit to 0 enables the voltage input.</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt>int_mode: int</dt>
+<dd>Override the BIOS default temperature interrupt mode.
+The only possible value is 0 which forces interrupt
+mode 0. In this mode, any pending interrupt is cleared
+when the status register is read but is regenerated as
+long as the temperature stays above the hysteresis
+limit.</dd>
+</dl>
+</li>
+</ul>
+<p>Be aware that overriding BIOS defaults might cause some unwanted side effects!</p>
+</div>
+<div class="section" id="description">
+<h2>Description<a class="headerlink" href="#description" title="Permalink to this headline">¶</a></h2>
+<p>The VIA VT1211 Super-I/O chip includes complete hardware monitoring
+capabilities. It monitors 2 dedicated temperature sensor inputs (temp1 and
+temp2), 1 dedicated voltage (in5) and 2 fans. Additionally, the chip
+implements 5 universal input channels (UCH1-5) that can be individually
+programmed to either monitor a voltage or a temperature.</p>
+<p>This chip also provides manual and automatic control of fan speeds (according
+to the datasheet). The driver only supports automatic control since the manual
+mode doesn’t seem to work as advertised in the datasheet. In fact I couldn’t
+get manual mode to work at all! Be aware that automatic mode hasn’t been
+tested very well (due to the fact that my EPIA M10000 doesn’t have the fans
+connected to the PWM outputs of the VT1211 :-().</p>
+<p>The following table shows the relationship between the vt1211 inputs and the
+sysfs nodes.</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="21%" />
+<col width="19%" />
+<col width="15%" />
+<col width="44%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Sensor</th>
+<th class="head">Voltage Mode</th>
+<th class="head">Temp Mode</th>
+<th class="head">Default Use (from the datasheet)</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>Reading 1</td>
+<td>&#160;</td>
+<td>temp1</td>
+<td>Intel thermal diode</td>
+</tr>
+<tr class="row-odd"><td>Reading 3</td>
+<td>&#160;</td>
+<td>temp2</td>
+<td>Internal thermal diode</td>
+</tr>
+<tr class="row-even"><td>UCH1/Reading2</td>
+<td>in0</td>
+<td>temp3</td>
+<td>NTC type thermistor</td>
+</tr>
+<tr class="row-odd"><td>UCH2</td>
+<td>in1</td>
+<td>temp4</td>
+<td>+2.5V</td>
+</tr>
+<tr class="row-even"><td>UCH3</td>
+<td>in2</td>
+<td>temp5</td>
+<td>VccP (processor core)</td>
+</tr>
+<tr class="row-odd"><td>UCH4</td>
+<td>in3</td>
+<td>temp6</td>
+<td>+5V</td>
+</tr>
+<tr class="row-even"><td>UCH5</td>
+<td>in4</td>
+<td>temp7</td>
+<td>+12V</td>
+</tr>
+<tr class="row-odd"><td>+3.3V</td>
+<td>in5</td>
+<td>&#160;</td>
+<td>Internal VCC (+3.3V)</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="voltage-monitoring">
+<h2>Voltage Monitoring<a class="headerlink" href="#voltage-monitoring" title="Permalink to this headline">¶</a></h2>
+<p>Voltages are sampled by an 8-bit ADC with a LSB of ~10mV. The supported input
+range is thus from 0 to 2.60V. Voltage values outside of this range need
+external scaling resistors. This external scaling needs to be compensated for
+via compute lines in sensors.conf, like:</p>
+<p>compute inx &#64;*(1+R1/R2), &#64;/(1+R1/R2)</p>
+<p>The board level scaling resistors according to VIA’s recommendation are as
+follows. And this is of course totally dependent on the actual board
+implementation :-) You will have to find documentation for your own
+motherboard and edit sensors.conf accordingly.</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="28%" />
+<col width="13%" />
+<col width="13%" />
+<col width="20%" />
+<col width="26%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Voltage</th>
+<th class="head">R1</th>
+<th class="head">R2</th>
+<th class="head">Divider</th>
+<th class="head">Raw Value</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>+2.5V</td>
+<td>2K</td>
+<td>10K</td>
+<td>1.2</td>
+<td>2083 mV</td>
+</tr>
+<tr class="row-odd"><td>VccP</td>
+<td>—</td>
+<td>—</td>
+<td>1.0</td>
+<td>1400 mV <a class="footnote-reference" href="#id3" id="id1">[1]</a></td>
+</tr>
+<tr class="row-even"><td>+5V</td>
+<td>14K</td>
+<td>10K</td>
+<td>2.4</td>
+<td>2083 mV</td>
+</tr>
+<tr class="row-odd"><td>+12V</td>
+<td>47K</td>
+<td>10K</td>
+<td>5.7</td>
+<td>2105 mV</td>
+</tr>
+<tr class="row-even"><td>+3.3V (int)</td>
+<td>2K</td>
+<td>3.4K</td>
+<td>1.588</td>
+<td>3300 mV <a class="footnote-reference" href="#id4" id="id2">[2]</a></td>
+</tr>
+<tr class="row-odd"><td>+3.3V (ext)</td>
+<td>6.8K</td>
+<td>10K</td>
+<td>1.68</td>
+<td>1964 mV</td>
+</tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="id3" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id1">[1]</a></td><td>Depending on the CPU (1.4V is for a VIA C3 Nehemiah).</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="id4" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id2">[2]</a></td><td>R1 and R2 for 3.3V (int) are internal to the VT1211 chip and the driver
+performs the scaling and returns the properly scaled voltage value.</td></tr>
+</tbody>
+</table>
+<p>Each measured voltage has an associated low and high limit which triggers an
+alarm when crossed.</p>
+</div>
+<div class="section" id="temperature-monitoring">
+<h2>Temperature Monitoring<a class="headerlink" href="#temperature-monitoring" title="Permalink to this headline">¶</a></h2>
+<p>Temperatures are reported in millidegree Celsius. Each measured temperature
+has a high limit which triggers an alarm if crossed. There is an associated
+hysteresis value with each temperature below which the temperature has to drop
+before the alarm is cleared (this is only true for interrupt mode 0). The
+interrupt mode can be forced to 0 in case the BIOS doesn’t do it
+automatically. See the ‘Module Parameters’ section for details.</p>
+<p>All temperature channels except temp2 are external. Temp2 is the VT1211
+internal thermal diode and the driver does all the scaling for temp2 and
+returns the temperature in millidegree Celsius. For the external channels
+temp1 and temp3-temp7, scaling depends on the board implementation and needs
+to be performed in userspace via sensors.conf.</p>
+<p>Temp1 is an Intel-type thermal diode which requires the following formula to
+convert between sysfs readings and real temperatures:</p>
+<p>compute temp1 (&#64;-Offset)/Gain, (&#64;*Gain)+Offset</p>
+<p>According to the VIA VT1211 BIOS porting guide, the following gain and offset
+values should be used:</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="44%" />
+<col width="24%" />
+<col width="32%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Diode Type</th>
+<th class="head">Offset</th>
+<th class="head">Gain</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>Intel CPU</td>
+<td>88.638
+65.000</td>
+<td>0.9528
+0.9686 <a class="footnote-reference" href="#id6" id="id5">[3]</a></td>
+</tr>
+<tr class="row-odd"><td>VIA C3 Ezra</td>
+<td>83.869</td>
+<td>0.9528</td>
+</tr>
+<tr class="row-even"><td>VIA C3 Ezra-T</td>
+<td>73.869</td>
+<td>0.9528</td>
+</tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="id6" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id5">[3]</a></td><td>This is the formula from the lm_sensors 2.10.0 sensors.conf file. I don’t
+know where it comes from or how it was derived, it’s just listed here for
+completeness.</td></tr>
+</tbody>
+</table>
+<p>Temp3-temp7 support NTC thermistors. For these channels, the driver returns
+the voltages as seen at the individual pins of UCH1-UCH5. The voltage at the
+pin (Vpin) is formed by a voltage divider made of the thermistor (Rth) and a
+scaling resistor (Rs):</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>Vpin = 2200 * Rth / (Rs + Rth)   (2200 is the ADC max limit of 2200 mV)
+</pre></div>
+</div>
+<p>The equation for the thermistor is as follows (google it if you want to know
+more about it):</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>Rth = Ro * exp(B * (1 / T - 1 / To))   (To is 298.15K (25C) and Ro is the
+                                        nominal resistance at 25C)
+</pre></div>
+</div>
+<p>Mingling the above two equations and assuming Rs = Ro and B = 3435 yields the
+following formula for sensors.conf:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>compute tempx 1 / (1 / 298.15 - (` (2200 / @ - 1)) / 3435) - 273.15,
+              2200 / (1 + (^ (3435 / 298.15 - 3435 / (273.15 + @))))
+</pre></div>
+</div>
+</div>
+<div class="section" id="fan-speed-control">
+<h2>Fan Speed Control<a class="headerlink" href="#fan-speed-control" title="Permalink to this headline">¶</a></h2>
+<p>The VT1211 provides 2 programmable PWM outputs to control the speeds of 2
+fans. Writing a 2 to any of the two pwm[1-2]_enable sysfs nodes will put the
+PWM controller in automatic mode. There is only a single controller that
+controls both PWM outputs but each PWM output can be individually enabled and
+disabled.</p>
+<p>Each PWM has 4 associated distinct output duty-cycles: full, high, low and
+off. Full and off are internally hard-wired to 255 (100%) and 0 (0%),
+respectively. High and low can be programmed via
+pwm[1-2]_auto_point[2-3]_pwm. Each PWM output can be associated with a
+different thermal input but - and here’s the weird part - only one set of
+thermal thresholds exist that controls both PWMs output duty-cycles. The
+thermal thresholds are accessible via pwm[1-2]_auto_point[1-4]_temp. Note
+that even though there are 2 sets of 4 auto points each, they map to the same
+registers in the VT1211 and programming one set is sufficient (actually only
+the first set pwm1_auto_point[1-4]_temp is writable, the second set is
+read-only).</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="39%" />
+<col width="61%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">PWM Auto Point</th>
+<th class="head">PWM Output Duty-Cycle</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>pwm[1-2]_auto_point4_pwm</td>
+<td>full speed duty-cycle (hard-wired to 255)</td>
+</tr>
+<tr class="row-odd"><td>pwm[1-2]_auto_point3_pwm</td>
+<td>high speed duty-cycle</td>
+</tr>
+<tr class="row-even"><td>pwm[1-2]_auto_point2_pwm</td>
+<td>low speed duty-cycle</td>
+</tr>
+<tr class="row-odd"><td>pwm[1-2]_auto_point1_pwm</td>
+<td>off duty-cycle (hard-wired to 0)</td>
+</tr>
+</tbody>
+</table>
+<table border="1" class="docutils">
+<colgroup>
+<col width="60%" />
+<col width="40%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Temp Auto Point</th>
+<th class="head">Thermal Threshold</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>pwm[1-2]_auto_point4_temp</td>
+<td>full speed temp</td>
+</tr>
+<tr class="row-odd"><td>pwm[1-2]_auto_point3_temp</td>
+<td>high speed temp</td>
+</tr>
+<tr class="row-even"><td>pwm[1-2]_auto_point2_temp</td>
+<td>low speed temp</td>
+</tr>
+<tr class="row-odd"><td>pwm[1-2]_auto_point1_temp</td>
+<td>off temp</td>
+</tr>
+</tbody>
+</table>
+<p>Long story short, the controller implements the following algorithm to set the
+PWM output duty-cycle based on the input temperature:</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="29%" />
+<col width="35%" />
+<col width="36%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Thermal Threshold</th>
+<th class="head">Output Duty-Cycle
+(Rising Temp)</th>
+<th class="head">Output Duty-Cycle
+(Falling Temp)</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td><ul class="first last simple">
+<li></li>
+</ul>
+</td>
+<td>full speed duty-cycle</td>
+<td>full speed duty-cycle</td>
+</tr>
+<tr class="row-odd"><td>full speed temp</td>
+<td>&#160;</td>
+<td>&#160;</td>
+</tr>
+<tr class="row-even"><td><ul class="first last simple">
+<li></li>
+</ul>
+</td>
+<td>high speed duty-cycle</td>
+<td>full speed duty-cycle</td>
+</tr>
+<tr class="row-odd"><td>high speed temp</td>
+<td>&#160;</td>
+<td>&#160;</td>
+</tr>
+<tr class="row-even"><td><ul class="first last simple">
+<li></li>
+</ul>
+</td>
+<td>low speed duty-cycle</td>
+<td>high speed duty-cycle</td>
+</tr>
+<tr class="row-odd"><td>low speed temp</td>
+<td>&#160;</td>
+<td>&#160;</td>
+</tr>
+<tr class="row-even"><td><ul class="first last simple">
+<li></li>
+</ul>
+</td>
+<td>off duty-cycle</td>
+<td>low speed duty-cycle</td>
+</tr>
+<tr class="row-odd"><td>off temp</td>
+<td>&#160;</td>
+<td>&#160;</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright The kernel development community
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>
