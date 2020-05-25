@@ -1,0 +1,301 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Describing and referring to LEDs in ACPI &mdash; The Linux Kernel  documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript">
+          var DOCUMENTATION_OPTIONS = {
+              URL_ROOT:'../../../',
+              VERSION:'',
+              LANGUAGE:'None',
+              COLLAPSE_INDEX:false,
+              FILE_SUFFIX:'.html',
+              HAS_SOURCE:  true,
+              SOURCELINK_SUFFIX: '.txt'
+          };
+      </script>
+        <script type="text/javascript" src="../../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/theme_overrides.css" type="text/css" />
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home"> The Linux Kernel
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                5.6.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../admin-guide/mm/damon/index.html">DAMON: Data Access MONitor</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">The Linux Kernel</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../index.html">Docs</a> &raquo;</li>
+        
+      <li>Describing and referring to LEDs in ACPI</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../../../_sources/firmware-guide/acpi/dsd/leds.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="describing-and-referring-to-leds-in-acpi">
+<h1>Describing and referring to LEDs in ACPI<a class="headerlink" href="#describing-and-referring-to-leds-in-acpi" title="Permalink to this headline">¶</a></h1>
+<p>Individual LEDs are described by hierarchical data extension [6] nodes under the
+device node, the LED driver chip. The “reg” property in the LED specific nodes
+tells the numerical ID of each individual LED output to which the LEDs are
+connected. [3] The hierarchical data nodes are named “led&#64;X”, where X is the
+number of the LED output.</p>
+<p>Referring to LEDs in Device tree is documented in [4], in “flash-leds” property
+documentation. In short, LEDs are directly referred to by using phandles.</p>
+<p>While Device tree allows referring to any node in the tree[1], in ACPI
+references are limited to device nodes only [2]. For this reason using the same
+mechanism on ACPI is not possible. A mechanism to refer to non-device ACPI nodes
+is documented in [7].</p>
+<p>ACPI allows (as does DT) using integer arguments after the reference. A
+combination of the LED driver device reference and an integer argument,
+referring to the “reg” property of the relevant LED, is used to identify
+individual LEDs. The value of the “reg” property is a contract between the
+firmware and software, it uniquely identifies the LED driver outputs.</p>
+<p>Under the LED driver device, The first hierarchical data extension package list
+entry shall contain the string “led&#64;” followed by the number of the LED,
+followed by the referred object name. That object shall be named “LED” followed
+by the number of the LED.</p>
+<div class="section" id="example">
+<h2>Example<a class="headerlink" href="#example" title="Permalink to this headline">¶</a></h2>
+<p>An ASL example of a camera sensor device and a LED driver device for two LEDs is
+show below. Objects not relevant for LEDs or the references to them have been
+omitted.</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>Device (LED)
+{
+        Name (_DSD, Package () {
+                ToUUID(&quot;dbb8e3e6-5886-4ba6-8795-1319f52a966b&quot;),
+                Package () {
+                        Package () { &quot;led@0&quot;, LED0 },
+                        Package () { &quot;led@1&quot;, LED1 },
+                }
+        })
+        Name (LED0, Package () {
+                ToUUID(&quot;daffd814-6eba-4d8c-8a91-bc9bbf4aa301&quot;),
+                Package () {
+                        Package () { &quot;reg&quot;, 0 },
+                        Package () { &quot;flash-max-microamp&quot;, 1000000 },
+                        Package () { &quot;flash-timeout-us&quot;, 200000 },
+                        Package () { &quot;led-max-microamp&quot;, 100000 },
+                        Package () { &quot;label&quot;, &quot;white:flash&quot; },
+                }
+        })
+        Name (LED1, Package () {
+                ToUUID(&quot;daffd814-6eba-4d8c-8a91-bc9bbf4aa301&quot;),
+                Package () {
+                        Package () { &quot;reg&quot;, 1 },
+                        Package () { &quot;led-max-microamp&quot;, 10000 },
+                        Package () { &quot;label&quot;, &quot;red:indicator&quot; },
+                }
+        })
+}
+
+Device (SEN)
+{
+        Name (_DSD, Package () {
+                ToUUID(&quot;daffd814-6eba-4d8c-8a91-bc9bbf4aa301&quot;),
+                Package () {
+                        Package () {
+                                &quot;flash-leds&quot;,
+                                Package () { ^LED, &quot;led@0&quot;, ^LED, &quot;led@1&quot; },
+                        }
+                }
+        })
+}
+</pre></div>
+</div>
+<p>where</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>LED     LED driver device
+LED0    First LED
+LED1    Second LED
+SEN     Camera sensor device (or another device the LED is related to)
+</pre></div>
+</div>
+</div>
+<div class="section" id="references">
+<h2>References<a class="headerlink" href="#references" title="Permalink to this headline">¶</a></h2>
+<p>[1] Device tree. &lt;URL:http://www.devicetree.org&gt;, referenced 2019-02-21.</p>
+<dl class="docutils">
+<dt>[2] Advanced Configuration and Power Interface Specification.</dt>
+<dd>&lt;URL:https://uefi.org/sites/default/files/resources/ACPI_6_3_final_Jan30.pdf&gt;,
+referenced 2019-02-21.</dd>
+</dl>
+<p>[3] Documentation/devicetree/bindings/leds/common.txt</p>
+<p>[4] Documentation/devicetree/bindings/media/video-interfaces.txt</p>
+<dl class="docutils">
+<dt>[5] Device Properties UUID For _DSD.</dt>
+<dd>&lt;URL:http://www.uefi.org/sites/default/files/resources/_DSD-device-properties-UUID.pdf&gt;,
+referenced 2019-02-21.</dd>
+<dt>[6] Hierarchical Data Extension UUID For _DSD.</dt>
+<dd>&lt;URL:http://www.uefi.org/sites/default/files/resources/_DSD-hierarchical-data-extension-UUID-v1.1.pdf&gt;,
+referenced 2019-02-21.</dd>
+</dl>
+<p>[7] Documentation/firmware-guide/acpi/dsd/data-node-references.rst</p>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright The kernel development community
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>
