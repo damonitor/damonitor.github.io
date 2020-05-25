@@ -1,0 +1,359 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>DPAA2 DPIO (Data Path I/O) Overview &mdash; The Linux Kernel  documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript">
+          var DOCUMENTATION_OPTIONS = {
+              URL_ROOT:'../../../../',
+              VERSION:'',
+              LANGUAGE:'None',
+              COLLAPSE_INDEX:false,
+              FILE_SUFFIX:'.html',
+              HAS_SOURCE:  true,
+              SOURCELINK_SUFFIX: '.txt'
+          };
+      </script>
+        <script type="text/javascript" src="../../../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../../../_static/doctools.js"></script>
+    
+    <script type="text/javascript" src="../../../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../../_static/theme_overrides.css" type="text/css" />
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../../../index.html" class="icon icon-home"> The Linux Kernel
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                5.6.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../admin-guide/mm/damon/index.html">DAMON: Data Access MONitor</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../index.html">The Linux Kernel</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../../index.html">Docs</a> &raquo;</li>
+        
+      <li>DPAA2 DPIO (Data Path I/O) Overview</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../../../../_sources/networking/device_drivers/freescale/dpaa2/dpio-driver.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="dpaa2-dpio-data-path-i-o-overview">
+<h1>DPAA2 DPIO (Data Path I/O) Overview<a class="headerlink" href="#dpaa2-dpio-data-path-i-o-overview" title="Permalink to this headline">¶</a></h1>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Copyright:</th><td class="field-body">© 2016-2018 NXP</td>
+</tr>
+</tbody>
+</table>
+<p>This document provides an overview of the Freescale DPAA2 DPIO
+drivers</p>
+</div>
+<div class="section" id="introduction">
+<h1>Introduction<a class="headerlink" href="#introduction" title="Permalink to this headline">¶</a></h1>
+<p>A DPAA2 DPIO (Data Path I/O) is a hardware object that provides
+interfaces to enqueue and dequeue frames to/from network interfaces
+and other accelerators.  A DPIO also provides hardware buffer
+pool management for network interfaces.</p>
+<p>This document provides an overview the Linux DPIO driver, its
+subcomponents, and its APIs.</p>
+<p>See Documentation/networking/device_drivers/freescale/dpaa2/overview.rst for
+a general overview of DPAA2 and the general DPAA2 driver architecture in Linux.</p>
+<div class="section" id="driver-overview">
+<h2>Driver Overview<a class="headerlink" href="#driver-overview" title="Permalink to this headline">¶</a></h2>
+<p>The DPIO driver is bound to DPIO objects discovered on the fsl-mc bus and
+provides services that:</p>
+<blockquote>
+<div><ol class="upperalpha simple">
+<li>allow other drivers, such as the Ethernet driver, to enqueue and dequeue
+frames for their respective objects</li>
+<li>allow drivers to register callbacks for data availability notifications
+when data becomes available on a queue or channel</li>
+<li>allow drivers to manage hardware buffer pools</li>
+</ol>
+</div></blockquote>
+<dl class="docutils">
+<dt>The Linux DPIO driver consists of 3 primary components–</dt>
+<dd><p class="first">DPIO object driver– fsl-mc driver that manages the DPIO object</p>
+<p>DPIO service– provides APIs to other Linux drivers for services</p>
+<p>QBman portal interface– sends portal commands, gets responses:</p>
+<div class="last highlight-none notranslate"><div class="highlight"><pre><span></span>  fsl-mc          other
+   bus           drivers
+    |               |
++---+----+   +------+-----+
+|DPIO obj|   |DPIO service|
+| driver |---|  (DPIO)    |
++--------+   +------+-----+
+                    |
+             +------+-----+
+             |    QBman   |
+             | portal i/f |
+             +------------+
+                    |
+                 hardware
+</pre></div>
+</div>
+</dd>
+</dl>
+<p>The diagram below shows how the DPIO driver components fit with the other
+DPAA2 Linux driver components:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>                                                  +------------+
+                                                  | OS Network |
+                                                  |   Stack    |
+                +------------+                    +------------+
+                | Allocator  |. . . . . . .       |  Ethernet  |
+                |(DPMCP,DPBP)|                    |   (DPNI)   |
+                +-.----------+                    +---+---+----+
+                 .          .                         ^   |
+                .            .           &lt;data avail, |   |&lt;enqueue,
+               .              .           tx confirm&gt; |   | dequeue&gt;
+   +-------------+             .                      |   |
+   | DPRC driver |              .    +--------+ +------------+
+   |   (DPRC)    |               . . |DPIO obj| |DPIO service|
+   +----------+--+                   | driver |-|  (DPIO)    |
+              |                      +--------+ +------+-----+
+              |&lt;dev add/remove&gt;                 +------|-----+
+              |                                 |   QBman    |
+         +----+--------------+                  | portal i/f |
+         |   MC-bus driver   |                  +------------+
+         |                   |                     |
+         | /soc/fsl-mc       |                     |
+         +-------------------+                     |
+                                                   |
+=========================================|=========|========================
+                                       +-+--DPIO---|-----------+
+                                       |           |           |
+                                       |        QBman Portal   |
+                                       +-----------------------+
+
+============================================================================
+</pre></div>
+</div>
+</div>
+<div class="section" id="dpio-object-driver-dpio-driver-c">
+<h2>DPIO Object Driver (dpio-driver.c)<a class="headerlink" href="#dpio-object-driver-dpio-driver-c" title="Permalink to this headline">¶</a></h2>
+<blockquote>
+<div>The dpio-driver component registers with the fsl-mc bus to handle objects of
+type “dpio”.  The implementation of probe() handles basic initialization
+of the DPIO including mapping of the DPIO regions (the QBman SW portal)
+and initializing interrupts and registering irq handlers.  The dpio-driver
+registers the probed DPIO with dpio-service.</div></blockquote>
+</div>
+<div class="section" id="dpio-service-dpio-service-c-dpaa2-io-h">
+<h2>DPIO service  (dpio-service.c, dpaa2-io.h)<a class="headerlink" href="#dpio-service-dpio-service-c-dpaa2-io-h" title="Permalink to this headline">¶</a></h2>
+<blockquote>
+<div><p>The dpio service component provides queuing, notification, and buffers
+management services to DPAA2 drivers, such as the Ethernet driver.  A system
+will typically allocate 1 DPIO object per CPU to allow queuing operations
+to happen simultaneously across all CPUs.</p>
+<dl class="docutils">
+<dt>Notification handling</dt>
+<dd><p class="first">dpaa2_io_service_register()</p>
+<p>dpaa2_io_service_deregister()</p>
+<p class="last">dpaa2_io_service_rearm()</p>
+</dd>
+<dt>Queuing</dt>
+<dd><p class="first">dpaa2_io_service_pull_fq()</p>
+<p>dpaa2_io_service_pull_channel()</p>
+<p>dpaa2_io_service_enqueue_fq()</p>
+<p>dpaa2_io_service_enqueue_qd()</p>
+<p>dpaa2_io_store_create()</p>
+<p>dpaa2_io_store_destroy()</p>
+<p class="last">dpaa2_io_store_next()</p>
+</dd>
+<dt>Buffer pool management</dt>
+<dd><p class="first">dpaa2_io_service_release()</p>
+<p class="last">dpaa2_io_service_acquire()</p>
+</dd>
+</dl>
+</div></blockquote>
+</div>
+<div class="section" id="qbman-portal-interface-qbman-portal-c">
+<h2>QBman portal interface (qbman-portal.c)<a class="headerlink" href="#qbman-portal-interface-qbman-portal-c" title="Permalink to this headline">¶</a></h2>
+<blockquote>
+<div><p>The qbman-portal component provides APIs to do the low level hardware
+bit twiddling for operations such as:</p>
+<blockquote>
+<div><ul class="simple">
+<li>initializing Qman software portals</li>
+<li>building and sending portal commands</li>
+<li>portal interrupt configuration and processing</li>
+</ul>
+</div></blockquote>
+<p>The qbman-portal APIs are not public to other drivers, and are
+only used by dpio-service.</p>
+</div></blockquote>
+</div>
+<div class="section" id="other-dpaa2-fd-h-dpaa2-global-h">
+<h2>Other (dpaa2-fd.h, dpaa2-global.h)<a class="headerlink" href="#other-dpaa2-fd-h-dpaa2-global-h" title="Permalink to this headline">¶</a></h2>
+<blockquote>
+<div><p>Frame descriptor and scatter-gather definitions and the APIs used to
+manipulate them are defined in dpaa2-fd.h.</p>
+<p>Dequeue result struct and parsing APIs are defined in dpaa2-global.h.</p>
+</div></blockquote>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright The kernel development community
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

@@ -1,0 +1,311 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Kernel driver pcf8591 &mdash; The Linux Kernel  documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript">
+          var DOCUMENTATION_OPTIONS = {
+              URL_ROOT:'../',
+              VERSION:'',
+              LANGUAGE:'None',
+              COLLAPSE_INDEX:false,
+              FILE_SUFFIX:'.html',
+              HAS_SOURCE:  true,
+              SOURCELINK_SUFFIX: '.txt'
+          };
+      </script>
+        <script type="text/javascript" src="../_static/jquery.js"></script>
+        <script type="text/javascript" src="../_static/underscore.js"></script>
+        <script type="text/javascript" src="../_static/doctools.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/theme_overrides.css" type="text/css" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> The Linux Kernel
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                5.6.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../admin-guide/mm/damon/index.html">DAMON: Data Access MONitor</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">The Linux Kernel</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+      <li>Kernel driver pcf8591</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/hwmon/pcf8591.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="kernel-driver-pcf8591">
+<h1>Kernel driver pcf8591<a class="headerlink" href="#kernel-driver-pcf8591" title="Permalink to this headline">¶</a></h1>
+<p>Supported chips:</p>
+<blockquote>
+<div><ul>
+<li><p class="first">Philips/NXP PCF8591</p>
+<p>Prefix: ‘pcf8591’</p>
+<p>Addresses scanned: none</p>
+<p>Datasheet: Publicly available at the NXP website</p>
+<blockquote>
+<div><p><a class="reference external" href="http://www.nxp.com/pip/PCF8591_6.html">http://www.nxp.com/pip/PCF8591_6.html</a></p>
+</div></blockquote>
+</li>
+</ul>
+</div></blockquote>
+<dl class="docutils">
+<dt>Authors:</dt>
+<dd><ul class="first last simple">
+<li>Aurelien Jarno &lt;<a class="reference external" href="mailto:aurelien&#37;&#52;&#48;aurel32&#46;net">aurelien<span>&#64;</span>aurel32<span>&#46;</span>net</a>&gt;</li>
+<li>valuable contributions by Jan M. Sendler &lt;<a class="reference external" href="mailto:sendler&#37;&#52;&#48;sendler&#46;de">sendler<span>&#64;</span>sendler<span>&#46;</span>de</a>&gt;,</li>
+<li>Jean Delvare &lt;<a class="reference external" href="mailto:jdelvare&#37;&#52;&#48;suse&#46;de">jdelvare<span>&#64;</span>suse<span>&#46;</span>de</a>&gt;</li>
+</ul>
+</dd>
+</dl>
+<div class="section" id="description">
+<h2>Description<a class="headerlink" href="#description" title="Permalink to this headline">¶</a></h2>
+<p>The PCF8591 is an 8-bit A/D and D/A converter (4 analog inputs and one
+analog output) for the I2C bus produced by Philips Semiconductors (now NXP).
+It is designed to provide a byte I2C interface to up to 4 separate devices.</p>
+<p>The PCF8591 has 4 analog inputs programmable as single-ended or
+differential inputs:</p>
+<ul class="simple">
+<li><dl class="first docutils">
+<dt>mode 0 <span class="classifier-delimiter">:</span> <span class="classifier">four single ended inputs</span></dt>
+<dd>Pins AIN0 to AIN3 are single ended inputs for channels 0 to 3</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt>mode 1 <span class="classifier-delimiter">:</span> <span class="classifier">three differential inputs</span></dt>
+<dd>Pins AIN3 is the common negative differential input
+Pins AIN0 to AIN2 are positive differential inputs for channels 0 to 2</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt>mode 2 <span class="classifier-delimiter">:</span> <span class="classifier">single ended and differential mixed</span></dt>
+<dd>Pins AIN0 and AIN1 are single ended inputs for channels 0 and 1
+Pins AIN2 is the positive differential input for channel 3
+Pins AIN3 is the negative differential input for channel 3</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt>mode 3 <span class="classifier-delimiter">:</span> <span class="classifier">two differential inputs</span></dt>
+<dd>Pins AIN0 is the positive differential input for channel 0
+Pins AIN1 is the negative differential input for channel 0
+Pins AIN2 is the positive differential input for channel 1
+Pins AIN3 is the negative differential input for channel 1</dd>
+</dl>
+</li>
+</ul>
+<p>See the datasheet for details.</p>
+</div>
+<div class="section" id="module-parameters">
+<h2>Module parameters<a class="headerlink" href="#module-parameters" title="Permalink to this headline">¶</a></h2>
+<ul>
+<li><p class="first">input_mode int</p>
+<blockquote>
+<div><p>Analog input mode:</p>
+<blockquote>
+<div><ul class="simple">
+<li>0 = four single ended inputs</li>
+<li>1 = three differential inputs</li>
+<li>2 = single ended and differential mixed</li>
+<li>3 = two differential inputs</li>
+</ul>
+</div></blockquote>
+</div></blockquote>
+</li>
+</ul>
+</div>
+<div class="section" id="accessing-pcf8591-via-sys-interface">
+<h2>Accessing PCF8591 via /sys interface<a class="headerlink" href="#accessing-pcf8591-via-sys-interface" title="Permalink to this headline">¶</a></h2>
+<p>The PCF8591 is plainly impossible to detect! Thus the driver won’t even
+try. You have to explicitly instantiate the device at the relevant
+address (in the interval [0x48..0x4f]) either through platform data, or
+using the sysfs interface. See Documentation/i2c/instantiating-devices.rst
+for details.</p>
+<p>Directories are being created for each instantiated PCF8591:</p>
+<dl class="docutils">
+<dt>/sys/bus/i2c/devices/&lt;0&gt;-&lt;1&gt;/</dt>
+<dd>where &lt;0&gt; is the bus the chip is connected to (e. g. i2c-0)
+and &lt;1&gt; the chip address ([48..4f])</dd>
+</dl>
+<p>Inside these directories, there are such files:</p>
+<blockquote>
+<div>in0_input, in1_input, in2_input, in3_input, out0_enable, out0_output, name</div></blockquote>
+<p>Name contains chip name.</p>
+<p>The in0_input, in1_input, in2_input and in3_input files are RO. Reading gives
+the value of the corresponding channel. Depending on the current analog inputs
+configuration, files in2_input and in3_input may not exist. Values range
+from 0 to 255 for single ended inputs and -128 to +127 for differential inputs
+(8-bit ADC).</p>
+<p>The out0_enable file is RW. Reading gives “1” for analog output enabled and
+“0” for analog output disabled. Writing accepts “0” and “1” accordingly.</p>
+<p>The out0_output file is RW. Writing a number between 0 and 255 (8-bit DAC), send
+the value to the digital-to-analog converter. Note that a voltage will
+only appears on AOUT pin if aout0_enable equals 1. Reading returns the last
+value written.</p>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright The kernel development community
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

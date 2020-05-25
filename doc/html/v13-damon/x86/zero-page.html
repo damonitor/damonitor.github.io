@@ -1,0 +1,352 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>8. Zero Page &mdash; The Linux Kernel  documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript">
+          var DOCUMENTATION_OPTIONS = {
+              URL_ROOT:'../',
+              VERSION:'',
+              LANGUAGE:'None',
+              COLLAPSE_INDEX:false,
+              FILE_SUFFIX:'.html',
+              HAS_SOURCE:  true,
+              SOURCELINK_SUFFIX: '.txt'
+          };
+      </script>
+        <script type="text/javascript" src="../_static/jquery.js"></script>
+        <script type="text/javascript" src="../_static/underscore.js"></script>
+        <script type="text/javascript" src="../_static/doctools.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/theme_overrides.css" type="text/css" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> The Linux Kernel
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                5.6.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../admin-guide/mm/damon/index.html">DAMON: Data Access MONitor</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">The Linux Kernel</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+      <li>8. Zero Page</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/x86/zero-page.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="zero-page">
+<h1>8. Zero Page<a class="headerlink" href="#zero-page" title="Permalink to this headline">¶</a></h1>
+<p>The additional fields in struct boot_params as a part of 32-bit boot
+protocol of kernel. These should be filled by bootloader or 16-bit
+real-mode setup code of the kernel. References/settings to it mainly
+are in:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>arch/x86/include/uapi/asm/bootparam.h
+</pre></div>
+</div>
+<table border="1" class="docutils">
+<colgroup>
+<col width="13%" />
+<col width="6%" />
+<col width="26%" />
+<col width="56%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td>Offset/Size</td>
+<td>Proto</td>
+<td>Name</td>
+<td>Meaning</td>
+</tr>
+<tr class="row-even"><td>000/040</td>
+<td>ALL</td>
+<td>screen_info</td>
+<td>Text mode or frame buffer information
+(struct screen_info)</td>
+</tr>
+<tr class="row-odd"><td>040/014</td>
+<td>ALL</td>
+<td>apm_bios_info</td>
+<td>APM BIOS information (struct apm_bios_info)</td>
+</tr>
+<tr class="row-even"><td>058/008</td>
+<td>ALL</td>
+<td>tboot_addr</td>
+<td>Physical address of tboot shared page</td>
+</tr>
+<tr class="row-odd"><td>060/010</td>
+<td>ALL</td>
+<td>ist_info</td>
+<td>Intel SpeedStep (IST) BIOS support information
+(struct ist_info)</td>
+</tr>
+<tr class="row-even"><td>080/010</td>
+<td>ALL</td>
+<td>hd0_info</td>
+<td>hd0 disk parameter, OBSOLETE!!</td>
+</tr>
+<tr class="row-odd"><td>090/010</td>
+<td>ALL</td>
+<td>hd1_info</td>
+<td>hd1 disk parameter, OBSOLETE!!</td>
+</tr>
+<tr class="row-even"><td>0A0/010</td>
+<td>ALL</td>
+<td>sys_desc_table</td>
+<td>System description table (struct sys_desc_table),
+OBSOLETE!!</td>
+</tr>
+<tr class="row-odd"><td>0B0/010</td>
+<td>ALL</td>
+<td>olpc_ofw_header</td>
+<td>OLPC’s OpenFirmware CIF and friends</td>
+</tr>
+<tr class="row-even"><td>0C0/004</td>
+<td>ALL</td>
+<td>ext_ramdisk_image</td>
+<td>ramdisk_image high 32bits</td>
+</tr>
+<tr class="row-odd"><td>0C4/004</td>
+<td>ALL</td>
+<td>ext_ramdisk_size</td>
+<td>ramdisk_size high 32bits</td>
+</tr>
+<tr class="row-even"><td>0C8/004</td>
+<td>ALL</td>
+<td>ext_cmd_line_ptr</td>
+<td>cmd_line_ptr high 32bits</td>
+</tr>
+<tr class="row-odd"><td>140/080</td>
+<td>ALL</td>
+<td>edid_info</td>
+<td>Video mode setup (struct edid_info)</td>
+</tr>
+<tr class="row-even"><td>1C0/020</td>
+<td>ALL</td>
+<td>efi_info</td>
+<td>EFI 32 information (struct efi_info)</td>
+</tr>
+<tr class="row-odd"><td>1E0/004</td>
+<td>ALL</td>
+<td>alt_mem_k</td>
+<td>Alternative mem check, in KB</td>
+</tr>
+<tr class="row-even"><td>1E4/004</td>
+<td>ALL</td>
+<td>scratch</td>
+<td>Scratch field for the kernel setup code</td>
+</tr>
+<tr class="row-odd"><td>1E8/001</td>
+<td>ALL</td>
+<td>e820_entries</td>
+<td>Number of entries in e820_table (below)</td>
+</tr>
+<tr class="row-even"><td>1E9/001</td>
+<td>ALL</td>
+<td>eddbuf_entries</td>
+<td>Number of entries in eddbuf (below)</td>
+</tr>
+<tr class="row-odd"><td>1EA/001</td>
+<td>ALL</td>
+<td>edd_mbr_sig_buf_entries</td>
+<td>Number of entries in edd_mbr_sig_buffer
+(below)</td>
+</tr>
+<tr class="row-even"><td>1EB/001</td>
+<td>ALL</td>
+<td>kbd_status</td>
+<td>Numlock is enabled</td>
+</tr>
+<tr class="row-odd"><td>1EC/001</td>
+<td>ALL</td>
+<td>secure_boot</td>
+<td>Secure boot is enabled in the firmware</td>
+</tr>
+<tr class="row-even"><td>1EF/001</td>
+<td>ALL</td>
+<td>sentinel</td>
+<td>Used to detect broken bootloaders</td>
+</tr>
+<tr class="row-odd"><td>290/040</td>
+<td>ALL</td>
+<td>edd_mbr_sig_buffer</td>
+<td>EDD MBR signatures</td>
+</tr>
+<tr class="row-even"><td>2D0/A00</td>
+<td>ALL</td>
+<td>e820_table</td>
+<td>E820 memory map table
+(array of struct e820_entry)</td>
+</tr>
+<tr class="row-odd"><td>D00/1EC</td>
+<td>ALL</td>
+<td>eddbuf</td>
+<td>EDD data (array of struct edd_info)</td>
+</tr>
+</tbody>
+</table>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright The kernel development community
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

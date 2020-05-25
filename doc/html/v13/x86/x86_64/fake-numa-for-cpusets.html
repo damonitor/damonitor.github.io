@@ -1,0 +1,295 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>22.5. Fake NUMA For CPUSets &mdash; The Linux Kernel  documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript">
+          var DOCUMENTATION_OPTIONS = {
+              URL_ROOT:'../../',
+              VERSION:'',
+              LANGUAGE:'None',
+              COLLAPSE_INDEX:false,
+              FILE_SUFFIX:'.html',
+              HAS_SOURCE:  true,
+              SOURCELINK_SUFFIX: '.txt'
+          };
+      </script>
+        <script type="text/javascript" src="../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../_static/doctools.js"></script>
+    
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/theme_overrides.css" type="text/css" />
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../index.html" class="icon icon-home"> The Linux Kernel
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                5.6.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../admin-guide/mm/damon/index.html">DAMON: Data Access MONitor</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">The Linux Kernel</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html">Docs</a> &raquo;</li>
+        
+      <li>22.5. Fake NUMA For CPUSets</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../../_sources/x86/x86_64/fake-numa-for-cpusets.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="fake-numa-for-cpusets">
+<h1>22.5. Fake NUMA For CPUSets<a class="headerlink" href="#fake-numa-for-cpusets" title="Permalink to this headline">¶</a></h1>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Author:</th><td class="field-body">David Rientjes &lt;<a class="reference external" href="mailto:rientjes&#37;&#52;&#48;cs&#46;washington&#46;edu">rientjes<span>&#64;</span>cs<span>&#46;</span>washington<span>&#46;</span>edu</a>&gt;</td>
+</tr>
+</tbody>
+</table>
+<p>Using numa=fake and CPUSets for Resource Management</p>
+<p>This document describes how the numa=fake x86_64 command-line option can be used
+in conjunction with cpusets for coarse memory management.  Using this feature,
+you can create fake NUMA nodes that represent contiguous chunks of memory and
+assign them to cpusets and their attached tasks.  This is a way of limiting the
+amount of system memory that are available to a certain class of tasks.</p>
+<p>For more information on the features of cpusets, see
+Documentation/admin-guide/cgroup-v1/cpusets.rst.
+There are a number of different configurations you can use for your needs.  For
+more information on the numa=fake command line option and its various ways of
+configuring fake nodes, see Documentation/x86/x86_64/boot-options.rst.</p>
+<p>For the purposes of this introduction, we’ll assume a very primitive NUMA
+emulation setup of “numa=fake=4*512,”.  This will split our system memory into
+four equal chunks of 512M each that we can now use to assign to cpusets.  As
+you become more familiar with using this combination for resource control,
+you’ll determine a better setup to minimize the number of nodes you have to deal
+with.</p>
+<p>A machine may be split as follows with “numa=fake=4*512,” as reported by dmesg:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>Faking node 0 at 0000000000000000-0000000020000000 (512MB)
+Faking node 1 at 0000000020000000-0000000040000000 (512MB)
+Faking node 2 at 0000000040000000-0000000060000000 (512MB)
+Faking node 3 at 0000000060000000-0000000080000000 (512MB)
+...
+On node 0 totalpages: 130975
+On node 1 totalpages: 131072
+On node 2 totalpages: 131072
+On node 3 totalpages: 131072
+</pre></div>
+</div>
+<p>Now following the instructions for mounting the cpusets filesystem from
+Documentation/admin-guide/cgroup-v1/cpusets.rst, you can assign fake nodes (i.e. contiguous memory
+address spaces) to individual cpusets:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>[root@xroads /]# mkdir exampleset
+[root@xroads /]# mount -t cpuset none exampleset
+[root@xroads /]# mkdir exampleset/ddset
+[root@xroads /]# cd exampleset/ddset
+[root@xroads /exampleset/ddset]# echo 0-1 &gt; cpus
+[root@xroads /exampleset/ddset]# echo 0-1 &gt; mems
+</pre></div>
+</div>
+<p>Now this cpuset, ‘ddset’, will only allowed access to fake nodes 0 and 1 for
+memory allocations (1G).</p>
+<p>You can now assign tasks to these cpusets to limit the memory resources
+available to them according to the fake nodes assigned as mems:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>[root@xroads /exampleset/ddset]# echo $$ &gt; tasks
+[root@xroads /exampleset/ddset]# dd if=/dev/zero of=tmp bs=1024 count=1G
+[1] 13425
+</pre></div>
+</div>
+<p>Notice the difference between the system memory usage as reported by
+/proc/meminfo between the restricted cpuset case above and the unrestricted
+case (i.e. running the same ‘dd’ command without assigning it to a fake NUMA
+cpuset):</p>
+<blockquote>
+<div><table border="1" class="docutils">
+<colgroup>
+<col width="27%" />
+<col width="40%" />
+<col width="33%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Name</th>
+<th class="head">Unrestricted</th>
+<th class="head">Restricted</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>MemTotal</td>
+<td>3091900 kB</td>
+<td>3091900 kB</td>
+</tr>
+<tr class="row-odd"><td>MemFree</td>
+<td>42113 kB</td>
+<td>1513236 kB</td>
+</tr>
+</tbody>
+</table>
+</div></blockquote>
+<p>This allows for coarse memory management for the tasks you assign to particular
+cpusets.  Since cpusets can form a hierarchy, you can create some pretty
+interesting combinations of use-cases for various classes of tasks for your
+memory management needs.</p>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright The kernel development community
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

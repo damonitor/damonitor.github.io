@@ -1,0 +1,295 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Kernel driver i2c-sis96x &mdash; The Linux Kernel  documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript">
+          var DOCUMENTATION_OPTIONS = {
+              URL_ROOT:'../../',
+              VERSION:'',
+              LANGUAGE:'None',
+              COLLAPSE_INDEX:false,
+              FILE_SUFFIX:'.html',
+              HAS_SOURCE:  true,
+              SOURCELINK_SUFFIX: '.txt'
+          };
+      </script>
+        <script type="text/javascript" src="../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../_static/doctools.js"></script>
+    
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/theme_overrides.css" type="text/css" />
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../index.html" class="icon icon-home"> The Linux Kernel
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                5.6.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../admin-guide/mm/damon/index.html">DAMON: Data Access MONitor</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">The Linux Kernel</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html">Docs</a> &raquo;</li>
+        
+      <li>Kernel driver i2c-sis96x</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../../_sources/i2c/busses/i2c-sis96x.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="kernel-driver-i2c-sis96x">
+<h1>Kernel driver i2c-sis96x<a class="headerlink" href="#kernel-driver-i2c-sis96x" title="Permalink to this headline">¶</a></h1>
+<p>Replaces 2.4.x i2c-sis645</p>
+<p>Supported adapters:</p>
+<blockquote>
+<div><ul>
+<li><p class="first">Silicon Integrated Systems Corp (SiS)</p>
+<dl class="docutils">
+<dt>Any combination of these host bridges:</dt>
+<dd><p class="first last">645, 645DX (aka 646), 648, 650, 651, 655, 735, 745, 746</p>
+</dd>
+<dt>and these south bridges:</dt>
+<dd><p class="first last">961, 962, 963(L)</p>
+</dd>
+</dl>
+</li>
+</ul>
+</div></blockquote>
+<p>Author: Mark M. Hoffman &lt;<a class="reference external" href="mailto:mhoffman&#37;&#52;&#48;lightlink&#46;com">mhoffman<span>&#64;</span>lightlink<span>&#46;</span>com</a>&gt;</p>
+<div class="section" id="description">
+<h2>Description<a class="headerlink" href="#description" title="Permalink to this headline">¶</a></h2>
+<p>This SMBus only driver is known to work on motherboards with the above
+named chipset combinations. The driver was developed without benefit of a
+proper datasheet from SiS. The SMBus registers are assumed compatible with
+those of the SiS630, although they are located in a completely different
+place. Thanks to Alexander Malysh &lt;<a class="reference external" href="mailto:amalysh&#37;&#52;&#48;web&#46;de">amalysh<span>&#64;</span>web<span>&#46;</span>de</a>&gt; for providing the
+SiS630 datasheet (and  driver).</p>
+<p>The command <code class="docutils literal notranslate"><span class="pre">lspci</span></code> as root should produce something like these lines:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>00:00.0 Host bridge: Silicon Integrated Systems [SiS]: Unknown device 0645
+00:02.0 ISA bridge: Silicon Integrated Systems [SiS] 85C503/5513
+00:02.1 SMBus: Silicon Integrated Systems [SiS]: Unknown device 0016
+</pre></div>
+</div>
+<p>or perhaps this:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>00:00.0 Host bridge: Silicon Integrated Systems [SiS]: Unknown device 0645
+00:02.0 ISA bridge: Silicon Integrated Systems [SiS]: Unknown device 0961
+00:02.1 SMBus: Silicon Integrated Systems [SiS]: Unknown device 0016
+</pre></div>
+</div>
+<p>(kernel versions later than 2.4.18 may fill in the “Unknown”s)</p>
+<p>If you can’t see it please look on quirk_sis_96x_smbus
+(drivers/pci/quirks.c) (also if southbridge detection fails)</p>
+<p>I suspect that this driver could be made to work for the following SiS
+chipsets as well: 635, and 635T. If anyone owns a board with those chips
+AND is willing to risk crashing &amp; burning an otherwise well-behaved kernel
+in the name of progress… please contact me at &lt;<a class="reference external" href="mailto:mhoffman&#37;&#52;&#48;lightlink&#46;com">mhoffman<span>&#64;</span>lightlink<span>&#46;</span>com</a>&gt; or
+via the linux-i2c mailing list: &lt;<a class="reference external" href="mailto:linux-i2c&#37;&#52;&#48;vger&#46;kernel&#46;org">linux-i2c<span>&#64;</span>vger<span>&#46;</span>kernel<span>&#46;</span>org</a>&gt;.  Please send bug
+reports and/or success stories as well.</p>
+</div>
+<div class="section" id="to-dos">
+<h2>TO DOs<a class="headerlink" href="#to-dos" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li>The driver does not support SMBus block reads/writes; I may add them if a
+scenario is found where they’re needed.</li>
+</ul>
+</div>
+<div class="section" id="thank-you">
+<h2>Thank You<a class="headerlink" href="#thank-you" title="Permalink to this headline">¶</a></h2>
+<dl class="docutils">
+<dt>Mark D. Studebaker &lt;<a class="reference external" href="mailto:mdsxyz123&#37;&#52;&#48;yahoo&#46;com">mdsxyz123<span>&#64;</span>yahoo<span>&#46;</span>com</a>&gt;</dt>
+<dd><ul class="first last simple">
+<li>design hints and bug fixes</li>
+</ul>
+</dd>
+<dt>Alexander Maylsh &lt;<a class="reference external" href="mailto:amalysh&#37;&#52;&#48;web&#46;de">amalysh<span>&#64;</span>web<span>&#46;</span>de</a>&gt;</dt>
+<dd><ul class="first last simple">
+<li>ditto, plus an important datasheet… almost the one I really wanted</li>
+</ul>
+</dd>
+<dt>Hans-Günter Lütke Uphues &lt;<a class="reference external" href="mailto:hg_lu&#37;&#52;&#48;t-online&#46;de">hg_lu<span>&#64;</span>t-online<span>&#46;</span>de</a>&gt;</dt>
+<dd><ul class="first last simple">
+<li>patch for SiS735</li>
+</ul>
+</dd>
+<dt>Robert Zwerus &lt;<a class="reference external" href="mailto:arzie&#37;&#52;&#48;dds&#46;nl">arzie<span>&#64;</span>dds<span>&#46;</span>nl</a>&gt;</dt>
+<dd><ul class="first last simple">
+<li>testing for SiS645DX</li>
+</ul>
+</dd>
+<dt>Kianusch Sayah Karadji &lt;<a class="reference external" href="mailto:kianusch&#37;&#52;&#48;sk-tech&#46;net">kianusch<span>&#64;</span>sk-tech<span>&#46;</span>net</a>&gt;</dt>
+<dd><ul class="first last simple">
+<li>patch for SiS645DX/962</li>
+</ul>
+</dd>
+<dt>Ken Healy</dt>
+<dd><ul class="first last simple">
+<li>patch for SiS655</li>
+</ul>
+</dd>
+</dl>
+<p>To anyone else who has written w/ feedback, thanks!</p>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright The kernel development community
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

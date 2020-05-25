@@ -1,0 +1,332 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>ACPI video extensions &mdash; The Linux Kernel  documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript">
+          var DOCUMENTATION_OPTIONS = {
+              URL_ROOT:'../../',
+              VERSION:'',
+              LANGUAGE:'None',
+              COLLAPSE_INDEX:false,
+              FILE_SUFFIX:'.html',
+              HAS_SOURCE:  true,
+              SOURCELINK_SUFFIX: '.txt'
+          };
+      </script>
+        <script type="text/javascript" src="../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../_static/doctools.js"></script>
+    
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/theme_overrides.css" type="text/css" />
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../index.html" class="icon icon-home"> The Linux Kernel
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                5.6.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../admin-guide/mm/damon/index.html">DAMON: Data Access MONitor</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">The Linux Kernel</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html">Docs</a> &raquo;</li>
+        
+      <li>ACPI video extensions</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../../_sources/firmware-guide/acpi/video_extension.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="acpi-video-extensions">
+<h1>ACPI video extensions<a class="headerlink" href="#acpi-video-extensions" title="Permalink to this headline">¶</a></h1>
+<p>This driver implement the ACPI Extensions For Display Adapters for
+integrated graphics devices on motherboard, as specified in ACPI 2.0
+Specification, Appendix B, allowing to perform some basic control like
+defining the video POST device, retrieving EDID information or to
+setup a video output, etc.  Note that this is an ref. implementation
+only.  It may or may not work for your integrated video device.</p>
+<p>The ACPI video driver does 3 things regarding backlight control.</p>
+<div class="section" id="export-a-sysfs-interface-for-user-space-to-control-backlight-level">
+<h2>Export a sysfs interface for user space to control backlight level<a class="headerlink" href="#export-a-sysfs-interface-for-user-space-to-control-backlight-level" title="Permalink to this headline">¶</a></h2>
+<p>If the ACPI table has a video device, and acpi_backlight=vendor kernel
+command line is not present, the driver will register a backlight device
+and set the required backlight operation structure for it for the sysfs
+interface control. For every registered class device, there will be a
+directory named acpi_videoX under /sys/class/backlight.</p>
+<p>The backlight sysfs interface has a standard definition here:
+Documentation/ABI/stable/sysfs-class-backlight.</p>
+<p>And what ACPI video driver does is:</p>
+<dl class="docutils">
+<dt>actual_brightness:</dt>
+<dd>on read, control method _BQC will be evaluated to
+get the brightness level the firmware thinks it is at;</dd>
+<dt>bl_power:</dt>
+<dd>not implemented, will set the current brightness instead;</dd>
+<dt>brightness:</dt>
+<dd>on write, control method _BCM will run to set the requested brightness level;</dd>
+<dt>max_brightness:</dt>
+<dd>Derived from the _BCL package(see below);</dd>
+<dt>type:</dt>
+<dd>firmware</dd>
+</dl>
+<p>Note that ACPI video backlight driver will always use index for
+brightness, actual_brightness and max_brightness. So if we have
+the following _BCL package:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>Method (_BCL, 0, NotSerialized)
+{
+        Return (Package (0x0C)
+        {
+                0x64,
+                0x32,
+                0x0A,
+                0x14,
+                0x1E,
+                0x28,
+                0x32,
+                0x3C,
+                0x46,
+                0x50,
+                0x5A,
+                0x64
+        })
+}
+</pre></div>
+</div>
+<p>The first two levels are for when laptop are on AC or on battery and are
+not used by Linux currently. The remaining 10 levels are supported levels
+that we can choose from. The applicable index values are from 0 (that
+corresponds to the 0x0A brightness value) to 9 (that corresponds to the
+0x64 brightness value) inclusive. Each of those index values is regarded
+as a “brightness level” indicator. Thus from the user space perspective
+the range of available brightness levels is from 0 to 9 (max_brightness)
+inclusive.</p>
+</div>
+<div class="section" id="notify-user-space-about-hotkey-event">
+<h2>Notify user space about hotkey event<a class="headerlink" href="#notify-user-space-about-hotkey-event" title="Permalink to this headline">¶</a></h2>
+<p>There are generally two cases for hotkey event reporting:</p>
+<ol class="lowerroman">
+<li><p class="first">For some laptops, when user presses the hotkey, a scancode will be
+generated and sent to user space through the input device created by
+the keyboard driver as a key type input event, with proper remap, the
+following key code will appear to user space:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>EV_KEY, KEY_BRIGHTNESSUP
+EV_KEY, KEY_BRIGHTNESSDOWN
+etc.
+</pre></div>
+</div>
+</li>
+</ol>
+<p>For this case, ACPI video driver does not need to do anything(actually,
+it doesn’t even know this happened).</p>
+<ol class="lowerroman" start="2">
+<li><p class="first">For some laptops, the press of the hotkey will not generate the
+scancode, instead, firmware will notify the video device ACPI node
+about the event. The event value is defined in the ACPI spec. ACPI
+video driver will generate an key type input event according to the
+notify value it received and send the event to user space through the
+input device it created:</p>
+<blockquote>
+<div><table border="1" class="docutils">
+<colgroup>
+<col width="22%" />
+<col width="78%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">event</th>
+<th class="head">keycode</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>0x86</td>
+<td>KEY_BRIGHTNESSUP</td>
+</tr>
+<tr class="row-odd"><td>0x87</td>
+<td>KEY_BRIGHTNESSDOWN</td>
+</tr>
+<tr class="row-even"><td>etc.</td>
+<td>&#160;</td>
+</tr>
+</tbody>
+</table>
+</div></blockquote>
+</li>
+</ol>
+<p>so this would lead to the same effect as case i) now.</p>
+<p>Once user space tool receives this event, it can modify the backlight
+level through the sysfs interface.</p>
+</div>
+<div class="section" id="change-backlight-level-in-the-kernel">
+<h2>Change backlight level in the kernel<a class="headerlink" href="#change-backlight-level-in-the-kernel" title="Permalink to this headline">¶</a></h2>
+<p>This works for machines covered by case ii) in Section 2. Once the driver
+received a notification, it will set the backlight level accordingly. This does
+not affect the sending of event to user space, they are always sent to user
+space regardless of whether or not the video module controls the backlight level
+directly. This behaviour can be controlled through the brightness_switch_enabled
+module parameter as documented in admin-guide/kernel-parameters.rst. It is
+recommended to disable this behaviour once a GUI environment starts up and
+wants to have full control of the backlight level.</p>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright The kernel development community
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

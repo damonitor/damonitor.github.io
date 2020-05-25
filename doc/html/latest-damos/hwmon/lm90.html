@@ -1,0 +1,564 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Kernel driver lm90 &mdash; The Linux Kernel  documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript">
+          var DOCUMENTATION_OPTIONS = {
+              URL_ROOT:'../',
+              VERSION:'',
+              LANGUAGE:'None',
+              COLLAPSE_INDEX:false,
+              FILE_SUFFIX:'.html',
+              HAS_SOURCE:  true,
+              SOURCELINK_SUFFIX: '.txt'
+          };
+      </script>
+        <script type="text/javascript" src="../_static/jquery.js"></script>
+        <script type="text/javascript" src="../_static/underscore.js"></script>
+        <script type="text/javascript" src="../_static/doctools.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/theme_overrides.css" type="text/css" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> The Linux Kernel
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                5.6.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../admin-guide/mm/damon/index.html">DAMON: Data Access MONitor</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">The Linux Kernel</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+      <li>Kernel driver lm90</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/hwmon/lm90.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="kernel-driver-lm90">
+<h1>Kernel driver lm90<a class="headerlink" href="#kernel-driver-lm90" title="Permalink to this headline">¶</a></h1>
+<p>Supported chips:</p>
+<blockquote>
+<div><ul>
+<li><p class="first">National Semiconductor LM90</p>
+<p>Prefix: ‘lm90’</p>
+<p>Addresses scanned: I2C 0x4c</p>
+<p>Datasheet: Publicly available at the National Semiconductor website</p>
+<blockquote>
+<div><p><a class="reference external" href="http://www.national.com/pf/LM/LM90.html">http://www.national.com/pf/LM/LM90.html</a></p>
+</div></blockquote>
+</li>
+<li><p class="first">National Semiconductor LM89</p>
+<p>Prefix: ‘lm89’ (no auto-detection)</p>
+<p>Addresses scanned: I2C 0x4c and 0x4d</p>
+<p>Datasheet: Publicly available at the National Semiconductor website</p>
+<blockquote>
+<div><p><a class="reference external" href="http://www.national.com/mpf/LM/LM89.html">http://www.national.com/mpf/LM/LM89.html</a></p>
+</div></blockquote>
+</li>
+<li><p class="first">National Semiconductor LM99</p>
+<p>Prefix: ‘lm99’</p>
+<p>Addresses scanned: I2C 0x4c and 0x4d</p>
+<p>Datasheet: Publicly available at the National Semiconductor website</p>
+<blockquote>
+<div><p><a class="reference external" href="http://www.national.com/pf/LM/LM99.html">http://www.national.com/pf/LM/LM99.html</a></p>
+</div></blockquote>
+</li>
+<li><p class="first">National Semiconductor LM86</p>
+<p>Prefix: ‘lm86’</p>
+<p>Addresses scanned: I2C 0x4c</p>
+<p>Datasheet: Publicly available at the National Semiconductor website</p>
+<blockquote>
+<div><p><a class="reference external" href="http://www.national.com/mpf/LM/LM86.html">http://www.national.com/mpf/LM/LM86.html</a></p>
+</div></blockquote>
+</li>
+<li><p class="first">Analog Devices ADM1032</p>
+<p>Prefix: ‘adm1032’</p>
+<p>Addresses scanned: I2C 0x4c and 0x4d</p>
+<p>Datasheet: Publicly available at the ON Semiconductor website</p>
+<blockquote>
+<div><p><a class="reference external" href="http://www.onsemi.com/PowerSolutions/product.do?id=ADM1032">http://www.onsemi.com/PowerSolutions/product.do?id=ADM1032</a></p>
+</div></blockquote>
+</li>
+<li><p class="first">Analog Devices ADT7461</p>
+<p>Prefix: ‘adt7461’</p>
+<p>Addresses scanned: I2C 0x4c and 0x4d</p>
+<p>Datasheet: Publicly available at the ON Semiconductor website</p>
+<blockquote>
+<div><p><a class="reference external" href="http://www.onsemi.com/PowerSolutions/product.do?id=ADT7461">http://www.onsemi.com/PowerSolutions/product.do?id=ADT7461</a></p>
+</div></blockquote>
+</li>
+<li><p class="first">Analog Devices ADT7461A</p>
+<p>Prefix: ‘adt7461a’</p>
+<p>Addresses scanned: I2C 0x4c and 0x4d</p>
+<p>Datasheet: Publicly available at the ON Semiconductor website</p>
+<blockquote>
+<div><p><a class="reference external" href="http://www.onsemi.com/PowerSolutions/product.do?id=ADT7461A">http://www.onsemi.com/PowerSolutions/product.do?id=ADT7461A</a></p>
+</div></blockquote>
+</li>
+<li><p class="first">ON Semiconductor NCT1008</p>
+<p>Prefix: ‘nct1008’</p>
+<p>Addresses scanned: I2C 0x4c and 0x4d</p>
+<p>Datasheet: Publicly available at the ON Semiconductor website</p>
+<blockquote>
+<div><p><a class="reference external" href="http://www.onsemi.com/PowerSolutions/product.do?id=NCT1008">http://www.onsemi.com/PowerSolutions/product.do?id=NCT1008</a></p>
+</div></blockquote>
+</li>
+<li><p class="first">Maxim MAX6646</p>
+<p>Prefix: ‘max6646’</p>
+<p>Addresses scanned: I2C 0x4d</p>
+<p>Datasheet: Publicly available at the Maxim website</p>
+<blockquote>
+<div><p><a class="reference external" href="http://www.maxim-ic.com/quick_view2.cfm/qv_pk/3497">http://www.maxim-ic.com/quick_view2.cfm/qv_pk/3497</a></p>
+</div></blockquote>
+</li>
+<li><p class="first">Maxim MAX6647</p>
+<p>Prefix: ‘max6646’</p>
+<p>Addresses scanned: I2C 0x4e</p>
+<p>Datasheet: Publicly available at the Maxim website</p>
+<blockquote>
+<div><p><a class="reference external" href="http://www.maxim-ic.com/quick_view2.cfm/qv_pk/3497">http://www.maxim-ic.com/quick_view2.cfm/qv_pk/3497</a></p>
+</div></blockquote>
+</li>
+<li><p class="first">Maxim MAX6648</p>
+<p>Prefix: ‘max6646’</p>
+<p>Addresses scanned: I2C 0x4c</p>
+<p>Datasheet: Publicly available at the Maxim website</p>
+<blockquote>
+<div><p><a class="reference external" href="http://www.maxim-ic.com/quick_view2.cfm/qv_pk/3500">http://www.maxim-ic.com/quick_view2.cfm/qv_pk/3500</a></p>
+</div></blockquote>
+</li>
+<li><p class="first">Maxim MAX6649</p>
+<p>Prefix: ‘max6646’</p>
+<p>Addresses scanned: I2C 0x4c</p>
+<p>Datasheet: Publicly available at the Maxim website</p>
+<blockquote>
+<div><p><a class="reference external" href="http://www.maxim-ic.com/quick_view2.cfm/qv_pk/3497">http://www.maxim-ic.com/quick_view2.cfm/qv_pk/3497</a></p>
+</div></blockquote>
+</li>
+<li><p class="first">Maxim MAX6657</p>
+<p>Prefix: ‘max6657’</p>
+<p>Addresses scanned: I2C 0x4c</p>
+<p>Datasheet: Publicly available at the Maxim website</p>
+<blockquote>
+<div><p><a class="reference external" href="http://www.maxim-ic.com/quick_view2.cfm/qv_pk/2578">http://www.maxim-ic.com/quick_view2.cfm/qv_pk/2578</a></p>
+</div></blockquote>
+</li>
+<li><p class="first">Maxim MAX6658</p>
+<p>Prefix: ‘max6657’</p>
+<p>Addresses scanned: I2C 0x4c</p>
+<p>Datasheet: Publicly available at the Maxim website</p>
+<blockquote>
+<div><p><a class="reference external" href="http://www.maxim-ic.com/quick_view2.cfm/qv_pk/2578">http://www.maxim-ic.com/quick_view2.cfm/qv_pk/2578</a></p>
+</div></blockquote>
+</li>
+<li><p class="first">Maxim MAX6659</p>
+<p>Prefix: ‘max6659’</p>
+<p>Addresses scanned: I2C 0x4c, 0x4d, 0x4e</p>
+<p>Datasheet: Publicly available at the Maxim website</p>
+<blockquote>
+<div><p><a class="reference external" href="http://www.maxim-ic.com/quick_view2.cfm/qv_pk/2578">http://www.maxim-ic.com/quick_view2.cfm/qv_pk/2578</a></p>
+</div></blockquote>
+</li>
+<li><p class="first">Maxim MAX6680</p>
+<p>Prefix: ‘max6680’</p>
+<p>Addresses scanned: I2C 0x18, 0x19, 0x1a, 0x29, 0x2a, 0x2b,</p>
+<blockquote>
+<div><p>0x4c, 0x4d and 0x4e</p>
+</div></blockquote>
+<p>Datasheet: Publicly available at the Maxim website</p>
+<blockquote>
+<div><p><a class="reference external" href="http://www.maxim-ic.com/quick_view2.cfm/qv_pk/3370">http://www.maxim-ic.com/quick_view2.cfm/qv_pk/3370</a></p>
+</div></blockquote>
+</li>
+<li><p class="first">Maxim MAX6681</p>
+<p>Prefix: ‘max6680’</p>
+<p>Addresses scanned: I2C 0x18, 0x19, 0x1a, 0x29, 0x2a, 0x2b,</p>
+<blockquote>
+<div><p>0x4c, 0x4d and 0x4e</p>
+</div></blockquote>
+<p>Datasheet: Publicly available at the Maxim website</p>
+<blockquote>
+<div><p><a class="reference external" href="http://www.maxim-ic.com/quick_view2.cfm/qv_pk/3370">http://www.maxim-ic.com/quick_view2.cfm/qv_pk/3370</a></p>
+</div></blockquote>
+</li>
+<li><p class="first">Maxim MAX6692</p>
+<p>Prefix: ‘max6646’</p>
+<p>Addresses scanned: I2C 0x4c</p>
+<p>Datasheet: Publicly available at the Maxim website</p>
+<blockquote>
+<div><p><a class="reference external" href="http://www.maxim-ic.com/quick_view2.cfm/qv_pk/3500">http://www.maxim-ic.com/quick_view2.cfm/qv_pk/3500</a></p>
+</div></blockquote>
+</li>
+<li><p class="first">Maxim MAX6695</p>
+<p>Prefix: ‘max6695’</p>
+<p>Addresses scanned: I2C 0x18</p>
+<p>Datasheet: Publicly available at the Maxim website</p>
+<blockquote>
+<div><p><a class="reference external" href="http://www.maxim-ic.com/datasheet/index.mvp/id/4199">http://www.maxim-ic.com/datasheet/index.mvp/id/4199</a></p>
+</div></blockquote>
+</li>
+<li><p class="first">Maxim MAX6696</p>
+<p>Prefix: ‘max6695’</p>
+<p>Addresses scanned: I2C 0x18, 0x19, 0x1a, 0x29, 0x2a, 0x2b,</p>
+<blockquote>
+<div><p>0x4c, 0x4d and 0x4e</p>
+</div></blockquote>
+<p>Datasheet: Publicly available at the Maxim website</p>
+<blockquote>
+<div><p><a class="reference external" href="http://www.maxim-ic.com/datasheet/index.mvp/id/4199">http://www.maxim-ic.com/datasheet/index.mvp/id/4199</a></p>
+</div></blockquote>
+</li>
+<li><p class="first">Winbond/Nuvoton W83L771W/G</p>
+<p>Prefix: ‘w83l771’</p>
+<p>Addresses scanned: I2C 0x4c</p>
+<p>Datasheet: No longer available</p>
+</li>
+<li><p class="first">Winbond/Nuvoton W83L771AWG/ASG</p>
+<p>Prefix: ‘w83l771’</p>
+<p>Addresses scanned: I2C 0x4c</p>
+<p>Datasheet: Not publicly available, can be requested from Nuvoton</p>
+</li>
+<li><p class="first">Philips/NXP SA56004X</p>
+<p>Prefix: ‘sa56004’</p>
+<p>Addresses scanned: I2C 0x48 through 0x4F</p>
+<p>Datasheet: Publicly available at NXP website</p>
+<blockquote>
+<div><p><a class="reference external" href="http://ics.nxp.com/products/interface/datasheet/sa56004x.pdf">http://ics.nxp.com/products/interface/datasheet/sa56004x.pdf</a></p>
+</div></blockquote>
+</li>
+<li><p class="first">GMT G781</p>
+<p>Prefix: ‘g781’</p>
+<p>Addresses scanned: I2C 0x4c, 0x4d</p>
+<p>Datasheet: Not publicly available from GMT</p>
+</li>
+<li><p class="first">Texas Instruments TMP451</p>
+<p>Prefix: ‘tmp451’</p>
+<p>Addresses scanned: I2C 0x4c</p>
+<p>Datasheet: Publicly available at TI website</p>
+<blockquote>
+<div><p><a class="reference external" href="http://www.ti.com/litv/pdf/sbos686">http://www.ti.com/litv/pdf/sbos686</a></p>
+</div></blockquote>
+</li>
+</ul>
+</div></blockquote>
+<p>Author: Jean Delvare &lt;<a class="reference external" href="mailto:jdelvare&#37;&#52;&#48;suse&#46;de">jdelvare<span>&#64;</span>suse<span>&#46;</span>de</a>&gt;</p>
+<div class="section" id="description">
+<h2>Description<a class="headerlink" href="#description" title="Permalink to this headline">¶</a></h2>
+<p>The LM90 is a digital temperature sensor. It senses its own temperature as
+well as the temperature of up to one external diode. It is compatible
+with many other devices, many of which are supported by this driver.</p>
+<p>Note that there is no easy way to differentiate between the MAX6657,
+MAX6658 and MAX6659 variants. The extra features of the MAX6659 are only
+supported by this driver if the chip is located at address 0x4d or 0x4e,
+or if the chip type is explicitly selected as max6659.
+The MAX6680 and MAX6681 only differ in their pinout, therefore they obviously
+can’t (and don’t need to) be distinguished.</p>
+<p>The specificity of this family of chipsets over the ADM1021/LM84
+family is that it features critical limits with hysteresis, and an
+increased resolution of the remote temperature measurement.</p>
+<p>The different chipsets of the family are not strictly identical, although
+very similar. For reference, here comes a non-exhaustive list of specific
+features:</p>
+<dl class="docutils">
+<dt>LM90:</dt>
+<dd><ul class="first last simple">
+<li>Filter and alert configuration register at 0xBF.</li>
+<li>ALERT is triggered by temperatures over critical limits.</li>
+</ul>
+</dd>
+<dt>LM86 and LM89:</dt>
+<dd><ul class="first last simple">
+<li>Same as LM90</li>
+<li>Better external channel accuracy</li>
+</ul>
+</dd>
+<dt>LM99:</dt>
+<dd><ul class="first last simple">
+<li>Same as LM89</li>
+<li>External temperature shifted by 16 degrees down</li>
+</ul>
+</dd>
+<dt>ADM1032:</dt>
+<dd><ul class="first last simple">
+<li>Consecutive alert register at 0x22.</li>
+<li>Conversion averaging.</li>
+<li>Up to 64 conversions/s.</li>
+<li>ALERT is triggered by open remote sensor.</li>
+<li>SMBus PEC support for Write Byte and Receive Byte transactions.</li>
+</ul>
+</dd>
+<dt>ADT7461, ADT7461A, NCT1008:</dt>
+<dd><ul class="first last simple">
+<li>Extended temperature range (breaks compatibility)</li>
+<li>Lower resolution for remote temperature</li>
+</ul>
+</dd>
+<dt>MAX6657 and MAX6658:</dt>
+<dd><ul class="first last simple">
+<li>Better local resolution</li>
+<li>Remote sensor type selection</li>
+</ul>
+</dd>
+<dt>MAX6659:</dt>
+<dd><ul class="first last simple">
+<li>Better local resolution</li>
+<li>Selectable address</li>
+<li>Second critical temperature limit</li>
+<li>Remote sensor type selection</li>
+</ul>
+</dd>
+<dt>MAX6680 and MAX6681:</dt>
+<dd><ul class="first last simple">
+<li>Selectable address</li>
+<li>Remote sensor type selection</li>
+</ul>
+</dd>
+<dt>MAX6695 and MAX6696:</dt>
+<dd><ul class="first last simple">
+<li>Better local resolution</li>
+<li>Selectable address (max6696)</li>
+<li>Second critical temperature limit</li>
+<li>Two remote sensors</li>
+</ul>
+</dd>
+<dt>W83L771W/G</dt>
+<dd><ul class="first last simple">
+<li>The G variant is lead-free, otherwise similar to the W.</li>
+<li>Filter and alert configuration register at 0xBF</li>
+<li>Moving average (depending on conversion rate)</li>
+</ul>
+</dd>
+<dt>W83L771AWG/ASG</dt>
+<dd><ul class="first last simple">
+<li>Successor of the W83L771W/G, same features.</li>
+<li>The AWG and ASG variants only differ in package format.</li>
+<li>Diode ideality factor configuration (remote sensor) at 0xE3</li>
+</ul>
+</dd>
+<dt>SA56004X:</dt>
+<dd><ul class="first last simple">
+<li>Better local resolution</li>
+</ul>
+</dd>
+</dl>
+<p>All temperature values are given in degrees Celsius. Resolution
+is 1.0 degree for the local temperature, 0.125 degree for the remote
+temperature, except for the MAX6657, MAX6658 and MAX6659 which have a
+resolution of 0.125 degree for both temperatures.</p>
+<p>Each sensor has its own high and low limits, plus a critical limit.
+Additionally, there is a relative hysteresis value common to both critical
+values. To make life easier to user-space applications, two absolute values
+are exported, one for each channel, but these values are of course linked.
+Only the local hysteresis can be set from user-space, and the same delta
+applies to the remote hysteresis.</p>
+<p>The lm90 driver will not update its values more frequently than configured with
+the update_interval attribute; reading them more often will do no harm, but will
+return ‘old’ values.</p>
+</div>
+<div class="section" id="smbus-alert-support">
+<h2>SMBus Alert Support<a class="headerlink" href="#smbus-alert-support" title="Permalink to this headline">¶</a></h2>
+<p>This driver has basic support for SMBus alert. When an alert is received,
+the status register is read and the faulty temperature channel is logged.</p>
+<p>The Analog Devices chips (ADM1032, ADT7461 and ADT7461A) and ON
+Semiconductor chips (NCT1008) do not implement the SMBus alert protocol
+properly so additional care is needed: the ALERT output is disabled when
+an alert is received, and is re-enabled only when the alarm is gone.
+Otherwise the chip would block alerts from other chips in the bus as long
+as the alarm is active.</p>
+</div>
+<div class="section" id="pec-support">
+<h2>PEC Support<a class="headerlink" href="#pec-support" title="Permalink to this headline">¶</a></h2>
+<p>The ADM1032 is the only chip of the family which supports PEC. It does
+not support PEC on all transactions though, so some care must be taken.</p>
+<p>When reading a register value, the PEC byte is computed and sent by the
+ADM1032 chip. However, in the case of a combined transaction (SMBus Read
+Byte), the ADM1032 computes the CRC value over only the second half of
+the message rather than its entirety, because it thinks the first half
+of the message belongs to a different transaction. As a result, the CRC
+value differs from what the SMBus master expects, and all reads fail.</p>
+<p>For this reason, the lm90 driver will enable PEC for the ADM1032 only if
+the bus supports the SMBus Send Byte and Receive Byte transaction types.
+These transactions will be used to read register values, instead of
+SMBus Read Byte, and PEC will work properly.</p>
+<p>Additionally, the ADM1032 doesn’t support SMBus Send Byte with PEC.
+Instead, it will try to write the PEC value to the register (because the
+SMBus Send Byte transaction with PEC is similar to a Write Byte transaction
+without PEC), which is not what we want. Thus, PEC is explicitly disabled
+on SMBus Send Byte transactions in the lm90 driver.</p>
+<p>PEC on byte data transactions represents a significant increase in bandwidth
+usage (+33% for writes, +25% for reads) in normal conditions. With the need
+to use two SMBus transaction for reads, this overhead jumps to +50%. Worse,
+two transactions will typically mean twice as much delay waiting for
+transaction completion, effectively doubling the register cache refresh time.
+I guess reliability comes at a price, but it’s quite expensive this time.</p>
+<p>So, as not everyone might enjoy the slowdown, PEC can be disabled through
+sysfs. Just write 0 to the “pec” file and PEC will be disabled. Write 1
+to that file to enable PEC again.</p>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright The kernel development community
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

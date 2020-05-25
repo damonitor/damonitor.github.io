@@ -1,0 +1,333 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Kernel driver lm75 &mdash; The Linux Kernel  documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript">
+          var DOCUMENTATION_OPTIONS = {
+              URL_ROOT:'../',
+              VERSION:'',
+              LANGUAGE:'None',
+              COLLAPSE_INDEX:false,
+              FILE_SUFFIX:'.html',
+              HAS_SOURCE:  true,
+              SOURCELINK_SUFFIX: '.txt'
+          };
+      </script>
+        <script type="text/javascript" src="../_static/jquery.js"></script>
+        <script type="text/javascript" src="../_static/underscore.js"></script>
+        <script type="text/javascript" src="../_static/doctools.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/theme_overrides.css" type="text/css" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> The Linux Kernel
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                5.6.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../admin-guide/mm/damon/index.html">DAMON: Data Access MONitor</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">The Linux Kernel</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+      <li>Kernel driver lm75</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/hwmon/lm75.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="kernel-driver-lm75">
+<h1>Kernel driver lm75<a class="headerlink" href="#kernel-driver-lm75" title="Permalink to this headline">¶</a></h1>
+<p>Supported chips:</p>
+<blockquote>
+<div><ul>
+<li><p class="first">National Semiconductor LM75</p>
+<p>Prefix: ‘lm75’</p>
+<p>Addresses scanned: I2C 0x48 - 0x4f</p>
+<p>Datasheet: Publicly available at the National Semiconductor website</p>
+<blockquote>
+<div><p><a class="reference external" href="http://www.national.com/">http://www.national.com/</a></p>
+</div></blockquote>
+</li>
+<li><p class="first">National Semiconductor LM75A</p>
+<p>Prefix: ‘lm75a’</p>
+<p>Addresses scanned: I2C 0x48 - 0x4f</p>
+<p>Datasheet: Publicly available at the National Semiconductor website</p>
+<blockquote>
+<div><p><a class="reference external" href="http://www.national.com/">http://www.national.com/</a></p>
+</div></blockquote>
+</li>
+<li><p class="first">Dallas Semiconductor (now Maxim) DS75, DS1775, DS7505</p>
+<p>Prefixes: ‘ds75’, ‘ds1775’, ‘ds7505’</p>
+<p>Addresses scanned: none</p>
+<p>Datasheet: Publicly available at the Maxim website</p>
+<blockquote>
+<div><p><a class="reference external" href="http://www.maximintegrated.com/">http://www.maximintegrated.com/</a></p>
+</div></blockquote>
+</li>
+<li><p class="first">Maxim MAX6625, MAX6626, MAX31725, MAX31726</p>
+<p>Prefixes: ‘max6625’, ‘max6626’, ‘max31725’, ‘max31726’</p>
+<p>Addresses scanned: none</p>
+<p>Datasheet: Publicly available at the Maxim website</p>
+<blockquote>
+<div><p><a class="reference external" href="http://www.maxim-ic.com/">http://www.maxim-ic.com/</a></p>
+</div></blockquote>
+</li>
+<li><p class="first">Microchip (TelCom) TCN75</p>
+<p>Prefix: ‘tcn75’</p>
+<p>Addresses scanned: none</p>
+<p>Datasheet: Publicly available at the Microchip website</p>
+<blockquote>
+<div><p><a class="reference external" href="http://www.microchip.com/">http://www.microchip.com/</a></p>
+</div></blockquote>
+</li>
+<li><p class="first">Microchip MCP9800, MCP9801, MCP9802, MCP9803</p>
+<p>Prefix: ‘mcp980x’</p>
+<p>Addresses scanned: none</p>
+<p>Datasheet: Publicly available at the Microchip website</p>
+<blockquote>
+<div><p><a class="reference external" href="http://www.microchip.com/">http://www.microchip.com/</a></p>
+</div></blockquote>
+</li>
+<li><p class="first">Analog Devices ADT75</p>
+<p>Prefix: ‘adt75’</p>
+<p>Addresses scanned: none</p>
+<p>Datasheet: Publicly available at the Analog Devices website</p>
+<blockquote>
+<div><p><a class="reference external" href="http://www.analog.com/adt75">http://www.analog.com/adt75</a></p>
+</div></blockquote>
+</li>
+<li><p class="first">ST Microelectronics STDS75</p>
+<p>Prefix: ‘stds75’</p>
+<p>Addresses scanned: none</p>
+<p>Datasheet: Publicly available at the ST website</p>
+<blockquote>
+<div><p><a class="reference external" href="http://www.st.com/internet/analog/product/121769.jsp">http://www.st.com/internet/analog/product/121769.jsp</a></p>
+</div></blockquote>
+</li>
+<li><p class="first">ST Microelectronics STLM75</p>
+<p>Prefix: ‘stlm75’</p>
+<p>Addresses scanned: none</p>
+<p>Datasheet: Publicly available at the ST website</p>
+<blockquote>
+<div><p><a class="reference external" href="https://www.st.com/resource/en/datasheet/stlm75.pdf">https://www.st.com/resource/en/datasheet/stlm75.pdf</a></p>
+</div></blockquote>
+</li>
+<li><p class="first">Texas Instruments TMP100, TMP101, TMP105, TMP112, TMP75, TMP75B, TMP75C, TMP175, TMP275</p>
+<p>Prefixes: ‘tmp100’, ‘tmp101’, ‘tmp105’, ‘tmp112’, ‘tmp175’, ‘tmp75’, ‘tmp75b’, ‘tmp75c’, ‘tmp275’</p>
+<p>Addresses scanned: none</p>
+<p>Datasheet: Publicly available at the Texas Instruments website</p>
+<blockquote>
+<div><p><a class="reference external" href="http://www.ti.com/product/tmp100">http://www.ti.com/product/tmp100</a></p>
+<p><a class="reference external" href="http://www.ti.com/product/tmp101">http://www.ti.com/product/tmp101</a></p>
+<p><a class="reference external" href="http://www.ti.com/product/tmp105">http://www.ti.com/product/tmp105</a></p>
+<p><a class="reference external" href="http://www.ti.com/product/tmp112">http://www.ti.com/product/tmp112</a></p>
+<p><a class="reference external" href="http://www.ti.com/product/tmp75">http://www.ti.com/product/tmp75</a></p>
+<p><a class="reference external" href="http://www.ti.com/product/tmp75b">http://www.ti.com/product/tmp75b</a></p>
+<p><a class="reference external" href="http://www.ti.com/product/tmp75c">http://www.ti.com/product/tmp75c</a></p>
+<p><a class="reference external" href="http://www.ti.com/product/tmp175">http://www.ti.com/product/tmp175</a></p>
+<p><a class="reference external" href="http://www.ti.com/product/tmp275">http://www.ti.com/product/tmp275</a></p>
+</div></blockquote>
+</li>
+<li><p class="first">NXP LM75B, PCT2075</p>
+<p>Prefix: ‘lm75b’, ‘pct2075’</p>
+<p>Addresses scanned: none</p>
+<p>Datasheet: Publicly available at the NXP website</p>
+<blockquote>
+<div><p><a class="reference external" href="http://www.nxp.com/documents/data_sheet/LM75B.pdf">http://www.nxp.com/documents/data_sheet/LM75B.pdf</a></p>
+<p><a class="reference external" href="http://www.nxp.com/docs/en/data-sheet/PCT2075.pdf">http://www.nxp.com/docs/en/data-sheet/PCT2075.pdf</a></p>
+</div></blockquote>
+</li>
+</ul>
+</div></blockquote>
+<p>Author: Frodo Looijaard &lt;<a class="reference external" href="mailto:frodol&#37;&#52;&#48;dds&#46;nl">frodol<span>&#64;</span>dds<span>&#46;</span>nl</a>&gt;</p>
+<div class="section" id="description">
+<h2>Description<a class="headerlink" href="#description" title="Permalink to this headline">¶</a></h2>
+<p>The LM75 implements one temperature sensor. Limits can be set through the
+Overtemperature Shutdown register and Hysteresis register. Each value can be
+set and read to half-degree accuracy.
+An alarm is issued (usually to a connected LM78) when the temperature
+gets higher then the Overtemperature Shutdown value; it stays on until
+the temperature falls below the Hysteresis value.
+All temperatures are in degrees Celsius, and are guaranteed within a
+range of -55 to +125 degrees.</p>
+<p>The driver caches the values for a period varying between 1 second for the
+slowest chips and 125 ms for the fastest chips; reading it more often
+will do no harm, but will return ‘old’ values.</p>
+<p>The original LM75 was typically used in combination with LM78-like chips
+on PC motherboards, to measure the temperature of the processor(s). Clones
+are now used in various embedded designs.</p>
+<p>The LM75 is essentially an industry standard; there may be other
+LM75 clones not listed here, with or without various enhancements,
+that are supported. The clones are not detected by the driver, unless
+they reproduce the exact register tricks of the original LM75, and must
+therefore be instantiated explicitly. Higher resolution up to 16-bit
+is supported by this driver, other specific enhancements are not.</p>
+<p>The LM77 is not supported, contrary to what we pretended for a long time.
+Both chips are simply not compatible, value encoding differs.</p>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright The kernel development community
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

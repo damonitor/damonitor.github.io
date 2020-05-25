@@ -1,0 +1,241 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Using GPIO Lines in Linux &mdash; The Linux Kernel  documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript">
+          var DOCUMENTATION_OPTIONS = {
+              URL_ROOT:'../../',
+              VERSION:'',
+              LANGUAGE:'None',
+              COLLAPSE_INDEX:false,
+              FILE_SUFFIX:'.html',
+              HAS_SOURCE:  true,
+              SOURCELINK_SUFFIX: '.txt'
+          };
+      </script>
+        <script type="text/javascript" src="../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../_static/doctools.js"></script>
+    
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/theme_overrides.css" type="text/css" />
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../index.html" class="icon icon-home"> The Linux Kernel
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                5.6.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../admin-guide/mm/damon/index.html">DAMON: Data Access MONitor</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">The Linux Kernel</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html">Docs</a> &raquo;</li>
+        
+      <li>Using GPIO Lines in Linux</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../../_sources/driver-api/gpio/using-gpio.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="using-gpio-lines-in-linux">
+<h1>Using GPIO Lines in Linux<a class="headerlink" href="#using-gpio-lines-in-linux" title="Permalink to this headline">¶</a></h1>
+<p>The Linux kernel exists to abstract and present hardware to users. GPIO lines
+as such are normally not user facing abstractions. The most obvious, natural
+and preferred way to use GPIO lines is to let kernel hardware drivers deal
+with them.</p>
+<p>For examples of already existing generic drivers that will also be good
+examples for any other kernel drivers you want to author, refer to
+<a class="reference internal" href="drivers-on-gpio.html"><span class="doc">Subsystem drivers using GPIO</span></a></p>
+<p>For any kind of mass produced system you want to support, such as servers,
+laptops, phones, tablets, routers, and any consumer or office or business goods
+using appropriate kernel drivers is paramount. Submit your code for inclusion
+in the upstream Linux kernel when you feel it is mature enough and you will get
+help to refine it, see <a class="reference internal" href="../../process/submitting-patches.html"><span class="doc">Submitting patches: the essential guide to getting your code into the kernel</span></a>.</p>
+<p>In Linux GPIO lines also have a userspace ABI.</p>
+<p>The userspace ABI is intended for one-off deployments. Examples are prototypes,
+factory lines, maker community projects, workshop specimen, production tools,
+industrial automation, PLC-type use cases, door controllers, in short a piece
+of specialized equipment that is not produced by the numbers, requiring
+operators to have a deep knowledge of the equipment and knows about the
+software-hardware interface to be set up. They should not have a natural fit
+to any existing kernel subsystem and not be a good fit for an operating system,
+because of not being reusable or abstract enough, or involving a lot of non
+computer hardware related policy.</p>
+<p>Applications that have a good reason to use the industrial I/O (IIO) subsystem
+from userspace will likely be a good fit for using GPIO lines from userspace as
+well.</p>
+<p>Do not under any circumstances abuse the GPIO userspace ABI to cut corners in
+any product development projects. If you use it for prototyping, then do not
+productify the prototype: rewrite it using proper kernel drivers. Do not under
+any circumstances deploy any uniform products using GPIO from userspace.</p>
+<p>The userspace ABI is a character device for each GPIO hardware unit (GPIO chip).
+These devices will appear on the system as <code class="docutils literal notranslate"><span class="pre">/dev/gpiochip0</span></code> thru
+<code class="docutils literal notranslate"><span class="pre">/dev/gpiochipN</span></code>. Examples of how to directly use the userspace ABI can be
+found in the kernel tree <code class="docutils literal notranslate"><span class="pre">tools/gpio</span></code> subdirectory.</p>
+<p>For structured and managed applications, we recommend that you make use of the
+<a class="reference external" href="https://git.kernel.org/pub/scm/libs/libgpiod/libgpiod.git/">libgpiod</a> library. This provides helper abstractions, command line utlities
+and arbitration for multiple simultaneous consumers on the same GPIO chip.</p>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright The kernel development community
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

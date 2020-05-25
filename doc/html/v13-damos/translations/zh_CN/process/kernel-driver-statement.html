@@ -1,0 +1,419 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>内核驱动声明 &mdash; The Linux Kernel  documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript">
+          var DOCUMENTATION_OPTIONS = {
+              URL_ROOT:'../../../',
+              VERSION:'',
+              LANGUAGE:'None',
+              COLLAPSE_INDEX:false,
+              FILE_SUFFIX:'.html',
+              HAS_SOURCE:  true,
+              SOURCELINK_SUFFIX: '.txt'
+          };
+      </script>
+        <script type="text/javascript" src="../../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/theme_overrides.css" type="text/css" />
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home"> The Linux Kernel
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                5.6.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../admin-guide/mm/damon/index.html">DAMON: Data Access MONitor</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">The Linux Kernel</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../index.html">Docs</a> &raquo;</li>
+        
+      <li>内核驱动声明</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../../../_sources/translations/zh_CN/process/kernel-driver-statement.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="admonition warning">
+<p class="first admonition-title">Warning</p>
+<p class="last">此文件的目的是为让中文读者更容易阅读和理解，而不是作为一个分支。 因此，
+如果您对此文件有任何意见或更新，请先尝试更新原始英文文件。</p>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">如果您发现本文档与原始文件有任何不同或者有翻译问题，请联系该文件的译者，
+或者请求时奎亮的帮助：&lt;<a class="reference external" href="mailto:alex&#46;shi&#37;&#52;&#48;linux&#46;alibaba&#46;com">alex<span>&#46;</span>shi<span>&#64;</span>linux<span>&#46;</span>alibaba<span>&#46;</span>com</a>&gt;。</p>
+</div>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Original:</th><td class="field-body"><a class="reference internal" href="../../../process/kernel-driver-statement.html#process-statement-driver"><span class="std std-ref">Documentation/process/kernel-driver-statement.rst</span></a></td>
+</tr>
+<tr class="field-even field"><th class="field-name">Translator:</th><td class="field-body">Alex Shi &lt;<a class="reference external" href="mailto:alex&#46;shi&#37;&#52;&#48;linux&#46;alibaba&#46;com">alex<span>&#46;</span>shi<span>&#64;</span>linux<span>&#46;</span>alibaba<span>&#46;</span>com</a>&gt;</td>
+</tr>
+</tbody>
+</table>
+<div class="section" id="id1">
+<h1>内核驱动声明<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="linux">
+<h2>关于Linux内核模块的立场声明<a class="headerlink" href="#linux" title="Permalink to this headline">¶</a></h2>
+<p>我们，以下署名的Linux内核开发人员，认为任何封闭源Linux内核模块或驱动程序都是
+有害的和不可取的。我们已经一再发现它们对Linux用户，企业和更大的Linux生态系统
+有害。这样的模块否定了Linux开发模型的开放性，稳定性，灵活性和可维护性，并使
+他们的用户无法使用Linux社区的专业知识。提供闭源内核模块的供应商迫使其客户
+放弃Linux的主要优势或选择新的供应商。因此，为了充分利用开源所提供的成本节省和
+共享支持优势，我们敦促供应商采取措施，以开源内核代码在Linux上为其客户提供支持。</p>
+<p>我们只为自己说话，而不是我们今天可能会为之工作，过去或将来会为之工作的任何公司。</p>
+<blockquote>
+<div><ul class="simple">
+<li>Dave Airlie</li>
+<li>Nick Andrew</li>
+<li>Jens Axboe</li>
+<li>Ralf Baechle</li>
+<li>Felipe Balbi</li>
+<li>Ohad Ben-Cohen</li>
+<li>Muli Ben-Yehuda</li>
+<li>Jiri Benc</li>
+<li>Arnd Bergmann</li>
+<li>Thomas Bogendoerfer</li>
+<li>Vitaly Bordug</li>
+<li>James Bottomley</li>
+<li>Josh Boyer</li>
+<li>Neil Brown</li>
+<li>Mark Brown</li>
+<li>David Brownell</li>
+<li>Michael Buesch</li>
+<li>Franck Bui-Huu</li>
+<li>Adrian Bunk</li>
+<li>François Cami</li>
+<li>Ralph Campbell</li>
+<li>Luiz Fernando N. Capitulino</li>
+<li>Mauro Carvalho Chehab</li>
+<li>Denis Cheng</li>
+<li>Jonathan Corbet</li>
+<li>Glauber Costa</li>
+<li>Alan Cox</li>
+<li>Magnus Damm</li>
+<li>Ahmed S. Darwish</li>
+<li>Robert P. J. Day</li>
+<li>Hans de Goede</li>
+<li>Arnaldo Carvalho de Melo</li>
+<li>Helge Deller</li>
+<li>Jean Delvare</li>
+<li>Mathieu Desnoyers</li>
+<li>Sven-Thorsten Dietrich</li>
+<li>Alexey Dobriyan</li>
+<li>Daniel Drake</li>
+<li>Alex Dubov</li>
+<li>Randy Dunlap</li>
+<li>Michael Ellerman</li>
+<li>Pekka Enberg</li>
+<li>Jan Engelhardt</li>
+<li>Mark Fasheh</li>
+<li><ol class="first upperalpha" start="10">
+<li>Bruce Fields</li>
+</ol>
+</li>
+<li>Larry Finger</li>
+<li>Jeremy Fitzhardinge</li>
+<li>Mike Frysinger</li>
+<li>Kumar Gala</li>
+<li>Robin Getz</li>
+<li>Liam Girdwood</li>
+<li>Jan-Benedict Glaw</li>
+<li>Thomas Gleixner</li>
+<li>Brice Goglin</li>
+<li>Cyrill Gorcunov</li>
+<li>Andy Gospodarek</li>
+<li>Thomas Graf</li>
+<li>Krzysztof Halasa</li>
+<li>Harvey Harrison</li>
+<li>Stephen Hemminger</li>
+<li>Michael Hennerich</li>
+<li>Tejun Heo</li>
+<li>Benjamin Herrenschmidt</li>
+<li>Kristian Høgsberg</li>
+<li>Henrique de Moraes Holschuh</li>
+<li>Marcel Holtmann</li>
+<li>Mike Isely</li>
+<li>Takashi Iwai</li>
+<li>Olof Johansson</li>
+<li>Dave Jones</li>
+<li>Jesper Juhl</li>
+<li>Matthias Kaehlcke</li>
+<li>Kenji Kaneshige</li>
+<li>Jan Kara</li>
+<li>Jeremy Kerr</li>
+<li>Russell King</li>
+<li>Olaf Kirch</li>
+<li>Roel Kluin</li>
+<li>Hans-Jürgen Koch</li>
+<li>Auke Kok</li>
+<li>Peter Korsgaard</li>
+<li>Jiri Kosina</li>
+<li>Aaro Koskinen</li>
+<li>Mariusz Kozlowski</li>
+<li>Greg Kroah-Hartman</li>
+<li>Michael Krufky</li>
+<li>Aneesh Kumar</li>
+<li>Clemens Ladisch</li>
+<li>Christoph Lameter</li>
+<li>Gunnar Larisch</li>
+<li>Anders Larsen</li>
+<li>Grant Likely</li>
+<li>John W. Linville</li>
+<li>Yinghai Lu</li>
+<li>Tony Luck</li>
+<li>Pavel Machek</li>
+<li>Matt Mackall</li>
+<li>Paul Mackerras</li>
+<li>Roland McGrath</li>
+<li>Patrick McHardy</li>
+<li>Kyle McMartin</li>
+<li>Paul Menage</li>
+<li>Thierry Merle</li>
+<li>Eric Miao</li>
+<li>Akinobu Mita</li>
+<li>Ingo Molnar</li>
+<li>James Morris</li>
+<li>Andrew Morton</li>
+<li>Paul Mundt</li>
+<li>Oleg Nesterov</li>
+<li>Luca Olivetti</li>
+<li>S.Çağlar Onur</li>
+<li>Pierre Ossman</li>
+<li>Keith Owens</li>
+<li>Venkatesh Pallipadi</li>
+<li>Nick Piggin</li>
+<li>Nicolas Pitre</li>
+<li>Evgeniy Polyakov</li>
+<li>Richard Purdie</li>
+<li>Mike Rapoport</li>
+<li>Sam Ravnborg</li>
+<li>Gerrit Renker</li>
+<li>Stefan Richter</li>
+<li>David Rientjes</li>
+<li>Luis R. Rodriguez</li>
+<li>Stefan Roese</li>
+<li>Francois Romieu</li>
+<li>Rami Rosen</li>
+<li>Stephen Rothwell</li>
+<li>Maciej W. Rozycki</li>
+<li>Mark Salyzyn</li>
+<li>Yoshinori Sato</li>
+<li>Deepak Saxena</li>
+<li>Holger Schurig</li>
+<li>Amit Shah</li>
+<li>Yoshihiro Shimoda</li>
+<li>Sergei Shtylyov</li>
+<li>Kay Sievers</li>
+<li>Sebastian Siewior</li>
+<li>Rik Snel</li>
+<li>Jes Sorensen</li>
+<li>Alexey Starikovskiy</li>
+<li>Alan Stern</li>
+<li>Timur Tabi</li>
+<li>Hirokazu Takata</li>
+<li>Eliezer Tamir</li>
+<li>Eugene Teo</li>
+<li>Doug Thompson</li>
+<li>FUJITA Tomonori</li>
+<li>Dmitry Torokhov</li>
+<li>Marcelo Tosatti</li>
+<li>Steven Toth</li>
+<li>Theodore Tso</li>
+<li>Matthias Urlichs</li>
+<li>Geert Uytterhoeven</li>
+<li>Arjan van de Ven</li>
+<li>Ivo van Doorn</li>
+<li>Rik van Riel</li>
+<li>Wim Van Sebroeck</li>
+<li>Hans Verkuil</li>
+<li>Horst H. von Brand</li>
+<li>Dmitri Vorobiev</li>
+<li>Anton Vorontsov</li>
+<li>Daniel Walker</li>
+<li>Johannes Weiner</li>
+<li>Harald Welte</li>
+<li>Matthew Wilcox</li>
+<li>Dan J. Williams</li>
+<li>Darrick J. Wong</li>
+<li>David Woodhouse</li>
+<li>Chris Wright</li>
+<li>Bryan Wu</li>
+<li>Rafael J. Wysocki</li>
+<li>Herbert Xu</li>
+<li>Vlad Yasevich</li>
+<li>Peter Zijlstra</li>
+<li>Bartlomiej Zolnierkiewicz</li>
+</ul>
+</div></blockquote>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright The kernel development community
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

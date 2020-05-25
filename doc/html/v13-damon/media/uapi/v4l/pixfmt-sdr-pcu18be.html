@@ -1,0 +1,264 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>2.11.7. V4L2_SDR_FMT_PCU18BE (‘PC18’) &mdash; The Linux Kernel  documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript">
+          var DOCUMENTATION_OPTIONS = {
+              URL_ROOT:'../../../',
+              VERSION:'',
+              LANGUAGE:'None',
+              COLLAPSE_INDEX:false,
+              FILE_SUFFIX:'.html',
+              HAS_SOURCE:  true,
+              SOURCELINK_SUFFIX: '.txt'
+          };
+      </script>
+        <script type="text/javascript" src="../../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/theme_overrides.css" type="text/css" />
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home"> The Linux Kernel
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                5.6.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../admin-guide/mm/damon/index.html">DAMON: Data Access MONitor</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">The Linux Kernel</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../index.html">Docs</a> &raquo;</li>
+        
+      <li>2.11.7. V4L2_SDR_FMT_PCU18BE (‘PC18’)</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../../../_sources/media/uapi/v4l/pixfmt-sdr-pcu18be.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="v4l2-sdr-fmt-pcu18be-pc18">
+<span id="v4l2-sdr-fmt-pcu18be"></span><h1>2.11.7. V4L2_SDR_FMT_PCU18BE (‘PC18’)<a class="headerlink" href="#v4l2-sdr-fmt-pcu18be-pc18" title="Permalink to this headline">¶</a></h1>
+<p>Planar complex unsigned 18-bit big endian IQ sample</p>
+<div class="section" id="description">
+<h2>2.11.7.1. Description<a class="headerlink" href="#description" title="Permalink to this headline">¶</a></h2>
+<p>This format contains a sequence of complex number samples. Each complex
+number consist of two parts called In-phase and Quadrature (IQ). Both I
+and Q are represented as a 18 bit unsigned big endian number stored in
+32 bit space. The remaining unused bits within the 32 bit space will be
+padded with 0. I value starts first and Q value starts at an offset
+equalling half of the buffer size (i.e.) offset = buffersize/2. Out of
+the 18 bits, bit 17:2 (16 bit) is data and bit 1:0 (2 bit) can be any
+value.</p>
+<p><strong>Byte Order.</strong>
+Each cell is one byte.</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="20%" />
+<col width="20%" />
+<col width="20%" />
+<col width="20%" />
+<col width="20%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Offset:</th>
+<th class="head">Byte B0</th>
+<th class="head">Byte B1</th>
+<th class="head">Byte B2</th>
+<th class="head">Byte B3</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>start + 0:</td>
+<td>I’<sub>0[17:10]</sub></td>
+<td>I’<sub>0[9:2]</sub></td>
+<td>I’<sub>0[1:0]; B2[5:0]=pad</sub></td>
+<td>pad</td>
+</tr>
+<tr class="row-odd"><td>start + 4:</td>
+<td>I’<sub>1[17:10]</sub></td>
+<td>I’<sub>1[9:2]</sub></td>
+<td>I’<sub>1[1:0]; B2[5:0]=pad</sub></td>
+<td>pad</td>
+</tr>
+<tr class="row-even"><td colspan="5">…</td>
+</tr>
+<tr class="row-odd"><td>start + offset:</td>
+<td>Q’<sub>0[17:10]</sub></td>
+<td>Q’<sub>0[9:2]</sub></td>
+<td>Q’<sub>0[1:0]; B2[5:0]=pad</sub></td>
+<td>pad</td>
+</tr>
+<tr class="row-even"><td>start + offset + 4:</td>
+<td>Q’<sub>1[17:10]</sub></td>
+<td>Q’<sub>1[9:2]</sub></td>
+<td>Q’<sub>1[1:0]; B2[5:0]=pad</sub></td>
+<td>pad</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright The kernel development community
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

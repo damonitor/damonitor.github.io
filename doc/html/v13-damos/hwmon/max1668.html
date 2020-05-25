@@ -1,0 +1,359 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Kernel driver max1668 &mdash; The Linux Kernel  documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript">
+          var DOCUMENTATION_OPTIONS = {
+              URL_ROOT:'../',
+              VERSION:'',
+              LANGUAGE:'None',
+              COLLAPSE_INDEX:false,
+              FILE_SUFFIX:'.html',
+              HAS_SOURCE:  true,
+              SOURCELINK_SUFFIX: '.txt'
+          };
+      </script>
+        <script type="text/javascript" src="../_static/jquery.js"></script>
+        <script type="text/javascript" src="../_static/underscore.js"></script>
+        <script type="text/javascript" src="../_static/doctools.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/theme_overrides.css" type="text/css" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> The Linux Kernel
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                5.6.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../admin-guide/mm/damon/index.html">DAMON: Data Access MONitor</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">The Linux Kernel</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+      <li>Kernel driver max1668</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/hwmon/max1668.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="kernel-driver-max1668">
+<h1>Kernel driver max1668<a class="headerlink" href="#kernel-driver-max1668" title="Permalink to this headline">¶</a></h1>
+<p>Supported chips:</p>
+<blockquote>
+<div><ul>
+<li><p class="first">Maxim MAX1668, MAX1805 and MAX1989</p>
+<p>Prefix: ‘max1668’</p>
+<p>Addresses scanned: I2C 0x18, 0x19, 0x1a, 0x29, 0x2a, 0x2b, 0x4c, 0x4d, 0x4e</p>
+<p>Datasheet: <a class="reference external" href="http://datasheets.maxim-ic.com/en/ds/MAX1668-MAX1989.pdf">http://datasheets.maxim-ic.com/en/ds/MAX1668-MAX1989.pdf</a></p>
+</li>
+</ul>
+</div></blockquote>
+<p>Author:</p>
+<blockquote>
+<div>David George &lt;<a class="reference external" href="mailto:david&#46;george&#37;&#52;&#48;ska&#46;ac&#46;za">david<span>&#46;</span>george<span>&#64;</span>ska<span>&#46;</span>ac<span>&#46;</span>za</a>&gt;</div></blockquote>
+<div class="section" id="description">
+<h2>Description<a class="headerlink" href="#description" title="Permalink to this headline">¶</a></h2>
+<p>This driver implements support for the Maxim MAX1668, MAX1805 and MAX1989
+chips.</p>
+<p>The three devices are very similar, but the MAX1805 has a reduced feature
+set; only two remote temperature inputs vs the four available on the other
+two ICs.</p>
+<p>The driver is able to distinguish between the devices and creates sysfs
+entries as follows:</p>
+<ul class="simple">
+<li>MAX1805, MAX1668 and MAX1989:</li>
+</ul>
+<table border="1" class="docutils">
+<colgroup>
+<col width="19%" />
+<col width="3%" />
+<col width="78%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td>temp1_input</td>
+<td>ro</td>
+<td>local (ambient) temperature</td>
+</tr>
+<tr class="row-even"><td>temp1_max</td>
+<td>rw</td>
+<td>local temperature maximum threshold for alarm</td>
+</tr>
+<tr class="row-odd"><td>temp1_max_alarm</td>
+<td>ro</td>
+<td>local temperature maximum threshold alarm</td>
+</tr>
+<tr class="row-even"><td>temp1_min</td>
+<td>rw</td>
+<td>local temperature minimum threshold for alarm</td>
+</tr>
+<tr class="row-odd"><td>temp1_min_alarm</td>
+<td>ro</td>
+<td>local temperature minimum threshold alarm</td>
+</tr>
+<tr class="row-even"><td>temp2_input</td>
+<td>ro</td>
+<td>remote temperature 1</td>
+</tr>
+<tr class="row-odd"><td>temp2_max</td>
+<td>rw</td>
+<td>remote temperature 1 maximum threshold for alarm</td>
+</tr>
+<tr class="row-even"><td>temp2_max_alarm</td>
+<td>ro</td>
+<td>remote temperature 1 maximum threshold alarm</td>
+</tr>
+<tr class="row-odd"><td>temp2_min</td>
+<td>rw</td>
+<td>remote temperature 1 minimum threshold for alarm</td>
+</tr>
+<tr class="row-even"><td>temp2_min_alarm</td>
+<td>ro</td>
+<td>remote temperature 1 minimum threshold alarm</td>
+</tr>
+<tr class="row-odd"><td>temp3_input</td>
+<td>ro</td>
+<td>remote temperature 2</td>
+</tr>
+<tr class="row-even"><td>temp3_max</td>
+<td>rw</td>
+<td>remote temperature 2 maximum threshold for alarm</td>
+</tr>
+<tr class="row-odd"><td>temp3_max_alarm</td>
+<td>ro</td>
+<td>remote temperature 2 maximum threshold alarm</td>
+</tr>
+<tr class="row-even"><td>temp3_min</td>
+<td>rw</td>
+<td>remote temperature 2 minimum threshold for alarm</td>
+</tr>
+<tr class="row-odd"><td>temp3_min_alarm</td>
+<td>ro</td>
+<td>remote temperature 2 minimum threshold alarm</td>
+</tr>
+</tbody>
+</table>
+<ul class="simple">
+<li>MAX1668 and MAX1989 only:</li>
+</ul>
+<table border="1" class="docutils">
+<colgroup>
+<col width="19%" />
+<col width="3%" />
+<col width="78%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td>temp4_input</td>
+<td>ro</td>
+<td>remote temperature 3</td>
+</tr>
+<tr class="row-even"><td>temp4_max</td>
+<td>rw</td>
+<td>remote temperature 3 maximum threshold for alarm</td>
+</tr>
+<tr class="row-odd"><td>temp4_max_alarm</td>
+<td>ro</td>
+<td>remote temperature 3 maximum threshold alarm</td>
+</tr>
+<tr class="row-even"><td>temp4_min</td>
+<td>rw</td>
+<td>remote temperature 3 minimum threshold for alarm</td>
+</tr>
+<tr class="row-odd"><td>temp4_min_alarm</td>
+<td>ro</td>
+<td>remote temperature 3 minimum threshold alarm</td>
+</tr>
+<tr class="row-even"><td>temp5_input</td>
+<td>ro</td>
+<td>remote temperature 4</td>
+</tr>
+<tr class="row-odd"><td>temp5_max</td>
+<td>rw</td>
+<td>remote temperature 4 maximum threshold for alarm</td>
+</tr>
+<tr class="row-even"><td>temp5_max_alarm</td>
+<td>ro</td>
+<td>remote temperature 4 maximum threshold alarm</td>
+</tr>
+<tr class="row-odd"><td>temp5_min</td>
+<td>rw</td>
+<td>remote temperature 4 minimum threshold for alarm</td>
+</tr>
+<tr class="row-even"><td>temp5_min_alarm</td>
+<td>ro</td>
+<td>remote temperature 4 minimum threshold alarm</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="module-parameters">
+<h2>Module Parameters<a class="headerlink" href="#module-parameters" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li>read_only: int
+Set to non-zero if you wish to prevent write access to alarm thresholds.</li>
+</ul>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright The kernel development community
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

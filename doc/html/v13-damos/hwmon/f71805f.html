@@ -1,0 +1,467 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Kernel driver f71805f &mdash; The Linux Kernel  documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript">
+          var DOCUMENTATION_OPTIONS = {
+              URL_ROOT:'../',
+              VERSION:'',
+              LANGUAGE:'None',
+              COLLAPSE_INDEX:false,
+              FILE_SUFFIX:'.html',
+              HAS_SOURCE:  true,
+              SOURCELINK_SUFFIX: '.txt'
+          };
+      </script>
+        <script type="text/javascript" src="../_static/jquery.js"></script>
+        <script type="text/javascript" src="../_static/underscore.js"></script>
+        <script type="text/javascript" src="../_static/doctools.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/theme_overrides.css" type="text/css" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> The Linux Kernel
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                5.6.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../admin-guide/mm/damon/index.html">DAMON: Data Access MONitor</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">The Linux Kernel</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+      <li>Kernel driver f71805f</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/hwmon/f71805f.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="kernel-driver-f71805f">
+<h1>Kernel driver f71805f<a class="headerlink" href="#kernel-driver-f71805f" title="Permalink to this headline">¶</a></h1>
+<p>Supported chips:</p>
+<blockquote>
+<div><ul>
+<li><p class="first">Fintek F71805F/FG</p>
+<p>Prefix: ‘f71805f’</p>
+<p>Addresses scanned: none, address read from Super I/O config space</p>
+<p>Datasheet: Available from the Fintek website</p>
+</li>
+<li><p class="first">Fintek F71806F/FG</p>
+<p>Prefix: ‘f71872f’</p>
+<p>Addresses scanned: none, address read from Super I/O config space</p>
+<p>Datasheet: Available from the Fintek website</p>
+</li>
+<li><p class="first">Fintek F71872F/FG</p>
+<p>Prefix: ‘f71872f’</p>
+<p>Addresses scanned: none, address read from Super I/O config space</p>
+<p>Datasheet: Available from the Fintek website</p>
+</li>
+</ul>
+</div></blockquote>
+<p>Author: Jean Delvare &lt;<a class="reference external" href="mailto:jdelvare&#37;&#52;&#48;suse&#46;de">jdelvare<span>&#64;</span>suse<span>&#46;</span>de</a>&gt;</p>
+<p>Thanks to Denis Kieft from Barracuda Networks for the donation of a
+test system (custom Jetway K8M8MS motherboard, with CPU and RAM) and
+for providing initial documentation.</p>
+<p>Thanks to Kris Chen and Aaron Huang from Fintek for answering technical
+questions and providing additional documentation.</p>
+<p>Thanks to Chris Lin from Jetway for providing wiring schematics and
+answering technical questions.</p>
+<div class="section" id="description">
+<h2>Description<a class="headerlink" href="#description" title="Permalink to this headline">¶</a></h2>
+<p>The Fintek F71805F/FG Super I/O chip includes complete hardware monitoring
+capabilities. It can monitor up to 9 voltages (counting its own power
+source), 3 fans and 3 temperature sensors.</p>
+<p>This chip also has fan controlling features, using either DC or PWM, in
+three different modes (one manual, two automatic).</p>
+<p>The Fintek F71872F/FG Super I/O chip is almost the same, with two
+additional internal voltages monitored (VSB and battery). It also features
+6 VID inputs. The VID inputs are not yet supported by this driver.</p>
+<p>The Fintek F71806F/FG Super-I/O chip is essentially the same as the
+F71872F/FG, and is undistinguishable therefrom.</p>
+<p>The driver assumes that no more than one chip is present, which seems
+reasonable.</p>
+</div>
+<div class="section" id="voltage-monitoring">
+<h2>Voltage Monitoring<a class="headerlink" href="#voltage-monitoring" title="Permalink to this headline">¶</a></h2>
+<p>Voltages are sampled by an 8-bit ADC with a LSB of 8 mV. The supported
+range is thus from 0 to 2.040 V. Voltage values outside of this range
+need external resistors. An exception is in0, which is used to monitor
+the chip’s own power source (+3.3V), and is divided internally by a
+factor 2. For the F71872F/FG, in9 (VSB) and in10 (battery) are also
+divided internally by a factor 2.</p>
+<p>The two LSB of the voltage limit registers are not used (always 0), so
+you can only set the limits in steps of 32 mV (before scaling).</p>
+<p>The wirings and resistor values suggested by Fintek are as follow:</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="11%" />
+<col width="11%" />
+<col width="18%" />
+<col width="6%" />
+<col width="11%" />
+<col width="19%" />
+<col width="23%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">in</th>
+<th class="head">pin
+name</th>
+<th class="head">use</th>
+<th class="head">R1</th>
+<th class="head">R2</th>
+<th class="head">divider</th>
+<th class="head">expected
+raw val.</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>in0</td>
+<td>VCC</td>
+<td>VCC3.3V</td>
+<td>int.</td>
+<td>int.</td>
+<td>2.00</td>
+<td>1.65 V</td>
+</tr>
+<tr class="row-odd"><td>in1</td>
+<td>VIN1</td>
+<td>VTT1.2V</td>
+<td>10K</td>
+<td><ul class="first last simple">
+<li></li>
+</ul>
+</td>
+<td>1.00</td>
+<td>1.20 V</td>
+</tr>
+<tr class="row-even"><td>in2</td>
+<td>VIN2</td>
+<td>VRAM</td>
+<td>100K</td>
+<td>100K</td>
+<td>2.00</td>
+<td>~1.25 V <a class="footnote-reference" href="#id6" id="id1">[1]</a></td>
+</tr>
+<tr class="row-odd"><td>in3</td>
+<td>VIN3</td>
+<td>VCHIPSET</td>
+<td>47K</td>
+<td>100K</td>
+<td>1.47</td>
+<td>2.24 V <a class="footnote-reference" href="#id7" id="id2">[2]</a></td>
+</tr>
+<tr class="row-even"><td>in4</td>
+<td>VIN4</td>
+<td>VCC5V</td>
+<td>200K</td>
+<td>47K</td>
+<td>5.25</td>
+<td>0.95 V</td>
+</tr>
+<tr class="row-odd"><td>in5</td>
+<td>VIN5</td>
+<td>+12V</td>
+<td>200K</td>
+<td>20K</td>
+<td>11.00</td>
+<td>1.05 V</td>
+</tr>
+<tr class="row-even"><td>in6</td>
+<td>VIN6</td>
+<td>VCC1.5V</td>
+<td>10K</td>
+<td><ul class="first last simple">
+<li></li>
+</ul>
+</td>
+<td>1.00</td>
+<td>1.50 V</td>
+</tr>
+<tr class="row-odd"><td>in7</td>
+<td>VIN7</td>
+<td>VCORE</td>
+<td>10K</td>
+<td><ul class="first last simple">
+<li></li>
+</ul>
+</td>
+<td>1.00</td>
+<td>~1.40 V <a class="footnote-reference" href="#id6" id="id3">[1]</a></td>
+</tr>
+<tr class="row-even"><td>in8</td>
+<td>VIN8</td>
+<td>VSB5V</td>
+<td>200K</td>
+<td>47K</td>
+<td>1.00</td>
+<td>0.95 V</td>
+</tr>
+<tr class="row-odd"><td>in10</td>
+<td>VSB</td>
+<td>VSB3.3V</td>
+<td>int.</td>
+<td>int.</td>
+<td>2.00</td>
+<td>1.65 V <a class="footnote-reference" href="#id8" id="id4">[3]</a></td>
+</tr>
+<tr class="row-even"><td>in9</td>
+<td>VBAT</td>
+<td>VBATTERY</td>
+<td>int.</td>
+<td>int.</td>
+<td>2.00</td>
+<td>1.50 V <a class="footnote-reference" href="#id8" id="id5">[3]</a></td>
+</tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="id6" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label">[1]</td><td><em>(<a class="fn-backref" href="#id1">1</a>, <a class="fn-backref" href="#id3">2</a>)</em> Depends on your hardware setup.</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="id7" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id2">[2]</a></td><td>Obviously not correct, swapping R1 and R2 would make more sense.</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="id8" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label">[3]</td><td><em>(<a class="fn-backref" href="#id4">1</a>, <a class="fn-backref" href="#id5">2</a>)</em> F71872F/FG only.</td></tr>
+</tbody>
+</table>
+<p>These values can be used as hints at best, as motherboard manufacturers
+are free to use a completely different setup. As a matter of fact, the
+Jetway K8M8MS uses a significantly different setup. You will have to
+find out documentation about your own motherboard, and edit sensors.conf
+accordingly.</p>
+<p>Each voltage measured has associated low and high limits, each of which
+triggers an alarm when crossed.</p>
+</div>
+<div class="section" id="fan-monitoring">
+<h2>Fan Monitoring<a class="headerlink" href="#fan-monitoring" title="Permalink to this headline">¶</a></h2>
+<p>Fan rotation speeds are reported as 12-bit values from a gated clock
+signal. Speeds down to 366 RPM can be measured. There is no theoretical
+high limit, but values over 6000 RPM seem to cause problem. The effective
+resolution is much lower than you would expect, the step between different
+register values being 10 rather than 1.</p>
+<p>The chip assumes 2 pulse-per-revolution fans.</p>
+<p>An alarm is triggered if the rotation speed drops below a programmable
+limit or is too low to be measured.</p>
+</div>
+<div class="section" id="temperature-monitoring">
+<h2>Temperature Monitoring<a class="headerlink" href="#temperature-monitoring" title="Permalink to this headline">¶</a></h2>
+<p>Temperatures are reported in degrees Celsius. Each temperature measured
+has a high limit, those crossing triggers an alarm. There is an associated
+hysteresis value, below which the temperature has to drop before the
+alarm is cleared.</p>
+<p>All temperature channels are external, there is no embedded temperature
+sensor. Each channel can be used for connecting either a thermal diode
+or a thermistor. The driver reports the currently selected mode, but
+doesn’t allow changing it. In theory, the BIOS should have configured
+everything properly.</p>
+</div>
+<div class="section" id="fan-control">
+<h2>Fan Control<a class="headerlink" href="#fan-control" title="Permalink to this headline">¶</a></h2>
+<p>Both PWM (pulse-width modulation) and DC fan speed control methods are
+supported. The right one to use depends on external circuitry on the
+motherboard, so the driver assumes that the BIOS set the method
+properly. The driver will report the method, but won’t let you change
+it.</p>
+<p>When the PWM method is used, you can select the operating frequency,
+from 187.5 kHz (default) to 31 Hz. The best frequency depends on the
+fan model. As a rule of thumb, lower frequencies seem to give better
+control, but may generate annoying high-pitch noise. So a frequency just
+above the audible range, such as 25 kHz, may be a good choice; if this
+doesn’t give you good linear control, try reducing it. Fintek recommends
+not going below 1 kHz, as the fan tachometers get confused by lower
+frequencies as well.</p>
+<p>When the DC method is used, Fintek recommends not going below 5 V, which
+corresponds to a pwm value of 106 for the driver. The driver doesn’t
+enforce this limit though.</p>
+<p>Three different fan control modes are supported; the mode number is written
+to the pwm&lt;n&gt;_enable file.</p>
+<ul class="simple">
+<li>1: Manual mode
+You ask for a specific PWM duty cycle or DC voltage by writing to the
+pwm&lt;n&gt; file.</li>
+<li>2: Temperature mode
+You define 3 temperature/fan speed trip points using the
+pwm&lt;n&gt;_auto_point&lt;m&gt;_temp and _fan files. These define a staircase
+relationship between temperature and fan speed with two additional points
+interpolated between the values that you define. When the temperature
+is below auto_point1_temp the fan is switched off.</li>
+<li>3: Fan speed mode
+You ask for a specific fan speed by writing to the fan&lt;n&gt;_target file.</li>
+</ul>
+<p>Both of the automatic modes require that pwm1 corresponds to fan1, pwm2 to
+fan2 and pwm3 to fan3. Temperature mode also requires that temp1 corresponds
+to pwm1 and fan1, etc.</p>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright The kernel development community
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>
