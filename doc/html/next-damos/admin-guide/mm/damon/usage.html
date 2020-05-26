@@ -409,8 +409,9 @@ to <code class="docutils literal notranslate"><span class="pre">schemes</span></
 and human readable action names.  Currently supported operation actions are
 <code class="docutils literal notranslate"><span class="pre">willneed</span></code>, <code class="docutils literal notranslate"><span class="pre">cold</span></code>, <code class="docutils literal notranslate"><span class="pre">pageout</span></code>, <code class="docutils literal notranslate"><span class="pre">hugepage</span></code> and <code class="docutils literal notranslate"><span class="pre">nohugepage</span></code>.  Each of
 the actions works same to the madvise() system call hints having the name.
-Below is an example schemes.  Please also note that <code class="docutils literal notranslate"><span class="pre">0</span></code> for max values means
-infinite.</p>
+Please also note that both the ‘min’ and the ‘max’ are inclusive (closed
+interval), and <code class="docutils literal notranslate"><span class="pre">0</span></code> for max values means infinite. Below example schemes are
+possible.</p>
 <div class="highlight-none notranslate"><div class="highlight"><pre><span></span># format is:
 # &lt;min/max size&gt; &lt;min/max frequency (0-99)&gt; &lt;min/max age&gt; &lt;action&gt;
 #
@@ -418,33 +419,32 @@ infinite.</p>
 # us/ms/s/m/h/d for micro-seconds/milli-seconds/seconds/minutes/hours/days
 # &#39;null&#39; means zero for size and age.
 
-# if a region keeps a high access frequency for more than 100ms, put the
-# region on the head of the LRU list (call madvise() with MADV_WILLNEED).
+# if a region keeps a high access frequency for &gt;=100ms, put the region on
+# the head of the LRU list (call madvise() with MADV_WILLNEED).
 null    null    80      null    100ms   0s      willneed
 
-# if a region keeps a low access frequency for more than 200ms and less
-# than one hour put the # region on the tail of the LRU list (call
-# madvise() with MADV_COLD).
+# if a region keeps a low access frequency at least 200ms and at most one
+# hour, put the region on the tail of the LRU list (call madvise() with
+# MADV_COLD).
 0B      0B      10      20      200ms   1h cold
 
-# if a region keeps a very low access frequency for more than 1 minute,
-# swap out the region immediately (call madvise() with MADV_PAGEOUT).
+# if a region keeps a very low access frequency for &gt;=1 minute, swap
+# out the region immediately (call madvise() with MADV_PAGEOUT).
 0B      null    0       10      60s     0s pageout
 
-# if a region of a size bigger than 2MiB keeps a very high access frequency
-# for more than 100ms, let the region to use huge pages (call madvise()
-# with MADV_HUGEPAGE).
+# if a region of a size &gt;=2MiB keeps a very high access frequency for
+# &gt;=100ms, let the region to use huge pages (call madvise() with
+# MADV_HUGEPAGE).
 2M      null    90      99      100ms   0s hugepage
 
-# If a region of a size bigger than 2MiB keeps small access frequency for
-# more than 100ms, avoid the region using huge pages (call madvise() with
-# MADV_NOHUGEPAGE).
+# If a region of a size &gt;=2MiB keeps small access frequency for &gt;=100ms,
+# avoid the region using huge pages (call madvise() with MADV_NOHUGEPAGE).
 2M      null    0       25      100ms   0s nohugepage
 </pre></div>
 </div>
 <p>For example, you can make a running process named ‘foo’ to use huge pages for
 memory regions keeping 2MB or larger size and having very high access frequency
-for more than 100 milliseconds using below commands:</p>
+for at least 100 milliseconds using below commands:</p>
 <div class="highlight-none notranslate"><div class="highlight"><pre><span></span>$ echo &quot;2M null 90 99 100ms 0s hugepage&quot; &gt; my_thp_scheme
 $ ./damo schemes --schemes my_thp_scheme `pidof foo`
 </pre></div>
@@ -512,11 +512,13 @@ debugfs file.  Reading the file also shows the statistics of each scheme.  To
 the file, each of the schemes should be represented in each line in below form:</p>
 <blockquote>
 <div>min-size max-size min-acc max-acc min-age max-age action</div></blockquote>
-<p>Bytes for the size of regions (<code class="docutils literal notranslate"><span class="pre">min-size</span></code> and <code class="docutils literal notranslate"><span class="pre">max-size</span></code>), number of
-monitored accesses per aggregate interval for access frequency (<code class="docutils literal notranslate"><span class="pre">min-acc</span></code> and
-<code class="docutils literal notranslate"><span class="pre">max-acc</span></code>), number of aggregate intervals for the age of regions (<code class="docutils literal notranslate"><span class="pre">min-age</span></code>
-and <code class="docutils literal notranslate"><span class="pre">max-age</span></code>), and a predefined integer for memory management actions should
-be used.  The supported numbers and their meanings are as below.</p>
+<p>Note that the ranges are closed interval (both the min and the max are
+inclusive).  Bytes for the size of regions (<code class="docutils literal notranslate"><span class="pre">min-size</span></code> and <code class="docutils literal notranslate"><span class="pre">max-size</span></code>),
+number of monitored accesses per aggregate interval for access frequency
+(<code class="docutils literal notranslate"><span class="pre">min-acc</span></code> and <code class="docutils literal notranslate"><span class="pre">max-acc</span></code>), number of aggregate intervals for the age of
+regions (<code class="docutils literal notranslate"><span class="pre">min-age</span></code> and <code class="docutils literal notranslate"><span class="pre">max-age</span></code>), and a predefined integer for memory
+management actions should be used.  The supported numbers and their meanings
+are as below.</p>
 <blockquote>
 <div><ul class="simple">
 <li>0: Call <code class="docutils literal notranslate"><span class="pre">madvise()</span></code> for the region with <code class="docutils literal notranslate"><span class="pre">MADV_WILLNEED</span></code></li>
@@ -528,10 +530,10 @@ be used.  The supported numbers and their meanings are as below.</p>
 </ul>
 </div></blockquote>
 <p>You can disable schemes by simply writing an empty string to the file.  For
-example, below commands applies a scheme saying “If a memory region larger than
-4 KiB (4096 0) is showing less than 5 accesses per aggregate interval (0 5) for
-more than 5 aggregate interval (5 0), page out the region (2)”, check the
-entered scheme again, and finally remove the scheme.</p>
+example, below commands applies a scheme saying “If a memory region &gt;=4KiB is
+showing &lt;=5 accesses per aggregate interval (0 5) for &gt;=5 aggregate interval (5
+0), page out the region (2)”, check the entered scheme again, and finally
+remove the scheme.</p>
 <div class="highlight-none notranslate"><div class="highlight"><pre><span></span># cd &lt;debugfs&gt;/damon
 # echo &quot;4096 0 0 5 5 0 2&quot; &gt; schemes
 # cat schemes
