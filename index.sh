@@ -6,13 +6,14 @@ INDEX_FILE='_index.html'
 
 echo "
 <pre>
-DAMON Git Branch Rules
-======================
+Git Branches and Patchsets
+==========================
 
 Development of DAMON is mainly done in 'damon/next' branch of sj's Linux kernel
-git tree (https://github.com/sjp38/linux).  The commits for DAMON, which is
-made on the mainline kernel, are grouped into three different parts of DAMON,
-organized as normal patchsets, and posted to LKML if necessary.
+git tree (https://github.com/sjp38/linux).  The commits for DAMON on the
+branch, which is based on a upstream kernel, are periodically rebased and
+grouped into three different parts of DAMON, organized as normal patchsets, and
+posted to LKML if necessary.
 
 The three patchsets are:
 - DAMON: The core monitoring part,
@@ -22,29 +23,27 @@ The three patchsets are:
 For each posting of any patchset, 'damon/master' is updated to point the latest
 commit of 'damon/next', and 'damon/next' continues development.
 
-Documents Organization
-======================
+Documents
+=========
 
-The documents are organized in below way.
+The documents under 'doc/html/' in this site are organized in below way.
 
-- 'doc/html/latest' is the document for the 'damon/master'.
-- 'doc/html/latest-(damon|damos)' are the documents for the DAMON or DAMOS
-  patchset, made by 'damon/master'.
-- 'doc/html/next' is the document for the 'damon/next'.
-- 'doc/html/next-(damon|damos)' are similar to 'doc/html/latest-(damon|damos)'
-- 'doc/html/v13' is the document for the 'damon/master' when 'v13' of DAMON
-  patchset is posted.
-- 'doc/html/v13-(damon|damos)' are similar in that way.
+- 'latest' is the document for the 'damon/master'.
+- 'latest-(damon|damos)' are the documents for the DAMON or DAMOS patchset,
+  made by 'damon/master'.
+- 'next' is the document for the 'damon/next'.
+- 'next-(damon|damos)' are similar to 'doc/html/latest-(damon|damos)'
+- 'v13' is the document for the 'damon/master' when 'v13' of DAMON patchset is
+  posted.
+- 'v13-(damon|damos)' are similar in that way.
 
-This site contains the html documentations and test results of DAMON.
+Test Results
+============
 
-
-Test Result Organization
-========================
-
-Tests are done against 'damon/master' for each post of DAMON patchset.
-Therefore, similar version names are applied, but '(damon|damos)' suffixes are
-not used.
+The correctness / performance tests are done against 'damon/master' for major
+changes.  Therefore, version name rules that similar to that of documents are
+applied to the test results in this site, but '(damon|damos)' suffixes are not
+used.
 </pre>
 " > $INDEX_FILE
 
