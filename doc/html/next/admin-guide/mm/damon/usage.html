@@ -108,6 +108,7 @@
 <li class="toctree-l3"><a class="reference internal" href="#debugfs-interface">debugfs Interface</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#attributes">Attributes</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#target-pids">Target PIDs</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#initla-monitoring-target-regions">Initla Monitoring Target Regions</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#record">Record</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#schemes">Schemes</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#turning-on-off">Turning On/Off</a></li>
@@ -409,9 +410,8 @@ to <code class="docutils literal notranslate"><span class="pre">schemes</span></
 and human readable action names.  Currently supported operation actions are
 <code class="docutils literal notranslate"><span class="pre">willneed</span></code>, <code class="docutils literal notranslate"><span class="pre">cold</span></code>, <code class="docutils literal notranslate"><span class="pre">pageout</span></code>, <code class="docutils literal notranslate"><span class="pre">hugepage</span></code> and <code class="docutils literal notranslate"><span class="pre">nohugepage</span></code>.  Each of
 the actions works same to the madvise() system call hints having the name.
-Please also note that both the ‘min’ and the ‘max’ are inclusive (closed
-interval), and <code class="docutils literal notranslate"><span class="pre">0</span></code> for max values means infinite. Below example schemes are
-possible.</p>
+Please also note that the range is inclusive (closed interval), and <code class="docutils literal notranslate"><span class="pre">0</span></code> for
+max values means infinite. Below example schemes are possible.</p>
 <div class="highlight-none notranslate"><div class="highlight"><pre><span></span># format is:
 # &lt;min/max size&gt; &lt;min/max frequency (0-99)&gt; &lt;min/max age&gt; &lt;action&gt;
 #
@@ -472,16 +472,62 @@ check it again:</p>
 </div>
 <div class="section" id="target-pids">
 <h3>Target PIDs<a class="headerlink" href="#target-pids" title="Permalink to this headline">¶</a></h3>
-<p>Users can get and set the pids of monitoring target processes by reading from
-and writing to the <code class="docutils literal notranslate"><span class="pre">pids</span></code> file.  For example, below commands set processes
-having pids 42 and 4242 as the processes to be monitored and check it again:</p>
+<p>To monitor the virtual memory address spaces of specific processes, users can
+get and set the pids of monitoring target processes by reading from and writing
+to the <code class="docutils literal notranslate"><span class="pre">pids</span></code> file.  For example, below commands set processes having pids 42
+and 4242 as the processes to be monitored and check it again:</p>
 <div class="highlight-none notranslate"><div class="highlight"><pre><span></span># cd &lt;debugfs&gt;/damon
 # echo 42 4242 &gt; pids
 # cat pids
 42 4242
 </pre></div>
 </div>
+<p>Users can also monitor the physical memory address space of the system by
+writing a special keyword, <code class="docutils literal notranslate"><span class="pre">paddr\n</span></code> to the file.  In this case, reading the
+file will show <code class="docutils literal notranslate"><span class="pre">-1</span></code>, as below:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span># cd &lt;debugfs&gt;/damon
+# echo paddr &gt; pids
+# cat pids
+-1
+</pre></div>
+</div>
 <p>Note that setting the pids doesn’t start the monitoring.</p>
+</div>
+<div class="section" id="initla-monitoring-target-regions">
+<h3>Initla Monitoring Target Regions<a class="headerlink" href="#initla-monitoring-target-regions" title="Permalink to this headline">¶</a></h3>
+<p>In case of the virtual memory monitoring, DAMON automatically sets and updates
+the monitoring target regions so that entire memory mappings of target
+processes can be covered.  However, users might want to limit the monitoring
+region to specific address ranges, such as the heap, the stack, or specific
+file-mapped area.  Or, some users might know the initial access pattern of
+thier workloads and therefore want to set optimal initial regions for the
+‘adaptive regions adjustment’.</p>
+<p>In contrast, DAMON do not automatically sets and updates the monitoring target
+regions in case of physical memory monitoring.  Therefore, users should set the
+monitoring target regions by themselves.</p>
+<p>In such cases, users can explicitly set the initial monitoring target regions
+as they want, by writing proper values to the <code class="docutils literal notranslate"><span class="pre">init_regions</span></code> file.  Each line
+of the input should represent one region in below form.:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>&lt;pid&gt; &lt;start address&gt; &lt;end address&gt;
+</pre></div>
+</div>
+<p>The <code class="docutils literal notranslate"><span class="pre">pid</span></code> should be already in <code class="docutils literal notranslate"><span class="pre">pids</span></code> file, and the regions should be
+passed in address order.  For example, below commands will set a couple of
+address ranges, <code class="docutils literal notranslate"><span class="pre">1-100</span></code> and <code class="docutils literal notranslate"><span class="pre">100-200</span></code> as the initial monitoring target
+region of process 42, and another couple of address ranges, <code class="docutils literal notranslate"><span class="pre">20-40</span></code> and
+<code class="docutils literal notranslate"><span class="pre">50-100</span></code> as that of process 4242.:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span># cd &lt;debugfs&gt;/damon
+# echo &quot;42   1       100
+        42   100     200
+        4242 20      40
+        4242 50      100&quot; &gt; init_regions
+</pre></div>
+</div>
+<p>Note that this sets the initial monitoring target regions only.  In case of
+virtual memory monitoring, DAMON will automatically updates the boundary of the
+regions after one <code class="docutils literal notranslate"><span class="pre">regions</span> <span class="pre">update</span> <span class="pre">interval</span></code>.  Therefore, users should set the
+<code class="docutils literal notranslate"><span class="pre">regions</span> <span class="pre">update</span> <span class="pre">interval</span></code> large enough in this case, if they don’t want the
+update.</p>
 </div>
 <div class="section" id="record">
 <h3>Record<a class="headerlink" href="#record" title="Permalink to this headline">¶</a></h3>
@@ -512,13 +558,13 @@ debugfs file.  Reading the file also shows the statistics of each scheme.  To
 the file, each of the schemes should be represented in each line in below form:</p>
 <blockquote>
 <div>min-size max-size min-acc max-acc min-age max-age action</div></blockquote>
-<p>Note that the ranges are closed interval (both the min and the max are
-inclusive).  Bytes for the size of regions (<code class="docutils literal notranslate"><span class="pre">min-size</span></code> and <code class="docutils literal notranslate"><span class="pre">max-size</span></code>),
-number of monitored accesses per aggregate interval for access frequency
-(<code class="docutils literal notranslate"><span class="pre">min-acc</span></code> and <code class="docutils literal notranslate"><span class="pre">max-acc</span></code>), number of aggregate intervals for the age of
-regions (<code class="docutils literal notranslate"><span class="pre">min-age</span></code> and <code class="docutils literal notranslate"><span class="pre">max-age</span></code>), and a predefined integer for memory
-management actions should be used.  The supported numbers and their meanings
-are as below.</p>
+<p>Note that the ranges are closed interval.  Bytes for the size of regions
+(<code class="docutils literal notranslate"><span class="pre">min-size</span></code> and <code class="docutils literal notranslate"><span class="pre">max-size</span></code>), number of monitored accesses per aggregate
+interval for access frequency (<code class="docutils literal notranslate"><span class="pre">min-acc</span></code> and <code class="docutils literal notranslate"><span class="pre">max-acc</span></code>), number of
+aggregate intervals for the age of regions (<code class="docutils literal notranslate"><span class="pre">min-age</span></code> and <code class="docutils literal notranslate"><span class="pre">max-age</span></code>), and a
+predefined integer for memory management actions should be used.  The supported
+numbers and their
+meanings are as below.</p>
 <blockquote>
 <div><ul class="simple">
 <li>0: Call <code class="docutils literal notranslate"><span class="pre">madvise()</span></code> for the region with <code class="docutils literal notranslate"><span class="pre">MADV_WILLNEED</span></code></li>
