@@ -68,7 +68,7 @@
             
             
               <div class="version">
-                5.6.0
+                5.7.0
               </div>
             
           
@@ -217,11 +217,11 @@ related to BPF.</p>
 <div class="section" id="q-how-do-i-report-bugs-for-bpf-kernel-code">
 <h3><a class="toc-backref" href="#id2">Q: How do I report bugs for BPF kernel code?</a><a class="headerlink" href="#q-how-do-i-report-bugs-for-bpf-kernel-code" title="Permalink to this headline">¶</a></h3>
 <p>A: Since all BPF kernel development as well as bpftool and iproute2 BPF
-loader development happens through the netdev kernel mailing list,
+loader development happens through the bpf kernel mailing list,
 please report any found issues around BPF to the following mailing
 list:</p>
 <blockquote>
-<div><a class="reference external" href="mailto:netdev&#37;&#52;&#48;vger&#46;kernel&#46;org">netdev<span>&#64;</span>vger<span>&#46;</span>kernel<span>&#46;</span>org</a></div></blockquote>
+<div><a class="reference external" href="mailto:bpf&#37;&#52;&#48;vger&#46;kernel&#46;org">bpf<span>&#64;</span>vger<span>&#46;</span>kernel<span>&#46;</span>org</a></div></blockquote>
 <p>This may also include issues related to XDP, BPF tracing, etc.</p>
 <p>Given netdev has a high volume of traffic, please also add the BPF
 maintainers to Cc (from kernel <a class="reference external" href="../../MAINTAINERS">MAINTAINERS</a> file):</p>
@@ -240,15 +240,11 @@ is a guarantee that the reported issue will be overlooked.</strong></p>
 <h2><a class="toc-backref" href="#id3">Submitting patches</a><a class="headerlink" href="#submitting-patches" title="Permalink to this headline">¶</a></h2>
 <div class="section" id="q-to-which-mailing-list-do-i-need-to-submit-my-bpf-patches">
 <h3><a class="toc-backref" href="#id4">Q: To which mailing list do I need to submit my BPF patches?</a><a class="headerlink" href="#q-to-which-mailing-list-do-i-need-to-submit-my-bpf-patches" title="Permalink to this headline">¶</a></h3>
-<p>A: Please submit your BPF patches to the netdev kernel mailing list:</p>
+<p>A: Please submit your BPF patches to the bpf kernel mailing list:</p>
 <blockquote>
-<div><a class="reference external" href="mailto:netdev&#37;&#52;&#48;vger&#46;kernel&#46;org">netdev<span>&#64;</span>vger<span>&#46;</span>kernel<span>&#46;</span>org</a></div></blockquote>
-<p>Historically, BPF came out of networking and has always been maintained
-by the kernel networking community. Although these days BPF touches
-many other subsystems as well, the patches are still routed mainly
-through the networking community.</p>
+<div><a class="reference external" href="mailto:bpf&#37;&#52;&#48;vger&#46;kernel&#46;org">bpf<span>&#64;</span>vger<span>&#46;</span>kernel<span>&#46;</span>org</a></div></blockquote>
 <p>In case your patch has changes in various different subsystems (e.g.
-tracing, security, etc), make sure to Cc the related kernel mailing
+networking, tracing, security, etc), make sure to Cc the related kernel mailing
 lists and maintainers from there as well, so they are able to review
 the changes and provide their Acked-by’s to the patches.</p>
 </div>
@@ -349,7 +345,7 @@ individual diffs on top of the old series).</p>
 a BPF point of view.</p>
 <p>Be aware that this is not a final verdict that the patch will
 automatically get accepted into net or net-next trees eventually:</p>
-<p>On the netdev kernel mailing list reviews can come in at any point
+<p>On the bpf kernel mailing list reviews can come in at any point
 in time. If discussions around a patch conclude that they cannot
 get included as-is, we will either apply a follow-up fix or drop
 them from the trees entirely. Therefore, we also reserve to rebase
@@ -639,15 +635,15 @@ set are often developed together.</p>
 <p>A: You need cmake and gcc-c++ as build requisites for LLVM. Once you have
 that set up, proceed with building the latest LLVM and clang version
 from the git repositories:</p>
-<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>$ git clone http://llvm.org/git/llvm.git
-$ cd llvm/tools
-$ git clone --depth 1 http://llvm.org/git/clang.git
-$ cd ..; mkdir build; cd build
-$ cmake .. -DLLVM_TARGETS_TO_BUILD=&quot;BPF;X86&quot; \
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>$ git clone https://github.com/llvm/llvm-project.git
+$ mkdir -p llvm-project/llvm/build/install
+$ cd llvm-project/llvm/build
+$ cmake .. -G &quot;Ninja&quot; -DLLVM_TARGETS_TO_BUILD=&quot;BPF;X86&quot; \
+           -DLLVM_ENABLE_PROJECTS=&quot;clang&quot;    \
            -DBUILD_SHARED_LIBS=OFF           \
            -DCMAKE_BUILD_TYPE=Release        \
            -DLLVM_BUILD_RUNTIME=OFF
-$ make -j $(getconf _NPROCESSORS_ONLN)
+$ ninja
 </pre></div>
 </div>
 <p>The built binaries can then be found in the build/bin/ directory, where

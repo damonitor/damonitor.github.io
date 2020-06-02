@@ -68,7 +68,7 @@
             
             
               <div class="version">
-                5.6.0
+                5.7.0
               </div>
             
           
@@ -243,7 +243,7 @@ given to appropriate struct request_queue and decremented as they finish.</dd>
 <dd><p class="first">This field increases so long as field 9 is nonzero.</p>
 <p class="last">Since 5.0 this field counts jiffies when at least one request was
 started or completed. If request runs more than 2 jiffies then some
-I/O time will not be accounted unless there are other requests.</p>
+I/O time might be not accounted in case of concurrent requests.</p>
 </dd>
 <dt>Field 11 – weighted # of milliseconds spent doing I/Os (unsigned int)</dt>
 <dd>This field is incremented at each I/O start, I/O completion, I/O
@@ -278,6 +278,8 @@ almost a non-issue.  When the statistics are read, the per-CPU counters
 are summed (possibly overflowing the unsigned long variable they are
 summed to) and the result given to the user.  There is no convenient
 user interface for accessing the per-CPU counters themselves.</p>
+<p>Since 4.19 request times are measured with nanoseconds precision and
+truncated to milliseconds before showing in this interface.</p>
 <div class="section" id="disks-vs-partitions">
 <h2>Disks vs Partitions<a class="headerlink" href="#disks-vs-partitions" title="Permalink to this headline">¶</a></h2>
 <p>There were significant changes between 2.4 and 2.6+ in the I/O subsystem.

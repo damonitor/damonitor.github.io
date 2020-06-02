@@ -68,7 +68,7 @@
             
             
               <div class="version">
-                5.6.0
+                5.7.0
               </div>
             
           
@@ -596,8 +596,8 @@ then reserves and prevents non-allocated portions from allocation. Thus vGPU
 emulation module only needs to scan and validate graphics addresses without
 complexity of address translation.</p>
 <dl class="function">
-<dt id="c.i915_detect_vgpu">
-void <code class="descname">i915_detect_vgpu</code><span class="sig-paren">(</span>struct drm_i915_private *<em>&nbsp;dev_priv</em><span class="sig-paren">)</span><a class="headerlink" href="#c.i915_detect_vgpu" title="Permalink to this definition">¶</a></dt>
+<dt id="c.intel_vgpu_detect">
+void <code class="descname">intel_vgpu_detect</code><span class="sig-paren">(</span>struct drm_i915_private *<em>&nbsp;dev_priv</em><span class="sig-paren">)</span><a class="headerlink" href="#c.intel_vgpu_detect" title="Permalink to this definition">¶</a></dt>
 <dd><p>detect virtual GPU</p>
 </dd></dl>
 
@@ -1536,6 +1536,20 @@ update. For this integration <a class="reference internal" href="#c.intel_psr_in
 get called by the frontbuffer tracking code. Note that because of locking
 issues the self-refresh re-enable code is done from a work queue, which
 must be correctly synchronized/cancelled when shutting down the pipe.”</p>
+<p>DC3CO (DC3 clock off)</p>
+<p>On top of PSR2, GEN12 adds a intermediate power savings state that turns
+clock off automatically during PSR2 idle state.
+The smaller overhead of DC3co entry/exit vs. the overhead of PSR2 deep sleep
+entry/exit allows the HW to enter a low-power state even when page flipping
+periodically (for instance a 30fps video playback scenario).</p>
+<p>Every time a flips occurs PSR2 will get out of deep sleep state(if it was),
+so DC3CO is enabled and tgl_dc3co_disable_work is schedule to run after 6
+frames, if no other flip occurs and the function above is executed, DC3CO is
+disabled and PSR2 is configured to enter deep sleep, resetting again in case
+of another flip.
+Front buffer modifications do not trigger DC3CO activation on purpose as it
+would bring a lot of complexity and most of the moderns systems will only
+use page flips.</p>
 <dl class="function">
 <dt id="c.intel_psr_enable">
 void <code class="descname">intel_psr_enable</code><span class="sig-paren">(</span>struct intel_dp *<em>&nbsp;intel_dp</em>, const struct intel_crtc_state *<em>&nbsp;crtc_state</em><span class="sig-paren">)</span><a class="headerlink" href="#c.intel_psr_enable" title="Permalink to this definition">¶</a></dt>
@@ -1720,17 +1734,15 @@ true.</p>
 enable FBC for the chosen CRTC. If it does, it will set dev_priv-&gt;fbc.crtc.</p>
 <dl class="function">
 <dt id="c.intel_fbc_enable">
-void <code class="descname">intel_fbc_enable</code><span class="sig-paren">(</span>struct intel_crtc *<em>&nbsp;crtc</em>, const struct intel_crtc_state *<em>&nbsp;crtc_state</em>, const struct intel_plane_state *<em>&nbsp;plane_state</em><span class="sig-paren">)</span><a class="headerlink" href="#c.intel_fbc_enable" title="Permalink to this definition">¶</a></dt>
+void <code class="descname">intel_fbc_enable</code><span class="sig-paren">(</span>struct intel_atomic_state *<em>&nbsp;state</em>, struct intel_crtc *<em>&nbsp;crtc</em><span class="sig-paren">)</span><a class="headerlink" href="#c.intel_fbc_enable" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <p><strong>Parameters</strong></p>
 <dl class="docutils">
+<dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">intel_atomic_state</span> <span class="pre">*</span> <span class="pre">state</span></code></dt>
+<dd>corresponding <a class="reference internal" href="drm-kms.html#c.drm_crtc_state" title="drm_crtc_state"><code class="xref c c-type docutils literal notranslate"><span class="pre">drm_crtc_state</span></code></a> for <strong>crtc</strong></dd>
 <dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">intel_crtc</span> <span class="pre">*</span> <span class="pre">crtc</span></code></dt>
 <dd>the CRTC</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">const</span> <span class="pre">struct</span> <span class="pre">intel_crtc_state</span> <span class="pre">*</span> <span class="pre">crtc_state</span></code></dt>
-<dd>corresponding <a class="reference internal" href="drm-kms.html#c.drm_crtc_state" title="drm_crtc_state"><code class="xref c c-type docutils literal notranslate"><span class="pre">drm_crtc_state</span></code></a> for <strong>crtc</strong></dd>
-<dt><code class="docutils literal notranslate"><span class="pre">const</span> <span class="pre">struct</span> <span class="pre">intel_plane_state</span> <span class="pre">*</span> <span class="pre">plane_state</span></code></dt>
-<dd>corresponding <a class="reference internal" href="drm-kms.html#c.drm_plane_state" title="drm_plane_state"><code class="xref c c-type docutils literal notranslate"><span class="pre">drm_plane_state</span></code></a> for the primary plane of <strong>crtc</strong></dd>
 </dl>
 <p><strong>Description</strong></p>
 <p>This function checks if the given CRTC was chosen for FBC, then enables it if
@@ -2336,9 +2348,9 @@ blocks such as AUX CH or backlight PWM. Hence the only thing we
 really need to know about RAWCLK is its frequency so that various
 dividers can be programmed correctly.</p>
 <dl class="function">
-<dt id="c.intel_cdclk_init">
-void <code class="descname">intel_cdclk_init</code><span class="sig-paren">(</span>struct drm_i915_private *<em>&nbsp;i915</em><span class="sig-paren">)</span><a class="headerlink" href="#c.intel_cdclk_init" title="Permalink to this definition">¶</a></dt>
-<dd><p>Initialize CDCLK</p>
+<dt id="c.intel_cdclk_init_hw">
+void <code class="descname">intel_cdclk_init_hw</code><span class="sig-paren">(</span>struct drm_i915_private *<em>&nbsp;i915</em><span class="sig-paren">)</span><a class="headerlink" href="#c.intel_cdclk_init_hw" title="Permalink to this definition">¶</a></dt>
+<dd><p>Initialize CDCLK hardware</p>
 </dd></dl>
 
 <p><strong>Parameters</strong></p>
@@ -2352,9 +2364,9 @@ sanitizing the state of the hardware if needed. This is generally done only
 during the display core initialization sequence, after which the DMC will
 take care of turning CDCLK off/on as needed.</p>
 <dl class="function">
-<dt id="c.intel_cdclk_uninit">
-void <code class="descname">intel_cdclk_uninit</code><span class="sig-paren">(</span>struct drm_i915_private *<em>&nbsp;i915</em><span class="sig-paren">)</span><a class="headerlink" href="#c.intel_cdclk_uninit" title="Permalink to this definition">¶</a></dt>
-<dd><p>Uninitialize CDCLK</p>
+<dt id="c.intel_cdclk_uninit_hw">
+void <code class="descname">intel_cdclk_uninit_hw</code><span class="sig-paren">(</span>struct drm_i915_private *<em>&nbsp;i915</em><span class="sig-paren">)</span><a class="headerlink" href="#c.intel_cdclk_uninit_hw" title="Permalink to this definition">¶</a></dt>
+<dd><p>Uninitialize CDCLK hardware</p>
 </dd></dl>
 
 <p><strong>Parameters</strong></p>
@@ -2367,81 +2379,65 @@ void <code class="descname">intel_cdclk_uninit</code><span class="sig-paren">(</
 uninitialization sequence.</p>
 <dl class="function">
 <dt id="c.intel_cdclk_needs_modeset">
-bool <code class="descname">intel_cdclk_needs_modeset</code><span class="sig-paren">(</span>const struct intel_cdclk_state *<em>&nbsp;a</em>, const struct intel_cdclk_state *<em>&nbsp;b</em><span class="sig-paren">)</span><a class="headerlink" href="#c.intel_cdclk_needs_modeset" title="Permalink to this definition">¶</a></dt>
-<dd><p>Determine if two CDCLK states require a modeset on all pipes</p>
+bool <code class="descname">intel_cdclk_needs_modeset</code><span class="sig-paren">(</span>const struct intel_cdclk_config *<em>&nbsp;a</em>, const struct intel_cdclk_config *<em>&nbsp;b</em><span class="sig-paren">)</span><a class="headerlink" href="#c.intel_cdclk_needs_modeset" title="Permalink to this definition">¶</a></dt>
+<dd><p>Determine if changong between the CDCLK configurations requires a modeset on all pipes</p>
 </dd></dl>
 
 <p><strong>Parameters</strong></p>
 <dl class="docutils">
-<dt><code class="docutils literal notranslate"><span class="pre">const</span> <span class="pre">struct</span> <span class="pre">intel_cdclk_state</span> <span class="pre">*</span> <span class="pre">a</span></code></dt>
-<dd>first CDCLK state</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">const</span> <span class="pre">struct</span> <span class="pre">intel_cdclk_state</span> <span class="pre">*</span> <span class="pre">b</span></code></dt>
-<dd>second CDCLK state</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">const</span> <span class="pre">struct</span> <span class="pre">intel_cdclk_config</span> <span class="pre">*</span> <span class="pre">a</span></code></dt>
+<dd>first CDCLK configuration</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">const</span> <span class="pre">struct</span> <span class="pre">intel_cdclk_config</span> <span class="pre">*</span> <span class="pre">b</span></code></dt>
+<dd>second CDCLK configuration</dd>
 </dl>
 <p><strong>Return</strong></p>
-<p>True if the CDCLK states require pipes to be off during reprogramming, false if not.</p>
+<p>True if changing between the two CDCLK configurations
+requires all pipes to be off, false if not.</p>
 <dl class="function">
-<dt id="c.intel_cdclk_needs_cd2x_update">
-bool <code class="descname">intel_cdclk_needs_cd2x_update</code><span class="sig-paren">(</span>struct drm_i915_private *<em>&nbsp;dev_priv</em>, const struct intel_cdclk_state *<em>&nbsp;a</em>, const struct intel_cdclk_state *<em>&nbsp;b</em><span class="sig-paren">)</span><a class="headerlink" href="#c.intel_cdclk_needs_cd2x_update" title="Permalink to this definition">¶</a></dt>
-<dd><p>Determine if two CDCLK states require a cd2x divider update</p>
-</dd></dl>
-
-<p><strong>Parameters</strong></p>
-<dl class="docutils">
-<dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">drm_i915_private</span> <span class="pre">*</span> <span class="pre">dev_priv</span></code></dt>
-<dd>Not a CDCLK state, it’s the drm_i915_private!</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">const</span> <span class="pre">struct</span> <span class="pre">intel_cdclk_state</span> <span class="pre">*</span> <span class="pre">a</span></code></dt>
-<dd>first CDCLK state</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">const</span> <span class="pre">struct</span> <span class="pre">intel_cdclk_state</span> <span class="pre">*</span> <span class="pre">b</span></code></dt>
-<dd>second CDCLK state</dd>
-</dl>
-<p><strong>Return</strong></p>
-<p>True if the CDCLK states require just a cd2x divider update, false if not.</p>
-<dl class="function">
-<dt id="c.intel_cdclk_changed">
-bool <code class="descname">intel_cdclk_changed</code><span class="sig-paren">(</span>const struct intel_cdclk_state *<em>&nbsp;a</em>, const struct intel_cdclk_state *<em>&nbsp;b</em><span class="sig-paren">)</span><a class="headerlink" href="#c.intel_cdclk_changed" title="Permalink to this definition">¶</a></dt>
-<dd><p>Determine if two CDCLK states are different</p>
-</dd></dl>
-
-<p><strong>Parameters</strong></p>
-<dl class="docutils">
-<dt><code class="docutils literal notranslate"><span class="pre">const</span> <span class="pre">struct</span> <span class="pre">intel_cdclk_state</span> <span class="pre">*</span> <span class="pre">a</span></code></dt>
-<dd>first CDCLK state</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">const</span> <span class="pre">struct</span> <span class="pre">intel_cdclk_state</span> <span class="pre">*</span> <span class="pre">b</span></code></dt>
-<dd>second CDCLK state</dd>
-</dl>
-<p><strong>Return</strong></p>
-<p>True if the CDCLK states don’t match, false if they do.</p>
-<dl class="function">
-<dt id="c.intel_cdclk_swap_state">
-void <code class="descname">intel_cdclk_swap_state</code><span class="sig-paren">(</span>struct intel_atomic_state *<em>&nbsp;state</em><span class="sig-paren">)</span><a class="headerlink" href="#c.intel_cdclk_swap_state" title="Permalink to this definition">¶</a></dt>
-<dd><p>make atomic CDCLK configuration effective</p>
-</dd></dl>
-
-<p><strong>Parameters</strong></p>
-<dl class="docutils">
-<dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">intel_atomic_state</span> <span class="pre">*</span> <span class="pre">state</span></code></dt>
-<dd>atomic state</dd>
-</dl>
-<p><strong>Description</strong></p>
-<p>This is the CDCLK version of <a class="reference internal" href="drm-kms-helpers.html#c.drm_atomic_helper_swap_state" title="drm_atomic_helper_swap_state"><code class="xref c c-func docutils literal notranslate"><span class="pre">drm_atomic_helper_swap_state()</span></code></a> since the
-helper does not handle driver-specific global state.</p>
-<p>Similarly to the atomic helpers this function does a complete swap,
-i.e. it also puts the old state into <strong>state</strong>. This is used by the commit
-code to determine how CDCLK has changed (for instance did it increase or
-decrease).</p>
-<dl class="function">
-<dt id="c.intel_set_cdclk">
-void <code class="descname">intel_set_cdclk</code><span class="sig-paren">(</span>struct drm_i915_private *<em>&nbsp;dev_priv</em>, const struct intel_cdclk_state *<em>&nbsp;cdclk_state</em>, enum pipe<em>&nbsp;pipe</em><span class="sig-paren">)</span><a class="headerlink" href="#c.intel_set_cdclk" title="Permalink to this definition">¶</a></dt>
-<dd><p>Push the CDCLK state to the hardware</p>
+<dt id="c.intel_cdclk_can_cd2x_update">
+bool <code class="descname">intel_cdclk_can_cd2x_update</code><span class="sig-paren">(</span>struct drm_i915_private *<em>&nbsp;dev_priv</em>, const struct intel_cdclk_config *<em>&nbsp;a</em>, const struct intel_cdclk_config *<em>&nbsp;b</em><span class="sig-paren">)</span><a class="headerlink" href="#c.intel_cdclk_can_cd2x_update" title="Permalink to this definition">¶</a></dt>
+<dd><p>Determine if changing between the two CDCLK configurations requires only a cd2x divider update</p>
 </dd></dl>
 
 <p><strong>Parameters</strong></p>
 <dl class="docutils">
 <dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">drm_i915_private</span> <span class="pre">*</span> <span class="pre">dev_priv</span></code></dt>
 <dd>i915 device</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">const</span> <span class="pre">struct</span> <span class="pre">intel_cdclk_state</span> <span class="pre">*</span> <span class="pre">cdclk_state</span></code></dt>
-<dd>new CDCLK state</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">const</span> <span class="pre">struct</span> <span class="pre">intel_cdclk_config</span> <span class="pre">*</span> <span class="pre">a</span></code></dt>
+<dd>first CDCLK configuration</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">const</span> <span class="pre">struct</span> <span class="pre">intel_cdclk_config</span> <span class="pre">*</span> <span class="pre">b</span></code></dt>
+<dd>second CDCLK configuration</dd>
+</dl>
+<p><strong>Return</strong></p>
+<p>True if changing between the two CDCLK configurations
+can be done with just a cd2x divider update, false if not.</p>
+<dl class="function">
+<dt id="c.intel_cdclk_changed">
+bool <code class="descname">intel_cdclk_changed</code><span class="sig-paren">(</span>const struct intel_cdclk_config *<em>&nbsp;a</em>, const struct intel_cdclk_config *<em>&nbsp;b</em><span class="sig-paren">)</span><a class="headerlink" href="#c.intel_cdclk_changed" title="Permalink to this definition">¶</a></dt>
+<dd><p>Determine if two CDCLK configurations are different</p>
+</dd></dl>
+
+<p><strong>Parameters</strong></p>
+<dl class="docutils">
+<dt><code class="docutils literal notranslate"><span class="pre">const</span> <span class="pre">struct</span> <span class="pre">intel_cdclk_config</span> <span class="pre">*</span> <span class="pre">a</span></code></dt>
+<dd>first CDCLK configuration</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">const</span> <span class="pre">struct</span> <span class="pre">intel_cdclk_config</span> <span class="pre">*</span> <span class="pre">b</span></code></dt>
+<dd>second CDCLK configuration</dd>
+</dl>
+<p><strong>Return</strong></p>
+<p>True if the CDCLK configurations don’t match, false if they do.</p>
+<dl class="function">
+<dt id="c.intel_set_cdclk">
+void <code class="descname">intel_set_cdclk</code><span class="sig-paren">(</span>struct drm_i915_private *<em>&nbsp;dev_priv</em>, const struct intel_cdclk_config *<em>&nbsp;cdclk_config</em>, enum pipe<em>&nbsp;pipe</em><span class="sig-paren">)</span><a class="headerlink" href="#c.intel_set_cdclk" title="Permalink to this definition">¶</a></dt>
+<dd><p>Push the CDCLK configuration to the hardware</p>
+</dd></dl>
+
+<p><strong>Parameters</strong></p>
+<dl class="docutils">
+<dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">drm_i915_private</span> <span class="pre">*</span> <span class="pre">dev_priv</span></code></dt>
+<dd>i915 device</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">const</span> <span class="pre">struct</span> <span class="pre">intel_cdclk_config</span> <span class="pre">*</span> <span class="pre">cdclk_config</span></code></dt>
+<dd>new CDCLK configuration</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">enum</span> <span class="pre">pipe</span> <span class="pre">pipe</span></code></dt>
 <dd>pipe with which to synchronize the update</dd>
 </dl>
@@ -2450,44 +2446,32 @@ void <code class="descname">intel_set_cdclk</code><span class="sig-paren">(</spa
 if necessary.</p>
 <dl class="function">
 <dt id="c.intel_set_cdclk_pre_plane_update">
-void <code class="descname">intel_set_cdclk_pre_plane_update</code><span class="sig-paren">(</span>struct drm_i915_private *<em>&nbsp;dev_priv</em>, const struct intel_cdclk_state *<em>&nbsp;old_state</em>, const struct intel_cdclk_state *<em>&nbsp;new_state</em>, enum pipe<em>&nbsp;pipe</em><span class="sig-paren">)</span><a class="headerlink" href="#c.intel_set_cdclk_pre_plane_update" title="Permalink to this definition">¶</a></dt>
+void <code class="descname">intel_set_cdclk_pre_plane_update</code><span class="sig-paren">(</span>struct intel_atomic_state *<em>&nbsp;state</em><span class="sig-paren">)</span><a class="headerlink" href="#c.intel_set_cdclk_pre_plane_update" title="Permalink to this definition">¶</a></dt>
 <dd><p>Push the CDCLK state to the hardware</p>
 </dd></dl>
 
 <p><strong>Parameters</strong></p>
 <dl class="docutils">
-<dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">drm_i915_private</span> <span class="pre">*</span> <span class="pre">dev_priv</span></code></dt>
-<dd>i915 device</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">const</span> <span class="pre">struct</span> <span class="pre">intel_cdclk_state</span> <span class="pre">*</span> <span class="pre">old_state</span></code></dt>
-<dd>old CDCLK state</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">const</span> <span class="pre">struct</span> <span class="pre">intel_cdclk_state</span> <span class="pre">*</span> <span class="pre">new_state</span></code></dt>
-<dd>new CDCLK state</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">enum</span> <span class="pre">pipe</span> <span class="pre">pipe</span></code></dt>
-<dd>pipe with which to synchronize the update</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">intel_atomic_state</span> <span class="pre">*</span> <span class="pre">state</span></code></dt>
+<dd>intel atomic state</dd>
 </dl>
 <p><strong>Description</strong></p>
-<p>Program the hardware before updating the HW plane state based on the passed
-in CDCLK state, if necessary.</p>
+<p>Program the hardware before updating the HW plane state based on the
+new CDCLK state, if necessary.</p>
 <dl class="function">
 <dt id="c.intel_set_cdclk_post_plane_update">
-void <code class="descname">intel_set_cdclk_post_plane_update</code><span class="sig-paren">(</span>struct drm_i915_private *<em>&nbsp;dev_priv</em>, const struct intel_cdclk_state *<em>&nbsp;old_state</em>, const struct intel_cdclk_state *<em>&nbsp;new_state</em>, enum pipe<em>&nbsp;pipe</em><span class="sig-paren">)</span><a class="headerlink" href="#c.intel_set_cdclk_post_plane_update" title="Permalink to this definition">¶</a></dt>
+void <code class="descname">intel_set_cdclk_post_plane_update</code><span class="sig-paren">(</span>struct intel_atomic_state *<em>&nbsp;state</em><span class="sig-paren">)</span><a class="headerlink" href="#c.intel_set_cdclk_post_plane_update" title="Permalink to this definition">¶</a></dt>
 <dd><p>Push the CDCLK state to the hardware</p>
 </dd></dl>
 
 <p><strong>Parameters</strong></p>
 <dl class="docutils">
-<dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">drm_i915_private</span> <span class="pre">*</span> <span class="pre">dev_priv</span></code></dt>
-<dd>i915 device</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">const</span> <span class="pre">struct</span> <span class="pre">intel_cdclk_state</span> <span class="pre">*</span> <span class="pre">old_state</span></code></dt>
-<dd>old CDCLK state</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">const</span> <span class="pre">struct</span> <span class="pre">intel_cdclk_state</span> <span class="pre">*</span> <span class="pre">new_state</span></code></dt>
-<dd>new CDCLK state</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">enum</span> <span class="pre">pipe</span> <span class="pre">pipe</span></code></dt>
-<dd>pipe with which to synchronize the update</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">intel_atomic_state</span> <span class="pre">*</span> <span class="pre">state</span></code></dt>
+<dd>intel atomic state</dd>
 </dl>
 <p><strong>Description</strong></p>
-<p>Program the hardware after updating the HW plane state based on the passed
-in CDCLK state, if necessary.</p>
+<p>Program the hardware after updating the HW plane state based on the
+new CDCLK state, if necessary.</p>
 <dl class="function">
 <dt id="c.intel_update_max_cdclk">
 void <code class="descname">intel_update_max_cdclk</code><span class="sig-paren">(</span>struct drm_i915_private *<em>&nbsp;dev_priv</em><span class="sig-paren">)</span><a class="headerlink" href="#c.intel_update_max_cdclk" title="Permalink to this definition">¶</a></dt>
@@ -2517,8 +2501,8 @@ void <code class="descname">intel_update_cdclk</code><span class="sig-paren">(</
 <p><strong>Description</strong></p>
 <p>Determine the current CDCLK frequency.</p>
 <dl class="function">
-<dt id="c.intel_update_rawclk">
-void <code class="descname">intel_update_rawclk</code><span class="sig-paren">(</span>struct drm_i915_private *<em>&nbsp;dev_priv</em><span class="sig-paren">)</span><a class="headerlink" href="#c.intel_update_rawclk" title="Permalink to this definition">¶</a></dt>
+<dt id="c.intel_read_rawclk">
+u32 <code class="descname">intel_read_rawclk</code><span class="sig-paren">(</span>struct drm_i915_private *<em>&nbsp;dev_priv</em><span class="sig-paren">)</span><a class="headerlink" href="#c.intel_read_rawclk" title="Permalink to this definition">¶</a></dt>
 <dd><p>Determine the current RAWCLK frequency</p>
 </dd></dl>
 
@@ -2737,6 +2721,21 @@ void <code class="descname">intel_update_active_dpll</code><span class="sig-pare
 from the port DPLLs reserved previously by <a class="reference internal" href="#c.intel_reserve_shared_dplls" title="intel_reserve_shared_dplls"><code class="xref c c-func docutils literal notranslate"><span class="pre">intel_reserve_shared_dplls()</span></code></a>. The
 DPLL selected will be based on the current mode of the encoder’s port.</p>
 <dl class="function">
+<dt id="c.intel_dpll_get_freq">
+int <code class="descname">intel_dpll_get_freq</code><span class="sig-paren">(</span>struct drm_i915_private *<em>&nbsp;i915</em>, const struct <a class="reference internal" href="#c.intel_shared_dpll" title="intel_shared_dpll">intel_shared_dpll</a> *<em>&nbsp;pll</em><span class="sig-paren">)</span><a class="headerlink" href="#c.intel_dpll_get_freq" title="Permalink to this definition">¶</a></dt>
+<dd><p>calculate the DPLL’s output frequency</p>
+</dd></dl>
+
+<p><strong>Parameters</strong></p>
+<dl class="docutils">
+<dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">drm_i915_private</span> <span class="pre">*</span> <span class="pre">i915</span></code></dt>
+<dd>i915 device</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">const</span> <span class="pre">struct</span> <span class="pre">intel_shared_dpll</span> <span class="pre">*</span> <span class="pre">pll</span></code></dt>
+<dd>DPLL for which to calculate the output frequency</dd>
+</dl>
+<p><strong>Description</strong></p>
+<p>Return the output frequency corresponding to <strong>pll</strong>’s current state.</p>
+<dl class="function">
 <dt id="c.intel_dpll_dump_hw_state">
 void <code class="descname">intel_dpll_dump_hw_state</code><span class="sig-paren">(</span>struct drm_i915_private *<em>&nbsp;dev_priv</em>, const struct intel_dpll_hw_state *<em>&nbsp;hw_state</em><span class="sig-paren">)</span><a class="headerlink" href="#c.intel_dpll_dump_hw_state" title="Permalink to this definition">¶</a></dt>
 <dd><p>write hw_state to dmesg</p>
@@ -2750,7 +2749,7 @@ void <code class="descname">intel_dpll_dump_hw_state</code><span class="sig-pare
 <dd>hw state to be written to the log</dd>
 </dl>
 <p><strong>Description</strong></p>
-<p>Write the relevant values in <strong>hw_state</strong> to dmesg using DRM_DEBUG_KMS.</p>
+<p>Write the relevant values in <strong>hw_state</strong> to dmesg using drm_dbg_kms.</p>
 <dl class="type">
 <dt id="c.intel_dpll_id">
 enum <code class="descname">intel_dpll_id</code><a class="headerlink" href="#c.intel_dpll_id" title="Permalink to this definition">¶</a></dt>
@@ -2863,6 +2862,7 @@ struct <code class="descname">intel_shared_dpll_funcs</code><a class="headerlink
   void (*enable)(struct drm_i915_private *dev_priv, struct intel_shared_dpll *pll);
   void (*disable)(struct drm_i915_private *dev_priv, struct intel_shared_dpll *pll);
   bool (*get_hw_state)(struct drm_i915_private *dev_priv,struct intel_shared_dpll *pll, struct intel_dpll_hw_state *hw_state);
+  int (*get_freq)(struct drm_i915_private *i915, const struct intel_shared_dpll *pll);
 };
 </pre></div>
 </div>
@@ -2883,6 +2883,9 @@ tracked users for it.</dd>
 <dd>Hook for reading the values currently programmed to the DPLL
 registers. This is used for initial hw state readout and state
 verification after a mode set.</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">get_freq</span></code></dt>
+<dd>Hook for calculating the pll’s output frequency based on its
+current state.</dd>
 </dl>
 <dl class="type">
 <dt id="c.dpll_info">
@@ -3119,6 +3122,11 @@ This process is dubbed relocation.</p>
 </div>
 <div class="section" id="gem-bo-management-implementation-details">
 <h3>GEM BO Management Implementation Details<a class="headerlink" href="#gem-bo-management-implementation-details" title="Permalink to this headline">¶</a></h3>
+<p>A VMA represents a GEM BO that is bound into an address space. Therefore, a
+VMA’s presence cannot be guaranteed before binding, or after unbinding the
+object into/from the address space.</p>
+<p>To make things as simple as possible (ie. no refcounting), a VMA’s lifetime
+will always be &lt;= an objects lifetime. So object refcounting should cover us.</p>
 </div>
 <div class="section" id="buffer-object-eviction">
 <h3>Buffer Object Eviction<a class="headerlink" href="#buffer-object-eviction" title="Permalink to this headline">¶</a></h3>
@@ -3597,6 +3605,50 @@ preemption, but just sampling the new tail pointer).</p>
 </div>
 <div class="section" id="global-gtt-views">
 <h3>Global GTT views<a class="headerlink" href="#global-gtt-views" title="Permalink to this headline">¶</a></h3>
+<p>Background and previous state</p>
+<p>Historically objects could exists (be bound) in global GTT space only as
+singular instances with a view representing all of the object’s backing pages
+in a linear fashion. This view will be called a normal view.</p>
+<p>To support multiple views of the same object, where the number of mapped
+pages is not equal to the backing store, or where the layout of the pages
+is not linear, concept of a GGTT view was added.</p>
+<p>One example of an alternative view is a stereo display driven by a single
+image. In this case we would have a framebuffer looking like this
+(2x2 pages):</p>
+<blockquote>
+<div>12
+34</div></blockquote>
+<p>Above would represent a normal GGTT view as normally mapped for GPU or CPU
+rendering. In contrast, fed to the display engine would be an alternative
+view which could look something like this:</p>
+<blockquote>
+<div>1212
+3434</div></blockquote>
+<p>In this example both the size and layout of pages in the alternative view is
+different from the normal view.</p>
+<p>Implementation and usage</p>
+<p>GGTT views are implemented using VMAs and are distinguished via enum
+i915_ggtt_view_type and struct i915_ggtt_view.</p>
+<p>A new flavour of core GEM functions which work with GGTT bound objects were
+added with the _ggtt_ infix, and sometimes with _view postfix to avoid
+renaming  in large amounts of code. They take the struct i915_ggtt_view
+parameter encapsulating all metadata required to implement a view.</p>
+<p>As a helper for callers which are only interested in the normal view,
+globally const i915_ggtt_view_normal singleton instance exists. All old core
+GEM API functions, the ones not taking the view parameter, are operating on,
+or with the normal GGTT view.</p>
+<p>Code wanting to add or use a new GGTT view needs to:</p>
+<ol class="arabic simple">
+<li>Add a new enum with a suitable name.</li>
+<li>Extend the metadata in the i915_ggtt_view structure if required.</li>
+<li>Add support to i915_get_vma_pages().</li>
+</ol>
+<p>New views are required to build a scatter-gather table from within the
+i915_get_vma_pages function. This table is stored in the vma.ggtt_view and
+exists for the lifetime of an VMA.</p>
+<p>Core API is designed to have copy semantics which means that passed in
+struct i915_ggtt_view does not need to be persistent (left around after
+calling the core API functions).</p>
 <dl class="function">
 <dt id="c.i915_gem_gtt_reserve">
 int <code class="descname">i915_gem_gtt_reserve</code><span class="sig-paren">(</span>struct i915_address_space *<em>&nbsp;vm</em>, struct <a class="reference internal" href="drm-mm.html#c.drm_mm_node" title="drm_mm_node">drm_mm_node</a> *<em>&nbsp;node</em>, u64<em>&nbsp;size</em>, u64<em>&nbsp;offset</em>, unsigned long<em>&nbsp;color</em>, unsigned int<em>&nbsp;flags</em><span class="sig-paren">)</span><a class="headerlink" href="#c.i915_gem_gtt_reserve" title="Permalink to this definition">¶</a></dt>
@@ -4810,7 +4862,7 @@ ssize_t <code class="descname">i915_perf_read</code><span class="sig-paren">(</s
 </dl>
 <p><strong>Description</strong></p>
 <p>The entry point for handling a read() on a stream file descriptor from
-userspace. Most of the work is left to the <a class="reference internal" href="#c.i915_perf_read_locked" title="i915_perf_read_locked"><code class="xref c c-func docutils literal notranslate"><span class="pre">i915_perf_read_locked()</span></code></a> and
+userspace. Most of the work is left to the i915_perf_read_locked() and
 <a class="reference internal" href="#c.i915_perf_stream_ops" title="i915_perf_stream_ops"><code class="xref c c-type docutils literal notranslate"><span class="pre">i915_perf_stream_ops-&gt;read</span></code></a> but to save having stream implementations (of
 which we might have multiple later) we handle blocking read here.</p>
 <p>We can also consistently treat trying to read from a disabled stream
@@ -5487,40 +5539,6 @@ a circular OA buffer and apply the requested metric set configuration.</p>
 <p><strong>Return</strong></p>
 <p>zero on success or a negative error code.</p>
 <dl class="function">
-<dt id="c.i915_perf_read_locked">
-ssize_t <code class="descname">i915_perf_read_locked</code><span class="sig-paren">(</span>struct <a class="reference internal" href="#c.i915_perf_stream" title="i915_perf_stream">i915_perf_stream</a> *<em>&nbsp;stream</em>, struct file *<em>&nbsp;file</em>, char __user *<em>&nbsp;buf</em>, size_t<em>&nbsp;count</em>, loff_t *<em>&nbsp;ppos</em><span class="sig-paren">)</span><a class="headerlink" href="#c.i915_perf_read_locked" title="Permalink to this definition">¶</a></dt>
-<dd><p><a class="reference internal" href="#c.i915_perf_stream_ops" title="i915_perf_stream_ops"><code class="xref c c-type docutils literal notranslate"><span class="pre">i915_perf_stream_ops-&gt;read</span></code></a> with error normalisation</p>
-</dd></dl>
-
-<p><strong>Parameters</strong></p>
-<dl class="docutils">
-<dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">i915_perf_stream</span> <span class="pre">*</span> <span class="pre">stream</span></code></dt>
-<dd>An i915 perf stream</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">file</span> <span class="pre">*</span> <span class="pre">file</span></code></dt>
-<dd>An i915 perf stream file</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">char</span> <span class="pre">__user</span> <span class="pre">*</span> <span class="pre">buf</span></code></dt>
-<dd>destination buffer given by userspace</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">size_t</span> <span class="pre">count</span></code></dt>
-<dd>the number of bytes userspace wants to read</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">loff_t</span> <span class="pre">*</span> <span class="pre">ppos</span></code></dt>
-<dd>(inout) file seek position (unused)</dd>
-</dl>
-<p><strong>Description</strong></p>
-<p>Besides wrapping <a class="reference internal" href="#c.i915_perf_stream_ops" title="i915_perf_stream_ops"><code class="xref c c-type docutils literal notranslate"><span class="pre">i915_perf_stream_ops-&gt;read</span></code></a> this provides a common place to
-ensure that if we’ve successfully copied any data then reporting that takes
-precedence over any internal error status, so the data isn’t lost.</p>
-<p>For example ret will be -ENOSPC whenever there is more buffered data than
-can be copied to userspace, but that’s only interesting if we weren’t able
-to copy some data because it implies the userspace buffer is too small to
-receive a single record (and we never split records).</p>
-<p>Another case with ret == -EFAULT is more of a grey area since it would seem
-like bad form for userspace to ask us to overrun its buffer, but the user
-knows best:</p>
-<blockquote>
-<div><a class="reference external" href="http://yarchive.net/comp/linux/partial_reads_writes.html">http://yarchive.net/comp/linux/partial_reads_writes.html</a></div></blockquote>
-<p><strong>Return</strong></p>
-<p>The number of bytes copied or a negative error code on failure.</p>
-<dl class="function">
 <dt>
 ssize_t <code class="descname">i915_perf_read</code><span class="sig-paren">(</span>struct file *<em>&nbsp;file</em>, char __user *<em>&nbsp;buf</em>, size_t<em>&nbsp;count</em>, loff_t *<em>&nbsp;ppos</em><span class="sig-paren">)</span></dt>
 <dd><p>handles read() FOP for i915 perf stream FDs</p>
@@ -5539,7 +5557,7 @@ ssize_t <code class="descname">i915_perf_read</code><span class="sig-paren">(</s
 </dl>
 <p><strong>Description</strong></p>
 <p>The entry point for handling a read() on a stream file descriptor from
-userspace. Most of the work is left to the <a class="reference internal" href="#c.i915_perf_read_locked" title="i915_perf_read_locked"><code class="xref c c-func docutils literal notranslate"><span class="pre">i915_perf_read_locked()</span></code></a> and
+userspace. Most of the work is left to the i915_perf_read_locked() and
 <a class="reference internal" href="#c.i915_perf_stream_ops" title="i915_perf_stream_ops"><code class="xref c c-type docutils literal notranslate"><span class="pre">i915_perf_stream_ops-&gt;read</span></code></a> but to save having stream implementations (of
 which we might have multiple later) we handle blocking read here.</p>
 <p>We can also consistently treat trying to read from a disabled stream
@@ -5914,8 +5932,8 @@ cases, deviating from) the kernel coding style.</p>
 <p>The style guide for <code class="docutils literal notranslate"><span class="pre">i915_reg.h</span></code>.</p>
 <p>Follow the style described here for new macros, and while changing existing
 macros. Do <strong>not</strong> mass change existing definitions just to update the style.</p>
-<div class="section" id="id5">
-<h4>Layout<a class="headerlink" href="#id5" title="Permalink to this headline">¶</a></h4>
+<div class="section" id="file-layout">
+<h4>File Layout<a class="headerlink" href="#file-layout" title="Permalink to this headline">¶</a></h4>
 <p>Keep helper macros near the top. For example, _PIPE() and friends.</p>
 <p>Prefix macros that generally should not be used outside of this file with
 underscore ‘_’. For example, _PIPE() and friends, single instances of

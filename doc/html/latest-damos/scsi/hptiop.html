@@ -1,0 +1,581 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Highpoint RocketRAID 3xxx/4xxx Adapter Driver (hptiop) &mdash; The Linux Kernel  documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript">
+          var DOCUMENTATION_OPTIONS = {
+              URL_ROOT:'../',
+              VERSION:'',
+              LANGUAGE:'None',
+              COLLAPSE_INDEX:false,
+              FILE_SUFFIX:'.html',
+              HAS_SOURCE:  true,
+              SOURCELINK_SUFFIX: '.txt'
+          };
+      </script>
+        <script type="text/javascript" src="../_static/jquery.js"></script>
+        <script type="text/javascript" src="../_static/underscore.js"></script>
+        <script type="text/javascript" src="../_static/doctools.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/theme_overrides.css" type="text/css" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> The Linux Kernel
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                5.7.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../admin-guide/mm/damon/index.html">DAMON: Data Access MONitor</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">The Linux Kernel</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+      <li>Highpoint RocketRAID 3xxx/4xxx Adapter Driver (hptiop)</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/scsi/hptiop.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="highpoint-rocketraid-3xxx-4xxx-adapter-driver-hptiop">
+<h1>Highpoint RocketRAID 3xxx/4xxx Adapter Driver (hptiop)<a class="headerlink" href="#highpoint-rocketraid-3xxx-4xxx-adapter-driver-hptiop" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="controller-register-map">
+<h2>Controller Register Map<a class="headerlink" href="#controller-register-map" title="Permalink to this headline">¶</a></h2>
+<p>For RR44xx Intel IOP based adapters, the controller IOP is accessed via PCI BAR0 and BAR2</p>
+<blockquote>
+<div><table border="1" class="docutils">
+<colgroup>
+<col width="29%" />
+<col width="71%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">BAR0 offset</th>
+<th class="head">Register</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>0x11C5C</td>
+<td>Link Interface IRQ Set</td>
+</tr>
+<tr class="row-odd"><td>0x11C60</td>
+<td>Link Interface IRQ Clear</td>
+</tr>
+</tbody>
+</table>
+<table border="1" class="docutils">
+<colgroup>
+<col width="29%" />
+<col width="71%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">BAR2 offset</th>
+<th class="head">Register</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>0x10</td>
+<td>Inbound Message Register 0</td>
+</tr>
+<tr class="row-odd"><td>0x14</td>
+<td>Inbound Message Register 1</td>
+</tr>
+<tr class="row-even"><td>0x18</td>
+<td>Outbound Message Register 0</td>
+</tr>
+<tr class="row-odd"><td>0x1C</td>
+<td>Outbound Message Register 1</td>
+</tr>
+<tr class="row-even"><td>0x20</td>
+<td>Inbound Doorbell Register</td>
+</tr>
+<tr class="row-odd"><td>0x24</td>
+<td>Inbound Interrupt Status Register</td>
+</tr>
+<tr class="row-even"><td>0x28</td>
+<td>Inbound Interrupt Mask Register</td>
+</tr>
+<tr class="row-odd"><td>0x30</td>
+<td>Outbound Interrupt Status Register</td>
+</tr>
+<tr class="row-even"><td>0x34</td>
+<td>Outbound Interrupt Mask Register</td>
+</tr>
+<tr class="row-odd"><td>0x40</td>
+<td>Inbound Queue Port</td>
+</tr>
+<tr class="row-even"><td>0x44</td>
+<td>Outbound Queue Port</td>
+</tr>
+</tbody>
+</table>
+</div></blockquote>
+<p>For Intel IOP based adapters, the controller IOP is accessed via PCI BAR0:</p>
+<blockquote>
+<div><table border="1" class="docutils">
+<colgroup>
+<col width="29%" />
+<col width="71%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">BAR0 offset</th>
+<th class="head">Register</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>0x10</td>
+<td>Inbound Message Register 0</td>
+</tr>
+<tr class="row-odd"><td>0x14</td>
+<td>Inbound Message Register 1</td>
+</tr>
+<tr class="row-even"><td>0x18</td>
+<td>Outbound Message Register 0</td>
+</tr>
+<tr class="row-odd"><td>0x1C</td>
+<td>Outbound Message Register 1</td>
+</tr>
+<tr class="row-even"><td>0x20</td>
+<td>Inbound Doorbell Register</td>
+</tr>
+<tr class="row-odd"><td>0x24</td>
+<td>Inbound Interrupt Status Register</td>
+</tr>
+<tr class="row-even"><td>0x28</td>
+<td>Inbound Interrupt Mask Register</td>
+</tr>
+<tr class="row-odd"><td>0x30</td>
+<td>Outbound Interrupt Status Register</td>
+</tr>
+<tr class="row-even"><td>0x34</td>
+<td>Outbound Interrupt Mask Register</td>
+</tr>
+<tr class="row-odd"><td>0x40</td>
+<td>Inbound Queue Port</td>
+</tr>
+<tr class="row-even"><td>0x44</td>
+<td>Outbound Queue Port</td>
+</tr>
+</tbody>
+</table>
+</div></blockquote>
+<p>For Marvell not Frey IOP based adapters, the IOP is accessed via PCI BAR0 and BAR1:</p>
+<blockquote>
+<div><table border="1" class="docutils">
+<colgroup>
+<col width="29%" />
+<col width="71%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">BAR0 offset</th>
+<th class="head">Register</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>0x20400</td>
+<td>Inbound Doorbell Register</td>
+</tr>
+<tr class="row-odd"><td>0x20404</td>
+<td>Inbound Interrupt Mask Register</td>
+</tr>
+<tr class="row-even"><td>0x20408</td>
+<td>Outbound Doorbell Register</td>
+</tr>
+<tr class="row-odd"><td>0x2040C</td>
+<td>Outbound Interrupt Mask Register</td>
+</tr>
+</tbody>
+</table>
+<table border="1" class="docutils">
+<colgroup>
+<col width="29%" />
+<col width="71%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">BAR1 offset</th>
+<th class="head">Register</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>0x0</td>
+<td>Inbound Queue Head Pointer</td>
+</tr>
+<tr class="row-odd"><td>0x4</td>
+<td>Inbound Queue Tail Pointer</td>
+</tr>
+<tr class="row-even"><td>0x8</td>
+<td>Outbound Queue Head Pointer</td>
+</tr>
+<tr class="row-odd"><td>0xC</td>
+<td>Outbound Queue Tail Pointer</td>
+</tr>
+<tr class="row-even"><td>0x10</td>
+<td>Inbound Message Register</td>
+</tr>
+<tr class="row-odd"><td>0x14</td>
+<td>Outbound Message Register</td>
+</tr>
+<tr class="row-even"><td>0x40-0x1040</td>
+<td>Inbound Queue</td>
+</tr>
+<tr class="row-odd"><td>0x1040-0x2040</td>
+<td>Outbound Queue</td>
+</tr>
+</tbody>
+</table>
+</div></blockquote>
+<p>For Marvell Frey IOP based adapters, the IOP is accessed via PCI BAR0 and BAR1:</p>
+<blockquote>
+<div><table border="1" class="docutils">
+<colgroup>
+<col width="29%" />
+<col width="71%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">BAR0 offset</th>
+<th class="head">Register</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>0x0</td>
+<td>IOP configuration information.</td>
+</tr>
+</tbody>
+</table>
+<table border="1" class="docutils">
+<colgroup>
+<col width="22%" />
+<col width="78%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">BAR1 offset</th>
+<th class="head">Register</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>0x4000</td>
+<td>Inbound List Base Address Low</td>
+</tr>
+<tr class="row-odd"><td>0x4004</td>
+<td>Inbound List Base Address High</td>
+</tr>
+<tr class="row-even"><td>0x4018</td>
+<td>Inbound List Write Pointer</td>
+</tr>
+<tr class="row-odd"><td>0x402C</td>
+<td>Inbound List Configuration and Control</td>
+</tr>
+<tr class="row-even"><td>0x4050</td>
+<td>Outbound List Base Address Low</td>
+</tr>
+<tr class="row-odd"><td>0x4054</td>
+<td>Outbound List Base Address High</td>
+</tr>
+<tr class="row-even"><td>0x4058</td>
+<td>Outbound List Copy Pointer Shadow Base Address Low</td>
+</tr>
+<tr class="row-odd"><td>0x405C</td>
+<td>Outbound List Copy Pointer Shadow Base Address High</td>
+</tr>
+<tr class="row-even"><td>0x4088</td>
+<td>Outbound List Interrupt Cause</td>
+</tr>
+<tr class="row-odd"><td>0x408C</td>
+<td>Outbound List Interrupt Enable</td>
+</tr>
+<tr class="row-even"><td>0x1020C</td>
+<td>PCIe Function 0 Interrupt Enable</td>
+</tr>
+<tr class="row-odd"><td>0x10400</td>
+<td>PCIe Function 0 to CPU Message A</td>
+</tr>
+<tr class="row-even"><td>0x10420</td>
+<td>CPU to PCIe Function 0 Message A</td>
+</tr>
+<tr class="row-odd"><td>0x10480</td>
+<td>CPU to PCIe Function 0 Doorbell</td>
+</tr>
+<tr class="row-even"><td>0x10484</td>
+<td>CPU to PCIe Function 0 Doorbell Enable</td>
+</tr>
+</tbody>
+</table>
+</div></blockquote>
+</div>
+<div class="section" id="i-o-request-workflow-of-not-marvell-frey">
+<h2>I/O Request Workflow of Not Marvell Frey<a class="headerlink" href="#i-o-request-workflow-of-not-marvell-frey" title="Permalink to this headline">¶</a></h2>
+<p>All queued requests are handled via inbound/outbound queue port.
+A request packet can be allocated in either IOP or host memory.</p>
+<p>To send a request to the controller:</p>
+<blockquote>
+<div><ul>
+<li><p class="first">Get a free request packet by reading the inbound queue port or
+allocate a free request in host DMA coherent memory.</p>
+<p>The value returned from the inbound queue port is an offset
+relative to the IOP BAR0.</p>
+<p>Requests allocated in host memory must be aligned on 32-bytes boundary.</p>
+</li>
+<li><p class="first">Fill the packet.</p>
+</li>
+<li><p class="first">Post the packet to IOP by writing it to inbound queue. For requests
+allocated in IOP memory, write the offset to inbound queue port. For
+requests allocated in host memory, write (0x80000000|(bus_addr&gt;&gt;5))
+to the inbound queue port.</p>
+</li>
+<li><p class="first">The IOP process the request. When the request is completed, it
+will be put into outbound queue. An outbound interrupt will be
+generated.</p>
+<p>For requests allocated in IOP memory, the request offset is posted to
+outbound queue.</p>
+<p>For requests allocated in host memory, (0x80000000|(bus_addr&gt;&gt;5))
+is posted to the outbound queue. If IOP_REQUEST_FLAG_OUTPUT_CONTEXT
+flag is set in the request, the low 32-bit context value will be
+posted instead.</p>
+</li>
+<li><p class="first">The host read the outbound queue and complete the request.</p>
+<p>For requests allocated in IOP memory, the host driver free the request
+by writing it to the outbound queue.</p>
+</li>
+</ul>
+</div></blockquote>
+<p>Non-queued requests (reset/flush etc) can be sent via inbound message
+register 0. An outbound message with the same value indicates the completion
+of an inbound message.</p>
+</div>
+<div class="section" id="i-o-request-workflow-of-marvell-frey">
+<h2>I/O Request Workflow of Marvell Frey<a class="headerlink" href="#i-o-request-workflow-of-marvell-frey" title="Permalink to this headline">¶</a></h2>
+<p>All queued requests are handled via inbound/outbound list.</p>
+<p>To send a request to the controller:</p>
+<blockquote>
+<div><ul>
+<li><p class="first">Allocate a free request in host DMA coherent memory.</p>
+<p>Requests allocated in host memory must be aligned on 32-bytes boundary.</p>
+</li>
+<li><p class="first">Fill the request with index of the request in the flag.</p>
+<p>Fill a free inbound list unit with the physical address and the size of
+the request.</p>
+<p>Set up the inbound list write pointer with the index of previous unit,
+round to 0 if the index reaches the supported count of requests.</p>
+</li>
+<li><p class="first">Post the inbound list writer pointer to IOP.</p>
+</li>
+<li><p class="first">The IOP process the request. When the request is completed, the flag of
+the request with or-ed IOPMU_QUEUE_MASK_HOST_BITS will be put into a
+free outbound list unit and the index of the outbound list unit will be
+put into the copy pointer shadow register. An outbound interrupt will be
+generated.</p>
+</li>
+<li><p class="first">The host read the outbound list copy pointer shadow register and compare
+with previous saved read pointer N. If they are different, the host will
+read the (N+1)th outbound list unit.</p>
+<p>The host get the index of the request from the (N+1)th outbound list
+unit and complete the request.</p>
+</li>
+</ul>
+</div></blockquote>
+<p>Non-queued requests (reset communication/reset/flush etc) can be sent via PCIe
+Function 0 to CPU Message A register. The CPU to PCIe Function 0 Message register
+with the same value indicates the completion of message.</p>
+</div>
+<div class="section" id="user-level-interface">
+<h2>User-level Interface<a class="headerlink" href="#user-level-interface" title="Permalink to this headline">¶</a></h2>
+<p>The driver exposes following sysfs attributes:</p>
+<blockquote>
+<div><table border="1" class="docutils">
+<colgroup>
+<col width="40%" />
+<col width="7%" />
+<col width="53%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">NAME</th>
+<th class="head">R/W</th>
+<th class="head">Description</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>driver-version</td>
+<td>R</td>
+<td>driver version string</td>
+</tr>
+<tr class="row-odd"><td>firmware-version</td>
+<td>R</td>
+<td>firmware version string</td>
+</tr>
+</tbody>
+</table>
+</div></blockquote>
+<hr class="docutils" />
+<p>Copyright © 2006-2012 HighPoint Technologies, Inc. All Rights Reserved.</p>
+<blockquote>
+<div><p>This file is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.</p>
+<p><a class="reference external" href="mailto:linux&#37;&#52;&#48;highpoint-tech&#46;com">linux<span>&#64;</span>highpoint-tech<span>&#46;</span>com</a></p>
+<p><a class="reference external" href="http://www.highpoint-tech.com">http://www.highpoint-tech.com</a></p>
+</div></blockquote>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright The kernel development community
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

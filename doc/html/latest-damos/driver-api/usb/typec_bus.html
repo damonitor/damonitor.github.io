@@ -68,7 +68,7 @@
             
             
               <div class="version">
-                5.6.0
+                5.7.0
               </div>
             
           
@@ -202,9 +202,7 @@ in need to reconfigure the pins on the connector, the alternate mode driver
 needs to notify the bus using <a class="reference internal" href="#c.typec_altmode_notify" title="typec_altmode_notify"><code class="xref c c-func docutils literal notranslate"><span class="pre">typec_altmode_notify()</span></code></a>. The driver
 passes the negotiated SVID specific pin configuration value to the function as
 parameter. The bus driver will then configure the mux behind the connector using
-that value as the state value for the mux, and also call blocking notification
-chain to notify the external drivers about the state of the connector that need
-to know it.</p>
+that value as the state value for the mux.</p>
 <p>NOTE: The SVID specific pin configuration values must always start from
 <code class="docutils literal notranslate"><span class="pre">TYPEC_STATE_MODAL</span></code>. USB Type-C specification defines two default states for
 the connector: <code class="docutils literal notranslate"><span class="pre">TYPEC_STATE_USB</span></code> and <code class="docutils literal notranslate"><span class="pre">TYPEC_STATE_SAFE</span></code>. These values are
@@ -227,17 +225,6 @@ look like this:</p>
 #define ALTMODEX_CONF_B = TYPEC_MODAL_STATE(1);
 </pre></div>
 </div>
-</div>
-<div class="section" id="notification-chain">
-<h3>Notification chain<a class="headerlink" href="#notification-chain" title="Permalink to this headline">¶</a></h3>
-<p>The drivers for the components that the alternate modes are designed for need to
-get details regarding the results of the negotiation with the partner, and the
-pin configuration of the connector. In case of DisplayPort alternate mode for
-example, the GPU drivers will need to know those details. In case of
-Thunderbolt alternate mode, the thunderbolt drivers will need to know them, and
-so on.</p>
-<p>The notification chain is designed for this purpose. The drivers can register
-notifiers with <code class="xref c c-func docutils literal notranslate"><span class="pre">typec_altmode_register_notifier()</span></code>.</p>
 </div>
 <div class="section" id="cable-plug-alternate-modes">
 <h3>Cable plug alternate modes<a class="headerlink" href="#cable-plug-alternate-modes" title="Permalink to this headline">¶</a></h3>
@@ -398,9 +385,6 @@ void <code class="descname">typec_altmode_put_plug</code><span class="sig-paren"
 <dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">typec_altmode</span> <span class="pre">*</span> <span class="pre">plug</span></code></dt>
 <dd>Handle to the cable plug alternate mode</dd>
 </dl>
-</div>
-<div class="section" id="notifications">
-<h3>Notifications<a class="headerlink" href="#notifications" title="Permalink to this headline">¶</a></h3>
 </div>
 </div>
 </div>

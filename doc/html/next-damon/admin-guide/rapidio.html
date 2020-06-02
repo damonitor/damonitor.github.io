@@ -68,7 +68,7 @@
             
             
               <div class="version">
-                5.6.0
+                5.7.0
               </div>
             
           
@@ -730,7 +730,7 @@ device to the RIO device list.  Creates the generic sysfs nodes
 for an RIO device.</p>
 <dl class="function">
 <dt id="c.rio_request_inb_mbox">
-int <code class="descname">rio_request_inb_mbox</code><span class="sig-paren">(</span>struct <a class="reference internal" href="#c.rio_mport" title="rio_mport">rio_mport</a> *<em>&nbsp;mport</em>, void *<em>&nbsp;dev_id</em>, int<em>&nbsp;mbox</em>, int<em>&nbsp;entries</em>, void (*minb) (struct <a class="reference internal" href="#c.rio_mport" title="rio_mport">rio_mport</a> *<em>&nbsp;mport</em>, void<em>&nbsp;*dev_id</em>, int<em>&nbsp;mbox</em>, int<em>&nbsp;slot</em><span class="sig-paren">)</span><a class="headerlink" href="#c.rio_request_inb_mbox" title="Permalink to this definition">¶</a></dt>
+int <code class="descname">rio_request_inb_mbox</code><span class="sig-paren">(</span>struct <a class="reference internal" href="#c.rio_mport" title="rio_mport">rio_mport</a> *<em>&nbsp;mport</em>, void *<em>&nbsp;dev_id</em>, int<em>&nbsp;mbox</em>, int<em>&nbsp;entries</em>, void (<em>*minb</em>)(struct <a class="reference internal" href="#c.rio_mport" title="rio_mport">rio_mport</a> * mport, void *dev_id, int mbox, int slot)<span class="sig-paren">)</span><a class="headerlink" href="#c.rio_request_inb_mbox" title="Permalink to this definition">¶</a></dt>
 <dd><p>request inbound mailbox service</p>
 </dd></dl>
 
@@ -768,7 +768,7 @@ int <code class="descname">rio_release_inb_mbox</code><span class="sig-paren">(<
 if the request has been satisfied.</p>
 <dl class="function">
 <dt id="c.rio_request_outb_mbox">
-int <code class="descname">rio_request_outb_mbox</code><span class="sig-paren">(</span>struct <a class="reference internal" href="#c.rio_mport" title="rio_mport">rio_mport</a> *<em>&nbsp;mport</em>, void *<em>&nbsp;dev_id</em>, int<em>&nbsp;mbox</em>, int<em>&nbsp;entries</em>, void (*moutb) (struct <a class="reference internal" href="#c.rio_mport" title="rio_mport">rio_mport</a> *<em>&nbsp;mport</em>, void<em>&nbsp;*dev_id</em>, int<em>&nbsp;mbox</em>, int<em>&nbsp;slot</em><span class="sig-paren">)</span><a class="headerlink" href="#c.rio_request_outb_mbox" title="Permalink to this definition">¶</a></dt>
+int <code class="descname">rio_request_outb_mbox</code><span class="sig-paren">(</span>struct <a class="reference internal" href="#c.rio_mport" title="rio_mport">rio_mport</a> *<em>&nbsp;mport</em>, void *<em>&nbsp;dev_id</em>, int<em>&nbsp;mbox</em>, int<em>&nbsp;entries</em>, void (<em>*moutb</em>)(struct <a class="reference internal" href="#c.rio_mport" title="rio_mport">rio_mport</a> * mport, void *dev_id, int mbox, int slot)<span class="sig-paren">)</span><a class="headerlink" href="#c.rio_request_outb_mbox" title="Permalink to this definition">¶</a></dt>
 <dd><p>request outbound mailbox service</p>
 </dd></dl>
 
@@ -806,7 +806,7 @@ int <code class="descname">rio_release_outb_mbox</code><span class="sig-paren">(
 if the request has been satisfied.</p>
 <dl class="function">
 <dt id="c.rio_request_inb_dbell">
-int <code class="descname">rio_request_inb_dbell</code><span class="sig-paren">(</span>struct <a class="reference internal" href="#c.rio_mport" title="rio_mport">rio_mport</a> *<em>&nbsp;mport</em>, void *<em>&nbsp;dev_id</em>, u16<em>&nbsp;start</em>, u16<em>&nbsp;end</em>, void (*dinb) (struct <a class="reference internal" href="#c.rio_mport" title="rio_mport">rio_mport</a> *<em>&nbsp;mport</em>, void<em>&nbsp;*dev_id</em>, u16<em>&nbsp;src</em>, u16<em>&nbsp;dst</em>, u16<em>&nbsp;info</em><span class="sig-paren">)</span><a class="headerlink" href="#c.rio_request_inb_dbell" title="Permalink to this definition">¶</a></dt>
+int <code class="descname">rio_request_inb_dbell</code><span class="sig-paren">(</span>struct <a class="reference internal" href="#c.rio_mport" title="rio_mport">rio_mport</a> *<em>&nbsp;mport</em>, void *<em>&nbsp;dev_id</em>, u16<em>&nbsp;start</em>, u16<em>&nbsp;end</em>, void (<em>*dinb</em>)(struct <a class="reference internal" href="#c.rio_mport" title="rio_mport">rio_mport</a> * mport, void *dev_id, u16 src, u16 dst, u16 info)<span class="sig-paren">)</span><a class="headerlink" href="#c.rio_request_inb_dbell" title="Permalink to this definition">¶</a></dt>
 <dd><p>request inbound doorbell message service</p>
 </dd></dl>
 
@@ -882,7 +882,7 @@ int <code class="descname">rio_release_outb_dbell</code><span class="sig-paren">
 request has been satisfied.</p>
 <dl class="function">
 <dt id="c.rio_add_mport_pw_handler">
-int <code class="descname">rio_add_mport_pw_handler</code><span class="sig-paren">(</span>struct <a class="reference internal" href="#c.rio_mport" title="rio_mport">rio_mport</a> *<em>&nbsp;mport</em>, void *<em>&nbsp;context</em>, int (*pwcback) (struct <a class="reference internal" href="#c.rio_mport" title="rio_mport">rio_mport</a><em>&nbsp;*mport</em>, void<em>&nbsp;*context</em>, union rio_pw_msg<em>&nbsp;*msg</em>, int<em>&nbsp;step</em><span class="sig-paren">)</span><a class="headerlink" href="#c.rio_add_mport_pw_handler" title="Permalink to this definition">¶</a></dt>
+int <code class="descname">rio_add_mport_pw_handler</code><span class="sig-paren">(</span>struct <a class="reference internal" href="#c.rio_mport" title="rio_mport">rio_mport</a> *<em>&nbsp;mport</em>, void *<em>&nbsp;context</em>, int (<em>*pwcback</em>)(struct <a class="reference internal" href="#c.rio_mport" title="rio_mport">rio_mport</a> *mport, void *context, union rio_pw_msg *msg, int step)<span class="sig-paren">)</span><a class="headerlink" href="#c.rio_add_mport_pw_handler" title="Permalink to this definition">¶</a></dt>
 <dd><p>add port-write message handler into the list of mport specific pw handlers</p>
 </dd></dl>
 
@@ -899,7 +899,7 @@ int <code class="descname">rio_add_mport_pw_handler</code><span class="sig-paren
 <p>Returns 0 if the request has been satisfied.</p>
 <dl class="function">
 <dt id="c.rio_del_mport_pw_handler">
-int <code class="descname">rio_del_mport_pw_handler</code><span class="sig-paren">(</span>struct <a class="reference internal" href="#c.rio_mport" title="rio_mport">rio_mport</a> *<em>&nbsp;mport</em>, void *<em>&nbsp;context</em>, int (*pwcback) (struct <a class="reference internal" href="#c.rio_mport" title="rio_mport">rio_mport</a><em>&nbsp;*mport</em>, void<em>&nbsp;*context</em>, union rio_pw_msg<em>&nbsp;*msg</em>, int<em>&nbsp;step</em><span class="sig-paren">)</span><a class="headerlink" href="#c.rio_del_mport_pw_handler" title="Permalink to this definition">¶</a></dt>
+int <code class="descname">rio_del_mport_pw_handler</code><span class="sig-paren">(</span>struct <a class="reference internal" href="#c.rio_mport" title="rio_mport">rio_mport</a> *<em>&nbsp;mport</em>, void *<em>&nbsp;context</em>, int (<em>*pwcback</em>)(struct <a class="reference internal" href="#c.rio_mport" title="rio_mport">rio_mport</a> *mport, void *context, union rio_pw_msg *msg, int step)<span class="sig-paren">)</span><a class="headerlink" href="#c.rio_del_mport_pw_handler" title="Permalink to this definition">¶</a></dt>
 <dd><p>remove port-write message handler from the list of mport specific pw handlers</p>
 </dd></dl>
 
@@ -916,7 +916,7 @@ int <code class="descname">rio_del_mport_pw_handler</code><span class="sig-paren
 <p>Returns 0 if the request has been satisfied.</p>
 <dl class="function">
 <dt id="c.rio_request_inb_pwrite">
-int <code class="descname">rio_request_inb_pwrite</code><span class="sig-paren">(</span>struct <a class="reference internal" href="#c.rio_dev" title="rio_dev">rio_dev</a> *<em>&nbsp;rdev</em>, int (*pwcback) (struct <a class="reference internal" href="#c.rio_dev" title="rio_dev">rio_dev</a><em>&nbsp;*rdev</em>, union rio_pw_msg<em>&nbsp;*msg</em>, int<em>&nbsp;step</em><span class="sig-paren">)</span><a class="headerlink" href="#c.rio_request_inb_pwrite" title="Permalink to this definition">¶</a></dt>
+int <code class="descname">rio_request_inb_pwrite</code><span class="sig-paren">(</span>struct <a class="reference internal" href="#c.rio_dev" title="rio_dev">rio_dev</a> *<em>&nbsp;rdev</em>, int (<em>*pwcback</em>)(struct <a class="reference internal" href="#c.rio_dev" title="rio_dev">rio_dev</a> *rdev, union rio_pw_msg *msg, int step)<span class="sig-paren">)</span><a class="headerlink" href="#c.rio_request_inb_pwrite" title="Permalink to this definition">¶</a></dt>
 <dd><p>request inbound port-write message service for specific RapidIO device</p>
 </dd></dl>
 
@@ -1507,7 +1507,7 @@ struct <code class="descname">rio_switch</code><a class="headerlink" href="#c.ri
   u32 port_ok;
   struct rio_switch_ops *ops;
   spinlock_t lock;
-  struct rio_dev *nextdev[0];
+  struct rio_dev *nextdev[];
 };
 </pre></div>
 </div>
@@ -1603,7 +1603,7 @@ struct <code class="descname">rio_dev</code><a class="headerlink" href="#c.rio_d
   u8 hopcount;
   struct rio_dev *prev;
   atomic_t state;
-  struct rio_switch rswitch[0];
+  struct rio_switch rswitch[];
 };
 </pre></div>
 </div>
@@ -2197,7 +2197,7 @@ capabilities that indicate whether or not a device will implement a
 destination ID register. Returns 1 if true or 0 if false.</p>
 <dl class="function">
 <dt id="c.rio_release_dev">
-void <code class="descname">rio_release_dev</code><span class="sig-paren">(</span>struct <a class="reference internal" href="../driver-api/infrastructure.html#c.device" title="device">device</a> *<em>&nbsp;dev</em><span class="sig-paren">)</span><a class="headerlink" href="#c.rio_release_dev" title="Permalink to this definition">¶</a></dt>
+void <code class="descname">rio_release_dev</code><span class="sig-paren">(</span>struct device *<em>&nbsp;dev</em><span class="sig-paren">)</span><a class="headerlink" href="#c.rio_release_dev" title="Permalink to this definition">¶</a></dt>
 <dd><p>Frees a RIO device struct</p>
 </dd></dl>
 
@@ -2466,7 +2466,7 @@ provide a matching cleanup_module routine.</p>
 <h3>Driver functionality<a class="headerlink" href="#driver-functionality" title="Permalink to this headline">¶</a></h3>
 <dl class="function">
 <dt id="c.rio_setup_inb_dbell">
-int <code class="descname">rio_setup_inb_dbell</code><span class="sig-paren">(</span>struct <a class="reference internal" href="#c.rio_mport" title="rio_mport">rio_mport</a> *<em>&nbsp;mport</em>, void *<em>&nbsp;dev_id</em>, struct resource *<em>&nbsp;res</em>, void (*dinb) (struct <a class="reference internal" href="#c.rio_mport" title="rio_mport">rio_mport</a> *<em>&nbsp;mport</em>, void<em>&nbsp;*dev_id</em>, u16<em>&nbsp;src</em>, u16<em>&nbsp;dst</em>, u16<em>&nbsp;info</em><span class="sig-paren">)</span><a class="headerlink" href="#c.rio_setup_inb_dbell" title="Permalink to this definition">¶</a></dt>
+int <code class="descname">rio_setup_inb_dbell</code><span class="sig-paren">(</span>struct <a class="reference internal" href="#c.rio_mport" title="rio_mport">rio_mport</a> *<em>&nbsp;mport</em>, void *<em>&nbsp;dev_id</em>, struct resource *<em>&nbsp;res</em>, void (<em>*dinb</em>)(struct <a class="reference internal" href="#c.rio_mport" title="rio_mport">rio_mport</a> * mport, void *dev_id, u16 src, u16 dst, u16 info)<span class="sig-paren">)</span><a class="headerlink" href="#c.rio_setup_inb_dbell" title="Permalink to this definition">¶</a></dt>
 <dd><p>bind inbound doorbell callback</p>
 </dd></dl>
 
@@ -2713,7 +2713,7 @@ configuration space registers on the local device.</p>
 <h3>Device model support<a class="headerlink" href="#device-model-support" title="Permalink to this headline">¶</a></h3>
 <dl class="function">
 <dt id="c.rio_match_device">
-const struct <a class="reference internal" href="../driver-api/basics.html#c.rio_device_id" title="rio_device_id">rio_device_id</a> * <code class="descname">rio_match_device</code><span class="sig-paren">(</span>const struct <a class="reference internal" href="../driver-api/basics.html#c.rio_device_id" title="rio_device_id">rio_device_id</a> *<em>&nbsp;id</em>, const struct <a class="reference internal" href="#c.rio_dev" title="rio_dev">rio_dev</a> *<em>&nbsp;rdev</em><span class="sig-paren">)</span><a class="headerlink" href="#c.rio_match_device" title="Permalink to this definition">¶</a></dt>
+const struct rio_device_id * <code class="descname">rio_match_device</code><span class="sig-paren">(</span>const struct rio_device_id *<em>&nbsp;id</em>, const struct <a class="reference internal" href="#c.rio_dev" title="rio_dev">rio_dev</a> *<em>&nbsp;rdev</em><span class="sig-paren">)</span><a class="headerlink" href="#c.rio_match_device" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tell if a RIO device has a matching RIO device id structure</p>
 </dd></dl>
 
@@ -2728,10 +2728,10 @@ const struct <a class="reference internal" href="../driver-api/basics.html#c.rio
 <blockquote>
 <div>Used from driver probe and bus matching to check whether a RIO device
 matches a device id structure provided by a RIO driver. Returns the
-matching <a class="reference internal" href="../driver-api/basics.html#c.rio_device_id" title="rio_device_id"><code class="xref c c-type docutils literal notranslate"><span class="pre">struct</span> <span class="pre">rio_device_id</span></code></a> or <code class="docutils literal notranslate"><span class="pre">NULL</span></code> if there is no match.</div></blockquote>
+matching <code class="xref c c-type docutils literal notranslate"><span class="pre">struct</span> <span class="pre">rio_device_id</span></code> or <code class="docutils literal notranslate"><span class="pre">NULL</span></code> if there is no match.</div></blockquote>
 <dl class="function">
 <dt id="c.rio_device_probe">
-int <code class="descname">rio_device_probe</code><span class="sig-paren">(</span>struct <a class="reference internal" href="../driver-api/infrastructure.html#c.device" title="device">device</a> *<em>&nbsp;dev</em><span class="sig-paren">)</span><a class="headerlink" href="#c.rio_device_probe" title="Permalink to this definition">¶</a></dt>
+int <code class="descname">rio_device_probe</code><span class="sig-paren">(</span>struct device *<em>&nbsp;dev</em><span class="sig-paren">)</span><a class="headerlink" href="#c.rio_device_probe" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tell if a RIO device structure has a matching RIO device id structure</p>
 </dd></dl>
 
@@ -2744,7 +2744,7 @@ int <code class="descname">rio_device_probe</code><span class="sig-paren">(</spa
 <p>return 0 and set rio_dev-&gt;driver when drv claims rio_dev, else error</p>
 <dl class="function">
 <dt id="c.rio_device_remove">
-int <code class="descname">rio_device_remove</code><span class="sig-paren">(</span>struct <a class="reference internal" href="../driver-api/infrastructure.html#c.device" title="device">device</a> *<em>&nbsp;dev</em><span class="sig-paren">)</span><a class="headerlink" href="#c.rio_device_remove" title="Permalink to this definition">¶</a></dt>
+int <code class="descname">rio_device_remove</code><span class="sig-paren">(</span>struct device *<em>&nbsp;dev</em><span class="sig-paren">)</span><a class="headerlink" href="#c.rio_device_remove" title="Permalink to this definition">¶</a></dt>
 <dd><p>Remove a RIO device from the system</p>
 </dd></dl>
 
@@ -2759,7 +2759,7 @@ driver, then run the driver remove() method.  Then update
 the reference count.</p>
 <dl class="function">
 <dt id="c.rio_match_bus">
-int <code class="descname">rio_match_bus</code><span class="sig-paren">(</span>struct <a class="reference internal" href="../driver-api/infrastructure.html#c.device" title="device">device</a> *<em>&nbsp;dev</em>, struct device_driver *<em>&nbsp;drv</em><span class="sig-paren">)</span><a class="headerlink" href="#c.rio_match_bus" title="Permalink to this definition">¶</a></dt>
+int <code class="descname">rio_match_bus</code><span class="sig-paren">(</span>struct device *<em>&nbsp;dev</em>, struct device_driver *<em>&nbsp;drv</em><span class="sig-paren">)</span><a class="headerlink" href="#c.rio_match_bus" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tell if a RIO device structure has a matching RIO driver device id structure</p>
 </dd></dl>
 
@@ -2774,7 +2774,7 @@ int <code class="descname">rio_match_bus</code><span class="sig-paren">(</span>s
 <blockquote>
 <div>Used by a driver to check whether a RIO device present in the
 system is in its list of supported devices. Returns 1 if
-there is a matching <a class="reference internal" href="../driver-api/basics.html#c.rio_device_id" title="rio_device_id"><code class="xref c c-type docutils literal notranslate"><span class="pre">struct</span> <span class="pre">rio_device_id</span></code></a> or 0 if there is
+there is a matching <code class="xref c c-type docutils literal notranslate"><span class="pre">struct</span> <span class="pre">rio_device_id</span></code> or 0 if there is
 no match.</div></blockquote>
 <dl class="function">
 <dt id="c.rio_bus_init">

@@ -68,7 +68,7 @@
             
             
               <div class="version">
-                5.6.0
+                5.7.0
               </div>
             
           
@@ -411,7 +411,7 @@ struct <code class="descname">drm_device</code><a class="headerlink" href="#c.dr
   char *unique;
   struct mutex struct_mutex;
   struct mutex master_mutex;
-  int open_count;
+  atomic_t open_count;
   struct mutex filelist_mutex;
   struct list_head filelist;
   struct list_head filelist_internal;
@@ -646,17 +646,10 @@ struct <code class="descname">drm_driver</code><a class="headerlink" href="#c.dr
   void (*lastclose) (struct drm_device *);
   void (*unload) (struct drm_device *);
   void (*release) (struct drm_device *);
-  u32 (*get_vblank_counter) (struct drm_device *dev, unsigned int pipe);
-  int (*enable_vblank) (struct drm_device *dev, unsigned int pipe);
-  void (*disable_vblank) (struct drm_device *dev, unsigned int pipe);
-  bool (*get_scanout_position) (struct drm_device *dev, unsigned int pipe,bool in_vblank_irq, int *vpos, int *hpos,ktime_t *stime, ktime_t *etime, const struct drm_display_mode *mode);
-  bool (*get_vblank_timestamp) (struct drm_device *dev, unsigned int pipe,int *max_error,ktime_t *vblank_time, bool in_vblank_irq);
   irqreturn_t(*irq_handler) (int irq, void *arg);
   void (*irq_preinstall) (struct drm_device *dev);
   int (*irq_postinstall) (struct drm_device *dev);
   void (*irq_uninstall) (struct drm_device *dev);
-  int (*master_create)(struct drm_device *dev, struct drm_master *master);
-  void (*master_destroy)(struct drm_device *dev, struct drm_master *master);
   int (*master_set)(struct drm_device *dev, struct drm_file *file_priv, bool from_open);
   void (*master_drop)(struct drm_device *dev, struct drm_file *file_priv);
   int (*debugfs_init)(struct drm_minor *minor);
@@ -765,114 +758,6 @@ the device.</p>
 reference is released, i.e. the device is being destroyed. Drivers
 using this callback are responsible for calling <a class="reference internal" href="#c.drm_dev_fini" title="drm_dev_fini"><code class="xref c c-func docutils literal notranslate"><span class="pre">drm_dev_fini()</span></code></a>
 to finalize the device and then freeing the struct themselves.</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">get_vblank_counter</span></code></dt>
-<dd><p class="first">Driver callback for fetching a raw hardware vblank counter for the
-CRTC specified with the pipe argument.  If a device doesn’t have a
-hardware counter, the driver can simply leave the hook as NULL.
-The DRM core will account for missed vblank events while interrupts
-where disabled based on system timestamps.</p>
-<p>Wraparound handling and loss of events due to modesetting is dealt
-with in the DRM core code, as long as drivers call
-<a class="reference internal" href="drm-kms.html#c.drm_crtc_vblank_off" title="drm_crtc_vblank_off"><code class="xref c c-func docutils literal notranslate"><span class="pre">drm_crtc_vblank_off()</span></code></a> and <a class="reference internal" href="drm-kms.html#c.drm_crtc_vblank_on" title="drm_crtc_vblank_on"><code class="xref c c-func docutils literal notranslate"><span class="pre">drm_crtc_vblank_on()</span></code></a> when disabling or
-enabling a CRTC.</p>
-<p>This is deprecated and should not be used by new drivers.
-Use <a class="reference internal" href="drm-kms.html#c.drm_crtc_funcs" title="drm_crtc_funcs"><code class="xref c c-type docutils literal notranslate"><span class="pre">drm_crtc_funcs.get_vblank_counter</span></code></a> instead.</p>
-<p>Returns:</p>
-<p class="last">Raw vblank counter value.</p>
-</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">enable_vblank</span></code></dt>
-<dd><p class="first">Enable vblank interrupts for the CRTC specified with the pipe
-argument.</p>
-<p>This is deprecated and should not be used by new drivers.
-Use <a class="reference internal" href="drm-kms.html#c.drm_crtc_funcs" title="drm_crtc_funcs"><code class="xref c c-type docutils literal notranslate"><span class="pre">drm_crtc_funcs.enable_vblank</span></code></a> instead.</p>
-<p>Returns:</p>
-<p class="last">Zero on success, appropriate errno if the given <strong>crtc</strong>’s vblank
-interrupt cannot be enabled.</p>
-</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">disable_vblank</span></code></dt>
-<dd><p class="first">Disable vblank interrupts for the CRTC specified with the pipe
-argument.</p>
-<p class="last">This is deprecated and should not be used by new drivers.
-Use <a class="reference internal" href="drm-kms.html#c.drm_crtc_funcs" title="drm_crtc_funcs"><code class="xref c c-type docutils literal notranslate"><span class="pre">drm_crtc_funcs.disable_vblank</span></code></a> instead.</p>
-</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">get_scanout_position</span></code></dt>
-<dd><p class="first">Called by vblank timestamping code.</p>
-<p>Returns the current display scanout position from a crtc, and an
-optional accurate <a class="reference internal" href="../core-api/timekeeping.html#c.ktime_get" title="ktime_get"><code class="xref c c-func docutils literal notranslate"><span class="pre">ktime_get()</span></code></a> timestamp of when position was
-measured. Note that this is a helper callback which is only used if a
-driver uses <a class="reference internal" href="drm-kms.html#c.drm_calc_vbltimestamp_from_scanoutpos" title="drm_calc_vbltimestamp_from_scanoutpos"><code class="xref c c-func docutils literal notranslate"><span class="pre">drm_calc_vbltimestamp_from_scanoutpos()</span></code></a> for the
-<strong>get_vblank_timestamp</strong> callback.</p>
-<p>Parameters:</p>
-<dl class="docutils">
-<dt>dev:</dt>
-<dd>DRM device.</dd>
-<dt>pipe:</dt>
-<dd>Id of the crtc to query.</dd>
-<dt>in_vblank_irq:</dt>
-<dd>True when called from <a class="reference internal" href="drm-kms.html#c.drm_crtc_handle_vblank" title="drm_crtc_handle_vblank"><code class="xref c c-func docutils literal notranslate"><span class="pre">drm_crtc_handle_vblank()</span></code></a>.  Some drivers
-need to apply some workarounds for gpu-specific vblank irq quirks
-if flag is set.</dd>
-<dt>vpos:</dt>
-<dd>Target location for current vertical scanout position.</dd>
-<dt>hpos:</dt>
-<dd>Target location for current horizontal scanout position.</dd>
-<dt>stime:</dt>
-<dd>Target location for timestamp taken immediately before
-scanout position query. Can be NULL to skip timestamp.</dd>
-<dt>etime:</dt>
-<dd>Target location for timestamp taken immediately after
-scanout position query. Can be NULL to skip timestamp.</dd>
-<dt>mode:</dt>
-<dd>Current display timings.</dd>
-</dl>
-<p>Returns vpos as a positive number while in active scanout area.
-Returns vpos as a negative number inside vblank, counting the number
-of scanlines to go until end of vblank, e.g., -1 means “one scanline
-until start of active scanout / end of vblank.”</p>
-<p>Returns:</p>
-<p>True on success, false if a reliable scanout position counter could
-not be read out.</p>
-<p>FIXME:</p>
-<p class="last">Since this is a helper to implement <strong>get_vblank_timestamp</strong>, we should
-move it to <a class="reference internal" href="drm-kms-helpers.html#c.drm_crtc_helper_funcs" title="drm_crtc_helper_funcs"><code class="xref c c-type docutils literal notranslate"><span class="pre">struct</span> <span class="pre">drm_crtc_helper_funcs</span></code></a>, like all the other
-helper-internal hooks.</p>
-</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">get_vblank_timestamp</span></code></dt>
-<dd><p class="first">Called by drm_get_last_vbltimestamp(). Should return a precise
-timestamp when the most recent VBLANK interval ended or will end.</p>
-<p>Specifically, the timestamp in <strong>vblank_time</strong> should correspond as
-closely as possible to the time when the first video scanline of
-the video frame after the end of VBLANK will start scanning out,
-the time immediately after end of the VBLANK interval. If the
-<strong>crtc</strong> is currently inside VBLANK, this will be a time in the future.
-If the <strong>crtc</strong> is currently scanning out a frame, this will be the
-past start time of the current scanout. This is meant to adhere
-to the OpenML OML_sync_control extension specification.</p>
-<p>Paramters:</p>
-<dl class="docutils">
-<dt>dev:</dt>
-<dd>dev DRM device handle.</dd>
-<dt>pipe:</dt>
-<dd>crtc for which timestamp should be returned.</dd>
-<dt>max_error:</dt>
-<dd>Maximum allowable timestamp error in nanoseconds.
-Implementation should strive to provide timestamp
-with an error of at most max_error nanoseconds.
-Returns true upper bound on error for timestamp.</dd>
-<dt>vblank_time:</dt>
-<dd>Target location for returned vblank timestamp.</dd>
-<dt>in_vblank_irq:</dt>
-<dd>True when called from <a class="reference internal" href="drm-kms.html#c.drm_crtc_handle_vblank" title="drm_crtc_handle_vblank"><code class="xref c c-func docutils literal notranslate"><span class="pre">drm_crtc_handle_vblank()</span></code></a>.  Some drivers
-need to apply some workarounds for gpu-specific vblank irq quirks
-if flag is set.</dd>
-</dl>
-<p>Returns:</p>
-<p>True on success, false on failure, which means the core should
-fallback to a simple timestamp taken in <a class="reference internal" href="drm-kms.html#c.drm_crtc_handle_vblank" title="drm_crtc_handle_vblank"><code class="xref c c-func docutils literal notranslate"><span class="pre">drm_crtc_handle_vblank()</span></code></a>.</p>
-<p>FIXME:</p>
-<p class="last">We should move this hook to <a class="reference internal" href="drm-kms.html#c.drm_crtc_funcs" title="drm_crtc_funcs"><code class="xref c c-type docutils literal notranslate"><span class="pre">struct</span> <span class="pre">drm_crtc_funcs</span></code></a> like all the other
-vblank hooks.</p>
-</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">irq_handler</span></code></dt>
 <dd>Interrupt handler called when using <a class="reference internal" href="#c.drm_irq_install" title="drm_irq_install"><code class="xref c c-func docutils literal notranslate"><span class="pre">drm_irq_install()</span></code></a>. Not used by
 drivers which implement their own interrupt handling.</dd>
@@ -889,10 +774,6 @@ interrupt generation in the hardware.</dd>
 <dd>Optional callback used by <a class="reference internal" href="#c.drm_irq_uninstall" title="drm_irq_uninstall"><code class="xref c c-func docutils literal notranslate"><span class="pre">drm_irq_uninstall()</span></code></a> which is called before
 the interrupt handler is unregistered. This should be used to disable
 interrupt generation in the hardware.</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">master_create</span></code></dt>
-<dd>Called whenever a new master is created. Only used by vmwgfx.</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">master_destroy</span></code></dt>
-<dd>Called whenever a master is destroyed. Only used by vmwgfx.</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">master_set</span></code></dt>
 <dd>Called whenever the minor master is set. Only used by vmwgfx.</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">master_drop</span></code></dt>
@@ -1064,8 +945,26 @@ unplugged, these two functions guarantee that any store before calling
 recommended that drivers instead use the underlying <a class="reference internal" href="#c.drm_dev_enter" title="drm_dev_enter"><code class="xref c c-func docutils literal notranslate"><span class="pre">drm_dev_enter()</span></code></a> and
 <a class="reference internal" href="#c.drm_dev_exit" title="drm_dev_exit"><code class="xref c c-func docutils literal notranslate"><span class="pre">drm_dev_exit()</span></code></a> function pairs.</p>
 <dl class="function">
+<dt id="c.drm_core_check_all_features">
+bool <code class="descname">drm_core_check_all_features</code><span class="sig-paren">(</span>const struct <a class="reference internal" href="#c.drm_device" title="drm_device">drm_device</a> *<em>&nbsp;dev</em>, u32<em>&nbsp;features</em><span class="sig-paren">)</span><a class="headerlink" href="#c.drm_core_check_all_features" title="Permalink to this definition">¶</a></dt>
+<dd><p>check driver feature flags mask</p>
+</dd></dl>
+
+<p><strong>Parameters</strong></p>
+<dl class="docutils">
+<dt><code class="docutils literal notranslate"><span class="pre">const</span> <span class="pre">struct</span> <span class="pre">drm_device</span> <span class="pre">*</span> <span class="pre">dev</span></code></dt>
+<dd>DRM device to check</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">u32</span> <span class="pre">features</span></code></dt>
+<dd>feature flag(s) mask</dd>
+</dl>
+<p><strong>Description</strong></p>
+<p>This checks <strong>dev</strong> for driver features, see <a class="reference internal" href="#c.drm_driver" title="drm_driver"><code class="xref c c-type docutils literal notranslate"><span class="pre">drm_driver.driver_features</span></code></a>,
+<a class="reference internal" href="#c.drm_device" title="drm_device"><code class="xref c c-type docutils literal notranslate"><span class="pre">drm_device.driver_features</span></code></a>, and the various <a class="reference internal" href="#c.drm_driver_feature" title="drm_driver_feature"><code class="xref c c-type docutils literal notranslate"><span class="pre">enum</span> <span class="pre">drm_driver_feature</span></code></a> flags.</p>
+<p>Returns true if all features in the <strong>features</strong> mask are supported, false
+otherwise.</p>
+<dl class="function">
 <dt id="c.drm_core_check_feature">
-bool <code class="descname">drm_core_check_feature</code><span class="sig-paren">(</span>const struct <a class="reference internal" href="#c.drm_device" title="drm_device">drm_device</a> *<em>&nbsp;dev</em>, u32<em>&nbsp;feature</em><span class="sig-paren">)</span><a class="headerlink" href="#c.drm_core_check_feature" title="Permalink to this definition">¶</a></dt>
+bool <code class="descname">drm_core_check_feature</code><span class="sig-paren">(</span>const struct <a class="reference internal" href="#c.drm_device" title="drm_device">drm_device</a> *<em>&nbsp;dev</em>, enum <a class="reference internal" href="#c.drm_driver_feature" title="drm_driver_feature">drm_driver_feature</a><em>&nbsp;feature</em><span class="sig-paren">)</span><a class="headerlink" href="#c.drm_core_check_feature" title="Permalink to this definition">¶</a></dt>
 <dd><p>check driver feature flags</p>
 </dd></dl>
 
@@ -1073,7 +972,7 @@ bool <code class="descname">drm_core_check_feature</code><span class="sig-paren"
 <dl class="docutils">
 <dt><code class="docutils literal notranslate"><span class="pre">const</span> <span class="pre">struct</span> <span class="pre">drm_device</span> <span class="pre">*</span> <span class="pre">dev</span></code></dt>
 <dd>DRM device to check</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">u32</span> <span class="pre">feature</span></code></dt>
+<dt><code class="docutils literal notranslate"><span class="pre">enum</span> <span class="pre">drm_driver_feature</span> <span class="pre">feature</span></code></dt>
 <dd>feature flag</dd>
 </dl>
 <p><strong>Description</strong></p>
@@ -1515,30 +1414,6 @@ void <code class="descname">drm_pci_free</code><span class="sig-paren">(</span>s
 <p>FIXME: This is a needless abstraction of the Linux dma-api and should be
 removed.</p>
 <dl class="function">
-<dt id="c.drm_get_pci_dev">
-int <code class="descname">drm_get_pci_dev</code><span class="sig-paren">(</span>struct pci_dev *<em>&nbsp;pdev</em>, const struct <a class="reference internal" href="../driver-api/basics.html#c.pci_device_id" title="pci_device_id">pci_device_id</a> *<em>&nbsp;ent</em>, struct <a class="reference internal" href="#c.drm_driver" title="drm_driver">drm_driver</a> *<em>&nbsp;driver</em><span class="sig-paren">)</span><a class="headerlink" href="#c.drm_get_pci_dev" title="Permalink to this definition">¶</a></dt>
-<dd><p>Register a PCI device with the DRM subsystem</p>
-</dd></dl>
-
-<p><strong>Parameters</strong></p>
-<dl class="docutils">
-<dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">pci_dev</span> <span class="pre">*</span> <span class="pre">pdev</span></code></dt>
-<dd>PCI device</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">const</span> <span class="pre">struct</span> <span class="pre">pci_device_id</span> <span class="pre">*</span> <span class="pre">ent</span></code></dt>
-<dd>entry from the PCI ID table that matches <strong>pdev</strong></dd>
-<dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">drm_driver</span> <span class="pre">*</span> <span class="pre">driver</span></code></dt>
-<dd>DRM device driver</dd>
-</dl>
-<p><strong>Description</strong></p>
-<p>Attempt to gets inter module “drm” information. If we are first
-then register the character device and inter module information.
-Try and register, if we fail to register, backout previous work.</p>
-<p><strong>NOTE</strong></p>
-<p>This function is deprecated, please use <a class="reference internal" href="#c.drm_dev_alloc" title="drm_dev_alloc"><code class="xref c c-func docutils literal notranslate"><span class="pre">drm_dev_alloc()</span></code></a> and
-<a class="reference internal" href="#c.drm_dev_register" title="drm_dev_register"><code class="xref c c-func docutils literal notranslate"><span class="pre">drm_dev_register()</span></code></a> instead and remove your <a class="reference internal" href="#c.drm_driver" title="drm_driver"><code class="xref c c-type docutils literal notranslate"><span class="pre">drm_driver.load</span></code></a> callback.</p>
-<p><strong>Return</strong></p>
-<p>0 on success or a negative error code on failure.</p>
-<dl class="function">
 <dt id="c.drm_legacy_pci_init">
 int <code class="descname">drm_legacy_pci_init</code><span class="sig-paren">(</span>struct <a class="reference internal" href="#c.drm_driver" title="drm_driver">drm_driver</a> *<em>&nbsp;driver</em>, struct <a class="reference internal" href="../PCI/pci.html#c.pci_driver" title="pci_driver">pci_driver</a> *<em>&nbsp;pdriver</em><span class="sig-paren">)</span><a class="headerlink" href="#c.drm_legacy_pci_init" title="Permalink to this definition">¶</a></dt>
 <dd><p>shadow-attach a legacy DRM PCI driver</p>
@@ -1889,6 +1764,27 @@ DRM device also proceeds to call the <a class="reference internal" href="#c.drm_
 <p><strong>Return</strong></p>
 <p>Always succeeds and returns 0.</p>
 <dl class="function">
+<dt id="c.drm_release_noglobal">
+int <code class="descname">drm_release_noglobal</code><span class="sig-paren">(</span>struct inode *<em>&nbsp;inode</em>, struct file *<em>&nbsp;filp</em><span class="sig-paren">)</span><a class="headerlink" href="#c.drm_release_noglobal" title="Permalink to this definition">¶</a></dt>
+<dd><p>release method for DRM file</p>
+</dd></dl>
+
+<p><strong>Parameters</strong></p>
+<dl class="docutils">
+<dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">inode</span> <span class="pre">*</span> <span class="pre">inode</span></code></dt>
+<dd>device inode</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">file</span> <span class="pre">*</span> <span class="pre">filp</span></code></dt>
+<dd>file pointer.</dd>
+</dl>
+<p><strong>Description</strong></p>
+<p>This function may be used by drivers as their <code class="xref c c-type docutils literal notranslate"><span class="pre">file_operations.release</span></code>
+method. It frees any resources associated with the open file prior to taking
+the drm_global_mutex, which then calls the <a class="reference internal" href="#c.drm_driver" title="drm_driver"><code class="xref c c-type docutils literal notranslate"><span class="pre">drm_driver.postclose</span></code></a> driver
+callback. If this is the last open file for the DRM device also proceeds to
+call the <a class="reference internal" href="#c.drm_driver" title="drm_driver"><code class="xref c c-type docutils literal notranslate"><span class="pre">drm_driver.lastclose</span></code></a> driver callback.</p>
+<p><strong>Return</strong></p>
+<p>Always succeeds and returns 0.</p>
+<dl class="function">
 <dt id="c.drm_read">
 ssize_t <code class="descname">drm_read</code><span class="sig-paren">(</span>struct file *<em>&nbsp;filp</em>, char __user *<em>&nbsp;buffer</em>, size_t<em>&nbsp;count</em>, loff_t *<em>&nbsp;offset</em><span class="sig-paren">)</span><a class="headerlink" href="#c.drm_read" title="Permalink to this definition">¶</a></dt>
 <dd><p>read method for DRM file</p>
@@ -2061,6 +1957,39 @@ hold this lock.</p>
 corresponding DRM file is closed. Drivers need not worry about whether the
 DRM file for this event still exists and can call this function upon
 completion of the asynchronous work unconditionally.</p>
+<dl class="function">
+<dt id="c.drm_get_unmapped_area">
+unsigned long <code class="descname">drm_get_unmapped_area</code><span class="sig-paren">(</span>struct file *<em>&nbsp;file</em>, unsigned long<em>&nbsp;uaddr</em>, unsigned long<em>&nbsp;len</em>, unsigned long<em>&nbsp;pgoff</em>, unsigned long<em>&nbsp;flags</em>, struct drm_vma_offset_manager *<em>&nbsp;mgr</em><span class="sig-paren">)</span><a class="headerlink" href="#c.drm_get_unmapped_area" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get an unused user-space virtual memory area suitable for huge page table entries.</p>
+</dd></dl>
+
+<p><strong>Parameters</strong></p>
+<dl class="docutils">
+<dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">file</span> <span class="pre">*</span> <span class="pre">file</span></code></dt>
+<dd>The struct file representing the address space being mmap()’d.</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">unsigned</span> <span class="pre">long</span> <span class="pre">uaddr</span></code></dt>
+<dd>Start address suggested by user-space.</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">unsigned</span> <span class="pre">long</span> <span class="pre">len</span></code></dt>
+<dd>Length of the area.</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">unsigned</span> <span class="pre">long</span> <span class="pre">pgoff</span></code></dt>
+<dd>The page offset into the address space.</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">unsigned</span> <span class="pre">long</span> <span class="pre">flags</span></code></dt>
+<dd>mmap flags</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">drm_vma_offset_manager</span> <span class="pre">*</span> <span class="pre">mgr</span></code></dt>
+<dd>The address space manager used by the drm driver. This argument can
+probably be removed at some point when all drivers use the same
+address space manager.</dd>
+</dl>
+<p><strong>Description</strong></p>
+<p>This function attempts to find an unused user-space virtual memory area
+that can accommodate the size we want to map, and that is properly
+aligned to facilitate huge page table entries matching actual
+huge pages or huge page aligned memory in buffer objects. Buffer objects
+are assumed to start at huge page boundary pfns (io memory) or be
+populated by huge pages aligned to the start of the buffer object
+(system- or coherent memory). Adapted from shmem_get_unmapped_area.</p>
+<p><strong>Return</strong></p>
+<p>aligned user-space address.</p>
 </div>
 </div>
 <div class="section" id="misc-utilities">
@@ -2336,20 +2265,6 @@ run-time by echoing the debug value in its sysfs node:</p>
 <dl class="function">
 <dt id="c.DRM_DEV_DEBUG">
 <code class="descname">DRM_DEV_DEBUG</code><span class="sig-paren">(</span><em>dev</em>, <em>fmt</em>, <em>…</em><span class="sig-paren">)</span><a class="headerlink" href="#c.DRM_DEV_DEBUG" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<p><strong>Parameters</strong></p>
-<dl class="docutils">
-<dt><code class="docutils literal notranslate"><span class="pre">dev</span></code></dt>
-<dd>device pointer</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">fmt</span></code></dt>
-<dd>printf() like format string.</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">...</span></code></dt>
-<dd>variable arguments</dd>
-</dl>
-<dl class="function">
-<dt id="c.DRM_DEV_DEBUG_RATELIMITED">
-<code class="descname">DRM_DEV_DEBUG_RATELIMITED</code><span class="sig-paren">(</span><em>dev</em>, <em>fmt</em>, <em>…</em><span class="sig-paren">)</span><a class="headerlink" href="#c.DRM_DEV_DEBUG_RATELIMITED" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <p><strong>Parameters</strong></p>

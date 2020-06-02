@@ -68,7 +68,7 @@
             
             
               <div class="version">
-                5.6.0
+                5.7.0
               </div>
             
           
@@ -380,7 +380,7 @@ touch this.</dd>
 functions except for the context of callbacks defined in struct
 devfreq_governor, the governor should protect its access with the
 struct mutex lock in struct devfreq. A governor may use this mutex
-to protect its own private data in void <a href="#id1"><span class="problematic" id="id2">*</span></a>data as well.</p>
+to protect its own private data in <code class="docutils literal notranslate"><span class="pre">void</span> <span class="pre">*data</span></code> as well.</p>
 <dl class="function">
 <dt id="c.update_devfreq">
 int <code class="descname">update_devfreq</code><span class="sig-paren">(</span>struct <a class="reference internal" href="#c.devfreq" title="devfreq">devfreq</a> *<em>&nbsp;devfreq</em><span class="sig-paren">)</span><a class="headerlink" href="#c.update_devfreq" title="Permalink to this definition">¶</a></dt>
@@ -397,7 +397,7 @@ int <code class="descname">update_devfreq</code><span class="sig-paren">(</span>
 <dl class="type">
 <dt id="c.devfreq_simple_ondemand_data">
 struct <code class="descname">devfreq_simple_ondemand_data</code><a class="headerlink" href="#c.devfreq_simple_ondemand_data" title="Permalink to this definition">¶</a></dt>
-<dd><p>void <a href="#id3"><span class="problematic" id="id4">*</span></a>data fed to struct devfreq and devfreq_add_device</p>
+<dd><p><code class="docutils literal notranslate"><span class="pre">void</span> <span class="pre">*data</span></code> fed to struct devfreq and devfreq_add_device</p>
 </dd></dl>
 
 <p><strong>Definition</strong></p>
@@ -424,7 +424,7 @@ the governor uses the default values.</p>
 <dl class="type">
 <dt id="c.devfreq_passive_data">
 struct <code class="descname">devfreq_passive_data</code><a class="headerlink" href="#c.devfreq_passive_data" title="Permalink to this definition">¶</a></dt>
-<dd><p>void <a href="#id5"><span class="problematic" id="id6">*</span></a>data fed to struct devfreq and devfreq_add_device</p>
+<dd><p><code class="docutils literal notranslate"><span class="pre">void</span> <span class="pre">*data</span></code> fed to struct devfreq and devfreq_add_device</p>
 </dd></dl>
 
 <p><strong>Definition</strong></p>
@@ -676,8 +676,8 @@ void <code class="descname">devfreq_monitor_resume</code><span class="sig-paren"
 to be called from governor in response to DEVFREQ_GOV_RESUME
 event or when polling interval is set to non-zero.</p>
 <dl class="function">
-<dt id="c.devfreq_interval_update">
-void <code class="descname">devfreq_interval_update</code><span class="sig-paren">(</span>struct <a class="reference internal" href="#c.devfreq" title="devfreq">devfreq</a> *<em>&nbsp;devfreq</em>, unsigned int *<em>&nbsp;delay</em><span class="sig-paren">)</span><a class="headerlink" href="#c.devfreq_interval_update" title="Permalink to this definition">¶</a></dt>
+<dt id="c.devfreq_update_interval">
+void <code class="descname">devfreq_update_interval</code><span class="sig-paren">(</span>struct <a class="reference internal" href="#c.devfreq" title="devfreq">devfreq</a> *<em>&nbsp;devfreq</em>, unsigned int *<em>&nbsp;delay</em><span class="sig-paren">)</span><a class="headerlink" href="#c.devfreq_update_interval" title="Permalink to this definition">¶</a></dt>
 <dd><p>Update device devfreq monitoring interval</p>
 </dd></dl>
 
@@ -690,7 +690,7 @@ void <code class="descname">devfreq_interval_update</code><span class="sig-paren
 </dl>
 <p><strong>Description</strong></p>
 <p>Helper function to set new load monitoring polling interval. Function
-to be called from governor in response to DEVFREQ_GOV_INTERVAL event.</p>
+to be called from governor in response to DEVFREQ_GOV_UPDATE_INTERVAL event.</p>
 <dl class="function">
 <dt id="c.devfreq_add_device">
 struct <a class="reference internal" href="#c.devfreq" title="devfreq">devfreq</a> * <code class="descname">devfreq_add_device</code><span class="sig-paren">(</span>struct <a class="reference internal" href="infrastructure.html#c.device" title="device">device</a> *<em>&nbsp;dev</em>, struct <a class="reference internal" href="#c.devfreq_dev_profile" title="devfreq_dev_profile">devfreq_dev_profile</a> *<em>&nbsp;profile</em>, const char *<em>&nbsp;governor_name</em>, void *<em>&nbsp;data</em><span class="sig-paren">)</span><a class="headerlink" href="#c.devfreq_add_device" title="Permalink to this definition">¶</a></dt>

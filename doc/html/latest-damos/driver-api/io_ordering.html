@@ -1,0 +1,251 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Ordering I/O writes to memory-mapped addresses &mdash; The Linux Kernel  documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript">
+          var DOCUMENTATION_OPTIONS = {
+              URL_ROOT:'../',
+              VERSION:'',
+              LANGUAGE:'None',
+              COLLAPSE_INDEX:false,
+              FILE_SUFFIX:'.html',
+              HAS_SOURCE:  true,
+              SOURCELINK_SUFFIX: '.txt'
+          };
+      </script>
+        <script type="text/javascript" src="../_static/jquery.js"></script>
+        <script type="text/javascript" src="../_static/underscore.js"></script>
+        <script type="text/javascript" src="../_static/doctools.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/theme_overrides.css" type="text/css" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> The Linux Kernel
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                5.7.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../admin-guide/mm/damon/index.html">DAMON: Data Access MONitor</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">The Linux Kernel</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+      <li>Ordering I/O writes to memory-mapped addresses</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/driver-api/io_ordering.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="ordering-i-o-writes-to-memory-mapped-addresses">
+<h1>Ordering I/O writes to memory-mapped addresses<a class="headerlink" href="#ordering-i-o-writes-to-memory-mapped-addresses" title="Permalink to this headline">¶</a></h1>
+<p>On some platforms, so-called memory-mapped I/O is weakly ordered.  On such
+platforms, driver writers are responsible for ensuring that I/O writes to
+memory-mapped addresses on their device arrive in the order intended.  This is
+typically done by reading a ‘safe’ device or bridge register, causing the I/O
+chipset to flush pending writes to the device before any reads are posted.  A
+driver would usually use this technique immediately prior to the exit of a
+critical section of code protected by spinlocks.  This would ensure that
+subsequent writes to I/O space arrived only after all prior writes (much like a
+memory barrier op, mb(), only with respect to I/O).</p>
+<p>A more concrete example from a hypothetical device driver:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>        ...
+CPU A:  spin_lock_irqsave(&amp;dev_lock, flags)
+CPU A:  val = readl(my_status);
+CPU A:  ...
+CPU A:  writel(newval, ring_ptr);
+CPU A:  spin_unlock_irqrestore(&amp;dev_lock, flags)
+        ...
+CPU B:  spin_lock_irqsave(&amp;dev_lock, flags)
+CPU B:  val = readl(my_status);
+CPU B:  ...
+CPU B:  writel(newval2, ring_ptr);
+CPU B:  spin_unlock_irqrestore(&amp;dev_lock, flags)
+        ...
+</pre></div>
+</div>
+<p>In the case above, the device may receive newval2 before it receives newval,
+which could cause problems.  Fixing it is easy enough though:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>        ...
+CPU A:  spin_lock_irqsave(&amp;dev_lock, flags)
+CPU A:  val = readl(my_status);
+CPU A:  ...
+CPU A:  writel(newval, ring_ptr);
+CPU A:  (void)readl(safe_register); /* maybe a config register? */
+CPU A:  spin_unlock_irqrestore(&amp;dev_lock, flags)
+        ...
+CPU B:  spin_lock_irqsave(&amp;dev_lock, flags)
+CPU B:  val = readl(my_status);
+CPU B:  ...
+CPU B:  writel(newval2, ring_ptr);
+CPU B:  (void)readl(safe_register); /* maybe a config register? */
+CPU B:  spin_unlock_irqrestore(&amp;dev_lock, flags)
+</pre></div>
+</div>
+<p>Here, the reads from safe_register will cause the I/O chipset to flush any
+pending writes before actually posting the read to the chipset, preventing
+possible data corruption.</p>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright The kernel development community
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

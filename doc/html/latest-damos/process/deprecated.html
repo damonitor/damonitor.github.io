@@ -68,7 +68,7 @@
             
             
               <div class="version">
-                5.6.0
+                5.7.0
               </div>
             
           
@@ -181,6 +181,24 @@ a header file, it isn’t the full solution. Such interfaces must either
 be fully removed from the kernel, or added to this file to discourage
 others from using them in the future.</p>
 </div>
+<div class="section" id="bug-and-bug-on">
+<h2>BUG() and BUG_ON()<a class="headerlink" href="#bug-and-bug-on" title="Permalink to this headline">¶</a></h2>
+<p>Use WARN() and WARN_ON() instead, and handle the “impossible”
+error condition as gracefully as possible. While the BUG()-family
+of APIs were originally designed to act as an “impossible situation”
+assert and to kill a kernel thread “safely”, they turn out to just be
+too risky. (e.g. “In what order do locks need to be released? Have
+various states been restored?”) Very commonly, using BUG() will
+destabilize a system or entirely break it, which makes it impossible
+to debug or even get viable crash reports. Linus has <a class="reference external" href="https://lore.kernel.org/lkml/CA+55aFy6jNLsywVYdGp83AMrXBo_P-pkjkphPGrO=82SPKCpLQ&#64;mail.gmail.com/">very strong</a>
+feelings <a class="reference external" href="https://lore.kernel.org/lkml/CAHk-=whDHsbK3HTOpTF=ue_o04onRwTEaK_ZoJp_fjbqq4+=Jw&#64;mail.gmail.com/">about this</a>.</p>
+<p>Note that the WARN()-family should only be used for “expected to
+be unreachable” situations. If you want to warn about “reachable
+but undesirable” situations, please use the pr_warn()-family of
+functions. System owners may have set the <em>panic_on_warn</em> sysctl,
+to make sure their systems do not continue running in the face of
+“unreachable” conditions. (For example, see commits like <a class="reference external" href="https://git.kernel.org/linus/d4689846881d160a4d12a514e991a740bcb5d65a">this one</a>.)</p>
+</div>
 <div class="section" id="open-coded-arithmetic-in-allocator-arguments">
 <h2>open-coded arithmetic in allocator arguments<a class="headerlink" href="#open-coded-arithmetic-in-allocator-arguments" title="Permalink to this headline">¶</a></h2>
 <p>Dynamic size calculations (especially multiplication) should not be
@@ -215,8 +233,8 @@ a trailing array of others structures, as in:</p>
 </pre></div>
 </div>
 <p>See <a class="reference internal" href="../driver-api/basics.html#c.array_size" title="array_size"><code class="xref c c-func docutils literal notranslate"><span class="pre">array_size()</span></code></a>, <a class="reference internal" href="../driver-api/basics.html#c.array3_size" title="array3_size"><code class="xref c c-func docutils literal notranslate"><span class="pre">array3_size()</span></code></a>, and <a class="reference internal" href="../driver-api/basics.html#c.struct_size" title="struct_size"><code class="xref c c-func docutils literal notranslate"><span class="pre">struct_size()</span></code></a>,
-for more details as well as the related <code class="xref c c-func docutils literal notranslate"><span class="pre">check_add_overflow()</span></code> and
-<code class="xref c c-func docutils literal notranslate"><span class="pre">check_mul_overflow()</span></code> family of functions.</p>
+for more details as well as the related check_add_overflow() and
+check_mul_overflow() family of functions.</p>
 </div>
 <div class="section" id="simple-strtol-simple-strtoll-simple-strtoul-simple-strtoull">
 <h2>simple_strtol(), simple_strtoll(), simple_strtoul(), simple_strtoull()<a class="headerlink" href="#simple-strtol-simple-strtoll-simple-strtoul-simple-strtoull" title="Permalink to this headline">¶</a></h2>
@@ -245,9 +263,9 @@ and other misbehavior due to the missing termination. It also NUL-pads the
 destination buffer if the source contents are shorter than the destination
 buffer size, which may be a needless performance penalty for callers using
 only NUL-terminated strings. The safe replacement is <a class="reference internal" href="../core-api/kernel-api.html#c.strscpy" title="strscpy"><code class="xref c c-func docutils literal notranslate"><span class="pre">strscpy()</span></code></a>.
-(Users of <a class="reference internal" href="../core-api/kernel-api.html#c.strscpy" title="strscpy"><code class="xref c c-func docutils literal notranslate"><span class="pre">strscpy()</span></code></a> still needing NUL-padding will need an
-explicit <a class="reference internal" href="../core-api/kernel-api.html#c.memset" title="memset"><code class="xref c c-func docutils literal notranslate"><span class="pre">memset()</span></code></a> added.)</p>
-<p>If a caller is using non-NUL-terminated strings, <a class="reference internal" href="../core-api/kernel-api.html#c.strncpy" title="strncpy"><code class="xref c c-func docutils literal notranslate"><span class="pre">strncpy()</span></code></a> can
+(Users of <a class="reference internal" href="../core-api/kernel-api.html#c.strscpy" title="strscpy"><code class="xref c c-func docutils literal notranslate"><span class="pre">strscpy()</span></code></a> still needing NUL-padding should instead
+use <a class="reference internal" href="../core-api/kernel-api.html#c.strscpy_pad" title="strscpy_pad"><code class="xref c c-func docutils literal notranslate"><span class="pre">strscpy_pad()</span></code></a>.)</p>
+<p>If a caller is using non-NUL-terminated strings, <a class="reference internal" href="../core-api/kernel-api.html#c.strncpy" title="strncpy"><code class="xref c c-func docutils literal notranslate"><span class="pre">strncpy()</span></code></a>() can
 still be used, but destinations should be marked with the <a class="reference external" href="https://gcc.gnu.org/onlinedocs/gcc/Common-Variable-Attributes.html">__nonstring</a>
 attribute to avoid future compiler warnings.</p>
 </div>
@@ -257,6 +275,27 @@ attribute to avoid future compiler warnings.</p>
 the given limit of bytes to copy. This is inefficient and can lead to
 linear read overflows if a source string is not NUL-terminated. The
 safe replacement is <a class="reference internal" href="../core-api/kernel-api.html#c.strscpy" title="strscpy"><code class="xref c c-func docutils literal notranslate"><span class="pre">strscpy()</span></code></a>.</p>
+</div>
+<div class="section" id="p-format-specifier">
+<h2>%p format specifier<a class="headerlink" href="#p-format-specifier" title="Permalink to this headline">¶</a></h2>
+<p>Traditionally, using “%p” in format strings would lead to regular address
+exposure flaws in dmesg, proc, sysfs, etc. Instead of leaving these to
+be exploitable, all “%p” uses in the kernel are being printed as a hashed
+value, rendering them unusable for addressing. New uses of “%p” should not
+be added to the kernel. For text addresses, using “%pS” is likely better,
+as it produces the more useful symbol name instead. For nearly everything
+else, just do not add “%p” at all.</p>
+<p>Paraphrasing Linus’s current <a class="reference external" href="https://lore.kernel.org/lkml/CA+55aFwQEd_d40g4mUCSsVRZzrFPUJt74vc6PPpb675hYNXcKw&#64;mail.gmail.com/">guidance</a>:</p>
+<ul class="simple">
+<li>If the hashed “%p” value is pointless, ask yourself whether the pointer
+itself is important. Maybe it should be removed entirely?</li>
+<li>If you really think the true pointer value is important, why is some
+system state or user privilege level considered “special”? If you think
+you can justify it (in comments and commit log) well enough to stand
+up to Linus’s scrutiny, maybe you can use “%px”, along with making sure
+you have sensible permissions.</li>
+</ul>
+<p>And finally, know that a toggle for “%p” hashing will <a class="reference external" href="https://lore.kernel.org/lkml/CA+55aFwieC1-nAs+NFq9RTwaR8ef9hWa4MjNBWL41F-8wM49eA&#64;mail.gmail.com/">not be accepted</a>.</p>
 </div>
 <div class="section" id="variable-length-arrays-vlas">
 <h2>Variable Length Arrays (VLAs)<a class="headerlink" href="#variable-length-arrays-vlas" title="Permalink to this headline">¶</a></h2>
@@ -270,24 +309,38 @@ memory adjacent to the stack (when built without <cite>CONFIG_VMAP_STACK=y</cite
 </div>
 <div class="section" id="implicit-switch-case-fall-through">
 <h2>Implicit switch case fall-through<a class="headerlink" href="#implicit-switch-case-fall-through" title="Permalink to this headline">¶</a></h2>
-<p>The C language allows switch cases to “fall-through” when a “break” statement
-is missing at the end of a case. This, however, introduces ambiguity in the
-code, as it’s not always clear if the missing break is intentional or a bug.</p>
+<p>The C language allows switch cases to fall through to the next case
+when a “break” statement is missing at the end of a case. This, however,
+introduces ambiguity in the code, as it’s not always clear if the missing
+break is intentional or a bug. For example, it’s not obvious just from
+looking at the code if <cite>STATE_ONE</cite> is intentionally designed to fall
+through into <cite>STATE_TWO</cite>:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>switch (value) {
+case STATE_ONE:
+        do_something();
+case STATE_TWO:
+        do_other();
+        break;
+default:
+        WARN(&quot;unknown state&quot;);
+}
+</pre></div>
+</div>
 <p>As there have been a long list of flaws <a class="reference external" href="https://cwe.mitre.org/data/definitions/484.html">due to missing “break” statements</a>, we no longer allow
-“implicit fall-through”.</p>
-<p>In order to identify intentional fall-through cases, we have adopted a
-pseudo-keyword macro ‘fallthrough’ which expands to gcc’s extension
-__attribute__((__fallthrough__)).  <a class="reference external" href="https://gcc.gnu.org/onlinedocs/gcc/Statement-Attributes.html">Statement Attributes</a></p>
-<p>When the C17/C18  [[fallthrough]] syntax is more commonly supported by
+implicit fall-through. In order to identify intentional fall-through
+cases, we have adopted a pseudo-keyword macro “fallthrough” which
+expands to gcc’s extension <a class="reference external" href="https://gcc.gnu.org/onlinedocs/gcc/Statement-Attributes.html">__attribute__((__fallthrough__))</a>.
+(When the C17/C18  <cite>[[fallthrough]]</cite> syntax is more commonly supported by
 C compilers, static analyzers, and IDEs, we can switch to using that syntax
-for the macro pseudo-keyword.</p>
+for the macro pseudo-keyword.)</p>
 <p>All switch/case blocks must end in one of:</p>
-<blockquote>
-<div>break;
-fallthrough;
-continue;
-goto &lt;label&gt;;
-return [expression];</div></blockquote>
+<ul class="simple">
+<li>break;</li>
+<li>fallthrough;</li>
+<li>continue;</li>
+<li>goto &lt;label&gt;;</li>
+<li>return [expression];</li>
+</ul>
 </div>
 </div>
 

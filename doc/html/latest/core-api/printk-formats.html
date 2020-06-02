@@ -68,7 +68,7 @@
             
             
               <div class="version">
-                5.6.0
+                5.7.0
               </div>
             
           
@@ -260,6 +260,18 @@ offsets. If KALLSYMS are disabled then the symbol address is printed instead.</p
 used when printing stack backtraces. The specifier takes into
 consideration the effect of compiler optimisations which may occur
 when tail-calls are used and marked with the noreturn GCC attribute.</p>
+</div>
+<div class="section" id="probed-pointers-from-bpf-tracing">
+<h3>Probed Pointers from BPF / tracing<a class="headerlink" href="#probed-pointers-from-bpf-tracing" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>%pks    kernel string
+%pus    user string
+</pre></div>
+</div>
+<p>The <code class="docutils literal notranslate"><span class="pre">k</span></code> and <code class="docutils literal notranslate"><span class="pre">u</span></code> specifiers are used for printing prior probed memory from
+either kernel memory (k) or user memory (u). The subsequent <code class="docutils literal notranslate"><span class="pre">s</span></code> specifier
+results in printing a string. For direct use in regular <a class="reference internal" href="kernel-api.html#c.vsnprintf" title="vsnprintf"><code class="xref c c-func docutils literal notranslate"><span class="pre">vsnprintf()</span></code></a> the (k)
+and (u) annotation is ignored, however, when used out of BPF’s bpf_trace_printk(),
+for example, it reads the memory it is pointing to without faulting.</p>
 </div>
 <div class="section" id="kernel-pointers">
 <h3>Kernel Pointers<a class="headerlink" href="#kernel-pointers" title="Permalink to this headline">¶</a></h3>

@@ -68,7 +68,7 @@
             
             
               <div class="version">
-                5.6.0
+                5.7.0
               </div>
             
           
@@ -268,20 +268,17 @@ still cause this situation.</p>
 <table border="1" class="docutils" id="id1">
 <caption><span class="caption-text">struct v4l2_ext_control</span><a class="headerlink" href="#id1" title="Permalink to this table">¶</a></caption>
 <colgroup>
-<col width="20%" />
-<col width="20%" />
-<col width="20%" />
-<col width="40%" />
+<col width="25%" />
+<col width="25%" />
+<col width="50%" />
 </colgroup>
 <tbody valign="top">
 <tr class="row-odd"><td>__u32</td>
 <td><code class="docutils literal notranslate"><span class="pre">id</span></code></td>
-<td>&#160;</td>
 <td>Identifies the control, set by the application.</td>
 </tr>
 <tr class="row-even"><td>__u32</td>
 <td><code class="docutils literal notranslate"><span class="pre">size</span></code></td>
-<td>&#160;</td>
 <td><p class="first">The total size in bytes of the payload of this control. This is
 normally 0, but for pointer controls this should be set to the
 size of the memory containing the payload, or that will receive
@@ -300,64 +297,58 @@ to the size of the memory that contains the string. The actual
 </tr>
 <tr class="row-odd"><td>__u32</td>
 <td><code class="docutils literal notranslate"><span class="pre">reserved2</span></code>[1]</td>
-<td>&#160;</td>
 <td>Reserved for future extensions. Drivers and applications must set
 the array to zero.</td>
 </tr>
-<tr class="row-even"><td>union</td>
-<td colspan="3">(anonymous)</td>
+<tr class="row-even"><td>union {</td>
+<td colspan="2">(anonymous)</td>
 </tr>
-<tr class="row-odd"><td>&#160;</td>
-<td>__s32</td>
+<tr class="row-odd"><td>__s32</td>
 <td><code class="docutils literal notranslate"><span class="pre">value</span></code></td>
 <td>New value or current value. Valid if this control is not of type
 <code class="docutils literal notranslate"><span class="pre">V4L2_CTRL_TYPE_INTEGER64</span></code> and <code class="docutils literal notranslate"><span class="pre">V4L2_CTRL_FLAG_HAS_PAYLOAD</span></code> is
 not set.</td>
 </tr>
-<tr class="row-even"><td>&#160;</td>
-<td>__s64</td>
+<tr class="row-even"><td>__s64</td>
 <td><code class="docutils literal notranslate"><span class="pre">value64</span></code></td>
 <td>New value or current value. Valid if this control is of type
 <code class="docutils literal notranslate"><span class="pre">V4L2_CTRL_TYPE_INTEGER64</span></code> and <code class="docutils literal notranslate"><span class="pre">V4L2_CTRL_FLAG_HAS_PAYLOAD</span></code> is
 not set.</td>
 </tr>
-<tr class="row-odd"><td>&#160;</td>
-<td>char *</td>
+<tr class="row-odd"><td>char *</td>
 <td><code class="docutils literal notranslate"><span class="pre">string</span></code></td>
 <td>A pointer to a string. Valid if this control is of type
 <code class="docutils literal notranslate"><span class="pre">V4L2_CTRL_TYPE_STRING</span></code>.</td>
 </tr>
-<tr class="row-even"><td>&#160;</td>
-<td>__u8 *</td>
+<tr class="row-even"><td>__u8 *</td>
 <td><code class="docutils literal notranslate"><span class="pre">p_u8</span></code></td>
 <td>A pointer to a matrix control of unsigned 8-bit values. Valid if
 this control is of type <code class="docutils literal notranslate"><span class="pre">V4L2_CTRL_TYPE_U8</span></code>.</td>
 </tr>
-<tr class="row-odd"><td>&#160;</td>
-<td>__u16 *</td>
+<tr class="row-odd"><td>__u16 *</td>
 <td><code class="docutils literal notranslate"><span class="pre">p_u16</span></code></td>
 <td>A pointer to a matrix control of unsigned 16-bit values. Valid if
 this control is of type <code class="docutils literal notranslate"><span class="pre">V4L2_CTRL_TYPE_U16</span></code>.</td>
 </tr>
-<tr class="row-even"><td>&#160;</td>
-<td>__u32 *</td>
+<tr class="row-even"><td>__u32 *</td>
 <td><code class="docutils literal notranslate"><span class="pre">p_u32</span></code></td>
 <td>A pointer to a matrix control of unsigned 32-bit values. Valid if
 this control is of type <code class="docutils literal notranslate"><span class="pre">V4L2_CTRL_TYPE_U32</span></code>.</td>
 </tr>
-<tr class="row-odd"><td>&#160;</td>
-<td><code class="xref c c-type docutils literal notranslate"><span class="pre">v4l2_area</span></code> *</td>
+<tr class="row-odd"><td><code class="xref c c-type docutils literal notranslate"><span class="pre">v4l2_area</span></code> *</td>
 <td><code class="docutils literal notranslate"><span class="pre">p_area</span></code></td>
 <td>A pointer to a struct <code class="xref c c-type docutils literal notranslate"><span class="pre">v4l2_area</span></code>. Valid if this control is
 of type <code class="docutils literal notranslate"><span class="pre">V4L2_CTRL_TYPE_AREA</span></code>.</td>
 </tr>
-<tr class="row-even"><td>&#160;</td>
-<td>void *</td>
+<tr class="row-even"><td>void *</td>
 <td><code class="docutils literal notranslate"><span class="pre">ptr</span></code></td>
 <td>A pointer to a compound type which can be an N-dimensional array
 and/or a compound type (the control’s type is &gt;=
 <code class="docutils literal notranslate"><span class="pre">V4L2_CTRL_COMPOUND_TYPES</span></code>). Valid if
 <code class="docutils literal notranslate"><span class="pre">V4L2_CTRL_FLAG_HAS_PAYLOAD</span></code> is set for this control.</td>
+</tr>
+<tr class="row-odd"><td>}</td>
+<td colspan="2">&#160;</td>
 </tr>
 </tbody>
 </table>
@@ -369,17 +360,15 @@ and/or a compound type (the control’s type is &gt;=
 <table border="1" class="longtable docutils" id="id2">
 <caption><span class="caption-text">struct v4l2_ext_controls</span><a class="headerlink" href="#id2" title="Permalink to this table">¶</a></caption>
 <colgroup>
-<col width="20%" />
-<col width="20%" />
-<col width="40%" />
-<col width="20%" />
+<col width="25%" />
+<col width="25%" />
+<col width="50%" />
 </colgroup>
 <tbody valign="top">
-<tr class="row-odd"><td>union</td>
-<td colspan="3">(anonymous)</td>
+<tr class="row-odd"><td>union {</td>
+<td colspan="2">(anonymous)</td>
 </tr>
-<tr class="row-even"><td>&#160;</td>
-<td>__u32</td>
+<tr class="row-even"><td>__u32</td>
 <td><code class="docutils literal notranslate"><span class="pre">ctrl_class</span></code></td>
 <td>The control class to which all controls belong, see
 <a class="reference internal" href="#ctrl-class"><span class="std std-ref">Control classes</span></a>. Drivers that use a kernel framework for
@@ -389,8 +378,7 @@ support this can be tested by setting <code class="docutils literal notranslate"
 calling <a class="reference internal" href="#vidioc-g-ext-ctrls"><span class="std std-ref">VIDIOC_TRY_EXT_CTRLS</span></a> with a <code class="docutils literal notranslate"><span class="pre">count</span></code> of 0. If that
 succeeds, then the driver supports this feature.</td>
 </tr>
-<tr class="row-odd"><td>&#160;</td>
-<td>__u32</td>
+<tr class="row-odd"><td>__u32</td>
 <td><code class="docutils literal notranslate"><span class="pre">which</span></code></td>
 <td><p class="first">Which value of the control to get/set/try.
 <code class="docutils literal notranslate"><span class="pre">V4L2_CTRL_WHICH_CUR_VAL</span></code> will return the current value of the
@@ -416,13 +404,16 @@ VIDIOC_TRY_EXT_CTRLS with a count of 0. If that fails, then the
 driver does not support <code class="docutils literal notranslate"><span class="pre">V4L2_CTRL_WHICH_CUR_VAL</span></code>.</p>
 </td>
 </tr>
-<tr class="row-even"><td>__u32</td>
-<td><code class="docutils literal notranslate"><span class="pre">count</span></code></td>
-<td colspan="2">The number of controls in the controls array. May also be zero.</td>
+<tr class="row-even"><td>}</td>
+<td colspan="2">&#160;</td>
 </tr>
 <tr class="row-odd"><td>__u32</td>
+<td><code class="docutils literal notranslate"><span class="pre">count</span></code></td>
+<td>The number of controls in the controls array. May also be zero.</td>
+</tr>
+<tr class="row-even"><td>__u32</td>
 <td><code class="docutils literal notranslate"><span class="pre">error_idx</span></code></td>
-<td colspan="2"><p class="first">Set by the driver in case of an error. If the error is associated
+<td><p class="first">Set by the driver in case of an error. If the error is associated
 with a particular control, then <code class="docutils literal notranslate"><span class="pre">error_idx</span></code> is set to the index
 of that control. If the error is not related to a specific
 control, or the validation step failed (see below), then
@@ -461,23 +452,23 @@ actual control that failed the validation step. Unfortunately,
 there is no <code class="docutils literal notranslate"><span class="pre">TRY</span></code> equivalent for <a class="reference internal" href="#vidioc-g-ext-ctrls"><span class="std std-ref">VIDIOC_G_EXT_CTRLS</span></a>.</p>
 </td>
 </tr>
-<tr class="row-even"><td>__s32</td>
+<tr class="row-odd"><td>__s32</td>
 <td><code class="docutils literal notranslate"><span class="pre">request_fd</span></code></td>
-<td colspan="2">File descriptor of the request to be used by this operation. Only
+<td>File descriptor of the request to be used by this operation. Only
 valid if <code class="docutils literal notranslate"><span class="pre">which</span></code> is set to <code class="docutils literal notranslate"><span class="pre">V4L2_CTRL_WHICH_REQUEST_VAL</span></code>.
 If the device does not support requests, then <code class="docutils literal notranslate"><span class="pre">EACCES</span></code> will be returned.
 If requests are supported but an invalid request file descriptor is
 given, then <code class="docutils literal notranslate"><span class="pre">EINVAL</span></code> will be returned.</td>
 </tr>
-<tr class="row-odd"><td>__u32</td>
+<tr class="row-even"><td>__u32</td>
 <td><code class="docutils literal notranslate"><span class="pre">reserved</span></code>[1]</td>
-<td colspan="2"><p class="first">Reserved for future extensions.</p>
+<td><p class="first">Reserved for future extensions.</p>
 <p class="last">Drivers and applications must set the array to zero.</p>
 </td>
 </tr>
-<tr class="row-even"><td>struct <a class="reference internal" href="#c.v4l2_ext_control" title="v4l2_ext_control"><code class="xref c c-type docutils literal notranslate"><span class="pre">v4l2_ext_control</span></code></a> *</td>
+<tr class="row-odd"><td>struct <a class="reference internal" href="#c.v4l2_ext_control" title="v4l2_ext_control"><code class="xref c c-type docutils literal notranslate"><span class="pre">v4l2_ext_control</span></code></a> *</td>
 <td><code class="docutils literal notranslate"><span class="pre">controls</span></code></td>
-<td colspan="2"><p class="first">Pointer to an array of <code class="docutils literal notranslate"><span class="pre">count</span></code> v4l2_ext_control structures.</p>
+<td><p class="first">Pointer to an array of <code class="docutils literal notranslate"><span class="pre">count</span></code> v4l2_ext_control structures.</p>
 <p class="last">Ignored if <code class="docutils literal notranslate"><span class="pre">count</span></code> equals zero.</p>
 </td>
 </tr>

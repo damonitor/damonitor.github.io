@@ -68,7 +68,7 @@
             
             
               <div class="version">
-                5.6.0
+                5.7.0
               </div>
             
           
@@ -210,6 +210,24 @@ helper should also be moved from drm_plane_helper.c to the atomic helpers, to
 avoid confusion - the other helpers in that file are all deprecated legacy
 helpers.</p>
 <p>Contact: Ville Syrjälä, Daniel Vetter, driver maintainers</p>
+<p>Level: Advanced</p>
+</div>
+<div class="section" id="improve-plane-atomic-check-helpers">
+<h2>Improve plane atomic_check helpers<a class="headerlink" href="#improve-plane-atomic-check-helpers" title="Permalink to this headline">¶</a></h2>
+<p>Aside from the clipped coordinates right above there’s a few suboptimal things
+with the current helpers:</p>
+<ul class="simple">
+<li>drm_plane_helper_funcs-&gt;atomic_check gets called for enabled or disabled
+planes. At best this seems to confuse drivers, worst it means they blow up
+when the plane is disabled without the CRTC. The only special handling is
+resetting values in the plane state structures, which instead should be moved
+into the drm_plane_funcs-&gt;atomic_duplicate_state functions.</li>
+<li>Once that’s done, helpers could stop calling -&gt;atomic_check for disabled
+planes.</li>
+<li>Then we could go through all the drivers and remove the more-or-less confused
+checks for plane_state-&gt;fb and plane_state-&gt;crtc.</li>
+</ul>
+<p>Contact: Daniel Vetter</p>
 <p>Level: Advanced</p>
 </div>
 <div class="section" id="convert-early-atomic-drivers-to-async-commit-helpers">
@@ -424,21 +442,6 @@ it to use <a class="reference internal" href="drm-kms.html#c.drm_mode_hsync" tit
 <p>Contact: Sean Paul</p>
 <p>Level: Starter</p>
 </div>
-<div class="section" id="drm-fb-helper-tasks">
-<h2>drm_fb_helper tasks<a class="headerlink" href="#drm-fb-helper-tasks" title="Permalink to this headline">¶</a></h2>
-<ul class="simple">
-<li><a class="reference internal" href="drm-kms-helpers.html#c.drm_fb_helper_restore_fbdev_mode_unlocked" title="drm_fb_helper_restore_fbdev_mode_unlocked"><code class="xref c c-func docutils literal notranslate"><span class="pre">drm_fb_helper_restore_fbdev_mode_unlocked()</span></code></a> should call restore_fbdev_mode()
-not the _force variant so it can bail out if there is a master. But first
-these igt tests need to be fixed: <a class="reference external" href="mailto:kms_fbcon_fbt&#37;&#52;&#48;psr">kms_fbcon_fbt<span>&#64;</span>psr</a> and
-<a class="reference external" href="mailto:kms_fbcon_fbt&#37;&#52;&#48;psr-suspend">kms_fbcon_fbt<span>&#64;</span>psr-suspend</a>.</li>
-<li>The max connector argument for <a class="reference internal" href="drm-kms-helpers.html#c.drm_fb_helper_init" title="drm_fb_helper_init"><code class="xref c c-func docutils literal notranslate"><span class="pre">drm_fb_helper_init()</span></code></a> isn’t used anymore and
-can be removed.</li>
-<li>The helper doesn’t keep an array of connectors anymore so these can be
-removed: drm_fb_helper_single_add_all_connectors(),
-drm_fb_helper_add_one_connector() and drm_fb_helper_remove_one_connector().</li>
-</ul>
-<p>Level: Intermediate</p>
-</div>
 <div class="section" id="connector-register-unregister-fixes">
 <h2>connector register/unregister fixes<a class="headerlink" href="#connector-register-unregister-fixes" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
@@ -464,6 +467,16 @@ load/unload sequence into the driver’s probe function.</li>
 callbacks for all modern drivers.</li>
 </ul>
 <p>Contact: Daniel Vetter</p>
+<p>Level: Intermediate</p>
+</div>
+<div class="section" id="replace-drm-detect-hdmi-monitor-with-drm-display-info-is-hdmi">
+<h2>Replace drm_detect_hdmi_monitor() with drm_display_info.is_hdmi<a class="headerlink" href="#replace-drm-detect-hdmi-monitor-with-drm-display-info-is-hdmi" title="Permalink to this headline">¶</a></h2>
+<p>Once EDID is parsed, the monitor HDMI support information is available through
+drm_display_info.is_hdmi. Many drivers still call <a class="reference internal" href="drm-kms-helpers.html#c.drm_detect_hdmi_monitor" title="drm_detect_hdmi_monitor"><code class="xref c c-func docutils literal notranslate"><span class="pre">drm_detect_hdmi_monitor()</span></code></a> to
+retrieve the same information, which is less efficient.</p>
+<p>Audit each individual driver calling <a class="reference internal" href="drm-kms-helpers.html#c.drm_detect_hdmi_monitor" title="drm_detect_hdmi_monitor"><code class="xref c c-func docutils literal notranslate"><span class="pre">drm_detect_hdmi_monitor()</span></code></a> and switch to
+drm_display_info.is_hdmi if applicable.</p>
+<p>Contact: Laurent Pinchart, respective driver maintainers</p>
 <p>Level: Intermediate</p>
 <div class="section" id="core-refactorings">
 <h3>Core refactorings<a class="headerlink" href="#core-refactorings" title="Permalink to this headline">¶</a></h3>

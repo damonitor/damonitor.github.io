@@ -68,7 +68,7 @@
             
             
               <div class="version">
-                5.6.0
+                5.7.0
               </div>
             
           
@@ -220,9 +220,12 @@ phylib to the sfp/phylink support.  Please send patches to improve
 this documentation.</p>
 <ol class="arabic">
 <li><p class="first">Optionally split the network driver’s phylib update function into
-three parts dealing with link-down, link-up and reconfiguring the
-MAC settings. This can be done as a separate preparation commit.</p>
-<p>An example of this preparation can be found in git commit fc548b991fb0.</p>
+two parts dealing with link-down and link-up. This can be done as
+a separate preparation commit.</p>
+<p>An older example of this preparation can be found in git commit
+fc548b991fb0, although this was splitting into three parts; the
+link-up part now includes configuring the MAC for the link settings.
+Please see <a class="reference internal" href="kapi.html#c.mac_link_up" title="mac_link_up"><code class="xref c c-func docutils literal notranslate"><span class="pre">mac_link_up()</span></code></a> for more information on this.</p>
 </li>
 <li><p class="first">Replace:</p>
 <div class="highlight-none notranslate"><div class="highlight"><pre><span></span>select FIXED_PHY
@@ -288,31 +291,31 @@ except if these are called from the driver suspend/resume paths.</p>
 </li>
 <li><p class="first">Add/replace ksettings get/set methods with:</p>
 <div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="k">static</span> <span class="kt">int</span> <span class="nf">foo_ethtool_set_link_ksettings</span><span class="p">(</span><span class="k">struct</span> <span class="n">net_device</span> <span class="o">*</span><span class="n">dev</span><span class="p">,</span>
-                                         <span class="k">const</span> <span class="k">struct</span> <span class="n">ethtool_link_ksettings</span> <span class="o">*</span><span class="n">cmd</span><span class="p">)</span>
+                                          <span class="k">const</span> <span class="k">struct</span> <span class="n">ethtool_link_ksettings</span> <span class="o">*</span><span class="n">cmd</span><span class="p">)</span>
 <span class="p">{</span>
-    <span class="k">struct</span> <span class="n">foo_priv</span> <span class="o">*</span><span class="n">priv</span> <span class="o">=</span> <span class="n">netdev_priv</span><span class="p">(</span><span class="n">dev</span><span class="p">);</span>
+        <span class="k">struct</span> <span class="n">foo_priv</span> <span class="o">*</span><span class="n">priv</span> <span class="o">=</span> <span class="n">netdev_priv</span><span class="p">(</span><span class="n">dev</span><span class="p">);</span>
 
-    <span class="k">return</span> <span class="n">phylink_ethtool_ksettings_set</span><span class="p">(</span><span class="n">priv</span><span class="o">-&gt;</span><span class="n">phylink</span><span class="p">,</span> <span class="n">cmd</span><span class="p">);</span>
+        <span class="k">return</span> <span class="n">phylink_ethtool_ksettings_set</span><span class="p">(</span><span class="n">priv</span><span class="o">-&gt;</span><span class="n">phylink</span><span class="p">,</span> <span class="n">cmd</span><span class="p">);</span>
 <span class="p">}</span>
 
 <span class="k">static</span> <span class="kt">int</span> <span class="nf">foo_ethtool_get_link_ksettings</span><span class="p">(</span><span class="k">struct</span> <span class="n">net_device</span> <span class="o">*</span><span class="n">dev</span><span class="p">,</span>
-                                         <span class="k">struct</span> <span class="n">ethtool_link_ksettings</span> <span class="o">*</span><span class="n">cmd</span><span class="p">)</span>
+                                          <span class="k">struct</span> <span class="n">ethtool_link_ksettings</span> <span class="o">*</span><span class="n">cmd</span><span class="p">)</span>
 <span class="p">{</span>
-    <span class="k">struct</span> <span class="n">foo_priv</span> <span class="o">*</span><span class="n">priv</span> <span class="o">=</span> <span class="n">netdev_priv</span><span class="p">(</span><span class="n">dev</span><span class="p">);</span>
+        <span class="k">struct</span> <span class="n">foo_priv</span> <span class="o">*</span><span class="n">priv</span> <span class="o">=</span> <span class="n">netdev_priv</span><span class="p">(</span><span class="n">dev</span><span class="p">);</span>
 
-    <span class="k">return</span> <span class="n">phylink_ethtool_ksettings_get</span><span class="p">(</span><span class="n">priv</span><span class="o">-&gt;</span><span class="n">phylink</span><span class="p">,</span> <span class="n">cmd</span><span class="p">);</span>
+        <span class="k">return</span> <span class="n">phylink_ethtool_ksettings_get</span><span class="p">(</span><span class="n">priv</span><span class="o">-&gt;</span><span class="n">phylink</span><span class="p">,</span> <span class="n">cmd</span><span class="p">);</span>
 <span class="p">}</span>
 </pre></div>
 </div>
 </li>
 <li><p class="first">Replace the call to:</p>
-<blockquote>
-<div><p>phy_dev = of_phy_connect(dev, node, link_func, flags, phy_interface);</p>
-</div></blockquote>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>phy_dev = of_phy_connect(dev, node, link_func, flags, phy_interface);
+</pre></div>
+</div>
 <p>and associated code with a call to:</p>
-<blockquote>
-<div><p>err = phylink_of_phy_connect(priv-&gt;phylink, node, flags);</p>
-</div></blockquote>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>err = phylink_of_phy_connect(priv-&gt;phylink, node, flags);
+</pre></div>
+</div>
 <p>For the most part, <code class="docutils literal notranslate"><span class="pre">flags</span></code> can be zero; these flags are passed to
 the of_phy_attach() inside this function call if a PHY is specified
 in the DT node <code class="docutils literal notranslate"><span class="pre">node</span></code>.</p>
@@ -351,6 +354,13 @@ used. For an example, see drivers/net/ethernet/marvell/mvneta.c.</p>
 from the MAC, and report back the settings that the MAC is currently
 using. This is particularly important for in-band negotiation
 methods such as 1000base-X and SGMII.</p>
+<p>The <a class="reference internal" href="kapi.html#c.mac_link_up" title="mac_link_up"><code class="xref c c-func docutils literal notranslate"><span class="pre">mac_link_up()</span></code></a> method is used to inform the MAC that the
+link has come up. The call includes the negotiation mode and interface
+for reference only. The finalised link parameters are also supplied
+(speed, duplex and flow control/pause enablement settings) which
+should be used to configure the MAC when the MAC and PCS are not
+tightly integrated, or when the settings are not coming from in-band
+negotiation.</p>
 <p>The <a class="reference internal" href="kapi.html#c.mac_config" title="mac_config"><code class="xref c c-func docutils literal notranslate"><span class="pre">mac_config()</span></code></a> method is used to update the MAC with the
 requested state, and must avoid unnecessarily taking the link down
 when making changes to the MAC configuration.  This means the

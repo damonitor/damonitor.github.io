@@ -68,7 +68,7 @@
             
             
               <div class="version">
-                5.6.0
+                5.7.0
               </div>
             
           
@@ -953,20 +953,45 @@ void <code class="descname">amdgpu_bo_fence</code><span class="sig-paren">(</spa
 <dd>true if fence should be added shared</dd>
 </dl>
 <dl class="function">
-<dt id="c.amdgpu_bo_sync_wait">
-int <code class="descname">amdgpu_bo_sync_wait</code><span class="sig-paren">(</span>struct amdgpu_bo *<em>&nbsp;bo</em>, void *<em>&nbsp;owner</em>, bool<em>&nbsp;intr</em><span class="sig-paren">)</span><a class="headerlink" href="#c.amdgpu_bo_sync_wait" title="Permalink to this definition">¶</a></dt>
+<dt id="c.amdgpu_bo_sync_wait_resv">
+int <code class="descname">amdgpu_bo_sync_wait_resv</code><span class="sig-paren">(</span>struct amdgpu_device *<em>&nbsp;adev</em>, struct <a class="reference internal" href="../driver-api/dma-buf.html#c.dma_resv" title="dma_resv">dma_resv</a> *<em>&nbsp;resv</em>, enum amdgpu_sync_mode<em>&nbsp;sync_mode</em>, void *<em>&nbsp;owner</em>, bool<em>&nbsp;intr</em><span class="sig-paren">)</span><a class="headerlink" href="#c.amdgpu_bo_sync_wait_resv" title="Permalink to this definition">¶</a></dt>
 <dd><p>Wait for BO reservation fences</p>
 </dd></dl>
 
 <p><strong>Parameters</strong></p>
 <dl class="docutils">
-<dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">amdgpu_bo</span> <span class="pre">*</span> <span class="pre">bo</span></code></dt>
-<dd>buffer object</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">amdgpu_device</span> <span class="pre">*</span> <span class="pre">adev</span></code></dt>
+<dd>amdgpu device pointer</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">dma_resv</span> <span class="pre">*</span> <span class="pre">resv</span></code></dt>
+<dd>reservation object to sync to</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">enum</span> <span class="pre">amdgpu_sync_mode</span> <span class="pre">sync_mode</span></code></dt>
+<dd>synchronization mode</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">void</span> <span class="pre">*</span> <span class="pre">owner</span></code></dt>
 <dd>fence owner</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">bool</span> <span class="pre">intr</span></code></dt>
 <dd>Whether the wait is interruptible</dd>
 </dl>
+<p><strong>Description</strong></p>
+<p>Extract the fences from the reservation object and waits for them to finish.</p>
+<p><strong>Return</strong></p>
+<p>0 on success, errno otherwise.</p>
+<dl class="function">
+<dt id="c.amdgpu_bo_sync_wait">
+int <code class="descname">amdgpu_bo_sync_wait</code><span class="sig-paren">(</span>struct amdgpu_bo *<em>&nbsp;bo</em>, void *<em>&nbsp;owner</em>, bool<em>&nbsp;intr</em><span class="sig-paren">)</span><a class="headerlink" href="#c.amdgpu_bo_sync_wait" title="Permalink to this definition">¶</a></dt>
+<dd><p>Wrapper for amdgpu_bo_sync_wait_resv</p>
+</dd></dl>
+
+<p><strong>Parameters</strong></p>
+<dl class="docutils">
+<dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">amdgpu_bo</span> <span class="pre">*</span> <span class="pre">bo</span></code></dt>
+<dd>buffer object to wait for</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">void</span> <span class="pre">*</span> <span class="pre">owner</span></code></dt>
+<dd>fence owner</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">bool</span> <span class="pre">intr</span></code></dt>
+<dd>Whether the wait is interruptible</dd>
+</dl>
+<p><strong>Description</strong></p>
+<p>Wrapper to wait for fences in a BO.</p>
 <p><strong>Return</strong></p>
 <p>0 on success, errno otherwise.</p>
 <dl class="function">
@@ -1084,6 +1109,32 @@ void <code class="descname">amdgpu_dma_buf_detach</code><span class="sig-paren">
 <p><strong>Description</strong></p>
 <p>Called when an attachment is removed from the DMA-buf.</p>
 <dl class="function">
+<dt id="c.amdgpu_dma_buf_pin">
+int <code class="descname">amdgpu_dma_buf_pin</code><span class="sig-paren">(</span>struct <a class="reference internal" href="../driver-api/dma-buf.html#c.dma_buf_attachment" title="dma_buf_attachment">dma_buf_attachment</a> *<em>&nbsp;attach</em><span class="sig-paren">)</span><a class="headerlink" href="#c.amdgpu_dma_buf_pin" title="Permalink to this definition">¶</a></dt>
+<dd><p><a class="reference internal" href="../driver-api/dma-buf.html#c.dma_buf_ops" title="dma_buf_ops"><code class="xref c c-type docutils literal notranslate"><span class="pre">dma_buf_ops.pin</span></code></a> implementation</p>
+</dd></dl>
+
+<p><strong>Parameters</strong></p>
+<dl class="docutils">
+<dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">dma_buf_attachment</span> <span class="pre">*</span> <span class="pre">attach</span></code></dt>
+<dd>attachment to pin down</dd>
+</dl>
+<p><strong>Description</strong></p>
+<p>Pin the BO which is backing the DMA-buf so that it can’t move any more.</p>
+<dl class="function">
+<dt id="c.amdgpu_dma_buf_unpin">
+void <code class="descname">amdgpu_dma_buf_unpin</code><span class="sig-paren">(</span>struct <a class="reference internal" href="../driver-api/dma-buf.html#c.dma_buf_attachment" title="dma_buf_attachment">dma_buf_attachment</a> *<em>&nbsp;attach</em><span class="sig-paren">)</span><a class="headerlink" href="#c.amdgpu_dma_buf_unpin" title="Permalink to this definition">¶</a></dt>
+<dd><p><a class="reference internal" href="../driver-api/dma-buf.html#c.dma_buf_ops" title="dma_buf_ops"><code class="xref c c-type docutils literal notranslate"><span class="pre">dma_buf_ops.unpin</span></code></a> implementation</p>
+</dd></dl>
+
+<p><strong>Parameters</strong></p>
+<dl class="docutils">
+<dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">dma_buf_attachment</span> <span class="pre">*</span> <span class="pre">attach</span></code></dt>
+<dd>attachment to unpin</dd>
+</dl>
+<p><strong>Description</strong></p>
+<p>Unpin a previously pinned BO to make it movable again.</p>
+<dl class="function">
 <dt id="c.amdgpu_dma_buf_map">
 struct sg_table * <code class="descname">amdgpu_dma_buf_map</code><span class="sig-paren">(</span>struct <a class="reference internal" href="../driver-api/dma-buf.html#c.dma_buf_attachment" title="dma_buf_attachment">dma_buf_attachment</a> *<em>&nbsp;attach</em>, enum dma_data_direction<em>&nbsp;dir</em><span class="sig-paren">)</span><a class="headerlink" href="#c.amdgpu_dma_buf_map" title="Permalink to this definition">¶</a></dt>
 <dd><p><a class="reference internal" href="../driver-api/dma-buf.html#c.dma_buf_ops" title="dma_buf_ops"><code class="xref c c-type docutils literal notranslate"><span class="pre">dma_buf_ops.map_dma_buf</span></code></a> implementation</p>
@@ -1175,6 +1226,20 @@ struct <a class="reference internal" href="drm-mm.html#c.drm_gem_object" title="
 <p><strong>Return</strong></p>
 <p>A new GEM BO of the given DRM device, representing the memory
 described by the given DMA-buf attachment and scatter/gather table.</p>
+<dl class="function">
+<dt id="c.amdgpu_dma_buf_move_notify">
+void <code class="descname">amdgpu_dma_buf_move_notify</code><span class="sig-paren">(</span>struct <a class="reference internal" href="../driver-api/dma-buf.html#c.dma_buf_attachment" title="dma_buf_attachment">dma_buf_attachment</a> *<em>&nbsp;attach</em><span class="sig-paren">)</span><a class="headerlink" href="#c.amdgpu_dma_buf_move_notify" title="Permalink to this definition">¶</a></dt>
+<dd><p><code class="xref c c-type docutils literal notranslate"><span class="pre">attach.move_notify</span></code> implementation</p>
+</dd></dl>
+
+<p><strong>Parameters</strong></p>
+<dl class="docutils">
+<dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">dma_buf_attachment</span> <span class="pre">*</span> <span class="pre">attach</span></code></dt>
+<dd>the DMA-buf attachment</dd>
+</dl>
+<p><strong>Description</strong></p>
+<p>Invalidate the DMA-buf attachment, making sure that the we re-create the
+mapping before the next use.</p>
 <dl class="function">
 <dt id="c.amdgpu_gem_prime_import">
 struct <a class="reference internal" href="drm-mm.html#c.drm_gem_object" title="drm_gem_object">drm_gem_object</a> * <code class="descname">amdgpu_gem_prime_import</code><span class="sig-paren">(</span>struct <a class="reference internal" href="drm-internals.html#c.drm_device" title="drm_device">drm_device</a> *<em>&nbsp;dev</em>, struct <a class="reference internal" href="../driver-api/dma-buf.html#c.dma_buf" title="dma_buf">dma_buf</a> *<em>&nbsp;dma_buf</em><span class="sig-paren">)</span><a class="headerlink" href="#c.amdgpu_gem_prime_import" title="Permalink to this definition">¶</a></dt>
@@ -1406,19 +1471,6 @@ void <code class="descname">amdgpu_vm_bo_evicted</code><span class="sig-paren">(
 <p>State for PDs/PTs and per VM BOs which are not at the location they should
 be.</p>
 <dl class="function">
-<dt id="c.amdgpu_vm_bo_relocated">
-void <code class="descname">amdgpu_vm_bo_relocated</code><span class="sig-paren">(</span>struct amdgpu_vm_bo_base *<em>&nbsp;vm_bo</em><span class="sig-paren">)</span><a class="headerlink" href="#c.amdgpu_vm_bo_relocated" title="Permalink to this definition">¶</a></dt>
-<dd><p>vm_bo is reloacted</p>
-</dd></dl>
-
-<p><strong>Parameters</strong></p>
-<dl class="docutils">
-<dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">amdgpu_vm_bo_base</span> <span class="pre">*</span> <span class="pre">vm_bo</span></code></dt>
-<dd>vm_bo which is relocated</dd>
-</dl>
-<p><strong>Description</strong></p>
-<p>State for PDs/PTs which needs to update their parent PD.</p>
-<dl class="function">
 <dt id="c.amdgpu_vm_bo_moved">
 void <code class="descname">amdgpu_vm_bo_moved</code><span class="sig-paren">(</span>struct amdgpu_vm_bo_base *<em>&nbsp;vm_bo</em><span class="sig-paren">)</span><a class="headerlink" href="#c.amdgpu_vm_bo_moved" title="Permalink to this definition">¶</a></dt>
 <dd><p>vm_bo is moved</p>
@@ -1460,6 +1512,20 @@ void <code class="descname">amdgpu_vm_bo_invalidated</code><span class="sig-pare
 <p><strong>Description</strong></p>
 <p>State for normal BOs which are invalidated and that change not yet reflected
 in the PTs.</p>
+<dl class="function">
+<dt id="c.amdgpu_vm_bo_relocated">
+void <code class="descname">amdgpu_vm_bo_relocated</code><span class="sig-paren">(</span>struct amdgpu_vm_bo_base *<em>&nbsp;vm_bo</em><span class="sig-paren">)</span><a class="headerlink" href="#c.amdgpu_vm_bo_relocated" title="Permalink to this definition">¶</a></dt>
+<dd><p>vm_bo is reloacted</p>
+</dd></dl>
+
+<p><strong>Parameters</strong></p>
+<dl class="docutils">
+<dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">amdgpu_vm_bo_base</span> <span class="pre">*</span> <span class="pre">vm_bo</span></code></dt>
+<dd>vm_bo which is relocated</dd>
+</dl>
+<p><strong>Description</strong></p>
+<p>State for PDs/PTs which needs to update their parent PD.
+For the root PD, just move to idle state.</p>
 <dl class="function">
 <dt id="c.amdgpu_vm_bo_done">
 void <code class="descname">amdgpu_vm_bo_done</code><span class="sig-paren">(</span>struct amdgpu_vm_bo_base *<em>&nbsp;vm_bo</em><span class="sig-paren">)</span><a class="headerlink" href="#c.amdgpu_vm_bo_done" title="Permalink to this definition">¶</a></dt>
@@ -1687,7 +1753,7 @@ void <code class="descname">amdgpu_vm_move_to_lru_tail</code><span class="sig-pa
 together.</p>
 <dl class="function">
 <dt id="c.amdgpu_vm_validate_pt_bos">
-int <code class="descname">amdgpu_vm_validate_pt_bos</code><span class="sig-paren">(</span>struct amdgpu_device *<em>&nbsp;adev</em>, struct amdgpu_vm *<em>&nbsp;vm</em>, int (*<a class="reference internal" href="../networking/kapi.html#c.validate" title="validate">validate</a>) (void<em>&nbsp;*p</em>, struct amdgpu_bo<em>&nbsp;*bo</em>, void *<em>&nbsp;param</em><span class="sig-paren">)</span><a class="headerlink" href="#c.amdgpu_vm_validate_pt_bos" title="Permalink to this definition">¶</a></dt>
+int <code class="descname">amdgpu_vm_validate_pt_bos</code><span class="sig-paren">(</span>struct amdgpu_device *<em>&nbsp;adev</em>, struct amdgpu_vm *<em>&nbsp;vm</em>, int (<em>*validate</em>)(void *p, struct amdgpu_bo *bo), void *<em>&nbsp;param</em><span class="sig-paren">)</span><a class="headerlink" href="#c.amdgpu_vm_validate_pt_bos" title="Permalink to this definition">¶</a></dt>
 <dd><p>validate the page table BOs</p>
 </dd></dl>
 
@@ -1993,7 +2059,7 @@ int <code class="descname">amdgpu_vm_update_ptes</code><span class="sig-paren">(
 <p>0 for success, -EINVAL for failure.</p>
 <dl class="function">
 <dt id="c.amdgpu_vm_bo_update_mapping">
-int <code class="descname">amdgpu_vm_bo_update_mapping</code><span class="sig-paren">(</span>struct amdgpu_device *<em>&nbsp;adev</em>, struct amdgpu_vm *<em>&nbsp;vm</em>, bool<em>&nbsp;direct</em>, struct <a class="reference internal" href="../driver-api/dma-buf.html#c.dma_fence" title="dma_fence">dma_fence</a> *<em>&nbsp;exclusive</em>, uint64_t<em>&nbsp;start</em>, uint64_t<em>&nbsp;last</em>, uint64_t<em>&nbsp;flags</em>, uint64_t<em>&nbsp;addr</em>, dma_addr_t *<em>&nbsp;pages_addr</em>, struct <a class="reference internal" href="../driver-api/dma-buf.html#c.dma_fence" title="dma_fence">dma_fence</a> **<em>&nbsp;fence</em><span class="sig-paren">)</span><a class="headerlink" href="#c.amdgpu_vm_bo_update_mapping" title="Permalink to this definition">¶</a></dt>
+int <code class="descname">amdgpu_vm_bo_update_mapping</code><span class="sig-paren">(</span>struct amdgpu_device *<em>&nbsp;adev</em>, struct amdgpu_vm *<em>&nbsp;vm</em>, bool<em>&nbsp;direct</em>, struct <a class="reference internal" href="../driver-api/dma-buf.html#c.dma_resv" title="dma_resv">dma_resv</a> *<em>&nbsp;resv</em>, uint64_t<em>&nbsp;start</em>, uint64_t<em>&nbsp;last</em>, uint64_t<em>&nbsp;flags</em>, uint64_t<em>&nbsp;addr</em>, dma_addr_t *<em>&nbsp;pages_addr</em>, struct <a class="reference internal" href="../driver-api/dma-buf.html#c.dma_fence" title="dma_fence">dma_fence</a> **<em>&nbsp;fence</em><span class="sig-paren">)</span><a class="headerlink" href="#c.amdgpu_vm_bo_update_mapping" title="Permalink to this definition">¶</a></dt>
 <dd><p>update a mapping in the vm page table</p>
 </dd></dl>
 
@@ -2005,8 +2071,8 @@ int <code class="descname">amdgpu_vm_bo_update_mapping</code><span class="sig-pa
 <dd>requested vm</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">bool</span> <span class="pre">direct</span></code></dt>
 <dd>direct submission in a page fault</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">dma_fence</span> <span class="pre">*</span> <span class="pre">exclusive</span></code></dt>
-<dd>fence we need to sync to</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">dma_resv</span> <span class="pre">*</span> <span class="pre">resv</span></code></dt>
+<dd>fences we need to sync to</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">uint64_t</span> <span class="pre">start</span></code></dt>
 <dd>start of mapped range</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">uint64_t</span> <span class="pre">last</span></code></dt>
@@ -2026,7 +2092,7 @@ int <code class="descname">amdgpu_vm_bo_update_mapping</code><span class="sig-pa
 <p>0 for success, -EINVAL for failure.</p>
 <dl class="function">
 <dt id="c.amdgpu_vm_bo_split_mapping">
-int <code class="descname">amdgpu_vm_bo_split_mapping</code><span class="sig-paren">(</span>struct amdgpu_device *<em>&nbsp;adev</em>, struct <a class="reference internal" href="../driver-api/dma-buf.html#c.dma_fence" title="dma_fence">dma_fence</a> *<em>&nbsp;exclusive</em>, dma_addr_t *<em>&nbsp;pages_addr</em>, struct amdgpu_vm *<em>&nbsp;vm</em>, struct amdgpu_bo_va_mapping *<em>&nbsp;mapping</em>, uint64_t<em>&nbsp;flags</em>, struct amdgpu_device *<em>&nbsp;bo_adev</em>, struct <a class="reference internal" href="drm-mm.html#c.drm_mm_node" title="drm_mm_node">drm_mm_node</a> *<em>&nbsp;nodes</em>, struct <a class="reference internal" href="../driver-api/dma-buf.html#c.dma_fence" title="dma_fence">dma_fence</a> **<em>&nbsp;fence</em><span class="sig-paren">)</span><a class="headerlink" href="#c.amdgpu_vm_bo_split_mapping" title="Permalink to this definition">¶</a></dt>
+int <code class="descname">amdgpu_vm_bo_split_mapping</code><span class="sig-paren">(</span>struct amdgpu_device *<em>&nbsp;adev</em>, struct <a class="reference internal" href="../driver-api/dma-buf.html#c.dma_resv" title="dma_resv">dma_resv</a> *<em>&nbsp;resv</em>, dma_addr_t *<em>&nbsp;pages_addr</em>, struct amdgpu_vm *<em>&nbsp;vm</em>, struct amdgpu_bo_va_mapping *<em>&nbsp;mapping</em>, uint64_t<em>&nbsp;flags</em>, struct amdgpu_device *<em>&nbsp;bo_adev</em>, struct <a class="reference internal" href="drm-mm.html#c.drm_mm_node" title="drm_mm_node">drm_mm_node</a> *<em>&nbsp;nodes</em>, struct <a class="reference internal" href="../driver-api/dma-buf.html#c.dma_fence" title="dma_fence">dma_fence</a> **<em>&nbsp;fence</em><span class="sig-paren">)</span><a class="headerlink" href="#c.amdgpu_vm_bo_split_mapping" title="Permalink to this definition">¶</a></dt>
 <dd><p>split a mapping into smaller chunks</p>
 </dd></dl>
 
@@ -2034,8 +2100,8 @@ int <code class="descname">amdgpu_vm_bo_split_mapping</code><span class="sig-par
 <dl class="docutils">
 <dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">amdgpu_device</span> <span class="pre">*</span> <span class="pre">adev</span></code></dt>
 <dd>amdgpu_device pointer</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">dma_fence</span> <span class="pre">*</span> <span class="pre">exclusive</span></code></dt>
-<dd>fence we need to sync to</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">dma_resv</span> <span class="pre">*</span> <span class="pre">resv</span></code></dt>
+<dd>fences we need to sync to</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">dma_addr_t</span> <span class="pre">*</span> <span class="pre">pages_addr</span></code></dt>
 <dd>DMA addresses to use for mapping</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">amdgpu_vm</span> <span class="pre">*</span> <span class="pre">vm</span></code></dt>

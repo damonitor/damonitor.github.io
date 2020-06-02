@@ -68,7 +68,7 @@
             
             
               <div class="version">
-                5.6.0
+                5.7.0
               </div>
             
           
@@ -301,14 +301,12 @@ update action to the range (mark range read only, or fully unmap, etc.). The
 device must complete the update before the driver callback returns.</p>
 <p>When the device driver wants to populate a range of virtual addresses, it can
 use:</p>
-<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>long hmm_range_fault(struct hmm_range *range, unsigned int flags);
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>long hmm_range_fault(struct hmm_range *range);
 </pre></div>
 </div>
-<p>With the HMM_RANGE_SNAPSHOT flag, it will only fetch present CPU page table
-entries and will not trigger a page fault on missing or non-present entries.
-Without that flag, it does trigger a page fault on missing or read-only entries
-if write access is requested (see below). Page faults use the generic mm page
-fault code path just like a CPU page fault.</p>
+<p>It will trigger a page fault on missing or read-only entries if write access is
+requested (see below). Page faults use the generic mm page fault code path just
+like a CPU page fault.</p>
 <p>Both functions copy CPU page table entries into their pfns array argument. Each
 entry in that array corresponds to an address in the virtual range. HMM
 provides a set of flags to help the driver identify special CPU page table
@@ -335,7 +333,7 @@ The usage pattern is:</p>
 again:
      range.notifier_seq = mmu_interval_read_begin(&amp;interval_sub);
      down_read(&amp;mm-&gt;mmap_sem);
-     ret = hmm_range_fault(&amp;range, HMM_RANGE_SNAPSHOT);
+     ret = hmm_range_fault(&amp;range);
      if (ret) {
          up_read(&amp;mm-&gt;mmap_sem);
          if (ret == -EBUSY)

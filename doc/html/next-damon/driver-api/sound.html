@@ -68,7 +68,7 @@
             
             
               <div class="version">
-                5.6.0
+                5.7.0
               </div>
             
           
@@ -948,6 +948,17 @@ u64 <code class="descname">pcm_format_to_bits</code><span class="sig-paren">(</s
 <dd>PCM format</dd>
 </dl>
 <dl class="function">
+<dt id="c.pcm_for_each_format">
+<code class="descname">pcm_for_each_format</code><span class="sig-paren">(</span><em>f</em><span class="sig-paren">)</span><a class="headerlink" href="#c.pcm_for_each_format" title="Permalink to this definition">¶</a></dt>
+<dd><p>helper to iterate for each format type</p>
+</dd></dl>
+
+<p><strong>Parameters</strong></p>
+<dl class="docutils">
+<dt><code class="docutils literal notranslate"><span class="pre">f</span></code></dt>
+<dd>the iterator variable in snd_pcm_format_t type</dd>
+</dl>
+<dl class="function">
 <dt id="c.snd_pcm_format_name">
 const char * <code class="descname">snd_pcm_format_name</code><span class="sig-paren">(</span>snd_pcm_format_t<em>&nbsp;format</em><span class="sig-paren">)</span><a class="headerlink" href="#c.snd_pcm_format_name" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return a name string for the given PCM format</p>
@@ -1139,6 +1150,24 @@ invocation of <a class="reference internal" href="../sound/kernel-api/alsa-drive
 <p>Zero if successful, or a negative error code on failure or if the
 device not found.</p>
 <dl class="function">
+<dt id="c.snd_device_get_state">
+int <code class="descname">snd_device_get_state</code><span class="sig-paren">(</span>struct snd_card *<em>&nbsp;card</em>, void *<em>&nbsp;device_data</em><span class="sig-paren">)</span><a class="headerlink" href="#c.snd_device_get_state" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the current state of the given device</p>
+</dd></dl>
+
+<p><strong>Parameters</strong></p>
+<dl class="docutils">
+<dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">snd_card</span> <span class="pre">*</span> <span class="pre">card</span></code></dt>
+<dd>the card instance</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">void</span> <span class="pre">*</span> <span class="pre">device_data</span></code></dt>
+<dd>the data pointer to release</dd>
+</dl>
+<p><strong>Description</strong></p>
+<p>Returns the current state of the given device object.  For the valid
+device, either <strong>SNDRV_DEV_BUILD</strong>, <strong>SNDRV_DEV_REGISTERED</strong> or
+<strong>SNDRV_DEV_DISCONNECTED</strong> is returned.
+Or for a non-existing device, -1 is returned as an error.</p>
+<dl class="function">
 <dt id="c.snd_info_get_line">
 int <code class="descname">snd_info_get_line</code><span class="sig-paren">(</span>struct snd_info_buffer *<em>&nbsp;buffer</em>, char *<em>&nbsp;line</em>, int<em>&nbsp;len</em><span class="sig-paren">)</span><a class="headerlink" href="#c.snd_info_get_line" title="Permalink to this definition">¶</a></dt>
 <dd><p>read one line from the procfs buffer</p>
@@ -1247,7 +1276,7 @@ The all children entries are registered recursively.</p>
 <p>Zero if successful, or a negative error code on failure.</p>
 <dl class="function">
 <dt id="c.snd_card_rw_proc_new">
-int <code class="descname">snd_card_rw_proc_new</code><span class="sig-paren">(</span>struct snd_card *<em>&nbsp;card</em>, const char *<em>&nbsp;name</em>, void *<em>&nbsp;private_data</em>, void (*read) (struct snd_info_entry<em>&nbsp;*</em>, struct snd_info_buffer<em>&nbsp;*</em>, void (*<a class="reference internal" href="../media/uapi/dvb/video-fwrite.html#c.write" title="write">write</a>) (struct snd_info_entry<em>&nbsp;*entry</em>, struct snd_info_buffer<em>&nbsp;*buffer</em><span class="sig-paren">)</span><a class="headerlink" href="#c.snd_card_rw_proc_new" title="Permalink to this definition">¶</a></dt>
+int <code class="descname">snd_card_rw_proc_new</code><span class="sig-paren">(</span>struct snd_card *<em>&nbsp;card</em>, const char *<em>&nbsp;name</em>, void *<em>&nbsp;private_data</em>, void (<em>*read</em>)(struct snd_info_entry *, struct snd_info_buffer *), void (*<a class="reference internal" href="../media/uapi/dvb/video-fwrite.html#c.write" title="write">write</a>) (struct snd_info_entry *entry, struct snd_info_buffer *buffer)<span class="sig-paren">)</span><a class="headerlink" href="#c.snd_card_rw_proc_new" title="Permalink to this definition">¶</a></dt>
 <dd><p>Create a read/write text proc file entry for the card</p>
 </dd></dl>
 

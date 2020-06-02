@@ -68,7 +68,7 @@
             
             
               <div class="version">
-                5.6.0
+                5.7.0
               </div>
             
           
@@ -261,7 +261,10 @@ huge pages although processes will also directly compact memory as required.</p>
 allowed to examine the unevictable lru (mlocked pages) for pages to compact.
 This should be used on systems where stalls for minor page faults are an
 acceptable trade for large contiguous free memory.  Set to 0 to prevent
-compaction from moving pages that are unevictable.  Default value is 1.</p>
+compaction from moving pages that are unevictable.  Default value is 1.
+On CONFIG_PREEMPT_RT the default value is 0 in order to avoid a page fault, due
+to compaction, which would block the task from becomming active until the fault
+is resolved.</p>
 </div>
 <div class="section" id="dirty-background-bytes">
 <h2>dirty_background_bytes<a class="headerlink" href="#dirty-background-bytes" title="Permalink to this headline">¶</a></h2>

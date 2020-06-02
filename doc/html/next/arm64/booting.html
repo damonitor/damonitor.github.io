@@ -68,7 +68,7 @@
             
             
               <div class="version">
-                5.6.0
+                5.7.0
               </div>
             
           
@@ -418,6 +418,23 @@ compatibility (v2) mode:</p>
 <li>HCR_EL2.API (bit 41) must be initialised to 0b1</li>
 </ul>
 </li>
+</ul>
+<p>For CPUs with Activity Monitors Unit v1 (AMUv1) extension present:
+- If EL3 is present:</p>
+<blockquote>
+<div><p>CPTR_EL3.TAM (bit 30) must be initialised to 0b0
+CPTR_EL2.TAM (bit 30) must be initialised to 0b0
+AMCNTENSET0_EL0 must be initialised to 0b1111
+AMCNTENSET1_EL0 must be initialised to a platform specific value
+having 0b1 set for the corresponding bit for each of the auxiliary
+counters present.</p>
+</div></blockquote>
+<ul class="simple">
+<li>If the kernel is entered at EL1:
+AMCNTENSET0_EL0 must be initialised to 0b1111
+AMCNTENSET1_EL0 must be initialised to a platform specific value
+having 0b1 set for the corresponding bit for each of the auxiliary
+counters present.</li>
 </ul>
 </li>
 </ul>

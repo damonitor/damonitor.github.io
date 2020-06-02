@@ -68,7 +68,7 @@
             
             
               <div class="version">
-                5.6.0
+                5.7.0
               </div>
             
           
@@ -476,11 +476,12 @@ set_ftrace_filter ‘ftrace filter commands’ (see the ‘Filter commands’
 section of Documentation/trace/ftrace.rst), but there are major
 differences and the implementation isn’t currently tied to it in any
 way, so beware about making generalizations between the two.</p>
-<dl class="docutils">
-<dt>Note: Writing into trace_marker (See Documentation/trace/ftrace.rst)</dt>
-<dd>can also enable triggers that are written into
-/sys/kernel/tracing/events/ftrace/print/trigger</dd>
-</dl>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">Writing into trace_marker (See Documentation/trace/ftrace.rst)
+can also enable triggers that are written into
+/sys/kernel/tracing/events/ftrace/print/trigger</p>
+</div>
 <div class="section" id="id1">
 <h3>6.1 Expression syntax<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h3>
 <p>Triggers are added by echoing the command to the ‘trigger’ file:</p>
@@ -689,28 +690,24 @@ In this method, the name of the event to create and an array defining
 the fields is supplied to synth_event_create().  If successful, a
 synthetic event with that name and fields will exist following that
 call.  For example, to create a new “schedtest” synthetic event:</p>
-<blockquote>
-<div><dl class="docutils">
-<dt>ret = synth_event_create(“schedtest”, sched_fields,</dt>
-<dd>ARRAY_SIZE(sched_fields), THIS_MODULE);</dd>
-</dl>
-</div></blockquote>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>ret = synth_event_create(&quot;schedtest&quot;, sched_fields,
+                         ARRAY_SIZE(sched_fields), THIS_MODULE);
+</pre></div>
+</div>
 <p>The sched_fields param in this example points to an array of struct
 synth_field_desc, each of which describes an event field by type and
 name:</p>
-<blockquote>
-<div><dl class="docutils">
-<dt>static struct synth_field_desc sched_fields[] = {</dt>
-<dd>{ .type = “pid_t”,              .name = “next_pid_field” },
-{ .type = “char[16]”,           .name = “next_comm_field” },
-{ .type = “u64”,                .name = “ts_ns” },
-{ .type = “u64”,                .name = “ts_ms” },
-{ .type = “unsigned int”,       .name = “cpu” },
-{ .type = “char[64]”,           .name = “my_string_field” },
-{ .type = “int”,                .name = “my_int_field” },</dd>
-</dl>
-<p>};</p>
-</div></blockquote>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>static struct synth_field_desc sched_fields[] = {
+      { .type = &quot;pid_t&quot;,              .name = &quot;next_pid_field&quot; },
+      { .type = &quot;char[16]&quot;,           .name = &quot;next_comm_field&quot; },
+      { .type = &quot;u64&quot;,                .name = &quot;ts_ns&quot; },
+      { .type = &quot;u64&quot;,                .name = &quot;ts_ms&quot; },
+      { .type = &quot;unsigned int&quot;,       .name = &quot;cpu&quot; },
+      { .type = &quot;char[64]&quot;,           .name = &quot;my_string_field&quot; },
+      { .type = &quot;int&quot;,                .name = &quot;my_int_field&quot; },
+};
+</pre></div>
+</div>
 <p>See synth_field_size() for available types. If field_name contains [n]
 the field is considered to be an array.</p>
 <p>If the event is created from within a module, a pointer to the module
@@ -734,48 +731,50 @@ synth_event_gen_cmd_array_start(), the user should create and
 initialize a dynevent_cmd object using synth_event_cmd_init().</p>
 <p>For example, to create a new “schedtest” synthetic event with two
 fields:</p>
-<blockquote>
-<div><p>struct dynevent_cmd cmd;
-char <a href="#id2"><span class="problematic" id="id3">*</span></a>buf;</p>
-<p>/* Create a buffer to hold the generated command <a href="#id4"><span class="problematic" id="id5">*</span></a>/
-buf = kzalloc(MAX_DYNEVENT_CMD_LEN, GFP_KERNEL);</p>
-<p>/* Before generating the command, initialize the cmd object <a href="#id6"><span class="problematic" id="id7">*</span></a>/
-synth_event_cmd_init(&amp;cmd, buf, MAX_DYNEVENT_CMD_LEN);</p>
-<dl class="docutils">
-<dt>ret = synth_event_gen_cmd_start(&amp;cmd, “schedtest”, THIS_MODULE,</dt>
-<dd>“pid_t”, “next_pid_field”,
-“u64”, “ts_ns”);</dd>
-</dl>
-</div></blockquote>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>struct dynevent_cmd cmd;
+char *buf;
+
+/* Create a buffer to hold the generated command */
+buf = kzalloc(MAX_DYNEVENT_CMD_LEN, GFP_KERNEL);
+
+/* Before generating the command, initialize the cmd object */
+synth_event_cmd_init(&amp;cmd, buf, MAX_DYNEVENT_CMD_LEN);
+
+ret = synth_event_gen_cmd_start(&amp;cmd, &quot;schedtest&quot;, THIS_MODULE,
+                                &quot;pid_t&quot;, &quot;next_pid_field&quot;,
+                                &quot;u64&quot;, &quot;ts_ns&quot;);
+</pre></div>
+</div>
 <p>Alternatively, using an array of struct synth_field_desc fields
 containing the same information:</p>
-<blockquote>
-<div><dl class="docutils">
-<dt>ret = synth_event_gen_cmd_array_start(&amp;cmd, “schedtest”, THIS_MODULE,</dt>
-<dd>fields, n_fields);</dd>
-</dl>
-</div></blockquote>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>ret = synth_event_gen_cmd_array_start(&amp;cmd, &quot;schedtest&quot;, THIS_MODULE,
+                                      fields, n_fields);
+</pre></div>
+</div>
 <p>Once the synthetic event object has been created, it can then be
 populated with more fields.  Fields are added one by one using
 synth_event_add_field(), supplying the dynevent_cmd object, a field
 type, and a field name.  For example, to add a new int field named
 “intfield”, the following call should be made:</p>
-<blockquote>
-<div>ret = synth_event_add_field(&amp;cmd, “int”, “intfield”);</div></blockquote>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>ret = synth_event_add_field(&amp;cmd, &quot;int&quot;, &quot;intfield&quot;);
+</pre></div>
+</div>
 <p>See synth_field_size() for available types. If field_name contains [n]
 the field is considered to be an array.</p>
 <p>A group of fields can also be added all at once using an array of
 synth_field_desc with add_synth_fields().  For example, this would add
 just the first four sched_fields:</p>
-<blockquote>
-<div>ret = synth_event_add_fields(&amp;cmd, sched_fields, 4);</div></blockquote>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>ret = synth_event_add_fields(&amp;cmd, sched_fields, 4);
+</pre></div>
+</div>
 <p>If you already have a string of the form ‘type field_name’,
 synth_event_add_field_str() can be used to add it as-is; it will
 also automatically append a ‘;’ to the string.</p>
 <p>Once all the fields have been added, the event should be finalized and
 registered by calling the synth_event_gen_cmd_end() function:</p>
-<blockquote>
-<div>ret = synth_event_gen_cmd_end(&amp;cmd);</div></blockquote>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>ret = synth_event_gen_cmd_end(&amp;cmd);
+</pre></div>
+</div>
 <p>At this point, the event object is ready to be used for tracing new
 events.</p>
 </div>
@@ -802,18 +801,16 @@ trace array)), along with an variable number of u64 args, one for each
 synthetic event field, and the number of values being passed.</p>
 <p>So, to trace an event corresponding to the synthetic event definition
 above, code like the following could be used:</p>
-<blockquote>
-<div><dl class="docutils">
-<dt>ret = synth_event_trace(create_synth_test, 7, /* number of values <a href="#id8"><span class="problematic" id="id9">*</span></a>/</dt>
-<dd>444,             /* next_pid_field <em>/
-(u64)”clackers”, /</em> next_comm_field <em>/
-1000000,         /</em> ts_ns <em>/
-1000,            /</em> ts_ms <em>/
-smp_processor_id(),/</em> cpu <em>/
-(u64)”Thneed”,   /</em> my_string_field <em>/
-999);            /</em> my_int_field <a href="#id10"><span class="problematic" id="id11">*</span></a>/</dd>
-</dl>
-</div></blockquote>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>ret = synth_event_trace(create_synth_test, 7, /* number of values */
+                        444,             /* next_pid_field */
+                        (u64)&quot;clackers&quot;, /* next_comm_field */
+                        1000000,         /* ts_ns */
+                        1000,            /* ts_ms */
+                        smp_processor_id(),/* cpu */
+                        (u64)&quot;Thneed&quot;,   /* my_string_field */
+                        999);            /* my_int_field */
+</pre></div>
+</div>
 <p>All vals should be cast to u64, and string vals are just pointers to
 strings, cast to u64.  Strings will be copied into space reserved in
 the event for the string, using these pointers.</p>
@@ -826,16 +823,17 @@ trace array)), along with an array of u64, one for each synthetic
 event field.</p>
 <p>To trace an event corresponding to the synthetic event definition
 above, code like the following could be used:</p>
-<blockquote>
-<div><p>u64 vals[7];</p>
-<p>vals[0] = 777;                  /* next_pid_field <em>/
-vals[1] = (u64)”tiddlywinks”;   /</em> next_comm_field <em>/
-vals[2] = 1000000;              /</em> ts_ns <em>/
-vals[3] = 1000;                 /</em> ts_ms <em>/
-vals[4] = smp_processor_id();   /</em> cpu <em>/
-vals[5] = (u64)”thneed”;        /</em> my_string_field <em>/
-vals[6] = 398;                  /</em> my_int_field <a href="#id12"><span class="problematic" id="id13">*</span></a>/</p>
-</div></blockquote>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>u64 vals[7];
+
+vals[0] = 777;                  /* next_pid_field */
+vals[1] = (u64)&quot;tiddlywinks&quot;;   /* next_comm_field */
+vals[2] = 1000000;              /* ts_ns */
+vals[3] = 1000;                 /* ts_ms */
+vals[4] = smp_processor_id();   /* cpu */
+vals[5] = (u64)&quot;thneed&quot;;        /* my_string_field */
+vals[6] = 398;                  /* my_int_field */
+</pre></div>
+</div>
 <p>The ‘vals’ array is just an array of u64, the number of which must
 match the number of field in the synthetic event, and which must be in
 the same order as the synthetic event fields.</p>
@@ -847,62 +845,54 @@ is needed.  The trace_get_event_file() function can be used to get
 it - it will find the file in the given trace instance (in this case
 NULL since the top trace array is being used) while at the same time
 preventing the instance containing it from going away:</p>
-<blockquote>
-<div><dl class="docutils">
-<dt>schedtest_event_file = trace_get_event_file(NULL, “synthetic”,</dt>
-<dd>“schedtest”);</dd>
-</dl>
-</div></blockquote>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>schedtest_event_file = trace_get_event_file(NULL, &quot;synthetic&quot;,
+                                            &quot;schedtest&quot;);
+</pre></div>
+</div>
 <p>Before tracing the event, it should be enabled in some way, otherwise
 the synthetic event won’t actually show up in the trace buffer.</p>
 <p>To enable a synthetic event from the kernel, trace_array_set_clr_event()
 can be used (which is not specific to synthetic events, so does need
 the “synthetic” system name to be specified explicitly).</p>
 <p>To enable the event, pass ‘true’ to it:</p>
-<blockquote>
-<div><dl class="docutils">
-<dt>trace_array_set_clr_event(schedtest_event_file-&gt;tr,</dt>
-<dd>“synthetic”, “schedtest”, true);</dd>
-</dl>
-</div></blockquote>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>trace_array_set_clr_event(schedtest_event_file-&gt;tr,
+                          &quot;synthetic&quot;, &quot;schedtest&quot;, true);
+</pre></div>
+</div>
 <p>To disable it pass false:</p>
-<blockquote>
-<div><dl class="docutils">
-<dt>trace_array_set_clr_event(schedtest_event_file-&gt;tr,</dt>
-<dd>“synthetic”, “schedtest”, false);</dd>
-</dl>
-</div></blockquote>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>trace_array_set_clr_event(schedtest_event_file-&gt;tr,
+                          &quot;synthetic&quot;, &quot;schedtest&quot;, false);
+</pre></div>
+</div>
 <p>Finally, synth_event_trace_array() can be used to actually trace the
 event, which should be visible in the trace buffer afterwards:</p>
-<blockquote>
-<div><dl class="docutils">
-<dt>ret = synth_event_trace_array(schedtest_event_file, vals,</dt>
-<dd>ARRAY_SIZE(vals));</dd>
-</dl>
-</div></blockquote>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>ret = synth_event_trace_array(schedtest_event_file, vals,
+                              ARRAY_SIZE(vals));
+</pre></div>
+</div>
 <p>To remove the synthetic event, the event should be disabled, and the
 trace instance should be ‘put’ back using trace_put_event_file():</p>
-<blockquote>
-<div><dl class="docutils">
-<dt>trace_array_set_clr_event(schedtest_event_file-&gt;tr,</dt>
-<dd>“synthetic”, “schedtest”, false);</dd>
-</dl>
-<p>trace_put_event_file(schedtest_event_file);</p>
-</div></blockquote>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>trace_array_set_clr_event(schedtest_event_file-&gt;tr,
+                          &quot;synthetic&quot;, &quot;schedtest&quot;, false);
+trace_put_event_file(schedtest_event_file);
+</pre></div>
+</div>
 <p>If those have been successful, synth_event_delete() can be called to
 remove the event:</p>
-<blockquote>
-<div>ret = synth_event_delete(“schedtest”);</div></blockquote>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>ret = synth_event_delete(&quot;schedtest&quot;);
+</pre></div>
+</div>
 </div>
 <div class="section" id="tracing-a-synthetic-event-piecewise">
 <h3>6.3.3.1 Tracing a synthetic event piecewise<a class="headerlink" href="#tracing-a-synthetic-event-piecewise" title="Permalink to this headline">¶</a></h3>
 <p>To trace a synthetic using the piecewise method described above, the
 synth_event_trace_start() function is used to ‘open’ the synthetic
 event trace:</p>
-<blockquote>
-<div><p>struct synth_trace_state trace_state;</p>
-<p>ret = synth_event_trace_start(schedtest_event_file, &amp;trace_state);</p>
-</div></blockquote>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>struct synth_trace_state trace_state;
+
+ret = synth_event_trace_start(schedtest_event_file, &amp;trace_state);
+</pre></div>
+</div>
 <p>It’s passed the trace_event_file representing the synthetic event
 using the same methods as described above, along with a pointer to a
 struct synth_trace_state object, which will be zeroed before use and
@@ -921,49 +911,54 @@ field is set, the ‘cursor’ points to the next field, which will be set
 by the subsequent call, continuing until all the fields have been set
 in order.  The same sequence of calls as in the above examples using
 this method would be (without error-handling code):</p>
-<blockquote>
-<div><p>/* next_pid_field <a href="#id14"><span class="problematic" id="id15">*</span></a>/
-ret = synth_event_add_next_val(777, &amp;trace_state);</p>
-<p>/* next_comm_field <a href="#id16"><span class="problematic" id="id17">*</span></a>/
-ret = synth_event_add_next_val((u64)”slinky”, &amp;trace_state);</p>
-<p>/* ts_ns <a href="#id18"><span class="problematic" id="id19">*</span></a>/
-ret = synth_event_add_next_val(1000000, &amp;trace_state);</p>
-<p>/* ts_ms <a href="#id20"><span class="problematic" id="id21">*</span></a>/
-ret = synth_event_add_next_val(1000, &amp;trace_state);</p>
-<p>/* cpu <a href="#id22"><span class="problematic" id="id23">*</span></a>/
-ret = synth_event_add_next_val(smp_processor_id(), &amp;trace_state);</p>
-<p>/* my_string_field <a href="#id24"><span class="problematic" id="id25">*</span></a>/
-ret = synth_event_add_next_val((u64)”thneed_2.01”, &amp;trace_state);</p>
-<p>/* my_int_field <a href="#id26"><span class="problematic" id="id27">*</span></a>/
-ret = synth_event_add_next_val(395, &amp;trace_state);</p>
-</div></blockquote>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>/* next_pid_field */
+ret = synth_event_add_next_val(777, &amp;trace_state);
+
+/* next_comm_field */
+ret = synth_event_add_next_val((u64)&quot;slinky&quot;, &amp;trace_state);
+
+/* ts_ns */
+ret = synth_event_add_next_val(1000000, &amp;trace_state);
+
+/* ts_ms */
+ret = synth_event_add_next_val(1000, &amp;trace_state);
+
+/* cpu */
+ret = synth_event_add_next_val(smp_processor_id(), &amp;trace_state);
+
+/* my_string_field */
+ret = synth_event_add_next_val((u64)&quot;thneed_2.01&quot;, &amp;trace_state);
+
+/* my_int_field */
+ret = synth_event_add_next_val(395, &amp;trace_state);
+</pre></div>
+</div>
 <p>To assign the values in any order, synth_event_add_val() should be
 used.  Each call is passed the same synth_trace_state object used in
 the synth_event_trace_start(), along with the field name of the field
 to set and the value to set it to.  The same sequence of calls as in
 the above examples using this method would be (without error-handling
 code):</p>
-<blockquote>
-<div><p>ret = synth_event_add_val(“next_pid_field”, 777, &amp;trace_state);
-ret = synth_event_add_val(“next_comm_field”, (u64)”silly putty”,</p>
-<blockquote>
-<div>&amp;trace_state);</div></blockquote>
-<p>ret = synth_event_add_val(“ts_ns”, 1000000, &amp;trace_state);
-ret = synth_event_add_val(“ts_ms”, 1000, &amp;trace_state);
-ret = synth_event_add_val(“cpu”, smp_processor_id(), &amp;trace_state);
-ret = synth_event_add_val(“my_string_field”, (u64)”thneed_9”,</p>
-<blockquote>
-<div>&amp;trace_state);</div></blockquote>
-<p>ret = synth_event_add_val(“my_int_field”, 3999, &amp;trace_state);</p>
-</div></blockquote>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>ret = synth_event_add_val(&quot;next_pid_field&quot;, 777, &amp;trace_state);
+ret = synth_event_add_val(&quot;next_comm_field&quot;, (u64)&quot;silly putty&quot;,
+                          &amp;trace_state);
+ret = synth_event_add_val(&quot;ts_ns&quot;, 1000000, &amp;trace_state);
+ret = synth_event_add_val(&quot;ts_ms&quot;, 1000, &amp;trace_state);
+ret = synth_event_add_val(&quot;cpu&quot;, smp_processor_id(), &amp;trace_state);
+ret = synth_event_add_val(&quot;my_string_field&quot;, (u64)&quot;thneed_9&quot;,
+                          &amp;trace_state);
+ret = synth_event_add_val(&quot;my_int_field&quot;, 3999, &amp;trace_state);
+</pre></div>
+</div>
 <p>Note that synth_event_add_next_val() and synth_event_add_val() are
 incompatible if used within the same trace of an event - either one
 can be used but not both at the same time.</p>
 <p>Finally, the event won’t be actually traced until it’s ‘closed’,
 which is done using synth_event_trace_end(), which takes only the
 struct synth_trace_state object used in the previous calls:</p>
-<blockquote>
-<div>ret = synth_event_trace_end(&amp;trace_state);</div></blockquote>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>ret = synth_event_trace_end(&amp;trace_state);
+</pre></div>
+</div>
 <p>Note that synth_event_trace_end() must be called at the end regardless
 of whether any of the add calls failed (say due to a bad field name
 being passed in).</p>
@@ -981,67 +976,66 @@ function.  Before calling kprobe_event_gen_cmd_start(), the user
 should create and initialize a dynevent_cmd object using
 kprobe_event_cmd_init().</p>
 <p>For example, to create a new “schedtest” kprobe event with two fields:</p>
-<blockquote>
-<div><p>struct dynevent_cmd cmd;
-char <a href="#id28"><span class="problematic" id="id29">*</span></a>buf;</p>
-<p>/* Create a buffer to hold the generated command <a href="#id30"><span class="problematic" id="id31">*</span></a>/
-buf = kzalloc(MAX_DYNEVENT_CMD_LEN, GFP_KERNEL);</p>
-<p>/* Before generating the command, initialize the cmd object <a href="#id32"><span class="problematic" id="id33">*</span></a>/
-kprobe_event_cmd_init(&amp;cmd, buf, MAX_DYNEVENT_CMD_LEN);</p>
-<dl class="docutils">
-<dt>/*</dt>
-<dd><ul class="first simple">
-<li>Define the gen_kprobe_test event with the first 2 kprobe</li>
-<li>fields.</li>
-</ul>
-<p class="last"><a href="#id34"><span class="problematic" id="id35">*</span></a>/</p>
-</dd>
-<dt>ret = kprobe_event_gen_cmd_start(&amp;cmd, “gen_kprobe_test”, “do_sys_open”,</dt>
-<dd>“dfd=%ax”, “filename=%dx”);</dd>
-</dl>
-</div></blockquote>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>struct dynevent_cmd cmd;
+char *buf;
+
+/* Create a buffer to hold the generated command */
+buf = kzalloc(MAX_DYNEVENT_CMD_LEN, GFP_KERNEL);
+
+/* Before generating the command, initialize the cmd object */
+kprobe_event_cmd_init(&amp;cmd, buf, MAX_DYNEVENT_CMD_LEN);
+
+/*
+ * Define the gen_kprobe_test event with the first 2 kprobe
+ * fields.
+ */
+ret = kprobe_event_gen_cmd_start(&amp;cmd, &quot;gen_kprobe_test&quot;, &quot;do_sys_open&quot;,
+                                 &quot;dfd=%ax&quot;, &quot;filename=%dx&quot;);
+</pre></div>
+</div>
 <p>Once the kprobe event object has been created, it can then be
 populated with more fields.  Fields can be added using
 kprobe_event_add_fields(), supplying the dynevent_cmd object along
 with a variable arg list of probe fields.  For example, to add a
 couple additional fields, the following call could be made:</p>
-<blockquote>
-<div>ret = kprobe_event_add_fields(&amp;cmd, “flags=%cx”, “mode=+4($stack)”);</div></blockquote>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>ret = kprobe_event_add_fields(&amp;cmd, &quot;flags=%cx&quot;, &quot;mode=+4($stack)&quot;);
+</pre></div>
+</div>
 <p>Once all the fields have been added, the event should be finalized and
 registered by calling the kprobe_event_gen_cmd_end() or
 kretprobe_event_gen_cmd_end() functions, depending on whether a kprobe
 or kretprobe command was started:</p>
-<blockquote>
-<div>ret = kprobe_event_gen_cmd_end(&amp;cmd);</div></blockquote>
-<p>or</p>
-<blockquote>
-<div>ret = kretprobe_event_gen_cmd_end(&amp;cmd);</div></blockquote>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>ret = kprobe_event_gen_cmd_end(&amp;cmd);
+</pre></div>
+</div>
+<p>or:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>ret = kretprobe_event_gen_cmd_end(&amp;cmd);
+</pre></div>
+</div>
 <p>At this point, the event object is ready to be used for tracing new
 events.</p>
 <p>Similarly, a kretprobe event can be created using
 kretprobe_event_gen_cmd_start() with a probe name and location and
 additional params such as $retval:</p>
-<blockquote>
-<div><dl class="docutils">
-<dt>ret = kretprobe_event_gen_cmd_start(&amp;cmd, “gen_kretprobe_test”,</dt>
-<dd>“do_sys_open”, “$retval”);</dd>
-</dl>
-</div></blockquote>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>ret = kretprobe_event_gen_cmd_start(&amp;cmd, &quot;gen_kretprobe_test&quot;,
+                                    &quot;do_sys_open&quot;, &quot;$retval&quot;);
+</pre></div>
+</div>
 <p>Similar to the synthetic event case, code like the following can be
 used to enable the newly created kprobe event:</p>
-<blockquote>
-<div><p>gen_kprobe_test = trace_get_event_file(NULL, “kprobes”, “gen_kprobe_test”);</p>
-<dl class="docutils">
-<dt>ret = trace_array_set_clr_event(gen_kprobe_test-&gt;tr,</dt>
-<dd>“kprobes”, “gen_kprobe_test”, true);</dd>
-</dl>
-</div></blockquote>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>gen_kprobe_test = trace_get_event_file(NULL, &quot;kprobes&quot;, &quot;gen_kprobe_test&quot;);
+
+ret = trace_array_set_clr_event(gen_kprobe_test-&gt;tr,
+                                &quot;kprobes&quot;, &quot;gen_kprobe_test&quot;, true);
+</pre></div>
+</div>
 <p>Finally, also similar to synthetic events, the following code can be
 used to give the kprobe event file back and delete the event:</p>
-<blockquote>
-<div><p>trace_put_event_file(gen_kprobe_test);</p>
-<p>ret = kprobe_event_delete(“gen_kprobe_test”);</p>
-</div></blockquote>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>trace_put_event_file(gen_kprobe_test);
+
+ret = kprobe_event_delete(&quot;gen_kprobe_test&quot;);
+</pre></div>
+</div>
 </div>
 <div class="section" id="the-dynevent-cmd-low-level-api">
 <h3>6.3.4 The “dynevent_cmd” low-level API<a class="headerlink" href="#the-dynevent-cmd-low-level-api" title="Permalink to this headline">¶</a></h3>
@@ -1063,16 +1057,16 @@ are described below.</p>
 <p>The first step in building a new command string is to create and
 initialize an instance of a dynevent_cmd.  Here, for instance, we
 create a dynevent_cmd on the stack and initialize it:</p>
-<blockquote>
-<div><p>struct dynevent_cmd cmd;
-char <a href="#id36"><span class="problematic" id="id37">*</span></a>buf;
-int ret;</p>
-<p>buf = kzalloc(MAX_DYNEVENT_CMD_LEN, GFP_KERNEL);</p>
-<dl class="docutils">
-<dt>dynevent_cmd_init(cmd, buf, maxlen, DYNEVENT_TYPE_FOO,</dt>
-<dd>foo_event_run_command);</dd>
-</dl>
-</div></blockquote>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>struct dynevent_cmd cmd;
+char *buf;
+int ret;
+
+buf = kzalloc(MAX_DYNEVENT_CMD_LEN, GFP_KERNEL);
+
+dynevent_cmd_init(cmd, buf, maxlen, DYNEVENT_TYPE_FOO,
+                  foo_event_run_command);
+</pre></div>
+</div>
 <p>The dynevent_cmd initialization needs to be given a user-specified
 buffer and the length of the buffer (MAX_DYNEVENT_CMD_LEN can be used
 for this purpose - at 2k it’s generally too big to be comfortably put
@@ -1087,12 +1081,15 @@ calls to argument-adding functions.</p>
 or struct dynevent_arg_pair object.  Here’s an example of the simplest
 possible arg addition, which is simply to append the given string as
 a whitespace-separated argument to the command:</p>
-<blockquote>
-<div><p>struct dynevent_arg arg;</p>
-<p>dynevent_arg_init(&amp;arg, NULL, 0);</p>
-<p>arg.str = name;</p>
-<p>ret = dynevent_arg_add(cmd, &amp;arg);</p>
-</div></blockquote>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>struct dynevent_arg arg;
+
+dynevent_arg_init(&amp;arg, NULL, 0);
+
+arg.str = name;
+
+ret = dynevent_arg_add(cmd, &amp;arg);
+</pre></div>
+</div>
 <p>The arg object is first initialized using dynevent_arg_init() and in
 this case the parameters are NULL or 0, which means there’s no
 optional sanity-checking function or separator appended to the end of
@@ -1101,13 +1098,16 @@ the arg.</p>
 used to create an argument that consists of a couple components added
 together as a unit, for example, a ‘type field_name;’ arg or a simple
 expression arg e.g. ‘flags=%cx’:</p>
-<blockquote>
-<div><p>struct dynevent_arg_pair arg_pair;</p>
-<p>dynevent_arg_pair_init(&amp;arg_pair, dynevent_foo_check_arg_fn, 0, ‘;’);</p>
-<p>arg_pair.lhs = type;
-arg_pair.rhs = name;</p>
-<p>ret = dynevent_arg_pair_add(cmd, &amp;arg_pair);</p>
-</div></blockquote>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>struct dynevent_arg_pair arg_pair;
+
+dynevent_arg_pair_init(&amp;arg_pair, dynevent_foo_check_arg_fn, 0, &#39;;&#39;);
+
+arg_pair.lhs = type;
+arg_pair.rhs = name;
+
+ret = dynevent_arg_pair_add(cmd, &amp;arg_pair);
+</pre></div>
+</div>
 <p>Again, the arg_pair is first initialized, in this case with a callback
 function used to check the sanity of the args (for example, that
 neither part of the pair is NULL), along with a character to be used
@@ -1120,8 +1120,9 @@ add a string as-is, with no spaces, delimeters, or arg check.</p>
 been added and the command string is complete, the only thing left to
 do is run the command, which happens by simply calling
 dynevent_create():</p>
-<blockquote>
-<div>ret = dynevent_create(&amp;cmd);</div></blockquote>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>ret = dynevent_create(&amp;cmd);
+</pre></div>
+</div>
 <p>At that point, if the return value is 0, the dynamic event has been
 created and is ready to use.</p>
 <p>See the dynevent_cmd function definitions themselves for the details

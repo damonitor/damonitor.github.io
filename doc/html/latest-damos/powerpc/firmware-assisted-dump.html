@@ -68,7 +68,7 @@
             
             
               <div class="version">
-                5.6.0
+                5.7.0
               </div>
             
           
@@ -271,13 +271,13 @@ to ensure that crash data is preserved to process later.</p>
 <dl class="docutils">
 <dt>– On OPAL based machines (PowerNV), if the kernel is build with</dt>
 <dd><p class="first">CONFIG_OPAL_CORE=y, OPAL memory at the time of crash is also
-exported as /sys/firmware/opal/core file. This procfs file is
+exported as /sys/firmware/opal/mpipl/core file. This procfs file is
 helpful in debugging OPAL crashes with GDB. The kernel memory
 used for exporting this procfs file can be released by echo’ing
-‘1’ to /sys/kernel/fadump_release_opalcore node.</p>
+‘1’ to /sys/firmware/opal/mpipl/release_core node.</p>
 <dl class="last docutils">
 <dt>e.g.</dt>
-<dd># echo 1 &gt; /sys/kernel/fadump_release_opalcore</dd>
+<dd># echo 1 &gt; /sys/firmware/opal/mpipl/release_core</dd>
 </dl>
 </dd>
 </dl>
@@ -428,6 +428,12 @@ FADump. Once the FADump is un-registered, the system crash will not
 be handled and vmcore will not be captured. This interface can be
 easily integrated with kdump service start/stop.</p>
 </dd>
+</dl>
+<p>/sys/kernel/fadump/mem_reserved</p>
+<blockquote>
+<div>This is used to display the memory reserved by FADump for saving the
+crash dump.</div></blockquote>
+<dl class="docutils">
 <dt>/sys/kernel/fadump_release_mem</dt>
 <dd><p class="first">This file is available only when FADump is active during
 second kernel. This is used to release the reserved memory
@@ -443,15 +449,42 @@ enhanced to use this interface to release the memory reserved for
 dump and continue without 2nd reboot.</p>
 </dd>
 </dl>
-<p>/sys/kernel/fadump_release_opalcore</p>
-<blockquote>
+</div></blockquote>
+<dl class="docutils">
+<dt>Note: /sys/kernel/fadump_release_opalcore sysfs has moved to</dt>
+<dd><blockquote class="first">
+<div>/sys/firmware/opal/mpipl/release_core</div></blockquote>
+<p>/sys/firmware/opal/mpipl/release_core</p>
+<blockquote class="last">
 <div><p>This file is available only on OPAL based machines when FADump is
 active during capture kernel. This is used to release the memory
-used by the kernel to export /sys/firmware/opal/core file. To
+used by the kernel to export /sys/firmware/opal/mpipl/core file. To
 release this memory, echo ‘1’ to it:</p>
-<p>echo 1  &gt; /sys/kernel/fadump_release_opalcore</p>
+<p>echo 1  &gt; /sys/firmware/opal/mpipl/release_core</p>
 </div></blockquote>
-</div></blockquote>
+</dd>
+</dl>
+<p>Note: The following FADump sysfs files are deprecated.</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="52%" />
+<col width="48%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td>Deprecated</td>
+<td>Alternative</td>
+</tr>
+<tr class="row-even"><td>/sys/kernel/fadump_enabled</td>
+<td>/sys/kernel/fadump/enabled</td>
+</tr>
+<tr class="row-odd"><td>/sys/kernel/fadump_registered</td>
+<td>/sys/kernel/fadump/registered</td>
+</tr>
+<tr class="row-even"><td>/sys/kernel/fadump_release_mem</td>
+<td>/sys/kernel/fadump/release_mem</td>
+</tr>
+</tbody>
+</table>
 <p>Here is the list of files under powerpc debugfs:
 (Assuming debugfs is mounted on /sys/kernel/debug directory.)</p>
 <blockquote>

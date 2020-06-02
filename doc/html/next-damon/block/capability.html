@@ -68,7 +68,7 @@
             
             
               <div class="version">
-                5.6.0
+                5.7.0
               </div>
             
           
@@ -160,17 +160,45 @@
             
   <div class="section" id="generic-block-device-capability">
 <h1>Generic Block Device Capability<a class="headerlink" href="#generic-block-device-capability" title="Permalink to this headline">¶</a></h1>
-<p>This file documents the sysfs file block/&lt;disk&gt;/capability</p>
-<p>capability is a hex word indicating which capabilities a specific disk
-supports.  For more information on bits not listed here, see
-include/linux/genhd.h</p>
-<div class="section" id="genhd-fl-media-change-notify">
-<h2>GENHD_FL_MEDIA_CHANGE_NOTIFY<a class="headerlink" href="#genhd-fl-media-change-notify" title="Permalink to this headline">¶</a></h2>
-<p>Value: 4</p>
-<p>When this bit is set, the disk supports Asynchronous Notification
-of media change events.  These events will be broadcast to user
-space via kernel uevent.</p>
-</div>
+<p>This file documents the sysfs file <code class="docutils literal notranslate"><span class="pre">block/&lt;disk&gt;/capability</span></code>.</p>
+<p><code class="docutils literal notranslate"><span class="pre">capability</span></code> is a bitfield, printed in hexadecimal, indicating which
+capabilities a specific block device supports:</p>
+<p><strong>genhd capability flags</strong></p>
+<p><code class="docutils literal notranslate"><span class="pre">GENHD_FL_REMOVABLE</span></code> (0x0001): indicates that the block device
+gives access to removable media.
+When set, the device remains present even when media is not
+inserted.
+Must not be set for devices which are removed entirely when the
+media is removed.</p>
+<p><code class="docutils literal notranslate"><span class="pre">GENHD_FL_CD</span></code> (0x0008): the block device is a CD-ROM-style
+device.
+Affects responses to the <code class="docutils literal notranslate"><span class="pre">CDROM_GET_CAPABILITY</span></code> ioctl.</p>
+<p><code class="docutils literal notranslate"><span class="pre">GENHD_FL_UP</span></code> (0x0010): indicates that the block device is “up”,
+with a similar meaning to network interfaces.</p>
+<p><code class="docutils literal notranslate"><span class="pre">GENHD_FL_SUPPRESS_PARTITION_INFO</span></code> (0x0020): don’t include
+partition information in <code class="docutils literal notranslate"><span class="pre">/proc/partitions</span></code> or in the output of
+printk_all_partitions().
+Used for the null block device and some MMC devices.</p>
+<p><code class="docutils literal notranslate"><span class="pre">GENHD_FL_EXT_DEVT</span></code> (0x0040): the driver supports extended
+dynamic <code class="docutils literal notranslate"><span class="pre">dev_t</span></code>, i.e. it wants extended device numbers
+(<code class="docutils literal notranslate"><span class="pre">BLOCK_EXT_MAJOR</span></code>).
+This affects the maximum number of partitions.</p>
+<p><code class="docutils literal notranslate"><span class="pre">GENHD_FL_NATIVE_CAPACITY</span></code> (0x0080): based on information in the
+partition table, the device’s capacity has been extended to its
+native capacity; i.e. the device has hidden capacity used by one
+of the partitions (this is a flag used so that native capacity is
+only ever unlocked once).</p>
+<p><code class="docutils literal notranslate"><span class="pre">GENHD_FL_BLOCK_EVENTS_ON_EXCL_WRITE</span></code> (0x0100): event polling is
+blocked whenever a writer holds an exclusive lock.</p>
+<p><code class="docutils literal notranslate"><span class="pre">GENHD_FL_NO_PART_SCAN</span></code> (0x0200): partition scanning is disabled.
+Used for loop devices in their default settings and some MMC
+devices.</p>
+<p><code class="docutils literal notranslate"><span class="pre">GENHD_FL_HIDDEN</span></code> (0x0400): the block device is hidden; it
+doesn’t produce events, doesn’t appear in sysfs, and doesn’t have
+an associated <code class="docutils literal notranslate"><span class="pre">bdev</span></code>.
+Implies <code class="docutils literal notranslate"><span class="pre">GENHD_FL_SUPPRESS_PARTITION_INFO</span></code> and
+<code class="docutils literal notranslate"><span class="pre">GENHD_FL_NO_PART_SCAN</span></code>.
+Used for multipath devices.</p>
 </div>
 
 

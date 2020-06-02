@@ -68,7 +68,7 @@
             
             
               <div class="version">
-                5.6.0
+                5.7.0
               </div>
             
           
@@ -248,6 +248,51 @@ UFFDIO_COPY_MODE_DONTWAKE is set). Other ioctl works similarly to
 UFFDIO_COPY. They’re atomic as in guaranteeing that nothing can see an
 half copied page since it’ll keep userfaulting until the copy has
 finished.</p>
+<p>Notes:</p>
+<ul class="simple">
+<li>If you requested UFFDIO_REGISTER_MODE_MISSING when registering then
+you must provide some kind of page in your thread after reading from
+the uffd.  You must provide either UFFDIO_COPY or UFFDIO_ZEROPAGE.
+The normal behavior of the OS automatically providing a zero page on
+an annonymous mmaping is not in place.</li>
+<li>None of the page-delivering ioctls default to the range that you
+registered with.  You must fill in all fields for the appropriate
+ioctl struct including the range.</li>
+<li>You get the address of the access that triggered the missing page
+event out of a struct uffd_msg that you read in the thread from the
+uffd.  You can supply as many pages as you want with UFFDIO_COPY or
+UFFDIO_ZEROPAGE.  Keep in mind that unless you used DONTWAKE then
+the first of any of those IOCTLs wakes up the faulting thread.</li>
+<li>Be sure to test for all errors including (pollfd[0].revents &amp;
+POLLERR).  This can happen, e.g. when ranges supplied were
+incorrect.</li>
+</ul>
+<div class="section" id="write-protect-notifications">
+<h3>Write Protect Notifications<a class="headerlink" href="#write-protect-notifications" title="Permalink to this headline">¶</a></h3>
+<p>This is equivalent to (but faster than) using mprotect and a SIGSEGV
+signal handler.</p>
+<p>Firstly you need to register a range with UFFDIO_REGISTER_MODE_WP.
+Instead of using mprotect(2) you use ioctl(uffd, UFFDIO_WRITEPROTECT,
+struct <a href="#id2"><span class="problematic" id="id3">*</span></a>uffdio_writeprotect) while mode = UFFDIO_WRITEPROTECT_MODE_WP
+in the struct passed in.  The range does not default to and does not
+have to be identical to the range you registered with.  You can write
+protect as many ranges as you like (inside the registered range).
+Then, in the thread reading from uffd the struct will have
+msg.arg.pagefault.flags &amp; UFFD_PAGEFAULT_FLAG_WP set. Now you send
+ioctl(uffd, UFFDIO_WRITEPROTECT, struct <a href="#id4"><span class="problematic" id="id5">*</span></a>uffdio_writeprotect) again
+while pagefault.mode does not have UFFDIO_WRITEPROTECT_MODE_WP set.
+This wakes up the thread which will continue to run with writes. This
+allows you to do the bookkeeping about the write in the uffd reading
+thread before the ioctl.</p>
+<p>If you registered with both UFFDIO_REGISTER_MODE_MISSING and
+UFFDIO_REGISTER_MODE_WP then you need to think about the sequence in
+which you supply a page and undo write protect.  Note that there is a
+difference between writes into a WP area and into a !WP area.  The
+former will have UFFD_PAGEFAULT_FLAG_WP set, the latter
+UFFD_PAGEFAULT_FLAG_WRITE.  The latter did not fail on protection but
+you still need to supply a page when UFFDIO_REGISTER_MODE_MISSING was
+used.</p>
+</div>
 </div>
 <div class="section" id="qemu-kvm">
 <h2>QEMU/KVM<a class="headerlink" href="#qemu-kvm" title="Permalink to this headline">¶</a></h2>

@@ -68,7 +68,7 @@
             
             
               <div class="version">
-                5.6.0
+                5.7.0
               </div>
             
           
@@ -382,6 +382,114 @@ the following file:</p>
 </ul>
 <p>If you echo 0 into it means MAX_JIFFY_OFFSET will be used. The data type
 for the timeout is an int.</p>
+</div>
+<div class="section" id="efi-embedded-firmware-fallback-mechanism">
+<h2>EFI embedded firmware fallback mechanism<a class="headerlink" href="#efi-embedded-firmware-fallback-mechanism" title="Permalink to this headline">¶</a></h2>
+<p>On some devices the system’s EFI code / ROM may contain an embedded copy
+of firmware for some of the system’s integrated peripheral devices and
+the peripheral’s Linux device-driver needs to access this firmware.</p>
+<p>Device drivers which need such firmware can use the
+<a class="reference internal" href="../infrastructure.html#c.firmware_request_platform" title="firmware_request_platform"><code class="xref c c-func docutils literal notranslate"><span class="pre">firmware_request_platform()</span></code></a> function for this, note that this is a
+separate fallback mechanism from the other fallback mechanisms and
+this does not use the sysfs interface.</p>
+<p>A device driver which needs this can describe the firmware it needs
+using an efi_embedded_fw_desc struct:</p>
+<dl class="type">
+<dt id="c.efi_embedded_fw_desc">
+struct <code class="descname">efi_embedded_fw_desc</code><a class="headerlink" href="#c.efi_embedded_fw_desc" title="Permalink to this definition">¶</a></dt>
+<dd><p>This struct is used by the EFI embedded-fw code to search for embedded firmwares.</p>
+</dd></dl>
+
+<p><strong>Definition</strong></p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>struct efi_embedded_fw_desc {
+  const char *name;
+  u8 prefix[EFI_EMBEDDED_FW_PREFIX_LEN];
+  u32 length;
+  u8 sha256[32];
+};
+</pre></div>
+</div>
+<p><strong>Members</strong></p>
+<dl class="docutils">
+<dt><code class="docutils literal notranslate"><span class="pre">name</span></code></dt>
+<dd>Name to register the firmware with if found</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">prefix</span></code></dt>
+<dd>First 8 bytes of the firmware</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">length</span></code></dt>
+<dd>Length of the firmware in bytes including prefix</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">sha256</span></code></dt>
+<dd>SHA256 of the firmware</dd>
+</dl>
+<p>The EFI embedded-fw code works by scanning all EFI_BOOT_SERVICES_CODE memory
+segments for an eight byte sequence matching prefix; if the prefix is found it
+then does a sha256 over length bytes and if that matches makes a copy of length
+bytes and adds that to its list with found firmwares.</p>
+<p>To avoid doing this somewhat expensive scan on all systems, dmi matching is
+used. Drivers are expected to export a dmi_system_id array, with each entries’
+driver_data pointing to an efi_embedded_fw_desc.</p>
+<p>To register this array with the efi-embedded-fw code, a driver needs to:</p>
+<ol class="arabic simple">
+<li>Always be builtin to the kernel or store the dmi_system_id array in a
+separate object file which always gets builtin.</li>
+<li>Add an extern declaration for the dmi_system_id array to
+include/linux/efi_embedded_fw.h.</li>
+<li>Add the dmi_system_id array to the embedded_fw_table in
+drivers/firmware/efi/embedded-firmware.c wrapped in a #ifdef testing that
+the driver is being builtin.</li>
+<li>Add “select EFI_EMBEDDED_FIRMWARE if EFI_STUB” to its Kconfig entry.</li>
+</ol>
+<p>The <a class="reference internal" href="../infrastructure.html#c.firmware_request_platform" title="firmware_request_platform"><code class="xref c c-func docutils literal notranslate"><span class="pre">firmware_request_platform()</span></code></a> function will always first try to load firmware
+with the specified name directly from the disk, so the EFI embedded-fw can
+always be overridden by placing a file under /lib/firmware.</p>
+<p>Note that:</p>
+<ol class="arabic simple">
+<li>The code scanning for EFI embedded-firmware runs near the end
+of start_kernel(), just before calling rest_init(). For normal drivers and
+subsystems using subsys_initcall() to register themselves this does not
+matter. This means that code running earlier cannot use EFI
+embedded-firmware.</li>
+<li>At the moment the EFI embedded-fw code assumes that firmwares always start at
+an offset which is a multiple of 8 bytes, if this is not true for your case
+send in a patch to fix this.</li>
+<li>At the moment the EFI embedded-fw code only works on x86 because other archs
+free EFI_BOOT_SERVICES_CODE before the EFI embedded-fw code gets a chance to
+scan it.</li>
+<li>The current brute-force scanning of EFI_BOOT_SERVICES_CODE is an ad-hoc
+brute-force solution. There has been discussion to use the UEFI Platform
+Initialization (PI) spec’s Firmware Volume protocol. This has been rejected
+because the FV Protocol relies on <em>internal</em> interfaces of the PI spec, and:
+1. The PI spec does not define peripheral firmware at all
+2. The internal interfaces of the PI spec do not guarantee any backward
+compatibility. Any implementation details in FV may be subject to change,
+and may vary system to system. Supporting the FV Protocol would be
+difficult as it is purposely ambiguous.</li>
+</ol>
+<div class="section" id="example-how-to-check-for-and-extract-embedded-firmware">
+<h3>Example how to check for and extract embedded firmware<a class="headerlink" href="#example-how-to-check-for-and-extract-embedded-firmware" title="Permalink to this headline">¶</a></h3>
+<p>To check for, for example Silead touchscreen controller embedded firmware,
+do the following:</p>
+<ol class="arabic simple">
+<li>Boot the system with efi=debug on the kernel commandline</li>
+<li>cp /sys/kernel/debug/efi/boot_services_code? to your home dir</li>
+<li>Open the boot_services_code? files in a hex-editor, search for the
+magic prefix for Silead firmware: F0 00 00 00 02 00 00 00, this gives you
+the beginning address of the firmware inside the boot_services_code? file.</li>
+<li>The firmware has a specific pattern, it starts with a 8 byte page-address,
+typically F0 00 00 00 02 00 00 00 for the first page followed by 32-bit
+word-address + 32-bit value pairs. With the word-address incrementing 4
+bytes (1 word) for each pair until a page is complete. A complete page is
+followed by a new page-address, followed by more word + value pairs. This
+leads to a very distinct pattern. Scroll down until this pattern stops,
+this gives you the end of the firmware inside the boot_services_code? file.</li>
+<li>“dd if=boot_services_code? of=firmware bs=1 skip=&lt;begin-addr&gt; count=&lt;len&gt;”
+will extract the firmware for you. Inspect the firmware file in a
+hexeditor to make sure you got the dd parameters correct.</li>
+<li>Copy it to /lib/firmware under the expected name to test it.</li>
+<li>If the extracted firmware works, you can use the found info to fill an
+efi_embedded_fw_desc struct to describe it, run “sha256sum firmware”
+to get the sha256sum to put in the sha256 field.</li>
+</ol>
+</div>
 </div>
 </div>
 

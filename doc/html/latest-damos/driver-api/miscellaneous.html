@@ -68,7 +68,7 @@
             
             
               <div class="version">
-                5.6.0
+                5.7.0
               </div>
             
           
@@ -531,7 +531,7 @@ with <strong>port</strong> as the parameter.</p>
 </div></blockquote>
 <dl class="function">
 <dt id="c.parport_register_device">
-struct pardevice * <code class="descname">parport_register_device</code><span class="sig-paren">(</span>struct parport *<em>&nbsp;port</em>, const char *<em>&nbsp;name</em>, int (*pf) (void<em>&nbsp;*</em>, void (*kf) (void<em>&nbsp;*</em>, void (*irq_func) (void<em>&nbsp;*</em>, int<em>&nbsp;flags</em>, void *<em>&nbsp;handle</em><span class="sig-paren">)</span><a class="headerlink" href="#c.parport_register_device" title="Permalink to this definition">¶</a></dt>
+struct pardevice * <code class="descname">parport_register_device</code><span class="sig-paren">(</span>struct parport *<em>&nbsp;port</em>, const char *<em>&nbsp;name</em>, int (<em>*pf</em>)(void *), void (*kf) (void *), void (*irq_func) (void *), int<em>&nbsp;flags</em>, void *<em>&nbsp;handle</em><span class="sig-paren">)</span><a class="headerlink" href="#c.parport_register_device" title="Permalink to this definition">¶</a></dt>
 <dd><p>register a device on a parallel port</p>
 </dd></dl>
 
@@ -816,7 +816,7 @@ unsigned int <code class="descname">uart_get_divisor</code><span class="sig-pare
 <div>Calculate the uart clock divisor for the port.</div></blockquote>
 <dl class="function">
 <dt id="c.uart_console_write">
-void <code class="descname">uart_console_write</code><span class="sig-paren">(</span>struct uart_port *<em>&nbsp;port</em>, const char *<em>&nbsp;s</em>, unsigned int<em>&nbsp;count</em>, void (*putchar) (struct uart_port<em>&nbsp;*</em>, int<span class="sig-paren">)</span><a class="headerlink" href="#c.uart_console_write" title="Permalink to this definition">¶</a></dt>
+void <code class="descname">uart_console_write</code><span class="sig-paren">(</span>struct uart_port *<em>&nbsp;port</em>, const char *<em>&nbsp;s</em>, unsigned int<em>&nbsp;count</em>, void (<em>*putchar</em>)(struct uart_port *, int)<span class="sig-paren">)</span><a class="headerlink" href="#c.uart_console_write" title="Permalink to this definition">¶</a></dt>
 <dd><p>write a console message to a serial port</p>
 </dd></dl>
 
@@ -1209,6 +1209,7 @@ struct <code class="descname">pwm_device</code><a class="headerlink" href="#c.pw
   void *chip_data;
   struct pwm_args args;
   struct pwm_state state;
+  struct pwm_state last;
 };
 </pre></div>
 </div>
@@ -1229,7 +1230,9 @@ struct <code class="descname">pwm_device</code><a class="headerlink" href="#c.pw
 <dt><code class="docutils literal notranslate"><span class="pre">args</span></code></dt>
 <dd>PWM arguments</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">state</span></code></dt>
-<dd>curent PWM channel state</dd>
+<dd>last applied state</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">last</span></code></dt>
+<dd>last implemented state (for PWM_DEBUG)</dd>
 </dl>
 <dl class="function">
 <dt id="c.pwm_get_state">

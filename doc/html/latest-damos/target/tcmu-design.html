@@ -68,7 +68,7 @@
             
             
               <div class="version">
-                5.6.0
+                5.7.0
               </div>
             
           
@@ -160,8 +160,8 @@
             
   <div class="section" id="tcm-userspace-design">
 <h1>TCM Userspace Design<a class="headerlink" href="#tcm-userspace-design" title="Permalink to this headline">¶</a></h1>
-<div class="section" id="id1">
-<h2>TCM Userspace Design<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="design">
+<h2>Design<a class="headerlink" href="#design" title="Permalink to this headline">¶</a></h2>
 <p>TCM is another name for LIO, an in-kernel iSCSI target (server).
 Existing TCM targets run in the kernel.  TCMU (TCM in Userspace)
 allows userspace programs to be written which act as iSCSI targets.
@@ -287,7 +287,7 @@ processing of a command.</dd>
 <h3>The Command Ring<a class="headerlink" href="#the-command-ring" title="Permalink to this headline">¶</a></h3>
 <p>Commands are placed on the ring by the kernel incrementing
 mailbox.cmd_head by the size of the command, modulo cmdr_size, and
-then signaling userspace via <a class="reference internal" href="../driver-api/infrastructure.html#c.uio_event_notify" title="uio_event_notify"><code class="xref c c-func docutils literal notranslate"><span class="pre">uio_event_notify()</span></code></a>. Once the command is
+then signaling userspace via uio_event_notify(). Once the command is
 completed, userspace updates mailbox.cmd_tail in the same way and
 signals the kernel via a 4-byte write(). When cmd_head equals
 cmd_tail, the ring is empty – no commands are currently waiting to be

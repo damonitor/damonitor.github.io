@@ -68,7 +68,7 @@
             
             
               <div class="version">
-                5.6.0
+                5.7.0
               </div>
             
           
@@ -551,6 +551,7 @@ struct <code class="descname">edac_raw_error_desc</code><a class="headerlink" hr
   char label[(EDAC_MC_LABEL_LEN + 1 + sizeof(OTHER_LABEL)) * EDAC_MAX_LABELS];
   long grain;
   u16 error_count;
+  enum hw_event_mc_err_type type;
   int top_layer;
   int mid_layer;
   int low_layer;
@@ -559,7 +560,6 @@ struct <code class="descname">edac_raw_error_desc</code><a class="headerlink" hr
   unsigned long syndrome;
   const char *msg;
   const char *other_detail;
-  bool enable_per_layer_report;
 };
 </pre></div>
 </div>
@@ -573,6 +573,8 @@ struct <code class="descname">edac_raw_error_desc</code><a class="headerlink" hr
 <dd>minimum granularity for an error report, in bytes</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">error_count</span></code></dt>
 <dd>number of errors of the same type</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">type</span></code></dt>
+<dd>severity of the error (CE/UE/Fatal)</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">top_layer</span></code></dt>
 <dd>top layer of the error (layer[0])</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">mid_layer</span></code></dt>
@@ -590,9 +592,6 @@ the syndrome is not applicable)</dd>
 <dd>error message</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">other_detail</span></code></dt>
 <dd>other driver-specific detail about the error</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">enable_per_layer_report</span></code></dt>
-<dd>if false, the error affects all layers
-(typically, a memory controller error)</dd>
 </dl>
 <dl class="function">
 <dt id="c.edac_get_dimm_by_index">
@@ -764,16 +763,12 @@ int <code class="descname">edac_mc_find_csrow_by_page</code><span class="sig-par
 <p>on success, returns the csrow. -1 if not found.</p>
 <dl class="function">
 <dt id="c.edac_raw_mc_handle_error">
-void <code class="descname">edac_raw_mc_handle_error</code><span class="sig-paren">(</span>const enum <a class="reference internal" href="#c.hw_event_mc_err_type" title="hw_event_mc_err_type">hw_event_mc_err_type</a><em>&nbsp;type</em>, struct mem_ctl_info *<em>&nbsp;mci</em>, struct <a class="reference internal" href="#c.edac_raw_error_desc" title="edac_raw_error_desc">edac_raw_error_desc</a> *<em>&nbsp;e</em><span class="sig-paren">)</span><a class="headerlink" href="#c.edac_raw_mc_handle_error" title="Permalink to this definition">¶</a></dt>
+void <code class="descname">edac_raw_mc_handle_error</code><span class="sig-paren">(</span>struct <a class="reference internal" href="#c.edac_raw_error_desc" title="edac_raw_error_desc">edac_raw_error_desc</a> *<em>&nbsp;e</em><span class="sig-paren">)</span><a class="headerlink" href="#c.edac_raw_mc_handle_error" title="Permalink to this definition">¶</a></dt>
 <dd><p>Reports a memory event to userspace without doing anything to discover the error location.</p>
 </dd></dl>
 
 <p><strong>Parameters</strong></p>
 <dl class="docutils">
-<dt><code class="docutils literal notranslate"><span class="pre">const</span> <span class="pre">enum</span> <span class="pre">hw_event_mc_err_type</span> <span class="pre">type</span></code></dt>
-<dd>severity of the error (CE/UE/Fatal)</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">mem_ctl_info</span> <span class="pre">*</span> <span class="pre">mci</span></code></dt>
-<dd>a struct mem_ctl_info pointer</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">edac_raw_error_desc</span> <span class="pre">*</span> <span class="pre">e</span></code></dt>
 <dd>error description</dd>
 </dl>

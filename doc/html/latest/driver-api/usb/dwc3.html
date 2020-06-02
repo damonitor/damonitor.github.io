@@ -68,7 +68,7 @@
             
             
               <div class="version">
-                5.6.0
+                5.7.0
               </div>
             
           
@@ -1119,6 +1119,8 @@ struct <code class="descname">dwc3</code><a class="headerlink" href="#c.dwc3" ti
   struct extcon_dev       *edev;
   struct notifier_block   edev_nb;
   enum usb_phy_interface  hsphy_mode;
+  struct usb_role_switch  *role_sw;
+  enum usb_dr_mode        role_switch_default_mode;
   u32 fladj;
   u32 irq_gadget;
   u32 otg_irq;
@@ -1221,6 +1223,7 @@ struct <code class="descname">dwc3</code><a class="headerlink" href="#c.dwc3" ti
   unsigned dis_u2_freeclk_exists_quirk:1;
   unsigned dis_del_phy_power_chg_quirk:1;
   unsigned dis_tx_ipgap_linecheck_quirk:1;
+  unsigned parkmode_disable_ss_quirk:1;
   unsigned tx_de_emphasis_quirk:1;
   unsigned tx_de_emphasis:2;
   unsigned dis_metastability_quirk:1;
@@ -1306,6 +1309,11 @@ struct <code class="descname">dwc3</code><a class="headerlink" href="#c.dwc3" ti
 <dd>UTMI phy mode, one of following:
 - USBPHY_INTERFACE_MODE_UTMI
 - USBPHY_INTERFACE_MODE_UTMIW</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">role_sw</span></code></dt>
+<dd>usb_role_switch handle</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">role_switch_default_mode</span></code></dt>
+<dd>default operation mode of controller while
+usb role is USB_ROLE_NONE.</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">fladj</span></code></dt>
 <dd>frame length adjustment</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">irq_gadget</span></code></dt>
@@ -1447,6 +1455,9 @@ change quirk.</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">dis_tx_ipgap_linecheck_quirk</span></code></dt>
 <dd>set if we disable u2mac linestate
 check during HS transmit.</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">parkmode_disable_ss_quirk</span></code></dt>
+<dd>set if we need to disable all SuperSpeed
+instances in park mode.</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">tx_de_emphasis_quirk</span></code></dt>
 <dd>set if we enable Tx de-emphasis quirk</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">tx_de_emphasis</span></code></dt>

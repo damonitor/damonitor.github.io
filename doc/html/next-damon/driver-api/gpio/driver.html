@@ -68,7 +68,7 @@
             
             
               <div class="version">
-                5.6.0
+                5.7.0
               </div>
             
           
@@ -542,74 +542,71 @@ struct gpio_irq_chip inside struct gpio_chip before adding the gpio_chip.
 If you do this, the additional irq_chip will be set up by gpiolib at the
 same time as setting up the rest of the GPIO functionality. The following
 is a typical example of a cascaded interrupt handler using gpio_irq_chip:</p>
-<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>.. code-block:: c
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="cm">/* Typical state container with dynamic irqchip */</span>
+<span class="k">struct</span> <span class="n">my_gpio</span> <span class="p">{</span>
+    <span class="k">struct</span> <span class="n">gpio_chip</span> <span class="n">gc</span><span class="p">;</span>
+    <span class="k">struct</span> <span class="n">irq_chip</span> <span class="n">irq</span><span class="p">;</span>
+<span class="p">};</span>
+
+<span class="kt">int</span> <span class="n">irq</span><span class="p">;</span> <span class="cm">/* from platform etc */</span>
+<span class="k">struct</span> <span class="n">my_gpio</span> <span class="o">*</span><span class="n">g</span><span class="p">;</span>
+<span class="k">struct</span> <span class="n">gpio_irq_chip</span> <span class="o">*</span><span class="n">girq</span><span class="p">;</span>
+
+<span class="cm">/* Set up the irqchip dynamically */</span>
+<span class="n">g</span><span class="o">-&gt;</span><span class="n">irq</span><span class="p">.</span><span class="n">name</span> <span class="o">=</span> <span class="s">&quot;my_gpio_irq&quot;</span><span class="p">;</span>
+<span class="n">g</span><span class="o">-&gt;</span><span class="n">irq</span><span class="p">.</span><span class="n">irq_ack</span> <span class="o">=</span> <span class="n">my_gpio_ack_irq</span><span class="p">;</span>
+<span class="n">g</span><span class="o">-&gt;</span><span class="n">irq</span><span class="p">.</span><span class="n">irq_mask</span> <span class="o">=</span> <span class="n">my_gpio_mask_irq</span><span class="p">;</span>
+<span class="n">g</span><span class="o">-&gt;</span><span class="n">irq</span><span class="p">.</span><span class="n">irq_unmask</span> <span class="o">=</span> <span class="n">my_gpio_unmask_irq</span><span class="p">;</span>
+<span class="n">g</span><span class="o">-&gt;</span><span class="n">irq</span><span class="p">.</span><span class="n">irq_set_type</span> <span class="o">=</span> <span class="n">my_gpio_set_irq_type</span><span class="p">;</span>
+
+<span class="cm">/* Get a pointer to the gpio_irq_chip */</span>
+<span class="n">girq</span> <span class="o">=</span> <span class="o">&amp;</span><span class="n">g</span><span class="o">-&gt;</span><span class="n">gc</span><span class="p">.</span><span class="n">irq</span><span class="p">;</span>
+<span class="n">girq</span><span class="o">-&gt;</span><span class="n">chip</span> <span class="o">=</span> <span class="o">&amp;</span><span class="n">g</span><span class="o">-&gt;</span><span class="n">irq</span><span class="p">;</span>
+<span class="n">girq</span><span class="o">-&gt;</span><span class="n">parent_handler</span> <span class="o">=</span> <span class="n">ftgpio_gpio_irq_handler</span><span class="p">;</span>
+<span class="n">girq</span><span class="o">-&gt;</span><span class="n">num_parents</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+<span class="n">girq</span><span class="o">-&gt;</span><span class="n">parents</span> <span class="o">=</span> <span class="n">devm_kcalloc</span><span class="p">(</span><span class="n">dev</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="k">sizeof</span><span class="p">(</span><span class="o">*</span><span class="n">girq</span><span class="o">-&gt;</span><span class="n">parents</span><span class="p">),</span>
+                             <span class="n">GFP_KERNEL</span><span class="p">);</span>
+<span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">girq</span><span class="o">-&gt;</span><span class="n">parents</span><span class="p">)</span>
+    <span class="k">return</span> <span class="o">-</span><span class="n">ENOMEM</span><span class="p">;</span>
+<span class="n">girq</span><span class="o">-&gt;</span><span class="n">default_type</span> <span class="o">=</span> <span class="n">IRQ_TYPE_NONE</span><span class="p">;</span>
+<span class="n">girq</span><span class="o">-&gt;</span><span class="n">handler</span> <span class="o">=</span> <span class="n">handle_bad_irq</span><span class="p">;</span>
+<span class="n">girq</span><span class="o">-&gt;</span><span class="n">parents</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">irq</span><span class="p">;</span>
+
+<span class="k">return</span> <span class="nf">devm_gpiochip_add_data</span><span class="p">(</span><span class="n">dev</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">g</span><span class="o">-&gt;</span><span class="n">gc</span><span class="p">,</span> <span class="n">g</span><span class="p">);</span>
 </pre></div>
 </div>
-<blockquote>
-<div><p>/* Typical state container with dynamic irqchip <a href="#id1"><span class="problematic" id="id2">*</span></a>/
-struct my_gpio {</p>
-<blockquote>
-<div>struct gpio_chip gc;
-struct irq_chip irq;</div></blockquote>
-<p>};</p>
-<p>int irq; /* from platform etc <a href="#id3"><span class="problematic" id="id4">*</span></a>/
-struct my_gpio <a href="#id5"><span class="problematic" id="id6">*</span></a>g;
-struct gpio_irq_chip <a href="#id7"><span class="problematic" id="id8">*</span></a>girq;</p>
-<p>/* Set up the irqchip dynamically <a href="#id9"><span class="problematic" id="id10">*</span></a>/
-g-&gt;irq.name = “my_gpio_irq”;
-g-&gt;irq.irq_ack = my_gpio_ack_irq;
-g-&gt;irq.irq_mask = my_gpio_mask_irq;
-g-&gt;irq.irq_unmask = my_gpio_unmask_irq;
-g-&gt;irq.irq_set_type = my_gpio_set_irq_type;</p>
-<p>/* Get a pointer to the gpio_irq_chip <a href="#id11"><span class="problematic" id="id12">*</span></a>/
-girq = &amp;g-&gt;gc.irq;
-girq-&gt;chip = &amp;g-&gt;irq;
-girq-&gt;parent_handler = ftgpio_gpio_irq_handler;
-girq-&gt;num_parents = 1;
-girq-&gt;parents = devm_kcalloc(dev, 1, sizeof(<a href="#id13"><span class="problematic" id="id14">*</span></a>girq-&gt;parents),</p>
-<blockquote>
-<div>GFP_KERNEL);</div></blockquote>
-<dl class="docutils">
-<dt>if (!girq-&gt;parents)</dt>
-<dd>return -ENOMEM;</dd>
-</dl>
-<p>girq-&gt;default_type = IRQ_TYPE_NONE;
-girq-&gt;handler = handle_bad_irq;
-girq-&gt;parents[0] = irq;</p>
-<p>return devm_gpiochip_add_data(dev, &amp;g-&gt;gc, g);</p>
-</div></blockquote>
 <p>The helper support using hierarchical interrupt controllers as well.
 In this case the typical set-up will look like this:</p>
-<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>.. code-block:: c
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="cm">/* Typical state container with dynamic irqchip */</span>
+<span class="k">struct</span> <span class="n">my_gpio</span> <span class="p">{</span>
+    <span class="k">struct</span> <span class="n">gpio_chip</span> <span class="n">gc</span><span class="p">;</span>
+    <span class="k">struct</span> <span class="n">irq_chip</span> <span class="n">irq</span><span class="p">;</span>
+    <span class="k">struct</span> <span class="n">fwnode_handle</span> <span class="o">*</span><span class="n">fwnode</span><span class="p">;</span>
+<span class="p">};</span>
+
+<span class="kt">int</span> <span class="n">irq</span><span class="p">;</span> <span class="cm">/* from platform etc */</span>
+<span class="k">struct</span> <span class="n">my_gpio</span> <span class="o">*</span><span class="n">g</span><span class="p">;</span>
+<span class="k">struct</span> <span class="n">gpio_irq_chip</span> <span class="o">*</span><span class="n">girq</span><span class="p">;</span>
+
+<span class="cm">/* Set up the irqchip dynamically */</span>
+<span class="n">g</span><span class="o">-&gt;</span><span class="n">irq</span><span class="p">.</span><span class="n">name</span> <span class="o">=</span> <span class="s">&quot;my_gpio_irq&quot;</span><span class="p">;</span>
+<span class="n">g</span><span class="o">-&gt;</span><span class="n">irq</span><span class="p">.</span><span class="n">irq_ack</span> <span class="o">=</span> <span class="n">my_gpio_ack_irq</span><span class="p">;</span>
+<span class="n">g</span><span class="o">-&gt;</span><span class="n">irq</span><span class="p">.</span><span class="n">irq_mask</span> <span class="o">=</span> <span class="n">my_gpio_mask_irq</span><span class="p">;</span>
+<span class="n">g</span><span class="o">-&gt;</span><span class="n">irq</span><span class="p">.</span><span class="n">irq_unmask</span> <span class="o">=</span> <span class="n">my_gpio_unmask_irq</span><span class="p">;</span>
+<span class="n">g</span><span class="o">-&gt;</span><span class="n">irq</span><span class="p">.</span><span class="n">irq_set_type</span> <span class="o">=</span> <span class="n">my_gpio_set_irq_type</span><span class="p">;</span>
+
+<span class="cm">/* Get a pointer to the gpio_irq_chip */</span>
+<span class="n">girq</span> <span class="o">=</span> <span class="o">&amp;</span><span class="n">g</span><span class="o">-&gt;</span><span class="n">gc</span><span class="p">.</span><span class="n">irq</span><span class="p">;</span>
+<span class="n">girq</span><span class="o">-&gt;</span><span class="n">chip</span> <span class="o">=</span> <span class="o">&amp;</span><span class="n">g</span><span class="o">-&gt;</span><span class="n">irq</span><span class="p">;</span>
+<span class="n">girq</span><span class="o">-&gt;</span><span class="n">default_type</span> <span class="o">=</span> <span class="n">IRQ_TYPE_NONE</span><span class="p">;</span>
+<span class="n">girq</span><span class="o">-&gt;</span><span class="n">handler</span> <span class="o">=</span> <span class="n">handle_bad_irq</span><span class="p">;</span>
+<span class="n">girq</span><span class="o">-&gt;</span><span class="n">fwnode</span> <span class="o">=</span> <span class="n">g</span><span class="o">-&gt;</span><span class="n">fwnode</span><span class="p">;</span>
+<span class="n">girq</span><span class="o">-&gt;</span><span class="n">parent_domain</span> <span class="o">=</span> <span class="n">parent</span><span class="p">;</span>
+<span class="n">girq</span><span class="o">-&gt;</span><span class="n">child_to_parent_hwirq</span> <span class="o">=</span> <span class="n">my_gpio_child_to_parent_hwirq</span><span class="p">;</span>
+
+<span class="k">return</span> <span class="nf">devm_gpiochip_add_data</span><span class="p">(</span><span class="n">dev</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">g</span><span class="o">-&gt;</span><span class="n">gc</span><span class="p">,</span> <span class="n">g</span><span class="p">);</span>
 </pre></div>
 </div>
-<blockquote>
-<div><p>/* Typical state container with dynamic irqchip <a href="#id15"><span class="problematic" id="id16">*</span></a>/
-struct my_gpio {</p>
-<blockquote>
-<div>struct gpio_chip gc;
-struct irq_chip irq;
-struct fwnode_handle <a href="#id17"><span class="problematic" id="id18">*</span></a>fwnode;</div></blockquote>
-<p>};</p>
-<p>int irq; /* from platform etc <a href="#id19"><span class="problematic" id="id20">*</span></a>/
-struct my_gpio <a href="#id21"><span class="problematic" id="id22">*</span></a>g;
-struct gpio_irq_chip <a href="#id23"><span class="problematic" id="id24">*</span></a>girq;</p>
-<p>/* Set up the irqchip dynamically <a href="#id25"><span class="problematic" id="id26">*</span></a>/
-g-&gt;irq.name = “my_gpio_irq”;
-g-&gt;irq.irq_ack = my_gpio_ack_irq;
-g-&gt;irq.irq_mask = my_gpio_mask_irq;
-g-&gt;irq.irq_unmask = my_gpio_unmask_irq;
-g-&gt;irq.irq_set_type = my_gpio_set_irq_type;</p>
-<p>/* Get a pointer to the gpio_irq_chip <a href="#id27"><span class="problematic" id="id28">*</span></a>/
-girq = &amp;g-&gt;gc.irq;
-girq-&gt;chip = &amp;g-&gt;irq;
-girq-&gt;default_type = IRQ_TYPE_NONE;
-girq-&gt;handler = handle_bad_irq;
-girq-&gt;fwnode = g-&gt;fwnode;
-girq-&gt;parent_domain = parent;
-girq-&gt;child_to_parent_hwirq = my_gpio_child_to_parent_hwirq;</p>
-<p>return devm_gpiochip_add_data(dev, &amp;g-&gt;gc, g);</p>
-</div></blockquote>
 <p>As you can see pretty similar, but you do not supply a parent handler for
 the IRQ, instead a parent irqdomain, an fwnode for the hardware and
 a funcion .child_to_parent_hwirq() that has the purpose of looking up

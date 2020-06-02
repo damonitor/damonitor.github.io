@@ -68,7 +68,7 @@
             
             
               <div class="version">
-                5.6.0
+                5.7.0
               </div>
             
           
@@ -1084,7 +1084,7 @@ void <code class="descname">unlock_two_nondirectories</code><span class="sig-par
 </dl>
 <dl class="function">
 <dt id="c.inode_insert5">
-struct inode * <code class="descname">inode_insert5</code><span class="sig-paren">(</span>struct inode *<em>&nbsp;inode</em>, unsigned long<em>&nbsp;hashval</em>, int (*test) (struct inode<em>&nbsp;*</em>, void<em>&nbsp;*</em>, int (*set) (struct inode<em>&nbsp;*</em>, void<em>&nbsp;*</em>, void *<em>&nbsp;data</em><span class="sig-paren">)</span><a class="headerlink" href="#c.inode_insert5" title="Permalink to this definition">¶</a></dt>
+struct inode * <code class="descname">inode_insert5</code><span class="sig-paren">(</span>struct inode *<em>&nbsp;inode</em>, unsigned long<em>&nbsp;hashval</em>, int (<em>*test</em>)(struct inode *, void *), int (*set) (struct inode *, void *), void *<em>&nbsp;data</em><span class="sig-paren">)</span><a class="headerlink" href="#c.inode_insert5" title="Permalink to this definition">¶</a></dt>
 <dd><p>obtain an inode from a mounted file system</p>
 </dd></dl>
 
@@ -1113,7 +1113,7 @@ to fill it in before unlocking it via <a class="reference internal" href="#c.unl
 sleep.</p>
 <dl class="function">
 <dt id="c.iget5_locked">
-struct inode * <code class="descname">iget5_locked</code><span class="sig-paren">(</span>struct super_block *<em>&nbsp;sb</em>, unsigned long<em>&nbsp;hashval</em>, int (*test) (struct inode<em>&nbsp;*</em>, void<em>&nbsp;*</em>, int (*set) (struct inode<em>&nbsp;*</em>, void<em>&nbsp;*</em>, void *<em>&nbsp;data</em><span class="sig-paren">)</span><a class="headerlink" href="#c.iget5_locked" title="Permalink to this definition">¶</a></dt>
+struct inode * <code class="descname">iget5_locked</code><span class="sig-paren">(</span>struct super_block *<em>&nbsp;sb</em>, unsigned long<em>&nbsp;hashval</em>, int (<em>*test</em>)(struct inode *, void *), int (*set) (struct inode *, void *), void *<em>&nbsp;data</em><span class="sig-paren">)</span><a class="headerlink" href="#c.iget5_locked" title="Permalink to this definition">¶</a></dt>
 <dd><p>obtain an inode from a mounted file system</p>
 </dd></dl>
 
@@ -1185,7 +1185,7 @@ currently becomes quite slow.</p>
 </div></blockquote>
 <dl class="function">
 <dt id="c.ilookup5_nowait">
-struct inode * <code class="descname">ilookup5_nowait</code><span class="sig-paren">(</span>struct super_block *<em>&nbsp;sb</em>, unsigned long<em>&nbsp;hashval</em>, int (*test) (struct inode<em>&nbsp;*</em>, void<em>&nbsp;*</em>, void *<em>&nbsp;data</em><span class="sig-paren">)</span><a class="headerlink" href="#c.ilookup5_nowait" title="Permalink to this definition">¶</a></dt>
+struct inode * <code class="descname">ilookup5_nowait</code><span class="sig-paren">(</span>struct super_block *<em>&nbsp;sb</em>, unsigned long<em>&nbsp;hashval</em>, int (<em>*test</em>)(struct inode *, void *), void *<em>&nbsp;data</em><span class="sig-paren">)</span><a class="headerlink" href="#c.ilookup5_nowait" title="Permalink to this definition">¶</a></dt>
 <dd><p>search for an inode in the inode cache</p>
 </dd></dl>
 
@@ -1210,7 +1210,7 @@ with the returned inode.  You probably should be using <a class="reference inter
 <p>Note2: <strong>test</strong> is called with the inode_hash_lock held, so can’t sleep.</p>
 <dl class="function">
 <dt id="c.ilookup5">
-struct inode * <code class="descname">ilookup5</code><span class="sig-paren">(</span>struct super_block *<em>&nbsp;sb</em>, unsigned long<em>&nbsp;hashval</em>, int (*test) (struct inode<em>&nbsp;*</em>, void<em>&nbsp;*</em>, void *<em>&nbsp;data</em><span class="sig-paren">)</span><a class="headerlink" href="#c.ilookup5" title="Permalink to this definition">¶</a></dt>
+struct inode * <code class="descname">ilookup5</code><span class="sig-paren">(</span>struct super_block *<em>&nbsp;sb</em>, unsigned long<em>&nbsp;hashval</em>, int (<em>*test</em>)(struct inode *, void *), void *<em>&nbsp;data</em><span class="sig-paren">)</span><a class="headerlink" href="#c.ilookup5" title="Permalink to this definition">¶</a></dt>
 <dd><p>search for an inode in the inode cache</p>
 </dd></dl>
 
@@ -1252,7 +1252,7 @@ struct inode * <code class="descname">ilookup</code><span class="sig-paren">(</s
 cache, the inode is returned with an incremented reference count.</p>
 <dl class="function">
 <dt id="c.find_inode_nowait">
-struct inode * <code class="descname">find_inode_nowait</code><span class="sig-paren">(</span>struct super_block *<em>&nbsp;sb</em>, unsigned long<em>&nbsp;hashval</em>, int (*match) (struct inode<em>&nbsp;*</em>, unsigned<em>&nbsp;long</em>, void<em>&nbsp;*</em>, void *<em>&nbsp;data</em><span class="sig-paren">)</span><a class="headerlink" href="#c.find_inode_nowait" title="Permalink to this definition">¶</a></dt>
+struct inode * <code class="descname">find_inode_nowait</code><span class="sig-paren">(</span>struct super_block *<em>&nbsp;sb</em>, unsigned long<em>&nbsp;hashval</em>, int (<em>*match</em>)(struct inode *, unsigned long, void *), void *<em>&nbsp;data</em><span class="sig-paren">)</span><a class="headerlink" href="#c.find_inode_nowait" title="Permalink to this definition">¶</a></dt>
 <dd><p>find an inode in the inode cache</p>
 </dd></dl>
 
@@ -1525,7 +1525,7 @@ change the attachments of dentries to inodes.</p>
 </div></blockquote>
 <dl class="function">
 <dt id="c.sget_fc">
-struct super_block * <code class="descname">sget_fc</code><span class="sig-paren">(</span>struct fs_context *<em>&nbsp;fc</em>, int (*test) (struct super_block<em>&nbsp;*</em>, struct fs_context<em>&nbsp;*</em>, int (*set) (struct super_block<em>&nbsp;*</em>, struct fs_context<em>&nbsp;*</em><span class="sig-paren">)</span><a class="headerlink" href="#c.sget_fc" title="Permalink to this definition">¶</a></dt>
+struct super_block * <code class="descname">sget_fc</code><span class="sig-paren">(</span>struct fs_context *<em>&nbsp;fc</em>, int (<em>*test</em>)(struct super_block *, struct fs_context *), int (*set) (struct super_block *, struct fs_context *)<span class="sig-paren">)</span><a class="headerlink" href="#c.sget_fc" title="Permalink to this definition">¶</a></dt>
 <dd><p>Find or create a superblock</p>
 </dd></dl>
 
@@ -1550,7 +1550,7 @@ will be returned in a partially constructed state with SB_BORN and SB_ACTIVE
 as yet unset.</p>
 <dl class="function">
 <dt id="c.sget">
-struct super_block * <code class="descname">sget</code><span class="sig-paren">(</span>struct file_system_type *<em>&nbsp;type</em>, int (*test) (struct super_block<em>&nbsp;*</em>, void<em>&nbsp;*</em>, int (*set) (struct super_block<em>&nbsp;*</em>, void<em>&nbsp;*</em>, int<em>&nbsp;flags</em>, void *<em>&nbsp;data</em><span class="sig-paren">)</span><a class="headerlink" href="#c.sget" title="Permalink to this definition">¶</a></dt>
+struct super_block * <code class="descname">sget</code><span class="sig-paren">(</span>struct file_system_type *<em>&nbsp;type</em>, int (<em>*test</em>)(struct super_block *,void *), int (*set) (struct super_block *,void *), int<em>&nbsp;flags</em>, void *<em>&nbsp;data</em><span class="sig-paren">)</span><a class="headerlink" href="#c.sget" title="Permalink to this definition">¶</a></dt>
 <dd><p>find or create a superblock</p>
 </dd></dl>
 
@@ -1569,7 +1569,7 @@ struct super_block * <code class="descname">sget</code><span class="sig-paren">(
 </dl>
 <dl class="function">
 <dt id="c.iterate_supers_type">
-void <code class="descname">iterate_supers_type</code><span class="sig-paren">(</span>struct file_system_type *<em>&nbsp;type</em>, void (*f) (struct super_block<em>&nbsp;*</em>, void<em>&nbsp;*</em>, void *<em>&nbsp;arg</em><span class="sig-paren">)</span><a class="headerlink" href="#c.iterate_supers_type" title="Permalink to this definition">¶</a></dt>
+void <code class="descname">iterate_supers_type</code><span class="sig-paren">(</span>struct file_system_type *<em>&nbsp;type</em>, void (<em>*f</em>)(struct super_block *, void *), void *<em>&nbsp;arg</em><span class="sig-paren">)</span><a class="headerlink" href="#c.iterate_supers_type" title="Permalink to this definition">¶</a></dt>
 <dd><p>call function for superblocks of given type</p>
 </dd></dl>
 
@@ -1656,7 +1656,7 @@ to allocate a virtual block device.</p>
 or -ENOMEM if memory allocation failed.</p>
 <dl class="function">
 <dt id="c.vfs_get_super">
-int <code class="descname">vfs_get_super</code><span class="sig-paren">(</span>struct fs_context *<em>&nbsp;fc</em>, enum vfs_get_super_keying<em>&nbsp;keying</em>, int (*fill_super) (struct super_block<em>&nbsp;*sb</em>, struct fs_context<em>&nbsp;*fc</em><span class="sig-paren">)</span><a class="headerlink" href="#c.vfs_get_super" title="Permalink to this definition">¶</a></dt>
+int <code class="descname">vfs_get_super</code><span class="sig-paren">(</span>struct fs_context *<em>&nbsp;fc</em>, enum vfs_get_super_keying<em>&nbsp;keying</em>, int (<em>*fill_super</em>)(struct super_block *sb, struct fs_context *fc)<span class="sig-paren">)</span><a class="headerlink" href="#c.vfs_get_super" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get a superblock with a search key set in s_fs_info.</p>
 </dd></dl>
 
@@ -1687,7 +1687,7 @@ unkeyed.  Each call will get a new superblock.</li>
 for a kernel-internal mount or a submount.</p>
 <dl class="function">
 <dt id="c.get_tree_bdev">
-int <code class="descname">get_tree_bdev</code><span class="sig-paren">(</span>struct fs_context *<em>&nbsp;fc</em>, int (*fill_super) (struct super_block<em>&nbsp;*</em>, struct fs_context<em>&nbsp;*</em><span class="sig-paren">)</span><a class="headerlink" href="#c.get_tree_bdev" title="Permalink to this definition">¶</a></dt>
+int <code class="descname">get_tree_bdev</code><span class="sig-paren">(</span>struct fs_context *<em>&nbsp;fc</em>, int (<em>*fill_super</em>)(struct super_block *, struct fs_context *)<span class="sig-paren">)</span><a class="headerlink" href="#c.get_tree_bdev" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get a superblock based on a single block device</p>
 </dd></dl>
 
@@ -4406,7 +4406,7 @@ buffer <strong>from</strong> at offset <strong>ppos</strong> into the kernel spa
 advanced by this number, or negative value is returned on error.</p>
 <dl class="function">
 <dt id="c.generic_fh_to_dentry">
-struct dentry * <code class="descname">generic_fh_to_dentry</code><span class="sig-paren">(</span>struct super_block *<em>&nbsp;sb</em>, struct fid *<em>&nbsp;fid</em>, int<em>&nbsp;fh_len</em>, int<em>&nbsp;fh_type</em>, struct inode *(*get_inode) (struct super_block<em>&nbsp;*sb</em>, u64<em>&nbsp;ino</em>, u32<em>&nbsp;gen</em><span class="sig-paren">)</span><a class="headerlink" href="#c.generic_fh_to_dentry" title="Permalink to this definition">¶</a></dt>
+struct dentry * <code class="descname">generic_fh_to_dentry</code><span class="sig-paren">(</span>struct super_block *<em>&nbsp;sb</em>, struct fid *<em>&nbsp;fid</em>, int<em>&nbsp;fh_len</em>, int<em>&nbsp;fh_type</em>, struct inode *(<em>*get_inode</em>)(struct super_block *sb, u64 ino, u32 gen)<span class="sig-paren">)</span><a class="headerlink" href="#c.generic_fh_to_dentry" title="Permalink to this definition">¶</a></dt>
 <dd><p>generic helper for the fh_to_dentry export operation</p>
 </dd></dl>
 
@@ -4429,7 +4429,7 @@ Linux filehandle types and calls <strong>get_inode</strong> on it to retrieve th
 inode for the object specified in the file handle.</p>
 <dl class="function">
 <dt id="c.generic_fh_to_parent">
-struct dentry * <code class="descname">generic_fh_to_parent</code><span class="sig-paren">(</span>struct super_block *<em>&nbsp;sb</em>, struct fid *<em>&nbsp;fid</em>, int<em>&nbsp;fh_len</em>, int<em>&nbsp;fh_type</em>, struct inode *(*get_inode) (struct super_block<em>&nbsp;*sb</em>, u64<em>&nbsp;ino</em>, u32<em>&nbsp;gen</em><span class="sig-paren">)</span><a class="headerlink" href="#c.generic_fh_to_parent" title="Permalink to this definition">¶</a></dt>
+struct dentry * <code class="descname">generic_fh_to_parent</code><span class="sig-paren">(</span>struct super_block *<em>&nbsp;sb</em>, struct fid *<em>&nbsp;fid</em>, int<em>&nbsp;fh_len</em>, int<em>&nbsp;fh_type</em>, struct inode *(<em>*get_inode</em>)(struct super_block *sb, u64 ino, u32 gen)<span class="sig-paren">)</span><a class="headerlink" href="#c.generic_fh_to_parent" title="Permalink to this definition">¶</a></dt>
 <dd><p>generic helper for the fh_to_parent export operation</p>
 </dd></dl>
 
@@ -5003,35 +5003,30 @@ the file will clear the bitmap then update it with the given input.</p>
 <div class="section" id="proc-filesystem-interface">
 <h3>proc filesystem interface<a class="headerlink" href="#proc-filesystem-interface" title="Permalink to this headline">¶</a></h3>
 <dl class="function">
-<dt id="c.proc_flush_task">
-void <code class="descname">proc_flush_task</code><span class="sig-paren">(</span>struct task_struct *<em>&nbsp;task</em><span class="sig-paren">)</span><a class="headerlink" href="#c.proc_flush_task" title="Permalink to this definition">¶</a></dt>
-<dd><p>Remove dcache entries for <strong>task</strong> from the /proc dcache.</p>
+<dt id="c.proc_flush_pid">
+void <code class="descname">proc_flush_pid</code><span class="sig-paren">(</span>struct pid *<em>&nbsp;pid</em><span class="sig-paren">)</span><a class="headerlink" href="#c.proc_flush_pid" title="Permalink to this definition">¶</a></dt>
+<dd><p>Remove dcache entries for <strong>pid</strong> from the /proc dcache.</p>
 </dd></dl>
 
 <p><strong>Parameters</strong></p>
 <dl class="docutils">
-<dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">task_struct</span> <span class="pre">*</span> <span class="pre">task</span></code></dt>
-<dd>task that should be flushed.</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">pid</span> <span class="pre">*</span> <span class="pre">pid</span></code></dt>
+<dd>pid that should be flushed.</dd>
 </dl>
 <p><strong>Description</strong></p>
-<p>When flushing dentries from proc, one needs to flush them from global
-proc (proc_mnt) and from all the namespaces’ procs this task was seen
-in. This call is supposed to do all of this job.</p>
-<p>Looks in the dcache for
-/proc/<strong>pid</strong>
-/proc/<strong>tgid</strong>/task/<strong>pid</strong>
-if either directory is present flushes it and all of it’ts children
-from the dcache.</p>
+<p>This function walks a list of inodes (that belong to any proc
+filesystem) that are attached to the pid and flushes them from
+the dentry cache.</p>
 <p>It is safe and reasonable to cache /proc entries for a task until
 that task exits.  After that they just clog up the dcache with
 useless entries, possibly causing useful dcache entries to be
-flushed instead.  This routine is proved to flush those useless
-dcache entries at process exit time.</p>
+flushed instead.  This routine is provided to flush those useless
+dcache entries when a process is reaped.</p>
 <p><strong>NOTE</strong></p>
 <dl class="docutils">
 <dt>This routine is just an optimization so it does not guarantee</dt>
-<dd>that no dcache entries will exist at process exit time it
-just makes it very unlikely that any will persist.</dd>
+<dd>that no dcache entries will exist after a process is reaped
+it just makes it very unlikely that any will persist.</dd>
 </dl>
 </div>
 </div>
@@ -5307,6 +5302,53 @@ void <code class="descname">sysfs_remove_bin_file</code><span class="sig-paren">
 <dd>attribute descriptor.</dd>
 </dl>
 <dl class="function">
+<dt id="c.sysfs_file_change_owner">
+int <code class="descname">sysfs_file_change_owner</code><span class="sig-paren">(</span>struct kobject *<em>&nbsp;kobj</em>, const char *<em>&nbsp;name</em>, kuid_t<em>&nbsp;kuid</em>, kgid_t<em>&nbsp;kgid</em><span class="sig-paren">)</span><a class="headerlink" href="#c.sysfs_file_change_owner" title="Permalink to this definition">¶</a></dt>
+<dd><p>change owner of a sysfs file.</p>
+</dd></dl>
+
+<p><strong>Parameters</strong></p>
+<dl class="docutils">
+<dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">kobject</span> <span class="pre">*</span> <span class="pre">kobj</span></code></dt>
+<dd>object.</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">const</span> <span class="pre">char</span> <span class="pre">*</span> <span class="pre">name</span></code></dt>
+<dd>name of the file to change.</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">kuid_t</span> <span class="pre">kuid</span></code></dt>
+<dd>new owner’s kuid</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">kgid_t</span> <span class="pre">kgid</span></code></dt>
+<dd>new owner’s kgid</dd>
+</dl>
+<p><strong>Description</strong></p>
+<p>This function looks up the sysfs entry <strong>name</strong> under <strong>kobj</strong> and changes the
+ownership to <strong>kuid</strong>/<strong>kgid</strong>.</p>
+<p>Returns 0 on success or error code on failure.</p>
+<dl class="function">
+<dt id="c.sysfs_change_owner">
+int <code class="descname">sysfs_change_owner</code><span class="sig-paren">(</span>struct kobject *<em>&nbsp;kobj</em>, kuid_t<em>&nbsp;kuid</em>, kgid_t<em>&nbsp;kgid</em><span class="sig-paren">)</span><a class="headerlink" href="#c.sysfs_change_owner" title="Permalink to this definition">¶</a></dt>
+<dd><p>change owner of the given object.</p>
+</dd></dl>
+
+<p><strong>Parameters</strong></p>
+<dl class="docutils">
+<dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">kobject</span> <span class="pre">*</span> <span class="pre">kobj</span></code></dt>
+<dd>object.</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">kuid_t</span> <span class="pre">kuid</span></code></dt>
+<dd>new owner’s kuid</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">kgid_t</span> <span class="pre">kgid</span></code></dt>
+<dd>new owner’s kgid</dd>
+</dl>
+<p><strong>Description</strong></p>
+<p>Change the owner of the default directory, files, groups, and attributes of
+<strong>kobj</strong> to <strong>kuid</strong>/<strong>kgid</strong>. Note that sysfs_change_owner mirrors how the sysfs
+entries for a kobject are added by driver core. In summary,
+<a class="reference internal" href="#c.sysfs_change_owner" title="sysfs_change_owner"><code class="xref c c-func docutils literal notranslate"><span class="pre">sysfs_change_owner()</span></code></a> takes care of the default directory entry for <strong>kobj</strong>,
+the default attributes associated with the ktype of <strong>kobj</strong> and the default
+attributes associated with the ktype of <strong>kobj</strong>.
+Additional properties not added by driver core have to be changed by the
+driver or subsystem which created them. This is similar to how
+driver/subsystem specific entries are removed.</p>
+<p>Returns 0 on success or error code on failure.</p>
+<dl class="function">
 <dt id="c.sysfs_create_link">
 int <code class="descname">sysfs_create_link</code><span class="sig-paren">(</span>struct kobject *<em>&nbsp;kobj</em>, struct kobject *<em>&nbsp;target</em>, const char *<em>&nbsp;name</em><span class="sig-paren">)</span><a class="headerlink" href="#c.sysfs_create_link" title="Permalink to this definition">¶</a></dt>
 <dd><p>create symlink between two objects.</p>
@@ -5473,7 +5515,7 @@ DEFINE_DEBUGFS_ATTRIBUTE() is protected against file removals and
 thus, may be used here.</p>
 <dl class="function">
 <dt id="c.debugfs_create_file_size">
-struct dentry * <code class="descname">debugfs_create_file_size</code><span class="sig-paren">(</span>const char *<em>&nbsp;name</em>, umode_t<em>&nbsp;mode</em>, struct dentry *<em>&nbsp;parent</em>, void *<em>&nbsp;data</em>, const struct file_operations *<em>&nbsp;fops</em>, loff_t<em>&nbsp;file_size</em><span class="sig-paren">)</span><a class="headerlink" href="#c.debugfs_create_file_size" title="Permalink to this definition">¶</a></dt>
+void <code class="descname">debugfs_create_file_size</code><span class="sig-paren">(</span>const char *<em>&nbsp;name</em>, umode_t<em>&nbsp;mode</em>, struct dentry *<em>&nbsp;parent</em>, void *<em>&nbsp;data</em>, const struct file_operations *<em>&nbsp;fops</em>, loff_t<em>&nbsp;file_size</em><span class="sig-paren">)</span><a class="headerlink" href="#c.debugfs_create_file_size" title="Permalink to this definition">¶</a></dt>
 <dd><p>create a file in the debugfs filesystem</p>
 </dd></dl>
 
@@ -5502,13 +5544,6 @@ this file.</dd>
 wide range of flexibility in creating a file, or a directory (if you want
 to create a directory, the <a class="reference internal" href="#c.debugfs_create_dir" title="debugfs_create_dir"><code class="xref c c-func docutils literal notranslate"><span class="pre">debugfs_create_dir()</span></code></a> function is
 recommended to be used instead.)</p>
-<p>This function will return a pointer to a dentry if it succeeds.  This
-pointer must be passed to the <a class="reference internal" href="#c.debugfs_remove" title="debugfs_remove"><code class="xref c c-func docutils literal notranslate"><span class="pre">debugfs_remove()</span></code></a> function when the file is
-to be removed (no automatic cleanup happens if your module is unloaded,
-you are responsible here.)  If an error occurs, ERR_PTR(-ERROR) will be
-returned.</p>
-<p>If debugfs is not enabled in the kernel, the value -<code class="docutils literal notranslate"><span class="pre">ENODEV</span></code> will be
-returned.</p>
 <dl class="function">
 <dt id="c.debugfs_create_dir">
 struct dentry * <code class="descname">debugfs_create_dir</code><span class="sig-paren">(</span>const char *<em>&nbsp;name</em>, struct dentry *<em>&nbsp;parent</em><span class="sig-paren">)</span><a class="headerlink" href="#c.debugfs_create_dir" title="Permalink to this definition">¶</a></dt>
@@ -5729,7 +5764,7 @@ contains the value of the variable <strong>value</strong>.  If the <strong>mode<
 set, it can be read from, and written to.</p>
 <dl class="function">
 <dt id="c.debugfs_create_u32">
-struct dentry * <code class="descname">debugfs_create_u32</code><span class="sig-paren">(</span>const char *<em>&nbsp;name</em>, umode_t<em>&nbsp;mode</em>, struct dentry *<em>&nbsp;parent</em>, u32 *<em>&nbsp;value</em><span class="sig-paren">)</span><a class="headerlink" href="#c.debugfs_create_u32" title="Permalink to this definition">¶</a></dt>
+void <code class="descname">debugfs_create_u32</code><span class="sig-paren">(</span>const char *<em>&nbsp;name</em>, umode_t<em>&nbsp;mode</em>, struct dentry *<em>&nbsp;parent</em>, u32 *<em>&nbsp;value</em><span class="sig-paren">)</span><a class="headerlink" href="#c.debugfs_create_u32" title="Permalink to this definition">¶</a></dt>
 <dd><p>create a debugfs file that is used to read and write an unsigned 32-bit value</p>
 </dd></dl>
 
@@ -5751,13 +5786,6 @@ from.</dd>
 <p>This function creates a file in debugfs with the given name that
 contains the value of the variable <strong>value</strong>.  If the <strong>mode</strong> variable is so
 set, it can be read from, and written to.</p>
-<p>This function will return a pointer to a dentry if it succeeds.  This
-pointer must be passed to the <a class="reference internal" href="#c.debugfs_remove" title="debugfs_remove"><code class="xref c c-func docutils literal notranslate"><span class="pre">debugfs_remove()</span></code></a> function when the file is
-to be removed (no automatic cleanup happens if your module is unloaded,
-you are responsible here.)  If an error occurs, ERR_PTR(-ERROR) will be
-returned.</p>
-<p>If debugfs is not enabled in the kernel, the value ERR_PTR(-ENODEV) will
-be returned.</p>
 <dl class="function">
 <dt id="c.debugfs_create_u64">
 void <code class="descname">debugfs_create_u64</code><span class="sig-paren">(</span>const char *<em>&nbsp;name</em>, umode_t<em>&nbsp;mode</em>, struct dentry *<em>&nbsp;parent</em>, u64 *<em>&nbsp;value</em><span class="sig-paren">)</span><a class="headerlink" href="#c.debugfs_create_u64" title="Permalink to this definition">¶</a></dt>
@@ -6074,7 +6102,7 @@ the names and values of a set of 32-bit registers. If the <strong>mode</strong> 
 is so set it can be read from. Writing is not supported.</p>
 <dl class="function">
 <dt id="c.debugfs_create_devm_seqfile">
-struct dentry * <code class="descname">debugfs_create_devm_seqfile</code><span class="sig-paren">(</span>struct <a class="reference internal" href="../driver-api/infrastructure.html#c.device" title="device">device</a> *<em>&nbsp;dev</em>, const char *<em>&nbsp;name</em>, struct dentry *<em>&nbsp;parent</em>, int (*read_fn) (struct seq_file<em>&nbsp;*s</em>, void<em>&nbsp;*data</em><span class="sig-paren">)</span><a class="headerlink" href="#c.debugfs_create_devm_seqfile" title="Permalink to this definition">¶</a></dt>
+struct dentry * <code class="descname">debugfs_create_devm_seqfile</code><span class="sig-paren">(</span>struct <a class="reference internal" href="../driver-api/infrastructure.html#c.device" title="device">device</a> *<em>&nbsp;dev</em>, const char *<em>&nbsp;name</em>, struct dentry *<em>&nbsp;parent</em>, int (<em>*read_fn</em>)(struct seq_file *s, void *data)<span class="sig-paren">)</span><a class="headerlink" href="#c.debugfs_create_devm_seqfile" title="Permalink to this definition">¶</a></dt>
 <dd><p>create a debugfs file that is bound to device.</p>
 </dd></dl>
 

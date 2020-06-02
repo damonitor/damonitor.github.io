@@ -68,7 +68,7 @@
             
             
               <div class="version">
-                5.6.0
+                5.7.0
               </div>
             
           
@@ -315,7 +315,7 @@ That way you can be sure no ioctl is running when you call
 <h2>1.4.2. Video device registration<a class="headerlink" href="#video-device-registration" title="Permalink to this headline">¶</a></h2>
 <p>Next you register the video device with <a class="reference internal" href="#c.video_register_device" title="video_register_device"><code class="xref c c-func docutils literal notranslate"><span class="pre">video_register_device()</span></code></a>.
 This will create the character device for you.</p>
-<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="n">err</span> <span class="o">=</span> <span class="n">video_register_device</span><span class="p">(</span><span class="n">vdev</span><span class="p">,</span> <span class="n">VFL_TYPE_GRABBER</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">);</span>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="n">err</span> <span class="o">=</span> <span class="n">video_register_device</span><span class="p">(</span><span class="n">vdev</span><span class="p">,</span> <span class="n">VFL_TYPE_VIDEO</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">);</span>
 <span class="k">if</span> <span class="p">(</span><span class="n">err</span><span class="p">)</span> <span class="p">{</span>
         <span class="n">video_device_release</span><span class="p">(</span><span class="n">vdev</span><span class="p">);</span> <span class="cm">/* or kfree(my_vdev); */</span>
         <span class="k">return</span> <span class="n">err</span><span class="p">;</span>
@@ -340,7 +340,7 @@ types exist:</p>
 </tr>
 </thead>
 <tbody valign="top">
-<tr class="row-even"><td><code class="docutils literal notranslate"><span class="pre">VFL_TYPE_GRABBER</span></code></td>
+<tr class="row-even"><td><code class="docutils literal notranslate"><span class="pre">VFL_TYPE_VIDEO</span></code></td>
 <td><code class="docutils literal notranslate"><span class="pre">/dev/videoX</span></code></td>
 <td>for video input/output devices</td>
 </tr>
@@ -531,7 +531,7 @@ enum <code class="descname">vfl_devnode_type</code><a class="headerlink" href="#
 
 <p><strong>Constants</strong></p>
 <dl class="docutils">
-<dt><code class="docutils literal notranslate"><span class="pre">VFL_TYPE_GRABBER</span></code></dt>
+<dt><code class="docutils literal notranslate"><span class="pre">VFL_TYPE_VIDEO</span></code></dt>
 <dd>for video input/output devices</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">VFL_TYPE_VBI</span></code></dt>
 <dd>for vertical blank data (i.e. closed captions, teletext)</dd>
@@ -820,13 +820,13 @@ struct <code class="descname">video_device</code><a class="headerlink" href="#c.
 <dt><code class="docutils literal notranslate"><span class="pre">device_caps</span></code></dt>
 <dd>device capabilities as used in v4l2_capabilities</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">dev</span></code></dt>
-<dd><a class="reference internal" href="../../driver-api/infrastructure.html#c.device" title="device"><code class="xref c c-type docutils literal notranslate"><span class="pre">struct</span> <span class="pre">device</span></code></a> for the video device</dd>
+<dd><code class="xref c c-type docutils literal notranslate"><span class="pre">struct</span> <span class="pre">device</span></code> for the video device</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">cdev</span></code></dt>
 <dd>character device</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">v4l2_dev</span></code></dt>
 <dd>pointer to <a class="reference internal" href="v4l2-device.html#c.v4l2_device" title="v4l2_device"><code class="xref c c-type docutils literal notranslate"><span class="pre">struct</span> <span class="pre">v4l2_device</span></code></a> parent</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">dev_parent</span></code></dt>
-<dd>pointer to <a class="reference internal" href="../../driver-api/infrastructure.html#c.device" title="device"><code class="xref c c-type docutils literal notranslate"><span class="pre">struct</span> <span class="pre">device</span></code></a> parent</dd>
+<dd>pointer to <code class="xref c c-type docutils literal notranslate"><span class="pre">struct</span> <span class="pre">device</span></code> parent</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">ctrl_handler</span></code></dt>
 <dd>Control handler associated with this device node.
 May be NULL.</dd>
@@ -886,13 +886,13 @@ Contains a set of <a class="reference internal" href="#c.v4l2_video_device_flags
 <dl class="function">
 <dt id="c.to_video_device">
 <code class="descname">to_video_device</code><span class="sig-paren">(</span><em>cd</em><span class="sig-paren">)</span><a class="headerlink" href="#c.to_video_device" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns a <a class="reference internal" href="#c.video_device" title="video_device"><code class="xref c c-type docutils literal notranslate"><span class="pre">struct</span> <span class="pre">video_device</span></code></a> from the <a class="reference internal" href="../../driver-api/infrastructure.html#c.device" title="device"><code class="xref c c-type docutils literal notranslate"><span class="pre">struct</span> <span class="pre">device</span></code></a> embedded on it.</p>
+<dd><p>Returns a <a class="reference internal" href="#c.video_device" title="video_device"><code class="xref c c-type docutils literal notranslate"><span class="pre">struct</span> <span class="pre">video_device</span></code></a> from the <code class="xref c c-type docutils literal notranslate"><span class="pre">struct</span> <span class="pre">device</span></code> embedded on it.</p>
 </dd></dl>
 
 <p><strong>Parameters</strong></p>
 <dl class="docutils">
 <dt><code class="docutils literal notranslate"><span class="pre">cd</span></code></dt>
-<dd>pointer to <a class="reference internal" href="../../driver-api/infrastructure.html#c.device" title="device"><code class="xref c c-type docutils literal notranslate"><span class="pre">struct</span> <span class="pre">device</span></code></a></dd>
+<dd>pointer to <code class="xref c c-type docutils literal notranslate"><span class="pre">struct</span> <span class="pre">device</span></code></dd>
 </dl>
 <dl class="function">
 <dt id="c.__video_register_device">

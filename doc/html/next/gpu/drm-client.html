@@ -68,7 +68,7 @@
             
             
               <div class="version">
-                5.6.0
+                5.7.0
               </div>
             
           
@@ -190,6 +190,10 @@ releasing its resources using <a class="reference internal" href="#c.drm_client_
 <dd><p class="first">Called on drm_lastclose(). The first client instance in the list that
 returns zero gets the privilege to restore and no more clients are
 called. This callback is not called after <strong>unregister</strong> has been called.</p>
+<p>Note that the core does not guarantee exclusion against concurrent
+<a class="reference internal" href="drm-internals.html#c.drm_open" title="drm_open"><code class="xref c c-func docutils literal notranslate"><span class="pre">drm_open()</span></code></a>. Clients need to ensure this themselves, for example by
+using drm_master_internal_acquire() and
+drm_master_internal_release().</p>
 <p class="last">This callback is optional.</p>
 </dd>
 <dt><code class="docutils literal notranslate"><span class="pre">hotplug</span></code></dt>
@@ -482,8 +486,8 @@ to match the rotation needed on its connector.</p>
 <p><strong>Return</strong></p>
 <p>True if the plane can do the rotation, false otherwise.</p>
 <dl class="function">
-<dt id="c.drm_client_modeset_commit_force">
-int <code class="descname">drm_client_modeset_commit_force</code><span class="sig-paren">(</span>struct <a class="reference internal" href="#c.drm_client_dev" title="drm_client_dev">drm_client_dev</a> *<em>&nbsp;client</em><span class="sig-paren">)</span><a class="headerlink" href="#c.drm_client_modeset_commit_force" title="Permalink to this definition">¶</a></dt>
+<dt id="c.drm_client_modeset_commit_locked">
+int <code class="descname">drm_client_modeset_commit_locked</code><span class="sig-paren">(</span>struct <a class="reference internal" href="#c.drm_client_dev" title="drm_client_dev">drm_client_dev</a> *<em>&nbsp;client</em><span class="sig-paren">)</span><a class="headerlink" href="#c.drm_client_modeset_commit_locked" title="Permalink to this definition">¶</a></dt>
 <dd><p>Force commit CRTC configuration</p>
 </dd></dl>
 
@@ -493,7 +497,9 @@ int <code class="descname">drm_client_modeset_commit_force</code><span class="si
 <dd>DRM client</dd>
 </dl>
 <p><strong>Description</strong></p>
-<p>Commit modeset configuration to crtcs without checking if there is a DRM master.</p>
+<p>Commit modeset configuration to crtcs without checking if there is a DRM
+master. The assumption is that the caller already holds an internal DRM
+master reference acquired with drm_master_internal_acquire().</p>
 <p><strong>Return</strong></p>
 <p>Zero on success or negative error code on failure.</p>
 <dl class="function">

@@ -68,7 +68,7 @@
             
             
               <div class="version">
-                5.6.0
+                5.7.0
               </div>
             
           
@@ -265,8 +265,8 @@ sent to the CPU.</li>
 or packets that are trapped due to well-defined conditions (e.g., TTL error).
 Such traps can be shared by multiple device drivers and their description must
 be added to the following table:</p>
-<table border="1" class="colwidths-given docutils" id="id3">
-<caption><span class="caption-text">List of Generic Packet Traps</span><a class="headerlink" href="#id3" title="Permalink to this table">¶</a></caption>
+<table border="1" class="colwidths-given docutils" id="id4">
+<caption><span class="caption-text">List of Generic Packet Traps</span><a class="headerlink" href="#id4" title="Permalink to this table">¶</a></caption>
 <colgroup>
 <col width="5%" />
 <col width="5%" />
@@ -419,6 +419,14 @@ bits set in VXLAN header)</td>
 <td>Traps NVE packets that the device decided to drop because their overlay
 source MAC is multicast</td>
 </tr>
+<tr class="row-odd"><td><code class="docutils literal notranslate"><span class="pre">ingress_flow_action_drop</span></code></td>
+<td><code class="docutils literal notranslate"><span class="pre">drop</span></code></td>
+<td>Traps packets dropped during processing of ingress flow action drop</td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal notranslate"><span class="pre">egress_flow_action_drop</span></code></td>
+<td><code class="docutils literal notranslate"><span class="pre">drop</span></code></td>
+<td>Traps packets dropped during processing of egress flow action drop</td>
+</tr>
 </tbody>
 </table>
 </div>
@@ -437,14 +445,14 @@ drivers:</p>
 </div></blockquote>
 </div>
 <div class="section" id="generic-packet-trap-groups">
-<h2>Generic Packet Trap Groups<a class="headerlink" href="#generic-packet-trap-groups" title="Permalink to this headline">¶</a></h2>
+<span id="id3"></span><h2>Generic Packet Trap Groups<a class="headerlink" href="#generic-packet-trap-groups" title="Permalink to this headline">¶</a></h2>
 <p>Generic packet trap groups are used to aggregate logically related packet
 traps. These groups allow the user to batch operations such as setting the trap
 action of all member traps. In addition, <code class="docutils literal notranslate"><span class="pre">devlink-trap</span></code> can report aggregated
 per-group packets and bytes statistics, in case per-trap statistics are too
 narrow. The description of these groups must be added to the following table:</p>
-<table border="1" class="colwidths-given docutils" id="id4">
-<caption><span class="caption-text">List of Generic Packet Trap Groups</span><a class="headerlink" href="#id4" title="Permalink to this table">¶</a></caption>
+<table border="1" class="colwidths-given docutils" id="id5">
+<caption><span class="caption-text">List of Generic Packet Trap Groups</span><a class="headerlink" href="#id5" title="Permalink to this table">¶</a></caption>
 <colgroup>
 <col width="10%" />
 <col width="90%" />
@@ -469,8 +477,33 @@ an enqueue decision</td>
 <td>Contains packet traps for packets that were dropped by the device during
 tunnel encapsulation / decapsulation</td>
 </tr>
+<tr class="row-even"><td><code class="docutils literal notranslate"><span class="pre">acl_drops</span></code></td>
+<td>Contains packet traps for packets that were dropped by the device during
+ACL processing</td>
+</tr>
 </tbody>
 </table>
+</div>
+<div class="section" id="packet-trap-policers">
+<h2>Packet Trap Policers<a class="headerlink" href="#packet-trap-policers" title="Permalink to this headline">¶</a></h2>
+<p>As previously explained, the underlying device can trap certain packets to the
+CPU for processing. In most cases, the underlying device is capable of handling
+packet rates that are several orders of magnitude higher compared to those that
+can be handled by the CPU.</p>
+<p>Therefore, in order to prevent the underlying device from overwhelming the CPU,
+devices usually include packet trap policers that are able to police the
+trapped packets to rates that can be handled by the CPU.</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">devlink-trap</span></code> mechanism allows capable device drivers to register their
+supported packet trap policers with <code class="docutils literal notranslate"><span class="pre">devlink</span></code>. The device driver can choose
+to associate these policers with supported packet trap groups (see
+<a class="reference internal" href="#generic-packet-trap-groups"><span class="std std-ref">Generic Packet Trap Groups</span></a>) during its initialization, thereby exposing
+its default control plane policy to user space.</p>
+<p>Device drivers should allow user space to change the parameters of the policers
+(e.g., rate, burst size) as well as the association between the policers and
+trap groups by implementing the relevant callbacks.</p>
+<p>If possible, device drivers should implement a callback that allows user space
+to retrieve the number of packets that were dropped by the policer because its
+configured policy was violated.</p>
 </div>
 <div class="section" id="testing">
 <h2>Testing<a class="headerlink" href="#testing" title="Permalink to this headline">¶</a></h2>

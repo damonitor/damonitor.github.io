@@ -68,7 +68,7 @@
             
             
               <div class="version">
-                5.6.0
+                5.7.0
               </div>
             
           
@@ -561,6 +561,26 @@ struct <code class="descname">wmi_device_id</code><a class="headerlink" href="#c
 <dt><code class="docutils literal notranslate"><span class="pre">context</span></code></dt>
 <dd>pointer to driver specific data</dd>
 </dl>
+<dl class="type">
+<dt id="c.mhi_device_id">
+struct <code class="descname">mhi_device_id</code><a class="headerlink" href="#c.mhi_device_id" title="Permalink to this definition">¶</a></dt>
+<dd><p>MHI device identification</p>
+</dd></dl>
+
+<p><strong>Definition</strong></p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>struct mhi_device_id {
+  const char chan[MHI_NAME_SIZE];
+  kernel_ulong_t driver_data;
+};
+</pre></div>
+</div>
+<p><strong>Members</strong></p>
+<dl class="docutils">
+<dt><code class="docutils literal notranslate"><span class="pre">chan</span></code></dt>
+<dd>MHI channel name</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">driver_data</span></code></dt>
+<dd>driver data;</dd>
+</dl>
 </div>
 <div class="section" id="delaying-scheduling-and-timer-routines">
 <h2>Delaying, scheduling, and timer routines<a class="headerlink" href="#delaying-scheduling-and-timer-routines" title="Permalink to this headline">¶</a></h2>
@@ -837,8 +857,8 @@ can’t go away on us before we can do any checks.</p>
 false (0) if we failed to boost the target.
 -ESRCH if there’s no task to yield to.</div></blockquote>
 <dl class="function">
-<dt id="c.cpupri_find">
-int <code class="descname">cpupri_find</code><span class="sig-paren">(</span>struct cpupri *<em>&nbsp;cp</em>, struct task_struct *<em>&nbsp;p</em>, struct cpumask *<em>&nbsp;lowest_mask</em>, bool (*fitness_fn) (struct task_struct<em>&nbsp;*p</em>, int<em>&nbsp;cpu</em><span class="sig-paren">)</span><a class="headerlink" href="#c.cpupri_find" title="Permalink to this definition">¶</a></dt>
+<dt id="c.cpupri_find_fitness">
+int <code class="descname">cpupri_find_fitness</code><span class="sig-paren">(</span>struct cpupri *<em>&nbsp;cp</em>, struct task_struct *<em>&nbsp;p</em>, struct cpumask *<em>&nbsp;lowest_mask</em>, bool (<em>*fitness_fn</em>)(struct task_struct *p, int cpu)<span class="sig-paren">)</span><a class="headerlink" href="#c.cpupri_find_fitness" title="Permalink to this definition">¶</a></dt>
 <dd><p>find the best (lowest-pri) CPU in the system</p>
 </dd></dl>
 
@@ -1337,7 +1357,7 @@ of firing does not matter too much, as long as they don’t fire too
 early.</p>
 <dl class="function">
 <dt id="c.init_timer_key">
-void <code class="descname">init_timer_key</code><span class="sig-paren">(</span>struct timer_list *<em>&nbsp;timer</em>, void (*func) (struct timer_list<em>&nbsp;*</em>, unsigned int<em>&nbsp;flags</em>, const char *<em>&nbsp;name</em>, struct lock_class_key *<em>&nbsp;key</em><span class="sig-paren">)</span><a class="headerlink" href="#c.init_timer_key" title="Permalink to this definition">¶</a></dt>
+void <code class="descname">init_timer_key</code><span class="sig-paren">(</span>struct timer_list *<em>&nbsp;timer</em>, void (<em>*func</em>)(struct timer_list *), unsigned int<em>&nbsp;flags</em>, const char *<em>&nbsp;name</em>, struct lock_class_key *<em>&nbsp;key</em><span class="sig-paren">)</span><a class="headerlink" href="#c.init_timer_key" title="Permalink to this definition">¶</a></dt>
 <dd><p>initialize a timer</p>
 </dd></dl>
 
@@ -1538,23 +1558,25 @@ signed long <code class="descname">schedule_timeout</code><span class="sig-paren
 <dd>timeout value in jiffies</dd>
 </dl>
 <p><strong>Description</strong></p>
-<p>Make the current task sleep until <strong>timeout</strong> jiffies have
-elapsed. The routine will return immediately unless
-the current task state has been set (see set_current_state()).</p>
-<p>You can set the task state as follows -</p>
+<p>Make the current task sleep until <strong>timeout</strong> jiffies have elapsed.
+The function behavior depends on the current task state
+(see also set_current_state() description):</p>
+<p><code class="docutils literal notranslate"><span class="pre">TASK_RUNNING</span></code> - the scheduler is called, but the task does not sleep
+at all. That happens because sched_submit_work() does nothing for
+tasks in <code class="docutils literal notranslate"><span class="pre">TASK_RUNNING</span></code> state.</p>
 <p><code class="docutils literal notranslate"><span class="pre">TASK_UNINTERRUPTIBLE</span></code> - at least <strong>timeout</strong> jiffies are guaranteed to
 pass before the routine returns unless the current task is explicitly
-woken up, (e.g. by <a class="reference internal" href="#c.wake_up_process" title="wake_up_process"><code class="xref c c-func docutils literal notranslate"><span class="pre">wake_up_process()</span></code></a>)”.</p>
+woken up, (e.g. by <a class="reference internal" href="#c.wake_up_process" title="wake_up_process"><code class="xref c c-func docutils literal notranslate"><span class="pre">wake_up_process()</span></code></a>).</p>
 <p><code class="docutils literal notranslate"><span class="pre">TASK_INTERRUPTIBLE</span></code> - the routine may return early if a signal is
 delivered to the current task or the current task is explicitly woken
 up.</p>
-<p>The current task state is guaranteed to be TASK_RUNNING when this
+<p>The current task state is guaranteed to be <code class="docutils literal notranslate"><span class="pre">TASK_RUNNING</span></code> when this
 routine returns.</p>
 <p>Specifying a <strong>timeout</strong> value of <code class="docutils literal notranslate"><span class="pre">MAX_SCHEDULE_TIMEOUT</span></code> will schedule
 the CPU away without a bound on the timeout. In this case the return
 value will be <code class="docutils literal notranslate"><span class="pre">MAX_SCHEDULE_TIMEOUT</span></code>.</p>
 <p>Returns 0 when the timer has expired otherwise the remaining time in
-jiffies will be returned.  In all cases the return value is guaranteed
+jiffies will be returned. In all cases the return value is guaranteed
 to be non-negative.</p>
 <dl class="function">
 <dt id="c.msleep">
@@ -3501,7 +3523,7 @@ information will be printed out together to help debugging.  The
 description can be at most WORKER_DESC_LEN including the trailing ‘0’.</p>
 <dl class="function">
 <dt id="c.work_on_cpu">
-long <code class="descname">work_on_cpu</code><span class="sig-paren">(</span>int<em>&nbsp;cpu</em>, long (*fn) (void<em>&nbsp;*</em>, void *<em>&nbsp;arg</em><span class="sig-paren">)</span><a class="headerlink" href="#c.work_on_cpu" title="Permalink to this definition">¶</a></dt>
+long <code class="descname">work_on_cpu</code><span class="sig-paren">(</span>int<em>&nbsp;cpu</em>, long (<em>*fn</em>)(void *), void *<em>&nbsp;arg</em><span class="sig-paren">)</span><a class="headerlink" href="#c.work_on_cpu" title="Permalink to this definition">¶</a></dt>
 <dd><p>run a function in thread context on a particular cpu</p>
 </dd></dl>
 
@@ -3521,7 +3543,7 @@ The caller must not hold any locks which would prevent <strong>fn</strong> from 
 <p>The value <strong>fn</strong> returns.</p>
 <dl class="function">
 <dt id="c.work_on_cpu_safe">
-long <code class="descname">work_on_cpu_safe</code><span class="sig-paren">(</span>int<em>&nbsp;cpu</em>, long (*fn) (void<em>&nbsp;*</em>, void *<em>&nbsp;arg</em><span class="sig-paren">)</span><a class="headerlink" href="#c.work_on_cpu_safe" title="Permalink to this definition">¶</a></dt>
+long <code class="descname">work_on_cpu_safe</code><span class="sig-paren">(</span>int<em>&nbsp;cpu</em>, long (<em>*fn</em>)(void *), void *<em>&nbsp;arg</em><span class="sig-paren">)</span><a class="headerlink" href="#c.work_on_cpu_safe" title="Permalink to this definition">¶</a></dt>
 <dd><p>run a function in thread context on a particular cpu</p>
 </dd></dl>
 
@@ -4104,7 +4126,7 @@ freezer deadlock and freezable kthreads should use this function instead
 of calling try_to_freeze() directly.</p>
 <dl class="function">
 <dt id="c.kthread_create_on_node">
-struct task_struct * <code class="descname">kthread_create_on_node</code><span class="sig-paren">(</span>int (*threadfn) (void<em>&nbsp;*data</em>, void *<em>&nbsp;data</em>, int<em>&nbsp;node</em>, const char<em>&nbsp;namefmt</em>, ...<span class="sig-paren">)</span><a class="headerlink" href="#c.kthread_create_on_node" title="Permalink to this definition">¶</a></dt>
+struct task_struct * <code class="descname">kthread_create_on_node</code><span class="sig-paren">(</span>int (<em>*threadfn</em>)(void *data), void *<em>&nbsp;data</em>, int<em>&nbsp;node</em>, const char<em>&nbsp;namefmt</em>, ...<span class="sig-paren">)</span><a class="headerlink" href="#c.kthread_create_on_node" title="Permalink to this definition">¶</a></dt>
 <dd><p>create a kthread.</p>
 </dd></dl>
 
@@ -6412,7 +6434,7 @@ other devres_*() functions.</p>
 <p>Pointer to allocated devres on success, NULL on failure.</p>
 <dl class="function">
 <dt id="c.devres_for_each_res">
-void <code class="descname">devres_for_each_res</code><span class="sig-paren">(</span>struct <a class="reference internal" href="infrastructure.html#c.device" title="device">device</a> *<em>&nbsp;dev</em>, dr_release_t<em>&nbsp;release</em>, dr_match_t<em>&nbsp;match</em>, void *<em>&nbsp;match_data</em>, void (*fn) (struct <a class="reference internal" href="infrastructure.html#c.device" title="device">device</a><em>&nbsp;*</em>, void<em>&nbsp;*</em>, void<em>&nbsp;*</em>, void *<em>&nbsp;data</em><span class="sig-paren">)</span><a class="headerlink" href="#c.devres_for_each_res" title="Permalink to this definition">¶</a></dt>
+void <code class="descname">devres_for_each_res</code><span class="sig-paren">(</span>struct <a class="reference internal" href="infrastructure.html#c.device" title="device">device</a> *<em>&nbsp;dev</em>, dr_release_t<em>&nbsp;release</em>, dr_match_t<em>&nbsp;match</em>, void *<em>&nbsp;match_data</em>, void (<em>*fn</em>)(struct <a class="reference internal" href="infrastructure.html#c.device" title="device">device</a> *, void *, void *), void *<em>&nbsp;data</em><span class="sig-paren">)</span><a class="headerlink" href="#c.devres_for_each_res" title="Permalink to this definition">¶</a></dt>
 <dd><p>Resource iterator</p>
 </dd></dl>
 
@@ -6662,7 +6684,7 @@ groups properly nested inside the selected group are removed.</p>
 <p>The number of released non-group resources.</p>
 <dl class="function">
 <dt id="c.devm_add_action">
-int <code class="descname">devm_add_action</code><span class="sig-paren">(</span>struct <a class="reference internal" href="infrastructure.html#c.device" title="device">device</a> *<em>&nbsp;dev</em>, void (*action) (void<em>&nbsp;*</em>, void *<em>&nbsp;data</em><span class="sig-paren">)</span><a class="headerlink" href="#c.devm_add_action" title="Permalink to this definition">¶</a></dt>
+int <code class="descname">devm_add_action</code><span class="sig-paren">(</span>struct <a class="reference internal" href="infrastructure.html#c.device" title="device">device</a> *<em>&nbsp;dev</em>, void (<em>*action</em>)(void *), void *<em>&nbsp;data</em><span class="sig-paren">)</span><a class="headerlink" href="#c.devm_add_action" title="Permalink to this definition">¶</a></dt>
 <dd><p>add a custom action to list of managed resources</p>
 </dd></dl>
 
@@ -6680,7 +6702,7 @@ int <code class="descname">devm_add_action</code><span class="sig-paren">(</span
 it gets executed as part of standard resource unwinding.</p>
 <dl class="function">
 <dt id="c.devm_remove_action">
-void <code class="descname">devm_remove_action</code><span class="sig-paren">(</span>struct <a class="reference internal" href="infrastructure.html#c.device" title="device">device</a> *<em>&nbsp;dev</em>, void (*action) (void<em>&nbsp;*</em>, void *<em>&nbsp;data</em><span class="sig-paren">)</span><a class="headerlink" href="#c.devm_remove_action" title="Permalink to this definition">¶</a></dt>
+void <code class="descname">devm_remove_action</code><span class="sig-paren">(</span>struct <a class="reference internal" href="infrastructure.html#c.device" title="device">device</a> *<em>&nbsp;dev</em>, void (<em>*action</em>)(void *), void *<em>&nbsp;data</em><span class="sig-paren">)</span><a class="headerlink" href="#c.devm_remove_action" title="Permalink to this definition">¶</a></dt>
 <dd><p>removes previously added custom action</p>
 </dd></dl>
 
@@ -6698,7 +6720,7 @@ void <code class="descname">devm_remove_action</code><span class="sig-paren">(</
 Both action and data should match one of the existing entries.</p>
 <dl class="function">
 <dt id="c.devm_release_action">
-void <code class="descname">devm_release_action</code><span class="sig-paren">(</span>struct <a class="reference internal" href="infrastructure.html#c.device" title="device">device</a> *<em>&nbsp;dev</em>, void (*action) (void<em>&nbsp;*</em>, void *<em>&nbsp;data</em><span class="sig-paren">)</span><a class="headerlink" href="#c.devm_release_action" title="Permalink to this definition">¶</a></dt>
+void <code class="descname">devm_release_action</code><span class="sig-paren">(</span>struct <a class="reference internal" href="infrastructure.html#c.device" title="device">device</a> *<em>&nbsp;dev</em>, void (<em>*action</em>)(void *), void *<em>&nbsp;data</em><span class="sig-paren">)</span><a class="headerlink" href="#c.devm_release_action" title="Permalink to this definition">¶</a></dt>
 <dd><p>release previously added custom action</p>
 </dd></dl>
 

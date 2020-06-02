@@ -68,7 +68,7 @@
             
             
               <div class="version">
-                5.6.0
+                5.7.0
               </div>
             
           
@@ -161,9 +161,9 @@
   <div class="section" id="the-virtual-video-test-driver-vivid">
 <h1>36. The Virtual Video Test Driver (vivid)<a class="headerlink" href="#the-virtual-video-test-driver-vivid" title="Permalink to this headline">¶</a></h1>
 <p>This driver emulates video4linux hardware of various types: video capture, video
-output, vbi capture and output, radio receivers and transmitters and a software
-defined radio receiver. In addition a simple framebuffer device is available for
-testing capture and output overlays.</p>
+output, vbi capture and output, metadata capture and output, radio receivers and
+transmitters, touch capture and a software defined radio receiver. In addition a
+simple framebuffer device is available for testing capture and output overlays.</p>
 <p>Up to 64 vivid instances can be created, each with up to 16 inputs and 16 outputs.</p>
 <p>Each input can be a webcam, TV capture device, S-Video capture device or an HDMI
 capture device. Each output can be an S-Video output device or an HDMI output
@@ -189,6 +189,8 @@ you can test the various features without requiring special hardware.</p>
 <li>Radio receiver and transmitter support, including RDS support</li>
 <li>Software defined radio (SDR) support</li>
 <li>Capture and output overlay support</li>
+<li>Metadata capture and output support</li>
+<li>Touch capture support</li>
 </ul>
 <p>These features will be described in more detail below.</p>
 <div class="section" id="configuring-the-driver">
@@ -221,6 +223,9 @@ Each value is a bitmask with the following meaning:</p>
 <li>bit 10-11: VBI Output node: 0 = none, 1 = raw vbi, 2 = sliced vbi, 3 = both</li>
 <li>bit 12: Radio Transmitter node</li>
 <li>bit 16: Framebuffer for testing overlays</li>
+<li>bit 17: Metadata Capture node</li>
+<li>bit 18: Metadata Output node</li>
+<li>bit 19: Touch Capture node</li>
 </ul>
 </div></blockquote>
 <p>So to create four instances, the first two with just one video capture
@@ -336,6 +341,24 @@ device. The default is -1 which will just take the first free number.</p>
 <li><p class="first">sdr_cap_nr:</p>
 <blockquote>
 <div><p>give the desired swradioX start number for each SDR capture device.
+The default is -1 which will just take the first free number.</p>
+</div></blockquote>
+</li>
+<li><p class="first">meta_cap_nr:</p>
+<blockquote>
+<div><p>give the desired videoX start number for each metadata capture device.
+The default is -1 which will just take the first free number.</p>
+</div></blockquote>
+</li>
+<li><p class="first">meta_out_nr:</p>
+<blockquote>
+<div><p>give the desired videoX start number for each metadata output device.
+The default is -1 which will just take the first free number.</p>
+</div></blockquote>
+</li>
+<li><p class="first">touch_cap_nr:</p>
+<blockquote>
+<div><p>give the desired v4l-touchX start number for each touch capture device.
 The default is -1 which will just take the first free number.</p>
 </div></blockquote>
 </li>
@@ -678,12 +701,32 @@ using write().</p>
 <p>The generated data contains the In-phase and Quadrature components of a
 1 kHz tone that has an amplitude of sqrt(2).</p>
 </div>
+<div class="section" id="metadata-capture">
+<h2>36.9. Metadata Capture<a class="headerlink" href="#metadata-capture" title="Permalink to this headline">¶</a></h2>
+<p>The Metadata capture generates UVC format metadata. The PTS and SCR are
+transmitted based on the values set in vivid contols.</p>
+<p>The Metadata device will only work for the Webcam input, it will give
+back an error for all other inputs.</p>
+</div>
+<div class="section" id="metadata-output">
+<h2>36.10. Metadata Output<a class="headerlink" href="#metadata-output" title="Permalink to this headline">¶</a></h2>
+<p>The Metadata output can be used to set brightness, contrast, saturation and hue.</p>
+<p>The Metadata device will only work for the Webcam output, it will give
+back an error for all other outputs.</p>
+</div>
+<div class="section" id="touch-capture">
+<h2>36.11. Touch Capture<a class="headerlink" href="#touch-capture" title="Permalink to this headline">¶</a></h2>
+<p>The Touch capture generates touch patterns simulating single tap, double tap,
+triple tap, move from left to right, zoom in, zoom out, palm press (simulating
+a large area being pressed on a touchpad), and simulating 16 simultaneous
+touch points.</p>
+</div>
 <div class="section" id="controls">
-<h2>36.9. Controls<a class="headerlink" href="#controls" title="Permalink to this headline">¶</a></h2>
+<h2>36.12. Controls<a class="headerlink" href="#controls" title="Permalink to this headline">¶</a></h2>
 <p>Different devices support different controls. The sections below will describe
 each control and which devices support them.</p>
 <div class="section" id="user-controls-test-controls">
-<h3>36.9.1. User Controls - Test Controls<a class="headerlink" href="#user-controls-test-controls" title="Permalink to this headline">¶</a></h3>
+<h3>36.12.1. User Controls - Test Controls<a class="headerlink" href="#user-controls-test-controls" title="Permalink to this headline">¶</a></h3>
 <p>The Button, Boolean, Integer 32 Bits, Integer 64 Bits, Menu, String, Bitmask and
 Integer Menu are controls that represent all possible control types. The Menu
 control and the Integer Menu control both have ‘holes’ in their menu list,
@@ -693,7 +736,7 @@ allow you to check if your application can handle such things correctly.
 These controls are supported for every device type.</p>
 </div>
 <div class="section" id="user-controls-video-capture">
-<h3>36.9.2. User Controls - Video Capture<a class="headerlink" href="#user-controls-video-capture" title="Permalink to this headline">¶</a></h3>
+<h3>36.12.2. User Controls - Video Capture<a class="headerlink" href="#user-controls-video-capture" title="Permalink to this headline">¶</a></h3>
 <p>The following controls are specific to video capture.</p>
 <p>The Brightness, Contrast, Saturation and Hue controls actually work and are
 standard. There is one special feature with the Brightness control: each
@@ -713,7 +756,7 @@ controls.</p>
 formats containing an alpha channel.</p>
 </div>
 <div class="section" id="user-controls-audio">
-<h3>36.9.3. User Controls - Audio<a class="headerlink" href="#user-controls-audio" title="Permalink to this headline">¶</a></h3>
+<h3>36.12.3. User Controls - Audio<a class="headerlink" href="#user-controls-audio" title="Permalink to this headline">¶</a></h3>
 <p>The following controls are specific to video capture and output and radio
 receivers and transmitters.</p>
 <p>The ‘Volume’ and ‘Mute’ audio controls are typical for such devices to
@@ -721,10 +764,10 @@ control the volume and mute the audio. They don’t actually do anything in
 the vivid driver.</p>
 </div>
 <div class="section" id="vivid-controls">
-<h3>36.9.4. Vivid Controls<a class="headerlink" href="#vivid-controls" title="Permalink to this headline">¶</a></h3>
+<h3>36.12.4. Vivid Controls<a class="headerlink" href="#vivid-controls" title="Permalink to this headline">¶</a></h3>
 <p>These vivid custom controls control the image generation, error injection, etc.</p>
 <div class="section" id="test-pattern-controls">
-<h4>36.9.4.1. Test Pattern Controls<a class="headerlink" href="#test-pattern-controls" title="Permalink to this headline">¶</a></h4>
+<h4>36.12.4.1. Test Pattern Controls<a class="headerlink" href="#test-pattern-controls" title="Permalink to this headline">¶</a></h4>
 <p>The Test Pattern Controls are all specific to video capture.</p>
 <ul>
 <li><p class="first">Test Pattern:</p>
@@ -782,7 +825,7 @@ interpreted instead of being ignored.</p>
 </ul>
 </div>
 <div class="section" id="capture-feature-selection-controls">
-<h4>36.9.4.2. Capture Feature Selection Controls<a class="headerlink" href="#capture-feature-selection-controls" title="Permalink to this headline">¶</a></h4>
+<h4>36.12.4.2. Capture Feature Selection Controls<a class="headerlink" href="#capture-feature-selection-controls" title="Permalink to this headline">¶</a></h4>
 <p>These controls are all specific to video capture.</p>
 <ul>
 <li><p class="first">Sensor Flipped Horizontally:</p>
@@ -916,7 +959,7 @@ be reduced.</p>
 </ul>
 </div>
 <div class="section" id="output-feature-selection-controls">
-<h4>36.9.4.3. Output Feature Selection Controls<a class="headerlink" href="#output-feature-selection-controls" title="Permalink to this headline">¶</a></h4>
+<h4>36.12.4.3. Output Feature Selection Controls<a class="headerlink" href="#output-feature-selection-controls" title="Permalink to this headline">¶</a></h4>
 <p>These controls are all specific to video output.</p>
 <ul>
 <li><p class="first">Enable Output Cropping:</p>
@@ -944,7 +987,7 @@ module option is set to 0 (the default).</p>
 </ul>
 </div>
 <div class="section" id="error-injection-controls">
-<h4>36.9.4.4. Error Injection Controls<a class="headerlink" href="#error-injection-controls" title="Permalink to this headline">¶</a></h4>
+<h4>36.12.4.4. Error Injection Controls<a class="headerlink" href="#error-injection-controls" title="Permalink to this headline">¶</a></h4>
 <p>The following two controls are only valid for video and vbi capture.</p>
 <ul>
 <li><p class="first">Standard Signal Mode:</p>
@@ -1053,7 +1096,7 @@ from that is to stop streaming. To be precise: the videobuf2
 </ul>
 </div>
 <div class="section" id="vbi-raw-capture-controls">
-<h4>36.9.4.5. VBI Raw Capture Controls<a class="headerlink" href="#vbi-raw-capture-controls" title="Permalink to this headline">¶</a></h4>
+<h4>36.12.4.5. VBI Raw Capture Controls<a class="headerlink" href="#vbi-raw-capture-controls" title="Permalink to this headline">¶</a></h4>
 <ul>
 <li><p class="first">Interlaced VBI Format:</p>
 <blockquote>
@@ -1065,7 +1108,7 @@ of providing it grouped by field.</p>
 </div>
 </div>
 <div class="section" id="digital-video-controls">
-<h3>36.9.5. Digital Video Controls<a class="headerlink" href="#digital-video-controls" title="Permalink to this headline">¶</a></h3>
+<h3>36.12.5. Digital Video Controls<a class="headerlink" href="#digital-video-controls" title="Permalink to this headline">¶</a></h3>
 <ul>
 <li><p class="first">Rx RGB Quantization Range:</p>
 <blockquote>
@@ -1102,7 +1145,7 @@ the tx_edid_present, tx_hotplug and tx_rxsense controls.</p>
 </ul>
 </div>
 <div class="section" id="fm-radio-receiver-controls">
-<h3>36.9.6. FM Radio Receiver Controls<a class="headerlink" href="#fm-radio-receiver-controls" title="Permalink to this headline">¶</a></h3>
+<h3>36.12.6. FM Radio Receiver Controls<a class="headerlink" href="#fm-radio-receiver-controls" title="Permalink to this headline">¶</a></h3>
 <ul>
 <li><p class="first">RDS Reception:</p>
 <blockquote>
@@ -1165,7 +1208,7 @@ the RDS controls mentioned above.</p>
 </ul>
 </div>
 <div class="section" id="fm-radio-modulator-controls">
-<h3>36.9.7. FM Radio Modulator Controls<a class="headerlink" href="#fm-radio-modulator-controls" title="Permalink to this headline">¶</a></h3>
+<h3>36.12.7. FM Radio Modulator Controls<a class="headerlink" href="#fm-radio-modulator-controls" title="Permalink to this headline">¶</a></h3>
 <ul>
 <li><p class="first">RDS Program ID:</p>
 </li>
@@ -1202,9 +1245,24 @@ is Provided by the RDS controls mentioned above.</p>
 </li>
 </ul>
 </div>
+<div class="section" id="metadata-capture-controls">
+<h3>36.12.8. Metadata Capture Controls<a class="headerlink" href="#metadata-capture-controls" title="Permalink to this headline">¶</a></h3>
+<ul>
+<li><p class="first">Generate PTS</p>
+<blockquote>
+<div><p>if set, then the generated metadata stream contains Presentation timestamp.</p>
+</div></blockquote>
+</li>
+<li><p class="first">Generate SCR</p>
+<blockquote>
+<div><p>if set, then the generated metadata stream contains Source Clock information.</p>
+</div></blockquote>
+</li>
+</ul>
+</div>
 </div>
 <div class="section" id="video-vbi-and-rds-looping">
-<h2>36.10. Video, VBI and RDS Looping<a class="headerlink" href="#video-vbi-and-rds-looping" title="Permalink to this headline">¶</a></h2>
+<h2>36.13. Video, VBI and RDS Looping<a class="headerlink" href="#video-vbi-and-rds-looping" title="Permalink to this headline">¶</a></h2>
 <p>The vivid driver supports looping of video output to video input, VBI output
 to VBI input and RDS output to RDS input. For video/VBI looping this emulates
 as if a cable was hooked up between the output and input connector. So video
@@ -1216,7 +1274,7 @@ transmitter will ‘override’ the emulated radio stations.</p>
 <p>Looping is currently supported only between devices created by the same
 vivid driver instance.</p>
 <div class="section" id="video-and-sliced-vbi-looping">
-<h3>36.10.1. Video and Sliced VBI looping<a class="headerlink" href="#video-and-sliced-vbi-looping" title="Permalink to this headline">¶</a></h3>
+<h3>36.13.1. Video and Sliced VBI looping<a class="headerlink" href="#video-and-sliced-vbi-looping" title="Permalink to this headline">¶</a></h3>
 <p>The way to enable video/VBI looping is currently fairly crude. A ‘Loop Video’
 control is available in the “Vivid” control class of the video
 capture and VBI capture devices. When checked the video looping will be enabled.
@@ -1257,7 +1315,7 @@ for either raw or sliced VBI. Note that at the moment only CC/XDS (60 Hz formats
 and WSS (50 Hz formats) VBI data is looped. Teletext VBI data is not looped.</p>
 </div>
 <div class="section" id="radio-rds-looping">
-<h3>36.10.2. Radio &amp; RDS Looping<a class="headerlink" href="#radio-rds-looping" title="Permalink to this headline">¶</a></h3>
+<h3>36.13.2. Radio &amp; RDS Looping<a class="headerlink" href="#radio-rds-looping" title="Permalink to this headline">¶</a></h3>
 <p>As mentioned in section 6 the radio receiver emulates stations are regular
 frequency intervals. Depending on the frequency of the radio receiver a
 signal strength value is calculated (this is returned by VIDIOC_G_TUNER).
@@ -1271,7 +1329,7 @@ initially no looping takes place.</p>
 </div>
 </div>
 <div class="section" id="cropping-composing-scaling">
-<h2>36.11. Cropping, Composing, Scaling<a class="headerlink" href="#cropping-composing-scaling" title="Permalink to this headline">¶</a></h2>
+<h2>36.14. Cropping, Composing, Scaling<a class="headerlink" href="#cropping-composing-scaling" title="Permalink to this headline">¶</a></h2>
 <p>This driver supports cropping, composing and scaling in any combination. Normally
 which features are supported can be selected through the Vivid controls,
 but it is also possible to hardcode it when the module is loaded through the
@@ -1297,7 +1355,7 @@ designed for speed and simplicity, not quality.</p>
 to change crop and compose rectangles on the fly.</p>
 </div>
 <div class="section" id="formats">
-<h2>36.12. Formats<a class="headerlink" href="#formats" title="Permalink to this headline">¶</a></h2>
+<h2>36.15. Formats<a class="headerlink" href="#formats" title="Permalink to this headline">¶</a></h2>
 <p>The driver supports all the regular packed and planar 4:4:4, 4:2:2 and 4:2:0
 YUYV formats, 8, 16, 24 and 32 RGB packed formats and various multiplanar
 formats.</p>
@@ -1315,7 +1373,7 @@ data_offset to be non-zero, so this is a useful feature for testing applications
 <p>Video output will also honor any data_offset that the application set.</p>
 </div>
 <div class="section" id="capture-overlay">
-<h2>36.13. Capture Overlay<a class="headerlink" href="#capture-overlay" title="Permalink to this headline">¶</a></h2>
+<h2>36.16. Capture Overlay<a class="headerlink" href="#capture-overlay" title="Permalink to this headline">¶</a></h2>
 <p>Note: capture overlay support is implemented primarily to test the existing
 V4L2 capture overlay API. In practice few if any GPUs support such overlays
 anymore, and neither are they generally needed anymore since modern hardware
@@ -1370,7 +1428,7 @@ $ v4l2-ctl -d2 --stream-mmap --overlay=1
 <p>As you can see, this is not for the faint of heart…</p>
 </div>
 <div class="section" id="output-overlay">
-<h2>36.14. Output Overlay<a class="headerlink" href="#output-overlay" title="Permalink to this headline">¶</a></h2>
+<h2>36.17. Output Overlay<a class="headerlink" href="#output-overlay" title="Permalink to this headline">¶</a></h2>
 <p>Note: output overlays are primarily implemented in order to test the existing
 V4L2 output overlay API. Whether this API should be used for new drivers is
 questionable.</p>
@@ -1400,7 +1458,7 @@ capabilities will slow down the video loop considerably as a lot of checks have
 to be done per pixel.</p>
 </div>
 <div class="section" id="cec-consumer-electronics-control">
-<h2>36.15. CEC (Consumer Electronics Control)<a class="headerlink" href="#cec-consumer-electronics-control" title="Permalink to this headline">¶</a></h2>
+<h2>36.18. CEC (Consumer Electronics Control)<a class="headerlink" href="#cec-consumer-electronics-control" title="Permalink to this headline">¶</a></h2>
 <p>If there are HDMI inputs then a CEC adapter will be created that has
 the same number of input ports. This is the equivalent of e.g. a TV that
 has that number of inputs. Each HDMI output will also create a
@@ -1416,7 +1474,7 @@ there are more outputs than inputs then the remaining outputs have a CEC adapter
 that is disabled and reports an invalid physical address.</p>
 </div>
 <div class="section" id="some-future-improvements">
-<h2>36.16. Some Future Improvements<a class="headerlink" href="#some-future-improvements" title="Permalink to this headline">¶</a></h2>
+<h2>36.19. Some Future Improvements<a class="headerlink" href="#some-future-improvements" title="Permalink to this headline">¶</a></h2>
 <p>Just as a reminder and in no particular order:</p>
 <ul class="simple">
 <li>Add a virtual alsa driver to test audio</li>

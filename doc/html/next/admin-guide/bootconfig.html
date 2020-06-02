@@ -68,7 +68,7 @@
             
             
               <div class="version">
-                5.6.0
+                5.7.0
               </div>
             
           
@@ -180,7 +180,9 @@ This allows administrators to pass a structured-Key config file.</p>
 of dot-connected-words, and key and value are connected by <code class="docutils literal notranslate"><span class="pre">=</span></code>. The value
 has to be terminated by semi-colon (<code class="docutils literal notranslate"><span class="pre">;</span></code>) or newline (<code class="docutils literal notranslate"><span class="pre">\n</span></code>).
 For array value, array entries are separated by comma (<code class="docutils literal notranslate"><span class="pre">,</span></code>).</p>
-<p>KEY[.WORD[…]] = VALUE[, VALUE2[…]][;]</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>KEY[.WORD[...]] = VALUE[, VALUE2[...]][;]
+</pre></div>
+</div>
 <p>Unlike the kernel command line syntax, spaces are OK around the comma and <code class="docutils literal notranslate"><span class="pre">=</span></code>.</p>
 <p>Each key word must contain only alphabets, numbers, dash (<code class="docutils literal notranslate"><span class="pre">-</span></code>) or underscore
 (<code class="docutils literal notranslate"><span class="pre">_</span></code>). And each value only contains printable characters or spaces except
@@ -747,7 +749,7 @@ If you need to reuse <a class="reference internal" href="#c.xbc_init" title="xbc
 use this.</p>
 <dl class="function">
 <dt id="c.xbc_init">
-int <code class="descname">xbc_init</code><span class="sig-paren">(</span>char *<em>&nbsp;buf</em><span class="sig-paren">)</span><a class="headerlink" href="#c.xbc_init" title="Permalink to this definition">¶</a></dt>
+int <code class="descname">xbc_init</code><span class="sig-paren">(</span>char *<em>&nbsp;buf</em>, const char **<em>&nbsp;emsg</em>, int *<em>&nbsp;epos</em><span class="sig-paren">)</span><a class="headerlink" href="#c.xbc_init" title="Permalink to this definition">¶</a></dt>
 <dd><p>Parse given XBC file and build XBC internal tree</p>
 </dd></dl>
 
@@ -755,12 +757,19 @@ int <code class="descname">xbc_init</code><span class="sig-paren">(</span>char *
 <dl class="docutils">
 <dt><code class="docutils literal notranslate"><span class="pre">char</span> <span class="pre">*</span> <span class="pre">buf</span></code></dt>
 <dd>boot config text</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">const</span> <span class="pre">char</span> <span class="pre">**</span> <span class="pre">emsg</span></code></dt>
+<dd>A pointer of const char * to store the error message</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">int</span> <span class="pre">*</span> <span class="pre">epos</span></code></dt>
+<dd>A pointer of int to store the error position</dd>
 </dl>
 <p><strong>Description</strong></p>
 <p>This parses the boot config text in <strong>buf</strong>. <strong>buf</strong> must be a
 null terminated string and smaller than XBC_DATA_MAX.
 Return the number of stored nodes (&gt;0) if succeeded, or -errno
-if there is any error.</p>
+if there is any error.
+In error cases, <strong>emsg</strong> will be updated with an error message and
+<strong>epos</strong> will be updated with the error position which is the byte offset
+of <strong>buf</strong>. If the error is not a parser error, <strong>epos</strong> will be -1.</p>
 <dl class="function">
 <dt id="c.xbc_debug_dump">
 void <code class="descname">xbc_debug_dump</code><span class="sig-paren">(</span>void<span class="sig-paren">)</span><a class="headerlink" href="#c.xbc_debug_dump" title="Permalink to this definition">¶</a></dt>

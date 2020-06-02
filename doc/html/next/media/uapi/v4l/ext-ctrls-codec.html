@@ -68,7 +68,7 @@
             
             
               <div class="version">
-                5.6.0
+                5.7.0
               </div>
             
           
@@ -2343,6 +2343,24 @@ with B-coded and P-coded frames. The timestamp refers to the
 <tr class="row-odd"><td><code class="docutils literal notranslate"><span class="pre">V4L2_H264_DPB_ENTRY_FLAG_LONG_TERM</span></code></td>
 <td>0x00000004</td>
 <td>The DPB entry is a long term reference frame</td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal notranslate"><span class="pre">V4L2_H264_DPB_ENTRY_FLAG_FIELD</span></code></td>
+<td>0x00000008</td>
+<td>The DPB entry is a field reference, which means only one of the field
+will be used when decoding the new frame/field. When not set the DPB
+entry is a frame reference (both fields will be used). Note that this
+flag does not say anything about the number of fields contained in the
+reference frame, it just describes the one used to decode the new
+field/frame</td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal notranslate"><span class="pre">V4L2_H264_DPB_ENTRY_FLAG_BOTTOM_FIELD</span></code></td>
+<td>0x00000010</td>
+<td>The DPB entry is a bottom field reference (only the bottom field of the
+reference frame is needed to decode the new frame/field). Only valid if
+V4L2_H264_DPB_ENTRY_FLAG_FIELD is set. When
+V4L2_H264_DPB_ENTRY_FLAG_FIELD is set but
+V4L2_H264_DPB_ENTRY_FLAG_BOTTOM_FIELD is not, that means the
+DPB entry is a top field reference</td>
 </tr>
 </tbody>
 </table>

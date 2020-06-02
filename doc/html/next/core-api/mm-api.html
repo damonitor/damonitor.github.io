@@ -68,7 +68,7 @@
             
             
               <div class="version">
-                5.6.0
+                5.7.0
               </div>
             
           
@@ -392,6 +392,8 @@ This takes precedence over the <code class="docutils literal notranslate"><span 
 </div>
 <div class="section" id="reclaim-modifiers">
 <h3>Reclaim modifiers<a class="headerlink" href="#reclaim-modifiers" title="Permalink to this headline">¶</a></h3>
+<p>Please note that all the following flags are only applicable to sleepable
+allocations (e.g. <code class="docutils literal notranslate"><span class="pre">GFP_NOWAIT</span></code> and <code class="docutils literal notranslate"><span class="pre">GFP_ATOMIC</span></code> will ignore them).</p>
 <p><code class="docutils literal notranslate"><span class="pre">__GFP_IO</span></code> can start physical IO.</p>
 <p><code class="docutils literal notranslate"><span class="pre">__GFP_FS</span></code> can call down to the low-level FS. Clearing the flag avoids the
 allocator recursing into the filesystem which might already be holding
@@ -523,7 +525,7 @@ to be at least to the size.</p>
 include/linux/gfp.h and described at
 <a class="reference internal" href="#mm-api-gfp-flags"><span class="std std-ref">Documentation/core-api/mm-api.rst</span></a></p>
 <p>The recommended usage of the <strong>flags</strong> is described at
-<span class="xref std std-ref">Documentation/core-api/memory-allocation.rst</span></p>
+<a class="reference internal" href="memory-allocation.html#memory-allocation"><span class="std std-ref">Documentation/core-api/memory-allocation.rst</span></a></p>
 <p>Below is a brief outline of the most useful GFP flags</p>
 <dl class="docutils">
 <dt><code class="docutils literal notranslate"><span class="pre">GFP_KERNEL</span></code></dt>
@@ -700,7 +702,7 @@ safety checks as <a class="reference internal" href="#c.ksize" title="ksize"><co
 <p>size of the actual memory used by <strong>objp</strong> in bytes</p>
 <dl class="function">
 <dt id="c.kmem_cache_create_usercopy">
-struct kmem_cache * <code class="descname">kmem_cache_create_usercopy</code><span class="sig-paren">(</span>const char *<em>&nbsp;name</em>, unsigned int<em>&nbsp;size</em>, unsigned int<em>&nbsp;align</em>, slab_flags_t<em>&nbsp;flags</em>, unsigned int<em>&nbsp;useroffset</em>, unsigned int<em>&nbsp;usersize</em>, void (*ctor) (void<em>&nbsp;*</em><span class="sig-paren">)</span><a class="headerlink" href="#c.kmem_cache_create_usercopy" title="Permalink to this definition">¶</a></dt>
+struct kmem_cache * <code class="descname">kmem_cache_create_usercopy</code><span class="sig-paren">(</span>const char *<em>&nbsp;name</em>, unsigned int<em>&nbsp;size</em>, unsigned int<em>&nbsp;align</em>, slab_flags_t<em>&nbsp;flags</em>, unsigned int<em>&nbsp;useroffset</em>, unsigned int<em>&nbsp;usersize</em>, void (<em>*ctor</em>)(void *)<span class="sig-paren">)</span><a class="headerlink" href="#c.kmem_cache_create_usercopy" title="Permalink to this definition">¶</a></dt>
 <dd><p>Create a cache with a region suitable for copying to userspace</p>
 </dd></dl>
 
@@ -736,7 +738,7 @@ as davem.</p>
 <p>a pointer to the cache on success, NULL on failure.</p>
 <dl class="function">
 <dt id="c.kmem_cache_create">
-struct kmem_cache * <code class="descname">kmem_cache_create</code><span class="sig-paren">(</span>const char *<em>&nbsp;name</em>, unsigned int<em>&nbsp;size</em>, unsigned int<em>&nbsp;align</em>, slab_flags_t<em>&nbsp;flags</em>, void (*ctor) (void<em>&nbsp;*</em><span class="sig-paren">)</span><a class="headerlink" href="#c.kmem_cache_create" title="Permalink to this definition">¶</a></dt>
+struct kmem_cache * <code class="descname">kmem_cache_create</code><span class="sig-paren">(</span>const char *<em>&nbsp;name</em>, unsigned int<em>&nbsp;size</em>, unsigned int<em>&nbsp;align</em>, slab_flags_t<em>&nbsp;flags</em>, void (<em>*ctor</em>)(void *)<span class="sig-paren">)</span><a class="headerlink" href="#c.kmem_cache_create" title="Permalink to this definition">¶</a></dt>
 <dd><p>Create a cache.</p>
 </dd></dl>
 
@@ -1235,7 +1237,7 @@ mapped to userspace without leaking data.</p>
 <p>pointer to the allocated memory or <code class="docutils literal notranslate"><span class="pre">NULL</span></code> on error</p>
 <dl class="function">
 <dt id="c.remap_vmalloc_range_partial">
-int <code class="descname">remap_vmalloc_range_partial</code><span class="sig-paren">(</span>struct vm_area_struct *<em>&nbsp;vma</em>, unsigned long<em>&nbsp;uaddr</em>, void *<em>&nbsp;kaddr</em>, unsigned long<em>&nbsp;size</em><span class="sig-paren">)</span><a class="headerlink" href="#c.remap_vmalloc_range_partial" title="Permalink to this definition">¶</a></dt>
+int <code class="descname">remap_vmalloc_range_partial</code><span class="sig-paren">(</span>struct vm_area_struct *<em>&nbsp;vma</em>, unsigned long<em>&nbsp;uaddr</em>, void *<em>&nbsp;kaddr</em>, unsigned long<em>&nbsp;pgoff</em>, unsigned long<em>&nbsp;size</em><span class="sig-paren">)</span><a class="headerlink" href="#c.remap_vmalloc_range_partial" title="Permalink to this definition">¶</a></dt>
 <dd><p>map vmalloc pages to userspace</p>
 </dd></dl>
 
@@ -1247,6 +1249,8 @@ int <code class="descname">remap_vmalloc_range_partial</code><span class="sig-pa
 <dd>target user address to start at</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">void</span> <span class="pre">*</span> <span class="pre">kaddr</span></code></dt>
 <dd>virtual address of vmalloc kernel memory</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">unsigned</span> <span class="pre">long</span> <span class="pre">pgoff</span></code></dt>
+<dd>offset from <strong>kaddr</strong> to start at</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">unsigned</span> <span class="pre">long</span> <span class="pre">size</span></code></dt>
 <dd>size of map area</dd>
 </dl>
@@ -1303,7 +1307,7 @@ allocated for the VM area are returned.</p>
 <h2>File Mapping and Page Cache<a class="headerlink" href="#file-mapping-and-page-cache" title="Permalink to this headline">¶</a></h2>
 <dl class="function">
 <dt id="c.read_cache_pages">
-int <code class="descname">read_cache_pages</code><span class="sig-paren">(</span>struct <a class="reference internal" href="../filesystems/api-summary.html#c.address_space" title="address_space">address_space</a> *<em>&nbsp;mapping</em>, struct list_head *<em>&nbsp;pages</em>, int (*filler) (void<em>&nbsp;*</em>, struct page<em>&nbsp;*</em>, void *<em>&nbsp;data</em><span class="sig-paren">)</span><a class="headerlink" href="#c.read_cache_pages" title="Permalink to this definition">¶</a></dt>
+int <code class="descname">read_cache_pages</code><span class="sig-paren">(</span>struct <a class="reference internal" href="../filesystems/api-summary.html#c.address_space" title="address_space">address_space</a> *<em>&nbsp;mapping</em>, struct list_head *<em>&nbsp;pages</em>, int (<em>*filler</em>)(void *, struct page *), void *<em>&nbsp;data</em><span class="sig-paren">)</span><a class="headerlink" href="#c.read_cache_pages" title="Permalink to this definition">¶</a></dt>
 <dd><p>populate an address space with some pages &amp; start reads against them</p>
 </dd></dl>
 
@@ -1747,26 +1751,6 @@ return 5 if called under the rcu_read_lock.</p>
 range specified (in which case ‘index - return &gt;= max_scan’ will be true).
 In the rare case of wrap-around, ULONG_MAX will be returned.</p>
 <dl class="function">
-<dt id="c.find_get_entry">
-struct page * <code class="descname">find_get_entry</code><span class="sig-paren">(</span>struct <a class="reference internal" href="../filesystems/api-summary.html#c.address_space" title="address_space">address_space</a> *<em>&nbsp;mapping</em>, pgoff_t<em>&nbsp;offset</em><span class="sig-paren">)</span><a class="headerlink" href="#c.find_get_entry" title="Permalink to this definition">¶</a></dt>
-<dd><p>find and get a page cache entry</p>
-</dd></dl>
-
-<p><strong>Parameters</strong></p>
-<dl class="docutils">
-<dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">address_space</span> <span class="pre">*</span> <span class="pre">mapping</span></code></dt>
-<dd>the address_space to search</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">pgoff_t</span> <span class="pre">offset</span></code></dt>
-<dd>the page cache index</dd>
-</dl>
-<p><strong>Description</strong></p>
-<p>Looks up the page cache slot at <strong>mapping</strong> &amp; <strong>offset</strong>.  If there is a
-page cache page, it is returned with an increased refcount.</p>
-<p>If the slot holds a shadow entry of a previously evicted page, or a
-swap entry from shmem/tmpfs, it is returned.</p>
-<p><strong>Return</strong></p>
-<p>the found page or shadow entry, <code class="docutils literal notranslate"><span class="pre">NULL</span></code> if nothing is found.</p>
-<dl class="function">
 <dt id="c.find_lock_entry">
 struct page * <code class="descname">find_lock_entry</code><span class="sig-paren">(</span>struct <a class="reference internal" href="../filesystems/api-summary.html#c.address_space" title="address_space">address_space</a> *<em>&nbsp;mapping</em>, pgoff_t<em>&nbsp;offset</em><span class="sig-paren">)</span><a class="headerlink" href="#c.find_lock_entry" title="Permalink to this definition">¶</a></dt>
 <dd><p>locate, pin and lock a page cache entry</p>
@@ -1790,41 +1774,39 @@ swap entry from shmem/tmpfs, it is returned.</p>
 <p>the found page or shadow entry, <code class="docutils literal notranslate"><span class="pre">NULL</span></code> if nothing is found.</p>
 <dl class="function">
 <dt id="c.pagecache_get_page">
-struct page * <code class="descname">pagecache_get_page</code><span class="sig-paren">(</span>struct <a class="reference internal" href="../filesystems/api-summary.html#c.address_space" title="address_space">address_space</a> *<em>&nbsp;mapping</em>, pgoff_t<em>&nbsp;offset</em>, int<em>&nbsp;fgp_flags</em>, gfp_t<em>&nbsp;gfp_mask</em><span class="sig-paren">)</span><a class="headerlink" href="#c.pagecache_get_page" title="Permalink to this definition">¶</a></dt>
-<dd><p>find and get a page reference</p>
+struct page * <code class="descname">pagecache_get_page</code><span class="sig-paren">(</span>struct <a class="reference internal" href="../filesystems/api-summary.html#c.address_space" title="address_space">address_space</a> *<em>&nbsp;mapping</em>, pgoff_t<em>&nbsp;index</em>, int<em>&nbsp;fgp_flags</em>, gfp_t<em>&nbsp;gfp_mask</em><span class="sig-paren">)</span><a class="headerlink" href="#c.pagecache_get_page" title="Permalink to this definition">¶</a></dt>
+<dd><p>Find and get a reference to a page.</p>
 </dd></dl>
 
 <p><strong>Parameters</strong></p>
 <dl class="docutils">
 <dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">address_space</span> <span class="pre">*</span> <span class="pre">mapping</span></code></dt>
-<dd>the address_space to search</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">pgoff_t</span> <span class="pre">offset</span></code></dt>
-<dd>the page index</dd>
+<dd>The address_space to search.</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">pgoff_t</span> <span class="pre">index</span></code></dt>
+<dd>The page index.</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">int</span> <span class="pre">fgp_flags</span></code></dt>
-<dd>PCG flags</dd>
+<dd><code class="docutils literal notranslate"><span class="pre">FGP</span></code> flags modify how the page is returned.</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">gfp_t</span> <span class="pre">gfp_mask</span></code></dt>
-<dd>gfp mask to use for the page cache data page allocation</dd>
+<dd>Memory allocation flags to use if <code class="docutils literal notranslate"><span class="pre">FGP_CREAT</span></code> is specified.</dd>
 </dl>
 <p><strong>Description</strong></p>
-<p>Looks up the page cache slot at <strong>mapping</strong> &amp; <strong>offset</strong>.</p>
-<p>PCG flags modify how the page is returned.</p>
-<p><strong>fgp_flags</strong> can be:</p>
+<p>Looks up the page cache entry at <strong>mapping</strong> &amp; <strong>index</strong>.</p>
+<p><strong>fgp_flags</strong> can be zero or more of these flags:</p>
 <ul class="simple">
-<li>FGP_ACCESSED: the page will be marked accessed</li>
-<li>FGP_LOCK: Page is return locked</li>
-<li>FGP_CREAT: If page is not present then a new page is allocated using
-<strong>gfp_mask</strong> and added to the page cache and the VM’s LRU
-list. The page is returned locked and with an increased
-refcount.</li>
-<li>FGP_FOR_MMAP: Similar to FGP_CREAT, only we want to allow the caller to do
-its own locking dance if the page is already in cache, or unlock the page
-before returning if we had to add the page to pagecache.</li>
+<li><code class="docutils literal notranslate"><span class="pre">FGP_ACCESSED</span></code> - The page will be marked accessed.</li>
+<li><code class="docutils literal notranslate"><span class="pre">FGP_LOCK</span></code> - The page is returned locked.</li>
+<li><code class="docutils literal notranslate"><span class="pre">FGP_CREAT</span></code> - If no page is present then a new page is allocated using
+<strong>gfp_mask</strong> and added to the page cache and the VM’s LRU list.
+The page is returned locked and with an increased refcount.</li>
+<li><code class="docutils literal notranslate"><span class="pre">FGP_FOR_MMAP</span></code> - The caller wants to do its own locking dance if the
+page is already in cache.  If the page was allocated, unlock it before
+returning so the caller can do the same dance.</li>
 </ul>
-<p>If FGP_LOCK or FGP_CREAT are specified then the function may sleep even
-if the GFP flags specified for FGP_CREAT are atomic.</p>
+<p>If <code class="docutils literal notranslate"><span class="pre">FGP_LOCK</span></code> or <code class="docutils literal notranslate"><span class="pre">FGP_CREAT</span></code> are specified then the function may sleep even
+if the <code class="docutils literal notranslate"><span class="pre">GFP</span></code> flags specified for <code class="docutils literal notranslate"><span class="pre">FGP_CREAT</span></code> are atomic.</p>
 <p>If there is a page cache page, it is returned with an increased refcount.</p>
 <p><strong>Return</strong></p>
-<p>the found page or <code class="docutils literal notranslate"><span class="pre">NULL</span></code> otherwise.</p>
+<p>The found page or <code class="docutils literal notranslate"><span class="pre">NULL</span></code> otherwise.</p>
 <dl class="function">
 <dt id="c.find_get_pages_contig">
 unsigned <code class="descname">find_get_pages_contig</code><span class="sig-paren">(</span>struct <a class="reference internal" href="../filesystems/api-summary.html#c.address_space" title="address_space">address_space</a> *<em>&nbsp;mapping</em>, pgoff_t<em>&nbsp;index</em>, unsigned int<em>&nbsp;nr_pages</em>, struct page **<em>&nbsp;pages</em><span class="sig-paren">)</span><a class="headerlink" href="#c.find_get_pages_contig" title="Permalink to this definition">¶</a></dt>
@@ -1921,7 +1903,7 @@ has not been released.</p>
 <p>bitwise-OR of <code class="docutils literal notranslate"><span class="pre">VM_FAULT_</span></code> codes.</p>
 <dl class="function">
 <dt id="c.read_cache_page">
-struct page * <code class="descname">read_cache_page</code><span class="sig-paren">(</span>struct <a class="reference internal" href="../filesystems/api-summary.html#c.address_space" title="address_space">address_space</a> *<em>&nbsp;mapping</em>, pgoff_t<em>&nbsp;index</em>, int (*filler) (void<em>&nbsp;*</em>, struct page<em>&nbsp;*</em>, void *<em>&nbsp;data</em><span class="sig-paren">)</span><a class="headerlink" href="#c.read_cache_page" title="Permalink to this definition">¶</a></dt>
+struct page * <code class="descname">read_cache_page</code><span class="sig-paren">(</span>struct <a class="reference internal" href="../filesystems/api-summary.html#c.address_space" title="address_space">address_space</a> *<em>&nbsp;mapping</em>, pgoff_t<em>&nbsp;index</em>, int (<em>*filler</em>)(void *, struct page *), void *<em>&nbsp;data</em><span class="sig-paren">)</span><a class="headerlink" href="#c.read_cache_page" title="Permalink to this definition">¶</a></dt>
 <dd><p>read into page cache, fill it if needed</p>
 </dd></dl>
 
@@ -2382,6 +2364,124 @@ blocks). This way, pagecache will always stay logically coherent
 with on-disk format, and the filesystem would not have to deal with
 situations such as writepage being called for a page that has already
 had its underlying blocks deallocated.</p>
+<dl class="function">
+<dt id="c.mapping_set_error">
+void <code class="descname">mapping_set_error</code><span class="sig-paren">(</span>struct <a class="reference internal" href="../filesystems/api-summary.html#c.address_space" title="address_space">address_space</a> *<em>&nbsp;mapping</em>, int<em>&nbsp;error</em><span class="sig-paren">)</span><a class="headerlink" href="#c.mapping_set_error" title="Permalink to this definition">¶</a></dt>
+<dd><p>record a writeback error in the address_space</p>
+</dd></dl>
+
+<p><strong>Parameters</strong></p>
+<dl class="docutils">
+<dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">address_space</span> <span class="pre">*</span> <span class="pre">mapping</span></code></dt>
+<dd>the mapping in which an error should be set</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">int</span> <span class="pre">error</span></code></dt>
+<dd>the error to set in the mapping</dd>
+</dl>
+<p><strong>Description</strong></p>
+<p>When writeback fails in some way, we must record that error so that
+userspace can be informed when fsync and the like are called.  We endeavor
+to report errors on any file that was open at the time of the error.  Some
+internal callers also need to know when writeback errors have occurred.</p>
+<p>When a writeback error occurs, most filesystems will want to call
+mapping_set_error to record the error in the mapping so that it can be
+reported when the application calls fsync(2).</p>
+<dl class="function">
+<dt id="c.find_get_page">
+struct page * <code class="descname">find_get_page</code><span class="sig-paren">(</span>struct <a class="reference internal" href="../filesystems/api-summary.html#c.address_space" title="address_space">address_space</a> *<em>&nbsp;mapping</em>, pgoff_t<em>&nbsp;offset</em><span class="sig-paren">)</span><a class="headerlink" href="#c.find_get_page" title="Permalink to this definition">¶</a></dt>
+<dd><p>find and get a page reference</p>
+</dd></dl>
+
+<p><strong>Parameters</strong></p>
+<dl class="docutils">
+<dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">address_space</span> <span class="pre">*</span> <span class="pre">mapping</span></code></dt>
+<dd>the address_space to search</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">pgoff_t</span> <span class="pre">offset</span></code></dt>
+<dd>the page index</dd>
+</dl>
+<p><strong>Description</strong></p>
+<p>Looks up the page cache slot at <strong>mapping</strong> &amp; <strong>offset</strong>.  If there is a
+page cache page, it is returned with an increased refcount.</p>
+<p>Otherwise, <code class="docutils literal notranslate"><span class="pre">NULL</span></code> is returned.</p>
+<dl class="function">
+<dt id="c.find_lock_page">
+struct page * <code class="descname">find_lock_page</code><span class="sig-paren">(</span>struct <a class="reference internal" href="../filesystems/api-summary.html#c.address_space" title="address_space">address_space</a> *<em>&nbsp;mapping</em>, pgoff_t<em>&nbsp;offset</em><span class="sig-paren">)</span><a class="headerlink" href="#c.find_lock_page" title="Permalink to this definition">¶</a></dt>
+<dd><p>locate, pin and lock a pagecache page</p>
+</dd></dl>
+
+<p><strong>Parameters</strong></p>
+<dl class="docutils">
+<dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">address_space</span> <span class="pre">*</span> <span class="pre">mapping</span></code></dt>
+<dd>the address_space to search</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">pgoff_t</span> <span class="pre">offset</span></code></dt>
+<dd>the page index</dd>
+</dl>
+<p><strong>Description</strong></p>
+<p>Looks up the page cache slot at <strong>mapping</strong> &amp; <strong>offset</strong>.  If there is a
+page cache page, it is returned locked and with an increased
+refcount.</p>
+<p>Otherwise, <code class="docutils literal notranslate"><span class="pre">NULL</span></code> is returned.</p>
+<p><a class="reference internal" href="#c.find_lock_page" title="find_lock_page"><code class="xref c c-func docutils literal notranslate"><span class="pre">find_lock_page()</span></code></a> may sleep.</p>
+<dl class="function">
+<dt id="c.find_or_create_page">
+struct page * <code class="descname">find_or_create_page</code><span class="sig-paren">(</span>struct <a class="reference internal" href="../filesystems/api-summary.html#c.address_space" title="address_space">address_space</a> *<em>&nbsp;mapping</em>, pgoff_t<em>&nbsp;index</em>, gfp_t<em>&nbsp;gfp_mask</em><span class="sig-paren">)</span><a class="headerlink" href="#c.find_or_create_page" title="Permalink to this definition">¶</a></dt>
+<dd><p>locate or add a pagecache page</p>
+</dd></dl>
+
+<p><strong>Parameters</strong></p>
+<dl class="docutils">
+<dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">address_space</span> <span class="pre">*</span> <span class="pre">mapping</span></code></dt>
+<dd>the page’s address_space</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">pgoff_t</span> <span class="pre">index</span></code></dt>
+<dd>the page’s index into the mapping</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">gfp_t</span> <span class="pre">gfp_mask</span></code></dt>
+<dd>page allocation mode</dd>
+</dl>
+<p><strong>Description</strong></p>
+<p>Looks up the page cache slot at <strong>mapping</strong> &amp; <strong>offset</strong>.  If there is a
+page cache page, it is returned locked and with an increased
+refcount.</p>
+<p>If the page is not present, a new page is allocated using <strong>gfp_mask</strong>
+and added to the page cache and the VM’s LRU list.  The page is
+returned locked and with an increased refcount.</p>
+<p>On memory exhaustion, <code class="docutils literal notranslate"><span class="pre">NULL</span></code> is returned.</p>
+<p><a class="reference internal" href="#c.find_or_create_page" title="find_or_create_page"><code class="xref c c-func docutils literal notranslate"><span class="pre">find_or_create_page()</span></code></a> may sleep, even if <strong>gfp_flags</strong> specifies an
+atomic allocation!</p>
+<dl class="function">
+<dt id="c.grab_cache_page_nowait">
+struct page * <code class="descname">grab_cache_page_nowait</code><span class="sig-paren">(</span>struct <a class="reference internal" href="../filesystems/api-summary.html#c.address_space" title="address_space">address_space</a> *<em>&nbsp;mapping</em>, pgoff_t<em>&nbsp;index</em><span class="sig-paren">)</span><a class="headerlink" href="#c.grab_cache_page_nowait" title="Permalink to this definition">¶</a></dt>
+<dd><p>returns locked page at given index in given cache</p>
+</dd></dl>
+
+<p><strong>Parameters</strong></p>
+<dl class="docutils">
+<dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">address_space</span> <span class="pre">*</span> <span class="pre">mapping</span></code></dt>
+<dd>target address_space</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">pgoff_t</span> <span class="pre">index</span></code></dt>
+<dd>the page index</dd>
+</dl>
+<p><strong>Description</strong></p>
+<p>Same as grab_cache_page(), but do not wait if the page is unavailable.
+This is intended for speculative data generators, where the data can
+be regenerated if the page couldn’t be grabbed.  This routine should
+be safe to call while holding the lock for another page.</p>
+<p>Clear __GFP_FS when allocating the page to avoid recursion into the fs
+and deadlock against the caller’s locked page.</p>
+<dl class="function">
+<dt id="c.page_mkwrite_check_truncate">
+int <code class="descname">page_mkwrite_check_truncate</code><span class="sig-paren">(</span>struct page *<em>&nbsp;page</em>, struct inode *<em>&nbsp;inode</em><span class="sig-paren">)</span><a class="headerlink" href="#c.page_mkwrite_check_truncate" title="Permalink to this definition">¶</a></dt>
+<dd><p>check if page was truncated</p>
+</dd></dl>
+
+<p><strong>Parameters</strong></p>
+<dl class="docutils">
+<dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">page</span> <span class="pre">*</span> <span class="pre">page</span></code></dt>
+<dd>the page to check</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">inode</span> <span class="pre">*</span> <span class="pre">inode</span></code></dt>
+<dd>the inode to check the page against</dd>
+</dl>
+<p><strong>Description</strong></p>
+<p>Returns the number of bytes in the page up to EOF,
+or -EFAULT if the page was truncated.</p>
 </div>
 <div class="section" id="memory-pools">
 <h2>Memory pools<a class="headerlink" href="#memory-pools" title="Permalink to this headline">¶</a></h2>
@@ -2682,6 +2782,29 @@ void <code class="descname">zap_vma_ptes</code><span class="sig-paren">(</span>s
 <p>This function only unmaps ptes assigned to VM_PFNMAP vmas.</p>
 <p>The entire address range must be fully contained within the vma.</p>
 <dl class="function">
+<dt id="c.vm_insert_pages">
+int <code class="descname">vm_insert_pages</code><span class="sig-paren">(</span>struct vm_area_struct *<em>&nbsp;vma</em>, unsigned long<em>&nbsp;addr</em>, struct page **<em>&nbsp;pages</em>, unsigned long *<em>&nbsp;num</em><span class="sig-paren">)</span><a class="headerlink" href="#c.vm_insert_pages" title="Permalink to this definition">¶</a></dt>
+<dd><p>insert multiple pages into user vma, batching the pmd lock.</p>
+</dd></dl>
+
+<p><strong>Parameters</strong></p>
+<dl class="docutils">
+<dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">vm_area_struct</span> <span class="pre">*</span> <span class="pre">vma</span></code></dt>
+<dd>user vma to map to</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">unsigned</span> <span class="pre">long</span> <span class="pre">addr</span></code></dt>
+<dd>target start user address of these pages</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">page</span> <span class="pre">**</span> <span class="pre">pages</span></code></dt>
+<dd>source kernel pages</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">unsigned</span> <span class="pre">long</span> <span class="pre">*</span> <span class="pre">num</span></code></dt>
+<dd>in: number of pages to map. out: number of pages that were <em>not</em>
+mapped. (0 means all pages were successfully mapped).</dd>
+</dl>
+<p><strong>Description</strong></p>
+<p>Preferred over <a class="reference internal" href="#c.vm_insert_page" title="vm_insert_page"><code class="xref c c-func docutils literal notranslate"><span class="pre">vm_insert_page()</span></code></a> when inserting multiple pages.</p>
+<p>In case of error, we may have mapped a subset of the provided
+pages. It is the caller’s responsibility to account for this case.</p>
+<p>The same restrictions apply as in <a class="reference internal" href="#c.vm_insert_page" title="vm_insert_page"><code class="xref c c-func docutils literal notranslate"><span class="pre">vm_insert_page()</span></code></a>.</p>
+<dl class="function">
 <dt id="c.vm_insert_page">
 int <code class="descname">vm_insert_page</code><span class="sig-paren">(</span>struct vm_area_struct *<em>&nbsp;vma</em>, unsigned long<em>&nbsp;addr</em>, struct page *<em>&nbsp;page</em><span class="sig-paren">)</span><a class="headerlink" href="#c.vm_insert_page" title="Permalink to this definition">¶</a></dt>
 <dd><p>insert single page into user vma</p>
@@ -2871,9 +2994,9 @@ int <code class="descname">remap_pfn_range</code><span class="sig-paren">(</span
 <dt><code class="docutils literal notranslate"><span class="pre">unsigned</span> <span class="pre">long</span> <span class="pre">addr</span></code></dt>
 <dd>target user address to start at</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">unsigned</span> <span class="pre">long</span> <span class="pre">pfn</span></code></dt>
-<dd>physical address of kernel memory</dd>
+<dd>page frame number of kernel physical memory address</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">unsigned</span> <span class="pre">long</span> <span class="pre">size</span></code></dt>
-<dd>size of map area</dd>
+<dd>size of mapping area</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">pgprot_t</span> <span class="pre">prot</span></code></dt>
 <dd>page protection flags for this mapping</dd>
 </dl>
@@ -2892,7 +3015,7 @@ int <code class="descname">vm_iomap_memory</code><span class="sig-paren">(</span
 <dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">vm_area_struct</span> <span class="pre">*</span> <span class="pre">vma</span></code></dt>
 <dd>user vma to map to</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">phys_addr_t</span> <span class="pre">start</span></code></dt>
-<dd>start of area</dd>
+<dd>start of the physical memory to be mapped</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">unsigned</span> <span class="pre">long</span> <span class="pre">len</span></code></dt>
 <dd>size of area</dd>
 </dl>
@@ -2985,6 +3108,24 @@ void <code class="descname">set_pfnblock_flags_mask</code><span class="sig-paren
 <dt><code class="docutils literal notranslate"><span class="pre">unsigned</span> <span class="pre">long</span> <span class="pre">mask</span></code></dt>
 <dd>mask of bits that the caller is interested in</dd>
 </dl>
+<dl class="function">
+<dt id="c.__putback_isolated_page">
+void <code class="descname">__putback_isolated_page</code><span class="sig-paren">(</span>struct page *<em>&nbsp;page</em>, unsigned int<em>&nbsp;order</em>, int<em>&nbsp;mt</em><span class="sig-paren">)</span><a class="headerlink" href="#c.__putback_isolated_page" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a now-isolated page back where we got it</p>
+</dd></dl>
+
+<p><strong>Parameters</strong></p>
+<dl class="docutils">
+<dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">page</span> <span class="pre">*</span> <span class="pre">page</span></code></dt>
+<dd>Page that was isolated</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">unsigned</span> <span class="pre">int</span> <span class="pre">order</span></code></dt>
+<dd>Order of the isolated page</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">int</span> <span class="pre">mt</span></code></dt>
+<dd>The page’s pageblock’s migratetype</dd>
+</dl>
+<p><strong>Description</strong></p>
+<p>This function is meant to return a page pulled from the free lists via
+__isolate_free_page back to the free lists they were pulled from.</p>
 <dl class="function">
 <dt id="c.alloc_pages_exact">
 void * <code class="descname">alloc_pages_exact</code><span class="sig-paren">(</span>size_t<em>&nbsp;size</em>, gfp_t<em>&nbsp;gfp_mask</em><span class="sig-paren">)</span><a class="headerlink" href="#c.alloc_pages_exact" title="Permalink to this definition">¶</a></dt>

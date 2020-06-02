@@ -68,7 +68,7 @@
             
             
               <div class="version">
-                5.6.0
+                5.7.0
               </div>
             
           
@@ -443,8 +443,7 @@ struct <code class="descname">device</code><a class="headerlink" href="#c.device
   const struct attribute_group **groups;
   void (*release)(struct device *dev);
   struct iommu_group      *iommu_group;
-  struct iommu_fwspec     *iommu_fwspec;
-  struct iommu_param      *iommu_param;
+  struct dev_iommu        *iommu;
   bool offline_disabled:1;
   bool offline:1;
   bool of_node_reused:1;
@@ -550,9 +549,7 @@ gone away. This should be set by the allocator of the
 device (i.e. the bus driver that discovered the device).</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">iommu_group</span></code></dt>
 <dd>IOMMU group the device belongs to.</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">iommu_fwspec</span></code></dt>
-<dd>IOMMU-specific properties supplied by firmware.</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">iommu_param</span></code></dt>
+<dt><code class="docutils literal notranslate"><span class="pre">iommu</span></code></dt>
 <dd>Per device generic IOMMU runtime data</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">offline_disabled</span></code></dt>
 <dd>If set, the device is permanently online.</dd>
@@ -617,7 +614,7 @@ void <code class="descname">driver_init</code><span class="sig-paren">(</span>vo
 subsystems. Called early from init/main.c.</p>
 <dl class="function">
 <dt id="c.driver_for_each_device">
-int <code class="descname">driver_for_each_device</code><span class="sig-paren">(</span>struct device_driver *<em>&nbsp;drv</em>, struct <a class="reference internal" href="#c.device" title="device">device</a> *<em>&nbsp;start</em>, void *<em>&nbsp;data</em>, int (*fn) (struct <a class="reference internal" href="#c.device" title="device">device</a><em>&nbsp;*</em>, void<em>&nbsp;*</em><span class="sig-paren">)</span><a class="headerlink" href="#c.driver_for_each_device" title="Permalink to this definition">¶</a></dt>
+int <code class="descname">driver_for_each_device</code><span class="sig-paren">(</span>struct device_driver *<em>&nbsp;drv</em>, struct <a class="reference internal" href="#c.device" title="device">device</a> *<em>&nbsp;start</em>, void *<em>&nbsp;data</em>, int (<em>*fn</em>)(struct <a class="reference internal" href="#c.device" title="device">device</a> *, void *)<span class="sig-paren">)</span><a class="headerlink" href="#c.driver_for_each_device" title="Permalink to this definition">¶</a></dt>
 <dd><p>Iterator for devices bound to a driver.</p>
 </dd></dl>
 
@@ -636,7 +633,7 @@ int <code class="descname">driver_for_each_device</code><span class="sig-paren">
 <p>Iterate over the <strong>drv</strong>’s list of devices calling <strong>fn</strong> for each one.</p>
 <dl class="function">
 <dt id="c.driver_find_device">
-struct <a class="reference internal" href="#c.device" title="device">device</a> * <code class="descname">driver_find_device</code><span class="sig-paren">(</span>struct device_driver *<em>&nbsp;drv</em>, struct <a class="reference internal" href="#c.device" title="device">device</a> *<em>&nbsp;start</em>, const void *<em>&nbsp;data</em>, int (*match) (struct <a class="reference internal" href="#c.device" title="device">device</a><em>&nbsp;*dev</em>, const void<em>&nbsp;*data</em><span class="sig-paren">)</span><a class="headerlink" href="#c.driver_find_device" title="Permalink to this definition">¶</a></dt>
+struct <a class="reference internal" href="#c.device" title="device">device</a> * <code class="descname">driver_find_device</code><span class="sig-paren">(</span>struct device_driver *<em>&nbsp;drv</em>, struct <a class="reference internal" href="#c.device" title="device">device</a> *<em>&nbsp;start</em>, const void *<em>&nbsp;data</em>, int (<em>*match</em>)(struct <a class="reference internal" href="#c.device" title="device">device</a> *dev, const void *data)<span class="sig-paren">)</span><a class="headerlink" href="#c.driver_find_device" title="Permalink to this definition">¶</a></dt>
 <dd><p>device iterator for locating a particular device.</p>
 </dd></dl>
 
@@ -1134,7 +1131,7 @@ via device_release() above. Otherwise, the structure will
 stick around until the final reference to the device is dropped.</p>
 <dl class="function">
 <dt id="c.device_for_each_child">
-int <code class="descname">device_for_each_child</code><span class="sig-paren">(</span>struct <a class="reference internal" href="#c.device" title="device">device</a> *<em>&nbsp;parent</em>, void *<em>&nbsp;data</em>, int (*fn) (struct <a class="reference internal" href="#c.device" title="device">device</a><em>&nbsp;*dev</em>, void<em>&nbsp;*data</em><span class="sig-paren">)</span><a class="headerlink" href="#c.device_for_each_child" title="Permalink to this definition">¶</a></dt>
+int <code class="descname">device_for_each_child</code><span class="sig-paren">(</span>struct <a class="reference internal" href="#c.device" title="device">device</a> *<em>&nbsp;parent</em>, void *<em>&nbsp;data</em>, int (<em>*fn</em>)(struct <a class="reference internal" href="#c.device" title="device">device</a> *dev, void *data)<span class="sig-paren">)</span><a class="headerlink" href="#c.device_for_each_child" title="Permalink to this definition">¶</a></dt>
 <dd><p>device child iterator.</p>
 </dd></dl>
 
@@ -1154,7 +1151,7 @@ passing it <strong>data</strong>.</p>
 other than 0, we break out and return that value.</p>
 <dl class="function">
 <dt id="c.device_for_each_child_reverse">
-int <code class="descname">device_for_each_child_reverse</code><span class="sig-paren">(</span>struct <a class="reference internal" href="#c.device" title="device">device</a> *<em>&nbsp;parent</em>, void *<em>&nbsp;data</em>, int (*fn) (struct <a class="reference internal" href="#c.device" title="device">device</a><em>&nbsp;*dev</em>, void<em>&nbsp;*data</em><span class="sig-paren">)</span><a class="headerlink" href="#c.device_for_each_child_reverse" title="Permalink to this definition">¶</a></dt>
+int <code class="descname">device_for_each_child_reverse</code><span class="sig-paren">(</span>struct <a class="reference internal" href="#c.device" title="device">device</a> *<em>&nbsp;parent</em>, void *<em>&nbsp;data</em>, int (<em>*fn</em>)(struct <a class="reference internal" href="#c.device" title="device">device</a> *dev, void *data)<span class="sig-paren">)</span><a class="headerlink" href="#c.device_for_each_child_reverse" title="Permalink to this definition">¶</a></dt>
 <dd><p>device child iterator in reversed order.</p>
 </dd></dl>
 
@@ -1174,7 +1171,7 @@ passing it <strong>data</strong>.</p>
 other than 0, we break out and return that value.</p>
 <dl class="function">
 <dt id="c.device_find_child">
-struct <a class="reference internal" href="#c.device" title="device">device</a> * <code class="descname">device_find_child</code><span class="sig-paren">(</span>struct <a class="reference internal" href="#c.device" title="device">device</a> *<em>&nbsp;parent</em>, void *<em>&nbsp;data</em>, int (*match) (struct <a class="reference internal" href="#c.device" title="device">device</a><em>&nbsp;*dev</em>, void<em>&nbsp;*data</em><span class="sig-paren">)</span><a class="headerlink" href="#c.device_find_child" title="Permalink to this definition">¶</a></dt>
+struct <a class="reference internal" href="#c.device" title="device">device</a> * <code class="descname">device_find_child</code><span class="sig-paren">(</span>struct <a class="reference internal" href="#c.device" title="device">device</a> *<em>&nbsp;parent</em>, void *<em>&nbsp;data</em>, int (<em>*match</em>)(struct <a class="reference internal" href="#c.device" title="device">device</a> *dev, void *data)<span class="sig-paren">)</span><a class="headerlink" href="#c.device_find_child" title="Permalink to this definition">¶</a></dt>
 <dd><p>device iterator for locating a particular device.</p>
 </dd></dl>
 
@@ -1440,6 +1437,26 @@ int <code class="descname">device_move</code><span class="sig-paren">(</span>str
 <dd>how to reorder the dpm_list</dd>
 </dl>
 <dl class="function">
+<dt id="c.device_change_owner">
+int <code class="descname">device_change_owner</code><span class="sig-paren">(</span>struct <a class="reference internal" href="#c.device" title="device">device</a> *<em>&nbsp;dev</em>, kuid_t<em>&nbsp;kuid</em>, kgid_t<em>&nbsp;kgid</em><span class="sig-paren">)</span><a class="headerlink" href="#c.device_change_owner" title="Permalink to this definition">¶</a></dt>
+<dd><p>change the owner of an existing device.</p>
+</dd></dl>
+
+<p><strong>Parameters</strong></p>
+<dl class="docutils">
+<dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">device</span> <span class="pre">*</span> <span class="pre">dev</span></code></dt>
+<dd>device.</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">kuid_t</span> <span class="pre">kuid</span></code></dt>
+<dd>new owner’s kuid</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">kgid_t</span> <span class="pre">kgid</span></code></dt>
+<dd>new owner’s kgid</dd>
+</dl>
+<p><strong>Description</strong></p>
+<p>This changes the owner of <strong>dev</strong> and its corresponding sysfs entries to
+<strong>kuid</strong>/<strong>kgid</strong>. This function closely mirrors how <strong>dev</strong> was added via driver
+core.</p>
+<p>Returns 0 on success or error code on failure.</p>
+<dl class="function">
 <dt id="c.set_primary_fwnode">
 void <code class="descname">set_primary_fwnode</code><span class="sig-paren">(</span>struct <a class="reference internal" href="#c.device" title="device">device</a> *<em>&nbsp;dev</em>, struct fwnode_handle *<em>&nbsp;fwnode</em><span class="sig-paren">)</span><a class="headerlink" href="#c.set_primary_fwnode" title="Permalink to this definition">¶</a></dt>
 <dd><p>Change the primary firmware node of a given device.</p>
@@ -1610,7 +1627,7 @@ void <code class="descname">class_dev_iter_exit</code><span class="sig-paren">(<
 complete whether the iteration ran till the end or not.</p>
 <dl class="function">
 <dt id="c.class_for_each_device">
-int <code class="descname">class_for_each_device</code><span class="sig-paren">(</span>struct class *<em>&nbsp;class</em>, struct <a class="reference internal" href="#c.device" title="device">device</a> *<em>&nbsp;start</em>, void *<em>&nbsp;data</em>, int (*fn) (struct <a class="reference internal" href="#c.device" title="device">device</a><em>&nbsp;*</em>, void<em>&nbsp;*</em><span class="sig-paren">)</span><a class="headerlink" href="#c.class_for_each_device" title="Permalink to this definition">¶</a></dt>
+int <code class="descname">class_for_each_device</code><span class="sig-paren">(</span>struct class *<em>&nbsp;class</em>, struct <a class="reference internal" href="#c.device" title="device">device</a> *<em>&nbsp;start</em>, void *<em>&nbsp;data</em>, int (<em>*fn</em>)(struct <a class="reference internal" href="#c.device" title="device">device</a> *, void *)<span class="sig-paren">)</span><a class="headerlink" href="#c.class_for_each_device" title="Permalink to this definition">¶</a></dt>
 <dd><p>device iterator</p>
 </dd></dl>
 
@@ -1636,7 +1653,7 @@ other than 0, we break out and return that value.</p>
 code.  There’s no locking restriction.</p>
 <dl class="function">
 <dt id="c.class_find_device">
-struct <a class="reference internal" href="#c.device" title="device">device</a> * <code class="descname">class_find_device</code><span class="sig-paren">(</span>struct class *<em>&nbsp;class</em>, struct <a class="reference internal" href="#c.device" title="device">device</a> *<em>&nbsp;start</em>, const void *<em>&nbsp;data</em>, int (*match) (struct <a class="reference internal" href="#c.device" title="device">device</a><em>&nbsp;*</em>, const void<em>&nbsp;*</em><span class="sig-paren">)</span><a class="headerlink" href="#c.class_find_device" title="Permalink to this definition">¶</a></dt>
+struct <a class="reference internal" href="#c.device" title="device">device</a> * <code class="descname">class_find_device</code><span class="sig-paren">(</span>struct class *<em>&nbsp;class</em>, struct <a class="reference internal" href="#c.device" title="device">device</a> *<em>&nbsp;start</em>, const void *<em>&nbsp;data</em>, int (<em>*match</em>)(struct <a class="reference internal" href="#c.device" title="device">device</a> *, const void *)<span class="sig-paren">)</span><a class="headerlink" href="#c.class_find_device" title="Permalink to this definition">¶</a></dt>
 <dd><p>device iterator for locating a particular device</p>
 </dd></dl>
 
@@ -1901,6 +1918,25 @@ fall back to usermode helper even if the firmware couldn’t be loaded
 directly from fs.  Hence it’s useful for loading optional firmwares, which
 aren’t always present, without extra long timeouts of udev.</p>
 <dl class="function">
+<dt id="c.firmware_request_platform">
+int <code class="descname">firmware_request_platform</code><span class="sig-paren">(</span>const struct firmware **<em>&nbsp;firmware</em>, const char *<em>&nbsp;name</em>, struct <a class="reference internal" href="#c.device" title="device">device</a> *<em>&nbsp;device</em><span class="sig-paren">)</span><a class="headerlink" href="#c.firmware_request_platform" title="Permalink to this definition">¶</a></dt>
+<dd><p>request firmware with platform-fw fallback</p>
+</dd></dl>
+
+<p><strong>Parameters</strong></p>
+<dl class="docutils">
+<dt><code class="docutils literal notranslate"><span class="pre">const</span> <span class="pre">struct</span> <span class="pre">firmware</span> <span class="pre">**</span> <span class="pre">firmware</span></code></dt>
+<dd>pointer to firmware image</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">const</span> <span class="pre">char</span> <span class="pre">*</span> <span class="pre">name</span></code></dt>
+<dd>name of firmware file</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">device</span> <span class="pre">*</span> <span class="pre">device</span></code></dt>
+<dd>device for which firmware is being loaded</dd>
+</dl>
+<p><strong>Description</strong></p>
+<p>This function is similar in behaviour to request_firmware, except that if
+direct filesystem lookup fails, it will fallback to looking for a copy of the
+requested firmware embedded in the platform’s main (e.g. UEFI) firmware.</p>
+<dl class="function">
 <dt id="c.firmware_request_cache">
 int <code class="descname">firmware_request_cache</code><span class="sig-paren">(</span>struct <a class="reference internal" href="#c.device" title="device">device</a> *<em>&nbsp;device</em>, const char *<em>&nbsp;name</em><span class="sig-paren">)</span><a class="headerlink" href="#c.firmware_request_cache" title="Permalink to this definition">¶</a></dt>
 <dd><p>cache firmware for suspend so resume can use it</p>
@@ -1958,7 +1994,7 @@ void <code class="descname">release_firmware</code><span class="sig-paren">(</sp
 </dl>
 <dl class="function">
 <dt id="c.request_firmware_nowait">
-int <code class="descname">request_firmware_nowait</code><span class="sig-paren">(</span>struct module *<em>&nbsp;module</em>, bool<em>&nbsp;uevent</em>, const char *<em>&nbsp;name</em>, struct <a class="reference internal" href="#c.device" title="device">device</a> *<em>&nbsp;device</em>, gfp_t<em>&nbsp;gfp</em>, void *<em>&nbsp;context</em>, void (*cont) (const struct firmware<em>&nbsp;*fw</em>, void<em>&nbsp;*context</em><span class="sig-paren">)</span><a class="headerlink" href="#c.request_firmware_nowait" title="Permalink to this definition">¶</a></dt>
+int <code class="descname">request_firmware_nowait</code><span class="sig-paren">(</span>struct module *<em>&nbsp;module</em>, bool<em>&nbsp;uevent</em>, const char *<em>&nbsp;name</em>, struct <a class="reference internal" href="#c.device" title="device">device</a> *<em>&nbsp;device</em>, gfp_t<em>&nbsp;gfp</em>, void *<em>&nbsp;context</em>, void (<em>*cont</em>)(const struct firmware *fw, void *context)<span class="sig-paren">)</span><a class="headerlink" href="#c.request_firmware_nowait" title="Permalink to this definition">¶</a></dt>
 <dd><p>asynchronous version of request_firmware</p>
 </dd></dl>
 
@@ -2333,6 +2369,22 @@ struct resource * <code class="descname">platform_get_resource</code><span class
 <dd>resource index</dd>
 </dl>
 <dl class="function">
+<dt id="c.devm_platform_get_and_ioremap_resource">
+void __iomem * <code class="descname">devm_platform_get_and_ioremap_resource</code><span class="sig-paren">(</span>struct platform_device *<em>&nbsp;pdev</em>, unsigned int<em>&nbsp;index</em>, struct resource **<em>&nbsp;res</em><span class="sig-paren">)</span><a class="headerlink" href="#c.devm_platform_get_and_ioremap_resource" title="Permalink to this definition">¶</a></dt>
+<dd><p>call devm_ioremap_resource() for a platform device and get resource</p>
+</dd></dl>
+
+<p><strong>Parameters</strong></p>
+<dl class="docutils">
+<dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">platform_device</span> <span class="pre">*</span> <span class="pre">pdev</span></code></dt>
+<dd>platform device to use both for memory resource lookup as well as
+resource management</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">unsigned</span> <span class="pre">int</span> <span class="pre">index</span></code></dt>
+<dd>resource index</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">resource</span> <span class="pre">**</span> <span class="pre">res</span></code></dt>
+<dd>optional output parameter to store a pointer to the obtained resource.</dd>
+</dl>
+<dl class="function">
 <dt id="c.devm_platform_ioremap_resource">
 void __iomem * <code class="descname">devm_platform_ioremap_resource</code><span class="sig-paren">(</span>struct platform_device *<em>&nbsp;pdev</em>, unsigned int<em>&nbsp;index</em><span class="sig-paren">)</span><a class="headerlink" href="#c.devm_platform_ioremap_resource" title="Permalink to this definition">¶</a></dt>
 <dd><p>call devm_ioremap_resource() for a platform device</p>
@@ -2668,7 +2720,7 @@ void <code class="descname">platform_driver_unregister</code><span class="sig-pa
 </dl>
 <dl class="function">
 <dt id="c.__platform_driver_probe">
-int <code class="descname">__platform_driver_probe</code><span class="sig-paren">(</span>struct platform_driver *<em>&nbsp;drv</em>, int (*probe) (struct platform_device<em>&nbsp;*</em>, struct module *<em>&nbsp;module</em><span class="sig-paren">)</span><a class="headerlink" href="#c.__platform_driver_probe" title="Permalink to this definition">¶</a></dt>
+int <code class="descname">__platform_driver_probe</code><span class="sig-paren">(</span>struct platform_driver *<em>&nbsp;drv</em>, int (<em>*probe</em>)(struct platform_device *), struct module *<em>&nbsp;module</em><span class="sig-paren">)</span><a class="headerlink" href="#c.__platform_driver_probe" title="Permalink to this definition">¶</a></dt>
 <dd><p>register driver for non-hotpluggable device</p>
 </dd></dl>
 
@@ -2694,7 +2746,7 @@ configured as part of board setup.</p>
 a negative error code and with the driver not registered.</p>
 <dl class="function">
 <dt id="c.__platform_create_bundle">
-struct platform_device * <code class="descname">__platform_create_bundle</code><span class="sig-paren">(</span>struct platform_driver *<em>&nbsp;driver</em>, int (*probe) (struct platform_device<em>&nbsp;*</em>, struct resource *<em>&nbsp;res</em>, unsigned int<em>&nbsp;n_res</em>, const void *<em>&nbsp;data</em>, size_t<em>&nbsp;size</em>, struct module *<em>&nbsp;module</em><span class="sig-paren">)</span><a class="headerlink" href="#c.__platform_create_bundle" title="Permalink to this definition">¶</a></dt>
+struct platform_device * <code class="descname">__platform_create_bundle</code><span class="sig-paren">(</span>struct platform_driver *<em>&nbsp;driver</em>, int (<em>*probe</em>)(struct platform_device *), struct resource *<em>&nbsp;res</em>, unsigned int<em>&nbsp;n_res</em>, const void *<em>&nbsp;data</em>, size_t<em>&nbsp;size</em>, struct module *<em>&nbsp;module</em><span class="sig-paren">)</span><a class="headerlink" href="#c.__platform_create_bundle" title="Permalink to this definition">¶</a></dt>
 <dd><p>register driver and create corresponding device</p>
 </dd></dl>
 
@@ -2773,7 +2825,7 @@ struct <a class="reference internal" href="#c.device" title="device">device</a> 
 </dl>
 <dl class="function">
 <dt id="c.bus_for_each_dev">
-int <code class="descname">bus_for_each_dev</code><span class="sig-paren">(</span>struct bus_type *<em>&nbsp;bus</em>, struct <a class="reference internal" href="#c.device" title="device">device</a> *<em>&nbsp;start</em>, void *<em>&nbsp;data</em>, int (*fn) (struct <a class="reference internal" href="#c.device" title="device">device</a><em>&nbsp;*</em>, void<em>&nbsp;*</em><span class="sig-paren">)</span><a class="headerlink" href="#c.bus_for_each_dev" title="Permalink to this definition">¶</a></dt>
+int <code class="descname">bus_for_each_dev</code><span class="sig-paren">(</span>struct bus_type *<em>&nbsp;bus</em>, struct <a class="reference internal" href="#c.device" title="device">device</a> *<em>&nbsp;start</em>, void *<em>&nbsp;data</em>, int (<em>*fn</em>)(struct <a class="reference internal" href="#c.device" title="device">device</a> *, void *)<span class="sig-paren">)</span><a class="headerlink" href="#c.bus_for_each_dev" title="Permalink to this definition">¶</a></dt>
 <dd><p>device iterator.</p>
 </dd></dl>
 
@@ -2801,7 +2853,7 @@ to retain this data, it should do so, and increment the reference
 count in the supplied callback.</p>
 <dl class="function">
 <dt id="c.bus_find_device">
-struct <a class="reference internal" href="#c.device" title="device">device</a> * <code class="descname">bus_find_device</code><span class="sig-paren">(</span>struct bus_type *<em>&nbsp;bus</em>, struct <a class="reference internal" href="#c.device" title="device">device</a> *<em>&nbsp;start</em>, const void *<em>&nbsp;data</em>, int (*match) (struct <a class="reference internal" href="#c.device" title="device">device</a><em>&nbsp;*dev</em>, const void<em>&nbsp;*data</em><span class="sig-paren">)</span><a class="headerlink" href="#c.bus_find_device" title="Permalink to this definition">¶</a></dt>
+struct <a class="reference internal" href="#c.device" title="device">device</a> * <code class="descname">bus_find_device</code><span class="sig-paren">(</span>struct bus_type *<em>&nbsp;bus</em>, struct <a class="reference internal" href="#c.device" title="device">device</a> *<em>&nbsp;start</em>, const void *<em>&nbsp;data</em>, int (<em>*match</em>)(struct <a class="reference internal" href="#c.device" title="device">device</a> *dev, const void *data)<span class="sig-paren">)</span><a class="headerlink" href="#c.bus_find_device" title="Permalink to this definition">¶</a></dt>
 <dd><p>device iterator for locating a particular device.</p>
 </dd></dl>
 
@@ -2844,7 +2896,7 @@ otherwise, fall back to a full list search. Either way a reference for
 the returned object is taken.</p>
 <dl class="function">
 <dt id="c.bus_for_each_drv">
-int <code class="descname">bus_for_each_drv</code><span class="sig-paren">(</span>struct bus_type *<em>&nbsp;bus</em>, struct device_driver *<em>&nbsp;start</em>, void *<em>&nbsp;data</em>, int (*fn) (struct device_driver<em>&nbsp;*</em>, void<em>&nbsp;*</em><span class="sig-paren">)</span><a class="headerlink" href="#c.bus_for_each_drv" title="Permalink to this definition">¶</a></dt>
+int <code class="descname">bus_for_each_drv</code><span class="sig-paren">(</span>struct bus_type *<em>&nbsp;bus</em>, struct device_driver *<em>&nbsp;start</em>, void *<em>&nbsp;data</em>, int (<em>*fn</em>)(struct device_driver *, void *)<span class="sig-paren">)</span><a class="headerlink" href="#c.bus_for_each_drv" title="Permalink to this definition">¶</a></dt>
 <dd><p>driver iterator</p>
 </dd></dl>
 
@@ -3284,6 +3336,23 @@ void <code class="descname">uio_event_notify</code><span class="sig-paren">(</sp
 <dt id="c.__uio_register_device">
 int <code class="descname">__uio_register_device</code><span class="sig-paren">(</span>struct module *<em>&nbsp;owner</em>, struct <a class="reference internal" href="#c.device" title="device">device</a> *<em>&nbsp;parent</em>, struct <a class="reference internal" href="#c.uio_info" title="uio_info">uio_info</a> *<em>&nbsp;info</em><span class="sig-paren">)</span><a class="headerlink" href="#c.__uio_register_device" title="Permalink to this definition">¶</a></dt>
 <dd><p>register a new userspace IO device</p>
+</dd></dl>
+
+<p><strong>Parameters</strong></p>
+<dl class="docutils">
+<dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">module</span> <span class="pre">*</span> <span class="pre">owner</span></code></dt>
+<dd>module that creates the new device</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">device</span> <span class="pre">*</span> <span class="pre">parent</span></code></dt>
+<dd>parent device</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">uio_info</span> <span class="pre">*</span> <span class="pre">info</span></code></dt>
+<dd>UIO device capabilities</dd>
+</dl>
+<p><strong>Description</strong></p>
+<p>returns zero on success or a negative error code.</p>
+<dl class="function">
+<dt id="c.__devm_uio_register_device">
+int <code class="descname">__devm_uio_register_device</code><span class="sig-paren">(</span>struct module *<em>&nbsp;owner</em>, struct <a class="reference internal" href="#c.device" title="device">device</a> *<em>&nbsp;parent</em>, struct <a class="reference internal" href="#c.uio_info" title="uio_info">uio_info</a> *<em>&nbsp;info</em><span class="sig-paren">)</span><a class="headerlink" href="#c.__devm_uio_register_device" title="Permalink to this definition">¶</a></dt>
+<dd><p>Resource managed uio_register_device()</p>
 </dd></dl>
 
 <p><strong>Parameters</strong></p>

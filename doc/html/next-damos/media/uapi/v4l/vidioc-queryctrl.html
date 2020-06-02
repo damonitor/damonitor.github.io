@@ -68,7 +68,7 @@
             
             
               <div class="version">
-                5.6.0
+                5.7.0
               </div>
             
           
@@ -438,43 +438,38 @@ the array to zero.</td>
 <span id="v4l2-querymenu"></span><table border="1" class="docutils" id="id4">
 <caption><span class="caption-text">struct v4l2_querymenu</span><a class="headerlink" href="#id4" title="Permalink to this table">¶</a></caption>
 <colgroup>
-<col width="20%" />
-<col width="20%" />
-<col width="40%" />
-<col width="20%" />
+<col width="25%" />
+<col width="25%" />
+<col width="50%" />
 </colgroup>
 <tbody valign="top">
 <tr class="row-odd"><td>__u32</td>
-<td>&#160;</td>
 <td><code class="docutils literal notranslate"><span class="pre">id</span></code></td>
 <td>Identifies the control, set by the application from the respective
 struct <a class="reference internal" href="#v4l2-queryctrl"><span class="std std-ref">v4l2_queryctrl</span></a> <code class="docutils literal notranslate"><span class="pre">id</span></code>.</td>
 </tr>
 <tr class="row-even"><td>__u32</td>
-<td>&#160;</td>
 <td><code class="docutils literal notranslate"><span class="pre">index</span></code></td>
 <td>Index of the menu item, starting at zero, set by the application.</td>
 </tr>
-<tr class="row-odd"><td>union</td>
-<td>&#160;</td>
-<td>&#160;</td>
-<td>&#160;</td>
+<tr class="row-odd"><td>union {</td>
+<td colspan="2">(anonymous)</td>
 </tr>
-<tr class="row-even"><td>&#160;</td>
-<td>__u8</td>
+<tr class="row-even"><td>__u8</td>
 <td><code class="docutils literal notranslate"><span class="pre">name</span></code>[32]</td>
 <td>Name of the menu item, a NUL-terminated ASCII string. This
 information is intended for the user. This field is valid for
 <code class="docutils literal notranslate"><span class="pre">V4L2_CTRL_TYPE_MENU</span></code> type controls.</td>
 </tr>
-<tr class="row-odd"><td>&#160;</td>
-<td>__s64</td>
+<tr class="row-odd"><td>__s64</td>
 <td><code class="docutils literal notranslate"><span class="pre">value</span></code></td>
 <td>Value of the integer menu item. This field is valid for
 <code class="docutils literal notranslate"><span class="pre">V4L2_CTRL_TYPE_INTEGER_MENU</span></code> type controls.</td>
 </tr>
-<tr class="row-even"><td>__u32</td>
-<td>&#160;</td>
+<tr class="row-even"><td>}</td>
+<td colspan="2">&#160;</td>
+</tr>
+<tr class="row-odd"><td>__u32</td>
 <td><code class="docutils literal notranslate"><span class="pre">reserved</span></code></td>
 <td>Reserved for future extensions. Drivers must set the array to
 zero.</td>
@@ -547,7 +542,7 @@ as a __u32, allowing the use of bit 31 in the bitmask.</td>
 <td>0</td>
 <td>0</td>
 <td>A control which performs an action when set. Drivers must ignore
-the value passed with <code class="docutils literal notranslate"><span class="pre">VIDIOC_S_CTRL</span></code> and return an <code class="docutils literal notranslate"><span class="pre">EINVAL</span></code> error
+the value passed with <code class="docutils literal notranslate"><span class="pre">VIDIOC_S_CTRL</span></code> and return an <code class="docutils literal notranslate"><span class="pre">EACCES</span></code> error
 code on a <code class="docutils literal notranslate"><span class="pre">VIDIOC_G_CTRL</span></code> attempt.</td>
 </tr>
 <tr class="row-even"><td><code class="docutils literal notranslate"><span class="pre">V4L2_CTRL_TYPE_INTEGER64</span></code></td>

@@ -68,7 +68,7 @@
             
             
               <div class="version">
-                5.6.0
+                5.7.0
               </div>
             
           
@@ -528,6 +528,27 @@ void <code class="descname">ib_free_cq_user</code><span class="sig-paren">(</spa
 <dd>completion queue to free.</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">ib_udata</span> <span class="pre">*</span> <span class="pre">udata</span></code></dt>
 <dd>User data or NULL for kernel object</dd>
+</dl>
+<dl class="function">
+<dt id="c.ib_cm_listen">
+int <code class="descname">ib_cm_listen</code><span class="sig-paren">(</span>struct ib_cm_id *<em>&nbsp;cm_id</em>, __be64<em>&nbsp;service_id</em>, __be64<em>&nbsp;service_mask</em><span class="sig-paren">)</span><a class="headerlink" href="#c.ib_cm_listen" title="Permalink to this definition">¶</a></dt>
+<dd><p>Initiates listening on the specified service ID for connection and service ID resolution requests.</p>
+</dd></dl>
+
+<p><strong>Parameters</strong></p>
+<dl class="docutils">
+<dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">ib_cm_id</span> <span class="pre">*</span> <span class="pre">cm_id</span></code></dt>
+<dd>Connection identifier associated with the listen request.</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">__be64</span> <span class="pre">service_id</span></code></dt>
+<dd>Service identifier matched against incoming connection
+and service ID resolution requests.  The service ID should be specified
+network-byte order.  If set to IB_CM_ASSIGN_SERVICE_ID, the CM will
+assign a service ID to the caller.</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">__be64</span> <span class="pre">service_mask</span></code></dt>
+<dd>Mask applied to service ID used to listen across a
+range of service IDs.  If set to 0, the service ID is matched
+exactly.  This parameter is ignored if <code class="docutils literal notranslate"><span class="pre">service_id</span></code> is set to
+IB_CM_ASSIGN_SERVICE_ID.</dd>
 </dl>
 <dl class="function">
 <dt id="c.ib_cm_insert_listen">
@@ -1330,6 +1351,23 @@ void <code class="descname">rdma_destroy_ah_attr</code><span class="sig-paren">(
 non NULL. It is safe to call this multiple times, and safe to call it on
 a zero initialized ah_attr.</p>
 <dl class="function">
+<dt id="c.ib_create_qp">
+struct ib_qp * <code class="descname">ib_create_qp</code><span class="sig-paren">(</span>struct ib_pd *<em>&nbsp;pd</em>, struct ib_qp_init_attr *<em>&nbsp;qp_init_attr</em><span class="sig-paren">)</span><a class="headerlink" href="#c.ib_create_qp" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates a kernel QP associated with the specified protection domain.</p>
+</dd></dl>
+
+<p><strong>Parameters</strong></p>
+<dl class="docutils">
+<dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">ib_pd</span> <span class="pre">*</span> <span class="pre">pd</span></code></dt>
+<dd>The protection domain associated with the QP.</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">ib_qp_init_attr</span> <span class="pre">*</span> <span class="pre">qp_init_attr</span></code></dt>
+<dd>A list of initial attributes required to create the
+QP.  If QP creation succeeds, then the attributes are updated to
+the actual capabilities of the created QP.</dd>
+</dl>
+<p><strong>NOTE</strong></p>
+<p>for user qp use ib_create_qp_user with valid udata!</p>
+<dl class="function">
 <dt id="c.ib_modify_qp_with_udata">
 int <code class="descname">ib_modify_qp_with_udata</code><span class="sig-paren">(</span>struct ib_qp *<em>&nbsp;ib_qp</em>, struct ib_qp_attr *<em>&nbsp;attr</em>, int<em>&nbsp;attr_mask</em>, struct ib_udata *<em>&nbsp;udata</em><span class="sig-paren">)</span><a class="headerlink" href="#c.ib_modify_qp_with_udata" title="Permalink to this definition">¶</a></dt>
 <dd><p>Modifies the attributes for the specified QP.</p>
@@ -1511,7 +1549,7 @@ constraints holds and the page_size argument is ignored.</li>
 is ready for registration.</p>
 <dl class="function">
 <dt id="c.ib_sg_to_pages">
-int <code class="descname">ib_sg_to_pages</code><span class="sig-paren">(</span>struct ib_mr *<em>&nbsp;mr</em>, struct scatterlist *<em>&nbsp;sgl</em>, int<em>&nbsp;sg_nents</em>, unsigned int *<em>&nbsp;sg_offset_p</em>, int (*set_page) (struct ib_mr<em>&nbsp;*</em>, u64<span class="sig-paren">)</span><a class="headerlink" href="#c.ib_sg_to_pages" title="Permalink to this definition">¶</a></dt>
+int <code class="descname">ib_sg_to_pages</code><span class="sig-paren">(</span>struct ib_mr *<em>&nbsp;mr</em>, struct scatterlist *<em>&nbsp;sgl</em>, int<em>&nbsp;sg_nents</em>, unsigned int *<em>&nbsp;sg_offset_p</em>, int (<em>*set_page</em>)(struct ib_mr *, u64)<span class="sig-paren">)</span><a class="headerlink" href="#c.ib_sg_to_pages" title="Permalink to this definition">¶</a></dt>
 <dd><p>Convert the largest prefix of a sg list to a page vector</p>
 </dd></dl>
 
@@ -1685,7 +1723,7 @@ User must invoke <a class="reference internal" href="#c.rdma_destroy_ah_attr" ti
 attributes which are initialized using <a class="reference internal" href="#c.ib_init_ah_attr_from_path" title="ib_init_ah_attr_from_path"><code class="xref c c-func docutils literal notranslate"><span class="pre">ib_init_ah_attr_from_path()</span></code></a>.</p>
 <dl class="function">
 <dt id="c.ib_sa_path_rec_get">
-int <code class="descname">ib_sa_path_rec_get</code><span class="sig-paren">(</span>struct ib_sa_client *<em>&nbsp;client</em>, struct ib_device *<em>&nbsp;device</em>, u8<em>&nbsp;port_num</em>, struct sa_path_rec *<em>&nbsp;rec</em>, ib_sa_comp_mask<em>&nbsp;comp_mask</em>, unsigned long<em>&nbsp;timeout_ms</em>, gfp_t<em>&nbsp;gfp_mask</em>, void (*callback) (int<em>&nbsp;status</em>, struct sa_path_rec<em>&nbsp;*resp</em>, void<em>&nbsp;*context</em>, void *<em>&nbsp;context</em>, struct ib_sa_query **<em>&nbsp;sa_query</em><span class="sig-paren">)</span><a class="headerlink" href="#c.ib_sa_path_rec_get" title="Permalink to this definition">¶</a></dt>
+int <code class="descname">ib_sa_path_rec_get</code><span class="sig-paren">(</span>struct ib_sa_client *<em>&nbsp;client</em>, struct ib_device *<em>&nbsp;device</em>, u8<em>&nbsp;port_num</em>, struct sa_path_rec *<em>&nbsp;rec</em>, ib_sa_comp_mask<em>&nbsp;comp_mask</em>, unsigned long<em>&nbsp;timeout_ms</em>, gfp_t<em>&nbsp;gfp_mask</em>, void (<em>*callback</em>)(int status, struct sa_path_rec *resp, void *context), void *<em>&nbsp;context</em>, struct ib_sa_query **<em>&nbsp;sa_query</em><span class="sig-paren">)</span><a class="headerlink" href="#c.ib_sa_path_rec_get" title="Permalink to this definition">¶</a></dt>
 <dd><p>Start a Path get query</p>
 </dd></dl>
 
@@ -1725,7 +1763,7 @@ error code.  Otherwise it is a query ID that can be used to cancel
 the query.</p>
 <dl class="function">
 <dt id="c.ib_sa_service_rec_query">
-int <code class="descname">ib_sa_service_rec_query</code><span class="sig-paren">(</span>struct ib_sa_client *<em>&nbsp;client</em>, struct ib_device *<em>&nbsp;device</em>, u8<em>&nbsp;port_num</em>, u8<em>&nbsp;method</em>, struct ib_sa_service_rec *<em>&nbsp;rec</em>, ib_sa_comp_mask<em>&nbsp;comp_mask</em>, unsigned long<em>&nbsp;timeout_ms</em>, gfp_t<em>&nbsp;gfp_mask</em>, void (*callback) (int<em>&nbsp;status</em>, struct ib_sa_service_rec<em>&nbsp;*resp</em>, void<em>&nbsp;*context</em>, void *<em>&nbsp;context</em>, struct ib_sa_query **<em>&nbsp;sa_query</em><span class="sig-paren">)</span><a class="headerlink" href="#c.ib_sa_service_rec_query" title="Permalink to this definition">¶</a></dt>
+int <code class="descname">ib_sa_service_rec_query</code><span class="sig-paren">(</span>struct ib_sa_client *<em>&nbsp;client</em>, struct ib_device *<em>&nbsp;device</em>, u8<em>&nbsp;port_num</em>, u8<em>&nbsp;method</em>, struct ib_sa_service_rec *<em>&nbsp;rec</em>, ib_sa_comp_mask<em>&nbsp;comp_mask</em>, unsigned long<em>&nbsp;timeout_ms</em>, gfp_t<em>&nbsp;gfp_mask</em>, void (<em>*callback</em>)(int status, struct ib_sa_service_rec *resp, void *context), void *<em>&nbsp;context</em>, struct ib_sa_query **<em>&nbsp;sa_query</em><span class="sig-paren">)</span><a class="headerlink" href="#c.ib_sa_service_rec_query" title="Permalink to this definition">¶</a></dt>
 <dd><p>Start Service Record operation</p>
 </dd></dl>
 
@@ -2378,7 +2416,7 @@ void <code class="descname">rvt_del_timers_sync</code><span class="sig-paren">(<
 </dl>
 <dl class="function">
 <dt id="c.rvt_qp_iter_init">
-struct <a class="reference internal" href="#c.rvt_qp_iter" title="rvt_qp_iter">rvt_qp_iter</a> * <code class="descname">rvt_qp_iter_init</code><span class="sig-paren">(</span>struct rvt_dev_info *<em>&nbsp;rdi</em>, u64<em>&nbsp;v</em>, void (*cb) (struct rvt_qp<em>&nbsp;*qp</em>, u64<em>&nbsp;v</em><span class="sig-paren">)</span><a class="headerlink" href="#c.rvt_qp_iter_init" title="Permalink to this definition">¶</a></dt>
+struct <a class="reference internal" href="#c.rvt_qp_iter" title="rvt_qp_iter">rvt_qp_iter</a> * <code class="descname">rvt_qp_iter_init</code><span class="sig-paren">(</span>struct rvt_dev_info *<em>&nbsp;rdi</em>, u64<em>&nbsp;v</em>, void (<em>*cb</em>)(struct rvt_qp *qp, u64 v)<span class="sig-paren">)</span><a class="headerlink" href="#c.rvt_qp_iter_init" title="Permalink to this definition">¶</a></dt>
 <dd><p>initial for QP iteration</p>
 </dd></dl>
 
@@ -2422,7 +2460,7 @@ value is 0.</p>
 <p>0 - iter-&gt;qp is valid 1 - no more QPs</p>
 <dl class="function">
 <dt id="c.rvt_qp_iter">
-void <code class="descname">rvt_qp_iter</code><span class="sig-paren">(</span>struct rvt_dev_info *<em>&nbsp;rdi</em>, u64<em>&nbsp;v</em>, void (*cb) (struct rvt_qp<em>&nbsp;*qp</em>, u64<em>&nbsp;v</em><span class="sig-paren">)</span><a class="headerlink" href="#c.rvt_qp_iter" title="Permalink to this definition">¶</a></dt>
+void <code class="descname">rvt_qp_iter</code><span class="sig-paren">(</span>struct rvt_dev_info *<em>&nbsp;rdi</em>, u64<em>&nbsp;v</em>, void (<em>*cb</em>)(struct rvt_qp *qp, u64 v)<span class="sig-paren">)</span><a class="headerlink" href="#c.rvt_qp_iter" title="Permalink to this definition">¶</a></dt>
 <dd><p>iterate all QPs</p>
 </dd></dl>
 
@@ -3784,7 +3822,7 @@ struct <code class="descname">opa_veswport_mactable</code><a class="headerlink" 
   __be16 offset;
   __be16 num_entries;
   __be32 mac_tbl_digest;
-  struct opa_veswport_mactable_entry  tbl_entries[0];
+  struct opa_veswport_mactable_entry  tbl_entries[];
 };
 </pre></div>
 </div>
@@ -3795,8 +3833,9 @@ struct <code class="descname">opa_veswport_mactable</code><a class="headerlink" 
 <dt><code class="docutils literal notranslate"><span class="pre">num_entries</span></code></dt>
 <dd>Number of entries to get or set</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">mac_tbl_digest</span></code></dt>
-<dd>mac table digest
-<a href="#id1"><span class="problematic" id="id2">**</span></a>tbl_entries**[]: Array of table entries</dd>
+<dd>mac table digest</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">tbl_entries</span></code></dt>
+<dd>Array of table entries</dd>
 </dl>
 <p><strong>Description</strong></p>
 <p>The EM sends down this structure in a MAD indicating
@@ -4060,7 +4099,7 @@ struct <code class="descname">opa_veswport_iface_macs</code><a class="headerlink
   __be16 num_macs_in_msg;
   __be16 tot_macs_in_lst;
   __be16 gen_count;
-  struct opa_vnic_iface_mac_entry entry[0];
+  struct opa_vnic_iface_mac_entry entry[];
 };
 </pre></div>
 </div>

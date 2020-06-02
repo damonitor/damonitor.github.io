@@ -68,7 +68,7 @@
             
             
               <div class="version">
-                5.6.0
+                5.7.0
               </div>
             
           
@@ -717,6 +717,8 @@ struct <code class="descname">ieee80211_ops</code><a class="headerlink" href="#c
   int (*get_ftm_responder_stats)(struct ieee80211_hw *hw,struct ieee80211_vif *vif, struct cfg80211_ftm_responder_stats *ftm_stats);
   int (*start_pmsr)(struct ieee80211_hw *hw, struct ieee80211_vif *vif, struct cfg80211_pmsr_request *request);
   void (*abort_pmsr)(struct ieee80211_hw *hw, struct ieee80211_vif *vif, struct cfg80211_pmsr_request *request);
+  int (*set_tid_config)(struct ieee80211_hw *hw,struct ieee80211_vif *vif,struct ieee80211_sta *sta, struct cfg80211_tid_config *tid_conf);
+  int (*reset_tid_config)(struct ieee80211_hw *hw,struct ieee80211_vif *vif, struct ieee80211_sta *sta, u8 tids);
 };
 </pre></div>
 </div>
@@ -939,6 +941,10 @@ callback can sleep.</dd>
 associated station, AP,  IBSS/WDS/mesh peer etc. For a VIF operating
 in AP mode, this callback will not be called when the flag
 <code class="docutils literal notranslate"><span class="pre">IEEE80211_HW_AP_LINK_PS</span></code> is set. Must be atomic.</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">sta_set_txpwr</span></code></dt>
+<dd>Configure the station tx power. This callback set the tx
+power for the station.
+This callback can sleep.</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">sta_state</span></code></dt>
 <dd>Notifies low level driver about state transition of a
 station (which can be the AP, a client, IBSS/WDS/mesh peer etc.)
@@ -1311,6 +1317,11 @@ Statistics should be cumulative, currently no way to reset is provided.</dd>
 <dd>start peer measurement (e.g. FTM) (this call can sleep)</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">abort_pmsr</span></code></dt>
 <dd>abort peer measurement (this call can sleep)</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">set_tid_config</span></code></dt>
+<dd>Apply TID specific configurations. This callback may sleep.</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">reset_tid_config</span></code></dt>
+<dd>Reset TID specific configuration for the peer.
+This callback may sleep.</dd>
 </dl>
 <p><strong>Description</strong></p>
 <p>This structure contains various callbacks that the driver may
@@ -2036,6 +2047,8 @@ frame (PS-Poll or uAPSD).</dd>
 <dd>This frame is going through the fast_xmit path</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">IEEE80211_TX_CTRL_SKIP_MPATH_LOOKUP</span></code></dt>
 <dd>This frame skips mesh path lookup</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">IEEE80211_TX_CTRL_HW_80211_ENCAP</span></code></dt>
+<dd><em>undescribed</em></dd>
 </dl>
 <p><strong>Description</strong></p>
 <p>These flags are used in tx_info-&gt;control.flags.</p>

@@ -572,6 +572,7 @@ videodev2.h
     \#define \ :ref:`V4L2_PIX_FMT_Y6 <v4l2-pix-fmt-y6>`      v4l2\_fourcc('Y', '0', '6', ' ') \/\*  6  Greyscale     \*\/
     \#define \ :ref:`V4L2_PIX_FMT_Y10 <v4l2-pix-fmt-y10>`     v4l2\_fourcc('Y', '1', '0', ' ') \/\* 10  Greyscale     \*\/
     \#define \ :ref:`V4L2_PIX_FMT_Y12 <v4l2-pix-fmt-y12>`     v4l2\_fourcc('Y', '1', '2', ' ') \/\* 12  Greyscale     \*\/
+    \#define \ :ref:`V4L2_PIX_FMT_Y14 <v4l2-pix-fmt-y14>`     v4l2\_fourcc('Y', '1', '4', ' ') \/\* 14  Greyscale     \*\/
     \#define \ :ref:`V4L2_PIX_FMT_Y16 <v4l2-pix-fmt-y16>`     v4l2\_fourcc('Y', '1', '6', ' ') \/\* 16  Greyscale     \*\/
     \#define \ :ref:`V4L2_PIX_FMT_Y16_BE <v4l2-pix-fmt-y16-be>`  v4l2\_fourcc\_be('Y', '1', '6', ' ') \/\* 16  Greyscale BE  \*\/
 
@@ -669,6 +670,10 @@ videodev2.h
     \#define \ :ref:`V4L2_PIX_FMT_SGBRG12P <v4l2-pix-fmt-sgbrg12p>` v4l2\_fourcc('p', 'G', 'C', 'C')
     \#define \ :ref:`V4L2_PIX_FMT_SGRBG12P <v4l2-pix-fmt-sgrbg12p>` v4l2\_fourcc('p', 'g', 'C', 'C')
     \#define \ :ref:`V4L2_PIX_FMT_SRGGB12P <v4l2-pix-fmt-srggb12p>` v4l2\_fourcc('p', 'R', 'C', 'C')
+    \#define \ :ref:`V4L2_PIX_FMT_SBGGR14 <v4l2-pix-fmt-sbggr14>` v4l2\_fourcc('B', 'G', '1', '4') \/\* 14  BGBG.. GRGR.. \*\/
+    \#define \ :ref:`V4L2_PIX_FMT_SGBRG14 <v4l2-pix-fmt-sgbrg14>` v4l2\_fourcc('G', 'B', '1', '4') \/\* 14  GBGB.. RGRG.. \*\/
+    \#define \ :ref:`V4L2_PIX_FMT_SGRBG14 <v4l2-pix-fmt-sgrbg14>` v4l2\_fourcc('G', 'R', '1', '4') \/\* 14  GRGR.. BGBG.. \*\/
+    \#define \ :ref:`V4L2_PIX_FMT_SRGGB14 <v4l2-pix-fmt-srggb14>` v4l2\_fourcc('R', 'G', '1', '4') \/\* 14  RGRG.. GBGB.. \*\/
             \/\* 14bit raw bayer packed, 7 bytes for every 4 pixels \*\/
     \#define \ :ref:`V4L2_PIX_FMT_SBGGR14P <v4l2-pix-fmt-sbggr14p>` v4l2\_fourcc('p', 'B', 'E', 'E')
     \#define \ :ref:`V4L2_PIX_FMT_SGBRG14P <v4l2-pix-fmt-sgbrg14p>` v4l2\_fourcc('p', 'G', 'E', 'E')
@@ -1248,6 +1253,10 @@ videodev2.h
 
     typedef \_\_u64 v4l2\_std\_id;
 
+    \/\*
+     \* Attention\: Keep the V4L2\_STD\_\* bit definitions in sync with
+     \* include\/dt-bindings\/display\/sdtv-standards.h SDTV\_STD\_\* bit definitions.
+     \*\/
     \/\* one bit for each \*\/
     \#define :ref:`V4L2_STD_PAL_B <v4l2-std-id>`          ((v4l2\_std\_id)0x00000001)
     \#define :ref:`V4L2_STD_PAL_B1 <v4l2-std-id>`         ((v4l2\_std\_id)0x00000002)

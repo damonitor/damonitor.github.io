@@ -68,7 +68,7 @@
             
             
               <div class="version">
-                5.6.0
+                5.7.0
               </div>
             
           
@@ -297,10 +297,13 @@ pmbus_driver_info. All functions are optional.</p>
 </div>
 <p>Read byte from page &lt;page&gt;, register &lt;reg&gt;.
 &lt;page&gt; may be -1, which means “current page”.</p>
-<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>int (*read_word_data)(struct i2c_client *client, int page, int reg);
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>int (*read_word_data)(struct i2c_client *client, int page, int phase,
+                      int reg);
 </pre></div>
 </div>
-<p>Read word from page &lt;page&gt;, register &lt;reg&gt;.</p>
+<p>Read word from page &lt;page&gt;, phase &lt;pase&gt;, register &lt;reg&gt;. If the chip does not
+support multiple phases, the phase parameter can be ignored. If the chip
+supports multiple phases, a phase value of 0xff indicates all phases.</p>
 <div class="highlight-none notranslate"><div class="highlight"><pre><span></span>int (*write_word_data)(struct i2c_client *client, int page, int reg,
                        u16 word);
 </pre></div>
@@ -327,15 +330,20 @@ commands are used, the chip driver code must not directly modify the current
 page, since the selected page is cached in the core driver and the core driver
 will assume that it is selected. Using pmbus_set_page() to select a new page
 is mandatory.</p>
-<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>int pmbus_set_page(struct i2c_client *client, u8 page);
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>int pmbus_set_page(struct i2c_client *client, u8 page, u8 phase);
 </pre></div>
 </div>
-<p>Set PMBus page register to &lt;page&gt; for subsequent commands.</p>
-<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>int pmbus_read_word_data(struct i2c_client *client, u8 page, u8 reg);
+<p>Set PMBus page register to &lt;page&gt; and &lt;phase&gt; for subsequent commands.
+If the chip does not support multiple phases, the phase parameter is
+ignored. Otherwise, a phase value of 0xff selects all phases.</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>int pmbus_read_word_data(struct i2c_client *client, u8 page, u8 phase,
+                         u8 reg);
 </pre></div>
 </div>
-<p>Read word data from &lt;page&gt;, &lt;reg&gt;. Similar to <a class="reference internal" href="../driver-api/i2c.html#c.i2c_smbus_read_word_data" title="i2c_smbus_read_word_data"><code class="xref c c-func docutils literal notranslate"><span class="pre">i2c_smbus_read_word_data()</span></code></a>, but
-selects page first.</p>
+<p>Read word data from &lt;page&gt;, &lt;phase&gt;, &lt;reg&gt;. Similar to
+<a class="reference internal" href="../driver-api/i2c.html#c.i2c_smbus_read_word_data" title="i2c_smbus_read_word_data"><code class="xref c c-func docutils literal notranslate"><span class="pre">i2c_smbus_read_word_data()</span></code></a>, but selects page and phase first. If the chip does
+not support multiple phases, the phase parameter is ignored. Otherwise, a phase
+value of 0xff selects all phases.</p>
 <div class="highlight-none notranslate"><div class="highlight"><pre><span></span>int pmbus_write_word_data(struct i2c_client *client, u8 page, u8 reg,
                           u16 word);
 </pre></div>

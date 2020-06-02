@@ -68,7 +68,7 @@
             
             
               <div class="version">
-                5.6.0
+                5.7.0
               </div>
             
           
@@ -971,7 +971,7 @@ struct <code class="descname">irq_chip_generic</code><a class="headerlink" href=
   unsigned long           unused;
   struct irq_domain       *domain;
   struct list_head        list;
-  struct irq_chip_type    chip_types[0];
+  struct irq_chip_type    chip_types[];
 };
 </pre></div>
 </div>
@@ -1549,36 +1549,6 @@ void <code class="descname">irq_wake_thread</code><span class="sig-paren">(</spa
 <dt><code class="docutils literal notranslate"><span class="pre">void</span> <span class="pre">*</span> <span class="pre">dev_id</span></code></dt>
 <dd>Device identity for which the thread should be woken</dd>
 </dl>
-<dl class="function">
-<dt id="c.setup_irq">
-int <code class="descname">setup_irq</code><span class="sig-paren">(</span>unsigned int<em>&nbsp;irq</em>, struct <a class="reference internal" href="#c.irqaction" title="irqaction">irqaction</a> *<em>&nbsp;act</em><span class="sig-paren">)</span><a class="headerlink" href="#c.setup_irq" title="Permalink to this definition">¶</a></dt>
-<dd><p>setup an interrupt</p>
-</dd></dl>
-
-<p><strong>Parameters</strong></p>
-<dl class="docutils">
-<dt><code class="docutils literal notranslate"><span class="pre">unsigned</span> <span class="pre">int</span> <span class="pre">irq</span></code></dt>
-<dd>Interrupt line to setup</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">irqaction</span> <span class="pre">*</span> <span class="pre">act</span></code></dt>
-<dd>irqaction for the interrupt</dd>
-</dl>
-<p><strong>Description</strong></p>
-<p>Used to statically setup interrupts in the early boot process.</p>
-<dl class="function">
-<dt id="c.remove_irq">
-void <code class="descname">remove_irq</code><span class="sig-paren">(</span>unsigned int<em>&nbsp;irq</em>, struct <a class="reference internal" href="#c.irqaction" title="irqaction">irqaction</a> *<em>&nbsp;act</em><span class="sig-paren">)</span><a class="headerlink" href="#c.remove_irq" title="Permalink to this definition">¶</a></dt>
-<dd><p>free an interrupt</p>
-</dd></dl>
-
-<p><strong>Parameters</strong></p>
-<dl class="docutils">
-<dt><code class="docutils literal notranslate"><span class="pre">unsigned</span> <span class="pre">int</span> <span class="pre">irq</span></code></dt>
-<dd>Interrupt line to free</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">irqaction</span> <span class="pre">*</span> <span class="pre">act</span></code></dt>
-<dd>irqaction for the interrupt</dd>
-</dl>
-<p><strong>Description</strong></p>
-<p>Used to remove interrupts statically setup by the early boot process.</p>
 <dl class="function">
 <dt id="c.free_irq">
 const void * <code class="descname">free_irq</code><span class="sig-paren">(</span>unsigned int<em>&nbsp;irq</em>, void *<em>&nbsp;dev_id</em><span class="sig-paren">)</span><a class="headerlink" href="#c.free_irq" title="Permalink to this definition">¶</a></dt>

@@ -68,7 +68,7 @@
             
             
               <div class="version">
-                5.6.0
+                5.7.0
               </div>
             
           
@@ -313,11 +313,11 @@ symbol except that the “implied” symbol’s value may still be set to n
 from a direct dependency or with a visible prompt.</p>
 <p>Given the following example:</p>
 <div class="highlight-none notranslate"><div class="highlight"><pre><span></span>config FOO
-    tristate
+    tristate &quot;foo&quot;
     imply BAZ
 
 config BAZ
-    tristate
+    tristate &quot;baz&quot;
     depends on BAR
 </pre></div>
 </div>
@@ -351,9 +351,24 @@ config BAZ
 <tr class="row-even"><td>y</td>
 <td>y</td>
 <td>y</td>
-<td>Y/n</td>
+<td>Y/m/n</td>
+</tr>
+<tr class="row-odd"><td>n</td>
+<td>m</td>
+<td>n</td>
+<td>N/m</td>
+</tr>
+<tr class="row-even"><td>m</td>
+<td>m</td>
+<td>m</td>
+<td>M/n</td>
 </tr>
 <tr class="row-odd"><td>y</td>
+<td>m</td>
+<td>n</td>
+<td>M/n</td>
+</tr>
+<tr class="row-even"><td>y</td>
 <td>n</td>
 <td><ul class="first last simple">
 <li></li>
@@ -367,6 +382,24 @@ config BAZ
 <p>This is useful e.g. with multiple drivers that want to indicate their
 ability to hook into a secondary subsystem while allowing the user to
 configure that subsystem out without also having to unset these drivers.</p>
+<p>Note: If the combination of FOO=y and BAR=m causes a link error,
+you can guard the function call with IS_REACHABLE():</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>foo_init()
+{
+        if (IS_REACHABLE(CONFIG_BAZ))
+                baz_register(&amp;foo);
+        ...
+}
+</pre></div>
+</div>
+<p>Note: If the feature provided by BAZ is highly desirable for FOO,
+FOO should imply not only BAZ, but also its dependency BAR:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>config FOO
+    tristate &quot;foo&quot;
+    imply BAR
+    imply BAZ
+</pre></div>
+</div>
 </li>
 <li><p class="first">limiting menu display: “visible if” &lt;expr&gt;</p>
 <p>This attribute is only applicable to menu blocks, if the condition is

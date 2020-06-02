@@ -68,7 +68,7 @@
             
             
               <div class="version">
-                5.6.0
+                5.7.0
               </div>
             
           
@@ -161,20 +161,20 @@
   <div class="section" id="arm-tcm-tightly-coupled-memory-handling-in-linux">
 <h1>ARM TCM (Tightly-Coupled Memory) handling in Linux<a class="headerlink" href="#arm-tcm-tightly-coupled-memory-handling-in-linux" title="Permalink to this headline">¶</a></h1>
 <p>Written by Linus Walleij &lt;<a class="reference external" href="mailto:linus&#46;walleij&#37;&#52;&#48;stericsson&#46;com">linus<span>&#46;</span>walleij<span>&#64;</span>stericsson<span>&#46;</span>com</a>&gt;</p>
-<p>Some ARM SoC:s have a so-called TCM (Tightly-Coupled Memory).
+<p>Some ARM SoCs have a so-called TCM (Tightly-Coupled Memory).
 This is usually just a few (4-64) KiB of RAM inside the ARM
 processor.</p>
-<p>Due to being embedded inside the CPU The TCM has a
+<p>Due to being embedded inside the CPU, the TCM has a
 Harvard-architecture, so there is an ITCM (instruction TCM)
 and a DTCM (data TCM). The DTCM can not contain any
 instructions, but the ITCM can actually contain data.
 The size of DTCM or ITCM is minimum 4KiB so the typical
 minimum configuration is 4KiB ITCM and 4KiB DTCM.</p>
-<p>ARM CPU:s have special registers to read out status, physical
+<p>ARM CPUs have special registers to read out status, physical
 location and size of TCM memories. arch/arm/include/asm/cputype.h
 defines a CPUID_TCM register that you can read out from the
 system control coprocessor. Documentation from ARM can be found
-at http://infocenter.arm.com, search for “TCM Status Register”
+at <a class="reference external" href="http://infocenter.arm.com">http://infocenter.arm.com</a>, search for “TCM Status Register”
 to see documents for all CPUs. Reading this register you can
 determine if ITCM (bits 1-0) and/or DTCM (bit 17-16) is present
 in the machine.</p>

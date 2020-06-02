@@ -68,7 +68,7 @@
             
             
               <div class="version">
-                5.6.0
+                5.7.0
               </div>
             
           
@@ -224,9 +224,9 @@ struct <code class="descname">gpio_irq_chip</code><a class="headerlink" href="#c
 #ifdef CONFIG_IRQ_DOMAIN_HIERARCHY;
   struct fwnode_handle *fwnode;
   struct irq_domain *parent_domain;
-  int (*child_to_parent_hwirq)(struct gpio_chip *chip,unsigned int child_hwirq,unsigned int child_type,unsigned int *parent_hwirq, unsigned int *parent_type);
-  void *(*populate_parent_alloc_arg)(struct gpio_chip *chip,unsigned int parent_hwirq, unsigned int parent_type);
-  unsigned int (*child_offset_to_irq)(struct gpio_chip *chip, unsigned int pin);
+  int (*child_to_parent_hwirq)(struct gpio_chip *gc,unsigned int child_hwirq,unsigned int child_type,unsigned int *parent_hwirq, unsigned int *parent_type);
+  void *(*populate_parent_alloc_arg)(struct gpio_chip *gc,unsigned int parent_hwirq, unsigned int parent_type);
+  unsigned int (*child_offset_to_irq)(struct gpio_chip *gc, unsigned int pin);
   struct irq_domain_ops child_irq_domain_ops;
 #endif;
   irq_flow_handler_t handler;
@@ -239,8 +239,8 @@ struct <code class="descname">gpio_irq_chip</code><a class="headerlink" href="#c
   unsigned int *parents;
   unsigned int *map;
   bool threaded;
-  int (*init_hw)(struct gpio_chip *chip);
-  void (*init_valid_mask)(struct gpio_chip *chip,unsigned long *valid_mask, unsigned int ngpios);
+  int (*init_hw)(struct gpio_chip *gc);
+  void (*init_valid_mask)(struct gpio_chip *gc,unsigned long *valid_mask, unsigned int ngpios);
   unsigned long *valid_mask;
   unsigned int first;
   void (*irq_enable)(struct irq_data *data);
@@ -356,20 +356,20 @@ struct <code class="descname">gpio_chip</code><a class="headerlink" href="#c.gpi
   struct gpio_device      *gpiodev;
   struct device           *parent;
   struct module           *owner;
-  int (*request)(struct gpio_chip *chip, unsigned offset);
-  void (*free)(struct gpio_chip *chip, unsigned offset);
-  int (*get_direction)(struct gpio_chip *chip, unsigned offset);
-  int (*direction_input)(struct gpio_chip *chip, unsigned offset);
-  int (*direction_output)(struct gpio_chip *chip, unsigned offset, int value);
-  int (*get)(struct gpio_chip *chip, unsigned offset);
-  int (*get_multiple)(struct gpio_chip *chip,unsigned long *mask, unsigned long *bits);
-  void (*set)(struct gpio_chip *chip, unsigned offset, int value);
-  void (*set_multiple)(struct gpio_chip *chip,unsigned long *mask, unsigned long *bits);
-  int (*set_config)(struct gpio_chip *chip,unsigned offset, unsigned long config);
-  int (*to_irq)(struct gpio_chip *chip, unsigned offset);
-  void (*dbg_show)(struct seq_file *s, struct gpio_chip *chip);
-  int (*init_valid_mask)(struct gpio_chip *chip,unsigned long *valid_mask, unsigned int ngpios);
-  int (*add_pin_ranges)(struct gpio_chip *chip);
+  int (*request)(struct gpio_chip *gc, unsigned offset);
+  void (*free)(struct gpio_chip *gc, unsigned offset);
+  int (*get_direction)(struct gpio_chip *gc, unsigned offset);
+  int (*direction_input)(struct gpio_chip *gc, unsigned offset);
+  int (*direction_output)(struct gpio_chip *gc, unsigned offset, int value);
+  int (*get)(struct gpio_chip *gc, unsigned offset);
+  int (*get_multiple)(struct gpio_chip *gc,unsigned long *mask, unsigned long *bits);
+  void (*set)(struct gpio_chip *gc, unsigned offset, int value);
+  void (*set_multiple)(struct gpio_chip *gc,unsigned long *mask, unsigned long *bits);
+  int (*set_config)(struct gpio_chip *gc,unsigned offset, unsigned long config);
+  int (*to_irq)(struct gpio_chip *gc, unsigned offset);
+  void (*dbg_show)(struct seq_file *s, struct gpio_chip *gc);
+  int (*init_valid_mask)(struct gpio_chip *gc,unsigned long *valid_mask, unsigned int ngpios);
+  int (*add_pin_ranges)(struct gpio_chip *gc);
   int base;
   u16 ngpio;
   const char              *const *names;
@@ -537,14 +537,14 @@ are referenced through calls like gpio_get_value(gpio), the offset
 is calculated by subtracting <strong>base</strong> from the gpio number.</p>
 <dl class="function">
 <dt id="c.gpiochip_add_data">
-<code class="descname">gpiochip_add_data</code><span class="sig-paren">(</span><em>chip</em>, <em>data</em><span class="sig-paren">)</span><a class="headerlink" href="#c.gpiochip_add_data" title="Permalink to this definition">¶</a></dt>
+<code class="descname">gpiochip_add_data</code><span class="sig-paren">(</span><em>gc</em>, <em>data</em><span class="sig-paren">)</span><a class="headerlink" href="#c.gpiochip_add_data" title="Permalink to this definition">¶</a></dt>
 <dd><p>register a gpio_chip</p>
 </dd></dl>
 
 <p><strong>Parameters</strong></p>
 <dl class="docutils">
-<dt><code class="docutils literal notranslate"><span class="pre">chip</span></code></dt>
-<dd>the chip to register, with chip-&gt;base initialized</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">gc</span></code></dt>
+<dd><em>undescribed</em></dd>
 <dt><code class="docutils literal notranslate"><span class="pre">data</span></code></dt>
 <dd>driver-private data associated with this chip</dd>
 </dl>
@@ -601,6 +601,22 @@ struct gpio_desc * <code class="descname">gpio_to_desc</code><span class="sig-pa
 <p>The GPIO descriptor associated with the given GPIO, or <code class="docutils literal notranslate"><span class="pre">NULL</span></code> if no GPIO
 with the given number exists in the system.</p>
 <dl class="function">
+<dt id="c.gpiochip_get_desc">
+struct gpio_desc * <code class="descname">gpiochip_get_desc</code><span class="sig-paren">(</span>struct <a class="reference internal" href="#c.gpio_chip" title="gpio_chip">gpio_chip</a> *<em>&nbsp;gc</em>, unsigned int<em>&nbsp;hwnum</em><span class="sig-paren">)</span><a class="headerlink" href="#c.gpiochip_get_desc" title="Permalink to this definition">¶</a></dt>
+<dd><p>get the GPIO descriptor corresponding to the given hardware number for this chip</p>
+</dd></dl>
+
+<p><strong>Parameters</strong></p>
+<dl class="docutils">
+<dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">gpio_chip</span> <span class="pre">*</span> <span class="pre">gc</span></code></dt>
+<dd>GPIO chip</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">unsigned</span> <span class="pre">int</span> <span class="pre">hwnum</span></code></dt>
+<dd>hardware number of the GPIO for this chip</dd>
+</dl>
+<p><strong>Return</strong></p>
+<p>A pointer to the GPIO descriptor or <code class="docutils literal notranslate"><span class="pre">ERR_PTR(-EINVAL)</span></code> if no GPIO exists
+in the given chip for the specified hardware number.</p>
+<dl class="function">
 <dt id="c.desc_to_gpio">
 int <code class="descname">desc_to_gpio</code><span class="sig-paren">(</span>const struct gpio_desc *<em>&nbsp;desc</em><span class="sig-paren">)</span><a class="headerlink" href="#c.desc_to_gpio" title="Permalink to this definition">¶</a></dt>
 <dd><p>convert a GPIO descriptor to the integer namespace</p>
@@ -643,56 +659,33 @@ int <code class="descname">gpiod_get_direction</code><span class="sig-paren">(</
 <p>This function may sleep if <a class="reference internal" href="#c.gpiod_cansleep" title="gpiod_cansleep"><code class="xref c c-func docutils literal notranslate"><span class="pre">gpiod_cansleep()</span></code></a> is true.</p>
 <dl class="function">
 <dt id="c.gpiochip_get_data">
-void * <code class="descname">gpiochip_get_data</code><span class="sig-paren">(</span>struct <a class="reference internal" href="#c.gpio_chip" title="gpio_chip">gpio_chip</a> *<em>&nbsp;chip</em><span class="sig-paren">)</span><a class="headerlink" href="#c.gpiochip_get_data" title="Permalink to this definition">¶</a></dt>
+void * <code class="descname">gpiochip_get_data</code><span class="sig-paren">(</span>struct <a class="reference internal" href="#c.gpio_chip" title="gpio_chip">gpio_chip</a> *<em>&nbsp;gc</em><span class="sig-paren">)</span><a class="headerlink" href="#c.gpiochip_get_data" title="Permalink to this definition">¶</a></dt>
 <dd><p>get per-subdriver data for the chip</p>
 </dd></dl>
 
 <p><strong>Parameters</strong></p>
 <dl class="docutils">
-<dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">gpio_chip</span> <span class="pre">*</span> <span class="pre">chip</span></code></dt>
+<dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">gpio_chip</span> <span class="pre">*</span> <span class="pre">gc</span></code></dt>
 <dd>GPIO chip</dd>
 </dl>
 <p><strong>Return</strong></p>
 <p>The per-subdriver data for the chip.</p>
 <dl class="function">
 <dt id="c.gpiochip_remove">
-void <code class="descname">gpiochip_remove</code><span class="sig-paren">(</span>struct <a class="reference internal" href="#c.gpio_chip" title="gpio_chip">gpio_chip</a> *<em>&nbsp;chip</em><span class="sig-paren">)</span><a class="headerlink" href="#c.gpiochip_remove" title="Permalink to this definition">¶</a></dt>
+void <code class="descname">gpiochip_remove</code><span class="sig-paren">(</span>struct <a class="reference internal" href="#c.gpio_chip" title="gpio_chip">gpio_chip</a> *<em>&nbsp;gc</em><span class="sig-paren">)</span><a class="headerlink" href="#c.gpiochip_remove" title="Permalink to this definition">¶</a></dt>
 <dd><p>unregister a gpio_chip</p>
 </dd></dl>
 
 <p><strong>Parameters</strong></p>
 <dl class="docutils">
-<dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">gpio_chip</span> <span class="pre">*</span> <span class="pre">chip</span></code></dt>
+<dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">gpio_chip</span> <span class="pre">*</span> <span class="pre">gc</span></code></dt>
 <dd>the chip to unregister</dd>
 </dl>
 <p><strong>Description</strong></p>
 <p>A gpio_chip with any GPIOs still requested may not be removed.</p>
 <dl class="function">
-<dt id="c.devm_gpiochip_add_data">
-int <code class="descname">devm_gpiochip_add_data</code><span class="sig-paren">(</span>struct <a class="reference internal" href="../infrastructure.html#c.device" title="device">device</a> *<em>&nbsp;dev</em>, struct <a class="reference internal" href="#c.gpio_chip" title="gpio_chip">gpio_chip</a> *<em>&nbsp;chip</em>, void *<em>&nbsp;data</em><span class="sig-paren">)</span><a class="headerlink" href="#c.devm_gpiochip_add_data" title="Permalink to this definition">¶</a></dt>
-<dd><p>Resource managed <a class="reference internal" href="#c.gpiochip_add_data" title="gpiochip_add_data"><code class="xref c c-func docutils literal notranslate"><span class="pre">gpiochip_add_data()</span></code></a></p>
-</dd></dl>
-
-<p><strong>Parameters</strong></p>
-<dl class="docutils">
-<dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">device</span> <span class="pre">*</span> <span class="pre">dev</span></code></dt>
-<dd>pointer to the device that gpio_chip belongs to.</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">gpio_chip</span> <span class="pre">*</span> <span class="pre">chip</span></code></dt>
-<dd>the chip to register, with chip-&gt;base initialized</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">void</span> <span class="pre">*</span> <span class="pre">data</span></code></dt>
-<dd>driver-private data associated with this chip</dd>
-</dl>
-<p><strong>Context</strong></p>
-<p>potentially before irqs will work</p>
-<p><strong>Description</strong></p>
-<p>The gpio chip automatically be released when the device is unbound.</p>
-<p><strong>Return</strong></p>
-<p>A negative errno if the chip can’t be registered, such as because the
-chip-&gt;base is invalid or already associated with a different chip.
-Otherwise it returns zero as a success code.</p>
-<dl class="function">
 <dt id="c.gpiochip_find">
-struct <a class="reference internal" href="#c.gpio_chip" title="gpio_chip">gpio_chip</a> * <code class="descname">gpiochip_find</code><span class="sig-paren">(</span>void *<em>&nbsp;data</em>, int (*match) (struct <a class="reference internal" href="#c.gpio_chip" title="gpio_chip">gpio_chip</a><em>&nbsp;*chip</em>, void<em>&nbsp;*data</em><span class="sig-paren">)</span><a class="headerlink" href="#c.gpiochip_find" title="Permalink to this definition">¶</a></dt>
+struct <a class="reference internal" href="#c.gpio_chip" title="gpio_chip">gpio_chip</a> * <code class="descname">gpiochip_find</code><span class="sig-paren">(</span>void *<em>&nbsp;data</em>, int (<em>*match</em>)(struct <a class="reference internal" href="#c.gpio_chip" title="gpio_chip">gpio_chip</a> *gc, void *data)<span class="sig-paren">)</span><a class="headerlink" href="#c.gpiochip_find" title="Permalink to this definition">¶</a></dt>
 <dd><p>iterator for locating a specific gpio_chip</p>
 </dd></dl>
 
@@ -700,7 +693,7 @@ struct <a class="reference internal" href="#c.gpio_chip" title="gpio_chip">gpio_
 <dl class="docutils">
 <dt><code class="docutils literal notranslate"><span class="pre">void</span> <span class="pre">*</span> <span class="pre">data</span></code></dt>
 <dd>data to pass to match function</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">int</span> <span class="pre">(*)(struct</span> <span class="pre">gpio_chip</span> <span class="pre">*chip,</span> <span class="pre">void</span> <span class="pre">*data)</span> <span class="pre">match</span></code></dt>
+<dt><code class="docutils literal notranslate"><span class="pre">int</span> <span class="pre">(*)(struct</span> <span class="pre">gpio_chip</span> <span class="pre">*gc,</span> <span class="pre">void</span> <span class="pre">*data)</span> <span class="pre">match</span></code></dt>
 <dd>Callback function to check gpio_chip</dd>
 </dl>
 <p><strong>Description</strong></p>
@@ -711,13 +704,13 @@ non-zero, this function will return to the caller and not iterate over any
 more gpio_chips.</p>
 <dl class="function">
 <dt id="c.gpiochip_set_nested_irqchip">
-void <code class="descname">gpiochip_set_nested_irqchip</code><span class="sig-paren">(</span>struct <a class="reference internal" href="#c.gpio_chip" title="gpio_chip">gpio_chip</a> *<em>&nbsp;gpiochip</em>, struct <a class="reference internal" href="../../core-api/genericirq.html#c.irq_chip" title="irq_chip">irq_chip</a> *<em>&nbsp;irqchip</em>, unsigned int<em>&nbsp;parent_irq</em><span class="sig-paren">)</span><a class="headerlink" href="#c.gpiochip_set_nested_irqchip" title="Permalink to this definition">¶</a></dt>
+void <code class="descname">gpiochip_set_nested_irqchip</code><span class="sig-paren">(</span>struct <a class="reference internal" href="#c.gpio_chip" title="gpio_chip">gpio_chip</a> *<em>&nbsp;gc</em>, struct <a class="reference internal" href="../../core-api/genericirq.html#c.irq_chip" title="irq_chip">irq_chip</a> *<em>&nbsp;irqchip</em>, unsigned int<em>&nbsp;parent_irq</em><span class="sig-paren">)</span><a class="headerlink" href="#c.gpiochip_set_nested_irqchip" title="Permalink to this definition">¶</a></dt>
 <dd><p>connects a nested irqchip to a gpiochip</p>
 </dd></dl>
 
 <p><strong>Parameters</strong></p>
 <dl class="docutils">
-<dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">gpio_chip</span> <span class="pre">*</span> <span class="pre">gpiochip</span></code></dt>
+<dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">gpio_chip</span> <span class="pre">*</span> <span class="pre">gc</span></code></dt>
 <dd>the gpiochip to set the irqchip nested handler to</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">irq_chip</span> <span class="pre">*</span> <span class="pre">irqchip</span></code></dt>
 <dd>the irqchip to nest to the gpiochip</dd>
@@ -782,13 +775,13 @@ be used as the deactivate function for the <code class="xref c c-type docutils l
 host_data for the IRQ domain must be the <a class="reference internal" href="#c.gpio_chip" title="gpio_chip"><code class="xref c c-type docutils literal notranslate"><span class="pre">struct</span> <span class="pre">gpio_chip</span></code></a>.</p>
 <dl class="function">
 <dt id="c.gpiochip_irqchip_add_key">
-int <code class="descname">gpiochip_irqchip_add_key</code><span class="sig-paren">(</span>struct <a class="reference internal" href="#c.gpio_chip" title="gpio_chip">gpio_chip</a> *<em>&nbsp;gpiochip</em>, struct <a class="reference internal" href="../../core-api/genericirq.html#c.irq_chip" title="irq_chip">irq_chip</a> *<em>&nbsp;irqchip</em>, unsigned int<em>&nbsp;first_irq</em>, irq_flow_handler_t<em>&nbsp;handler</em>, unsigned int<em>&nbsp;type</em>, bool<em>&nbsp;threaded</em>, struct lock_class_key *<em>&nbsp;lock_key</em>, struct lock_class_key *<em>&nbsp;request_key</em><span class="sig-paren">)</span><a class="headerlink" href="#c.gpiochip_irqchip_add_key" title="Permalink to this definition">¶</a></dt>
+int <code class="descname">gpiochip_irqchip_add_key</code><span class="sig-paren">(</span>struct <a class="reference internal" href="#c.gpio_chip" title="gpio_chip">gpio_chip</a> *<em>&nbsp;gc</em>, struct <a class="reference internal" href="../../core-api/genericirq.html#c.irq_chip" title="irq_chip">irq_chip</a> *<em>&nbsp;irqchip</em>, unsigned int<em>&nbsp;first_irq</em>, irq_flow_handler_t<em>&nbsp;handler</em>, unsigned int<em>&nbsp;type</em>, bool<em>&nbsp;threaded</em>, struct lock_class_key *<em>&nbsp;lock_key</em>, struct lock_class_key *<em>&nbsp;request_key</em><span class="sig-paren">)</span><a class="headerlink" href="#c.gpiochip_irqchip_add_key" title="Permalink to this definition">¶</a></dt>
 <dd><p>adds an irqchip to a gpiochip</p>
 </dd></dl>
 
 <p><strong>Parameters</strong></p>
 <dl class="docutils">
-<dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">gpio_chip</span> <span class="pre">*</span> <span class="pre">gpiochip</span></code></dt>
+<dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">gpio_chip</span> <span class="pre">*</span> <span class="pre">gc</span></code></dt>
 <dd>the gpiochip to add the irqchip to</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">irq_chip</span> <span class="pre">*</span> <span class="pre">irqchip</span></code></dt>
 <dd>the irqchip to add to the gpiochip</dd>
@@ -822,39 +815,39 @@ the pins on the gpiochip can generate a unique IRQ. Everything else
 need to be open coded.</p>
 <dl class="function">
 <dt id="c.gpiochip_generic_request">
-int <code class="descname">gpiochip_generic_request</code><span class="sig-paren">(</span>struct <a class="reference internal" href="#c.gpio_chip" title="gpio_chip">gpio_chip</a> *<em>&nbsp;chip</em>, unsigned<em>&nbsp;offset</em><span class="sig-paren">)</span><a class="headerlink" href="#c.gpiochip_generic_request" title="Permalink to this definition">¶</a></dt>
+int <code class="descname">gpiochip_generic_request</code><span class="sig-paren">(</span>struct <a class="reference internal" href="#c.gpio_chip" title="gpio_chip">gpio_chip</a> *<em>&nbsp;gc</em>, unsigned<em>&nbsp;offset</em><span class="sig-paren">)</span><a class="headerlink" href="#c.gpiochip_generic_request" title="Permalink to this definition">¶</a></dt>
 <dd><p>request the gpio function for a pin</p>
 </dd></dl>
 
 <p><strong>Parameters</strong></p>
 <dl class="docutils">
-<dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">gpio_chip</span> <span class="pre">*</span> <span class="pre">chip</span></code></dt>
+<dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">gpio_chip</span> <span class="pre">*</span> <span class="pre">gc</span></code></dt>
 <dd>the gpiochip owning the GPIO</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">unsigned</span> <span class="pre">offset</span></code></dt>
 <dd>the offset of the GPIO to request for GPIO function</dd>
 </dl>
 <dl class="function">
 <dt id="c.gpiochip_generic_free">
-void <code class="descname">gpiochip_generic_free</code><span class="sig-paren">(</span>struct <a class="reference internal" href="#c.gpio_chip" title="gpio_chip">gpio_chip</a> *<em>&nbsp;chip</em>, unsigned<em>&nbsp;offset</em><span class="sig-paren">)</span><a class="headerlink" href="#c.gpiochip_generic_free" title="Permalink to this definition">¶</a></dt>
+void <code class="descname">gpiochip_generic_free</code><span class="sig-paren">(</span>struct <a class="reference internal" href="#c.gpio_chip" title="gpio_chip">gpio_chip</a> *<em>&nbsp;gc</em>, unsigned<em>&nbsp;offset</em><span class="sig-paren">)</span><a class="headerlink" href="#c.gpiochip_generic_free" title="Permalink to this definition">¶</a></dt>
 <dd><p>free the gpio function from a pin</p>
 </dd></dl>
 
 <p><strong>Parameters</strong></p>
 <dl class="docutils">
-<dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">gpio_chip</span> <span class="pre">*</span> <span class="pre">chip</span></code></dt>
+<dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">gpio_chip</span> <span class="pre">*</span> <span class="pre">gc</span></code></dt>
 <dd>the gpiochip to request the gpio function for</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">unsigned</span> <span class="pre">offset</span></code></dt>
 <dd>the offset of the GPIO to free from GPIO function</dd>
 </dl>
 <dl class="function">
 <dt id="c.gpiochip_generic_config">
-int <code class="descname">gpiochip_generic_config</code><span class="sig-paren">(</span>struct <a class="reference internal" href="#c.gpio_chip" title="gpio_chip">gpio_chip</a> *<em>&nbsp;chip</em>, unsigned<em>&nbsp;offset</em>, unsigned long<em>&nbsp;config</em><span class="sig-paren">)</span><a class="headerlink" href="#c.gpiochip_generic_config" title="Permalink to this definition">¶</a></dt>
+int <code class="descname">gpiochip_generic_config</code><span class="sig-paren">(</span>struct <a class="reference internal" href="#c.gpio_chip" title="gpio_chip">gpio_chip</a> *<em>&nbsp;gc</em>, unsigned<em>&nbsp;offset</em>, unsigned long<em>&nbsp;config</em><span class="sig-paren">)</span><a class="headerlink" href="#c.gpiochip_generic_config" title="Permalink to this definition">¶</a></dt>
 <dd><p>apply configuration for a pin</p>
 </dd></dl>
 
 <p><strong>Parameters</strong></p>
 <dl class="docutils">
-<dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">gpio_chip</span> <span class="pre">*</span> <span class="pre">chip</span></code></dt>
+<dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">gpio_chip</span> <span class="pre">*</span> <span class="pre">gc</span></code></dt>
 <dd>the gpiochip owning the GPIO</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">unsigned</span> <span class="pre">offset</span></code></dt>
 <dd>the offset of the GPIO to apply the configuration</dd>
@@ -863,13 +856,13 @@ int <code class="descname">gpiochip_generic_config</code><span class="sig-paren"
 </dl>
 <dl class="function">
 <dt id="c.gpiochip_add_pingroup_range">
-int <code class="descname">gpiochip_add_pingroup_range</code><span class="sig-paren">(</span>struct <a class="reference internal" href="#c.gpio_chip" title="gpio_chip">gpio_chip</a> *<em>&nbsp;chip</em>, struct pinctrl_dev *<em>&nbsp;pctldev</em>, unsigned int<em>&nbsp;gpio_offset</em>, const char *<em>&nbsp;pin_group</em><span class="sig-paren">)</span><a class="headerlink" href="#c.gpiochip_add_pingroup_range" title="Permalink to this definition">¶</a></dt>
+int <code class="descname">gpiochip_add_pingroup_range</code><span class="sig-paren">(</span>struct <a class="reference internal" href="#c.gpio_chip" title="gpio_chip">gpio_chip</a> *<em>&nbsp;gc</em>, struct pinctrl_dev *<em>&nbsp;pctldev</em>, unsigned int<em>&nbsp;gpio_offset</em>, const char *<em>&nbsp;pin_group</em><span class="sig-paren">)</span><a class="headerlink" href="#c.gpiochip_add_pingroup_range" title="Permalink to this definition">¶</a></dt>
 <dd><p>add a range for GPIO &lt;-&gt; pin mapping</p>
 </dd></dl>
 
 <p><strong>Parameters</strong></p>
 <dl class="docutils">
-<dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">gpio_chip</span> <span class="pre">*</span> <span class="pre">chip</span></code></dt>
+<dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">gpio_chip</span> <span class="pre">*</span> <span class="pre">gc</span></code></dt>
 <dd>the gpiochip to add the range for</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">pinctrl_dev</span> <span class="pre">*</span> <span class="pre">pctldev</span></code></dt>
 <dd>the pin controller to map to</dd>
@@ -885,13 +878,13 @@ Documentation/devicetree/bindings/gpio/gpio.txt on how to
 bind pinctrl and gpio drivers via the “gpio-ranges” property.</p>
 <dl class="function">
 <dt id="c.gpiochip_add_pin_range">
-int <code class="descname">gpiochip_add_pin_range</code><span class="sig-paren">(</span>struct <a class="reference internal" href="#c.gpio_chip" title="gpio_chip">gpio_chip</a> *<em>&nbsp;chip</em>, const char *<em>&nbsp;pinctl_name</em>, unsigned int<em>&nbsp;gpio_offset</em>, unsigned int<em>&nbsp;pin_offset</em>, unsigned int<em>&nbsp;npins</em><span class="sig-paren">)</span><a class="headerlink" href="#c.gpiochip_add_pin_range" title="Permalink to this definition">¶</a></dt>
+int <code class="descname">gpiochip_add_pin_range</code><span class="sig-paren">(</span>struct <a class="reference internal" href="#c.gpio_chip" title="gpio_chip">gpio_chip</a> *<em>&nbsp;gc</em>, const char *<em>&nbsp;pinctl_name</em>, unsigned int<em>&nbsp;gpio_offset</em>, unsigned int<em>&nbsp;pin_offset</em>, unsigned int<em>&nbsp;npins</em><span class="sig-paren">)</span><a class="headerlink" href="#c.gpiochip_add_pin_range" title="Permalink to this definition">¶</a></dt>
 <dd><p>add a range for GPIO &lt;-&gt; pin mapping</p>
 </dd></dl>
 
 <p><strong>Parameters</strong></p>
 <dl class="docutils">
-<dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">gpio_chip</span> <span class="pre">*</span> <span class="pre">chip</span></code></dt>
+<dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">gpio_chip</span> <span class="pre">*</span> <span class="pre">gc</span></code></dt>
 <dd>the gpiochip to add the range for</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">const</span> <span class="pre">char</span> <span class="pre">*</span> <span class="pre">pinctl_name</span></code></dt>
 <dd>the dev_name() of the pin controller to map to</dd>
@@ -911,24 +904,24 @@ Documentation/devicetree/bindings/gpio/gpio.txt on how to
 bind pinctrl and gpio drivers via the “gpio-ranges” property.</p>
 <dl class="function">
 <dt id="c.gpiochip_remove_pin_ranges">
-void <code class="descname">gpiochip_remove_pin_ranges</code><span class="sig-paren">(</span>struct <a class="reference internal" href="#c.gpio_chip" title="gpio_chip">gpio_chip</a> *<em>&nbsp;chip</em><span class="sig-paren">)</span><a class="headerlink" href="#c.gpiochip_remove_pin_ranges" title="Permalink to this definition">¶</a></dt>
+void <code class="descname">gpiochip_remove_pin_ranges</code><span class="sig-paren">(</span>struct <a class="reference internal" href="#c.gpio_chip" title="gpio_chip">gpio_chip</a> *<em>&nbsp;gc</em><span class="sig-paren">)</span><a class="headerlink" href="#c.gpiochip_remove_pin_ranges" title="Permalink to this definition">¶</a></dt>
 <dd><p>remove all the GPIO &lt;-&gt; pin mappings</p>
 </dd></dl>
 
 <p><strong>Parameters</strong></p>
 <dl class="docutils">
-<dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">gpio_chip</span> <span class="pre">*</span> <span class="pre">chip</span></code></dt>
+<dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">gpio_chip</span> <span class="pre">*</span> <span class="pre">gc</span></code></dt>
 <dd>the chip to remove all the mappings for</dd>
 </dl>
 <dl class="function">
 <dt id="c.gpiochip_is_requested">
-const char * <code class="descname">gpiochip_is_requested</code><span class="sig-paren">(</span>struct <a class="reference internal" href="#c.gpio_chip" title="gpio_chip">gpio_chip</a> *<em>&nbsp;chip</em>, unsigned<em>&nbsp;offset</em><span class="sig-paren">)</span><a class="headerlink" href="#c.gpiochip_is_requested" title="Permalink to this definition">¶</a></dt>
+const char * <code class="descname">gpiochip_is_requested</code><span class="sig-paren">(</span>struct <a class="reference internal" href="#c.gpio_chip" title="gpio_chip">gpio_chip</a> *<em>&nbsp;gc</em>, unsigned<em>&nbsp;offset</em><span class="sig-paren">)</span><a class="headerlink" href="#c.gpiochip_is_requested" title="Permalink to this definition">¶</a></dt>
 <dd><p>return string iff signal was requested</p>
 </dd></dl>
 
 <p><strong>Parameters</strong></p>
 <dl class="docutils">
-<dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">gpio_chip</span> <span class="pre">*</span> <span class="pre">chip</span></code></dt>
+<dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">gpio_chip</span> <span class="pre">*</span> <span class="pre">gc</span></code></dt>
 <dd>controller managing the signal</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">unsigned</span> <span class="pre">offset</span></code></dt>
 <dd>of signal within controller’s 0..(ngpio - 1) range</dd>
@@ -942,13 +935,13 @@ help with diagnostics, and knowing that the signal is used as a GPIO
 can help avoid accidentally multiplexing it to another controller.</p>
 <dl class="function">
 <dt id="c.gpiochip_request_own_desc">
-struct gpio_desc * <code class="descname">gpiochip_request_own_desc</code><span class="sig-paren">(</span>struct <a class="reference internal" href="#c.gpio_chip" title="gpio_chip">gpio_chip</a> *<em>&nbsp;chip</em>, unsigned int<em>&nbsp;hwnum</em>, const char *<em>&nbsp;label</em>, enum gpio_lookup_flags<em>&nbsp;lflags</em>, enum gpiod_flags<em>&nbsp;dflags</em><span class="sig-paren">)</span><a class="headerlink" href="#c.gpiochip_request_own_desc" title="Permalink to this definition">¶</a></dt>
+struct gpio_desc * <code class="descname">gpiochip_request_own_desc</code><span class="sig-paren">(</span>struct <a class="reference internal" href="#c.gpio_chip" title="gpio_chip">gpio_chip</a> *<em>&nbsp;gc</em>, unsigned int<em>&nbsp;hwnum</em>, const char *<em>&nbsp;label</em>, enum gpio_lookup_flags<em>&nbsp;lflags</em>, enum gpiod_flags<em>&nbsp;dflags</em><span class="sig-paren">)</span><a class="headerlink" href="#c.gpiochip_request_own_desc" title="Permalink to this definition">¶</a></dt>
 <dd><p>Allow GPIO chip to request its own descriptor</p>
 </dd></dl>
 
 <p><strong>Parameters</strong></p>
 <dl class="docutils">
-<dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">gpio_chip</span> <span class="pre">*</span> <span class="pre">chip</span></code></dt>
+<dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">gpio_chip</span> <span class="pre">*</span> <span class="pre">gc</span></code></dt>
 <dd>GPIO chip</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">unsigned</span> <span class="pre">int</span> <span class="pre">hwnum</span></code></dt>
 <dd>hardware number of the GPIO for which to request the descriptor</dd>
@@ -1037,6 +1030,22 @@ be called safely on it. The initial value of the output must be specified
 as the logical value of the GPIO, i.e. taking its ACTIVE_LOW status into
 account.</p>
 <p>Return 0 in case of success, else an error code.</p>
+<dl class="function">
+<dt id="c.gpiod_set_config">
+int <code class="descname">gpiod_set_config</code><span class="sig-paren">(</span>struct gpio_desc *<em>&nbsp;desc</em>, unsigned long<em>&nbsp;config</em><span class="sig-paren">)</span><a class="headerlink" href="#c.gpiod_set_config" title="Permalink to this definition">¶</a></dt>
+<dd><p>sets <strong>config</strong> for a GPIO</p>
+</dd></dl>
+
+<p><strong>Parameters</strong></p>
+<dl class="docutils">
+<dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">gpio_desc</span> <span class="pre">*</span> <span class="pre">desc</span></code></dt>
+<dd>descriptor of the GPIO for which to set the configuration</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">unsigned</span> <span class="pre">long</span> <span class="pre">config</span></code></dt>
+<dd>Same packed config format as generic pinconf</dd>
+</dl>
+<p><strong>Return</strong></p>
+<p>0 on success, <code class="docutils literal notranslate"><span class="pre">-ENOTSUPP</span></code> if the controller doesn’t support setting the
+configuration.</p>
 <dl class="function">
 <dt id="c.gpiod_set_debounce">
 int <code class="descname">gpiod_set_debounce</code><span class="sig-paren">(</span>struct gpio_desc *<em>&nbsp;desc</em>, unsigned<em>&nbsp;debounce</em><span class="sig-paren">)</span><a class="headerlink" href="#c.gpiod_set_debounce" title="Permalink to this definition">¶</a></dt>
@@ -1289,13 +1298,13 @@ int <code class="descname">gpiod_to_irq</code><span class="sig-paren">(</span>co
 error.</p>
 <dl class="function">
 <dt id="c.gpiochip_lock_as_irq">
-int <code class="descname">gpiochip_lock_as_irq</code><span class="sig-paren">(</span>struct <a class="reference internal" href="#c.gpio_chip" title="gpio_chip">gpio_chip</a> *<em>&nbsp;chip</em>, unsigned int<em>&nbsp;offset</em><span class="sig-paren">)</span><a class="headerlink" href="#c.gpiochip_lock_as_irq" title="Permalink to this definition">¶</a></dt>
+int <code class="descname">gpiochip_lock_as_irq</code><span class="sig-paren">(</span>struct <a class="reference internal" href="#c.gpio_chip" title="gpio_chip">gpio_chip</a> *<em>&nbsp;gc</em>, unsigned int<em>&nbsp;offset</em><span class="sig-paren">)</span><a class="headerlink" href="#c.gpiochip_lock_as_irq" title="Permalink to this definition">¶</a></dt>
 <dd><p>lock a GPIO to be used as IRQ</p>
 </dd></dl>
 
 <p><strong>Parameters</strong></p>
 <dl class="docutils">
-<dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">gpio_chip</span> <span class="pre">*</span> <span class="pre">chip</span></code></dt>
+<dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">gpio_chip</span> <span class="pre">*</span> <span class="pre">gc</span></code></dt>
 <dd>the chip the GPIO to lock belongs to</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">unsigned</span> <span class="pre">int</span> <span class="pre">offset</span></code></dt>
 <dd>the offset of the GPIO to lock as IRQ</dd>
@@ -1305,13 +1314,13 @@ int <code class="descname">gpiochip_lock_as_irq</code><span class="sig-paren">(<
 a certain GPIO line to be used for IRQs.</p>
 <dl class="function">
 <dt id="c.gpiochip_unlock_as_irq">
-void <code class="descname">gpiochip_unlock_as_irq</code><span class="sig-paren">(</span>struct <a class="reference internal" href="#c.gpio_chip" title="gpio_chip">gpio_chip</a> *<em>&nbsp;chip</em>, unsigned int<em>&nbsp;offset</em><span class="sig-paren">)</span><a class="headerlink" href="#c.gpiochip_unlock_as_irq" title="Permalink to this definition">¶</a></dt>
+void <code class="descname">gpiochip_unlock_as_irq</code><span class="sig-paren">(</span>struct <a class="reference internal" href="#c.gpio_chip" title="gpio_chip">gpio_chip</a> *<em>&nbsp;gc</em>, unsigned int<em>&nbsp;offset</em><span class="sig-paren">)</span><a class="headerlink" href="#c.gpiochip_unlock_as_irq" title="Permalink to this definition">¶</a></dt>
 <dd><p>unlock a GPIO used as IRQ</p>
 </dd></dl>
 
 <p><strong>Parameters</strong></p>
 <dl class="docutils">
-<dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">gpio_chip</span> <span class="pre">*</span> <span class="pre">chip</span></code></dt>
+<dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">gpio_chip</span> <span class="pre">*</span> <span class="pre">gc</span></code></dt>
 <dd>the chip the GPIO to lock belongs to</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">unsigned</span> <span class="pre">int</span> <span class="pre">offset</span></code></dt>
 <dd>the offset of the GPIO to lock as IRQ</dd>
@@ -2123,6 +2132,29 @@ void <code class="descname">devm_gpio_free</code><span class="sig-paren">(</span
 same arguments and performs the same function as gpio_free().
 This function instead of gpio_free() should be used to manually
 free GPIOs allocated with <a class="reference internal" href="#c.devm_gpio_request" title="devm_gpio_request"><code class="xref c c-func docutils literal notranslate"><span class="pre">devm_gpio_request()</span></code></a>.</div></blockquote>
+<dl class="function">
+<dt id="c.devm_gpiochip_add_data">
+int <code class="descname">devm_gpiochip_add_data</code><span class="sig-paren">(</span>struct <a class="reference internal" href="../infrastructure.html#c.device" title="device">device</a> *<em>&nbsp;dev</em>, struct <a class="reference internal" href="#c.gpio_chip" title="gpio_chip">gpio_chip</a> *<em>&nbsp;gc</em>, void *<em>&nbsp;data</em><span class="sig-paren">)</span><a class="headerlink" href="#c.devm_gpiochip_add_data" title="Permalink to this definition">¶</a></dt>
+<dd><p>Resource managed <a class="reference internal" href="#c.gpiochip_add_data" title="gpiochip_add_data"><code class="xref c c-func docutils literal notranslate"><span class="pre">gpiochip_add_data()</span></code></a></p>
+</dd></dl>
+
+<p><strong>Parameters</strong></p>
+<dl class="docutils">
+<dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">device</span> <span class="pre">*</span> <span class="pre">dev</span></code></dt>
+<dd>pointer to the device that gpio_chip belongs to.</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">gpio_chip</span> <span class="pre">*</span> <span class="pre">gc</span></code></dt>
+<dd>the GPIO chip to register</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">void</span> <span class="pre">*</span> <span class="pre">data</span></code></dt>
+<dd>driver-private data associated with this chip</dd>
+</dl>
+<p><strong>Context</strong></p>
+<p>potentially before irqs will work</p>
+<p><strong>Description</strong></p>
+<p>The gpio chip automatically be released when the device is unbound.</p>
+<p><strong>Return</strong></p>
+<p>A negative errno if the chip can’t be registered, such as because the
+gc-&gt;base is invalid or already associated with a different chip.
+Otherwise it returns zero as a success code.</p>
 </div>
 <div class="section" id="sysfs-helpers">
 <h2>sysfs helpers<a class="headerlink" href="#sysfs-helpers" title="Permalink to this headline">¶</a></h2>

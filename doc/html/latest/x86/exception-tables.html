@@ -68,7 +68,7 @@
             
             
               <div class="version">
-                5.6.0
+                5.7.0
               </div>
             
           
@@ -399,6 +399,8 @@ and linked in vmlinux     : &gt; c017e7a5 &lt;do_con_write+e1&gt; movb   (%ebx),
 the fault, in our case the actual value is c0199ff5:
 the original assembly code: &gt; 3:      movl $-14,%eax
 and linked in vmlinux     : &gt; c0199ff5 &lt;.fixup+10b5&gt; movl   $0xfffffff2,%eax</p>
+<p>If the fixup was able to handle the exception, control flow may be returned
+to the instruction after the one that triggered the fault, ie. local label 2b.</p>
 <p>The assembly code:</p>
 <div class="highlight-none notranslate"><div class="highlight"><pre><span></span>&gt; .section __ex_table,&quot;a&quot;
 &gt;         .align 4
@@ -490,16 +492,17 @@ entry-&gt;insn. It is used to distinguish page faults from machine
 check.</dd>
 </dl>
 </li>
-<li><dl class="first docutils">
-<dt><code class="docutils literal notranslate"><span class="pre">int</span> <span class="pre">ex_handler_ext(const</span> <span class="pre">struct</span> <span class="pre">exception_table_entry</span> <span class="pre">*fixup)</span></code></dt>
-<dd>This case is used for uaccess_err … we need to set a flag
-in the task structure. Before the handler functions existed this
-case was handled by adding a large offset to the fixup to tag
-it as special.</dd>
-</dl>
-</li>
 </ol>
 <p>More functions can easily be added.</p>
+<p>CONFIG_BUILDTIME_TABLE_SORT allows the __ex_table section to be sorted post
+link of the kernel image, via a host utility scripts/sorttable. It will set the
+symbol main_extable_sort_needed to 0, avoiding sorting the __ex_table section
+at boot time. With the exception table sorted, at runtime when an exception
+occurs we can quickly lookup the __ex_table entry via binary search.</p>
+<p>This is not just a boot time optimization, some architectures require this
+table to be sorted in order to handle exceptions relatively early in the boot
+process. For example, i386 makes use of this form of exception handling before
+paging support is even enabled!</p>
 </div>
 
 

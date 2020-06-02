@@ -68,7 +68,7 @@
             
             
               <div class="version">
-                5.6.0
+                5.7.0
               </div>
             
           
@@ -196,82 +196,70 @@ call.</p>
 <table border="1" class="docutils" id="id1">
 <caption><span class="caption-text">struct v4l2_event</span><a class="headerlink" href="#id1" title="Permalink to this table">¶</a></caption>
 <colgroup>
-<col width="20%" />
-<col width="20%" />
-<col width="40%" />
-<col width="20%" />
+<col width="25%" />
+<col width="25%" />
+<col width="50%" />
 </colgroup>
 <tbody valign="top">
 <tr class="row-odd"><td>__u32</td>
 <td><code class="docutils literal notranslate"><span class="pre">type</span></code></td>
-<td>&#160;</td>
 <td>Type of the event, see <a class="reference internal" href="#event-type"><span class="std std-ref">Event Types</span></a>.</td>
 </tr>
-<tr class="row-even"><td>union</td>
-<td><code class="docutils literal notranslate"><span class="pre">u</span></code></td>
-<td>&#160;</td>
-<td>&#160;</td>
+<tr class="row-even"><td>union {</td>
+<td colspan="2"><code class="docutils literal notranslate"><span class="pre">u</span></code></td>
 </tr>
-<tr class="row-odd"><td>&#160;</td>
-<td>struct <a class="reference internal" href="#c.v4l2_event_vsync" title="v4l2_event_vsync"><code class="xref c c-type docutils literal notranslate"><span class="pre">v4l2_event_vsync</span></code></a></td>
+<tr class="row-odd"><td>struct <a class="reference internal" href="#c.v4l2_event_vsync" title="v4l2_event_vsync"><code class="xref c c-type docutils literal notranslate"><span class="pre">v4l2_event_vsync</span></code></a></td>
 <td><code class="docutils literal notranslate"><span class="pre">vsync</span></code></td>
 <td>Event data for event <code class="docutils literal notranslate"><span class="pre">V4L2_EVENT_VSYNC</span></code>.</td>
 </tr>
-<tr class="row-even"><td>&#160;</td>
-<td>struct <a class="reference internal" href="#c.v4l2_event_ctrl" title="v4l2_event_ctrl"><code class="xref c c-type docutils literal notranslate"><span class="pre">v4l2_event_ctrl</span></code></a></td>
+<tr class="row-even"><td>struct <a class="reference internal" href="#c.v4l2_event_ctrl" title="v4l2_event_ctrl"><code class="xref c c-type docutils literal notranslate"><span class="pre">v4l2_event_ctrl</span></code></a></td>
 <td><code class="docutils literal notranslate"><span class="pre">ctrl</span></code></td>
 <td>Event data for event <code class="docutils literal notranslate"><span class="pre">V4L2_EVENT_CTRL</span></code>.</td>
 </tr>
-<tr class="row-odd"><td>&#160;</td>
-<td>struct <a class="reference internal" href="#c.v4l2_event_frame_sync" title="v4l2_event_frame_sync"><code class="xref c c-type docutils literal notranslate"><span class="pre">v4l2_event_frame_sync</span></code></a></td>
+<tr class="row-odd"><td>struct <a class="reference internal" href="#c.v4l2_event_frame_sync" title="v4l2_event_frame_sync"><code class="xref c c-type docutils literal notranslate"><span class="pre">v4l2_event_frame_sync</span></code></a></td>
 <td><code class="docutils literal notranslate"><span class="pre">frame_sync</span></code></td>
 <td>Event data for event <code class="docutils literal notranslate"><span class="pre">V4L2_EVENT_FRAME_SYNC</span></code>.</td>
 </tr>
-<tr class="row-even"><td>&#160;</td>
-<td>struct <a class="reference internal" href="#c.v4l2_event_motion_det" title="v4l2_event_motion_det"><code class="xref c c-type docutils literal notranslate"><span class="pre">v4l2_event_motion_det</span></code></a></td>
+<tr class="row-even"><td>struct <a class="reference internal" href="#c.v4l2_event_motion_det" title="v4l2_event_motion_det"><code class="xref c c-type docutils literal notranslate"><span class="pre">v4l2_event_motion_det</span></code></a></td>
 <td><code class="docutils literal notranslate"><span class="pre">motion_det</span></code></td>
 <td>Event data for event V4L2_EVENT_MOTION_DET.</td>
 </tr>
-<tr class="row-odd"><td>&#160;</td>
-<td>struct <a class="reference internal" href="#c.v4l2_event_src_change" title="v4l2_event_src_change"><code class="xref c c-type docutils literal notranslate"><span class="pre">v4l2_event_src_change</span></code></a></td>
+<tr class="row-odd"><td>struct <a class="reference internal" href="#c.v4l2_event_src_change" title="v4l2_event_src_change"><code class="xref c c-type docutils literal notranslate"><span class="pre">v4l2_event_src_change</span></code></a></td>
 <td><code class="docutils literal notranslate"><span class="pre">src_change</span></code></td>
 <td>Event data for event V4L2_EVENT_SOURCE_CHANGE.</td>
 </tr>
-<tr class="row-even"><td>&#160;</td>
-<td>__u8</td>
+<tr class="row-even"><td>__u8</td>
 <td><code class="docutils literal notranslate"><span class="pre">data</span></code>[64]</td>
 <td>Event data. Defined by the event type. The union should be used to
 define easily accessible type for events.</td>
 </tr>
-<tr class="row-odd"><td>__u32</td>
-<td><code class="docutils literal notranslate"><span class="pre">pending</span></code></td>
-<td>&#160;</td>
-<td>Number of pending events excluding this one.</td>
+<tr class="row-odd"><td>}</td>
+<td colspan="2">&#160;</td>
 </tr>
 <tr class="row-even"><td>__u32</td>
+<td><code class="docutils literal notranslate"><span class="pre">pending</span></code></td>
+<td>Number of pending events excluding this one.</td>
+</tr>
+<tr class="row-odd"><td>__u32</td>
 <td><code class="docutils literal notranslate"><span class="pre">sequence</span></code></td>
-<td>&#160;</td>
 <td>Event sequence number. The sequence number is incremented for
 every subscribed event that takes place. If sequence numbers are
 not contiguous it means that events have been lost.</td>
 </tr>
-<tr class="row-odd"><td>struct timespec</td>
+<tr class="row-even"><td>struct timespec</td>
 <td><code class="docutils literal notranslate"><span class="pre">timestamp</span></code></td>
-<td>&#160;</td>
 <td>Event timestamp. The timestamp has been taken from the
 <code class="docutils literal notranslate"><span class="pre">CLOCK_MONOTONIC</span></code> clock. To access the same clock outside V4L2,
 use <code class="xref c c-func docutils literal notranslate"><span class="pre">clock_gettime()</span></code>.</td>
 </tr>
-<tr class="row-even"><td>u32</td>
+<tr class="row-odd"><td>u32</td>
 <td><code class="docutils literal notranslate"><span class="pre">id</span></code></td>
-<td>&#160;</td>
 <td>The ID associated with the event source. If the event does not
 have an associated ID (this depends on the event type), then this
 is 0.</td>
 </tr>
-<tr class="row-odd"><td>__u32</td>
+<tr class="row-even"><td>__u32</td>
 <td><code class="docutils literal notranslate"><span class="pre">reserved</span></code>[8]</td>
-<td>&#160;</td>
 <td>Reserved for future extensions. Drivers must set the array to
 zero.</td>
 </tr>
@@ -398,67 +386,58 @@ associated with it.</td>
 <table border="1" class="docutils" id="id4">
 <caption><span class="caption-text">struct v4l2_event_ctrl</span><a class="headerlink" href="#id4" title="Permalink to this table">¶</a></caption>
 <colgroup>
-<col width="20%" />
-<col width="20%" />
-<col width="40%" />
-<col width="20%" />
+<col width="25%" />
+<col width="25%" />
+<col width="50%" />
 </colgroup>
 <tbody valign="top">
 <tr class="row-odd"><td>__u32</td>
 <td><code class="docutils literal notranslate"><span class="pre">changes</span></code></td>
-<td>&#160;</td>
 <td>A bitmask that tells what has changed. See
 <a class="reference internal" href="#ctrl-changes-flags"><span class="std std-ref">Control Changes</span></a>.</td>
 </tr>
 <tr class="row-even"><td>__u32</td>
 <td><code class="docutils literal notranslate"><span class="pre">type</span></code></td>
-<td>&#160;</td>
 <td>The type of the control. See enum
 <a class="reference internal" href="vidioc-queryctrl.html#c.v4l2_ctrl_type" title="v4l2_ctrl_type"><code class="xref c c-type docutils literal notranslate"><span class="pre">v4l2_ctrl_type</span></code></a>.</td>
 </tr>
-<tr class="row-odd"><td>union (anonymous)</td>
-<td>&#160;</td>
-<td>&#160;</td>
-<td>&#160;</td>
+<tr class="row-odd"><td>union {</td>
+<td colspan="2">(anonymous)</td>
 </tr>
-<tr class="row-even"><td>&#160;</td>
-<td>__s32</td>
+<tr class="row-even"><td>__s32</td>
 <td><code class="docutils literal notranslate"><span class="pre">value</span></code></td>
 <td>The 32-bit value of the control for 32-bit control types. This is
 0 for string controls since the value of a string cannot be passed
 using <a class="reference internal" href="#vidioc-dqevent"><span class="std std-ref">ioctl VIDIOC_DQEVENT</span></a>.</td>
 </tr>
-<tr class="row-odd"><td>&#160;</td>
-<td>__s64</td>
+<tr class="row-odd"><td>__s64</td>
 <td><code class="docutils literal notranslate"><span class="pre">value64</span></code></td>
 <td>The 64-bit value of the control for 64-bit control types.</td>
 </tr>
-<tr class="row-even"><td>__u32</td>
+<tr class="row-even"><td>}</td>
+<td colspan="2">&#160;</td>
+</tr>
+<tr class="row-odd"><td>__u32</td>
 <td><code class="docutils literal notranslate"><span class="pre">flags</span></code></td>
-<td>&#160;</td>
 <td>The control flags. See <a class="reference internal" href="vidioc-queryctrl.html#control-flags"><span class="std std-ref">Control Flags</span></a>.</td>
 </tr>
-<tr class="row-odd"><td>__s32</td>
+<tr class="row-even"><td>__s32</td>
 <td><code class="docutils literal notranslate"><span class="pre">minimum</span></code></td>
-<td>&#160;</td>
 <td>The minimum value of the control. See struct
 <a class="reference internal" href="vidioc-queryctrl.html#v4l2-queryctrl"><span class="std std-ref">v4l2_queryctrl</span></a>.</td>
 </tr>
-<tr class="row-even"><td>__s32</td>
+<tr class="row-odd"><td>__s32</td>
 <td><code class="docutils literal notranslate"><span class="pre">maximum</span></code></td>
-<td>&#160;</td>
 <td>The maximum value of the control. See struct
 <a class="reference internal" href="vidioc-queryctrl.html#v4l2-queryctrl"><span class="std std-ref">v4l2_queryctrl</span></a>.</td>
 </tr>
-<tr class="row-odd"><td>__s32</td>
+<tr class="row-even"><td>__s32</td>
 <td><code class="docutils literal notranslate"><span class="pre">step</span></code></td>
-<td>&#160;</td>
 <td>The step value of the control. See struct
 <a class="reference internal" href="vidioc-queryctrl.html#v4l2-queryctrl"><span class="std std-ref">v4l2_queryctrl</span></a>.</td>
 </tr>
-<tr class="row-even"><td>__s32</td>
+<tr class="row-odd"><td>__s32</td>
 <td><code class="docutils literal notranslate"><span class="pre">default_value</span></code></td>
-<td>&#160;</td>
 <td>The default value value of the control. See struct
 <a class="reference internal" href="vidioc-queryctrl.html#v4l2-queryctrl"><span class="std std-ref">v4l2_queryctrl</span></a>.</td>
 </tr>

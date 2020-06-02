@@ -68,7 +68,7 @@
             
             
               <div class="version">
-                5.6.0
+                5.7.0
               </div>
             
           
@@ -2234,6 +2234,36 @@ void <code class="descname">drm_vram_helper_release_mm</code><span class="sig-pa
 <dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">drm_device</span> <span class="pre">*</span> <span class="pre">dev</span></code></dt>
 <dd>the DRM device</dd>
 </dl>
+<dl class="function">
+<dt id="c.drm_vram_helper_mode_valid">
+enum <a class="reference internal" href="drm-kms.html#c.drm_mode_status" title="drm_mode_status">drm_mode_status</a> <code class="descname">drm_vram_helper_mode_valid</code><span class="sig-paren">(</span>struct <a class="reference internal" href="drm-internals.html#c.drm_device" title="drm_device">drm_device</a> *<em>&nbsp;dev</em>, const struct <a class="reference internal" href="drm-kms.html#c.drm_display_mode" title="drm_display_mode">drm_display_mode</a> *<em>&nbsp;mode</em><span class="sig-paren">)</span><a class="headerlink" href="#c.drm_vram_helper_mode_valid" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests if a display mode’s framebuffer fits into the available video memory.</p>
+</dd></dl>
+
+<p><strong>Parameters</strong></p>
+<dl class="docutils">
+<dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">drm_device</span> <span class="pre">*</span> <span class="pre">dev</span></code></dt>
+<dd>the DRM device</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">const</span> <span class="pre">struct</span> <span class="pre">drm_display_mode</span> <span class="pre">*</span> <span class="pre">mode</span></code></dt>
+<dd>the mode to test</dd>
+</dl>
+<p><strong>Description</strong></p>
+<p>This function tests if enough video memory is available for using the
+specified display mode. Atomic modesetting requires importing the
+designated framebuffer into video memory before evicting the active
+one. Hence, any framebuffer may consume at most half of the available
+VRAM. Display modes that require a larger framebuffer can not be used,
+even if the CRTC does support them. Each framebuffer is assumed to
+have 32-bit color depth.</p>
+<p><strong>Note</strong></p>
+<p>The function can only test if the display mode is supported in
+general. If there are too many framebuffers pinned to video memory,
+a display mode may still not be usable in practice. The color depth of
+32-bit fits all current use case. A more flexible test can be added
+when necessary.</p>
+<p><strong>Return</strong></p>
+<p>MODE_OK if the display mode is supported, or an error code of type
+enum drm_mode_status otherwise.</p>
 </div>
 <div class="section" id="gem-ttm-helper-functions-reference">
 <h3>GEM TTM Helper Functions Reference<a class="headerlink" href="#gem-ttm-helper-functions-reference" title="Permalink to this headline">¶</a></h3>
@@ -3855,26 +3885,64 @@ The syncobj userspace API provides ioctls for several operations:</p>
 <li>Wait for a syncobj’s fence to appear and be signaled</li>
 </ul>
 </div></blockquote>
+<p>The syncobj userspace API also provides operations to manipulate a syncobj
+in terms of a timeline of struct <code class="xref c c-type docutils literal notranslate"><span class="pre">dma_fence_chain</span></code> rather than a single
+struct <a class="reference internal" href="../driver-api/dma-buf.html#c.dma_fence" title="dma_fence"><code class="xref c c-type docutils literal notranslate"><span class="pre">dma_fence</span></code></a>, through the following operations:</p>
+<blockquote>
+<div><ul class="simple">
+<li>Signal a given point on the timeline</li>
+<li>Wait for a given point to appear and/or be signaled</li>
+<li>Import and export from/to a given point of a timeline</li>
+</ul>
+</div></blockquote>
 <p>At it’s core, a syncobj is simply a wrapper around a pointer to a struct
 <a class="reference internal" href="../driver-api/dma-buf.html#c.dma_fence" title="dma_fence"><code class="xref c c-type docutils literal notranslate"><span class="pre">dma_fence</span></code></a> which may be NULL.
 When a syncobj is first created, its pointer is either NULL or a pointer
 to an already signaled fence depending on whether the
 <code class="xref c c-type docutils literal notranslate"><span class="pre">DRM_SYNCOBJ_CREATE_SIGNALED</span></code> flag is passed to
-<code class="xref c c-type docutils literal notranslate"><span class="pre">DRM_IOCTL_SYNCOBJ_CREATE</span></code>.
-When GPU work which signals a syncobj is enqueued in a DRM driver,
-the syncobj fence is replaced with a fence which will be signaled by the
-completion of that work.
-When GPU work which waits on a syncobj is enqueued in a DRM driver, the
-driver retrieves syncobj’s current fence at the time the work is enqueued
-waits on that fence before submitting the work to hardware.
-If the syncobj’s fence is NULL, the enqueue operation is expected to fail.
-All manipulation of the syncobjs’s fence happens in terms of the current
-fence at the time the ioctl is called by userspace regardless of whether
-that operation is an immediate host-side operation (signal or reset) or
-or an operation which is enqueued in some driver queue.
-<code class="xref c c-type docutils literal notranslate"><span class="pre">DRM_IOCTL_SYNCOBJ_RESET</span></code> and <code class="xref c c-type docutils literal notranslate"><span class="pre">DRM_IOCTL_SYNCOBJ_SIGNAL</span></code> can be used to
-manipulate a syncobj from the host by resetting its pointer to NULL or
+<code class="xref c c-type docutils literal notranslate"><span class="pre">DRM_IOCTL_SYNCOBJ_CREATE</span></code>.</p>
+<p>If the syncobj is considered as a binary (its state is either signaled or
+unsignaled) primitive, when GPU work is enqueued in a DRM driver to signal
+the syncobj, the syncobj’s fence is replaced with a fence which will be
+signaled by the completion of that work.
+If the syncobj is considered as a timeline primitive, when GPU work is
+enqueued in a DRM driver to signal the a given point of the syncobj, a new
+struct <code class="xref c c-type docutils literal notranslate"><span class="pre">dma_fence_chain</span></code> pointing to the DRM driver’s fence and also
+pointing to the previous fence that was in the syncobj. The new struct
+<code class="xref c c-type docutils literal notranslate"><span class="pre">dma_fence_chain</span></code> fence replace the syncobj’s fence and will be signaled by
+completion of the DRM driver’s work and also any work associated with the
+fence previously in the syncobj.</p>
+<p>When GPU work which waits on a syncobj is enqueued in a DRM driver, at the
+time the work is enqueued, it waits on the syncobj’s fence before
+submitting the work to hardware. That fence is either :</p>
+<blockquote>
+<div><ul class="simple">
+<li>The syncobj’s current fence if the syncobj is considered as a binary
+primitive.</li>
+<li>The struct <a class="reference internal" href="../driver-api/dma-buf.html#c.dma_fence" title="dma_fence"><code class="xref c c-type docutils literal notranslate"><span class="pre">dma_fence</span></code></a> associated with a given point if the syncobj is
+considered as a timeline primitive.</li>
+</ul>
+</div></blockquote>
+<p>If the syncobj’s fence is NULL or not present in the syncobj’s timeline,
+the enqueue operation is expected to fail.</p>
+<p>With binary syncobj, all manipulation of the syncobjs’s fence happens in
+terms of the current fence at the time the ioctl is called by userspace
+regardless of whether that operation is an immediate host-side operation
+(signal or reset) or or an operation which is enqueued in some driver
+queue. <code class="xref c c-type docutils literal notranslate"><span class="pre">DRM_IOCTL_SYNCOBJ_RESET</span></code> and <code class="xref c c-type docutils literal notranslate"><span class="pre">DRM_IOCTL_SYNCOBJ_SIGNAL</span></code> can be used
+to manipulate a syncobj from the host by resetting its pointer to NULL or
 setting its pointer to a fence which is already signaled.</p>
+<p>With a timeline syncobj, all manipulation of the synobj’s fence happens in
+terms of a u64 value referring to point in the timeline. See
+dma_fence_chain_find_seqno() to see how a given point is found in the
+timeline.</p>
+<p>Note that applications should be careful to always use timeline set of
+ioctl() when dealing with syncobj considered as timeline. Using a binary
+set of ioctl() with a syncobj considered as timeline could result incorrect
+synchronization. The use of binary syncobj is supported through the
+timeline set of ioctl() by using a point value of 0, this will reproduce
+the behavior of the binary set of ioctl() (for example replace the
+syncobj’s fence when signaling).</p>
 <div class="section" id="host-side-wait-on-syncobjs">
 <h3>Host-side wait on syncobjs<a class="headerlink" href="#host-side-wait-on-syncobjs" title="Permalink to this headline">¶</a></h3>
 <p><code class="xref c c-type docutils literal notranslate"><span class="pre">DRM_IOCTL_SYNCOBJ_WAIT</span></code> takes an array of syncobj handles and does a
@@ -3894,6 +3962,14 @@ to do a host wait in one thread (or process) which waits on GPU work
 submitted in another thread (or process) without having to manually
 synchronize between the two.
 This requirement is inherited from the Vulkan fence API.</p>
+<p>Similarly, <code class="xref c c-type docutils literal notranslate"><span class="pre">DRM_IOCTL_SYNCOBJ_TIMELINE_WAIT</span></code> takes an array of syncobj
+handles as well as an array of u64 points and does a host-side wait on all
+of syncobj fences at the given points simultaneously.</p>
+<p><code class="xref c c-type docutils literal notranslate"><span class="pre">DRM_IOCTL_SYNCOBJ_TIMELINE_WAIT</span></code> also adds the ability to wait for a given
+fence to materialize on the timeline without waiting for the fence to be
+signaled by using the <code class="xref c c-type docutils literal notranslate"><span class="pre">DRM_SYNCOBJ_WAIT_FLAGS_WAIT_AVAILABLE</span></code> flag. This
+requirement is inherited from the wait-before-signal behavior required by
+the Vulkan timeline semaphore API.</p>
 </div>
 <div class="section" id="import-export-of-syncobjs">
 <h3>Import/export of syncobjs<a class="headerlink" href="#import-export-of-syncobjs" title="Permalink to this headline">¶</a></h3>
@@ -3924,6 +4000,15 @@ to the fence wrapped by that sync file.
 Because sync files are immutable, resetting or signaling the syncobj
 will not affect any sync files whose fences have been imported into the
 syncobj.</p>
+</div>
+<div class="section" id="import-export-of-timeline-points-in-timeline-syncobjs">
+<h3>Import/export of timeline points in timeline syncobjs<a class="headerlink" href="#import-export-of-timeline-points-in-timeline-syncobjs" title="Permalink to this headline">¶</a></h3>
+<p><code class="xref c c-type docutils literal notranslate"><span class="pre">DRM_IOCTL_SYNCOBJ_TRANSFER</span></code> provides a mechanism to transfer a struct
+<code class="xref c c-type docutils literal notranslate"><span class="pre">dma_fence_chain</span></code> of a syncobj at a given u64 point to another u64 point
+into another syncobj.</p>
+<p>Note that if you want to transfer a struct <code class="xref c c-type docutils literal notranslate"><span class="pre">dma_fence_chain</span></code> from a given
+point on a timeline syncobj from/into a binary syncobj, you can use the
+point 0 to mean take/replace the fence in the syncobj.</p>
 </div>
 <dl class="type">
 <dt id="c.drm_syncobj">
@@ -4434,7 +4519,7 @@ struct <code class="descname">drm_gpu_scheduler</code><a class="headerlink" href
   struct list_head                ring_mirror_list;
   spinlock_t job_list_lock;
   int hang_limit;
-  atomic_t score;
+  atomic_t num_jobs;
   bool ready;
   bool free_guilty;
 };
@@ -4475,8 +4560,8 @@ timeout interval is over.</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">hang_limit</span></code></dt>
 <dd>once the hangs by a job crosses this limit then it is marked
 guilty and it will be considered for scheduling further.</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">score</span></code></dt>
-<dd>score to help loadbalancer pick a idle sched</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">num_jobs</span></code></dt>
+<dd>the number of jobs in queue in the scheduler</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">ready</span></code></dt>
 <dd>marks if the underlying HW is ready to work</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">free_guilty</span></code></dt>
@@ -4525,8 +4610,7 @@ unsigned long <code class="descname">drm_sched_suspend_timeout</code><span class
 <p><strong>Description</strong></p>
 <p>Suspend the delayed work timeout for the scheduler. This is done by
 modifying the delayed work timeout to an arbitrary large value,
-MAX_SCHEDULE_TIMEOUT in this case. Note that this function can be
-called from an IRQ context.</p>
+MAX_SCHEDULE_TIMEOUT in this case.</p>
 <p>Returns the timeout remaining</p>
 <dl class="function">
 <dt id="c.drm_sched_resume_timeout">
@@ -4542,8 +4626,7 @@ void <code class="descname">drm_sched_resume_timeout</code><span class="sig-pare
 <dd>remaining timeout</dd>
 </dl>
 <p><strong>Description</strong></p>
-<p>Resume the delayed work timeout for the scheduler. Note that
-this function can be called from an IRQ context.</p>
+<p>Resume the delayed work timeout for the scheduler.</p>
 <dl class="function">
 <dt id="c.drm_sched_stop">
 void <code class="descname">drm_sched_stop</code><span class="sig-paren">(</span>struct <a class="reference internal" href="#c.drm_gpu_scheduler" title="drm_gpu_scheduler">drm_gpu_scheduler</a> *<em>&nbsp;sched</em>, struct <a class="reference internal" href="#c.drm_sched_job" title="drm_sched_job">drm_sched_job</a> *<em>&nbsp;bad</em><span class="sig-paren">)</span><a class="headerlink" href="#c.drm_sched_stop" title="Permalink to this definition">¶</a></dt>
@@ -4617,6 +4700,22 @@ void <code class="descname">drm_sched_job_cleanup</code><span class="sig-paren">
 <dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">drm_sched_job</span> <span class="pre">*</span> <span class="pre">job</span></code></dt>
 <dd>scheduler job to clean up</dd>
 </dl>
+<dl class="function">
+<dt id="c.drm_sched_pick_best">
+struct <a class="reference internal" href="#c.drm_gpu_scheduler" title="drm_gpu_scheduler">drm_gpu_scheduler</a> * <code class="descname">drm_sched_pick_best</code><span class="sig-paren">(</span>struct <a class="reference internal" href="#c.drm_gpu_scheduler" title="drm_gpu_scheduler">drm_gpu_scheduler</a> **<em>&nbsp;sched_list</em>, unsigned int<em>&nbsp;num_sched_list</em><span class="sig-paren">)</span><a class="headerlink" href="#c.drm_sched_pick_best" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get a drm sched from a sched_list with the least load</p>
+</dd></dl>
+
+<p><strong>Parameters</strong></p>
+<dl class="docutils">
+<dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">drm_gpu_scheduler</span> <span class="pre">**</span> <span class="pre">sched_list</span></code></dt>
+<dd>list of drm_gpu_schedulers</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">unsigned</span> <span class="pre">int</span> <span class="pre">num_sched_list</span></code></dt>
+<dd>number of drm_gpu_schedulers in the sched_list</dd>
+</dl>
+<p><strong>Description</strong></p>
+<p>Returns pointer of the sched with the least load or NULL if none of the
+drm_gpu_schedulers are ready</p>
 <dl class="function">
 <dt id="c.drm_sched_init">
 int <code class="descname">drm_sched_init</code><span class="sig-paren">(</span>struct <a class="reference internal" href="#c.drm_gpu_scheduler" title="drm_gpu_scheduler">drm_gpu_scheduler</a> *<em>&nbsp;sched</em>, const struct <a class="reference internal" href="#c.drm_sched_backend_ops" title="drm_sched_backend_ops">drm_sched_backend_ops</a> *<em>&nbsp;ops</em>, unsigned<em>&nbsp;hw_submission</em>, unsigned<em>&nbsp;hang_limit</em>, long<em>&nbsp;timeout</em>, const char *<em>&nbsp;name</em><span class="sig-paren">)</span><a class="headerlink" href="#c.drm_sched_init" title="Permalink to this definition">¶</a></dt>

@@ -68,7 +68,7 @@
             
             
               <div class="version">
-                5.6.0
+                5.7.0
               </div>
             
           
@@ -223,14 +223,16 @@ used for indentation, and the above example is deliberately broken.</p>
 <h2>2) Breaking long lines and strings<a class="headerlink" href="#breaking-long-lines-and-strings" title="Permalink to this headline">¶</a></h2>
 <p>Coding style is all about readability and maintainability using commonly
 available tools.</p>
-<p>The limit on the length of lines is 80 columns and this is a strongly
-preferred limit.</p>
-<p>Statements longer than 80 columns will be broken into sensible chunks, unless
-exceeding 80 columns significantly increases readability and does not hide
-information. Descendants are always substantially shorter than the parent and
-are placed substantially to the right. The same applies to function headers
-with a long argument list. However, never break user-visible strings such as
-printk messages, because that breaks the ability to grep for them.</p>
+<p>The preferred limit on the length of a single line is 80 columns.</p>
+<p>Statements longer than 80 columns should be broken into sensible chunks,
+unless exceeding 80 columns significantly increases readability and does
+not hide information.</p>
+<p>Descendants are always substantially shorter than the parent and are
+are placed substantially to the right.  A very commonly used style
+is to align descendants to a function open parenthesis.</p>
+<p>These same rules are applied to function headers with a long argument list.</p>
+<p>However, never break user-visible strings such as printk messages because
+that breaks the ability to grep for them.</p>
 </div>
 <div class="section" id="placing-braces-and-spaces">
 <h2>3) Placing Braces and Spaces<a class="headerlink" href="#placing-braces-and-spaces" title="Permalink to this headline">¶</a></h2>
@@ -385,9 +387,9 @@ context lines.</p>
 </div>
 <div class="section" id="naming">
 <h2>4) Naming<a class="headerlink" href="#naming" title="Permalink to this headline">¶</a></h2>
-<p>C is a Spartan language, and so should your naming be.  Unlike Modula-2
-and Pascal programmers, C programmers do not use cute names like
-ThisVariableIsATemporaryCounter.  A C programmer would call that
+<p>C is a Spartan language, and your naming conventions should follow suit.
+Unlike Modula-2 and Pascal programmers, C programmers do not use cute
+names like ThisVariableIsATemporaryCounter. A C programmer would call that
 variable <code class="docutils literal notranslate"><span class="pre">tmp</span></code>, which is much easier to write, and not the least more
 difficult to understand.</p>
 <p>HOWEVER, while mixed-case names are frowned upon, descriptive names for
@@ -398,9 +400,9 @@ have descriptive names, as do global functions.  If you have a function
 that counts the number of active users, you should call that
 <code class="docutils literal notranslate"><span class="pre">count_active_users()</span></code> or similar, you should <strong>not</strong> call it <code class="docutils literal notranslate"><span class="pre">cntusr()</span></code>.</p>
 <p>Encoding the type of a function into the name (so-called Hungarian
-notation) is brain damaged - the compiler knows the types anyway and can
-check those, and it only confuses the programmer.  No wonder MicroSoft
-makes buggy programs.</p>
+notation) is asinine - the compiler knows the types anyway and can check
+those, and it only confuses the programmer. No wonder Microsoft makes buggy
+programs.</p>
 <p>LOCAL variable names should be short, and to the point.  If you have
 some random integer loop counter, it should probably be called <code class="docutils literal notranslate"><span class="pre">i</span></code>.
 Calling it <code class="docutils literal notranslate"><span class="pre">loop_counter</span></code> is non-productive, if there is no chance of it
@@ -824,9 +826,9 @@ covers RTL which is used frequently with assembly language in the kernel.</p>
 <div class="section" id="printing-kernel-messages">
 <h2>13) Printing kernel messages<a class="headerlink" href="#printing-kernel-messages" title="Permalink to this headline">¶</a></h2>
 <p>Kernel developers like to be seen as literate. Do mind the spelling
-of kernel messages to make a good impression. Do not use crippled
-words like <code class="docutils literal notranslate"><span class="pre">dont</span></code>; use <code class="docutils literal notranslate"><span class="pre">do</span> <span class="pre">not</span></code> or <code class="docutils literal notranslate"><span class="pre">don't</span></code> instead.  Make the messages
-concise, clear, and unambiguous.</p>
+of kernel messages to make a good impression. Do not use incorrect
+contractions like <code class="docutils literal notranslate"><span class="pre">dont</span></code>; use <code class="docutils literal notranslate"><span class="pre">do</span> <span class="pre">not</span></code> or <code class="docutils literal notranslate"><span class="pre">don't</span></code> instead. Make the
+messages concise, clear, and unambiguous.</p>
 <p>Kernel messages do not have to be terminated with a period.</p>
 <p>Printing numbers in parentheses (%d) adds no value and should be avoided.</p>
 <p>There are a number of driver model diagnostic macros in &lt;linux/device.h&gt;

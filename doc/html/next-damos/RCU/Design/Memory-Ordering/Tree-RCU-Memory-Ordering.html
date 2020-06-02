@@ -68,7 +68,7 @@
             
             
               <div class="version">
-                5.6.0
+                5.7.0
               </div>
             
           
@@ -161,7 +161,7 @@
   <div class="section" id="a-tour-through-tree-rcu-s-grace-period-memory-ordering">
 <h1>A Tour Through TREE_RCU’s Grace-Period Memory Ordering<a class="headerlink" href="#a-tour-through-tree-rcu-s-grace-period-memory-ordering" title="Permalink to this headline">¶</a></h1>
 <p>August 8, 2017</p>
-<p>This article was contributed by Paul E.&amp;nbsp;McKenney</p>
+<p>This article was contributed by Paul E. McKenney</p>
 <div class="section" id="introduction">
 <h2>Introduction<a class="headerlink" href="#introduction" title="Permalink to this headline">¶</a></h2>
 <p>This document gives a rough visual overview of how Tree RCU’s
@@ -198,7 +198,7 @@ processing, as is described in the following sections.</p>
 <h2>Tree RCU Grace Period Memory Ordering Building Blocks<a class="headerlink" href="#tree-rcu-grace-period-memory-ordering-building-blocks" title="Permalink to this headline">¶</a></h2>
 <p>The workhorse for RCU’s grace-period memory ordering is the
 critical section for the <code class="docutils literal notranslate"><span class="pre">rcu_node</span></code> structure’s
-<code class="docutils literal notranslate"><span class="pre">-&amp;gt;lock</span></code>. These critical sections use helper functions for lock
+<code class="docutils literal notranslate"><span class="pre">-&gt;lock</span></code>. These critical sections use helper functions for lock
 acquisition, including <code class="docutils literal notranslate"><span class="pre">raw_spin_lock_rcu_node()</span></code>,
 <code class="docutils literal notranslate"><span class="pre">raw_spin_lock_irq_rcu_node()</span></code>, and <code class="docutils literal notranslate"><span class="pre">raw_spin_lock_irqsave_rcu_node()</span></code>.
 Their lock-release counterparts are <code class="docutils literal notranslate"><span class="pre">raw_spin_unlock_rcu_node()</span></code>,
@@ -249,10 +249,10 @@ lock-acquisition and lock-release functions:</p>
 23   r3 = READ_ONCE(x);
 24 }
 25
-26 WARN_ON(r1 == 0 &amp;amp;&amp;amp; r2 == 0 &amp;amp;&amp;amp; r3 == 0);
+26 WARN_ON(r1 == 0 &amp;&amp; r2 == 0 &amp;&amp; r3 == 0);
 </pre></div>
 </div>
-<p>The <code class="docutils literal notranslate"><span class="pre">WARN_ON()</span></code> is evaluated at &amp;ldquo;the end of time&amp;rdquo;,
+<p>The <code class="docutils literal notranslate"><span class="pre">WARN_ON()</span></code> is evaluated at “the end of time”,
 after all changes have propagated throughout the system.
 Without the <code class="docutils literal notranslate"><span class="pre">smp_mb__after_unlock_lock()</span></code> provided by the
 acquisition functions, this <code class="docutils literal notranslate"><span class="pre">WARN_ON()</span></code> could trigger, for example

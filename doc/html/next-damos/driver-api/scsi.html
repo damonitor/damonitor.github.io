@@ -68,7 +68,7 @@
             
             
               <div class="version">
-                5.6.0
+                5.7.0
               </div>
             
           
@@ -449,7 +449,7 @@ count of the underlying LLDD module.  The device is freed once the last
 user vanishes.</p>
 <dl class="function">
 <dt id="c.starget_for_each_device">
-void <code class="descname">starget_for_each_device</code><span class="sig-paren">(</span>struct scsi_target *<em>&nbsp;starget</em>, void *<em>&nbsp;data</em>, void (*fn) (struct scsi_device<em>&nbsp;*</em>, void<em>&nbsp;*</em><span class="sig-paren">)</span><a class="headerlink" href="#c.starget_for_each_device" title="Permalink to this definition">¶</a></dt>
+void <code class="descname">starget_for_each_device</code><span class="sig-paren">(</span>struct scsi_target *<em>&nbsp;starget</em>, void *<em>&nbsp;data</em>, void (<em>*fn</em>)(struct scsi_device *, void *)<span class="sig-paren">)</span><a class="headerlink" href="#c.starget_for_each_device" title="Permalink to this definition">¶</a></dt>
 <dd><p>helper to walk all devices of a target</p>
 </dd></dl>
 
@@ -468,7 +468,7 @@ a reference that must be released by scsi_host_put when breaking
 out of the loop.</p>
 <dl class="function">
 <dt id="c.__starget_for_each_device">
-void <code class="descname">__starget_for_each_device</code><span class="sig-paren">(</span>struct scsi_target *<em>&nbsp;starget</em>, void *<em>&nbsp;data</em>, void (*fn) (struct scsi_device<em>&nbsp;*</em>, void<em>&nbsp;*</em><span class="sig-paren">)</span><a class="headerlink" href="#c.__starget_for_each_device" title="Permalink to this definition">¶</a></dt>
+void <code class="descname">__starget_for_each_device</code><span class="sig-paren">(</span>struct scsi_target *<em>&nbsp;starget</em>, void *<em>&nbsp;data</em>, void (<em>*fn</em>)(struct scsi_device *, void *)<span class="sig-paren">)</span><a class="headerlink" href="#c.__starget_for_each_device" title="Permalink to this definition">¶</a></dt>
 <dd><p>helper to walk all devices of a target (UNLOCKED)</p>
 </dd></dl>
 
@@ -601,6 +601,26 @@ unsigned char * <code class="descname">scsi_bios_ptable</code><span class="sig-p
 <p><strong>Return</strong></p>
 <p>partition table in kmalloc(GFP_KERNEL) memory, or NULL on error.</p>
 <dl class="function">
+<dt id="c.scsi_partsize">
+bool <code class="descname">scsi_partsize</code><span class="sig-paren">(</span>struct block_device *<em>&nbsp;bdev</em>, sector_t<em>&nbsp;capacity</em>, int<em>&nbsp;geom</em><span class="sig-paren">)</span><a class="headerlink" href="#c.scsi_partsize" title="Permalink to this definition">¶</a></dt>
+<dd><p>Parse cylinders/heads/sectors from PC partition table</p>
+</dd></dl>
+
+<p><strong>Parameters</strong></p>
+<dl class="docutils">
+<dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">block_device</span> <span class="pre">*</span> <span class="pre">bdev</span></code></dt>
+<dd>block device to parse</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">sector_t</span> <span class="pre">capacity</span></code></dt>
+<dd>size of the disk in sectors</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">int</span> <span class="pre">geom</span></code></dt>
+<dd>output in form of [hds, cylinders, sectors]</dd>
+</dl>
+<p><strong>Description</strong></p>
+<p>Determine the BIOS mapping/geometry used to create the partition
+table, storing the results in <strong>geom</strong>.</p>
+<p><strong>Return</strong></p>
+<p><code class="docutils literal notranslate"><span class="pre">false</span></code> on failure, <code class="docutils literal notranslate"><span class="pre">true</span></code> on success.</p>
+<dl class="function">
 <dt id="c.scsicam_bios_param">
 int <code class="descname">scsicam_bios_param</code><span class="sig-paren">(</span>struct block_device *<em>&nbsp;bdev</em>, sector_t<em>&nbsp;capacity</em>, int *<em>&nbsp;ip</em><span class="sig-paren">)</span><a class="headerlink" href="#c.scsicam_bios_param" title="Permalink to this definition">¶</a></dt>
 <dd><p>Determine geometry of a disk in cylinders/heads/sectors.</p>
@@ -621,30 +641,6 @@ int <code class="descname">scsicam_bios_param</code><span class="sig-paren">(</s
 <dd>SCSI-CAM system, storing the results in ip as required
 by the HDIO_GETGEO ioctl().</dd>
 </dl>
-<p><strong>Return</strong></p>
-<p>-1 on failure, 0 on success.</p>
-<dl class="function">
-<dt id="c.scsi_partsize">
-int <code class="descname">scsi_partsize</code><span class="sig-paren">(</span>unsigned char *<em>&nbsp;buf</em>, unsigned long<em>&nbsp;capacity</em>, unsigned int *<em>&nbsp;cyls</em>, unsigned int *<em>&nbsp;hds</em>, unsigned int *<em>&nbsp;secs</em><span class="sig-paren">)</span><a class="headerlink" href="#c.scsi_partsize" title="Permalink to this definition">¶</a></dt>
-<dd><p>Parse cylinders/heads/sectors from PC partition table</p>
-</dd></dl>
-
-<p><strong>Parameters</strong></p>
-<dl class="docutils">
-<dt><code class="docutils literal notranslate"><span class="pre">unsigned</span> <span class="pre">char</span> <span class="pre">*</span> <span class="pre">buf</span></code></dt>
-<dd>partition table, see <a class="reference internal" href="#c.scsi_bios_ptable" title="scsi_bios_ptable"><code class="xref c c-func docutils literal notranslate"><span class="pre">scsi_bios_ptable()</span></code></a></dd>
-<dt><code class="docutils literal notranslate"><span class="pre">unsigned</span> <span class="pre">long</span> <span class="pre">capacity</span></code></dt>
-<dd>size of the disk in sectors</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">unsigned</span> <span class="pre">int</span> <span class="pre">*</span> <span class="pre">cyls</span></code></dt>
-<dd>put cylinders here</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">unsigned</span> <span class="pre">int</span> <span class="pre">*</span> <span class="pre">hds</span></code></dt>
-<dd>put heads here</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">unsigned</span> <span class="pre">int</span> <span class="pre">*</span> <span class="pre">secs</span></code></dt>
-<dd>put sectors here</dd>
-</dl>
-<p><strong>Description</strong></p>
-<p>Determine the BIOS mapping/geometry used to create the partition
-table, storing the results in <strong>cyls</strong>, <strong>hds</strong>, and <strong>secs</strong></p>
 <p><strong>Return</strong></p>
 <p>-1 on failure, 0 on success.</p>
 </div>
@@ -2064,6 +2060,42 @@ void <code class="descname">scsi_flush_work</code><span class="sig-paren">(</spa
 <dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">Scsi_Host</span> <span class="pre">*</span> <span class="pre">shost</span></code></dt>
 <dd>Pointer to Scsi_Host.</dd>
 </dl>
+<dl class="function">
+<dt id="c.scsi_host_complete_all_commands">
+void <code class="descname">scsi_host_complete_all_commands</code><span class="sig-paren">(</span>struct Scsi_Host *<em>&nbsp;shost</em>, int<em>&nbsp;status</em><span class="sig-paren">)</span><a class="headerlink" href="#c.scsi_host_complete_all_commands" title="Permalink to this definition">¶</a></dt>
+<dd><p>Terminate all running commands</p>
+</dd></dl>
+
+<p><strong>Parameters</strong></p>
+<dl class="docutils">
+<dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">Scsi_Host</span> <span class="pre">*</span> <span class="pre">shost</span></code></dt>
+<dd>Scsi Host on which commands should be terminated</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">int</span> <span class="pre">status</span></code></dt>
+<dd>Status to be set for the terminated commands</dd>
+</dl>
+<p><strong>Description</strong></p>
+<p>There is no protection against modification of the number
+of outstanding commands. It is the responsibility of the
+caller to ensure that concurrent I/O submission and/or
+completion is stopped when calling this function.</p>
+<dl class="function">
+<dt id="c.scsi_host_busy_iter">
+void <code class="descname">scsi_host_busy_iter</code><span class="sig-paren">(</span>struct Scsi_Host *<em>&nbsp;shost</em>, bool (<em>*fn</em>)(struct scsi_cmnd *, void *, bool), void *<em>&nbsp;priv</em><span class="sig-paren">)</span><a class="headerlink" href="#c.scsi_host_busy_iter" title="Permalink to this definition">¶</a></dt>
+<dd><p>Iterate over all busy commands</p>
+</dd></dl>
+
+<p><strong>Parameters</strong></p>
+<dl class="docutils">
+<dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">Scsi_Host</span> <span class="pre">*</span> <span class="pre">shost</span></code></dt>
+<dd>Pointer to Scsi_Host.</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">bool</span> <span class="pre">(*)(struct</span> <span class="pre">scsi_cmnd</span> <span class="pre">*,</span> <span class="pre">void</span> <span class="pre">*,</span> <span class="pre">bool)</span> <span class="pre">fn</span></code></dt>
+<dd>Function to call on each busy command</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">void</span> <span class="pre">*</span> <span class="pre">priv</span></code></dt>
+<dd>Data pointer passed to <strong>fn</strong></dd>
+</dl>
+<p><strong>Description</strong></p>
+<p>If locking against concurrent command completions is required
+ithas to be provided by the caller</p>
 </div>
 <div class="section" id="drivers-scsi-scsi-common-c">
 <h4>drivers/scsi/scsi_common.c<a class="headerlink" href="#drivers-scsi-scsi-common-c" title="Permalink to this headline">¶</a></h4>
@@ -2664,7 +2696,7 @@ struct iscsi_bus_flash_conn * <code class="descname">iscsi_create_flashnode_conn
 <code class="docutils literal notranslate"><span class="pre">NULL</span></code> on failure</div></blockquote>
 <dl class="function">
 <dt id="c.iscsi_find_flashnode_sess">
-struct <a class="reference internal" href="infrastructure.html#c.device" title="device">device</a> * <code class="descname">iscsi_find_flashnode_sess</code><span class="sig-paren">(</span>struct Scsi_Host *<em>&nbsp;shost</em>, void *<em>&nbsp;data</em>, int (*fn) (struct <a class="reference internal" href="infrastructure.html#c.device" title="device">device</a><em>&nbsp;*dev</em>, void<em>&nbsp;*data</em><span class="sig-paren">)</span><a class="headerlink" href="#c.iscsi_find_flashnode_sess" title="Permalink to this definition">¶</a></dt>
+struct <a class="reference internal" href="infrastructure.html#c.device" title="device">device</a> * <code class="descname">iscsi_find_flashnode_sess</code><span class="sig-paren">(</span>struct Scsi_Host *<em>&nbsp;shost</em>, void *<em>&nbsp;data</em>, int (<em>*fn</em>)(struct <a class="reference internal" href="infrastructure.html#c.device" title="device">device</a> *dev, void *data)<span class="sig-paren">)</span><a class="headerlink" href="#c.iscsi_find_flashnode_sess" title="Permalink to this definition">¶</a></dt>
 <dd><p>finds flashnode session entry</p>
 </dd></dl>
 

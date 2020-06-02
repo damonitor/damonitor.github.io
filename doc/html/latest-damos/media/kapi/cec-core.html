@@ -68,7 +68,7 @@
             
             
               <div class="version">
-                5.6.0
+                5.7.0
               </div>
             
           
@@ -682,27 +682,8 @@ completely separate chip that deals with the CEC pin. For those cases a
 drm driver can install a notifier and use the notifier to inform the
 CEC driver about changes in the physical address.</p>
 <dl class="function">
-<dt id="c.cec_notifier_get_conn">
-struct cec_notifier * <code class="descname">cec_notifier_get_conn</code><span class="sig-paren">(</span>struct <a class="reference internal" href="../../driver-api/infrastructure.html#c.device" title="device">device</a> *<em>&nbsp;dev</em>, const char *<em>&nbsp;conn</em><span class="sig-paren">)</span><a class="headerlink" href="#c.cec_notifier_get_conn" title="Permalink to this definition">¶</a></dt>
-<dd><p>find or create a new cec_notifier for the given device and connector tuple.</p>
-</dd></dl>
-
-<p><strong>Parameters</strong></p>
-<dl class="docutils">
-<dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">device</span> <span class="pre">*</span> <span class="pre">dev</span></code></dt>
-<dd>device that sends the events.</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">const</span> <span class="pre">char</span> <span class="pre">*</span> <span class="pre">conn</span></code></dt>
-<dd>the connector name from which the event occurs</dd>
-</dl>
-<p><strong>Description</strong></p>
-<p>If a notifier for device <strong>dev</strong> already exists, then increase the refcount
-and return that notifier.</p>
-<p>If it doesn’t exist, then allocate a new notifier struct and return a
-pointer to that new struct.</p>
-<p>Return NULL if the memory could not be allocated.</p>
-<dl class="function">
 <dt id="c.cec_notifier_conn_register">
-struct cec_notifier * <code class="descname">cec_notifier_conn_register</code><span class="sig-paren">(</span>struct <a class="reference internal" href="../../driver-api/infrastructure.html#c.device" title="device">device</a> *<em>&nbsp;hdmi_dev</em>, const char *<em>&nbsp;conn_name</em>, const struct <a class="reference internal" href="../uapi/cec/cec-ioc-adap-g-conn-info.html#c.cec_connector_info" title="cec_connector_info">cec_connector_info</a> *<em>&nbsp;conn_info</em><span class="sig-paren">)</span><a class="headerlink" href="#c.cec_notifier_conn_register" title="Permalink to this definition">¶</a></dt>
+struct cec_notifier * <code class="descname">cec_notifier_conn_register</code><span class="sig-paren">(</span>struct device *<em>&nbsp;hdmi_dev</em>, const char *<em>&nbsp;port_name</em>, const struct <a class="reference internal" href="../uapi/cec/cec-ioc-adap-g-conn-info.html#c.cec_connector_info" title="cec_connector_info">cec_connector_info</a> *<em>&nbsp;conn_info</em><span class="sig-paren">)</span><a class="headerlink" href="#c.cec_notifier_conn_register" title="Permalink to this definition">¶</a></dt>
 <dd><p>find or create a new cec_notifier for the given HDMI device and connector tuple.</p>
 </dd></dl>
 
@@ -710,14 +691,14 @@ struct cec_notifier * <code class="descname">cec_notifier_conn_register</code><s
 <dl class="docutils">
 <dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">device</span> <span class="pre">*</span> <span class="pre">hdmi_dev</span></code></dt>
 <dd>HDMI device that sends the events.</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">const</span> <span class="pre">char</span> <span class="pre">*</span> <span class="pre">conn_name</span></code></dt>
+<dt><code class="docutils literal notranslate"><span class="pre">const</span> <span class="pre">char</span> <span class="pre">*</span> <span class="pre">port_name</span></code></dt>
 <dd>the connector name from which the event occurs. May be NULL
 if there is always only one HDMI connector created by the HDMI device.</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">const</span> <span class="pre">struct</span> <span class="pre">cec_connector_info</span> <span class="pre">*</span> <span class="pre">conn_info</span></code></dt>
 <dd>the connector info from which the event occurs (may be NULL)</dd>
 </dl>
 <p><strong>Description</strong></p>
-<p>If a notifier for device <strong>dev</strong> and connector <strong>conn_name</strong> already exists, then
+<p>If a notifier for device <strong>dev</strong> and connector <strong>port_name</strong> already exists, then
 increase the refcount and return that notifier.</p>
 <p>If it doesn’t exist, then allocate a new notifier struct and return a
 pointer to that new struct.</p>
@@ -735,7 +716,7 @@ void <code class="descname">cec_notifier_conn_unregister</code><span class="sig-
 </dl>
 <dl class="function">
 <dt id="c.cec_notifier_cec_adap_register">
-struct cec_notifier * <code class="descname">cec_notifier_cec_adap_register</code><span class="sig-paren">(</span>struct <a class="reference internal" href="../../driver-api/infrastructure.html#c.device" title="device">device</a> *<em>&nbsp;hdmi_dev</em>, const char *<em>&nbsp;conn_name</em>, struct cec_adapter *<em>&nbsp;adap</em><span class="sig-paren">)</span><a class="headerlink" href="#c.cec_notifier_cec_adap_register" title="Permalink to this definition">¶</a></dt>
+struct cec_notifier * <code class="descname">cec_notifier_cec_adap_register</code><span class="sig-paren">(</span>struct device *<em>&nbsp;hdmi_dev</em>, const char *<em>&nbsp;port_name</em>, struct cec_adapter *<em>&nbsp;adap</em><span class="sig-paren">)</span><a class="headerlink" href="#c.cec_notifier_cec_adap_register" title="Permalink to this definition">¶</a></dt>
 <dd><p>find or create a new cec_notifier for the given device.</p>
 </dd></dl>
 
@@ -743,14 +724,14 @@ struct cec_notifier * <code class="descname">cec_notifier_cec_adap_register</cod
 <dl class="docutils">
 <dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">device</span> <span class="pre">*</span> <span class="pre">hdmi_dev</span></code></dt>
 <dd>HDMI device that sends the events.</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">const</span> <span class="pre">char</span> <span class="pre">*</span> <span class="pre">conn_name</span></code></dt>
+<dt><code class="docutils literal notranslate"><span class="pre">const</span> <span class="pre">char</span> <span class="pre">*</span> <span class="pre">port_name</span></code></dt>
 <dd>the connector name from which the event occurs. May be NULL
 if there is always only one HDMI connector created by the HDMI device.</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">cec_adapter</span> <span class="pre">*</span> <span class="pre">adap</span></code></dt>
 <dd>the cec adapter that registered this notifier.</dd>
 </dl>
 <p><strong>Description</strong></p>
-<p>If a notifier for device <strong>dev</strong> and connector <strong>conn_name</strong> already exists, then
+<p>If a notifier for device <strong>dev</strong> and connector <strong>port_name</strong> already exists, then
 increase the refcount and return that notifier.</p>
 <p>If it doesn’t exist, then allocate a new notifier struct and return a
 pointer to that new struct.</p>
@@ -802,7 +783,7 @@ void <code class="descname">cec_notifier_set_phys_addr_from_edid</code><span cla
 Does nothing if <strong>n</strong> == NULL.</p>
 <dl class="function">
 <dt id="c.cec_notifier_parse_hdmi_phandle">
-struct <a class="reference internal" href="../../driver-api/infrastructure.html#c.device" title="device">device</a> * <code class="descname">cec_notifier_parse_hdmi_phandle</code><span class="sig-paren">(</span>struct <a class="reference internal" href="../../driver-api/infrastructure.html#c.device" title="device">device</a> *<em>&nbsp;dev</em><span class="sig-paren">)</span><a class="headerlink" href="#c.cec_notifier_parse_hdmi_phandle" title="Permalink to this definition">¶</a></dt>
+struct device * <code class="descname">cec_notifier_parse_hdmi_phandle</code><span class="sig-paren">(</span>struct device *<em>&nbsp;dev</em><span class="sig-paren">)</span><a class="headerlink" href="#c.cec_notifier_parse_hdmi_phandle" title="Permalink to this definition">¶</a></dt>
 <dd><p>find the hdmi device from “hdmi-phandle”</p>
 </dd></dl>
 

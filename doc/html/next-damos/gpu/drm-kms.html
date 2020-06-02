@@ -68,7 +68,7 @@
             
             
               <div class="version">
-                5.6.0
+                5.7.0
               </div>
             
           
@@ -2105,6 +2105,68 @@ bool <code class="descname">drm_atomic_crtc_effectively_active</code><span class
 the CRTC is off. However in some cases we’re interested in whether the CRTC
 is active, or effectively active (ie: it’s connected to an active display).
 In these cases, use this function instead of just checking active.</p>
+<dl class="type">
+<dt id="c.drm_bus_cfg">
+struct <code class="descname">drm_bus_cfg</code><a class="headerlink" href="#c.drm_bus_cfg" title="Permalink to this definition">¶</a></dt>
+<dd><p>bus configuration</p>
+</dd></dl>
+
+<p><strong>Definition</strong></p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>struct drm_bus_cfg {
+  u32 format;
+  u32 flags;
+};
+</pre></div>
+</div>
+<p><strong>Members</strong></p>
+<dl class="docutils">
+<dt><code class="docutils literal notranslate"><span class="pre">format</span></code></dt>
+<dd><p class="first">format used on this bus (one of the MEDIA_BUS_FMT_* format)</p>
+<p class="last">This field should not be directly modified by drivers
+(drm_atomic_bridge_chain_select_bus_fmts() takes care of the bus
+format negotiation).</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">flags</span></code></dt>
+<dd>DRM_BUS_* flags used on this bus</dd>
+</dl>
+<p><strong>Description</strong></p>
+<p>This structure stores the configuration of a physical bus between two
+components in an output pipeline, usually between two bridges, an encoder
+and a bridge, or a bridge and a connector.</p>
+<p>The bus configuration is stored in <a class="reference internal" href="#c.drm_bridge_state" title="drm_bridge_state"><code class="xref c c-type docutils literal notranslate"><span class="pre">drm_bridge_state</span></code></a> separately for the
+input and output buses, as seen from the point of view of each bridge. The
+bus configuration of a bridge output is usually identical to the
+configuration of the next bridge’s input, but may differ if the signals are
+modified between the two bridges, for instance by an inverter on the board.
+The input and output configurations of a bridge may differ if the bridge
+modifies the signals internally, for instance by performing format
+conversion, or modifying signals polarities.</p>
+<dl class="type">
+<dt id="c.drm_bridge_state">
+struct <code class="descname">drm_bridge_state</code><a class="headerlink" href="#c.drm_bridge_state" title="Permalink to this definition">¶</a></dt>
+<dd><p>Atomic bridge state object</p>
+</dd></dl>
+
+<p><strong>Definition</strong></p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>struct drm_bridge_state {
+  struct drm_private_state base;
+  struct drm_bridge *bridge;
+  struct drm_bus_cfg input_bus_cfg;
+  struct drm_bus_cfg output_bus_cfg;
+};
+</pre></div>
+</div>
+<p><strong>Members</strong></p>
+<dl class="docutils">
+<dt><code class="docutils literal notranslate"><span class="pre">base</span></code></dt>
+<dd>inherit from <a class="reference internal" href="#c.drm_private_state" title="drm_private_state"><code class="xref c c-type docutils literal notranslate"><span class="pre">drm_private_state</span></code></a></dd>
+<dt><code class="docutils literal notranslate"><span class="pre">bridge</span></code></dt>
+<dd>the bridge this state refers to</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">input_bus_cfg</span></code></dt>
+<dd>input bus configuration</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">output_bus_cfg</span></code></dt>
+<dd>input bus configuration</dd>
+</dl>
 <dl class="function">
 <dt id="c.drm_atomic_state_default_release">
 void <code class="descname">drm_atomic_state_default_release</code><span class="sig-paren">(</span>struct <a class="reference internal" href="#c.drm_atomic_state" title="drm_atomic_state">drm_atomic_state</a> *<em>&nbsp;state</em><span class="sig-paren">)</span><a class="headerlink" href="#c.drm_atomic_state_default_release" title="Permalink to this definition">¶</a></dt>
@@ -2394,6 +2456,82 @@ make sure that the state is consistent.</p>
 <p>Either the allocated state or the error code encoded into the pointer. When
 the error is EDEADLK then the w/w mutex code has detected a deadlock and the
 entire atomic sequence must be restarted. All other errors are fatal.</p>
+<dl class="function">
+<dt id="c.drm_atomic_get_bridge_state">
+struct <a class="reference internal" href="#c.drm_bridge_state" title="drm_bridge_state">drm_bridge_state</a> * <code class="descname">drm_atomic_get_bridge_state</code><span class="sig-paren">(</span>struct <a class="reference internal" href="#c.drm_atomic_state" title="drm_atomic_state">drm_atomic_state</a> *<em>&nbsp;state</em>, struct <a class="reference internal" href="drm-kms-helpers.html#c.drm_bridge" title="drm_bridge">drm_bridge</a> *<em>&nbsp;bridge</em><span class="sig-paren">)</span><a class="headerlink" href="#c.drm_atomic_get_bridge_state" title="Permalink to this definition">¶</a></dt>
+<dd><p>get bridge state</p>
+</dd></dl>
+
+<p><strong>Parameters</strong></p>
+<dl class="docutils">
+<dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">drm_atomic_state</span> <span class="pre">*</span> <span class="pre">state</span></code></dt>
+<dd>global atomic state object</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">drm_bridge</span> <span class="pre">*</span> <span class="pre">bridge</span></code></dt>
+<dd>bridge to get state object for</dd>
+</dl>
+<p><strong>Description</strong></p>
+<p>This function returns the bridge state for the given bridge, allocating it
+if needed. It will also grab the relevant bridge lock to make sure that the
+state is consistent.</p>
+<p><strong>Return</strong></p>
+<p>Either the allocated state or the error code encoded into the pointer. When
+the error is EDEADLK then the w/w mutex code has detected a deadlock and the
+entire atomic sequence must be restarted.</p>
+<dl class="function">
+<dt id="c.drm_atomic_get_old_bridge_state">
+struct <a class="reference internal" href="#c.drm_bridge_state" title="drm_bridge_state">drm_bridge_state</a> * <code class="descname">drm_atomic_get_old_bridge_state</code><span class="sig-paren">(</span>struct <a class="reference internal" href="#c.drm_atomic_state" title="drm_atomic_state">drm_atomic_state</a> *<em>&nbsp;state</em>, struct <a class="reference internal" href="drm-kms-helpers.html#c.drm_bridge" title="drm_bridge">drm_bridge</a> *<em>&nbsp;bridge</em><span class="sig-paren">)</span><a class="headerlink" href="#c.drm_atomic_get_old_bridge_state" title="Permalink to this definition">¶</a></dt>
+<dd><p>get old bridge state, if it exists</p>
+</dd></dl>
+
+<p><strong>Parameters</strong></p>
+<dl class="docutils">
+<dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">drm_atomic_state</span> <span class="pre">*</span> <span class="pre">state</span></code></dt>
+<dd>global atomic state object</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">drm_bridge</span> <span class="pre">*</span> <span class="pre">bridge</span></code></dt>
+<dd>bridge to grab</dd>
+</dl>
+<p><strong>Description</strong></p>
+<p>This function returns the old bridge state for the given bridge, or NULL if
+the bridge is not part of the global atomic state.</p>
+<dl class="function">
+<dt id="c.drm_atomic_get_new_bridge_state">
+struct <a class="reference internal" href="#c.drm_bridge_state" title="drm_bridge_state">drm_bridge_state</a> * <code class="descname">drm_atomic_get_new_bridge_state</code><span class="sig-paren">(</span>struct <a class="reference internal" href="#c.drm_atomic_state" title="drm_atomic_state">drm_atomic_state</a> *<em>&nbsp;state</em>, struct <a class="reference internal" href="drm-kms-helpers.html#c.drm_bridge" title="drm_bridge">drm_bridge</a> *<em>&nbsp;bridge</em><span class="sig-paren">)</span><a class="headerlink" href="#c.drm_atomic_get_new_bridge_state" title="Permalink to this definition">¶</a></dt>
+<dd><p>get new bridge state, if it exists</p>
+</dd></dl>
+
+<p><strong>Parameters</strong></p>
+<dl class="docutils">
+<dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">drm_atomic_state</span> <span class="pre">*</span> <span class="pre">state</span></code></dt>
+<dd>global atomic state object</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">drm_bridge</span> <span class="pre">*</span> <span class="pre">bridge</span></code></dt>
+<dd>bridge to grab</dd>
+</dl>
+<p><strong>Description</strong></p>
+<p>This function returns the new bridge state for the given bridge, or NULL if
+the bridge is not part of the global atomic state.</p>
+<dl class="function">
+<dt id="c.drm_atomic_add_encoder_bridges">
+int <code class="descname">drm_atomic_add_encoder_bridges</code><span class="sig-paren">(</span>struct <a class="reference internal" href="#c.drm_atomic_state" title="drm_atomic_state">drm_atomic_state</a> *<em>&nbsp;state</em>, struct <a class="reference internal" href="#c.drm_encoder" title="drm_encoder">drm_encoder</a> *<em>&nbsp;encoder</em><span class="sig-paren">)</span><a class="headerlink" href="#c.drm_atomic_add_encoder_bridges" title="Permalink to this definition">¶</a></dt>
+<dd><p>add bridges attached to an encoder</p>
+</dd></dl>
+
+<p><strong>Parameters</strong></p>
+<dl class="docutils">
+<dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">drm_atomic_state</span> <span class="pre">*</span> <span class="pre">state</span></code></dt>
+<dd>atomic state</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">drm_encoder</span> <span class="pre">*</span> <span class="pre">encoder</span></code></dt>
+<dd>DRM encoder</dd>
+</dl>
+<p><strong>Description</strong></p>
+<p>This function adds all bridges attached to <strong>encoder</strong>. This is needed to add
+bridge states to <strong>state</strong> and make them available when
+<a class="reference internal" href="drm-kms-helpers.html#c.drm_bridge_funcs" title="drm_bridge_funcs"><code class="xref c c-type docutils literal notranslate"><span class="pre">drm_bridge_funcs.atomic_check()</span></code></a>, <a class="reference internal" href="drm-kms-helpers.html#c.drm_bridge_funcs" title="drm_bridge_funcs"><code class="xref c c-type docutils literal notranslate"><span class="pre">drm_bridge_funcs.atomic_pre_enable()</span></code></a>,
+<a class="reference internal" href="drm-kms-helpers.html#c.drm_bridge_funcs" title="drm_bridge_funcs"><code class="xref c c-type docutils literal notranslate"><span class="pre">drm_bridge_funcs.atomic_enable()</span></code></a>,
+<a class="reference internal" href="drm-kms-helpers.html#c.drm_bridge_funcs" title="drm_bridge_funcs"><code class="xref c c-type docutils literal notranslate"><span class="pre">drm_bridge_funcs.atomic_disable_post_disable()</span></code></a> are called.</p>
+<p><strong>Return</strong></p>
+<p>0 on success or can fail with -EDEADLK or -ENOMEM. When the error is EDEADLK
+then the w/w mutex code has detected a deadlock and the entire atomic
+sequence must be restarted. All other errors are fatal.</p>
 <dl class="function">
 <dt id="c.drm_atomic_add_affected_connectors">
 int <code class="descname">drm_atomic_add_affected_connectors</code><span class="sig-paren">(</span>struct <a class="reference internal" href="#c.drm_atomic_state" title="drm_atomic_state">drm_atomic_state</a> *<em>&nbsp;state</em>, struct <a class="reference internal" href="#c.drm_crtc" title="drm_crtc">drm_crtc</a> *<em>&nbsp;crtc</em><span class="sig-paren">)</span><a class="headerlink" href="#c.drm_atomic_add_affected_connectors" title="Permalink to this definition">¶</a></dt>
@@ -2768,12 +2906,23 @@ control flow.</dd>
 drivers to steer the atomic commit control flow.</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">no_vblank</span></code></dt>
 <dd><p class="first">Reflects the ability of a CRTC to send VBLANK events. This state
-usually depends on the pipeline configuration, and the main usuage
-is CRTCs feeding a writeback connector operating in oneshot mode.
-In this case the VBLANK event is only generated when a job is queued
-to the writeback connector, and we want the core to fake VBLANK
-events when this part of the pipeline hasn’t changed but others had
-or when the CRTC and connectors are being disabled.</p>
+usually depends on the pipeline configuration. If set to true, DRM
+atomic helpers will send out a fake VBLANK event during display
+updates after all hardware changes have been committed. This is
+implemented in <a class="reference internal" href="drm-kms-helpers.html#c.drm_atomic_helper_fake_vblank" title="drm_atomic_helper_fake_vblank"><code class="xref c c-func docutils literal notranslate"><span class="pre">drm_atomic_helper_fake_vblank()</span></code></a>.</p>
+<p>One usage is for drivers and/or hardware without support for VBLANK
+interrupts. Such drivers typically do not initialize vblanking
+(i.e., call <a class="reference internal" href="#c.drm_vblank_init" title="drm_vblank_init"><code class="xref c c-func docutils literal notranslate"><span class="pre">drm_vblank_init()</span></code></a> with the number of CRTCs). For CRTCs
+without initialized vblanking, this field is set to true in
+<a class="reference internal" href="drm-kms-helpers.html#c.drm_atomic_helper_check_modeset" title="drm_atomic_helper_check_modeset"><code class="xref c c-func docutils literal notranslate"><span class="pre">drm_atomic_helper_check_modeset()</span></code></a>, and a fake VBLANK event will be
+send out on each update of the display pipeline by
+<a class="reference internal" href="drm-kms-helpers.html#c.drm_atomic_helper_fake_vblank" title="drm_atomic_helper_fake_vblank"><code class="xref c c-func docutils literal notranslate"><span class="pre">drm_atomic_helper_fake_vblank()</span></code></a>.</p>
+<p>Another usage is CRTCs feeding a writeback connector operating in
+oneshot mode. In this case the fake VBLANK event is only generated
+when a job is queued to the writeback connector, and we want the
+core to fake VBLANK events when this part of the pipeline hasn’t
+changed but others had or when the CRTC and connectors are being
+disabled.</p>
 <p><a class="reference internal" href="drm-kms-helpers.html#c.__drm_atomic_helper_crtc_duplicate_state" title="__drm_atomic_helper_crtc_duplicate_state"><code class="xref c c-func docutils literal notranslate"><span class="pre">__drm_atomic_helper_crtc_duplicate_state()</span></code></a> will not reset the value
 from the current state, the CRTC driver is then responsible for
 updating this field when needed.</p>
@@ -2866,7 +3015,13 @@ hardware has stopped scanning out the old buffers.</li>
 that case.</li>
 </ul>
 </div></blockquote>
-<p>This can be handled by the <a class="reference internal" href="#c.drm_crtc_send_vblank_event" title="drm_crtc_send_vblank_event"><code class="xref c c-func docutils literal notranslate"><span class="pre">drm_crtc_send_vblank_event()</span></code></a> function,
+<p>For very simple hardware without VBLANK interrupt, enabling
+<a class="reference internal" href="#c.drm_crtc_state" title="drm_crtc_state"><code class="xref c c-type docutils literal notranslate"><span class="pre">struct</span> <span class="pre">drm_crtc_state</span></code></a>.no_vblank makes DRM’s atomic commit helpers
+send a fake VBLANK event at the end of the display update after all
+hardware changes have been applied. See
+<a class="reference internal" href="drm-kms-helpers.html#c.drm_atomic_helper_fake_vblank" title="drm_atomic_helper_fake_vblank"><code class="xref c c-func docutils literal notranslate"><span class="pre">drm_atomic_helper_fake_vblank()</span></code></a>.</p>
+<p>For more complex hardware this
+can be handled by the <a class="reference internal" href="#c.drm_crtc_send_vblank_event" title="drm_crtc_send_vblank_event"><code class="xref c c-func docutils literal notranslate"><span class="pre">drm_crtc_send_vblank_event()</span></code></a> function,
 which the driver should call on the provided event upon completion of
 the atomic commit. Note that if the driver supports vblank signalling
 and timestamping the vblank counters and timestamps must agree with
@@ -2941,6 +3096,7 @@ struct <code class="descname">drm_crtc_funcs</code><a class="headerlink" href="#
   u32 (*get_vblank_counter)(struct drm_crtc *crtc);
   int (*enable_vblank)(struct drm_crtc *crtc);
   void (*disable_vblank)(struct drm_crtc *crtc);
+  bool (*get_vblank_timestamp)(struct drm_crtc *crtc,int *max_error,ktime_t *vblank_time, bool in_vblank_irq);
 };
 </pre></div>
 </div>
@@ -3236,6 +3392,37 @@ be enabled.</p>
 <dt><code class="docutils literal notranslate"><span class="pre">disable_vblank</span></code></dt>
 <dd>Disable vblank interrupts for the CRTC. It’s meant to be used by
 new drivers as the replacement of <a class="reference internal" href="drm-internals.html#c.drm_driver" title="drm_driver"><code class="xref c c-type docutils literal notranslate"><span class="pre">drm_driver.disable_vblank</span></code></a> hook.</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">get_vblank_timestamp</span></code></dt>
+<dd><p class="first">Called by drm_get_last_vbltimestamp(). Should return a precise
+timestamp when the most recent vblank interval ended or will end.</p>
+<p>Specifically, the timestamp in <strong>vblank_time</strong> should correspond as
+closely as possible to the time when the first video scanline of
+the video frame after the end of vblank will start scanning out,
+the time immediately after end of the vblank interval. If the
+<strong>crtc</strong> is currently inside vblank, this will be a time in the future.
+If the <strong>crtc</strong> is currently scanning out a frame, this will be the
+past start time of the current scanout. This is meant to adhere
+to the OpenML OML_sync_control extension specification.</p>
+<p>Parameters:</p>
+<dl class="docutils">
+<dt>crtc:</dt>
+<dd>CRTC for which timestamp should be returned.</dd>
+<dt>max_error:</dt>
+<dd>Maximum allowable timestamp error in nanoseconds.
+Implementation should strive to provide timestamp
+with an error of at most max_error nanoseconds.
+Returns true upper bound on error for timestamp.</dd>
+<dt>vblank_time:</dt>
+<dd>Target location for returned vblank timestamp.</dd>
+<dt>in_vblank_irq:</dt>
+<dd>True when called from <a class="reference internal" href="#c.drm_crtc_handle_vblank" title="drm_crtc_handle_vblank"><code class="xref c c-func docutils literal notranslate"><span class="pre">drm_crtc_handle_vblank()</span></code></a>.  Some drivers
+need to apply some workarounds for gpu-specific vblank irq quirks
+if flag is set.</dd>
+</dl>
+<p>Returns:</p>
+<p class="last">True on success, false on failure, which means the core should
+fallback to a simple timestamp taken in <a class="reference internal" href="#c.drm_crtc_handle_vblank" title="drm_crtc_handle_vblank"><code class="xref c c-func docutils literal notranslate"><span class="pre">drm_crtc_handle_vblank()</span></code></a>.</p>
+</dd>
 </dl>
 <p><strong>Description</strong></p>
 <p>The drm_crtc_funcs structure is the central CRTC management structure
@@ -3349,10 +3536,11 @@ can update this by calling
 <dd><p class="first">Programmed mode in hw, after adjustments for encoders, crtc, panel
 scaling etc. Should only be used by legacy drivers, for high
 precision vblank timestamps in
-<a class="reference internal" href="#c.drm_calc_vbltimestamp_from_scanoutpos" title="drm_calc_vbltimestamp_from_scanoutpos"><code class="xref c c-func docutils literal notranslate"><span class="pre">drm_calc_vbltimestamp_from_scanoutpos()</span></code></a>.</p>
+<a class="reference internal" href="#c.drm_crtc_vblank_helper_get_vblank_timestamp" title="drm_crtc_vblank_helper_get_vblank_timestamp"><code class="xref c c-func docutils literal notranslate"><span class="pre">drm_crtc_vblank_helper_get_vblank_timestamp()</span></code></a>.</p>
 <p class="last">Note that atomic drivers should not use this, but instead use
 <a class="reference internal" href="#c.drm_crtc_state" title="drm_crtc_state"><code class="xref c c-type docutils literal notranslate"><span class="pre">drm_crtc_state.adjusted_mode</span></code></a>. And for high-precision timestamps
-<a class="reference internal" href="#c.drm_calc_vbltimestamp_from_scanoutpos" title="drm_calc_vbltimestamp_from_scanoutpos"><code class="xref c c-func docutils literal notranslate"><span class="pre">drm_calc_vbltimestamp_from_scanoutpos()</span></code></a> used <a class="reference internal" href="#c.drm_vblank_crtc" title="drm_vblank_crtc"><code class="xref c c-type docutils literal notranslate"><span class="pre">drm_vblank_crtc.hwmode</span></code></a>,
+<a class="reference internal" href="#c.drm_crtc_vblank_helper_get_vblank_timestamp" title="drm_crtc_vblank_helper_get_vblank_timestamp"><code class="xref c c-func docutils literal notranslate"><span class="pre">drm_crtc_vblank_helper_get_vblank_timestamp()</span></code></a> used
+<a class="reference internal" href="#c.drm_vblank_crtc" title="drm_vblank_crtc"><code class="xref c c-type docutils literal notranslate"><span class="pre">drm_vblank_crtc.hwmode</span></code></a>,
 which is filled out by calling <a class="reference internal" href="#c.drm_calc_timestamping_constants" title="drm_calc_timestamping_constants"><code class="xref c c-func docutils literal notranslate"><span class="pre">drm_calc_timestamping_constants()</span></code></a>.</p>
 </dd>
 <dt><code class="docutils literal notranslate"><span class="pre">x</span></code></dt>
@@ -5223,7 +5411,7 @@ enum <code class="descname">drm_mode_status</code><a class="headerlink" href="#c
 <dt><code class="docutils literal notranslate"><span class="pre">MODE_H_ILLEGAL</span></code></dt>
 <dd>mode has illegal horizontal timings</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">MODE_V_ILLEGAL</span></code></dt>
-<dd>mode has illegal horizontal timings</dd>
+<dd>mode has illegal vertical timings</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">MODE_BAD_WIDTH</span></code></dt>
 <dd>requires an unsupported linepitch</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">MODE_NOMODE</span></code></dt>
@@ -5358,7 +5546,6 @@ struct <code class="descname">drm_display_mode</code><a class="headerlink" href=
   int crtc_vsync_start;
   int crtc_vsync_end;
   int crtc_vtotal;
-  int *private;
   int private_flags;
   int vrefresh;
   int hsync;
@@ -5507,13 +5694,11 @@ difference is exactly a factor of 10.</p>
 <dd>hardware mode vertical sync end</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">crtc_vtotal</span></code></dt>
 <dd>hardware mode vertical total size</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">private</span></code></dt>
-<dd>Pointer for driver private data. This can only be used for mode
+<dt><code class="docutils literal notranslate"><span class="pre">private_flags</span></code></dt>
+<dd>Driver private flags. private_flags can only be used for mode
 objects passed to drivers in modeset operations. It shouldn’t be used
 by atomic drivers since they can store any additional data by
 subclassing state structures.</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">private_flags</span></code></dt>
-<dd>Similar to <strong>private</strong>, but just an integer.</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">vrefresh</span></code></dt>
 <dd><p class="first">Vertical refresh rate, for debug output in human readable form. Not
 used in a functional way.</p>
@@ -6435,6 +6620,31 @@ top side of the device’s casing.</dd>
 <p>This enum is used to track the (LCD) panel orientation. There are no
 separate #defines for the uapi!</p>
 <dl class="type">
+<dt id="c.drm_monitor_range_info">
+struct <code class="descname">drm_monitor_range_info</code><a class="headerlink" href="#c.drm_monitor_range_info" title="Permalink to this definition">¶</a></dt>
+<dd><p>Panel’s Monitor range in EDID for <a class="reference internal" href="#c.drm_display_info" title="drm_display_info"><code class="xref c c-type docutils literal notranslate"><span class="pre">drm_display_info</span></code></a></p>
+</dd></dl>
+
+<p><strong>Definition</strong></p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>struct drm_monitor_range_info {
+  u8 min_vfreq;
+  u8 max_vfreq;
+};
+</pre></div>
+</div>
+<p><strong>Members</strong></p>
+<dl class="docutils">
+<dt><code class="docutils literal notranslate"><span class="pre">min_vfreq</span></code></dt>
+<dd>This is the min supported refresh rate in Hz from
+EDID’s detailed monitor range.</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">max_vfreq</span></code></dt>
+<dd>This is the max supported refresh rate in Hz from
+EDID’s detailed monitor range</dd>
+</dl>
+<p><strong>Description</strong></p>
+<p>This struct is used to store a frequency range supported by panel
+as parsed from EDID’s detailed monitor range descriptor block.</p>
+<dl class="type">
 <dt id="c.drm_bus_flags">
 enum <code class="descname">drm_bus_flags</code><a class="headerlink" href="#c.drm_bus_flags" title="Permalink to this definition">¶</a></dt>
 <dd><p>bus_flags info for <a class="reference internal" href="#c.drm_display_info" title="drm_display_info"><code class="xref c c-type docutils literal notranslate"><span class="pre">drm_display_info</span></code></a></p>
@@ -6523,12 +6733,14 @@ struct <code class="descname">drm_display_info</code><a class="headerlink" href=
   u32 bus_flags;
   int max_tmds_clock;
   bool dvi_dual;
+  bool is_hdmi;
   bool has_hdmi_infoframe;
   bool rgb_quant_range_selectable;
   u8 edid_hdmi_dc_modes;
   u8 cea_rev;
   struct drm_hdmi_info hdmi;
   bool non_desktop;
+  struct drm_monitor_range_info monitor_range;
 };
 </pre></div>
 </div>
@@ -6568,6 +6780,11 @@ DRM_BUS_FLAGS_.</dd>
 sink in kHz. 0 means undefined.</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">dvi_dual</span></code></dt>
 <dd>Dual-link DVI sink?</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">is_hdmi</span></code></dt>
+<dd><p class="first">True if the sink is an HDMI device.</p>
+<p class="last">This field shall be used instead of calling
+<a class="reference internal" href="drm-kms-helpers.html#c.drm_detect_hdmi_monitor" title="drm_detect_hdmi_monitor"><code class="xref c c-func docutils literal notranslate"><span class="pre">drm_detect_hdmi_monitor()</span></code></a> when possible.</p>
+</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">has_hdmi_infoframe</span></code></dt>
 <dd>Does the sink support the HDMI infoframe?</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">rgb_quant_range_selectable</span></code></dt>
@@ -6582,6 +6799,8 @@ more stuff redundant with <strong>bus_formats</strong>.</dd>
 <dd>advance features of a HDMI sink.</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">non_desktop</span></code></dt>
 <dd>Non desktop display (HMD).</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">monitor_range</span></code></dt>
+<dd>Frequency range supported by monitor range descriptor</dd>
 </dl>
 <p><strong>Description</strong></p>
 <p>Describes a given display (e.g. CRT or flat panel) and its limitations. For
@@ -7106,6 +7325,7 @@ struct <code class="descname">drm_connector</code><a class="headerlink" href="#c
   int null_edid_counter;
   unsigned bad_edid_counter;
   bool edid_corrupt;
+  u8 real_edid_checksum;
   struct dentry *debugfs_entry;
   struct drm_connector_state *state;
   struct drm_property_blob *tile_blob_ptr;
@@ -7280,6 +7500,10 @@ Needed to workaround some HW bugs where we get all 0s</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">edid_corrupt</span></code></dt>
 <dd>Indicates whether the last read EDID was corrupt. Used
 in Displayport compliance testing - Displayport Link CTS Core 1.2
+rev1.1 4.2.2.6</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">real_edid_checksum</span></code></dt>
+<dd>real edid checksum for corrupted edid block.
+Required in Displayport 1.4 compliance testing
 rev1.1 4.2.2.6</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">debugfs_entry</span></code></dt>
 <dd>debugfs directory for this connector</dd>
@@ -7472,6 +7696,19 @@ your own reference first using <a class="reference internal" href="#c.drm_connec
 <dt><code class="docutils literal notranslate"><span class="pre">encoder</span></code></dt>
 <dd><a class="reference internal" href="#c.drm_encoder" title="drm_encoder"><code class="xref c c-type docutils literal notranslate"><span class="pre">struct</span> <span class="pre">drm_encoder</span></code></a> pointer used as cursor</dd>
 </dl>
+<dl class="function">
+<dt id="c.drm_get_connector_type_name">
+const char * <code class="descname">drm_get_connector_type_name</code><span class="sig-paren">(</span>unsigned int<em>&nbsp;type</em><span class="sig-paren">)</span><a class="headerlink" href="#c.drm_get_connector_type_name" title="Permalink to this definition">¶</a></dt>
+<dd><p>return a string for connector type</p>
+</dd></dl>
+
+<p><strong>Parameters</strong></p>
+<dl class="docutils">
+<dt><code class="docutils literal notranslate"><span class="pre">unsigned</span> <span class="pre">int</span> <span class="pre">type</span></code></dt>
+<dd>The connector type (DRM_MODE_CONNECTOR_*)</dd>
+</dl>
+<p><strong>Return</strong></p>
+<p>the name of the connector type, or NULL if the type is not valid.</p>
 <dl class="function">
 <dt id="c.drm_connector_init">
 int <code class="descname">drm_connector_init</code><span class="sig-paren">(</span>struct <a class="reference internal" href="drm-internals.html#c.drm_device" title="drm_device">drm_device</a> *<em>&nbsp;dev</em>, struct <a class="reference internal" href="#c.drm_connector" title="drm_connector">drm_connector</a> *<em>&nbsp;connector</em>, const struct <a class="reference internal" href="#c.drm_connector_funcs" title="drm_connector_funcs">drm_connector_funcs</a> *<em>&nbsp;funcs</em>, int<em>&nbsp;connector_type</em><span class="sig-paren">)</span><a class="headerlink" href="#c.drm_connector_init" title="Permalink to this definition">¶</a></dt>
@@ -8051,27 +8288,48 @@ void <code class="descname">drm_connector_set_vrr_capable_property</code><span c
 <p>Should be used by atomic drivers to update the indicated support for
 variable refresh rate over a connector.</p>
 <dl class="function">
-<dt id="c.drm_connector_init_panel_orientation_property">
-int <code class="descname">drm_connector_init_panel_orientation_property</code><span class="sig-paren">(</span>struct <a class="reference internal" href="#c.drm_connector" title="drm_connector">drm_connector</a> *<em>&nbsp;connector</em>, int<em>&nbsp;width</em>, int<em>&nbsp;height</em><span class="sig-paren">)</span><a class="headerlink" href="#c.drm_connector_init_panel_orientation_property" title="Permalink to this definition">¶</a></dt>
-<dd><p>initialize the connecters panel_orientation property</p>
+<dt id="c.drm_connector_set_panel_orientation">
+int <code class="descname">drm_connector_set_panel_orientation</code><span class="sig-paren">(</span>struct <a class="reference internal" href="#c.drm_connector" title="drm_connector">drm_connector</a> *<em>&nbsp;connector</em>, enum <a class="reference internal" href="#c.drm_panel_orientation" title="drm_panel_orientation">drm_panel_orientation</a><em>&nbsp;panel_orientation</em><span class="sig-paren">)</span><a class="headerlink" href="#c.drm_connector_set_panel_orientation" title="Permalink to this definition">¶</a></dt>
+<dd><p>sets the connecter’s panel_orientation</p>
+</dd></dl>
+
+<p><strong>Parameters</strong></p>
+<dl class="docutils">
+<dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">drm_connector</span> <span class="pre">*</span> <span class="pre">connector</span></code></dt>
+<dd>connector for which to set the panel-orientation property.</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">enum</span> <span class="pre">drm_panel_orientation</span> <span class="pre">panel_orientation</span></code></dt>
+<dd>drm_panel_orientation value to set</dd>
+</dl>
+<p><strong>Description</strong></p>
+<p>This function sets the connector’s panel_orientation and attaches
+a “panel orientation” property to the connector.</p>
+<p>Calling this function on a connector where the panel_orientation has
+already been set is a no-op (e.g. the orientation has been overridden with
+a kernel commandline option).</p>
+<p>It is allowed to call this function with a panel_orientation of
+DRM_MODE_PANEL_ORIENTATION_UNKNOWN, in which case it is a no-op.</p>
+<p><strong>Return</strong></p>
+<p>Zero on success, negative errno on failure.</p>
+<dl class="function">
+<dt id="c.drm_connector_set_panel_orientation_with_quirk">
+int <code class="descname">drm_connector_set_panel_orientation_with_quirk</code><span class="sig-paren">(</span>struct <a class="reference internal" href="#c.drm_connector" title="drm_connector">drm_connector</a> *<em>&nbsp;connector</em>, enum <a class="reference internal" href="#c.drm_panel_orientation" title="drm_panel_orientation">drm_panel_orientation</a><em>&nbsp;panel_orientation</em>, int<em>&nbsp;width</em>, int<em>&nbsp;height</em><span class="sig-paren">)</span><a class="headerlink" href="#c.drm_connector_set_panel_orientation_with_quirk" title="Permalink to this definition">¶</a></dt>
+<dd><p>set the connecter’s panel_orientation after checking for quirks</p>
 </dd></dl>
 
 <p><strong>Parameters</strong></p>
 <dl class="docutils">
 <dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">drm_connector</span> <span class="pre">*</span> <span class="pre">connector</span></code></dt>
 <dd>connector for which to init the panel-orientation property.</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">enum</span> <span class="pre">drm_panel_orientation</span> <span class="pre">panel_orientation</span></code></dt>
+<dd>drm_panel_orientation value to set</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">int</span> <span class="pre">width</span></code></dt>
 <dd>width in pixels of the panel, used for panel quirk detection</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">int</span> <span class="pre">height</span></code></dt>
 <dd>height in pixels of the panel, used for panel quirk detection</dd>
 </dl>
 <p><strong>Description</strong></p>
-<p>This function should only be called for built-in panels, after setting
-connector-&gt;display_info.panel_orientation first (if known).</p>
-<p>This function will check for platform specific (e.g. DMI based) quirks
-overriding display_info.panel_orientation first, then if panel_orientation
-is not DRM_MODE_PANEL_ORIENTATION_UNKNOWN it will attach the
-“panel orientation” property to the connector.</p>
+<p>Like <a class="reference internal" href="#c.drm_connector_set_panel_orientation" title="drm_connector_set_panel_orientation"><code class="xref c c-func docutils literal notranslate"><span class="pre">drm_connector_set_panel_orientation()</span></code></a>, but with a check for platform
+specific (e.g. DMI based) quirks overriding the passed in panel_orientation.</p>
 <p><strong>Return</strong></p>
 <p>Zero on success, negative errno on failure.</p>
 <dl class="function">
@@ -8406,7 +8664,8 @@ are stable and hence known before registering all objects.</p>
 drivers.  Atomic drivers should instead check
 <a class="reference internal" href="#c.drm_connector_state" title="drm_connector_state"><code class="xref c c-type docutils literal notranslate"><span class="pre">drm_connector_state.crtc</span></code></a>.</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">bridge_chain</span></code></dt>
-<dd>Bridges attached to this encoder.</dd>
+<dd>Bridges attached to this encoder. Drivers shall not
+access this field directly.</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">funcs</span></code></dt>
 <dd>control functions</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">helper_private</span></code></dt>
@@ -9752,7 +10011,8 @@ INPUT_PROP_DIRECT) will still map 1:1 to the actual LCD panel
 coordinates, so if userspace rotates the picture to adjust for
 the orientation it must also apply the same transformation to the
 touchscreen input coordinates. This property is initialized by calling
-<a class="reference internal" href="#c.drm_connector_init_panel_orientation_property" title="drm_connector_init_panel_orientation_property"><code class="xref c c-func docutils literal notranslate"><span class="pre">drm_connector_init_panel_orientation_property()</span></code></a>.</dd>
+<a class="reference internal" href="#c.drm_connector_set_panel_orientation" title="drm_connector_set_panel_orientation"><code class="xref c c-func docutils literal notranslate"><span class="pre">drm_connector_set_panel_orientation()</span></code></a> or
+<a class="reference internal" href="#c.drm_connector_set_panel_orientation_with_quirk" title="drm_connector_set_panel_orientation_with_quirk"><code class="xref c c-func docutils literal notranslate"><span class="pre">drm_connector_set_panel_orientation_with_quirk()</span></code></a></dd>
 <dt>scaling mode:</dt>
 <dd><p class="first">This property defines how a non-native mode is upscaled to the native
 mode of an LCD panel:</p>
@@ -11609,6 +11869,11 @@ manner, see <a class="reference internal" href="drm-internals.html#c.drm_driver"
 <a class="reference internal" href="drm-internals.html#c.drm_driver" title="drm_driver"><code class="xref c c-type docutils literal notranslate"><span class="pre">drm_driver.max_vblank_count</span></code></a>. In that case the vblank core only disables the
 vblanks after a timer has expired, which can be configured through the
 <code class="docutils literal notranslate"><span class="pre">vblankoffdelay</span></code> module parameter.</p>
+<p>Drivers for hardware without support for vertical-blanking interrupts
+must not call <a class="reference internal" href="#c.drm_vblank_init" title="drm_vblank_init"><code class="xref c c-func docutils literal notranslate"><span class="pre">drm_vblank_init()</span></code></a>. For such drivers, atomic helpers will
+automatically generate fake vblank events as part of the display update.
+This functionality also can be controlled by the driver by enabling and
+disabling struct drm_crtc_state.no_vblank.</p>
 <div class="section" id="vertical-blanking-and-interrupt-handling-functions-reference">
 <h3>Vertical Blanking and Interrupt Handling Functions Reference<a class="headerlink" href="#vertical-blanking-and-interrupt-handling-functions-reference" title="Permalink to this headline">¶</a></h3>
 <dl class="type">
@@ -11733,17 +11998,17 @@ save and restore the vblank count.</dd>
 structure.</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">framedur_ns</span></code></dt>
 <dd>Frame/Field duration in ns, used by
-<a class="reference internal" href="#c.drm_calc_vbltimestamp_from_scanoutpos" title="drm_calc_vbltimestamp_from_scanoutpos"><code class="xref c c-func docutils literal notranslate"><span class="pre">drm_calc_vbltimestamp_from_scanoutpos()</span></code></a> and computed by
+<a class="reference internal" href="#c.drm_crtc_vblank_helper_get_vblank_timestamp" title="drm_crtc_vblank_helper_get_vblank_timestamp"><code class="xref c c-func docutils literal notranslate"><span class="pre">drm_crtc_vblank_helper_get_vblank_timestamp()</span></code></a> and computed by
 <a class="reference internal" href="#c.drm_calc_timestamping_constants" title="drm_calc_timestamping_constants"><code class="xref c c-func docutils literal notranslate"><span class="pre">drm_calc_timestamping_constants()</span></code></a>.</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">linedur_ns</span></code></dt>
 <dd>Line duration in ns, used by
-<a class="reference internal" href="#c.drm_calc_vbltimestamp_from_scanoutpos" title="drm_calc_vbltimestamp_from_scanoutpos"><code class="xref c c-func docutils literal notranslate"><span class="pre">drm_calc_vbltimestamp_from_scanoutpos()</span></code></a> and computed by
+<a class="reference internal" href="#c.drm_crtc_vblank_helper_get_vblank_timestamp" title="drm_crtc_vblank_helper_get_vblank_timestamp"><code class="xref c c-func docutils literal notranslate"><span class="pre">drm_crtc_vblank_helper_get_vblank_timestamp()</span></code></a> and computed by
 <a class="reference internal" href="#c.drm_calc_timestamping_constants" title="drm_calc_timestamping_constants"><code class="xref c c-func docutils literal notranslate"><span class="pre">drm_calc_timestamping_constants()</span></code></a>.</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">hwmode</span></code></dt>
 <dd>Cache of the current hardware display mode. Only valid when <strong>enabled</strong>
 is set. This is used by helpers like
-<a class="reference internal" href="#c.drm_calc_vbltimestamp_from_scanoutpos" title="drm_calc_vbltimestamp_from_scanoutpos"><code class="xref c c-func docutils literal notranslate"><span class="pre">drm_calc_vbltimestamp_from_scanoutpos()</span></code></a>. We can’t just access the
-hardware mode by e.g. looking at <a class="reference internal" href="#c.drm_crtc_state" title="drm_crtc_state"><code class="xref c c-type docutils literal notranslate"><span class="pre">drm_crtc_state.adjusted_mode</span></code></a>,
+<a class="reference internal" href="#c.drm_crtc_vblank_helper_get_vblank_timestamp" title="drm_crtc_vblank_helper_get_vblank_timestamp"><code class="xref c c-func docutils literal notranslate"><span class="pre">drm_crtc_vblank_helper_get_vblank_timestamp()</span></code></a>. We can’t just access
+the hardware mode by e.g. looking at <a class="reference internal" href="#c.drm_crtc_state" title="drm_crtc_state"><code class="xref c c-type docutils literal notranslate"><span class="pre">drm_crtc_state.adjusted_mode</span></code></a>,
 because that one is really hard to get from interrupt context.</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">enabled</span></code></dt>
 <dd>Tracks the enabling state of the corresponding <a class="reference internal" href="#c.drm_crtc" title="drm_crtc"><code class="xref c c-type docutils literal notranslate"><span class="pre">drm_crtc</span></code></a> to
@@ -11794,6 +12059,26 @@ drivers with a <a class="reference internal" href="drm-internals.html#c.drm_driv
 <p><strong>Return</strong></p>
 <p>Zero on success or a negative error code on failure.</p>
 <dl class="function">
+<dt id="c.drm_dev_has_vblank">
+bool <code class="descname">drm_dev_has_vblank</code><span class="sig-paren">(</span>const struct <a class="reference internal" href="drm-internals.html#c.drm_device" title="drm_device">drm_device</a> *<em>&nbsp;dev</em><span class="sig-paren">)</span><a class="headerlink" href="#c.drm_dev_has_vblank" title="Permalink to this definition">¶</a></dt>
+<dd><p>test if vblanking has been initialized for a device</p>
+</dd></dl>
+
+<p><strong>Parameters</strong></p>
+<dl class="docutils">
+<dt><code class="docutils literal notranslate"><span class="pre">const</span> <span class="pre">struct</span> <span class="pre">drm_device</span> <span class="pre">*</span> <span class="pre">dev</span></code></dt>
+<dd>the device</dd>
+</dl>
+<p><strong>Description</strong></p>
+<p>Drivers may call this function to test if vblank support is
+initialized for a device. For most hardware this means that vblanking
+can also be enabled.</p>
+<p>Atomic helpers use this function to initialize
+<a class="reference internal" href="#c.drm_crtc_state" title="drm_crtc_state"><code class="xref c c-type docutils literal notranslate"><span class="pre">drm_crtc_state.no_vblank</span></code></a>. See also <a class="reference internal" href="drm-kms-helpers.html#c.drm_atomic_helper_check_modeset" title="drm_atomic_helper_check_modeset"><code class="xref c c-func docutils literal notranslate"><span class="pre">drm_atomic_helper_check_modeset()</span></code></a>.</p>
+<p><strong>Return</strong></p>
+<p>True if vblanking has been initialized for the given device, false
+otherwise.</p>
+<dl class="function">
 <dt id="c.drm_crtc_vblank_waitqueue">
 wait_queue_head_t * <code class="descname">drm_crtc_vblank_waitqueue</code><span class="sig-paren">(</span>struct <a class="reference internal" href="#c.drm_crtc" title="drm_crtc">drm_crtc</a> *<em>&nbsp;crtc</em><span class="sig-paren">)</span><a class="headerlink" href="#c.drm_crtc_vblank_waitqueue" title="Permalink to this definition">¶</a></dt>
 <dd><p>get vblank waitqueue for the CRTC</p>
@@ -11824,21 +12109,55 @@ void <code class="descname">drm_calc_timestamping_constants</code><span class="s
 <p><strong>Description</strong></p>
 <p>Calculate and store various constants which are later needed by vblank and
 swap-completion timestamping, e.g, by
-<a class="reference internal" href="#c.drm_calc_vbltimestamp_from_scanoutpos" title="drm_calc_vbltimestamp_from_scanoutpos"><code class="xref c c-func docutils literal notranslate"><span class="pre">drm_calc_vbltimestamp_from_scanoutpos()</span></code></a>. They are derived from CRTC’s true
-scanout timing, so they take things like panel scaling or other adjustments
-into account.</p>
+<a class="reference internal" href="#c.drm_crtc_vblank_helper_get_vblank_timestamp" title="drm_crtc_vblank_helper_get_vblank_timestamp"><code class="xref c c-func docutils literal notranslate"><span class="pre">drm_crtc_vblank_helper_get_vblank_timestamp()</span></code></a>. They are derived from
+CRTC’s true scanout timing, so they take things like panel scaling or
+other adjustments into account.</p>
 <dl class="function">
-<dt id="c.drm_calc_vbltimestamp_from_scanoutpos">
-bool <code class="descname">drm_calc_vbltimestamp_from_scanoutpos</code><span class="sig-paren">(</span>struct <a class="reference internal" href="drm-internals.html#c.drm_device" title="drm_device">drm_device</a> *<em>&nbsp;dev</em>, unsigned int<em>&nbsp;pipe</em>, int *<em>&nbsp;max_error</em>, ktime_t *<em>&nbsp;vblank_time</em>, bool<em>&nbsp;in_vblank_irq</em><span class="sig-paren">)</span><a class="headerlink" href="#c.drm_calc_vbltimestamp_from_scanoutpos" title="Permalink to this definition">¶</a></dt>
+<dt id="c.drm_crtc_vblank_helper_get_vblank_timestamp_internal">
+bool <code class="descname">drm_crtc_vblank_helper_get_vblank_timestamp_internal</code><span class="sig-paren">(</span>struct <a class="reference internal" href="#c.drm_crtc" title="drm_crtc">drm_crtc</a> *<em>&nbsp;crtc</em>, int *<em>&nbsp;max_error</em>, ktime_t *<em>&nbsp;vblank_time</em>, bool<em>&nbsp;in_vblank_irq</em>, drm_vblank_get_scanout_position_func<em>&nbsp;get_scanout_position</em><span class="sig-paren">)</span><a class="headerlink" href="#c.drm_crtc_vblank_helper_get_vblank_timestamp_internal" title="Permalink to this definition">¶</a></dt>
 <dd><p>precise vblank timestamp helper</p>
 </dd></dl>
 
 <p><strong>Parameters</strong></p>
 <dl class="docutils">
-<dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">drm_device</span> <span class="pre">*</span> <span class="pre">dev</span></code></dt>
-<dd>DRM device</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">unsigned</span> <span class="pre">int</span> <span class="pre">pipe</span></code></dt>
-<dd>index of CRTC whose vblank timestamp to retrieve</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">drm_crtc</span> <span class="pre">*</span> <span class="pre">crtc</span></code></dt>
+<dd>CRTC whose vblank timestamp to retrieve</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">int</span> <span class="pre">*</span> <span class="pre">max_error</span></code></dt>
+<dd>Desired maximum allowable error in timestamps (nanosecs)
+On return contains true maximum error of timestamp</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">ktime_t</span> <span class="pre">*</span> <span class="pre">vblank_time</span></code></dt>
+<dd>Pointer to time which should receive the timestamp</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">bool</span> <span class="pre">in_vblank_irq</span></code></dt>
+<dd>True when called from <a class="reference internal" href="#c.drm_crtc_handle_vblank" title="drm_crtc_handle_vblank"><code class="xref c c-func docutils literal notranslate"><span class="pre">drm_crtc_handle_vblank()</span></code></a>.  Some drivers
+need to apply some workarounds for gpu-specific vblank irq quirks
+if flag is set.</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">drm_vblank_get_scanout_position_func</span> <span class="pre">get_scanout_position</span></code></dt>
+<dd>Callback function to retrieve the scanout position. See
+<strong>struct</strong> drm_crtc_helper_funcs.get_scanout_position.</dd>
+</dl>
+<p><strong>Description</strong></p>
+<p>Implements calculation of exact vblank timestamps from given drm_display_mode
+timings and current video scanout position of a CRTC.</p>
+<p>The current implementation only handles standard video modes. For double scan
+and interlaced modes the driver is supposed to adjust the hardware mode
+(taken from <a class="reference internal" href="#c.drm_crtc_state" title="drm_crtc_state"><code class="xref c c-type docutils literal notranslate"><span class="pre">drm_crtc_state.adjusted</span></code></a> mode for atomic modeset drivers) to
+match the scanout position reported.</p>
+<p>Note that atomic drivers must call <a class="reference internal" href="#c.drm_calc_timestamping_constants" title="drm_calc_timestamping_constants"><code class="xref c c-func docutils literal notranslate"><span class="pre">drm_calc_timestamping_constants()</span></code></a> before
+enabling a CRTC. The atomic helpers already take care of that in
+<a class="reference internal" href="drm-kms-helpers.html#c.drm_atomic_helper_update_legacy_modeset_state" title="drm_atomic_helper_update_legacy_modeset_state"><code class="xref c c-func docutils literal notranslate"><span class="pre">drm_atomic_helper_update_legacy_modeset_state()</span></code></a>.</p>
+<p><strong>Return</strong></p>
+<p>Returns true on success, and false on failure, i.e. when no accurate
+timestamp could be acquired.</p>
+<dl class="function">
+<dt id="c.drm_crtc_vblank_helper_get_vblank_timestamp">
+bool <code class="descname">drm_crtc_vblank_helper_get_vblank_timestamp</code><span class="sig-paren">(</span>struct <a class="reference internal" href="#c.drm_crtc" title="drm_crtc">drm_crtc</a> *<em>&nbsp;crtc</em>, int *<em>&nbsp;max_error</em>, ktime_t *<em>&nbsp;vblank_time</em>, bool<em>&nbsp;in_vblank_irq</em><span class="sig-paren">)</span><a class="headerlink" href="#c.drm_crtc_vblank_helper_get_vblank_timestamp" title="Permalink to this definition">¶</a></dt>
+<dd><p>precise vblank timestamp helper</p>
+</dd></dl>
+
+<p><strong>Parameters</strong></p>
+<dl class="docutils">
+<dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">drm_crtc</span> <span class="pre">*</span> <span class="pre">crtc</span></code></dt>
+<dd>CRTC whose vblank timestamp to retrieve</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">int</span> <span class="pre">*</span> <span class="pre">max_error</span></code></dt>
 <dd>Desired maximum allowable error in timestamps (nanosecs)
 On return contains true maximum error of timestamp</dd>
@@ -11852,8 +12171,8 @@ if flag is set.</dd>
 <p><strong>Description</strong></p>
 <p>Implements calculation of exact vblank timestamps from given drm_display_mode
 timings and current video scanout position of a CRTC. This can be directly
-used as the <a class="reference internal" href="drm-internals.html#c.drm_driver" title="drm_driver"><code class="xref c c-type docutils literal notranslate"><span class="pre">drm_driver.get_vblank_timestamp</span></code></a> implementation of a kms driver
-if <a class="reference internal" href="drm-internals.html#c.drm_driver" title="drm_driver"><code class="xref c c-type docutils literal notranslate"><span class="pre">drm_driver.get_scanout_position</span></code></a> is implemented.</p>
+used as the <a class="reference internal" href="#c.drm_crtc_funcs" title="drm_crtc_funcs"><code class="xref c c-type docutils literal notranslate"><span class="pre">drm_crtc_funcs.get_vblank_timestamp</span></code></a> implementation of a kms
+driver if <a class="reference internal" href="drm-kms-helpers.html#c.drm_crtc_helper_funcs" title="drm_crtc_helper_funcs"><code class="xref c c-type docutils literal notranslate"><span class="pre">drm_crtc_helper_funcs.get_scanout_position</span></code></a> is implemented.</p>
 <p>The current implementation only handles standard video modes. For double scan
 and interlaced modes the driver is supposed to adjust the hardware mode
 (taken from <a class="reference internal" href="#c.drm_crtc_state" title="drm_crtc_state"><code class="xref c c-type docutils literal notranslate"><span class="pre">drm_crtc_state.adjusted</span></code></a> mode for atomic modeset drivers) to

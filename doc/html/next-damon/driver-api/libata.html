@@ -68,7 +68,7 @@
             
             
               <div class="version">
-                5.6.0
+                5.7.0
               </div>
             
           
@@ -475,7 +475,7 @@ not called.</p>
 <div class="section" id="error-handling">
 <h2>Error handling<a class="headerlink" href="#error-handling" title="Permalink to this headline">¶</a></h2>
 <p>This chapter describes how errors are handled under libata. Readers are
-advised to read SCSI EH (Documentation/scsi/scsi_eh.txt) and ATA
+advised to read SCSI EH (Documentation/scsi/scsi_eh.rst) and ATA
 exceptions doc first.</p>
 <div class="section" id="origins-of-commands">
 <h3>Origins of commands<a class="headerlink" href="#origins-of-commands" title="Permalink to this headline">¶</a></h3>
@@ -728,49 +728,6 @@ None.</p>
 <blockquote>
 <div>ATAPI_{READ|WRITE|READ_CD|PASS_THRU|MISC}</div></blockquote>
 <dl class="function">
-<dt id="c.ata_tf_to_fis">
-void <code class="descname">ata_tf_to_fis</code><span class="sig-paren">(</span>const struct ata_taskfile *<em>&nbsp;tf</em>, u8<em>&nbsp;pmp</em>, int<em>&nbsp;is_cmd</em>, u8 *<em>&nbsp;fis</em><span class="sig-paren">)</span><a class="headerlink" href="#c.ata_tf_to_fis" title="Permalink to this definition">¶</a></dt>
-<dd><p>Convert ATA taskfile to SATA FIS structure</p>
-</dd></dl>
-
-<p><strong>Parameters</strong></p>
-<dl class="docutils">
-<dt><code class="docutils literal notranslate"><span class="pre">const</span> <span class="pre">struct</span> <span class="pre">ata_taskfile</span> <span class="pre">*</span> <span class="pre">tf</span></code></dt>
-<dd>Taskfile to convert</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">u8</span> <span class="pre">pmp</span></code></dt>
-<dd>Port multiplier port</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">int</span> <span class="pre">is_cmd</span></code></dt>
-<dd>This FIS is for command</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">u8</span> <span class="pre">*</span> <span class="pre">fis</span></code></dt>
-<dd>Buffer into which data will output</dd>
-</dl>
-<p><strong>Description</strong></p>
-<blockquote>
-<div><p>Converts a standard ATA taskfile to a Serial ATA
-FIS structure (Register - Host to Device).</p>
-<p>LOCKING:
-Inherited from caller.</p>
-</div></blockquote>
-<dl class="function">
-<dt id="c.ata_tf_from_fis">
-void <code class="descname">ata_tf_from_fis</code><span class="sig-paren">(</span>const u8 *<em>&nbsp;fis</em>, struct ata_taskfile *<em>&nbsp;tf</em><span class="sig-paren">)</span><a class="headerlink" href="#c.ata_tf_from_fis" title="Permalink to this definition">¶</a></dt>
-<dd><p>Convert SATA FIS to ATA taskfile</p>
-</dd></dl>
-
-<p><strong>Parameters</strong></p>
-<dl class="docutils">
-<dt><code class="docutils literal notranslate"><span class="pre">const</span> <span class="pre">u8</span> <span class="pre">*</span> <span class="pre">fis</span></code></dt>
-<dd>Buffer from which data will be input</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">ata_taskfile</span> <span class="pre">*</span> <span class="pre">tf</span></code></dt>
-<dd>Taskfile to output</dd>
-</dl>
-<p><strong>Description</strong></p>
-<blockquote>
-<div><p>Converts a serial ATA FIS structure to a standard ATA taskfile.</p>
-<p>LOCKING:
-Inherited from caller.</p>
-</div></blockquote>
-<dl class="function">
 <dt id="c.ata_pack_xfermask">
 unsigned long <code class="descname">ata_pack_xfermask</code><span class="sig-paren">(</span>unsigned long<em>&nbsp;pio_mask</em>, unsigned long<em>&nbsp;mwdma_mask</em>, unsigned long<em>&nbsp;udma_mask</em><span class="sig-paren">)</span><a class="headerlink" href="#c.ata_pack_xfermask" title="Permalink to this definition">¶</a></dt>
 <dd><p>Pack pio, mwdma and udma masks into xfer_mask</p>
@@ -795,27 +752,6 @@ None.</p>
 <p><strong>Return</strong></p>
 <blockquote>
 <div>Packed xfer_mask.</div></blockquote>
-<dl class="function">
-<dt id="c.ata_unpack_xfermask">
-void <code class="descname">ata_unpack_xfermask</code><span class="sig-paren">(</span>unsigned long<em>&nbsp;xfer_mask</em>, unsigned long *<em>&nbsp;pio_mask</em>, unsigned long *<em>&nbsp;mwdma_mask</em>, unsigned long *<em>&nbsp;udma_mask</em><span class="sig-paren">)</span><a class="headerlink" href="#c.ata_unpack_xfermask" title="Permalink to this definition">¶</a></dt>
-<dd><p>Unpack xfer_mask into pio, mwdma and udma masks</p>
-</dd></dl>
-
-<p><strong>Parameters</strong></p>
-<dl class="docutils">
-<dt><code class="docutils literal notranslate"><span class="pre">unsigned</span> <span class="pre">long</span> <span class="pre">xfer_mask</span></code></dt>
-<dd>xfer_mask to unpack</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">unsigned</span> <span class="pre">long</span> <span class="pre">*</span> <span class="pre">pio_mask</span></code></dt>
-<dd>resulting pio_mask</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">unsigned</span> <span class="pre">long</span> <span class="pre">*</span> <span class="pre">mwdma_mask</span></code></dt>
-<dd>resulting mwdma_mask</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">unsigned</span> <span class="pre">long</span> <span class="pre">*</span> <span class="pre">udma_mask</span></code></dt>
-<dd>resulting udma_mask</dd>
-</dl>
-<p><strong>Description</strong></p>
-<blockquote>
-<div>Unpack <strong>xfer_mask</strong> into <strong>pio_mask</strong>, <strong>mwdma_mask</strong> and <strong>udma_mask</strong>.
-Any NULL destination masks will be ignored.</div></blockquote>
 <dl class="function">
 <dt id="c.ata_xfer_mask2mode">
 u8 <code class="descname">ata_xfer_mask2mode</code><span class="sig-paren">(</span>unsigned long<em>&nbsp;xfer_mask</em><span class="sig-paren">)</span><a class="headerlink" href="#c.ata_xfer_mask2mode" title="Permalink to this definition">¶</a></dt>
@@ -1118,52 +1054,6 @@ struct ata_device * <code class="descname">ata_dev_pair</code><span class="sig-p
 <div>Obtain the other device on the same cable, or if none is
 present NULL is returned</div></blockquote>
 <dl class="function">
-<dt id="c.sata_set_spd">
-int <code class="descname">sata_set_spd</code><span class="sig-paren">(</span>struct ata_link *<em>&nbsp;link</em><span class="sig-paren">)</span><a class="headerlink" href="#c.sata_set_spd" title="Permalink to this definition">¶</a></dt>
-<dd><p>set SATA spd according to spd limit</p>
-</dd></dl>
-
-<p><strong>Parameters</strong></p>
-<dl class="docutils">
-<dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">ata_link</span> <span class="pre">*</span> <span class="pre">link</span></code></dt>
-<dd>Link to set SATA spd for</dd>
-</dl>
-<p><strong>Description</strong></p>
-<blockquote>
-<div><p>Set SATA spd of <strong>link</strong> according to sata_spd_limit.</p>
-<p>LOCKING:
-Inherited from caller.</p>
-</div></blockquote>
-<p><strong>Return</strong></p>
-<blockquote>
-<div>0 if spd doesn’t need to be changed, 1 if spd has been
-changed.  Negative errno if SCR registers are inaccessible.</div></blockquote>
-<dl class="function">
-<dt id="c.ata_timing_cycle2mode">
-u8 <code class="descname">ata_timing_cycle2mode</code><span class="sig-paren">(</span>unsigned int<em>&nbsp;xfer_shift</em>, int<em>&nbsp;cycle</em><span class="sig-paren">)</span><a class="headerlink" href="#c.ata_timing_cycle2mode" title="Permalink to this definition">¶</a></dt>
-<dd><p>find xfer mode for the specified cycle duration</p>
-</dd></dl>
-
-<p><strong>Parameters</strong></p>
-<dl class="docutils">
-<dt><code class="docutils literal notranslate"><span class="pre">unsigned</span> <span class="pre">int</span> <span class="pre">xfer_shift</span></code></dt>
-<dd>ATA_SHIFT_* value for transfer type to examine.</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">int</span> <span class="pre">cycle</span></code></dt>
-<dd>cycle duration in ns</dd>
-</dl>
-<p><strong>Description</strong></p>
-<blockquote>
-<div><p>Return matching xfer mode for <strong>cycle</strong>.  The returned mode is of
-the transfer type specified by <strong>xfer_shift</strong>.  If <strong>cycle</strong> is too
-slow for <strong>xfer_shift</strong>, 0xff is returned.  If <strong>cycle</strong> is faster
-than the fastest known mode, the fasted mode is returned.</p>
-<p>LOCKING:
-None.</p>
-</div></blockquote>
-<p><strong>Return</strong></p>
-<blockquote>
-<div>Matching xfer_mode, 0xff if no match found.</div></blockquote>
-<dl class="function">
 <dt id="c.ata_do_set_mode">
 int <code class="descname">ata_do_set_mode</code><span class="sig-paren">(</span>struct ata_link *<em>&nbsp;link</em>, struct ata_device **<em>&nbsp;r_failed_dev</em><span class="sig-paren">)</span><a class="headerlink" href="#c.ata_do_set_mode" title="Permalink to this definition">¶</a></dt>
 <dd><p>Program timings and issue SET FEATURES - XFER</p>
@@ -1190,7 +1080,7 @@ PCI/etc. bus probe sem.</p>
 <div>0 on success, negative errno otherwise</div></blockquote>
 <dl class="function">
 <dt id="c.ata_wait_after_reset">
-int <code class="descname">ata_wait_after_reset</code><span class="sig-paren">(</span>struct ata_link *<em>&nbsp;link</em>, unsigned long<em>&nbsp;deadline</em>, int (*check_ready) (struct ata_link<em>&nbsp;*link</em><span class="sig-paren">)</span><a class="headerlink" href="#c.ata_wait_after_reset" title="Permalink to this definition">¶</a></dt>
+int <code class="descname">ata_wait_after_reset</code><span class="sig-paren">(</span>struct ata_link *<em>&nbsp;link</em>, unsigned long<em>&nbsp;deadline</em>, int (<em>*check_ready</em>)(struct ata_link *link)<span class="sig-paren">)</span><a class="headerlink" href="#c.ata_wait_after_reset" title="Permalink to this definition">¶</a></dt>
 <dd><p>wait for link to become ready after reset</p>
 </dd></dl>
 
@@ -1213,89 +1103,6 @@ EH context.</p>
 <blockquote>
 <div>0 if <strong>link</strong> is ready before <strong>deadline</strong>; otherwise, -errno.</div></blockquote>
 <dl class="function">
-<dt id="c.sata_link_debounce">
-int <code class="descname">sata_link_debounce</code><span class="sig-paren">(</span>struct ata_link *<em>&nbsp;link</em>, const unsigned long *<em>&nbsp;params</em>, unsigned long<em>&nbsp;deadline</em><span class="sig-paren">)</span><a class="headerlink" href="#c.sata_link_debounce" title="Permalink to this definition">¶</a></dt>
-<dd><p>debounce SATA phy status</p>
-</dd></dl>
-
-<p><strong>Parameters</strong></p>
-<dl class="docutils">
-<dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">ata_link</span> <span class="pre">*</span> <span class="pre">link</span></code></dt>
-<dd>ATA link to debounce SATA phy status for</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">const</span> <span class="pre">unsigned</span> <span class="pre">long</span> <span class="pre">*</span> <span class="pre">params</span></code></dt>
-<dd>timing parameters { interval, duration, timeout } in msec</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">unsigned</span> <span class="pre">long</span> <span class="pre">deadline</span></code></dt>
-<dd>deadline jiffies for the operation</dd>
-</dl>
-<p><strong>Description</strong></p>
-<blockquote>
-<div><p>Make sure SStatus of <strong>link</strong> reaches stable state, determined by
-holding the same value where DET is not 1 for <strong>duration</strong> polled
-every <strong>interval</strong>, before <strong>timeout</strong>.  Timeout constraints the
-beginning of the stable state.  Because DET gets stuck at 1 on
-some controllers after hot unplugging, this functions waits
-until timeout then returns 0 if DET is stable at 1.</p>
-<p><strong>timeout</strong> is further limited by <strong>deadline</strong>.  The sooner of the
-two is used.</p>
-<p>LOCKING:
-Kernel thread context (may sleep)</p>
-</div></blockquote>
-<p><strong>Return</strong></p>
-<blockquote>
-<div>0 on success, -errno on failure.</div></blockquote>
-<dl class="function">
-<dt id="c.sata_link_resume">
-int <code class="descname">sata_link_resume</code><span class="sig-paren">(</span>struct ata_link *<em>&nbsp;link</em>, const unsigned long *<em>&nbsp;params</em>, unsigned long<em>&nbsp;deadline</em><span class="sig-paren">)</span><a class="headerlink" href="#c.sata_link_resume" title="Permalink to this definition">¶</a></dt>
-<dd><p>resume SATA link</p>
-</dd></dl>
-
-<p><strong>Parameters</strong></p>
-<dl class="docutils">
-<dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">ata_link</span> <span class="pre">*</span> <span class="pre">link</span></code></dt>
-<dd>ATA link to resume SATA</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">const</span> <span class="pre">unsigned</span> <span class="pre">long</span> <span class="pre">*</span> <span class="pre">params</span></code></dt>
-<dd>timing parameters { interval, duration, timeout } in msec</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">unsigned</span> <span class="pre">long</span> <span class="pre">deadline</span></code></dt>
-<dd>deadline jiffies for the operation</dd>
-</dl>
-<p><strong>Description</strong></p>
-<blockquote>
-<div><p>Resume SATA phy <strong>link</strong> and debounce it.</p>
-<p>LOCKING:
-Kernel thread context (may sleep)</p>
-</div></blockquote>
-<p><strong>Return</strong></p>
-<blockquote>
-<div>0 on success, -errno on failure.</div></blockquote>
-<dl class="function">
-<dt id="c.sata_link_scr_lpm">
-int <code class="descname">sata_link_scr_lpm</code><span class="sig-paren">(</span>struct ata_link *<em>&nbsp;link</em>, enum ata_lpm_policy<em>&nbsp;policy</em>, bool<em>&nbsp;spm_wakeup</em><span class="sig-paren">)</span><a class="headerlink" href="#c.sata_link_scr_lpm" title="Permalink to this definition">¶</a></dt>
-<dd><p>manipulate SControl IPM and SPM fields</p>
-</dd></dl>
-
-<p><strong>Parameters</strong></p>
-<dl class="docutils">
-<dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">ata_link</span> <span class="pre">*</span> <span class="pre">link</span></code></dt>
-<dd>ATA link to manipulate SControl for</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">enum</span> <span class="pre">ata_lpm_policy</span> <span class="pre">policy</span></code></dt>
-<dd>LPM policy to configure</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">bool</span> <span class="pre">spm_wakeup</span></code></dt>
-<dd>initiate LPM transition to active state</dd>
-</dl>
-<p><strong>Description</strong></p>
-<blockquote>
-<div><p>Manipulate the IPM field of the SControl register of <strong>link</strong>
-according to <strong>policy</strong>.  If <strong>policy</strong> is ATA_LPM_MAX_POWER and
-<strong>spm_wakeup</strong> is <code class="docutils literal notranslate"><span class="pre">true</span></code>, the SPM field is manipulated to wake up
-the link.  This function also clears PHYRDY_CHG before
-returning.</p>
-<p>LOCKING:
-EH context.</p>
-</div></blockquote>
-<p><strong>Return</strong></p>
-<blockquote>
-<div>0 on success, -errno otherwise.</div></blockquote>
-<dl class="function">
 <dt id="c.ata_std_prereset">
 int <code class="descname">ata_std_prereset</code><span class="sig-paren">(</span>struct ata_link *<em>&nbsp;link</em>, unsigned long<em>&nbsp;deadline</em><span class="sig-paren">)</span><a class="headerlink" href="#c.ata_std_prereset" title="Permalink to this definition">¶</a></dt>
 <dd><p>prepare for reset</p>
@@ -1315,41 +1122,6 @@ prereset makes libata abort whole reset sequence and give up
 that port, so prereset should be best-effort.  It does its
 best to prepare for reset sequence but if things go wrong, it
 should just whine, not fail.</p>
-<p>LOCKING:
-Kernel thread context (may sleep)</p>
-</div></blockquote>
-<p><strong>Return</strong></p>
-<blockquote>
-<div>0 on success, -errno otherwise.</div></blockquote>
-<dl class="function">
-<dt id="c.sata_link_hardreset">
-int <code class="descname">sata_link_hardreset</code><span class="sig-paren">(</span>struct ata_link *<em>&nbsp;link</em>, const unsigned long *<em>&nbsp;timing</em>, unsigned long<em>&nbsp;deadline</em>, bool *<em>&nbsp;online</em>, int (*check_ready) (struct ata_link<em>&nbsp;*</em><span class="sig-paren">)</span><a class="headerlink" href="#c.sata_link_hardreset" title="Permalink to this definition">¶</a></dt>
-<dd><p>reset link via SATA phy reset</p>
-</dd></dl>
-
-<p><strong>Parameters</strong></p>
-<dl class="docutils">
-<dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">ata_link</span> <span class="pre">*</span> <span class="pre">link</span></code></dt>
-<dd>link to reset</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">const</span> <span class="pre">unsigned</span> <span class="pre">long</span> <span class="pre">*</span> <span class="pre">timing</span></code></dt>
-<dd>timing parameters { interval, duration, timeout } in msec</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">unsigned</span> <span class="pre">long</span> <span class="pre">deadline</span></code></dt>
-<dd>deadline jiffies for the operation</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">bool</span> <span class="pre">*</span> <span class="pre">online</span></code></dt>
-<dd>optional out parameter indicating link onlineness</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">int</span> <span class="pre">(*)(struct</span> <span class="pre">ata_link</span> <span class="pre">*)</span> <span class="pre">check_ready</span></code></dt>
-<dd>optional callback to check link readiness</dd>
-</dl>
-<p><strong>Description</strong></p>
-<blockquote>
-<div><p>SATA phy-reset <strong>link</strong> using DET bits of SControl register.
-After hardreset, link readiness is waited upon using
-<a class="reference internal" href="#c.ata_wait_ready" title="ata_wait_ready"><code class="xref c c-func docutils literal notranslate"><span class="pre">ata_wait_ready()</span></code></a> if <strong>check_ready</strong> is specified.  LLDs are
-allowed to not specify <strong>check_ready</strong> and wait itself after this
-function returns.  Device classification is LLD’s
-responsibility.</p>
-<p><strong>*online</strong> is set to one iff reset succeeded and <strong>link</strong> is online
-after reset.</p>
 <p>LOCKING:
 Kernel thread context (may sleep)</p>
 </div></blockquote>
@@ -1450,29 +1222,6 @@ spin_lock_irqsave(host lock)</p>
 <blockquote>
 <div>ATA_DEFER_* if deferring is needed, 0 otherwise.</div></blockquote>
 <dl class="function">
-<dt id="c.ata_sg_init">
-void <code class="descname">ata_sg_init</code><span class="sig-paren">(</span>struct ata_queued_cmd *<em>&nbsp;qc</em>, struct scatterlist *<em>&nbsp;sg</em>, unsigned int<em>&nbsp;n_elem</em><span class="sig-paren">)</span><a class="headerlink" href="#c.ata_sg_init" title="Permalink to this definition">¶</a></dt>
-<dd><p>Associate command with scatter-gather table.</p>
-</dd></dl>
-
-<p><strong>Parameters</strong></p>
-<dl class="docutils">
-<dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">ata_queued_cmd</span> <span class="pre">*</span> <span class="pre">qc</span></code></dt>
-<dd>Command to be associated</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">scatterlist</span> <span class="pre">*</span> <span class="pre">sg</span></code></dt>
-<dd>Scatter-gather table.</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">unsigned</span> <span class="pre">int</span> <span class="pre">n_elem</span></code></dt>
-<dd>Number of elements in s/g table.</dd>
-</dl>
-<p><strong>Description</strong></p>
-<blockquote>
-<div><p>Initialize the data-related elements of queued_cmd <strong>qc</strong>
-to point to a scatter-gather table <strong>sg</strong>, containing <strong>n_elem</strong>
-elements.</p>
-<p>LOCKING:
-spin_lock_irqsave(host lock)</p>
-</div></blockquote>
-<dl class="function">
 <dt id="c.ata_qc_complete">
 void <code class="descname">ata_qc_complete</code><span class="sig-paren">(</span>struct ata_queued_cmd *<em>&nbsp;qc</em><span class="sig-paren">)</span><a class="headerlink" href="#c.ata_qc_complete" title="Permalink to this definition">¶</a></dt>
 <dd><p>Complete an active ATA command</p>
@@ -1489,7 +1238,7 @@ void <code class="descname">ata_qc_complete</code><span class="sig-paren">(</spa
 completed, with either an ok or not-ok status.</p>
 <p>Refrain from calling this function multiple times when
 successfully completing multiple NCQ commands.
-<a class="reference internal" href="#c.ata_qc_complete_multiple" title="ata_qc_complete_multiple"><code class="xref c c-func docutils literal notranslate"><span class="pre">ata_qc_complete_multiple()</span></code></a> should be used instead, which will
+ata_qc_complete_multiple() should be used instead, which will
 properly update IRQ expect state.</p>
 <p>LOCKING:
 spin_lock_irqsave(host lock)</p>
@@ -1512,131 +1261,6 @@ spin_lock_irqsave(host lock)</div></blockquote>
 <p><strong>Return</strong></p>
 <blockquote>
 <div>Bitmask of active qcs</div></blockquote>
-<dl class="function">
-<dt id="c.ata_qc_complete_multiple">
-int <code class="descname">ata_qc_complete_multiple</code><span class="sig-paren">(</span>struct ata_port *<em>&nbsp;ap</em>, u64<em>&nbsp;qc_active</em><span class="sig-paren">)</span><a class="headerlink" href="#c.ata_qc_complete_multiple" title="Permalink to this definition">¶</a></dt>
-<dd><p>Complete multiple qcs successfully</p>
-</dd></dl>
-
-<p><strong>Parameters</strong></p>
-<dl class="docutils">
-<dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">ata_port</span> <span class="pre">*</span> <span class="pre">ap</span></code></dt>
-<dd>port in question</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">u64</span> <span class="pre">qc_active</span></code></dt>
-<dd>new qc_active mask</dd>
-</dl>
-<p><strong>Description</strong></p>
-<blockquote>
-<div><p>Complete in-flight commands.  This functions is meant to be
-called from low-level driver’s interrupt routine to complete
-requests normally.  ap-&gt;qc_active and <strong>qc_active</strong> is compared
-and commands are completed accordingly.</p>
-<p>Always use this function when completing multiple NCQ commands
-from IRQ handlers instead of calling <a class="reference internal" href="#c.ata_qc_complete" title="ata_qc_complete"><code class="xref c c-func docutils literal notranslate"><span class="pre">ata_qc_complete()</span></code></a>
-multiple times to keep IRQ expect status properly in sync.</p>
-<p>LOCKING:
-spin_lock_irqsave(host lock)</p>
-</div></blockquote>
-<p><strong>Return</strong></p>
-<blockquote>
-<div>Number of completed commands on success, -errno otherwise.</div></blockquote>
-<dl class="function">
-<dt id="c.sata_scr_valid">
-int <code class="descname">sata_scr_valid</code><span class="sig-paren">(</span>struct ata_link *<em>&nbsp;link</em><span class="sig-paren">)</span><a class="headerlink" href="#c.sata_scr_valid" title="Permalink to this definition">¶</a></dt>
-<dd><p>test whether SCRs are accessible</p>
-</dd></dl>
-
-<p><strong>Parameters</strong></p>
-<dl class="docutils">
-<dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">ata_link</span> <span class="pre">*</span> <span class="pre">link</span></code></dt>
-<dd>ATA link to test SCR accessibility for</dd>
-</dl>
-<p><strong>Description</strong></p>
-<blockquote>
-<div><p>Test whether SCRs are accessible for <strong>link</strong>.</p>
-<p>LOCKING:
-None.</p>
-</div></blockquote>
-<p><strong>Return</strong></p>
-<blockquote>
-<div>1 if SCRs are accessible, 0 otherwise.</div></blockquote>
-<dl class="function">
-<dt id="c.sata_scr_read">
-int <code class="descname">sata_scr_read</code><span class="sig-paren">(</span>struct ata_link *<em>&nbsp;link</em>, int<em>&nbsp;reg</em>, u32 *<em>&nbsp;val</em><span class="sig-paren">)</span><a class="headerlink" href="#c.sata_scr_read" title="Permalink to this definition">¶</a></dt>
-<dd><p>read SCR register of the specified port</p>
-</dd></dl>
-
-<p><strong>Parameters</strong></p>
-<dl class="docutils">
-<dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">ata_link</span> <span class="pre">*</span> <span class="pre">link</span></code></dt>
-<dd>ATA link to read SCR for</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">int</span> <span class="pre">reg</span></code></dt>
-<dd>SCR to read</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">u32</span> <span class="pre">*</span> <span class="pre">val</span></code></dt>
-<dd>Place to store read value</dd>
-</dl>
-<p><strong>Description</strong></p>
-<blockquote>
-<div><p>Read SCR register <strong>reg</strong> of <strong>link</strong> into <strong>*val</strong>.  This function is
-guaranteed to succeed if <strong>link</strong> is ap-&gt;link, the cable type of
-the port is SATA and the port implements -&gt;scr_read.</p>
-<p>LOCKING:
-None if <strong>link</strong> is ap-&gt;link.  Kernel thread context otherwise.</p>
-</div></blockquote>
-<p><strong>Return</strong></p>
-<blockquote>
-<div>0 on success, negative errno on failure.</div></blockquote>
-<dl class="function">
-<dt id="c.sata_scr_write">
-int <code class="descname">sata_scr_write</code><span class="sig-paren">(</span>struct ata_link *<em>&nbsp;link</em>, int<em>&nbsp;reg</em>, u32<em>&nbsp;val</em><span class="sig-paren">)</span><a class="headerlink" href="#c.sata_scr_write" title="Permalink to this definition">¶</a></dt>
-<dd><p>write SCR register of the specified port</p>
-</dd></dl>
-
-<p><strong>Parameters</strong></p>
-<dl class="docutils">
-<dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">ata_link</span> <span class="pre">*</span> <span class="pre">link</span></code></dt>
-<dd>ATA link to write SCR for</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">int</span> <span class="pre">reg</span></code></dt>
-<dd>SCR to write</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">u32</span> <span class="pre">val</span></code></dt>
-<dd>value to write</dd>
-</dl>
-<p><strong>Description</strong></p>
-<blockquote>
-<div><p>Write <strong>val</strong> to SCR register <strong>reg</strong> of <strong>link</strong>.  This function is
-guaranteed to succeed if <strong>link</strong> is ap-&gt;link, the cable type of
-the port is SATA and the port implements -&gt;scr_read.</p>
-<p>LOCKING:
-None if <strong>link</strong> is ap-&gt;link.  Kernel thread context otherwise.</p>
-</div></blockquote>
-<p><strong>Return</strong></p>
-<blockquote>
-<div>0 on success, negative errno on failure.</div></blockquote>
-<dl class="function">
-<dt id="c.sata_scr_write_flush">
-int <code class="descname">sata_scr_write_flush</code><span class="sig-paren">(</span>struct ata_link *<em>&nbsp;link</em>, int<em>&nbsp;reg</em>, u32<em>&nbsp;val</em><span class="sig-paren">)</span><a class="headerlink" href="#c.sata_scr_write_flush" title="Permalink to this definition">¶</a></dt>
-<dd><p>write SCR register of the specified port and flush</p>
-</dd></dl>
-
-<p><strong>Parameters</strong></p>
-<dl class="docutils">
-<dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">ata_link</span> <span class="pre">*</span> <span class="pre">link</span></code></dt>
-<dd>ATA link to write SCR for</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">int</span> <span class="pre">reg</span></code></dt>
-<dd>SCR to write</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">u32</span> <span class="pre">val</span></code></dt>
-<dd>value to write</dd>
-</dl>
-<p><strong>Description</strong></p>
-<blockquote>
-<div><p>This function is identical to <a class="reference internal" href="#c.sata_scr_write" title="sata_scr_write"><code class="xref c c-func docutils literal notranslate"><span class="pre">sata_scr_write()</span></code></a> except that this
-function performs flush after writing to the register.</p>
-<p>LOCKING:
-None if <strong>link</strong> is ap-&gt;link.  Kernel thread context otherwise.</p>
-</div></blockquote>
-<p><strong>Return</strong></p>
-<blockquote>
-<div>0 on success, negative errno on failure.</div></blockquote>
 <dl class="function">
 <dt id="c.ata_link_online">
 bool <code class="descname">ata_link_online</code><span class="sig-paren">(</span>struct ata_link *<em>&nbsp;link</em><span class="sig-paren">)</span><a class="headerlink" href="#c.ata_link_online" title="Permalink to this definition">¶</a></dt>
@@ -1770,55 +1394,6 @@ last entry will be used for the remaining ports.</div></blockquote>
 <p>LOCKING:
 Inherited from calling layer (may sleep).</p>
 </div></blockquote>
-<dl class="function">
-<dt id="c.ata_slave_link_init">
-int <code class="descname">ata_slave_link_init</code><span class="sig-paren">(</span>struct ata_port *<em>&nbsp;ap</em><span class="sig-paren">)</span><a class="headerlink" href="#c.ata_slave_link_init" title="Permalink to this definition">¶</a></dt>
-<dd><p>initialize slave link</p>
-</dd></dl>
-
-<p><strong>Parameters</strong></p>
-<dl class="docutils">
-<dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">ata_port</span> <span class="pre">*</span> <span class="pre">ap</span></code></dt>
-<dd>port to initialize slave link for</dd>
-</dl>
-<p><strong>Description</strong></p>
-<blockquote>
-<div><p>Create and initialize slave link for <strong>ap</strong>.  This enables slave
-link handling on the port.</p>
-<p>In libata, a port contains links and a link contains devices.
-There is single host link but if a PMP is attached to it,
-there can be multiple fan-out links.  On SATA, there’s usually
-a single device connected to a link but PATA and SATA
-controllers emulating TF based interface can have two - master
-and slave.</p>
-<p>However, there are a few controllers which don’t fit into this
-abstraction too well - SATA controllers which emulate TF
-interface with both master and slave devices but also have
-separate SCR register sets for each device.  These controllers
-need separate links for physical link handling
-(e.g. onlineness, link speed) but should be treated like a
-traditional M/S controller for everything else (e.g. command
-issue, softreset).</p>
-<p>slave_link is libata’s way of handling this class of
-controllers without impacting core layer too much.  For
-anything other than physical link handling, the default host
-link is used for both master and slave.  For physical link
-handling, separate <strong>ap-&gt;slave_link</strong> is used.  All dirty details
-are implemented inside libata core layer.  From LLD’s POV, the
-only difference is that prereset, hardreset and postreset are
-called once more for the slave link, so the reset sequence
-looks like the following.</p>
-<p>prereset(M) -&gt; prereset(S) -&gt; hardreset(M) -&gt; hardreset(S) -&gt;
-softreset(M) -&gt; postreset(M) -&gt; postreset(S)</p>
-<p>Note that softreset is called only for the master.  Softreset
-resets both M/S by definition, so SRST on master should handle
-both (the standard method will work just fine).</p>
-<p>LOCKING:
-Should be called before host is registered.</p>
-</div></blockquote>
-<p><strong>Return</strong></p>
-<blockquote>
-<div>0 on success, -errno on failure.</div></blockquote>
 <dl class="function">
 <dt id="c.ata_host_start">
 int <code class="descname">ata_host_start</code><span class="sig-paren">(</span>struct ata_host *<em>&nbsp;host</em><span class="sig-paren">)</span><a class="headerlink" href="#c.ata_host_start" title="Permalink to this definition">¶</a></dt>
@@ -2030,26 +1605,6 @@ Kernel thread context (may sleep)</p>
 <p><strong>Return</strong></p>
 <blockquote>
 <div>The final register value.</div></blockquote>
-<dl class="function">
-<dt id="c.sata_lpm_ignore_phy_events">
-bool <code class="descname">sata_lpm_ignore_phy_events</code><span class="sig-paren">(</span>struct ata_link *<em>&nbsp;link</em><span class="sig-paren">)</span><a class="headerlink" href="#c.sata_lpm_ignore_phy_events" title="Permalink to this definition">¶</a></dt>
-<dd><p>test if PHY event should be ignored</p>
-</dd></dl>
-
-<p><strong>Parameters</strong></p>
-<dl class="docutils">
-<dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">ata_link</span> <span class="pre">*</span> <span class="pre">link</span></code></dt>
-<dd>Link receiving the event</dd>
-</dl>
-<p><strong>Description</strong></p>
-<blockquote>
-<div><p>Test whether the received PHY event has to be ignored or not.</p>
-<p>LOCKING:
-None:</p>
-</div></blockquote>
-<p><strong>Return</strong></p>
-<blockquote>
-<div>True if the event has to be ignored.</div></blockquote>
 </div>
 <div class="section" id="libata-core-internals">
 <h2>libata Core Internals<a class="headerlink" href="#libata-core-internals" title="Permalink to this headline">¶</a></h2>
@@ -2236,6 +1791,27 @@ None.</p>
 <blockquote>
 <div>0 on success, -ERANGE if the request is too large for <strong>dev</strong>,
 -EINVAL if the request is invalid.</div></blockquote>
+<dl class="function">
+<dt id="c.ata_unpack_xfermask">
+void <code class="descname">ata_unpack_xfermask</code><span class="sig-paren">(</span>unsigned long<em>&nbsp;xfer_mask</em>, unsigned long *<em>&nbsp;pio_mask</em>, unsigned long *<em>&nbsp;mwdma_mask</em>, unsigned long *<em>&nbsp;udma_mask</em><span class="sig-paren">)</span><a class="headerlink" href="#c.ata_unpack_xfermask" title="Permalink to this definition">¶</a></dt>
+<dd><p>Unpack xfer_mask into pio, mwdma and udma masks</p>
+</dd></dl>
+
+<p><strong>Parameters</strong></p>
+<dl class="docutils">
+<dt><code class="docutils literal notranslate"><span class="pre">unsigned</span> <span class="pre">long</span> <span class="pre">xfer_mask</span></code></dt>
+<dd>xfer_mask to unpack</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">unsigned</span> <span class="pre">long</span> <span class="pre">*</span> <span class="pre">pio_mask</span></code></dt>
+<dd>resulting pio_mask</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">unsigned</span> <span class="pre">long</span> <span class="pre">*</span> <span class="pre">mwdma_mask</span></code></dt>
+<dd>resulting mwdma_mask</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">unsigned</span> <span class="pre">long</span> <span class="pre">*</span> <span class="pre">udma_mask</span></code></dt>
+<dd>resulting udma_mask</dd>
+</dl>
+<p><strong>Description</strong></p>
+<blockquote>
+<div>Unpack <strong>xfer_mask</strong> into <strong>pio_mask</strong>, <strong>mwdma_mask</strong> and <strong>udma_mask</strong>.
+Any NULL destination masks will be ignored.</div></blockquote>
 <dl class="function">
 <dt id="c.ata_read_native_max_address">
 int <code class="descname">ata_read_native_max_address</code><span class="sig-paren">(</span>struct ata_device *<em>&nbsp;dev</em>, u64 *<em>&nbsp;max_sectors</em><span class="sig-paren">)</span><a class="headerlink" href="#c.ata_read_native_max_address" title="Permalink to this definition">¶</a></dt>
@@ -2535,7 +2111,7 @@ int <code class="descname">sata_down_spd_limit</code><span class="sig-paren">(</
 <blockquote>
 <div><p>Adjust SATA spd limit of <strong>link</strong> downward.  Note that this
 function only adjusts the limit.  The change must be applied
-using <a class="reference internal" href="#c.sata_set_spd" title="sata_set_spd"><code class="xref c c-func docutils literal notranslate"><span class="pre">sata_set_spd()</span></code></a>.</p>
+using sata_set_spd().</p>
 <p>If <strong>spd_limit</strong> is non-zero, the speed is limited to equal to or
 lower than <strong>spd_limit</strong> if such speed is supported.  If
 <strong>spd_limit</strong> is slower than any supported speed, only the lowest
@@ -2547,28 +2123,30 @@ Inherited from caller.</p>
 <blockquote>
 <div>0 on success, negative errno on failure</div></blockquote>
 <dl class="function">
-<dt id="c.sata_set_spd_needed">
-int <code class="descname">sata_set_spd_needed</code><span class="sig-paren">(</span>struct ata_link *<em>&nbsp;link</em><span class="sig-paren">)</span><a class="headerlink" href="#c.sata_set_spd_needed" title="Permalink to this definition">¶</a></dt>
-<dd><p>is SATA spd configuration needed</p>
+<dt id="c.ata_timing_cycle2mode">
+u8 <code class="descname">ata_timing_cycle2mode</code><span class="sig-paren">(</span>unsigned int<em>&nbsp;xfer_shift</em>, int<em>&nbsp;cycle</em><span class="sig-paren">)</span><a class="headerlink" href="#c.ata_timing_cycle2mode" title="Permalink to this definition">¶</a></dt>
+<dd><p>find xfer mode for the specified cycle duration</p>
 </dd></dl>
 
 <p><strong>Parameters</strong></p>
 <dl class="docutils">
-<dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">ata_link</span> <span class="pre">*</span> <span class="pre">link</span></code></dt>
-<dd>Link in question</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">unsigned</span> <span class="pre">int</span> <span class="pre">xfer_shift</span></code></dt>
+<dd>ATA_SHIFT_* value for transfer type to examine.</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">int</span> <span class="pre">cycle</span></code></dt>
+<dd>cycle duration in ns</dd>
 </dl>
 <p><strong>Description</strong></p>
 <blockquote>
-<div><p>Test whether the spd limit in SControl matches
-<strong>link-&gt;sata_spd_limit</strong>.  This function is used to determine
-whether hardreset is necessary to apply SATA spd
-configuration.</p>
+<div><p>Return matching xfer mode for <strong>cycle</strong>.  The returned mode is of
+the transfer type specified by <strong>xfer_shift</strong>.  If <strong>cycle</strong> is too
+slow for <strong>xfer_shift</strong>, 0xff is returned.  If <strong>cycle</strong> is faster
+than the fastest known mode, the fasted mode is returned.</p>
 <p>LOCKING:
-Inherited from caller.</p>
+None.</p>
 </div></blockquote>
 <p><strong>Return</strong></p>
 <blockquote>
-<div>1 if SATA spd configuration is needed, 0 otherwise.</div></blockquote>
+<div>Matching xfer_mode, 0xff if no match found.</div></blockquote>
 <dl class="function">
 <dt id="c.ata_down_xfermask_limit">
 int <code class="descname">ata_down_xfermask_limit</code><span class="sig-paren">(</span>struct ata_device *<em>&nbsp;dev</em>, unsigned int<em>&nbsp;sel</em><span class="sig-paren">)</span><a class="headerlink" href="#c.ata_down_xfermask_limit" title="Permalink to this definition">¶</a></dt>
@@ -2595,7 +2173,7 @@ Inherited from caller.</p>
 <div>0 on success, negative errno on failure</div></blockquote>
 <dl class="function">
 <dt id="c.ata_wait_ready">
-int <code class="descname">ata_wait_ready</code><span class="sig-paren">(</span>struct ata_link *<em>&nbsp;link</em>, unsigned long<em>&nbsp;deadline</em>, int (*check_ready) (struct ata_link<em>&nbsp;*link</em><span class="sig-paren">)</span><a class="headerlink" href="#c.ata_wait_ready" title="Permalink to this definition">¶</a></dt>
+int <code class="descname">ata_wait_ready</code><span class="sig-paren">(</span>struct ata_link *<em>&nbsp;link</em>, unsigned long<em>&nbsp;deadline</em>, int (<em>*check_ready</em>)(struct ata_link *link)<span class="sig-paren">)</span><a class="headerlink" href="#c.ata_wait_ready" title="Permalink to this definition">¶</a></dt>
 <dd><p>wait for link to become ready</p>
 </dd></dl>
 
@@ -2818,6 +2396,29 @@ spin_lock_irqsave(host lock)</p>
 <dt>0 when ATAPI DMA can be used</dt>
 <dd>nonzero otherwise</dd>
 </dl>
+<dl class="function">
+<dt id="c.ata_sg_init">
+void <code class="descname">ata_sg_init</code><span class="sig-paren">(</span>struct ata_queued_cmd *<em>&nbsp;qc</em>, struct scatterlist *<em>&nbsp;sg</em>, unsigned int<em>&nbsp;n_elem</em><span class="sig-paren">)</span><a class="headerlink" href="#c.ata_sg_init" title="Permalink to this definition">¶</a></dt>
+<dd><p>Associate command with scatter-gather table.</p>
+</dd></dl>
+
+<p><strong>Parameters</strong></p>
+<dl class="docutils">
+<dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">ata_queued_cmd</span> <span class="pre">*</span> <span class="pre">qc</span></code></dt>
+<dd>Command to be associated</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">scatterlist</span> <span class="pre">*</span> <span class="pre">sg</span></code></dt>
+<dd>Scatter-gather table.</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">unsigned</span> <span class="pre">int</span> <span class="pre">n_elem</span></code></dt>
+<dd>Number of elements in s/g table.</dd>
+</dl>
+<p><strong>Description</strong></p>
+<blockquote>
+<div><p>Initialize the data-related elements of queued_cmd <strong>qc</strong>
+to point to a scatter-gather table <strong>sg</strong>, containing <strong>n_elem</strong>
+elements.</p>
+<p>LOCKING:
+spin_lock_irqsave(host lock)</p>
+</div></blockquote>
 <dl class="function">
 <dt id="c.ata_sg_clean">
 void <code class="descname">ata_sg_clean</code><span class="sig-paren">(</span>struct ata_queued_cmd *<em>&nbsp;qc</em><span class="sig-paren">)</span><a class="headerlink" href="#c.ata_sg_clean" title="Permalink to this definition">¶</a></dt>
@@ -3540,27 +3141,6 @@ spin_lock_irqsave(host lock)</p>
 <blockquote>
 <div>Number of aborted commands.</div></blockquote>
 <dl class="function">
-<dt id="c.sata_async_notification">
-int <code class="descname">sata_async_notification</code><span class="sig-paren">(</span>struct ata_port *<em>&nbsp;ap</em><span class="sig-paren">)</span><a class="headerlink" href="#c.sata_async_notification" title="Permalink to this definition">¶</a></dt>
-<dd><p>SATA async notification handler</p>
-</dd></dl>
-
-<p><strong>Parameters</strong></p>
-<dl class="docutils">
-<dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">ata_port</span> <span class="pre">*</span> <span class="pre">ap</span></code></dt>
-<dd>ATA port where async notification is received</dd>
-</dl>
-<p><strong>Description</strong></p>
-<blockquote>
-<div><p>Handler to be called when async notification via SDB FIS is
-received.  This function schedules EH if necessary.</p>
-<p>LOCKING:
-spin_lock_irqsave(host lock)</p>
-</div></blockquote>
-<p><strong>Return</strong></p>
-<blockquote>
-<div>1 if EH is scheduled, 0 otherwise.</div></blockquote>
-<dl class="function">
 <dt id="c.ata_eh_freeze_port">
 void <code class="descname">ata_eh_freeze_port</code><span class="sig-paren">(</span>struct ata_port *<em>&nbsp;ap</em><span class="sig-paren">)</span><a class="headerlink" href="#c.ata_eh_freeze_port" title="Permalink to this definition">¶</a></dt>
 <dd><p>EH helper to freeze port</p>
@@ -3730,31 +3310,6 @@ None.</p>
 <blockquote>
 <div>Descriptive string for <strong>err_mask</strong></div></blockquote>
 <dl class="function">
-<dt id="c.ata_eh_read_log_10h">
-int <code class="descname">ata_eh_read_log_10h</code><span class="sig-paren">(</span>struct ata_device *<em>&nbsp;dev</em>, int *<em>&nbsp;tag</em>, struct ata_taskfile *<em>&nbsp;tf</em><span class="sig-paren">)</span><a class="headerlink" href="#c.ata_eh_read_log_10h" title="Permalink to this definition">¶</a></dt>
-<dd><p>Read log page 10h for NCQ error details</p>
-</dd></dl>
-
-<p><strong>Parameters</strong></p>
-<dl class="docutils">
-<dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">ata_device</span> <span class="pre">*</span> <span class="pre">dev</span></code></dt>
-<dd>Device to read log page 10h from</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">int</span> <span class="pre">*</span> <span class="pre">tag</span></code></dt>
-<dd>Resulting tag of the failed command</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">ata_taskfile</span> <span class="pre">*</span> <span class="pre">tf</span></code></dt>
-<dd>Resulting taskfile registers of the failed command</dd>
-</dl>
-<p><strong>Description</strong></p>
-<blockquote>
-<div><p>Read log page 10h to obtain NCQ error details and clear error
-condition.</p>
-<p>LOCKING:
-Kernel thread context (may sleep).</p>
-</div></blockquote>
-<p><strong>Return</strong></p>
-<blockquote>
-<div>0 on success, -errno otherwise.</div></blockquote>
-<dl class="function">
 <dt id="c.atapi_eh_tur">
 unsigned int <code class="descname">atapi_eh_tur</code><span class="sig-paren">(</span>struct ata_device *<em>&nbsp;dev</em>, u8 *<em>&nbsp;r_sense_key</em><span class="sig-paren">)</span><a class="headerlink" href="#c.atapi_eh_tur" title="Permalink to this definition">¶</a></dt>
 <dd><p>perform ATAPI TEST_UNIT_READY</p>
@@ -3838,26 +3393,6 @@ void <code class="descname">ata_eh_analyze_serror</code><span class="sig-paren">
 failure.</p>
 <p>LOCKING:
 None.</p>
-</div></blockquote>
-<dl class="function">
-<dt id="c.ata_eh_analyze_ncq_error">
-void <code class="descname">ata_eh_analyze_ncq_error</code><span class="sig-paren">(</span>struct ata_link *<em>&nbsp;link</em><span class="sig-paren">)</span><a class="headerlink" href="#c.ata_eh_analyze_ncq_error" title="Permalink to this definition">¶</a></dt>
-<dd><p>analyze NCQ error</p>
-</dd></dl>
-
-<p><strong>Parameters</strong></p>
-<dl class="docutils">
-<dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">ata_link</span> <span class="pre">*</span> <span class="pre">link</span></code></dt>
-<dd>ATA link to analyze NCQ error for</dd>
-</dl>
-<p><strong>Description</strong></p>
-<blockquote>
-<div><p>Read log page 10h, determine the offending qc and acquire
-error status TF.  For NCQ device errors, all LLDDs have to do
-is setting AC_ERR_DEV in ehi-&gt;err_mask.  This function takes
-care of the rest.</p>
-<p>LOCKING:
-Kernel thread context (may sleep).</p>
 </div></blockquote>
 <dl class="function">
 <dt id="c.ata_eh_analyze_tf">
@@ -4320,140 +3855,6 @@ Kernel thread context (may sleep).</p>
 <div class="section" id="libata-scsi-translation-emulation">
 <h2>libata SCSI translation/emulation<a class="headerlink" href="#libata-scsi-translation-emulation" title="Permalink to this headline">¶</a></h2>
 <dl class="function">
-<dt id="c.ata_sas_port_alloc">
-struct ata_port * <code class="descname">ata_sas_port_alloc</code><span class="sig-paren">(</span>struct ata_host *<em>&nbsp;host</em>, struct ata_port_info *<em>&nbsp;port_info</em>, struct Scsi_Host *<em>&nbsp;shost</em><span class="sig-paren">)</span><a class="headerlink" href="#c.ata_sas_port_alloc" title="Permalink to this definition">¶</a></dt>
-<dd><p>Allocate port for a SAS attached SATA device</p>
-</dd></dl>
-
-<p><strong>Parameters</strong></p>
-<dl class="docutils">
-<dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">ata_host</span> <span class="pre">*</span> <span class="pre">host</span></code></dt>
-<dd>ATA host container for all SAS ports</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">ata_port_info</span> <span class="pre">*</span> <span class="pre">port_info</span></code></dt>
-<dd>Information from low-level host driver</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">Scsi_Host</span> <span class="pre">*</span> <span class="pre">shost</span></code></dt>
-<dd>SCSI host that the scsi device is attached to</dd>
-</dl>
-<p><strong>Description</strong></p>
-<blockquote>
-<div>LOCKING:
-PCI/etc. bus probe sem.</div></blockquote>
-<p><strong>Return</strong></p>
-<blockquote>
-<div>ata_port pointer on success / NULL on failure.</div></blockquote>
-<dl class="function">
-<dt id="c.ata_sas_port_start">
-int <code class="descname">ata_sas_port_start</code><span class="sig-paren">(</span>struct ata_port *<em>&nbsp;ap</em><span class="sig-paren">)</span><a class="headerlink" href="#c.ata_sas_port_start" title="Permalink to this definition">¶</a></dt>
-<dd><p>Set port up for dma.</p>
-</dd></dl>
-
-<p><strong>Parameters</strong></p>
-<dl class="docutils">
-<dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">ata_port</span> <span class="pre">*</span> <span class="pre">ap</span></code></dt>
-<dd>Port to initialize</dd>
-</dl>
-<p><strong>Description</strong></p>
-<blockquote>
-<div><p>Called just after data structures for each port are
-initialized.</p>
-<p>May be used as the port_start() entry in ata_port_operations.</p>
-<p>LOCKING:
-Inherited from caller.</p>
-</div></blockquote>
-<dl class="function">
-<dt id="c.ata_sas_port_stop">
-void <code class="descname">ata_sas_port_stop</code><span class="sig-paren">(</span>struct ata_port *<em>&nbsp;ap</em><span class="sig-paren">)</span><a class="headerlink" href="#c.ata_sas_port_stop" title="Permalink to this definition">¶</a></dt>
-<dd><p>Undo <a class="reference internal" href="#c.ata_sas_port_start" title="ata_sas_port_start"><code class="xref c c-func docutils literal notranslate"><span class="pre">ata_sas_port_start()</span></code></a></p>
-</dd></dl>
-
-<p><strong>Parameters</strong></p>
-<dl class="docutils">
-<dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">ata_port</span> <span class="pre">*</span> <span class="pre">ap</span></code></dt>
-<dd>Port to shut down</dd>
-</dl>
-<p><strong>Description</strong></p>
-<blockquote>
-<div><p>May be used as the port_stop() entry in ata_port_operations.</p>
-<p>LOCKING:
-Inherited from caller.</p>
-</div></blockquote>
-<dl class="function">
-<dt id="c.ata_sas_async_probe">
-void <code class="descname">ata_sas_async_probe</code><span class="sig-paren">(</span>struct ata_port *<em>&nbsp;ap</em><span class="sig-paren">)</span><a class="headerlink" href="#c.ata_sas_async_probe" title="Permalink to this definition">¶</a></dt>
-<dd><p>simply schedule probing and return</p>
-</dd></dl>
-
-<p><strong>Parameters</strong></p>
-<dl class="docutils">
-<dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">ata_port</span> <span class="pre">*</span> <span class="pre">ap</span></code></dt>
-<dd>Port to probe</dd>
-</dl>
-<p><strong>Description</strong></p>
-<p>For batch scheduling of probe for sas attached ata devices, assumes
-the port has already been through <a class="reference internal" href="#c.ata_sas_port_init" title="ata_sas_port_init"><code class="xref c c-func docutils literal notranslate"><span class="pre">ata_sas_port_init()</span></code></a></p>
-<dl class="function">
-<dt id="c.ata_sas_port_init">
-int <code class="descname">ata_sas_port_init</code><span class="sig-paren">(</span>struct ata_port *<em>&nbsp;ap</em><span class="sig-paren">)</span><a class="headerlink" href="#c.ata_sas_port_init" title="Permalink to this definition">¶</a></dt>
-<dd><p>Initialize a SATA device</p>
-</dd></dl>
-
-<p><strong>Parameters</strong></p>
-<dl class="docutils">
-<dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">ata_port</span> <span class="pre">*</span> <span class="pre">ap</span></code></dt>
-<dd>SATA port to initialize</dd>
-</dl>
-<p><strong>Description</strong></p>
-<blockquote>
-<div>LOCKING:
-PCI/etc. bus probe sem.</div></blockquote>
-<p><strong>Return</strong></p>
-<blockquote>
-<div>Zero on success, non-zero on error.</div></blockquote>
-<dl class="function">
-<dt id="c.ata_sas_port_destroy">
-void <code class="descname">ata_sas_port_destroy</code><span class="sig-paren">(</span>struct ata_port *<em>&nbsp;ap</em><span class="sig-paren">)</span><a class="headerlink" href="#c.ata_sas_port_destroy" title="Permalink to this definition">¶</a></dt>
-<dd><p>Destroy a SATA port allocated by ata_sas_port_alloc</p>
-</dd></dl>
-
-<p><strong>Parameters</strong></p>
-<dl class="docutils">
-<dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">ata_port</span> <span class="pre">*</span> <span class="pre">ap</span></code></dt>
-<dd>SATA port to destroy</dd>
-</dl>
-<dl class="function">
-<dt id="c.ata_sas_slave_configure">
-int <code class="descname">ata_sas_slave_configure</code><span class="sig-paren">(</span>struct scsi_device *<em>&nbsp;sdev</em>, struct ata_port *<em>&nbsp;ap</em><span class="sig-paren">)</span><a class="headerlink" href="#c.ata_sas_slave_configure" title="Permalink to this definition">¶</a></dt>
-<dd><p>Default slave_config routine for libata devices</p>
-</dd></dl>
-
-<p><strong>Parameters</strong></p>
-<dl class="docutils">
-<dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">scsi_device</span> <span class="pre">*</span> <span class="pre">sdev</span></code></dt>
-<dd>SCSI device to configure</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">ata_port</span> <span class="pre">*</span> <span class="pre">ap</span></code></dt>
-<dd>ATA port to which SCSI device is attached</dd>
-</dl>
-<p><strong>Return</strong></p>
-<blockquote>
-<div>Zero.</div></blockquote>
-<dl class="function">
-<dt id="c.ata_sas_queuecmd">
-int <code class="descname">ata_sas_queuecmd</code><span class="sig-paren">(</span>struct scsi_cmnd *<em>&nbsp;cmd</em>, struct ata_port *<em>&nbsp;ap</em><span class="sig-paren">)</span><a class="headerlink" href="#c.ata_sas_queuecmd" title="Permalink to this definition">¶</a></dt>
-<dd><p>Issue SCSI cdb to libata-managed device</p>
-</dd></dl>
-
-<p><strong>Parameters</strong></p>
-<dl class="docutils">
-<dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">scsi_cmnd</span> <span class="pre">*</span> <span class="pre">cmd</span></code></dt>
-<dd>SCSI command to be sent</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">ata_port</span> <span class="pre">*</span> <span class="pre">ap</span></code></dt>
-<dd>ATA port to which the command is being sent</dd>
-</dl>
-<p><strong>Return</strong></p>
-<blockquote>
-<div>Return value from __ata_scsi_queuecmd() if <strong>cmd</strong> can be queued,
-0 otherwise.</div></blockquote>
-<dl class="function">
 <dt id="c.ata_std_bios_param">
 int <code class="descname">ata_std_bios_param</code><span class="sig-paren">(</span>struct scsi_device *<em>&nbsp;sdev</em>, struct block_device *<em>&nbsp;bdev</em>, sector_t<em>&nbsp;capacity</em>, int<em>&nbsp;geom</em><span class="sig-paren">)</span><a class="headerlink" href="#c.ata_std_bios_param" title="Permalink to this definition">¶</a></dt>
 <dd><p>generic bios head/sector/cylinder calculator used by sd.</p>
@@ -4500,6 +3901,75 @@ the end of the device.  It requests EH to unlock HPA.</p>
 <p>LOCKING:
 Defined by the SCSI layer.  Might sleep.</p>
 </div></blockquote>
+<dl class="function">
+<dt id="c.ata_scsi_slave_config">
+int <code class="descname">ata_scsi_slave_config</code><span class="sig-paren">(</span>struct scsi_device *<em>&nbsp;sdev</em><span class="sig-paren">)</span><a class="headerlink" href="#c.ata_scsi_slave_config" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set SCSI device attributes</p>
+</dd></dl>
+
+<p><strong>Parameters</strong></p>
+<dl class="docutils">
+<dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">scsi_device</span> <span class="pre">*</span> <span class="pre">sdev</span></code></dt>
+<dd>SCSI device to examine</dd>
+</dl>
+<p><strong>Description</strong></p>
+<blockquote>
+<div><p>This is called before we actually start reading
+and writing to the device, to configure certain
+SCSI mid-layer behaviors.</p>
+<p>LOCKING:
+Defined by SCSI layer.  We don’t really care.</p>
+</div></blockquote>
+<dl class="function">
+<dt id="c.ata_scsi_slave_destroy">
+void <code class="descname">ata_scsi_slave_destroy</code><span class="sig-paren">(</span>struct scsi_device *<em>&nbsp;sdev</em><span class="sig-paren">)</span><a class="headerlink" href="#c.ata_scsi_slave_destroy" title="Permalink to this definition">¶</a></dt>
+<dd><p>SCSI device is about to be destroyed</p>
+</dd></dl>
+
+<p><strong>Parameters</strong></p>
+<dl class="docutils">
+<dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">scsi_device</span> <span class="pre">*</span> <span class="pre">sdev</span></code></dt>
+<dd>SCSI device to be destroyed</dd>
+</dl>
+<p><strong>Description</strong></p>
+<blockquote>
+<div><p><strong>sdev</strong> is about to be destroyed for hot/warm unplugging.  If
+this unplugging was initiated by libata as indicated by NULL
+dev-&gt;sdev, this function doesn’t have to do anything.
+Otherwise, SCSI layer initiated warm-unplug is in progress.
+Clear dev-&gt;sdev, schedule the device for ATA detach and invoke
+EH.</p>
+<p>LOCKING:
+Defined by SCSI layer.  We don’t really care.</p>
+</div></blockquote>
+<dl class="function">
+<dt id="c.ata_scsi_queuecmd">
+int <code class="descname">ata_scsi_queuecmd</code><span class="sig-paren">(</span>struct Scsi_Host *<em>&nbsp;shost</em>, struct scsi_cmnd *<em>&nbsp;cmd</em><span class="sig-paren">)</span><a class="headerlink" href="#c.ata_scsi_queuecmd" title="Permalink to this definition">¶</a></dt>
+<dd><p>Issue SCSI cdb to libata-managed device</p>
+</dd></dl>
+
+<p><strong>Parameters</strong></p>
+<dl class="docutils">
+<dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">Scsi_Host</span> <span class="pre">*</span> <span class="pre">shost</span></code></dt>
+<dd>SCSI host of command to be sent</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">scsi_cmnd</span> <span class="pre">*</span> <span class="pre">cmd</span></code></dt>
+<dd>SCSI command to be sent</dd>
+</dl>
+<p><strong>Description</strong></p>
+<blockquote>
+<div><p>In some cases, this function translates SCSI commands into
+ATA taskfiles, and queues the taskfiles to be sent to
+hardware.  In other cases, this function simulates a
+SCSI device by evaluating and responding to certain
+SCSI commands.  This creates the overall effect of
+ATA and ATAPI devices appearing as SCSI devices.</p>
+<p>LOCKING:
+ATA host lock</p>
+</div></blockquote>
+<p><strong>Return</strong></p>
+<blockquote>
+<div>Return value from __ata_scsi_queuecmd() if <strong>cmd</strong> can be queued,
+0 otherwise.</div></blockquote>
 <dl class="function">
 <dt id="c.ata_get_identity">
 int <code class="descname">ata_get_identity</code><span class="sig-paren">(</span>struct ata_port *<em>&nbsp;ap</em>, struct scsi_device *<em>&nbsp;sdev</em>, void __user *<em>&nbsp;arg</em><span class="sig-paren">)</span><a class="headerlink" href="#c.ata_get_identity" title="Permalink to this definition">¶</a></dt>
@@ -4682,90 +4152,6 @@ None.</p>
 <p><strong>Return</strong></p>
 <blockquote>
 <div>1 if ; otherwise, 0.</div></blockquote>
-<dl class="function">
-<dt id="c.ata_scsi_slave_config">
-int <code class="descname">ata_scsi_slave_config</code><span class="sig-paren">(</span>struct scsi_device *<em>&nbsp;sdev</em><span class="sig-paren">)</span><a class="headerlink" href="#c.ata_scsi_slave_config" title="Permalink to this definition">¶</a></dt>
-<dd><p>Set SCSI device attributes</p>
-</dd></dl>
-
-<p><strong>Parameters</strong></p>
-<dl class="docutils">
-<dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">scsi_device</span> <span class="pre">*</span> <span class="pre">sdev</span></code></dt>
-<dd>SCSI device to examine</dd>
-</dl>
-<p><strong>Description</strong></p>
-<blockquote>
-<div><p>This is called before we actually start reading
-and writing to the device, to configure certain
-SCSI mid-layer behaviors.</p>
-<p>LOCKING:
-Defined by SCSI layer.  We don’t really care.</p>
-</div></blockquote>
-<dl class="function">
-<dt id="c.ata_scsi_slave_destroy">
-void <code class="descname">ata_scsi_slave_destroy</code><span class="sig-paren">(</span>struct scsi_device *<em>&nbsp;sdev</em><span class="sig-paren">)</span><a class="headerlink" href="#c.ata_scsi_slave_destroy" title="Permalink to this definition">¶</a></dt>
-<dd><p>SCSI device is about to be destroyed</p>
-</dd></dl>
-
-<p><strong>Parameters</strong></p>
-<dl class="docutils">
-<dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">scsi_device</span> <span class="pre">*</span> <span class="pre">sdev</span></code></dt>
-<dd>SCSI device to be destroyed</dd>
-</dl>
-<p><strong>Description</strong></p>
-<blockquote>
-<div><p><strong>sdev</strong> is about to be destroyed for hot/warm unplugging.  If
-this unplugging was initiated by libata as indicated by NULL
-dev-&gt;sdev, this function doesn’t have to do anything.
-Otherwise, SCSI layer initiated warm-unplug is in progress.
-Clear dev-&gt;sdev, schedule the device for ATA detach and invoke
-EH.</p>
-<p>LOCKING:
-Defined by SCSI layer.  We don’t really care.</p>
-</div></blockquote>
-<dl class="function">
-<dt id="c.__ata_change_queue_depth">
-int <code class="descname">__ata_change_queue_depth</code><span class="sig-paren">(</span>struct ata_port *<em>&nbsp;ap</em>, struct scsi_device *<em>&nbsp;sdev</em>, int<em>&nbsp;queue_depth</em><span class="sig-paren">)</span><a class="headerlink" href="#c.__ata_change_queue_depth" title="Permalink to this definition">¶</a></dt>
-<dd><p>helper for ata_scsi_change_queue_depth</p>
-</dd></dl>
-
-<p><strong>Parameters</strong></p>
-<dl class="docutils">
-<dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">ata_port</span> <span class="pre">*</span> <span class="pre">ap</span></code></dt>
-<dd>ATA port to which the device change the queue depth</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">scsi_device</span> <span class="pre">*</span> <span class="pre">sdev</span></code></dt>
-<dd>SCSI device to configure queue depth for</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">int</span> <span class="pre">queue_depth</span></code></dt>
-<dd>new queue depth</dd>
-</dl>
-<p><strong>Description</strong></p>
-<blockquote>
-<div>libsas and libata have different approaches for associating a sdev to
-its ata_port.</div></blockquote>
-<dl class="function">
-<dt id="c.ata_scsi_change_queue_depth">
-int <code class="descname">ata_scsi_change_queue_depth</code><span class="sig-paren">(</span>struct scsi_device *<em>&nbsp;sdev</em>, int<em>&nbsp;queue_depth</em><span class="sig-paren">)</span><a class="headerlink" href="#c.ata_scsi_change_queue_depth" title="Permalink to this definition">¶</a></dt>
-<dd><p>SCSI callback for queue depth config</p>
-</dd></dl>
-
-<p><strong>Parameters</strong></p>
-<dl class="docutils">
-<dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">scsi_device</span> <span class="pre">*</span> <span class="pre">sdev</span></code></dt>
-<dd>SCSI device to configure queue depth for</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">int</span> <span class="pre">queue_depth</span></code></dt>
-<dd>new queue depth</dd>
-</dl>
-<p><strong>Description</strong></p>
-<blockquote>
-<div><p>This is libata standard hostt-&gt;change_queue_depth callback.
-SCSI will call into this callback when user tries to set queue
-depth via sysfs.</p>
-<p>LOCKING:
-SCSI layer (we don’t care)</p>
-</div></blockquote>
-<p><strong>Return</strong></p>
-<blockquote>
-<div>Newly configured queue depth.</div></blockquote>
 <dl class="function">
 <dt id="c.ata_scsi_start_stop_xlat">
 unsigned int <code class="descname">ata_scsi_start_stop_xlat</code><span class="sig-paren">(</span>struct ata_queued_cmd *<em>&nbsp;qc</em><span class="sig-paren">)</span><a class="headerlink" href="#c.ata_scsi_start_stop_xlat" title="Permalink to this definition">¶</a></dt>
@@ -4991,7 +4377,7 @@ Unlocks ata_scsi_rbuf_lock.</p>
 </div></blockquote>
 <dl class="function">
 <dt id="c.ata_scsi_rbuf_fill">
-void <code class="descname">ata_scsi_rbuf_fill</code><span class="sig-paren">(</span>struct ata_scsi_args *<em>&nbsp;args</em>, unsigned int (*actor) (struct ata_scsi_args<em>&nbsp;*args</em>, u8<em>&nbsp;*rbuf</em><span class="sig-paren">)</span><a class="headerlink" href="#c.ata_scsi_rbuf_fill" title="Permalink to this definition">¶</a></dt>
+void <code class="descname">ata_scsi_rbuf_fill</code><span class="sig-paren">(</span>struct ata_scsi_args *<em>&nbsp;args</em>, unsigned int (<em>*actor</em>)(struct ata_scsi_args *args, u8 *rbuf)<span class="sig-paren">)</span><a class="headerlink" href="#c.ata_scsi_rbuf_fill" title="Permalink to this definition">¶</a></dt>
 <dd><p>wrapper for SCSI command simulators</p>
 </dd></dl>
 
@@ -5531,34 +4917,6 @@ void <code class="descname">ata_scsi_dump_cdb</code><span class="sig-paren">(</s
 <p><strong>Description</strong></p>
 <blockquote>
 <div>Prints the contents of a SCSI command via <a class="reference internal" href="basics.html#c.printk" title="printk"><code class="xref c c-func docutils literal notranslate"><span class="pre">printk()</span></code></a>.</div></blockquote>
-<dl class="function">
-<dt id="c.ata_scsi_queuecmd">
-int <code class="descname">ata_scsi_queuecmd</code><span class="sig-paren">(</span>struct Scsi_Host *<em>&nbsp;shost</em>, struct scsi_cmnd *<em>&nbsp;cmd</em><span class="sig-paren">)</span><a class="headerlink" href="#c.ata_scsi_queuecmd" title="Permalink to this definition">¶</a></dt>
-<dd><p>Issue SCSI cdb to libata-managed device</p>
-</dd></dl>
-
-<p><strong>Parameters</strong></p>
-<dl class="docutils">
-<dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">Scsi_Host</span> <span class="pre">*</span> <span class="pre">shost</span></code></dt>
-<dd>SCSI host of command to be sent</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">scsi_cmnd</span> <span class="pre">*</span> <span class="pre">cmd</span></code></dt>
-<dd>SCSI command to be sent</dd>
-</dl>
-<p><strong>Description</strong></p>
-<blockquote>
-<div><p>In some cases, this function translates SCSI commands into
-ATA taskfiles, and queues the taskfiles to be sent to
-hardware.  In other cases, this function simulates a
-SCSI device by evaluating and responding to certain
-SCSI commands.  This creates the overall effect of
-ATA and ATAPI devices appearing as SCSI devices.</p>
-<p>LOCKING:
-ATA host lock</p>
-</div></blockquote>
-<p><strong>Return</strong></p>
-<blockquote>
-<div>Return value from __ata_scsi_queuecmd() if <strong>cmd</strong> can be queued,
-0 otherwise.</div></blockquote>
 <dl class="function">
 <dt id="c.ata_scsi_simulate">
 void <code class="descname">ata_scsi_simulate</code><span class="sig-paren">(</span>struct ata_device *<em>&nbsp;dev</em>, struct scsi_cmnd *<em>&nbsp;cmd</em><span class="sig-paren">)</span><a class="headerlink" href="#c.ata_scsi_simulate" title="Permalink to this definition">¶</a></dt>

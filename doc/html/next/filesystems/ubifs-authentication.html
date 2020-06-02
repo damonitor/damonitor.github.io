@@ -68,7 +68,7 @@
             
             
               <div class="version">
-                5.6.0
+                5.7.0
               </div>
             
           
@@ -231,11 +231,11 @@ persisted onto the flash directly. More details on UBIFS can also be found in
 <div class="section" id="ubifs-index-tree-node-cache">
 <h3>UBIFS Index &amp; Tree Node Cache<a class="headerlink" href="#ubifs-index-tree-node-cache" title="Permalink to this headline">¶</a></h3>
 <p>Basic on-flash UBIFS entities are called <em>nodes</em>. UBIFS knows different types
-of nodes. Eg. data nodes (<cite>struct ubifs_data_node</cite>) which store chunks of file
-contents or inode nodes (<cite>struct ubifs_ino_node</cite>) which represent VFS inodes.
-Almost all types of nodes share a common header (<cite>ubifs_ch</cite>) containing basic
+of nodes. Eg. data nodes (<code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">ubifs_data_node</span></code>) which store chunks of file
+contents or inode nodes (<code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">ubifs_ino_node</span></code>) which represent VFS inodes.
+Almost all types of nodes share a common header (<code class="docutils literal notranslate"><span class="pre">ubifs_ch</span></code>) containing basic
 information like node type, node length, a sequence number, etc. (see
-<a href="#id1"><span class="problematic" id="id2">`</span></a>fs/ubifs/ubifs-media.h`in kernel source). Exceptions are entries of the LPT
+<code class="docutils literal notranslate"><span class="pre">fs/ubifs/ubifs-media.h</span></code> in kernel source). Exceptions are entries of the LPT
 and some less important node types like padding nodes which are used to pad
 unusable content at the end of LEBs.</p>
 <p>To avoid re-writing the whole B+ tree on every single change, it is implemented
@@ -312,17 +312,17 @@ for every other LEB will directly cause UBIFS to fail the mount operation.</p>
 <div class="section" id="leb-property-tree-table">
 <h3>LEB Property Tree/Table<a class="headerlink" href="#leb-property-tree-table" title="Permalink to this headline">¶</a></h3>
 <p>The LEB property tree is used to store per-LEB information. This includes the
-LEB type and amount of free and <em>dirty</em> (old, obsolete content) space <a class="footnote-reference" href="#id4" id="id3">[1]</a> on
+LEB type and amount of free and <em>dirty</em> (old, obsolete content) space <a class="footnote-reference" href="#id2" id="id1">[1]</a> on
 the LEB. The type is important, because UBIFS never mixes index nodes with data
 nodes on a single LEB and thus each LEB has a specific purpose. This again is
 useful for free space calculations. See [UBIFS-WP] for more details.</p>
 <p>The LEB property tree again is a B+ tree, but it is much smaller than the
 index. Due to its smaller size it is always written as one chunk on every
 commit. Thus, saving the LPT is an atomic operation.</p>
-<table class="docutils footnote" frame="void" id="id4" rules="none">
+<table class="docutils footnote" frame="void" id="id2" rules="none">
 <colgroup><col class="label" /><col /></colgroup>
 <tbody valign="top">
-<tr><td class="label"><a class="fn-backref" href="#id3">[1]</a></td><td>Since LEBs can only be appended and never overwritten, there is a
+<tr><td class="label"><a class="fn-backref" href="#id1">[1]</a></td><td>Since LEBs can only be appended and never overwritten, there is a
 difference between free space ie. the remaining space left on the LEB to be
 written to without erasing it and previously written content that is obsolete
 but can’t be overwritten without erasing the full LEB.</td></tr>

@@ -68,7 +68,7 @@
             
             
               <div class="version">
-                5.6.0
+                5.7.0
               </div>
             
           
@@ -223,28 +223,38 @@ media entity associated with the video device.</p>
 <p><strong>Return</strong></p>
 <p>returns zero on success or a negative error code.</p>
 <dl class="function">
-<dt id="c.v4l2_pipeline_pm_use">
-int <code class="descname">v4l2_pipeline_pm_use</code><span class="sig-paren">(</span>struct <a class="reference internal" href="mc-core.html#c.media_entity" title="media_entity">media_entity</a> *<em>&nbsp;entity</em>, int<em>&nbsp;use</em><span class="sig-paren">)</span><a class="headerlink" href="#c.v4l2_pipeline_pm_use" title="Permalink to this definition">¶</a></dt>
-<dd><p>Update the use count of an entity</p>
+<dt id="c.v4l2_pipeline_pm_get">
+int <code class="descname">v4l2_pipeline_pm_get</code><span class="sig-paren">(</span>struct <a class="reference internal" href="mc-core.html#c.media_entity" title="media_entity">media_entity</a> *<em>&nbsp;entity</em><span class="sig-paren">)</span><a class="headerlink" href="#c.v4l2_pipeline_pm_get" title="Permalink to this definition">¶</a></dt>
+<dd><p>Increase the use count of a pipeline</p>
 </dd></dl>
 
 <p><strong>Parameters</strong></p>
 <dl class="docutils">
 <dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">media_entity</span> <span class="pre">*</span> <span class="pre">entity</span></code></dt>
-<dd>The entity</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">int</span> <span class="pre">use</span></code></dt>
-<dd>Use (1) or stop using (0) the entity</dd>
+<dd>The root entity of a pipeline</dd>
 </dl>
 <p><strong>Description</strong></p>
-<p>Update the use count of all entities in the pipeline and power entities on or
-off accordingly.</p>
-<p>This function is intended to be called in video node open (use ==
-1) and release (use == 0). It uses struct media_entity.use_count to
-track the power status. The use of this function should be paired
-with <a class="reference internal" href="#c.v4l2_pipeline_link_notify" title="v4l2_pipeline_link_notify"><code class="xref c c-func docutils literal notranslate"><span class="pre">v4l2_pipeline_link_notify()</span></code></a>.</p>
-<p>Return 0 on success or a negative error code on failure. Powering entities
-off is assumed to never fail. No failure can occur when the use parameter is
-set to 0.</p>
+<p>Update the use count of all entities in the pipeline and power entities on.</p>
+<p>This function is intended to be called in video node open. It uses
+struct media_entity.use_count to track the power status. The use
+of this function should be paired with <a class="reference internal" href="#c.v4l2_pipeline_link_notify" title="v4l2_pipeline_link_notify"><code class="xref c c-func docutils literal notranslate"><span class="pre">v4l2_pipeline_link_notify()</span></code></a>.</p>
+<p>Return 0 on success or a negative error code on failure.</p>
+<dl class="function">
+<dt id="c.v4l2_pipeline_pm_put">
+void <code class="descname">v4l2_pipeline_pm_put</code><span class="sig-paren">(</span>struct <a class="reference internal" href="mc-core.html#c.media_entity" title="media_entity">media_entity</a> *<em>&nbsp;entity</em><span class="sig-paren">)</span><a class="headerlink" href="#c.v4l2_pipeline_pm_put" title="Permalink to this definition">¶</a></dt>
+<dd><p>Decrease the use count of a pipeline</p>
+</dd></dl>
+
+<p><strong>Parameters</strong></p>
+<dl class="docutils">
+<dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">media_entity</span> <span class="pre">*</span> <span class="pre">entity</span></code></dt>
+<dd>The root entity of a pipeline</dd>
+</dl>
+<p><strong>Description</strong></p>
+<p>Update the use count of all entities in the pipeline and power entities off.</p>
+<p>This function is intended to be called in video node release. It uses
+struct media_entity.use_count to track the power status. The use
+of this function should be paired with <a class="reference internal" href="#c.v4l2_pipeline_link_notify" title="v4l2_pipeline_link_notify"><code class="xref c c-func docutils literal notranslate"><span class="pre">v4l2_pipeline_link_notify()</span></code></a>.</p>
 <dl class="function">
 <dt id="c.v4l2_pipeline_link_notify">
 int <code class="descname">v4l2_pipeline_link_notify</code><span class="sig-paren">(</span>struct <a class="reference internal" href="mc-core.html#c.media_link" title="media_link">media_link</a> *<em>&nbsp;link</em>, u32<em>&nbsp;flags</em>, unsigned int<em>&nbsp;notification</em><span class="sig-paren">)</span><a class="headerlink" href="#c.v4l2_pipeline_link_notify" title="Permalink to this definition">¶</a></dt>
@@ -264,7 +274,7 @@ int <code class="descname">v4l2_pipeline_link_notify</code><span class="sig-pare
 <p>React to link management on powered pipelines by updating the use count of
 all entities in the source and sink sides of the link. Entities are powered
 on or off accordingly. The use of this function should be paired
-with <a class="reference internal" href="#c.v4l2_pipeline_pm_use" title="v4l2_pipeline_pm_use"><code class="xref c c-func docutils literal notranslate"><span class="pre">v4l2_pipeline_pm_use()</span></code></a>.</p>
+with v4l2_pipeline_pm_{get,put}().</p>
 <p>Return 0 on success or a negative error code on failure. Powering entities
 off is assumed to never fail. This function will not fail for disconnection
 events.</p>

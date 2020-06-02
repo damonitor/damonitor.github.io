@@ -68,7 +68,7 @@
             
             
               <div class="version">
-                5.6.0
+                5.7.0
               </div>
             
           
@@ -444,7 +444,7 @@ operation related to this fd is called. It calls <a class="reference internal" h
 in turn, and frees the memory allocated for dmabuf when exported.</p>
 <dl class="function">
 <dt id="c.dma_buf_dynamic_attach">
-struct <a class="reference internal" href="#c.dma_buf_attachment" title="dma_buf_attachment">dma_buf_attachment</a> * <code class="descname">dma_buf_dynamic_attach</code><span class="sig-paren">(</span>struct <a class="reference internal" href="#c.dma_buf" title="dma_buf">dma_buf</a> *<em>&nbsp;dmabuf</em>, struct <a class="reference internal" href="infrastructure.html#c.device" title="device">device</a> *<em>&nbsp;dev</em>, bool<em>&nbsp;dynamic_mapping</em><span class="sig-paren">)</span><a class="headerlink" href="#c.dma_buf_dynamic_attach" title="Permalink to this definition">¶</a></dt>
+struct <a class="reference internal" href="#c.dma_buf_attachment" title="dma_buf_attachment">dma_buf_attachment</a> * <code class="descname">dma_buf_dynamic_attach</code><span class="sig-paren">(</span>struct <a class="reference internal" href="#c.dma_buf" title="dma_buf">dma_buf</a> *<em>&nbsp;dmabuf</em>, struct <a class="reference internal" href="infrastructure.html#c.device" title="device">device</a> *<em>&nbsp;dev</em>, const struct <a class="reference internal" href="#c.dma_buf_attach_ops" title="dma_buf_attach_ops">dma_buf_attach_ops</a> *<em>&nbsp;importer_ops</em>, void *<em>&nbsp;importer_priv</em><span class="sig-paren">)</span><a class="headerlink" href="#c.dma_buf_dynamic_attach" title="Permalink to this definition">¶</a></dt>
 <dd><p>Add the device to dma_buf’s attachments list; optionally, calls attach() of dma_buf_ops to allow device-specific attach functionality</p>
 </dd></dl>
 
@@ -454,8 +454,10 @@ struct <a class="reference internal" href="#c.dma_buf_attachment" title="dma_buf
 <dd>[in]    buffer to attach device to.</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">device</span> <span class="pre">*</span> <span class="pre">dev</span></code></dt>
 <dd>[in]    device to be attached.</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">bool</span> <span class="pre">dynamic_mapping</span></code></dt>
-<dd>[in]    calling convention for map/unmap</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">const</span> <span class="pre">struct</span> <span class="pre">dma_buf_attach_ops</span> <span class="pre">*</span> <span class="pre">importer_ops</span></code></dt>
+<dd>[in]    importer operations for the attachment</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">void</span> <span class="pre">*</span> <span class="pre">importer_priv</span></code></dt>
+<dd>[in]    importer private pointer for the attachment</dd>
 </dl>
 <p><strong>Description</strong></p>
 <p>Returns struct dma_buf_attachment pointer for this attachment. Attachments
@@ -498,6 +500,30 @@ void <code class="descname">dma_buf_detach</code><span class="sig-paren">(</span
 <p><strong>Description</strong></p>
 <p>Clean up a device attachment obtained by calling <a class="reference internal" href="#c.dma_buf_attach" title="dma_buf_attach"><code class="xref c c-func docutils literal notranslate"><span class="pre">dma_buf_attach()</span></code></a>.</p>
 <dl class="function">
+<dt id="c.dma_buf_pin">
+int <code class="descname">dma_buf_pin</code><span class="sig-paren">(</span>struct <a class="reference internal" href="#c.dma_buf_attachment" title="dma_buf_attachment">dma_buf_attachment</a> *<em>&nbsp;attach</em><span class="sig-paren">)</span><a class="headerlink" href="#c.dma_buf_pin" title="Permalink to this definition">¶</a></dt>
+<dd><p>Lock down the DMA-buf</p>
+</dd></dl>
+
+<p><strong>Parameters</strong></p>
+<dl class="docutils">
+<dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">dma_buf_attachment</span> <span class="pre">*</span> <span class="pre">attach</span></code></dt>
+<dd>[in]    attachment which should be pinned</dd>
+</dl>
+<p><strong>Return</strong></p>
+<p>0 on success, negative error code on failure.</p>
+<dl class="function">
+<dt id="c.dma_buf_unpin">
+void <code class="descname">dma_buf_unpin</code><span class="sig-paren">(</span>struct <a class="reference internal" href="#c.dma_buf_attachment" title="dma_buf_attachment">dma_buf_attachment</a> *<em>&nbsp;attach</em><span class="sig-paren">)</span><a class="headerlink" href="#c.dma_buf_unpin" title="Permalink to this definition">¶</a></dt>
+<dd><p>Remove lock from DMA-buf</p>
+</dd></dl>
+
+<p><strong>Parameters</strong></p>
+<dl class="docutils">
+<dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">dma_buf_attachment</span> <span class="pre">*</span> <span class="pre">attach</span></code></dt>
+<dd>[in]    attachment which should be unpinned</dd>
+</dl>
+<dl class="function">
 <dt id="c.dma_buf_map_attachment">
 struct sg_table * <code class="descname">dma_buf_map_attachment</code><span class="sig-paren">(</span>struct <a class="reference internal" href="#c.dma_buf_attachment" title="dma_buf_attachment">dma_buf_attachment</a> *<em>&nbsp;attach</em>, enum dma_data_direction<em>&nbsp;direction</em><span class="sig-paren">)</span><a class="headerlink" href="#c.dma_buf_map_attachment" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns the scatterlist table of the attachment; mapped into _device_ address space. Is a wrapper for map_dma_buf() of the dma_buf_ops.</p>
@@ -534,6 +560,20 @@ void <code class="descname">dma_buf_unmap_attachment</code><span class="sig-pare
 </dl>
 <p><strong>Description</strong></p>
 <p>This unmaps a DMA mapping for <strong>attached</strong> obtained by <a class="reference internal" href="#c.dma_buf_map_attachment" title="dma_buf_map_attachment"><code class="xref c c-func docutils literal notranslate"><span class="pre">dma_buf_map_attachment()</span></code></a>.</p>
+<dl class="function">
+<dt id="c.dma_buf_move_notify">
+void <code class="descname">dma_buf_move_notify</code><span class="sig-paren">(</span>struct <a class="reference internal" href="#c.dma_buf" title="dma_buf">dma_buf</a> *<em>&nbsp;dmabuf</em><span class="sig-paren">)</span><a class="headerlink" href="#c.dma_buf_move_notify" title="Permalink to this definition">¶</a></dt>
+<dd><p>notify attachments that DMA-buf is moving</p>
+</dd></dl>
+
+<p><strong>Parameters</strong></p>
+<dl class="docutils">
+<dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">dma_buf</span> <span class="pre">*</span> <span class="pre">dmabuf</span></code></dt>
+<dd>[in]    buffer which is moving</dd>
+</dl>
+<p><strong>Description</strong></p>
+<p>Informs all attachmenst that they need to destroy and recreated all their
+mappings.</p>
 <dl class="function">
 <dt id="c.dma_buf_begin_cpu_access">
 int <code class="descname">dma_buf_begin_cpu_access</code><span class="sig-paren">(</span>struct <a class="reference internal" href="#c.dma_buf" title="dma_buf">dma_buf</a> *<em>&nbsp;dmabuf</em>, enum dma_data_direction<em>&nbsp;direction</em><span class="sig-paren">)</span><a class="headerlink" href="#c.dma_buf_begin_cpu_access" title="Permalink to this definition">¶</a></dt>
@@ -629,9 +669,10 @@ struct <code class="descname">dma_buf_ops</code><a class="headerlink" href="#c.d
 <p><strong>Definition</strong></p>
 <div class="highlight-none notranslate"><div class="highlight"><pre><span></span>struct dma_buf_ops {
   bool cache_sgt_mapping;
-  bool dynamic_mapping;
   int (*attach)(struct dma_buf *, struct dma_buf_attachment *);
   void (*detach)(struct dma_buf *, struct dma_buf_attachment *);
+  int (*pin)(struct dma_buf_attachment *attach);
+  void (*unpin)(struct dma_buf_attachment *attach);
   struct sg_table * (*map_dma_buf)(struct dma_buf_attachment *, enum dma_data_direction);
   void (*unmap_dma_buf)(struct dma_buf_attachment *,struct sg_table *, enum dma_data_direction);
   void (*release)(struct dma_buf *);
@@ -649,13 +690,6 @@ struct <code class="descname">dma_buf_ops</code><a class="headerlink" href="#c.d
 <dd>If true the framework will cache the first mapping made for each
 attachment. This avoids creating mappings for attachments multiple
 times.</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">dynamic_mapping</span></code></dt>
-<dd><p class="first">If true the framework makes sure that the map/unmap_dma_buf
-callbacks are always called with the dma_resv object locked.</p>
-<p class="last">If false the framework makes sure that the map/unmap_dma_buf
-callbacks are always called without the dma_resv object locked.
-Mutual exclusive with <strong>cache_sgt_mapping</strong>.</p>
-</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">attach</span></code></dt>
 <dd><p class="first">This is called from <a class="reference internal" href="#c.dma_buf_attach" title="dma_buf_attach"><code class="xref c c-func docutils literal notranslate"><span class="pre">dma_buf_attach()</span></code></a> to make sure that a given
 <a class="reference internal" href="#c.dma_buf_attachment" title="dma_buf_attachment"><code class="xref c c-type docutils literal notranslate"><span class="pre">dma_buf_attachment.dev</span></code></a> can access the provided <a class="reference internal" href="#c.dma_buf" title="dma_buf"><code class="xref c c-type docutils literal notranslate"><span class="pre">dma_buf</span></code></a>. Exporters
@@ -681,12 +715,27 @@ Provided so that exporters can clean up any housekeeping for an
 <a class="reference internal" href="#c.dma_buf_attachment" title="dma_buf_attachment"><code class="xref c c-type docutils literal notranslate"><span class="pre">dma_buf_attachment</span></code></a>.</p>
 <p class="last">This callback is optional.</p>
 </dd>
+<dt><code class="docutils literal notranslate"><span class="pre">pin</span></code></dt>
+<dd><p class="first">This is called by dma_buf_pin and lets the exporter know that the
+DMA-buf can’t be moved any more.</p>
+<p>This is called with the dmabuf-&gt;resv object locked and is mutual
+exclusive with <strong>cache_sgt_mapping</strong>.</p>
+<p>This callback is optional and should only be used in limited use
+cases like scanout and not for temporary pin operations.</p>
+<p>Returns:</p>
+<p class="last">0 on success, negative error code on failure.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">unpin</span></code></dt>
+<dd><p class="first">This is called by dma_buf_unpin and lets the exporter know that the
+DMA-buf can be moved again.</p>
+<p>This is called with the dmabuf-&gt;resv object locked and is mutual
+exclusive with <strong>cache_sgt_mapping</strong>.</p>
+<p class="last">This callback is optional.</p>
+</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">map_dma_buf</span></code></dt>
 <dd><p class="first">This is called by <a class="reference internal" href="#c.dma_buf_map_attachment" title="dma_buf_map_attachment"><code class="xref c c-func docutils literal notranslate"><span class="pre">dma_buf_map_attachment()</span></code></a> and is used to map a
 shared <a class="reference internal" href="#c.dma_buf" title="dma_buf"><code class="xref c c-type docutils literal notranslate"><span class="pre">dma_buf</span></code></a> into device address space, and it is mandatory. It
-can only be called if <strong>attach</strong> has been called successfully. This
-essentially pins the DMA buffer into place, and it cannot be moved
-any more</p>
+can only be called if <strong>attach</strong> has been called successfully.</p>
 <p>This call may sleep, e.g. when the backing storage first needs to be
 allocated, or moved to a location suitable for all currently attached
 devices.</p>
@@ -715,9 +764,8 @@ blocked.</p>
 <dt><code class="docutils literal notranslate"><span class="pre">unmap_dma_buf</span></code></dt>
 <dd>This is called by <a class="reference internal" href="#c.dma_buf_unmap_attachment" title="dma_buf_unmap_attachment"><code class="xref c c-func docutils literal notranslate"><span class="pre">dma_buf_unmap_attachment()</span></code></a> and should unmap and
 release the <code class="xref c c-type docutils literal notranslate"><span class="pre">sg_table</span></code> allocated in <strong>map_dma_buf</strong>, and it is mandatory.
-It should also unpin the backing storage if this is the last mapping
-of the DMA buffer, it the exporter supports backing storage
-migration.</dd>
+For static dma_buf handling this might also unpins the backing
+storage if this is the last mapping of the DMA buffer.</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">release</span></code></dt>
 <dd>Called after the last dma_buf_put to release the <a class="reference internal" href="#c.dma_buf" title="dma_buf"><code class="xref c c-type docutils literal notranslate"><span class="pre">dma_buf</span></code></a>, and
 mandatory.</dd>
@@ -866,6 +914,37 @@ calling <a class="reference internal" href="#c.dma_buf_fd" title="dma_buf_fd"><c
 <a class="reference internal" href="#c.get_dma_buf" title="get_dma_buf"><code class="xref c c-func docutils literal notranslate"><span class="pre">get_dma_buf()</span></code></a>.</p>
 <p>Device DMA access is handled by the separate <a class="reference internal" href="#c.dma_buf_attachment" title="dma_buf_attachment"><code class="xref c c-type docutils literal notranslate"><span class="pre">struct</span> <span class="pre">dma_buf_attachment</span></code></a>.</p>
 <dl class="type">
+<dt id="c.dma_buf_attach_ops">
+struct <code class="descname">dma_buf_attach_ops</code><a class="headerlink" href="#c.dma_buf_attach_ops" title="Permalink to this definition">¶</a></dt>
+<dd><p>importer operations for an attachment</p>
+</dd></dl>
+
+<p><strong>Definition</strong></p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>struct dma_buf_attach_ops {
+  void (*move_notify)(struct dma_buf_attachment *attach);
+};
+</pre></div>
+</div>
+<p><strong>Members</strong></p>
+<dl class="docutils">
+<dt><code class="docutils literal notranslate"><span class="pre">move_notify</span></code></dt>
+<dd><p class="first">[optional] notification that the DMA-buf is moving</p>
+<p>If this callback is provided the framework can avoid pinning the
+backing store while mappings exists.</p>
+<p>This callback is called with the lock of the reservation object
+associated with the dma_buf held and the mapping function must be
+called with this lock held as well. This makes sure that no mapping
+is created concurrently with an ongoing move operation.</p>
+<p>Mappings stay valid and are not directly affected by this callback.
+But the DMA-buf can now be in a different physical location, so all
+mappings should be destroyed and re-created as soon as possible.</p>
+<p class="last">New mappings can be created after this callback returns, and will
+point to the new location of the DMA-buf.</p>
+</dd>
+</dl>
+<p><strong>Description</strong></p>
+<p>Attachment operations implemented by the importer.</p>
+<dl class="type">
 <dt id="c.dma_buf_attachment">
 struct <code class="descname">dma_buf_attachment</code><a class="headerlink" href="#c.dma_buf_attachment" title="Permalink to this definition">¶</a></dt>
 <dd><p>holds device-buffer attachment data</p>
@@ -878,7 +957,8 @@ struct <code class="descname">dma_buf_attachment</code><a class="headerlink" hre
   struct list_head node;
   struct sg_table *sgt;
   enum dma_data_direction dir;
-  bool dynamic_mapping;
+  const struct dma_buf_attach_ops *importer_ops;
+  void *importer_priv;
   void *priv;
 };
 </pre></div>
@@ -895,9 +975,11 @@ struct <code class="descname">dma_buf_attachment</code><a class="headerlink" hre
 <dd>cached mapping.</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">dir</span></code></dt>
 <dd>direction of cached mapping.</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">dynamic_mapping</span></code></dt>
-<dd>true if dma_buf_map/unmap_attachment() is called with the
-dma_resv lock held.</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">importer_ops</span></code></dt>
+<dd>importer operations for this attachment, if provided
+dma_buf_map/unmap_attachment() must be called with the dma_resv lock held.</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">importer_priv</span></code></dt>
+<dd>importer specific attachment data.</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">priv</span></code></dt>
 <dd>exporter specific attachment data.</dd>
 </dl>

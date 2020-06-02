@@ -248,9 +248,8 @@ The format also supports comments, several units for size and age of regions,
 and human readable action names.  Currently supported operation actions are
 ``willneed``, ``cold``, ``pageout``, ``hugepage`` and ``nohugepage``.  Each of
 the actions works same to the madvise() system call hints having the name.
-Please also note that both the 'min' and the 'max' are inclusive (closed
-interval), and ``0`` for max values means infinite. Below example schemes are
-possible. ::
+Please also note that the range is inclusive (closed interval), and ``0`` for
+max values means infinite. Below example schemes are possible. ::
 
     # format is:
     # <min/max size> <min/max frequency (0-99)> <min/max age> <action>
@@ -360,13 +359,13 @@ the file, each of the schemes should be represented in each line in below form:
 
     min-size max-size min-acc max-acc min-age max-age action
 
-Note that the ranges are closed interval (both the min and the max are
-inclusive).  Bytes for the size of regions (``min-size`` and ``max-size``),
-number of monitored accesses per aggregate interval for access frequency
-(``min-acc`` and ``max-acc``), number of aggregate intervals for the age of
-regions (``min-age`` and ``max-age``), and a predefined integer for memory
-management actions should be used.  The supported numbers and their meanings
-are as below.
+Note that the ranges are closed interval.  Bytes for the size of regions
+(``min-size`` and ``max-size``), number of monitored accesses per aggregate
+interval for access frequency (``min-acc`` and ``max-acc``), number of
+aggregate intervals for the age of regions (``min-age`` and ``max-age``), and a
+predefined integer for memory management actions should be used.  The supported
+numbers and their
+meanings are as below.
 
  - 0: Call ``madvise()`` for the region with ``MADV_WILLNEED``
  - 1: Call ``madvise()`` for the region with ``MADV_COLD``

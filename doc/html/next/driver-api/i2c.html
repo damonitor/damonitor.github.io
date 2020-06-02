@@ -68,7 +68,7 @@
             
             
               <div class="version">
-                5.6.0
+                5.7.0
               </div>
             
           
@@ -1123,16 +1123,17 @@ void <code class="descname">i2c_parse_fw_timings</code><span class="sig-paren">(
 <dd>the i2c_timings struct to be filled with values</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">bool</span> <span class="pre">use_defaults</span></code></dt>
 <dd>bool to use sane defaults derived from the I2C specification
-when properties are not found, otherwise use 0</dd>
+when properties are not found, otherwise don’t update</dd>
 </dl>
 <p><strong>Description</strong></p>
 <p>Scan the device for the generic I2C properties describing timing parameters
 for the signal and fill the given struct with the results. If a property was
 not found and use_defaults was true, then maximum timings are assumed which
 are derived from the I2C specification. If use_defaults is not used, the
-results will be 0, so drivers can apply their own defaults later. The latter
-is mainly intended for avoiding regressions of existing drivers which want
-to switch to this function. New drivers almost always should use the defaults.</p>
+results will be as before, so drivers can apply their own defaults before
+calling this helper. The latter is mainly intended for avoiding regressions
+of existing drivers which want to switch to this function. New drivers
+almost always should use the defaults.</p>
 <dl class="function">
 <dt id="c.i2c_del_driver">
 void <code class="descname">i2c_del_driver</code><span class="sig-paren">(</span>struct <a class="reference internal" href="#c.i2c_driver" title="i2c_driver">i2c_driver</a> *<em>&nbsp;driver</em><span class="sig-paren">)</span><a class="headerlink" href="#c.i2c_del_driver" title="Permalink to this definition">¶</a></dt>
@@ -1452,9 +1453,9 @@ effect as a byte read. Before using this function you must double-check
 if the I2C slave does support exchanging a block transfer with a byte
 transfer.</p>
 <dl class="function">
-<dt id="c.i2c_setup_smbus_alert">
-struct <a class="reference internal" href="#c.i2c_client" title="i2c_client">i2c_client</a> * <code class="descname">i2c_setup_smbus_alert</code><span class="sig-paren">(</span>struct i2c_adapter *<em>&nbsp;adapter</em>, struct i2c_smbus_alert_setup *<em>&nbsp;setup</em><span class="sig-paren">)</span><a class="headerlink" href="#c.i2c_setup_smbus_alert" title="Permalink to this definition">¶</a></dt>
-<dd><p>Setup SMBus alert support</p>
+<dt id="c.i2c_new_smbus_alert_device">
+struct <a class="reference internal" href="#c.i2c_client" title="i2c_client">i2c_client</a> * <code class="descname">i2c_new_smbus_alert_device</code><span class="sig-paren">(</span>struct i2c_adapter *<em>&nbsp;adapter</em>, struct i2c_smbus_alert_setup *<em>&nbsp;setup</em><span class="sig-paren">)</span><a class="headerlink" href="#c.i2c_new_smbus_alert_device" title="Permalink to this definition">¶</a></dt>
+<dd><p>get ara client for SMBus alert support</p>
 </dd></dl>
 
 <p><strong>Parameters</strong></p>
@@ -1470,13 +1471,9 @@ struct <a class="reference internal" href="#c.i2c_client" title="i2c_client">i2c
 <p>Setup handling of the SMBus alert protocol on a given I2C bus segment.</p>
 <p>Handling can be done either through our IRQ handler, or by the
 adapter (from its handler, periodic polling, or whatever).</p>
-<p>NOTE that if we manage the IRQ, we <em>MUST</em> know if it’s level or
-edge triggered in order to hand it to the workqueue correctly.
-If triggering the alert seems to wedge the system, you probably
-should have said it’s level triggered.</p>
 <p>This returns the ara client, which should be saved for later use with
-i2c_handle_smbus_alert() and ultimately <a class="reference internal" href="#c.i2c_unregister_device" title="i2c_unregister_device"><code class="xref c c-func docutils literal notranslate"><span class="pre">i2c_unregister_device()</span></code></a>; or NULL
-to indicate an error.</p>
+i2c_handle_smbus_alert() and ultimately <a class="reference internal" href="#c.i2c_unregister_device" title="i2c_unregister_device"><code class="xref c c-func docutils literal notranslate"><span class="pre">i2c_unregister_device()</span></code></a>; or an
+ERRPTR to indicate an error.</p>
 </div>
 
 

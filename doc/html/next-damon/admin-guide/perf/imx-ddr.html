@@ -68,7 +68,7 @@
             
             
               <div class="version">
-                5.6.0
+                5.7.0
               </div>
             
           
@@ -201,10 +201,10 @@ Filter is defined with two configuration parts:
 </div></blockquote>
 <p>AXI_ID and AXI_MASKING are mapped on DPCR1 register in performance counter.
 When non-masked bits are matching corresponding AXI_ID bits then counter is
-incremented. Perf counter is incremented if</p>
-<blockquote>
-<div><p>AxID &amp;&amp; AXI_MASKING == AXI_ID &amp;&amp; AXI_MASKING</p>
-</div></blockquote>
+incremented. Perf counter is incremented if:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>AxID &amp;&amp; AXI_MASKING == AXI_ID &amp;&amp; AXI_MASKING
+</pre></div>
+</div>
 <p>This filter doesn’t support filter different AXI ID for axid-read and axid-write
 event at the same time as this filter is shared between counters.</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>perf stat -a -e imx8_ddr0/axid-read,axi_mask<span class="o">=</span>0xMMMM,axi_id<span class="o">=</span>0xDDDD/ cmd

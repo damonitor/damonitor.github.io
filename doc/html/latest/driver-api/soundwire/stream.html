@@ -68,7 +68,7 @@
             
             
               <div class="version">
-                5.6.0
+                5.7.0
               </div>
             
           
@@ -303,22 +303,27 @@ stream states maintained by the Bus for each of the audio stream.</p>
 <div class="highlight-none notranslate"><div class="highlight"><pre><span></span>+-----------+     +------------+     +----------+     +----------+
 | ALLOCATED +----&gt;| CONFIGURED +----&gt;| PREPARED +----&gt;| ENABLED  |
 |   STATE   |     |    STATE   |     |  STATE   |     |  STATE   |
-+-----------+     +------------+     +----------+     +----+-----+
-                                                           ^
-                                                           |
-                                                           |
-                                                           v
-         +----------+           +------------+        +----+-----+
++-----------+     +------------+     +---+--+---+     +----+-----+
+                                         ^  ^              ^
+                                         |  |              |
+                                       __|  |___________   |
+                                      |                 |  |
+                                      v                 |  v
+         +----------+           +-----+------+        +-+--+-----+
          | RELEASED |&lt;----------+ DEPREPARED |&lt;-------+ DISABLED |
          |  STATE   |           |   STATE    |        |  STATE   |
          +----------+           +------------+        +----------+
 </pre></div>
 </div>
-<p>NOTE: State transition between prepare and deprepare is supported in Spec
-but not in the software (subsystem)</p>
-<p>NOTE2: Stream state transition checks need to be handled by caller
-framework, for example ALSA/ASoC. No checks for stream transition exist in
-SoundWire subsystem.</p>
+<p>NOTE: State transitions between <code class="docutils literal notranslate"><span class="pre">SDW_STREAM_ENABLED</span></code> and
+<code class="docutils literal notranslate"><span class="pre">SDW_STREAM_DISABLED</span></code> are only relevant when then INFO_PAUSE flag is
+supported at the ALSA/ASoC level. Likewise the transition between
+<code class="docutils literal notranslate"><span class="pre">SDW_DISABLED_STATE</span></code> and <code class="docutils literal notranslate"><span class="pre">SDW_PREPARED_STATE</span></code> depends on the
+INFO_RESUME flag.</p>
+<p>NOTE2: The framework implements basic state transition checks, but
+does not e.g. check if a transition from DISABLED to ENABLED is valid
+on a specific platform. Such tests need to be added at the ALSA/ASoC
+level.</p>
 </div>
 <div class="section" id="stream-state-operations">
 <h3>Stream State Operations<a class="headerlink" href="#stream-state-operations" title="Permalink to this headline">¶</a></h3>
@@ -384,7 +389,9 @@ framework, this stream state is linked to .hw_params() operation.</p>
 <h4>SDW_STREAM_PREPARED<a class="headerlink" href="#sdw-stream-prepared" title="Permalink to this headline">¶</a></h4>
 <p>Prepare state of stream. Operations performed before entering in this state:</p>
 <blockquote>
-<div><ol class="arabic simple">
+<div><ol class="arabic simple" start="0">
+<li>Steps 1 and 2 are omitted in the case of a resume operation,
+where the bus bandwidth is known.</li>
 <li>Bus parameters such as bandwidth, frame shape, clock frequency,
 are computed based on current stream as well as already active
 stream(s) on Bus. Re-computation is required to accommodate current
@@ -405,9 +412,11 @@ programming PrepareCtrl register.</li>
 </div></blockquote>
 <p>After all above operations are successful, stream state is set to
 <code class="docutils literal notranslate"><span class="pre">SDW_STREAM_PREPARED</span></code>.</p>
-<p>Bus implements below API for PREPARE state which needs to be called once per
-stream. From ASoC DPCM framework, this stream state is linked to
-.prepare() operation.</p>
+<p>Bus implements below API for PREPARE state which needs to be called
+once per stream. From ASoC DPCM framework, this stream state is linked
+to .prepare() operation. Since the .trigger() operations may not
+follow the .prepare(), a direct transition from
+<code class="docutils literal notranslate"><span class="pre">SDW_STREAM_PREPARED</span></code> to <code class="docutils literal notranslate"><span class="pre">SDW_STREAM_DEPREPARED</span></code> is allowed.</p>
 <div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="kt">int</span> <span class="nf">sdw_prepare_stream</span><span class="p">(</span><span class="k">struct</span> <span class="n">sdw_stream_runtime</span> <span class="o">*</span> <span class="n">stream</span><span class="p">);</span>
 </pre></div>
 </div>
@@ -459,6 +468,12 @@ with current stream are disabled.</li>
 <p>Bus implements below API for DISABLED state which needs to be called once
 per stream. From ASoC DPCM framework, this stream state is linked to
 .trigger() stop operation.</p>
+<p>When the INFO_PAUSE flag is supported, a direct transition to
+<code class="docutils literal notranslate"><span class="pre">SDW_STREAM_ENABLED</span></code> is allowed.</p>
+<p>For resume operations where ASoC will use the .prepare() callback, the
+stream can transition from <code class="docutils literal notranslate"><span class="pre">SDW_STREAM_DISABLED</span></code> to
+<code class="docutils literal notranslate"><span class="pre">SDW_STREAM_PREPARED</span></code>, with all required settings restored but
+without updating the bandwidth and bit allocation.</p>
 <div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="kt">int</span> <span class="nf">sdw_disable_stream</span><span class="p">(</span><span class="k">struct</span> <span class="n">sdw_stream_runtime</span> <span class="o">*</span> <span class="n">stream</span><span class="p">);</span>
 </pre></div>
 </div>
@@ -478,9 +493,16 @@ applied by performing bank switch etc.</li>
 </div></blockquote>
 <p>After all above operations are successful, stream state is set to
 <code class="docutils literal notranslate"><span class="pre">SDW_STREAM_DEPREPARED</span></code>.</p>
-<p>Bus implements below API for DEPREPARED state which needs to be called once
-per stream. From ASoC DPCM framework, this stream state is linked to
-.trigger() stop operation.</p>
+<p>Bus implements below API for DEPREPARED state which needs to be called
+once per stream. ALSA/ASoC do not have a concept of ‘deprepare’, and
+the mapping from this stream state to ALSA/ASoC operation may be
+implementation specific.</p>
+<p>When the INFO_PAUSE flag is supported, the stream state is linked to
+the .hw_free() operation - the stream is not deprepared on a
+TRIGGER_STOP.</p>
+<p>Other implementations may transition to the <code class="docutils literal notranslate"><span class="pre">SDW_STREAM_DEPREPARED</span></code>
+state on TRIGGER_STOP, should they require a transition through the
+<code class="docutils literal notranslate"><span class="pre">SDW_STREAM_PREPARED</span></code> state.</p>
 <div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="kt">int</span> <span class="nf">sdw_deprepare_stream</span><span class="p">(</span><span class="k">struct</span> <span class="n">sdw_stream_runtime</span> <span class="o">*</span> <span class="n">stream</span><span class="p">);</span>
 </pre></div>
 </div>

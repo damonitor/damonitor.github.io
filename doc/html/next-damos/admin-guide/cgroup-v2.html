@@ -68,7 +68,7 @@
             
             
               <div class="version">
-                5.6.0
+                5.7.0
               </div>
             
           
@@ -174,7 +174,7 @@
 conventions of cgroup v2.  It describes all userland-visible aspects
 of cgroup including core and specific controller behaviors.  All
 future changes must be reflected in this document.  Documentation for
-v1 is available under Documentation/admin-guide/cgroup-v1/.</p>
+v1 is available under <a class="reference internal" href="cgroup-v1/index.html#cgroup-v1"><span class="std std-ref">Documentation/admin-guide/cgroup-v1/index.rst</span></a>.</p>
 <div class="section" id="introduction">
 <h2>Introduction<a class="headerlink" href="#introduction" title="Permalink to this headline">¶</a></h2>
 <div class="section" id="terminology">
@@ -263,6 +263,16 @@ behaviour without this option is to include subtree counts.
 This option is system wide and can only be set on mount or
 modified through remount from the init namespace. The mount
 option is ignored on non-init namespace mounts.</div></blockquote>
+<p>memory_recursiveprot</p>
+<blockquote>
+<div>Recursively apply memory.min and memory.low protection to
+entire subtrees, without requiring explicit downward
+propagation into leaf cgroups.  This allows protecting entire
+subtrees from one another, while retaining free competition
+within those subtrees.  This should have been the default
+behavior but is a mount-option to avoid regressing setups
+relying on the original semantics (e.g. specifying bogusly
+high ‘bypass’ protection values at higher tree levels).</div></blockquote>
 </div></blockquote>
 </div>
 <div class="section" id="organizing-processes-and-threads">
@@ -999,7 +1009,7 @@ one number is written, $MAX is updated.</p>
 <dt>cpu.pressure</dt>
 <dd><p class="first">A read-only nested-key file which exists on non-root cgroups.</p>
 <p class="last">Shows pressure stall information for CPU. See
-Documentation/accounting/psi.rst for details.</p>
+<span class="xref std std-ref">Documentation/accounting/psi.rst</span> for details.</p>
 </dd>
 <dt>cpu.uclamp.min</dt>
 <dd><p class="first">A read-write single value file which exists on non-root cgroups.
@@ -1057,8 +1067,7 @@ cgroups.</p>
 and its descendants.</p>
 </dd>
 <dt>memory.min</dt>
-<dd><blockquote class="first">
-<div><p>A read-write single value file which exists on non-root
+<dd><p class="first">A read-write single value file which exists on non-root
 cgroups.  The default is “0”.</p>
 <p>Hard memory protection.  If the memory usage of a cgroup
 is within its effective min boundary, the cgroup’s memory
@@ -1068,10 +1077,8 @@ is invoked. Above the effective min boundary (or
 effective low boundary if it is higher), pages are reclaimed
 proportionally to the overage, reducing reclaim pressure for
 smaller overages.</p>
-</div></blockquote>
-<dl class="last docutils">
-<dt>Effective min boundary is limited by memory.min values of</dt>
-<dd><p class="first">all ancestor cgroups. If there is memory.min overcommitment
+<p>Effective min boundary is limited by memory.min values of
+all ancestor cgroups. If there is memory.min overcommitment
 (child cgroup or cgroups are requiring more protected memory
 than parent will allow), then each child cgroup will get
 the part of parent’s protection proportional to its
@@ -1080,8 +1087,6 @@ actual memory usage below memory.min.</p>
 protection is discouraged and may lead to constant OOMs.</p>
 <p class="last">If a memory cgroup is not populated with processes,
 its memory.min is ignored.</p>
-</dd>
-</dl>
 </dd>
 <dt>memory.low</dt>
 <dd><p class="first">A read-write single value file which exists on non-root
@@ -1247,47 +1252,35 @@ pressure.</dd>
 <dd>Total number of page faults incurred</dd>
 <dt>pgmajfault</dt>
 <dd>Number of major page faults incurred</dd>
-</dl>
-<p>workingset_refault</p>
-<blockquote>
-<div>Number of refaults of previously evicted pages</div></blockquote>
-<p>workingset_activate</p>
-<blockquote>
-<div>Number of refaulted pages that were immediately activated</div></blockquote>
-<p>workingset_nodereclaim</p>
-<blockquote>
-<div>Number of times a shadow node has been reclaimed</div></blockquote>
-<p>pgrefill</p>
-<blockquote>
-<div>Amount of scanned pages (in an active LRU list)</div></blockquote>
-<p>pgscan</p>
-<blockquote>
-<div>Amount of scanned pages (in an inactive LRU list)</div></blockquote>
-<p>pgsteal</p>
-<blockquote>
-<div>Amount of reclaimed pages</div></blockquote>
-<p>pgactivate</p>
-<blockquote>
-<div>Amount of pages moved to the active LRU list</div></blockquote>
-<p>pgdeactivate</p>
-<blockquote>
-<div>Amount of pages moved to the inactive LRU list</div></blockquote>
-<p>pglazyfree</p>
-<blockquote>
-<div>Amount of pages postponed to be freed under memory pressure</div></blockquote>
-<p>pglazyfreed</p>
-<blockquote>
-<div>Amount of reclaimed lazyfree pages</div></blockquote>
-<p>thp_fault_alloc</p>
-<blockquote>
-<div>Number of transparent hugepages which were allocated to satisfy
+<dt>workingset_refault</dt>
+<dd>Number of refaults of previously evicted pages</dd>
+<dt>workingset_activate</dt>
+<dd>Number of refaulted pages that were immediately activated</dd>
+<dt>workingset_nodereclaim</dt>
+<dd>Number of times a shadow node has been reclaimed</dd>
+<dt>pgrefill</dt>
+<dd>Amount of scanned pages (in an active LRU list)</dd>
+<dt>pgscan</dt>
+<dd>Amount of scanned pages (in an inactive LRU list)</dd>
+<dt>pgsteal</dt>
+<dd>Amount of reclaimed pages</dd>
+<dt>pgactivate</dt>
+<dd>Amount of pages moved to the active LRU list</dd>
+<dt>pgdeactivate</dt>
+<dd>Amount of pages moved to the inactive LRU list</dd>
+<dt>pglazyfree</dt>
+<dd>Amount of pages postponed to be freed under memory pressure</dd>
+<dt>pglazyfreed</dt>
+<dd>Amount of reclaimed lazyfree pages</dd>
+<dt>thp_fault_alloc</dt>
+<dd>Number of transparent hugepages which were allocated to satisfy
 a page fault, including COW faults. This counter is not present
-when CONFIG_TRANSPARENT_HUGEPAGE is not set.</div></blockquote>
-<p>thp_collapse_alloc</p>
-<blockquote>
-<div>Number of transparent hugepages which were allocated to allow
+when CONFIG_TRANSPARENT_HUGEPAGE is not set.</dd>
+<dt>thp_collapse_alloc</dt>
+<dd>Number of transparent hugepages which were allocated to allow
 collapsing an existing range of pages. This counter is not
-present when CONFIG_TRANSPARENT_HUGEPAGE is not set.</div></blockquote>
+present when CONFIG_TRANSPARENT_HUGEPAGE is not set.</dd>
+</dl>
 </div></blockquote>
 </dd>
 <dt>memory.swap.current</dt>
@@ -1327,7 +1320,7 @@ reduces the impact on the workload and memory management.</p>
 <dt>memory.pressure</dt>
 <dd><p class="first">A read-only nested-key file which exists on non-root cgroups.</p>
 <p class="last">Shows pressure stall information for memory. See
-Documentation/accounting/psi.rst for details.</p>
+<span class="xref std std-ref">Documentation/accounting/psi.rst</span> for details.</p>
 </dd>
 </dl>
 </div></blockquote>
@@ -1413,9 +1406,10 @@ The following nested keys are defined.</p>
 </table>
 </div></blockquote>
 <p>An example read output follows:</p>
-<blockquote class="last">
-<div>8:16 rbytes=1459200 wbytes=314773504 rios=192 wios=353 dbytes=0 dios=0
-8:0 rbytes=90430464 wbytes=299008000 rios=8950 wios=1252 dbytes=50331648 dios=3021</div></blockquote>
+<div class="last highlight-none notranslate"><div class="highlight"><pre><span></span>8:16 rbytes=1459200 wbytes=314773504 rios=192 wios=353 dbytes=0 dios=0
+8:0 rbytes=90430464 wbytes=299008000 rios=8950 wios=1252 dbytes=50331648 dios=3021
+</pre></div>
+</div>
 </dd>
 <dt>io.cost.qos</dt>
 <dd><p class="first">A read-write nested-keyed file with exists only on the root
@@ -1622,7 +1616,7 @@ delayed if limit is reached.  Temporary bursts are allowed.</p>
 <dt>io.pressure</dt>
 <dd><p class="first">A read-only nested-key file which exists on non-root cgroups.</p>
 <p class="last">Shows pressure stall information for IO. See
-Documentation/accounting/psi.rst for details.</p>
+<span class="xref std std-ref">Documentation/accounting/psi.rst</span> for details.</p>
 </dd>
 </dl>
 </div></blockquote>
@@ -1821,9 +1815,10 @@ subjected to constraints imposed by its parent and can differ
 from the requested CPUs.</p>
 <p>The CPU numbers are comma-separated numbers or ranges.
 For example:</p>
-<blockquote>
-<div># cat cpuset.cpus
-0-4,6,8-10</div></blockquote>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span># cat cpuset.cpus
+0-4,6,8-10
+</pre></div>
+</div>
 <p>An empty value indicates that the cgroup is using the same
 setting as the nearest cgroup ancestor with a non-empty
 “cpuset.cpus” or all the available CPUs if none is found.</p>
@@ -1853,9 +1848,10 @@ is subjected to constraints imposed by its parent and can differ
 from the requested memory nodes.</p>
 <p>The memory node numbers are comma-separated numbers or ranges.
 For example:</p>
-<blockquote>
-<div># cat cpuset.mems
-0-1,3</div></blockquote>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span># cat cpuset.mems
+0-1,3
+</pre></div>
+</div>
 <p>An empty value indicates that the cgroup is using the same
 setting as the nearest cgroup ancestor with a non-empty
 “cpuset.mems” or all the available memory nodes if none
@@ -2244,7 +2240,7 @@ the configuration, the bio may be executed at a lower priority and if
 the writeback session is holding shared resources, e.g. a journal
 entry, may lead to priority inversion.  There is no one easy solution
 for the problem.  Filesystems can try to work around specific problem
-cases by skipping wbc_init_bio() and using <a class="reference internal" href="../filesystems/api-summary.html#c.bio_associate_blkg" title="bio_associate_blkg"><code class="xref c c-func docutils literal notranslate"><span class="pre">bio_associate_blkg()</span></code></a>
+cases by skipping wbc_init_bio() and using bio_associate_blkg()
 directly.</p>
 </div>
 </div>

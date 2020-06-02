@@ -68,7 +68,7 @@
             
             
               <div class="version">
-                5.6.0
+                5.7.0
               </div>
             
           
@@ -2227,7 +2227,7 @@ struct <code class="descname">skb_ext</code><a class="headerlink" href="#c.skb_e
   refcount_t refcnt;
   u8 offset[SKB_EXT_NUM];
   u8 chunks;
-  char data[0] ;
+  char data[] ;
 };
 </pre></div>
 </div>
@@ -2777,6 +2777,17 @@ persistent failure not just ‘timed out’</dd>
 <dd>used during RCU grace period</dd>
 </dl>
 <dl class="function">
+<dt id="c.sk_user_data_is_nocopy">
+bool <code class="descname">sk_user_data_is_nocopy</code><span class="sig-paren">(</span>const struct <a class="reference internal" href="#c.sock" title="sock">sock</a> *<em>&nbsp;sk</em><span class="sig-paren">)</span><a class="headerlink" href="#c.sk_user_data_is_nocopy" title="Permalink to this definition">¶</a></dt>
+<dd><p>Test if sk_user_data pointer must not be copied</p>
+</dd></dl>
+
+<p><strong>Parameters</strong></p>
+<dl class="docutils">
+<dt><code class="docutils literal notranslate"><span class="pre">const</span> <span class="pre">struct</span> <span class="pre">sock</span> <span class="pre">*</span> <span class="pre">sk</span></code></dt>
+<dd>socket</dd>
+</dl>
+<dl class="function">
 <dt id="c.sk_for_each_entry_offset_rcu">
 <code class="descname">sk_for_each_entry_offset_rcu</code><span class="sig-paren">(</span><em>tpos</em>, <em>pos</em>, <em>head</em>, <em>offset</em><span class="sig-paren">)</span><a class="headerlink" href="#c.sk_for_each_entry_offset_rcu" title="Permalink to this definition">¶</a></dt>
 <dd><p>iterate over a list at a given struct offset</p>
@@ -2956,6 +2967,19 @@ void <code class="descname">sk_eat_skb</code><span class="sig-paren">(</span>str
 <p><strong>Description</strong></p>
 <p>This routine must be called with interrupts disabled or with the socket
 locked so that the sk_buff queue operation is ok.</p>
+<dl class="function">
+<dt id="c.skb_steal_sock">
+struct <a class="reference internal" href="#c.sock" title="sock">sock</a> * <code class="descname">skb_steal_sock</code><span class="sig-paren">(</span>struct <a class="reference internal" href="#c.sk_buff" title="sk_buff">sk_buff</a> *<em>&nbsp;skb</em>, bool *<em>&nbsp;refcounted</em><span class="sig-paren">)</span><a class="headerlink" href="#c.skb_steal_sock" title="Permalink to this definition">¶</a></dt>
+<dd><p>steal a socket from an sk_buff</p>
+</dd></dl>
+
+<p><strong>Parameters</strong></p>
+<dl class="docutils">
+<dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">sk_buff</span> <span class="pre">*</span> <span class="pre">skb</span></code></dt>
+<dd>sk_buff to steal the socket from</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">bool</span> <span class="pre">*</span> <span class="pre">refcounted</span></code></dt>
+<dd>is set to true if the socket is reference-counted</dd>
+</dl>
 <dl class="function">
 <dt id="c.sock_alloc_file">
 struct file * <code class="descname">sock_alloc_file</code><span class="sig-paren">(</span>struct <a class="reference internal" href="#c.socket" title="socket">socket</a> *<em>&nbsp;sock</em>, int<em>&nbsp;flags</em>, const char *<em>&nbsp;dname</em><span class="sig-paren">)</span><a class="headerlink" href="#c.sock_alloc_file" title="Permalink to this definition">¶</a></dt>
@@ -4459,7 +4483,7 @@ int <code class="descname">skb_checksum_setup</code><span class="sig-paren">(</s
 </dl>
 <dl class="function">
 <dt id="c.skb_checksum_trimmed">
-struct <a class="reference internal" href="#c.sk_buff" title="sk_buff">sk_buff</a> * <code class="descname">skb_checksum_trimmed</code><span class="sig-paren">(</span>struct <a class="reference internal" href="#c.sk_buff" title="sk_buff">sk_buff</a> *<em>&nbsp;skb</em>, unsigned int<em>&nbsp;transport_len</em>, __sum16(*skb_chkf) (struct <a class="reference internal" href="#c.sk_buff" title="sk_buff">sk_buff</a><em>&nbsp;*skb</em><span class="sig-paren">)</span><a class="headerlink" href="#c.skb_checksum_trimmed" title="Permalink to this definition">¶</a></dt>
+struct <a class="reference internal" href="#c.sk_buff" title="sk_buff">sk_buff</a> * <code class="descname">skb_checksum_trimmed</code><span class="sig-paren">(</span>struct <a class="reference internal" href="#c.sk_buff" title="sk_buff">sk_buff</a> *<em>&nbsp;skb</em>, unsigned int<em>&nbsp;transport_len</em>, __sum16(<em>*skb_chkf</em>)(struct <a class="reference internal" href="#c.sk_buff" title="sk_buff">sk_buff</a> *skb)<span class="sig-paren">)</span><a class="headerlink" href="#c.skb_checksum_trimmed" title="Permalink to this definition">¶</a></dt>
 <dd><p>validate checksum of an skb</p>
 </dd></dl>
 
@@ -4895,7 +4919,7 @@ return false if fast path is taken:</p>
 <div>sk_lock.slock unlocked, owned = 1, BH enabled</div></blockquote>
 <dl class="function">
 <dt id="c.__skb_try_recv_datagram">
-struct <a class="reference internal" href="#c.sk_buff" title="sk_buff">sk_buff</a> * <code class="descname">__skb_try_recv_datagram</code><span class="sig-paren">(</span>struct <a class="reference internal" href="#c.sock" title="sock">sock</a> *<em>&nbsp;sk</em>, struct sk_buff_head *<em>&nbsp;queue</em>, unsigned int<em>&nbsp;flags</em>, void (*destructor) (struct <a class="reference internal" href="#c.sock" title="sock">sock</a><em>&nbsp;*sk</em>, struct <a class="reference internal" href="#c.sk_buff" title="sk_buff">sk_buff</a><em>&nbsp;*skb</em>, int *<em>&nbsp;off</em>, int *<em>&nbsp;err</em>, struct <a class="reference internal" href="#c.sk_buff" title="sk_buff">sk_buff</a> **<em>&nbsp;last</em><span class="sig-paren">)</span><a class="headerlink" href="#c.__skb_try_recv_datagram" title="Permalink to this definition">¶</a></dt>
+struct <a class="reference internal" href="#c.sk_buff" title="sk_buff">sk_buff</a> * <code class="descname">__skb_try_recv_datagram</code><span class="sig-paren">(</span>struct <a class="reference internal" href="#c.sock" title="sock">sock</a> *<em>&nbsp;sk</em>, struct sk_buff_head *<em>&nbsp;queue</em>, unsigned int<em>&nbsp;flags</em>, int *<em>&nbsp;off</em>, int *<em>&nbsp;err</em>, struct <a class="reference internal" href="#c.sk_buff" title="sk_buff">sk_buff</a> **<em>&nbsp;last</em><span class="sig-paren">)</span><a class="headerlink" href="#c.__skb_try_recv_datagram" title="Permalink to this definition">¶</a></dt>
 <dd><p>Receive a datagram skbuff</p>
 </dd></dl>
 
@@ -4907,8 +4931,6 @@ struct <a class="reference internal" href="#c.sk_buff" title="sk_buff">sk_buff</
 <dd>socket queue from which to receive</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">unsigned</span> <span class="pre">int</span> <span class="pre">flags</span></code></dt>
 <dd>MSG_ flags</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">void</span> <span class="pre">(*)(struct</span> <span class="pre">sock</span> <span class="pre">*sk,</span> <span class="pre">struct</span> <span class="pre">sk_buff</span> <span class="pre">*skb)</span> <span class="pre">destructor</span></code></dt>
-<dd>invoked under the receive lock on successful dequeue</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">int</span> <span class="pre">*</span> <span class="pre">off</span></code></dt>
 <dd>an offset in bytes to peek skb from. Returns an offset
 within an skb where data actually starts</dd>
@@ -5935,26 +5957,23 @@ length <strong>len</strong> starting at offset <strong>base</strong>.</p>
 <p><strong>buf</strong> and <strong>subbuf</strong> may be pointers to the same struct xdr_buf.</p>
 <p>Returns -1 if base of length are out of bounds.</p>
 <dl class="function">
-<dt id="c.xdr_buf_read_mic">
-int <code class="descname">xdr_buf_read_mic</code><span class="sig-paren">(</span>struct xdr_buf *<em>&nbsp;buf</em>, struct xdr_netobj *<em>&nbsp;mic</em>, unsigned int<em>&nbsp;offset</em><span class="sig-paren">)</span><a class="headerlink" href="#c.xdr_buf_read_mic" title="Permalink to this definition">¶</a></dt>
-<dd><p>obtain the address of the GSS mic from xdr buf</p>
+<dt id="c.xdr_buf_trim">
+void <code class="descname">xdr_buf_trim</code><span class="sig-paren">(</span>struct xdr_buf *<em>&nbsp;buf</em>, unsigned int<em>&nbsp;len</em><span class="sig-paren">)</span><a class="headerlink" href="#c.xdr_buf_trim" title="Permalink to this definition">¶</a></dt>
+<dd><p>lop at most “len” bytes off the end of “buf”</p>
 </dd></dl>
 
 <p><strong>Parameters</strong></p>
 <dl class="docutils">
 <dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">xdr_buf</span> <span class="pre">*</span> <span class="pre">buf</span></code></dt>
-<dd>pointer to buffer containing a mic</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">xdr_netobj</span> <span class="pre">*</span> <span class="pre">mic</span></code></dt>
-<dd>on success, returns the address of the mic</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">unsigned</span> <span class="pre">int</span> <span class="pre">offset</span></code></dt>
-<dd>the offset in buf where mic may be found</dd>
+<dd>buf to be trimmed</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">unsigned</span> <span class="pre">int</span> <span class="pre">len</span></code></dt>
+<dd>number of bytes to reduce “buf” by</dd>
 </dl>
 <p><strong>Description</strong></p>
-<p>This function may modify the xdr buf if the mic is found to be straddling
-a boundary between head, pages, and tail.  On success the mic can be read
-from the address returned.  There is no need to free the mic.</p>
-<p><strong>Return</strong></p>
-<p>Success returns 0, otherwise an integer error.</p>
+<p>Trim an xdr_buf by the given number of bytes by fixing up the lengths. Note
+that it’s possible that we’ll trim less than that amount if the xdr_buf is
+too small, or if (for instance) it’s all in the head and the parser has
+already read too far into it.</p>
 <dl class="function">
 <dt id="c.xdr_stream_decode_opaque">
 ssize_t <code class="descname">xdr_stream_decode_opaque</code><span class="sig-paren">(</span>struct xdr_stream *<em>&nbsp;xdr</em>, void *<em>&nbsp;ptr</em>, size_t<em>&nbsp;size</em><span class="sig-paren">)</span><a class="headerlink" href="#c.xdr_stream_decode_opaque" title="Permalink to this definition">¶</a></dt>
@@ -6730,7 +6749,7 @@ void <code class="descname">rpc_remove_pipe_dir_object</code><span class="sig-pa
 </dl>
 <dl class="function">
 <dt id="c.rpc_find_or_alloc_pipe_dir_object">
-struct rpc_pipe_dir_object * <code class="descname">rpc_find_or_alloc_pipe_dir_object</code><span class="sig-paren">(</span>struct net *<em>&nbsp;net</em>, struct rpc_pipe_dir_head *<em>&nbsp;pdh</em>, int (*match) (struct rpc_pipe_dir_object<em>&nbsp;*</em>, void<em>&nbsp;*</em>, struct rpc_pipe_dir_object *(*alloc) (void<em>&nbsp;*</em>, void *<em>&nbsp;data</em><span class="sig-paren">)</span><a class="headerlink" href="#c.rpc_find_or_alloc_pipe_dir_object" title="Permalink to this definition">¶</a></dt>
+struct rpc_pipe_dir_object * <code class="descname">rpc_find_or_alloc_pipe_dir_object</code><span class="sig-paren">(</span>struct net *<em>&nbsp;net</em>, struct rpc_pipe_dir_head *<em>&nbsp;pdh</em>, int (<em>*match</em>)(struct rpc_pipe_dir_object *, void *), struct rpc_pipe_dir_object *(*alloc) (void *), void *<em>&nbsp;data</em><span class="sig-paren">)</span><a class="headerlink" href="#c.rpc_find_or_alloc_pipe_dir_object" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <p><strong>Parameters</strong></p>
@@ -6828,7 +6847,7 @@ negative errno is returned, and “clnt” continues to use the old
 xprt.</p>
 <dl class="function">
 <dt id="c.rpc_clnt_iterate_for_each_xprt">
-int <code class="descname">rpc_clnt_iterate_for_each_xprt</code><span class="sig-paren">(</span>struct rpc_clnt *<em>&nbsp;clnt</em>, int (*fn) (struct rpc_clnt<em>&nbsp;*</em>, struct rpc_xprt<em>&nbsp;*</em>, void<em>&nbsp;*</em>, void *<em>&nbsp;data</em><span class="sig-paren">)</span><a class="headerlink" href="#c.rpc_clnt_iterate_for_each_xprt" title="Permalink to this definition">¶</a></dt>
+int <code class="descname">rpc_clnt_iterate_for_each_xprt</code><span class="sig-paren">(</span>struct rpc_clnt *<em>&nbsp;clnt</em>, int (<em>*fn</em>)(struct rpc_clnt *, struct rpc_xprt *, void *), void *<em>&nbsp;data</em><span class="sig-paren">)</span><a class="headerlink" href="#c.rpc_clnt_iterate_for_each_xprt" title="Permalink to this definition">¶</a></dt>
 <dd><p>Apply a function to all transports</p>
 </dd></dl>
 
@@ -7080,7 +7099,7 @@ the rpc_call_done routine.</dd>
 transport to the rpc_clnt xprt switch</p>
 <dl class="function">
 <dt id="c.rpc_clnt_add_xprt">
-int <code class="descname">rpc_clnt_add_xprt</code><span class="sig-paren">(</span>struct rpc_clnt *<em>&nbsp;clnt</em>, struct xprt_create *<em>&nbsp;xprtargs</em>, int (*setup) (struct rpc_clnt<em>&nbsp;*</em>, struct rpc_xprt_switch<em>&nbsp;*</em>, struct rpc_xprt<em>&nbsp;*</em>, void<em>&nbsp;*</em>, void *<em>&nbsp;data</em><span class="sig-paren">)</span><a class="headerlink" href="#c.rpc_clnt_add_xprt" title="Permalink to this definition">¶</a></dt>
+int <code class="descname">rpc_clnt_add_xprt</code><span class="sig-paren">(</span>struct rpc_clnt *<em>&nbsp;clnt</em>, struct xprt_create *<em>&nbsp;xprtargs</em>, int (<em>*setup</em>)(struct rpc_clnt *, struct rpc_xprt_switch *, struct rpc_xprt *, void *), void *<em>&nbsp;data</em><span class="sig-paren">)</span><a class="headerlink" href="#c.rpc_clnt_add_xprt" title="Permalink to this definition">¶</a></dt>
 <dd><p>Add a new transport to a rpc_clnt</p>
 </dd></dl>
 
@@ -8379,7 +8398,7 @@ struct <a class="reference internal" href="#c.sk_buff" title="sk_buff">sk_buff</
 <div><p>This function segments the given skb and returns a list of segments.</p>
 <p>It may return NULL if the skb requires no segmentation.  This is
 only possible when GSO is used for verifying header integrity.</p>
-<p>Segmentation preserves SKB_SGO_CB_OFFSET bytes of previous skb cb.</p>
+<p>Segmentation preserves SKB_GSO_CB_OFFSET bytes of previous skb cb.</p>
 </div></blockquote>
 <dl class="function">
 <dt id="c.dev_loopback_xmit">
@@ -9216,7 +9235,7 @@ dev-&gt;netdev_ops-&gt;get_stats64 or dev-&gt;netdev_ops-&gt;get_stats;
 otherwise the internal statistics structure is used.</div></blockquote>
 <dl class="function">
 <dt id="c.alloc_netdev_mqs">
-struct <a class="reference internal" href="#c.net_device" title="net_device">net_device</a> * <code class="descname">alloc_netdev_mqs</code><span class="sig-paren">(</span>int<em>&nbsp;sizeof_priv</em>, const char *<em>&nbsp;name</em>, unsigned char<em>&nbsp;name_assign_type</em>, void (*setup) (struct <a class="reference internal" href="#c.net_device" title="net_device">net_device</a><em>&nbsp;*</em>, unsigned int<em>&nbsp;txqs</em>, unsigned int<em>&nbsp;rxqs</em><span class="sig-paren">)</span><a class="headerlink" href="#c.alloc_netdev_mqs" title="Permalink to this definition">¶</a></dt>
+struct <a class="reference internal" href="#c.net_device" title="net_device">net_device</a> * <code class="descname">alloc_netdev_mqs</code><span class="sig-paren">(</span>int<em>&nbsp;sizeof_priv</em>, const char *<em>&nbsp;name</em>, unsigned char<em>&nbsp;name_assign_type</em>, void (<em>*setup</em>)(struct <a class="reference internal" href="#c.net_device" title="net_device">net_device</a> *), unsigned int<em>&nbsp;txqs</em>, unsigned int<em>&nbsp;rxqs</em><span class="sig-paren">)</span><a class="headerlink" href="#c.alloc_netdev_mqs" title="Permalink to this definition">¶</a></dt>
 <dd><p>allocate network device</p>
 </dd></dl>
 
@@ -10395,6 +10414,9 @@ struct <code class="descname">net_device</code><a class="headerlink" href="#c.ne
   bool proto_down;
   unsigned wol_enabled:1;
   struct list_head        net_notifier_list;
+#if IS_ENABLED(CONFIG_MACSEC);
+  const struct macsec_ops *macsec_ops;
+#endif;
 };
 </pre></div>
 </div>
@@ -10742,6 +10764,8 @@ switch port.</dd>
 <dd>List of per-net netdev notifier block
 that follow this device when it is moved
 to another network namespace.</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">macsec_ops</span></code></dt>
+<dd>MACsec offloading ops</dd>
 </dl>
 <p><strong>Description</strong></p>
 <blockquote>
@@ -10767,7 +10791,7 @@ void * <code class="descname">netdev_priv</code><span class="sig-paren">(</span>
 <p>Get network device private data</p>
 <dl class="function">
 <dt id="c.netif_napi_add">
-void <code class="descname">netif_napi_add</code><span class="sig-paren">(</span>struct <a class="reference internal" href="#c.net_device" title="net_device">net_device</a> *<em>&nbsp;dev</em>, struct napi_struct *<em>&nbsp;napi</em>, int (*poll) (struct napi_struct<em>&nbsp;*</em>, int, int<em>&nbsp;weight</em><span class="sig-paren">)</span><a class="headerlink" href="#c.netif_napi_add" title="Permalink to this definition">¶</a></dt>
+void <code class="descname">netif_napi_add</code><span class="sig-paren">(</span>struct <a class="reference internal" href="#c.net_device" title="net_device">net_device</a> *<em>&nbsp;dev</em>, struct napi_struct *<em>&nbsp;napi</em>, int (<em>*poll</em>)(struct napi_struct *, int), int<em>&nbsp;weight</em><span class="sig-paren">)</span><a class="headerlink" href="#c.netif_napi_add" title="Permalink to this definition">¶</a></dt>
 <dd><p>initialize a NAPI context</p>
 </dd></dl>
 
@@ -10787,7 +10811,7 @@ void <code class="descname">netif_napi_add</code><span class="sig-paren">(</span
 <em>any</em> of the other NAPI-related functions.</p>
 <dl class="function">
 <dt id="c.netif_tx_napi_add">
-void <code class="descname">netif_tx_napi_add</code><span class="sig-paren">(</span>struct <a class="reference internal" href="#c.net_device" title="net_device">net_device</a> *<em>&nbsp;dev</em>, struct napi_struct *<em>&nbsp;napi</em>, int (*poll) (struct napi_struct<em>&nbsp;*</em>, int, int<em>&nbsp;weight</em><span class="sig-paren">)</span><a class="headerlink" href="#c.netif_tx_napi_add" title="Permalink to this definition">¶</a></dt>
+void <code class="descname">netif_tx_napi_add</code><span class="sig-paren">(</span>struct <a class="reference internal" href="#c.net_device" title="net_device">net_device</a> *<em>&nbsp;dev</em>, struct napi_struct *<em>&nbsp;napi</em>, int (<em>*poll</em>)(struct napi_struct *, int), int<em>&nbsp;weight</em><span class="sig-paren">)</span><a class="headerlink" href="#c.netif_tx_napi_add" title="Permalink to this definition">¶</a></dt>
 <dd><p>initialize a NAPI context</p>
 </dd></dl>
 
@@ -11257,7 +11281,7 @@ void <code class="descname">netif_tx_lock</code><span class="sig-paren">(</span>
 <p>Get network device transmit lock</p>
 <dl class="function">
 <dt id="c.__dev_uc_sync">
-int <code class="descname">__dev_uc_sync</code><span class="sig-paren">(</span>struct <a class="reference internal" href="#c.net_device" title="net_device">net_device</a> *<em>&nbsp;dev</em>, int (*sync) (struct <a class="reference internal" href="#c.net_device" title="net_device">net_device</a><em>&nbsp;*</em>, const unsigned char<em>&nbsp;*</em>, int (*unsync) (struct <a class="reference internal" href="#c.net_device" title="net_device">net_device</a><em>&nbsp;*</em>, const unsigned char<em>&nbsp;*</em><span class="sig-paren">)</span><a class="headerlink" href="#c.__dev_uc_sync" title="Permalink to this definition">¶</a></dt>
+int <code class="descname">__dev_uc_sync</code><span class="sig-paren">(</span>struct <a class="reference internal" href="#c.net_device" title="net_device">net_device</a> *<em>&nbsp;dev</em>, int (<em>*sync</em>)(struct <a class="reference internal" href="#c.net_device" title="net_device">net_device</a> *, const unsigned char *), int (*unsync) (struct <a class="reference internal" href="#c.net_device" title="net_device">net_device</a> *, const unsigned char *)<span class="sig-paren">)</span><a class="headerlink" href="#c.__dev_uc_sync" title="Permalink to this definition">¶</a></dt>
 <dd><p>Synchonize device’s unicast list</p>
 </dd></dl>
 
@@ -11276,7 +11300,7 @@ int <code class="descname">__dev_uc_sync</code><span class="sig-paren">(</span>s
 addresses that have been deleted.</div></blockquote>
 <dl class="function">
 <dt id="c.__dev_uc_unsync">
-void <code class="descname">__dev_uc_unsync</code><span class="sig-paren">(</span>struct <a class="reference internal" href="#c.net_device" title="net_device">net_device</a> *<em>&nbsp;dev</em>, int (*unsync) (struct <a class="reference internal" href="#c.net_device" title="net_device">net_device</a><em>&nbsp;*</em>, const unsigned char<em>&nbsp;*</em><span class="sig-paren">)</span><a class="headerlink" href="#c.__dev_uc_unsync" title="Permalink to this definition">¶</a></dt>
+void <code class="descname">__dev_uc_unsync</code><span class="sig-paren">(</span>struct <a class="reference internal" href="#c.net_device" title="net_device">net_device</a> *<em>&nbsp;dev</em>, int (<em>*unsync</em>)(struct <a class="reference internal" href="#c.net_device" title="net_device">net_device</a> *, const unsigned char *)<span class="sig-paren">)</span><a class="headerlink" href="#c.__dev_uc_unsync" title="Permalink to this definition">¶</a></dt>
 <dd><p>Remove synchronized addresses from device</p>
 </dd></dl>
 
@@ -11292,7 +11316,7 @@ void <code class="descname">__dev_uc_unsync</code><span class="sig-paren">(</spa
 <div>Remove all addresses that were added to the device by dev_uc_sync().</div></blockquote>
 <dl class="function">
 <dt id="c.__dev_mc_sync">
-int <code class="descname">__dev_mc_sync</code><span class="sig-paren">(</span>struct <a class="reference internal" href="#c.net_device" title="net_device">net_device</a> *<em>&nbsp;dev</em>, int (*sync) (struct <a class="reference internal" href="#c.net_device" title="net_device">net_device</a><em>&nbsp;*</em>, const unsigned char<em>&nbsp;*</em>, int (*unsync) (struct <a class="reference internal" href="#c.net_device" title="net_device">net_device</a><em>&nbsp;*</em>, const unsigned char<em>&nbsp;*</em><span class="sig-paren">)</span><a class="headerlink" href="#c.__dev_mc_sync" title="Permalink to this definition">¶</a></dt>
+int <code class="descname">__dev_mc_sync</code><span class="sig-paren">(</span>struct <a class="reference internal" href="#c.net_device" title="net_device">net_device</a> *<em>&nbsp;dev</em>, int (<em>*sync</em>)(struct <a class="reference internal" href="#c.net_device" title="net_device">net_device</a> *, const unsigned char *), int (*unsync) (struct <a class="reference internal" href="#c.net_device" title="net_device">net_device</a> *, const unsigned char *)<span class="sig-paren">)</span><a class="headerlink" href="#c.__dev_mc_sync" title="Permalink to this definition">¶</a></dt>
 <dd><p>Synchonize device’s multicast list</p>
 </dd></dl>
 
@@ -11311,7 +11335,7 @@ int <code class="descname">__dev_mc_sync</code><span class="sig-paren">(</span>s
 addresses that have been deleted.</div></blockquote>
 <dl class="function">
 <dt id="c.__dev_mc_unsync">
-void <code class="descname">__dev_mc_unsync</code><span class="sig-paren">(</span>struct <a class="reference internal" href="#c.net_device" title="net_device">net_device</a> *<em>&nbsp;dev</em>, int (*unsync) (struct <a class="reference internal" href="#c.net_device" title="net_device">net_device</a><em>&nbsp;*</em>, const unsigned char<em>&nbsp;*</em><span class="sig-paren">)</span><a class="headerlink" href="#c.__dev_mc_unsync" title="Permalink to this definition">¶</a></dt>
+void <code class="descname">__dev_mc_unsync</code><span class="sig-paren">(</span>struct <a class="reference internal" href="#c.net_device" title="net_device">net_device</a> *<em>&nbsp;dev</em>, int (<em>*unsync</em>)(struct <a class="reference internal" href="#c.net_device" title="net_device">net_device</a> *, const unsigned char *)<span class="sig-paren">)</span><a class="headerlink" href="#c.__dev_mc_unsync" title="Permalink to this definition">¶</a></dt>
 <dd><p>Remove synchronized addresses from device</p>
 </dd></dl>
 
@@ -11814,7 +11838,7 @@ void <code class="descname">phy_state_machine</code><span class="sig-paren">(</s
 </dl>
 <dl class="function">
 <dt id="c.phy_register_fixup">
-int <code class="descname">phy_register_fixup</code><span class="sig-paren">(</span>const char *<em>&nbsp;bus_id</em>, u32<em>&nbsp;phy_uid</em>, u32<em>&nbsp;phy_uid_mask</em>, int (*run) (struct phy_device<em>&nbsp;*</em><span class="sig-paren">)</span><a class="headerlink" href="#c.phy_register_fixup" title="Permalink to this definition">¶</a></dt>
+int <code class="descname">phy_register_fixup</code><span class="sig-paren">(</span>const char *<em>&nbsp;bus_id</em>, u32<em>&nbsp;phy_uid</em>, u32<em>&nbsp;phy_uid_mask</em>, int (<em>*run</em>)(struct phy_device *)<span class="sig-paren">)</span><a class="headerlink" href="#c.phy_register_fixup" title="Permalink to this definition">¶</a></dt>
 <dd><p>creates a new phy_fixup and adds it to the list</p>
 </dd></dl>
 
@@ -11905,7 +11929,7 @@ struct phy_device * <code class="descname">phy_find_first</code><span class="sig
 </dl>
 <dl class="function">
 <dt id="c.phy_connect_direct">
-int <code class="descname">phy_connect_direct</code><span class="sig-paren">(</span>struct <a class="reference internal" href="#c.net_device" title="net_device">net_device</a> *<em>&nbsp;dev</em>, struct phy_device *<em>&nbsp;phydev</em>, void (*handler) (struct <a class="reference internal" href="#c.net_device" title="net_device">net_device</a><em>&nbsp;*</em>, phy_interface_t<em>&nbsp;interface</em><span class="sig-paren">)</span><a class="headerlink" href="#c.phy_connect_direct" title="Permalink to this definition">¶</a></dt>
+int <code class="descname">phy_connect_direct</code><span class="sig-paren">(</span>struct <a class="reference internal" href="#c.net_device" title="net_device">net_device</a> *<em>&nbsp;dev</em>, struct phy_device *<em>&nbsp;phydev</em>, void (<em>*handler</em>)(struct <a class="reference internal" href="#c.net_device" title="net_device">net_device</a> *), phy_interface_t<em>&nbsp;interface</em><span class="sig-paren">)</span><a class="headerlink" href="#c.phy_connect_direct" title="Permalink to this definition">¶</a></dt>
 <dd><p>connect an ethernet device to a specific phy_device</p>
 </dd></dl>
 
@@ -11922,7 +11946,7 @@ int <code class="descname">phy_connect_direct</code><span class="sig-paren">(</s
 </dl>
 <dl class="function">
 <dt id="c.phy_connect">
-struct phy_device * <code class="descname">phy_connect</code><span class="sig-paren">(</span>struct <a class="reference internal" href="#c.net_device" title="net_device">net_device</a> *<em>&nbsp;dev</em>, const char *<em>&nbsp;bus_id</em>, void (*handler) (struct <a class="reference internal" href="#c.net_device" title="net_device">net_device</a><em>&nbsp;*</em>, phy_interface_t<em>&nbsp;interface</em><span class="sig-paren">)</span><a class="headerlink" href="#c.phy_connect" title="Permalink to this definition">¶</a></dt>
+struct phy_device * <code class="descname">phy_connect</code><span class="sig-paren">(</span>struct <a class="reference internal" href="#c.net_device" title="net_device">net_device</a> *<em>&nbsp;dev</em>, const char *<em>&nbsp;bus_id</em>, void (<em>*handler</em>)(struct <a class="reference internal" href="#c.net_device" title="net_device">net_device</a> *), phy_interface_t<em>&nbsp;interface</em><span class="sig-paren">)</span><a class="headerlink" href="#c.phy_connect" title="Permalink to this definition">¶</a></dt>
 <dd><p>connect an ethernet device to a PHY device</p>
 </dd></dl>
 
@@ -12409,6 +12433,27 @@ bool <code class="descname">phy_validate_pause</code><span class="sig-paren">(</
 configuration the user is requesting. Returns True if it is
 supported, false otherwise.</p>
 <dl class="function">
+<dt id="c.phy_get_pause">
+void <code class="descname">phy_get_pause</code><span class="sig-paren">(</span>struct phy_device *<em>&nbsp;phydev</em>, bool *<em>&nbsp;tx_pause</em>, bool *<em>&nbsp;rx_pause</em><span class="sig-paren">)</span><a class="headerlink" href="#c.phy_get_pause" title="Permalink to this definition">¶</a></dt>
+<dd><p>resolve negotiated pause modes</p>
+</dd></dl>
+
+<p><strong>Parameters</strong></p>
+<dl class="docutils">
+<dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">phy_device</span> <span class="pre">*</span> <span class="pre">phydev</span></code></dt>
+<dd>phy_device struct</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">bool</span> <span class="pre">*</span> <span class="pre">tx_pause</span></code></dt>
+<dd>pointer to bool to indicate whether transmit pause should be
+enabled.</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">bool</span> <span class="pre">*</span> <span class="pre">rx_pause</span></code></dt>
+<dd>pointer to bool to indicate whether receive pause should be
+enabled.</dd>
+</dl>
+<p><strong>Description</strong></p>
+<p>Resolve and return the flow control modes according to the negotiation
+result. This includes checking that we are operating in full duplex mode.
+See linkmode_resolve_pause() for further details.</p>
+<dl class="function">
 <dt id="c.phy_driver_register">
 int <code class="descname">phy_driver_register</code><span class="sig-paren">(</span>struct phy_driver *<em>&nbsp;new_driver</em>, struct module *<em>&nbsp;owner</em><span class="sig-paren">)</span><a class="headerlink" href="#c.phy_driver_register" title="Permalink to this definition">¶</a></dt>
 <dd><p>register a phy_driver with the PHY layer</p>
@@ -12474,7 +12519,7 @@ its return value is in turn returned.</p>
 </dl>
 <dl class="function">
 <dt id="c.phy_prepare_link">
-void <code class="descname">phy_prepare_link</code><span class="sig-paren">(</span>struct phy_device *<em>&nbsp;phydev</em>, void (*handler) (struct <a class="reference internal" href="#c.net_device" title="net_device">net_device</a><em>&nbsp;*</em><span class="sig-paren">)</span><a class="headerlink" href="#c.phy_prepare_link" title="Permalink to this definition">¶</a></dt>
+void <code class="descname">phy_prepare_link</code><span class="sig-paren">(</span>struct phy_device *<em>&nbsp;phydev</em>, void (<em>*handler</em>)(struct <a class="reference internal" href="#c.net_device" title="net_device">net_device</a> *)<span class="sig-paren">)</span><a class="headerlink" href="#c.phy_prepare_link" title="Permalink to this definition">¶</a></dt>
 <dd><p>prepares the PHY layer to monitor link status</p>
 </dd></dl>
 
@@ -12625,6 +12670,21 @@ void <code class="descname">devm_mdiobus_free</code><span class="sig-paren">(</s
 <p><strong>Description</strong></p>
 <p>Free mii_bus allocated with <a class="reference internal" href="#c.devm_mdiobus_alloc_size" title="devm_mdiobus_alloc_size"><code class="xref c c-func docutils literal notranslate"><span class="pre">devm_mdiobus_alloc_size()</span></code></a>.</p>
 <dl class="function">
+<dt id="c.mdio_find_bus">
+struct mii_bus * <code class="descname">mdio_find_bus</code><span class="sig-paren">(</span>const char *<em>&nbsp;mdio_name</em><span class="sig-paren">)</span><a class="headerlink" href="#c.mdio_find_bus" title="Permalink to this definition">¶</a></dt>
+<dd><p>Given the name of a mdiobus, find the mii_bus.</p>
+</dd></dl>
+
+<p><strong>Parameters</strong></p>
+<dl class="docutils">
+<dt><code class="docutils literal notranslate"><span class="pre">const</span> <span class="pre">char</span> <span class="pre">*</span> <span class="pre">mdio_name</span></code></dt>
+<dd>The name of a mdiobus.</dd>
+</dl>
+<p><strong>Description</strong></p>
+<p>Returns a reference to the mii_bus, or NULL if none found.  The
+embedded struct device will have its reference count incremented,
+and this must be put_deviced’ed once the bus is finished with.</p>
+<dl class="function">
 <dt id="c.of_mdio_find_bus">
 struct mii_bus * <code class="descname">of_mdio_find_bus</code><span class="sig-paren">(</span>struct device_node *<em>&nbsp;mdio_bus_np</em><span class="sig-paren">)</span><a class="headerlink" href="#c.of_mdio_find_bus" title="Permalink to this definition">¶</a></dt>
 <dd><p>Given an mii_bus node, find the mii_bus.</p>
@@ -12741,6 +12801,30 @@ int <code class="descname">__mdiobus_write</code><span class="sig-paren">(</span
 <p><strong>NOTE</strong></p>
 <p>MUST NOT be called from interrupt context.</p>
 <dl class="function">
+<dt id="c.__mdiobus_modify_changed">
+int <code class="descname">__mdiobus_modify_changed</code><span class="sig-paren">(</span>struct mii_bus *<em>&nbsp;bus</em>, int<em>&nbsp;addr</em>, u32<em>&nbsp;regnum</em>, u16<em>&nbsp;mask</em>, u16<em>&nbsp;set</em><span class="sig-paren">)</span><a class="headerlink" href="#c.__mdiobus_modify_changed" title="Permalink to this definition">¶</a></dt>
+<dd><p>Unlocked version of the mdiobus_modify function</p>
+</dd></dl>
+
+<p><strong>Parameters</strong></p>
+<dl class="docutils">
+<dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">mii_bus</span> <span class="pre">*</span> <span class="pre">bus</span></code></dt>
+<dd>the mii_bus struct</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">int</span> <span class="pre">addr</span></code></dt>
+<dd>the phy address</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">u32</span> <span class="pre">regnum</span></code></dt>
+<dd>register number to modify</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">u16</span> <span class="pre">mask</span></code></dt>
+<dd>bit mask of bits to clear</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">u16</span> <span class="pre">set</span></code></dt>
+<dd>bit mask of bits to set</dd>
+</dl>
+<p><strong>Description</strong></p>
+<p>Read, modify, and if any change, write the register value back to the
+device. Any error returns a negative number.</p>
+<p><strong>NOTE</strong></p>
+<p>MUST NOT be called from interrupt context.</p>
+<dl class="function">
 <dt id="c.mdiobus_read_nested">
 int <code class="descname">mdiobus_read_nested</code><span class="sig-paren">(</span>struct mii_bus *<em>&nbsp;bus</em>, int<em>&nbsp;addr</em>, u32<em>&nbsp;regnum</em><span class="sig-paren">)</span><a class="headerlink" href="#c.mdiobus_read_nested" title="Permalink to this definition">¶</a></dt>
 <dd><p>Nested version of the mdiobus_read function</p>
@@ -12826,6 +12910,25 @@ int <code class="descname">mdiobus_write</code><span class="sig-paren">(</span>s
 <p>MUST NOT be called from interrupt context,
 because the bus read/write functions may wait for an interrupt
 to conclude the operation.</p>
+<dl class="function">
+<dt id="c.mdiobus_modify">
+int <code class="descname">mdiobus_modify</code><span class="sig-paren">(</span>struct mii_bus *<em>&nbsp;bus</em>, int<em>&nbsp;addr</em>, u32<em>&nbsp;regnum</em>, u16<em>&nbsp;mask</em>, u16<em>&nbsp;set</em><span class="sig-paren">)</span><a class="headerlink" href="#c.mdiobus_modify" title="Permalink to this definition">¶</a></dt>
+<dd><p>Convenience function for modifying a given mdio device register</p>
+</dd></dl>
+
+<p><strong>Parameters</strong></p>
+<dl class="docutils">
+<dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">mii_bus</span> <span class="pre">*</span> <span class="pre">bus</span></code></dt>
+<dd>the mii_bus struct</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">int</span> <span class="pre">addr</span></code></dt>
+<dd>the phy address</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">u32</span> <span class="pre">regnum</span></code></dt>
+<dd>register number to write</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">u16</span> <span class="pre">mask</span></code></dt>
+<dd>bit mask of bits to clear</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">u16</span> <span class="pre">set</span></code></dt>
+<dd>bit mask of bits to set</dd>
+</dl>
 <dl class="function">
 <dt id="c.mdiobus_release">
 void <code class="descname">mdiobus_release</code><span class="sig-paren">(</span>struct <a class="reference internal" href="../driver-api/infrastructure.html#c.device" title="device">device</a> *<em>&nbsp;d</em><span class="sig-paren">)</span><a class="headerlink" href="#c.mdiobus_release" title="Permalink to this definition">¶</a></dt>
@@ -12955,7 +13058,7 @@ struct <code class="descname">phylink_mac_ops</code><a class="headerlink" href="
   void (*mac_config)(struct phylink_config *config, unsigned int mode, const struct phylink_link_state *state);
   void (*mac_an_restart)(struct phylink_config *config);
   void (*mac_link_down)(struct phylink_config *config, unsigned int mode, phy_interface_t interface);
-  void (*mac_link_up)(struct phylink_config *config, unsigned int mode,phy_interface_t interface, struct phy_device *phy);
+  void (*mac_link_up)(struct phylink_config *config,struct phy_device *phy, unsigned int mode,phy_interface_t interface, int speed, int duplex, bool tx_pause, bool rx_pause);
 };
 </pre></div>
 </div>
@@ -13047,14 +13150,29 @@ void <code class="descname">mac_config</code><span class="sig-paren">(</span>str
 <strong>state-&gt;lp_advertising</strong>, <strong>state-&gt;link</strong>, <strong>state-&gt;an_complete</strong> are never
 guaranteed to be correct, and so any <a class="reference internal" href="#c.mac_config" title="mac_config"><code class="xref c c-func docutils literal notranslate"><span class="pre">mac_config()</span></code></a> implementation must
 never reference these fields.</p>
+<dl class="docutils">
+<dt>(this requires a rewrite - please refer to mac_link_up() for situations</dt>
+<dd>where the PCS and MAC are not tightly integrated.)</dd>
+</dl>
+<p>In all negotiation modes, as defined by <strong>mode</strong>, <strong>state-&gt;pause</strong> indicates the
+pause settings which should be applied as follows. If <code class="docutils literal notranslate"><span class="pre">MLO_PAUSE_AN</span></code> is not
+set, <code class="docutils literal notranslate"><span class="pre">MLO_PAUSE_TX</span></code> and <code class="docutils literal notranslate"><span class="pre">MLO_PAUSE_RX</span></code> indicate whether the MAC should send
+pause frames and/or act on received pause frames respectively. Otherwise,
+the results of in-band negotiation/status from the MAC PCS should be used
+to control the MAC pause mode settings.</p>
 <p>The action performed depends on the currently selected mode:</p>
 <dl class="docutils">
 <dt><code class="docutils literal notranslate"><span class="pre">MLO_AN_FIXED</span></code>, <code class="docutils literal notranslate"><span class="pre">MLO_AN_PHY</span></code>:</dt>
-<dd><p class="first">Configure the specified <strong>state-&gt;speed</strong>, <strong>state-&gt;duplex</strong> and
-<strong>state-&gt;pause</strong> (<code class="docutils literal notranslate"><span class="pre">MLO_PAUSE_TX</span></code> / <code class="docutils literal notranslate"><span class="pre">MLO_PAUSE_RX</span></code>) modes over a link
-specified by <strong>state-&gt;interface</strong>.  <strong>state-&gt;advertising</strong> may be used,
-but is not required.  Other members of <strong>state</strong> must be ignored.</p>
-<p class="last">Valid state members: interface, speed, duplex, pause, advertising.</p>
+<dd><p class="first">Configure for non-inband negotiation mode, where the link settings
+are completely communicated via <a class="reference internal" href="#c.mac_link_up" title="mac_link_up"><code class="xref c c-func docutils literal notranslate"><span class="pre">mac_link_up()</span></code></a>.  The physical link
+protocol from the MAC is specified by <strong>state-&gt;interface</strong>.</p>
+<p><strong>state-&gt;advertising</strong> may be used, but is not required.</p>
+<p>Older drivers (prior to the <a class="reference internal" href="#c.mac_link_up" title="mac_link_up"><code class="xref c c-func docutils literal notranslate"><span class="pre">mac_link_up()</span></code></a> change) may use <strong>state-&gt;speed</strong>,
+<strong>state-&gt;duplex</strong> and <strong>state-&gt;pause</strong> to configure the MAC, but this is
+deprecated; such drivers should be converted to use <a class="reference internal" href="#c.mac_link_up" title="mac_link_up"><code class="xref c c-func docutils literal notranslate"><span class="pre">mac_link_up()</span></code></a>.</p>
+<p>Other members of <strong>state</strong> must be ignored.</p>
+<p class="last">Valid state members: interface, advertising.
+Deprecated state members: speed, duplex, pause.</p>
 </dd>
 <dt><code class="docutils literal notranslate"><span class="pre">MLO_AN_INBAND</span></code>:</dt>
 <dd><p class="first">place the link in an inband negotiation mode (such as 802.3z
@@ -13063,11 +13181,13 @@ mode). In both cases, link state management (whether the link
 is up or not) is performed by the MAC, and reported via the
 <a class="reference internal" href="#c.mac_pcs_get_state" title="mac_pcs_get_state"><code class="xref c c-func docutils literal notranslate"><span class="pre">mac_pcs_get_state()</span></code></a> callback. Changes in link state must be made
 by calling <a class="reference internal" href="#c.phylink_mac_change" title="phylink_mac_change"><code class="xref c c-func docutils literal notranslate"><span class="pre">phylink_mac_change()</span></code></a>.</p>
+<p>Interface mode specific details are mentioned below.</p>
 <p>If in 802.3z mode, the link speed is fixed, dependent on the
-<strong>state-&gt;interface</strong>. Duplex is negotiated, and pause is advertised
-according to <strong>state-&gt;an_enabled</strong>, <strong>state-&gt;pause</strong> and
-<strong>state-&gt;advertising</strong> flags. Beware of MACs which only support full
-duplex at gigabit and higher speeds.</p>
+<strong>state-&gt;interface</strong>. Duplex and pause modes are negotiated via
+the in-band configuration word. Advertised pause modes are set
+according to the <strong>state-&gt;an_enabled</strong> and <strong>state-&gt;advertising</strong>
+flags. Beware of MACs which only support full duplex at gigabit
+and higher speeds.</p>
 <p>If in Cisco SGMII mode, the link speed and duplex mode are passed
 in the serial bitstream 16-bit configuration word, and the MAC
 should be configured to read these bits and acknowledge the
@@ -13116,7 +13236,7 @@ Energy Efficient Ethernet MAC configuration. Interface type
 selection must be done in <a class="reference internal" href="#c.mac_config" title="mac_config"><code class="xref c c-func docutils literal notranslate"><span class="pre">mac_config()</span></code></a>.</p>
 <dl class="function">
 <dt id="c.mac_link_up">
-void <code class="descname">mac_link_up</code><span class="sig-paren">(</span>struct <a class="reference internal" href="#c.phylink_config" title="phylink_config">phylink_config</a> *<em>&nbsp;config</em>, unsigned int<em>&nbsp;mode</em>, phy_interface_t<em>&nbsp;interface</em>, struct phy_device *<em>&nbsp;phy</em><span class="sig-paren">)</span><a class="headerlink" href="#c.mac_link_up" title="Permalink to this definition">¶</a></dt>
+void <code class="descname">mac_link_up</code><span class="sig-paren">(</span>struct <a class="reference internal" href="#c.phylink_config" title="phylink_config">phylink_config</a> *<em>&nbsp;config</em>, struct phy_device *<em>&nbsp;phy</em>, unsigned int<em>&nbsp;mode</em>, phy_interface_t<em>&nbsp;interface</em>, int<em>&nbsp;speed</em>, int<em>&nbsp;duplex</em>, bool<em>&nbsp;tx_pause</em>, bool<em>&nbsp;rx_pause</em><span class="sig-paren">)</span><a class="headerlink" href="#c.mac_link_up" title="Permalink to this definition">¶</a></dt>
 <dd><p>allow the link to come up</p>
 </dd></dl>
 
@@ -13124,19 +13244,134 @@ void <code class="descname">mac_link_up</code><span class="sig-paren">(</span>st
 <dl class="docutils">
 <dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">phylink_config</span> <span class="pre">*</span> <span class="pre">config</span></code></dt>
 <dd>a pointer to a <a class="reference internal" href="#c.phylink_config" title="phylink_config"><code class="xref c c-type docutils literal notranslate"><span class="pre">struct</span> <span class="pre">phylink_config</span></code></a>.</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">phy_device</span> <span class="pre">*</span> <span class="pre">phy</span></code></dt>
+<dd>any attached phy</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">unsigned</span> <span class="pre">int</span> <span class="pre">mode</span></code></dt>
 <dd>link autonegotiation mode</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">phy_interface_t</span> <span class="pre">interface</span></code></dt>
 <dd>link <code class="xref c c-type docutils literal notranslate"><span class="pre">typedef</span> <span class="pre">phy_interface_t</span></code> mode</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">phy_device</span> <span class="pre">*</span> <span class="pre">phy</span></code></dt>
-<dd>any attached phy</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">int</span> <span class="pre">speed</span></code></dt>
+<dd>link speed</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">int</span> <span class="pre">duplex</span></code></dt>
+<dd>link duplex</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">bool</span> <span class="pre">tx_pause</span></code></dt>
+<dd>link transmit pause enablement status</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">bool</span> <span class="pre">rx_pause</span></code></dt>
+<dd>link receive pause enablement status</dd>
 </dl>
 <p><strong>Description</strong></p>
-<p>If <strong>mode</strong> is not an in-band negotiation mode (as defined by
-phylink_autoneg_inband()), allow the link to come up. If <strong>phy</strong>
-is non-<code class="docutils literal notranslate"><span class="pre">NULL</span></code>, configure Energy Efficient Ethernet by calling
+<p>Configure the MAC for an established link.</p>
+<p><strong>speed</strong>, <strong>duplex</strong>, <strong>tx_pause</strong> and <strong>rx_pause</strong> indicate the finalised link
+settings, and should be used to configure the MAC block appropriately
+where these settings are not automatically conveyed from the PCS block,
+or if in-band negotiation (as defined by phylink_autoneg_inband(<strong>mode</strong>))
+is disabled.</p>
+<p>Note that when 802.3z in-band negotiation is in use, it is possible
+that the user wishes to override the pause settings, and this should
+be allowed when considering the implementation of this method.</p>
+<p>If in-band negotiation mode is disabled, allow the link to come up. If
+<strong>phy</strong> is non-<code class="docutils literal notranslate"><span class="pre">NULL</span></code>, configure Energy Efficient Ethernet by calling
 <a class="reference internal" href="#c.phy_init_eee" title="phy_init_eee"><code class="xref c c-func docutils literal notranslate"><span class="pre">phy_init_eee()</span></code></a> and perform appropriate MAC configuration for EEE.
 Interface type selection must be done in <a class="reference internal" href="#c.mac_config" title="mac_config"><code class="xref c c-func docutils literal notranslate"><span class="pre">mac_config()</span></code></a>.</p>
+<dl class="type">
+<dt id="c.phylink_pcs_ops">
+struct <code class="descname">phylink_pcs_ops</code><a class="headerlink" href="#c.phylink_pcs_ops" title="Permalink to this definition">¶</a></dt>
+<dd><p>MAC PCS operations structure.</p>
+</dd></dl>
+
+<p><strong>Definition</strong></p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>struct phylink_pcs_ops {
+  void (*pcs_get_state)(struct phylink_config *config, struct phylink_link_state *state);
+  int (*pcs_config)(struct phylink_config *config, unsigned int mode,phy_interface_t interface, const unsigned long *advertising);
+  void (*pcs_an_restart)(struct phylink_config *config);
+  void (*pcs_link_up)(struct phylink_config *config, unsigned int mode, phy_interface_t interface, int speed, int duplex);
+};
+</pre></div>
+</div>
+<p><strong>Members</strong></p>
+<dl class="docutils">
+<dt><code class="docutils literal notranslate"><span class="pre">pcs_get_state</span></code></dt>
+<dd>read the current MAC PCS link state from the hardware.</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">pcs_config</span></code></dt>
+<dd>configure the MAC PCS for the selected mode and state.</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">pcs_an_restart</span></code></dt>
+<dd>restart 802.3z BaseX autonegotiation.</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">pcs_link_up</span></code></dt>
+<dd>program the PCS for the resolved link configuration
+(where necessary).</dd>
+</dl>
+<dl class="function">
+<dt id="c.pcs_get_state">
+void <code class="descname">pcs_get_state</code><span class="sig-paren">(</span>struct <a class="reference internal" href="#c.phylink_config" title="phylink_config">phylink_config</a> *<em>&nbsp;config</em>, struct <a class="reference internal" href="#c.phylink_link_state" title="phylink_link_state">phylink_link_state</a> *<em>&nbsp;state</em><span class="sig-paren">)</span><a class="headerlink" href="#c.pcs_get_state" title="Permalink to this definition">¶</a></dt>
+<dd><p>Read the current inband link state from the hardware</p>
+</dd></dl>
+
+<p><strong>Parameters</strong></p>
+<dl class="docutils">
+<dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">phylink_config</span> <span class="pre">*</span> <span class="pre">config</span></code></dt>
+<dd>a pointer to a <a class="reference internal" href="#c.phylink_config" title="phylink_config"><code class="xref c c-type docutils literal notranslate"><span class="pre">struct</span> <span class="pre">phylink_config</span></code></a>.</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">phylink_link_state</span> <span class="pre">*</span> <span class="pre">state</span></code></dt>
+<dd>a pointer to a <a class="reference internal" href="#c.phylink_link_state" title="phylink_link_state"><code class="xref c c-type docutils literal notranslate"><span class="pre">struct</span> <span class="pre">phylink_link_state</span></code></a>.</dd>
+</dl>
+<p><strong>Description</strong></p>
+<p>Read the current inband link state from the MAC PCS, reporting the
+current speed in <strong>state-&gt;speed</strong>, duplex mode in <strong>state-&gt;duplex</strong>, pause
+mode in <strong>state-&gt;pause</strong> using the <code class="docutils literal notranslate"><span class="pre">MLO_PAUSE_RX</span></code> and <code class="docutils literal notranslate"><span class="pre">MLO_PAUSE_TX</span></code> bits,
+negotiation completion state in <strong>state-&gt;an_complete</strong>, and link up state
+in <strong>state-&gt;link</strong>. If possible, <strong>state-&gt;lp_advertising</strong> should also be
+populated.</p>
+<p>When present, this overrides <a class="reference internal" href="#c.mac_pcs_get_state" title="mac_pcs_get_state"><code class="xref c c-func docutils literal notranslate"><span class="pre">mac_pcs_get_state()</span></code></a> in <a class="reference internal" href="#c.phylink_mac_ops" title="phylink_mac_ops"><code class="xref c c-type docutils literal notranslate"><span class="pre">struct</span>
+<span class="pre">phylink_mac_ops</span></code></a>.</p>
+<dl class="function">
+<dt id="c.int">
+<code class="descname">int</code><span class="sig-paren">(</span>*<em>&nbsp;pcs_config</em><span class="sig-paren">)</span><a class="headerlink" href="#c.int" title="Permalink to this definition">¶</a></dt>
+<dd><p>Configure the PCS mode and advertisement</p>
+</dd></dl>
+
+<p><strong>Parameters</strong></p>
+<dl class="docutils">
+<dt>`` * pcs_config``</dt>
+<dd><em>undescribed</em></dd>
+</dl>
+<p><strong>Description</strong></p>
+<p>Configure the PCS for the operating mode, the interface mode, and set
+the advertisement mask.</p>
+<p>When operating in <code class="docutils literal notranslate"><span class="pre">MLO_AN_INBAND</span></code>, inband should always be enabled,
+otherwise inband should be disabled.</p>
+<p>For SGMII, there is no advertisement from the MAC side, the PCS should
+be programmed to acknowledge the inband word from the PHY.</p>
+<p>For 1000BASE-X, the advertisement should be programmed into the PCS.</p>
+<p>For most 10GBASE-R, there is no advertisement.</p>
+<dl class="function">
+<dt id="c.void">
+<code class="descname">void</code><span class="sig-paren">(</span>*<em>&nbsp;pcs_an_restart</em><span class="sig-paren">)</span><a class="headerlink" href="#c.void" title="Permalink to this definition">¶</a></dt>
+<dd><p>restart 802.3z BaseX autonegotiation</p>
+</dd></dl>
+
+<p><strong>Parameters</strong></p>
+<dl class="docutils">
+<dt>`` * pcs_an_restart``</dt>
+<dd><em>undescribed</em></dd>
+</dl>
+<p><strong>Description</strong></p>
+<p>When PCS ops are present, this overrides <a class="reference internal" href="#c.mac_an_restart" title="mac_an_restart"><code class="xref c c-func docutils literal notranslate"><span class="pre">mac_an_restart()</span></code></a> in <a class="reference internal" href="#c.phylink_mac_ops" title="phylink_mac_ops"><code class="xref c c-type docutils literal notranslate"><span class="pre">struct</span>
+<span class="pre">phylink_mac_ops</span></code></a>.</p>
+<dl class="function">
+<dt>
+<code class="descname">void</code><span class="sig-paren">(</span>*<em>&nbsp;pcs_link_up</em><span class="sig-paren">)</span></dt>
+<dd><p>program the PCS for the resolved link configuration</p>
+</dd></dl>
+
+<p><strong>Parameters</strong></p>
+<dl class="docutils">
+<dt>`` * pcs_link_up``</dt>
+<dd><em>undescribed</em></dd>
+</dl>
+<p><strong>Description</strong></p>
+<p>This call will be made just before <a class="reference internal" href="#c.mac_link_up" title="mac_link_up"><code class="xref c c-func docutils literal notranslate"><span class="pre">mac_link_up()</span></code></a> to inform the PCS of
+the resolved link parameters. For example, a PCS operating in SGMII
+mode without in-band AN needs to be manually configured for the link
+and duplex setting. Otherwise, this should be a no-op.</p>
 <dl class="type">
 <dt id="c.phylink">
 struct <code class="descname">phylink</code><a class="headerlink" href="#c.phylink" title="Permalink to this definition">¶</a></dt>
@@ -13165,7 +13400,7 @@ void <code class="descname">phylink_set_port_modes</code><span class="sig-paren"
 use this in their ‘validate’ callback.</p>
 <dl class="function">
 <dt id="c.phylink_create">
-struct <a class="reference internal" href="#c.phylink" title="phylink">phylink</a> * <code class="descname">phylink_create</code><span class="sig-paren">(</span>struct <a class="reference internal" href="#c.phylink_config" title="phylink_config">phylink_config</a> *<em>&nbsp;config</em>, struct fwnode_handle *<em>&nbsp;fwnode</em>, phy_interface_t<em>&nbsp;iface</em>, const struct <a class="reference internal" href="#c.phylink_mac_ops" title="phylink_mac_ops">phylink_mac_ops</a> *<em>&nbsp;ops</em><span class="sig-paren">)</span><a class="headerlink" href="#c.phylink_create" title="Permalink to this definition">¶</a></dt>
+struct <a class="reference internal" href="#c.phylink" title="phylink">phylink</a> * <code class="descname">phylink_create</code><span class="sig-paren">(</span>struct <a class="reference internal" href="#c.phylink_config" title="phylink_config">phylink_config</a> *<em>&nbsp;config</em>, struct fwnode_handle *<em>&nbsp;fwnode</em>, phy_interface_t<em>&nbsp;iface</em>, const struct <a class="reference internal" href="#c.phylink_mac_ops" title="phylink_mac_ops">phylink_mac_ops</a> *<em>&nbsp;mac_ops</em><span class="sig-paren">)</span><a class="headerlink" href="#c.phylink_create" title="Permalink to this definition">¶</a></dt>
 <dd><p>create a phylink instance</p>
 </dd></dl>
 
@@ -13178,7 +13413,7 @@ struct <a class="reference internal" href="#c.phylink" title="phylink">phylink</
 interface</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">phy_interface_t</span> <span class="pre">iface</span></code></dt>
 <dd>the desired link mode defined by <code class="xref c c-type docutils literal notranslate"><span class="pre">typedef</span> <span class="pre">phy_interface_t</span></code></dd>
-<dt><code class="docutils literal notranslate"><span class="pre">const</span> <span class="pre">struct</span> <span class="pre">phylink_mac_ops</span> <span class="pre">*</span> <span class="pre">ops</span></code></dt>
+<dt><code class="docutils literal notranslate"><span class="pre">const</span> <span class="pre">struct</span> <span class="pre">phylink_mac_ops</span> <span class="pre">*</span> <span class="pre">mac_ops</span></code></dt>
 <dd>a pointer to a <a class="reference internal" href="#c.phylink_mac_ops" title="phylink_mac_ops"><code class="xref c c-type docutils literal notranslate"><span class="pre">struct</span> <span class="pre">phylink_mac_ops</span></code></a> for the MAC.</dd>
 </dl>
 <p><strong>Description</strong></p>
@@ -13260,7 +13495,7 @@ void <code class="descname">phylink_disconnect_phy</code><span class="sig-paren"
 <p>Disconnect any current PHY from the phylink instance described by <strong>pl</strong>.</p>
 <dl class="function">
 <dt id="c.phylink_fixed_state_cb">
-int <code class="descname">phylink_fixed_state_cb</code><span class="sig-paren">(</span>struct <a class="reference internal" href="#c.phylink" title="phylink">phylink</a> *<em>&nbsp;pl</em>, void (*cb) (struct <a class="reference internal" href="#c.net_device" title="net_device">net_device</a><em>&nbsp;*dev</em>, struct <a class="reference internal" href="#c.phylink_link_state" title="phylink_link_state">phylink_link_state</a><em>&nbsp;*state</em><span class="sig-paren">)</span><a class="headerlink" href="#c.phylink_fixed_state_cb" title="Permalink to this definition">¶</a></dt>
+int <code class="descname">phylink_fixed_state_cb</code><span class="sig-paren">(</span>struct <a class="reference internal" href="#c.phylink" title="phylink">phylink</a> *<em>&nbsp;pl</em>, void (<em>*cb</em>)(struct <a class="reference internal" href="#c.net_device" title="net_device">net_device</a> *dev, struct <a class="reference internal" href="#c.phylink_link_state" title="phylink_link_state">phylink_link_state</a> *state)<span class="sig-paren">)</span><a class="headerlink" href="#c.phylink_fixed_state_cb" title="Permalink to this definition">¶</a></dt>
 <dd><p>allow setting a fixed link callback</p>
 </dd></dl>
 
@@ -13530,6 +13765,67 @@ decide whether to run at 2.5Gbit or 1Gbit appropriately, switching
 the interface mode to suit.  <strong>state-&gt;interface</strong> is appropriately
 updated, and the advertising mask has the “other” baseX_Full flag
 cleared.</p>
+<dl class="function">
+<dt id="c.phylink_mii_c22_pcs_get_state">
+void <code class="descname">phylink_mii_c22_pcs_get_state</code><span class="sig-paren">(</span>struct mdio_device *<em>&nbsp;pcs</em>, struct <a class="reference internal" href="#c.phylink_link_state" title="phylink_link_state">phylink_link_state</a> *<em>&nbsp;state</em><span class="sig-paren">)</span><a class="headerlink" href="#c.phylink_mii_c22_pcs_get_state" title="Permalink to this definition">¶</a></dt>
+<dd><p>read the MAC PCS state</p>
+</dd></dl>
+
+<p><strong>Parameters</strong></p>
+<dl class="docutils">
+<dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">mdio_device</span> <span class="pre">*</span> <span class="pre">pcs</span></code></dt>
+<dd>a pointer to a <code class="xref c c-type docutils literal notranslate"><span class="pre">struct</span> <span class="pre">mdio_device</span></code>.</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">phylink_link_state</span> <span class="pre">*</span> <span class="pre">state</span></code></dt>
+<dd>a pointer to a <a class="reference internal" href="#c.phylink_link_state" title="phylink_link_state"><code class="xref c c-type docutils literal notranslate"><span class="pre">struct</span> <span class="pre">phylink_link_state</span></code></a>.</dd>
+</dl>
+<p><strong>Description</strong></p>
+<p>Helper for MAC PCS supporting the 802.3 clause 22 register set for
+clause 37 negotiation and/or SGMII control.</p>
+<p>Read the MAC PCS state from the MII device configured in <strong>config</strong> and
+parse the Clause 37 or Cisco SGMII link partner negotiation word into
+the phylink <strong>state</strong> structure. This is suitable to be directly plugged
+into the <a class="reference internal" href="#c.mac_pcs_get_state" title="mac_pcs_get_state"><code class="xref c c-func docutils literal notranslate"><span class="pre">mac_pcs_get_state()</span></code></a> member of the struct phylink_mac_ops
+structure.</p>
+<dl class="function">
+<dt id="c.phylink_mii_c22_pcs_set_advertisement">
+int <code class="descname">phylink_mii_c22_pcs_set_advertisement</code><span class="sig-paren">(</span>struct mdio_device *<em>&nbsp;pcs</em>, phy_interface_t<em>&nbsp;interface</em>, const unsigned long *<em>&nbsp;advertising</em><span class="sig-paren">)</span><a class="headerlink" href="#c.phylink_mii_c22_pcs_set_advertisement" title="Permalink to this definition">¶</a></dt>
+<dd><p>configure the clause 37 PCS advertisement</p>
+</dd></dl>
+
+<p><strong>Parameters</strong></p>
+<dl class="docutils">
+<dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">mdio_device</span> <span class="pre">*</span> <span class="pre">pcs</span></code></dt>
+<dd>a pointer to a <code class="xref c c-type docutils literal notranslate"><span class="pre">struct</span> <span class="pre">mdio_device</span></code>.</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">phy_interface_t</span> <span class="pre">interface</span></code></dt>
+<dd>the PHY interface mode being configured</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">const</span> <span class="pre">unsigned</span> <span class="pre">long</span> <span class="pre">*</span> <span class="pre">advertising</span></code></dt>
+<dd>the ethtool advertisement mask</dd>
+</dl>
+<p><strong>Description</strong></p>
+<p>Helper for MAC PCS supporting the 802.3 clause 22 register set for
+clause 37 negotiation and/or SGMII control.</p>
+<p>Configure the clause 37 PCS advertisement as specified by <strong>state</strong>. This
+does not trigger a renegotiation; phylink will do that via the
+<a class="reference internal" href="#c.mac_an_restart" title="mac_an_restart"><code class="xref c c-func docutils literal notranslate"><span class="pre">mac_an_restart()</span></code></a> method of the struct phylink_mac_ops structure.</p>
+<p>Returns negative error code on failure to configure the advertisement,
+zero if no change has been made, or one if the advertisement has changed.</p>
+<dl class="function">
+<dt id="c.phylink_mii_c22_pcs_an_restart">
+void <code class="descname">phylink_mii_c22_pcs_an_restart</code><span class="sig-paren">(</span>struct mdio_device *<em>&nbsp;pcs</em><span class="sig-paren">)</span><a class="headerlink" href="#c.phylink_mii_c22_pcs_an_restart" title="Permalink to this definition">¶</a></dt>
+<dd><p>restart 802.3z autonegotiation</p>
+</dd></dl>
+
+<p><strong>Parameters</strong></p>
+<dl class="docutils">
+<dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">mdio_device</span> <span class="pre">*</span> <span class="pre">pcs</span></code></dt>
+<dd>a pointer to a <code class="xref c c-type docutils literal notranslate"><span class="pre">struct</span> <span class="pre">mdio_device</span></code>.</dd>
+</dl>
+<p><strong>Description</strong></p>
+<p>Helper for MAC PCS supporting the 802.3 clause 22 register set for
+clause 37 negotiation.</p>
+<p>Restart the clause 37 negotiation with the link partner. This is
+suitable to be directly plugged into the <a class="reference internal" href="#c.mac_pcs_get_state" title="mac_pcs_get_state"><code class="xref c c-func docutils literal notranslate"><span class="pre">mac_pcs_get_state()</span></code></a> member
+of the struct phylink_mac_ops structure.</p>
 </div>
 <div class="section" id="sfp-support">
 <h3>SFP support<a class="headerlink" href="#sfp-support" title="Permalink to this headline">¶</a></h3>

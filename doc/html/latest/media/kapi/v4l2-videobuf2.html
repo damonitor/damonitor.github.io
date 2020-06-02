@@ -68,7 +68,7 @@
             
             
               <div class="version">
-                5.6.0
+                5.7.0
               </div>
             
           
@@ -246,7 +246,7 @@ driver, useful for cache synchronisation, optional.</dd>
 <dd>called every time the buffer is passed back from the driver
 to the userspace, also optional.</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">attach_dmabuf</span></code></dt>
-<dd>attach a shared <a class="reference internal" href="../../driver-api/dma-buf.html#c.dma_buf" title="dma_buf"><code class="xref c c-type docutils literal notranslate"><span class="pre">struct</span> <span class="pre">dma_buf</span></code></a> for a hardware operation;
+<dd>attach a shared <code class="xref c c-type docutils literal notranslate"><span class="pre">struct</span> <span class="pre">dma_buf</span></code> for a hardware operation;
 used for DMABUF memory types; dev is the alloc device
 dbuf is the shared dma_buf; returns ERR_PTR() on failure;
 allocator private per-buffer structure on success;
@@ -714,8 +714,11 @@ by the vb2 core.</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">buf_struct_size</span></code></dt>
 <dd>size of the driver-specific buffer structure;
 “0” indicates the driver doesn’t want to use a custom buffer
-structure type. for example, <code class="docutils literal notranslate"><span class="pre">sizeof(struct</span> <span class="pre">vb2_v4l2_buffer)</span></code>
-will be used for v4l2.</dd>
+structure type. In that case a subsystem-specific struct
+will be used (in the case of V4L2 that is
+<code class="docutils literal notranslate"><span class="pre">sizeof(struct</span> <span class="pre">vb2_v4l2_buffer)</span></code>). The first field of the
+driver-specific buffer structure must be the subsystem-specific
+struct (vb2_v4l2_buffer in the case of V4L2).</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">timestamp_flags</span></code></dt>
 <dd>Timestamp flags; <code class="docutils literal notranslate"><span class="pre">V4L2_BUF_FLAG_TIMESTAMP_*</span></code> and
 <code class="docutils literal notranslate"><span class="pre">V4L2_BUF_FLAG_TSTAMP_SRC_*</span></code></dd>
@@ -729,7 +732,7 @@ to force the buffer allocation to a specific memory zone.</dd>
 cannot be started unless at least this number of buffers
 have been queued into the driver.</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">alloc_devs</span></code></dt>
-<dd><a class="reference internal" href="../../driver-api/infrastructure.html#c.device" title="device"><code class="xref c c-type docutils literal notranslate"><span class="pre">struct</span> <span class="pre">device</span></code></a> memory type/allocator-specific per-plane device</dd>
+<dd><code class="xref c c-type docutils literal notranslate"><span class="pre">struct</span> <span class="pre">device</span></code> memory type/allocator-specific per-plane device</dd>
 </dl>
 <dl class="function">
 <dt id="c.vb2_plane_vaddr">

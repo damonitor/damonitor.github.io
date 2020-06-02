@@ -68,7 +68,7 @@
             
             
               <div class="version">
-                5.6.0
+                5.7.0
               </div>
             
           
@@ -2073,6 +2073,8 @@ struct <code class="descname">nand_chip</code><a class="headerlink" href="#c.nan
   int read_retries;
   struct mutex lock;
   unsigned int suspended : 1;
+  int (*suspend)(struct nand_chip *chip);
+  void (*resume)(struct nand_chip *chip);
   uint8_t *oob_poi;
   struct nand_controller *controller;
   struct nand_ecc_ctrl ecc;
@@ -2086,6 +2088,8 @@ struct <code class="descname">nand_chip</code><a class="headerlink" href="#c.nan
     const struct nand_manufacturer *desc;
     void *priv;
   } manufacturer;
+  int (*lock_area)(struct nand_chip *chip, loff_t ofs, uint64_t len);
+  int (*unlock_area)(struct nand_chip *chip, loff_t ofs, uint64_t len);
 };
 </pre></div>
 </div>
@@ -2164,6 +2168,10 @@ read it.</dd>
 serialize accesses to the NAND device.</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">suspended</span></code></dt>
 <dd>set to 1 when the device is suspended, 0 when it’s not.</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">suspend</span></code></dt>
+<dd>[REPLACEABLE] specific NAND device suspend operation</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">resume</span></code></dt>
+<dd>[REPLACEABLE] specific NAND device resume operation</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">oob_poi</span></code></dt>
 <dd>“poison value buffer,” used for laying out OOB data
 before writing</dd>
@@ -2193,6 +2201,10 @@ bad block scan.</dd>
 <dd>[INTERN] Contains manufacturer’s description</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">manufacturer.priv</span></code></dt>
 <dd>[INTERN] Contains manufacturer private information</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">lock_area</span></code></dt>
+<dd>[REPLACEABLE] specific NAND chip lock operation</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">unlock_area</span></code></dt>
+<dd>[REPLACEABLE] specific NAND chip unlock operation</dd>
 </dl>
 <dl class="type">
 <dt id="c.nand_flash_dev">
@@ -2233,7 +2245,7 @@ struct <code class="descname">nand_flash_dev</code><a class="headerlink" href="#
 <dt><code class="docutils literal notranslate"><span class="pre">{unnamed_struct}</span></code></dt>
 <dd>anonymous</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">mfr_id</span></code></dt>
-<dd>manufecturer ID part of the full chip ID array (refers the same
+<dd>manufacturer ID part of the full chip ID array (refers the same
 memory address as <code class="docutils literal notranslate"><span class="pre">id[0]</span></code>)</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">dev_id</span></code></dt>
 <dd>device ID part of the full chip ID array (refers the same memory
@@ -4057,6 +4069,8 @@ int <code class="descname">nand_suspend</code><span class="sig-paren">(</span>st
 <dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">mtd_info</span> <span class="pre">*</span> <span class="pre">mtd</span></code></dt>
 <dd>MTD device structure</dd>
 </dl>
+<p><strong>Description</strong></p>
+<p>Returns 0 for success or negative error code otherwise.</p>
 <dl class="function">
 <dt id="c.nand_resume">
 void <code class="descname">nand_resume</code><span class="sig-paren">(</span>struct mtd_info *<em>&nbsp;mtd</em><span class="sig-paren">)</span><a class="headerlink" href="#c.nand_resume" title="Permalink to this definition">¶</a></dt>
@@ -4078,6 +4092,36 @@ void <code class="descname">nand_shutdown</code><span class="sig-paren">(</span>
 <dl class="docutils">
 <dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">mtd_info</span> <span class="pre">*</span> <span class="pre">mtd</span></code></dt>
 <dd>MTD device structure</dd>
+</dl>
+<dl class="function">
+<dt id="c.nand_lock">
+int <code class="descname">nand_lock</code><span class="sig-paren">(</span>struct mtd_info *<em>&nbsp;mtd</em>, loff_t<em>&nbsp;ofs</em>, uint64_t<em>&nbsp;len</em><span class="sig-paren">)</span><a class="headerlink" href="#c.nand_lock" title="Permalink to this definition">¶</a></dt>
+<dd><p>[MTD Interface] Lock the NAND flash</p>
+</dd></dl>
+
+<p><strong>Parameters</strong></p>
+<dl class="docutils">
+<dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">mtd_info</span> <span class="pre">*</span> <span class="pre">mtd</span></code></dt>
+<dd>MTD device structure</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">loff_t</span> <span class="pre">ofs</span></code></dt>
+<dd>offset byte address</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">uint64_t</span> <span class="pre">len</span></code></dt>
+<dd>number of bytes to lock (must be a multiple of block/page size)</dd>
+</dl>
+<dl class="function">
+<dt id="c.nand_unlock">
+int <code class="descname">nand_unlock</code><span class="sig-paren">(</span>struct mtd_info *<em>&nbsp;mtd</em>, loff_t<em>&nbsp;ofs</em>, uint64_t<em>&nbsp;len</em><span class="sig-paren">)</span><a class="headerlink" href="#c.nand_unlock" title="Permalink to this definition">¶</a></dt>
+<dd><p>[MTD Interface] Unlock the NAND flash</p>
+</dd></dl>
+
+<p><strong>Parameters</strong></p>
+<dl class="docutils">
+<dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">mtd_info</span> <span class="pre">*</span> <span class="pre">mtd</span></code></dt>
+<dd>MTD device structure</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">loff_t</span> <span class="pre">ofs</span></code></dt>
+<dd>offset byte address</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">uint64_t</span> <span class="pre">len</span></code></dt>
+<dd>number of bytes to unlock (must be a multiple of block/page size)</dd>
 </dl>
 <dl class="function">
 <dt id="c.nand_scan_ident">

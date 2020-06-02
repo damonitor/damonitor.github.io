@@ -68,7 +68,7 @@
             
             
               <div class="version">
-                5.6.0
+                5.7.0
               </div>
             
           
@@ -171,9 +171,11 @@ panels with or without frame buffering and can convert most
 input formats including most variants of RGB and YUV.</p>
 <p>The hardware has four display pipes, and the layout is a little
 bit like this:</p>
-<p>Memory     -&gt; Overlay -&gt; Channel -&gt; FIFO -&gt; 5 formatters -&gt; DSI/DPI
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>Memory     -&gt; Overlay -&gt; Channel -&gt; FIFO -&gt; 5 formatters -&gt; DSI/DPI
 External      0..5       0..3       A,B,    3 x DSI         bridge
-source 0..9                         C0,C1   2 x DPI</p>
+source 0..9                         C0,C1   2 x DPI
+</pre></div>
+</div>
 <p>FIFOs A and B are for LCD and HDMI while FIFO CO/C1 are for
 panels with embedded buffer.
 3 of the formatters are for DSI.
@@ -187,12 +189,11 @@ one FIFO and one formatter which we connect to the simple CMA framebuffer
 helpers. We then provide a bridge to the DSI port, and on the DSI port
 bridge we connect hang a panel bridge or other bridge. This may be subject
 to change as we exploit more of the hardware capabilities.</p>
-<p>TODO:
-- Enabled damaged rectangles using <a class="reference internal" href="drm-kms.html#c.drm_plane_enable_fb_damage_clips" title="drm_plane_enable_fb_damage_clips"><code class="xref c c-func docutils literal notranslate"><span class="pre">drm_plane_enable_fb_damage_clips()</span></code></a></p>
-<blockquote>
-<div>so we can selectively just transmit the damaged area to a
-command-only display.</div></blockquote>
+<p>TODO:</p>
 <ul class="simple">
+<li>Enabled damaged rectangles using <a class="reference internal" href="drm-kms.html#c.drm_plane_enable_fb_damage_clips" title="drm_plane_enable_fb_damage_clips"><code class="xref c c-func docutils literal notranslate"><span class="pre">drm_plane_enable_fb_damage_clips()</span></code></a>
+so we can selectively just transmit the damaged area to a
+command-only display.</li>
 <li>Enable mixing of more planes, possibly at the cost of moving away
 from using the simple framebuffer pipeline.</li>
 <li>Enable output to bridges such as the AV8100 HDMI encoder from

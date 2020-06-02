@@ -68,7 +68,7 @@
             
             
               <div class="version">
-                5.6.0
+                5.7.0
               </div>
             
           
@@ -221,6 +221,7 @@ struct <code class="descname">drm_crtc_helper_funcs</code><a class="headerlink" 
   void (*atomic_flush)(struct drm_crtc *crtc, struct drm_crtc_state *old_crtc_state);
   void (*atomic_enable)(struct drm_crtc *crtc, struct drm_crtc_state *old_crtc_state);
   void (*atomic_disable)(struct drm_crtc *crtc, struct drm_crtc_state *old_crtc_state);
+  bool (*get_scanout_position)(struct drm_crtc *crtc,bool in_vblank_irq, int *vpos, int *hpos,ktime_t *stime, ktime_t *etime, const struct drm_display_mode *mode);
 };
 </pre></div>
 </div>
@@ -492,6 +493,42 @@ state. Atomic drivers should consider to use this one instead
 of <strong>disable</strong>.</p>
 <p class="last">This function is optional.</p>
 </dd>
+<dt><code class="docutils literal notranslate"><span class="pre">get_scanout_position</span></code></dt>
+<dd><p class="first">Called by vblank timestamping code.</p>
+<p>Returns the current display scanout position from a CRTC and an
+optional accurate <a class="reference internal" href="../core-api/timekeeping.html#c.ktime_get" title="ktime_get"><code class="xref c c-func docutils literal notranslate"><span class="pre">ktime_get()</span></code></a> timestamp of when the position was
+measured. Note that this is a helper callback which is only used
+if a driver uses <a class="reference internal" href="drm-kms.html#c.drm_crtc_vblank_helper_get_vblank_timestamp" title="drm_crtc_vblank_helper_get_vblank_timestamp"><code class="xref c c-func docutils literal notranslate"><span class="pre">drm_crtc_vblank_helper_get_vblank_timestamp()</span></code></a>
+for the <strong>drm_crtc_funcs.get_vblank_timestamp</strong> callback.</p>
+<p>Parameters:</p>
+<dl class="docutils">
+<dt>crtc:</dt>
+<dd>The CRTC.</dd>
+<dt>in_vblank_irq:</dt>
+<dd>True when called from <a class="reference internal" href="drm-kms.html#c.drm_crtc_handle_vblank" title="drm_crtc_handle_vblank"><code class="xref c c-func docutils literal notranslate"><span class="pre">drm_crtc_handle_vblank()</span></code></a>. Some drivers
+need to apply some workarounds for gpu-specific vblank irq
+quirks if the flag is set.</dd>
+<dt>vpos:</dt>
+<dd>Target location for current vertical scanout position.</dd>
+<dt>hpos:</dt>
+<dd>Target location for current horizontal scanout position.</dd>
+<dt>stime:</dt>
+<dd>Target location for timestamp taken immediately before
+scanout position query. Can be NULL to skip timestamp.</dd>
+<dt>etime:</dt>
+<dd>Target location for timestamp taken immediately after
+scanout position query. Can be NULL to skip timestamp.</dd>
+<dt>mode:</dt>
+<dd>Current display timings.</dd>
+</dl>
+<p>Returns vpos as a positive number while in active scanout area.
+Returns vpos as a negative number inside vblank, counting the number
+of scanlines to go until end of vblank, e.g., -1 means “one scanline
+until start of active scanout / end of vblank.”</p>
+<p>Returns:</p>
+<p class="last">True on success, false if a reliable scanout position counter could
+not be read out.</p>
+</dd>
 </dl>
 <p><strong>Description</strong></p>
 <p>These hooks are used by the legacy CRTC helpers, the transitional plane
@@ -524,7 +561,6 @@ struct <code class="descname">drm_encoder_helper_funcs</code><a class="headerlin
   void (*commit)(struct drm_encoder *encoder);
   void (*mode_set)(struct drm_encoder *encoder,struct drm_display_mode *mode, struct drm_display_mode *adjusted_mode);
   void (*atomic_mode_set)(struct drm_encoder *encoder,struct drm_crtc_state *crtc_state, struct drm_connector_state *conn_state);
-  struct drm_crtc *(*get_crtc)(struct drm_encoder *encoder);
   enum drm_connector_status (*detect)(struct drm_encoder *encoder, struct drm_connector *connector);
   void (*atomic_disable)(struct drm_encoder *encoder, struct drm_atomic_state *state);
   void (*atomic_enable)(struct drm_encoder *encoder, struct drm_atomic_state *state);
@@ -651,15 +687,6 @@ encoder setup into the <strong>enable</strong> callback.</p>
 be used instead of <strong>mode_set</strong> if the driver needs to inspect the
 connector state or display info, since there is no direct way to
 go from the encoder to the current connector.</p>
-</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">get_crtc</span></code></dt>
-<dd><p class="first">This callback is used by the legacy CRTC helpers to work around
-deficiencies in its own book-keeping.</p>
-<p>Do not use, use atomic helpers instead, which get the book keeping
-right.</p>
-<p>FIXME:</p>
-<p class="last">Currently only nouveau is using this, and as soon as nouveau is
-atomic we can ditch this hook.</p>
 </dd>
 <dt><code class="docutils literal notranslate"><span class="pre">detect</span></code></dt>
 <dd><p class="first">This callback can be used by drivers who want to do detection on the
@@ -1361,6 +1388,7 @@ instead.</li>
 <a class="reference internal" href="drm-kms.html#c.drm_crtc_state" title="drm_crtc_state"><code class="xref c c-type docutils literal notranslate"><span class="pre">drm_crtc_state.connectors_changed</span></code></a> is set when a connector is added or
 removed from the CRTC.  <a class="reference internal" href="drm-kms.html#c.drm_crtc_state" title="drm_crtc_state"><code class="xref c c-type docutils literal notranslate"><span class="pre">drm_crtc_state.active_changed</span></code></a> is set when
 <a class="reference internal" href="drm-kms.html#c.drm_crtc_state" title="drm_crtc_state"><code class="xref c c-type docutils literal notranslate"><span class="pre">drm_crtc_state.active</span></code></a> changes, which is used for DPMS.
+<a class="reference internal" href="drm-kms.html#c.drm_crtc_state" title="drm_crtc_state"><code class="xref c c-type docutils literal notranslate"><span class="pre">drm_crtc_state.no_vblank</span></code></a> is set from the result of <a class="reference internal" href="drm-kms.html#c.drm_dev_has_vblank" title="drm_dev_has_vblank"><code class="xref c c-func docutils literal notranslate"><span class="pre">drm_dev_has_vblank()</span></code></a>.
 See also: <a class="reference internal" href="drm-kms.html#c.drm_atomic_crtc_needs_modeset" title="drm_atomic_crtc_needs_modeset"><code class="xref c c-func docutils literal notranslate"><span class="pre">drm_atomic_crtc_needs_modeset()</span></code></a></p>
 <p>IMPORTANT:</p>
 <p>Drivers which set <a class="reference internal" href="drm-kms.html#c.drm_crtc_state" title="drm_crtc_state"><code class="xref c c-type docutils literal notranslate"><span class="pre">drm_crtc_state.mode_changed</span></code></a> (e.g. in their
@@ -1777,7 +1805,9 @@ mode and faking VBLANK events. In this case they only fake the VBLANK event
 when a job is queued, and any change to the pipeline that does not touch the
 connector is leading to timeouts when calling
 <a class="reference internal" href="#c.drm_atomic_helper_wait_for_vblanks" title="drm_atomic_helper_wait_for_vblanks"><code class="xref c c-func docutils literal notranslate"><span class="pre">drm_atomic_helper_wait_for_vblanks()</span></code></a> or
-<a class="reference internal" href="#c.drm_atomic_helper_wait_for_flip_done" title="drm_atomic_helper_wait_for_flip_done"><code class="xref c c-func docutils literal notranslate"><span class="pre">drm_atomic_helper_wait_for_flip_done()</span></code></a>.</p>
+<a class="reference internal" href="#c.drm_atomic_helper_wait_for_flip_done" title="drm_atomic_helper_wait_for_flip_done"><code class="xref c c-func docutils literal notranslate"><span class="pre">drm_atomic_helper_wait_for_flip_done()</span></code></a>. In addition to writeback
+connectors, this function can also fake VBLANK events for CRTCs without
+VBLANK interrupt.</p>
 <p>This is part of the atomic helper support for nonblocking commits, see
 <a class="reference internal" href="#c.drm_atomic_helper_setup_commit" title="drm_atomic_helper_setup_commit"><code class="xref c c-func docutils literal notranslate"><span class="pre">drm_atomic_helper_setup_commit()</span></code></a> for an overview.</p>
 <dl class="function">
@@ -2279,6 +2309,35 @@ int <code class="descname">drm_atomic_helper_legacy_gamma_set</code><span class=
 that support color management through the DEGAMMA_LUT/GAMMA_LUT
 properties. See <a class="reference internal" href="drm-kms.html#c.drm_crtc_enable_color_mgmt" title="drm_crtc_enable_color_mgmt"><code class="xref c c-func docutils literal notranslate"><span class="pre">drm_crtc_enable_color_mgmt()</span></code></a> and the containing chapter for
 how the atomic color management and gamma tables work.</p>
+<dl class="function">
+<dt id="c.drm_atomic_helper_bridge_propagate_bus_fmt">
+u32 * <code class="descname">drm_atomic_helper_bridge_propagate_bus_fmt</code><span class="sig-paren">(</span>struct <a class="reference internal" href="#c.drm_bridge" title="drm_bridge">drm_bridge</a> *<em>&nbsp;bridge</em>, struct <a class="reference internal" href="drm-kms.html#c.drm_bridge_state" title="drm_bridge_state">drm_bridge_state</a> *<em>&nbsp;bridge_state</em>, struct <a class="reference internal" href="drm-kms.html#c.drm_crtc_state" title="drm_crtc_state">drm_crtc_state</a> *<em>&nbsp;crtc_state</em>, struct <a class="reference internal" href="drm-kms.html#c.drm_connector_state" title="drm_connector_state">drm_connector_state</a> *<em>&nbsp;conn_state</em>, u32<em>&nbsp;output_fmt</em>, unsigned int *<em>&nbsp;num_input_fmts</em><span class="sig-paren">)</span><a class="headerlink" href="#c.drm_atomic_helper_bridge_propagate_bus_fmt" title="Permalink to this definition">¶</a></dt>
+<dd><p>Propagate output format to the input end of a bridge</p>
+</dd></dl>
+
+<p><strong>Parameters</strong></p>
+<dl class="docutils">
+<dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">drm_bridge</span> <span class="pre">*</span> <span class="pre">bridge</span></code></dt>
+<dd>bridge control structure</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">drm_bridge_state</span> <span class="pre">*</span> <span class="pre">bridge_state</span></code></dt>
+<dd>new bridge state</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">drm_crtc_state</span> <span class="pre">*</span> <span class="pre">crtc_state</span></code></dt>
+<dd>new CRTC state</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">drm_connector_state</span> <span class="pre">*</span> <span class="pre">conn_state</span></code></dt>
+<dd>new connector state</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">u32</span> <span class="pre">output_fmt</span></code></dt>
+<dd>tested output bus format</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">unsigned</span> <span class="pre">int</span> <span class="pre">*</span> <span class="pre">num_input_fmts</span></code></dt>
+<dd>will contain the size of the returned array</dd>
+</dl>
+<p><strong>Description</strong></p>
+<p>This helper is a pluggable implementation of the
+<a class="reference internal" href="#c.drm_bridge_funcs" title="drm_bridge_funcs"><code class="xref c c-type docutils literal notranslate"><span class="pre">drm_bridge_funcs.atomic_get_input_bus_fmts</span></code></a> operation for bridges that don’t
+modify the bus configuration between their input and their output. It
+returns an array of input formats with a single element set to <strong>output_fmt</strong>.</p>
+<p><strong>Return</strong></p>
+<p>a valid format array of size <strong>num_input_fmts</strong>, or NULL if the allocation
+failed</p>
 </div>
 <div class="section" id="atomic-state-reset-and-initialization">
 <h3>Atomic State Reset and Initialization<a class="headerlink" href="#atomic-state-reset-and-initialization" title="Permalink to this headline">¶</a></h3>
@@ -2659,6 +2718,89 @@ void <code class="descname">__drm_atomic_helper_private_obj_duplicate_state</cod
 <p><strong>Description</strong></p>
 <p>Copies atomic state from a private objects’s current state and resets inferred values.
 This is useful for drivers that subclass the private state.</p>
+<dl class="function">
+<dt id="c.__drm_atomic_helper_bridge_duplicate_state">
+void <code class="descname">__drm_atomic_helper_bridge_duplicate_state</code><span class="sig-paren">(</span>struct <a class="reference internal" href="#c.drm_bridge" title="drm_bridge">drm_bridge</a> *<em>&nbsp;bridge</em>, struct <a class="reference internal" href="drm-kms.html#c.drm_bridge_state" title="drm_bridge_state">drm_bridge_state</a> *<em>&nbsp;state</em><span class="sig-paren">)</span><a class="headerlink" href="#c.__drm_atomic_helper_bridge_duplicate_state" title="Permalink to this definition">¶</a></dt>
+<dd><p>Copy atomic bridge state</p>
+</dd></dl>
+
+<p><strong>Parameters</strong></p>
+<dl class="docutils">
+<dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">drm_bridge</span> <span class="pre">*</span> <span class="pre">bridge</span></code></dt>
+<dd>bridge object</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">drm_bridge_state</span> <span class="pre">*</span> <span class="pre">state</span></code></dt>
+<dd>atomic bridge state</dd>
+</dl>
+<p><strong>Description</strong></p>
+<p>Copies atomic state from a bridge’s current state and resets inferred values.
+This is useful for drivers that subclass the bridge state.</p>
+<dl class="function">
+<dt id="c.drm_atomic_helper_bridge_duplicate_state">
+struct <a class="reference internal" href="drm-kms.html#c.drm_bridge_state" title="drm_bridge_state">drm_bridge_state</a> * <code class="descname">drm_atomic_helper_bridge_duplicate_state</code><span class="sig-paren">(</span>struct <a class="reference internal" href="#c.drm_bridge" title="drm_bridge">drm_bridge</a> *<em>&nbsp;bridge</em><span class="sig-paren">)</span><a class="headerlink" href="#c.drm_atomic_helper_bridge_duplicate_state" title="Permalink to this definition">¶</a></dt>
+<dd><p>Duplicate a bridge state object</p>
+</dd></dl>
+
+<p><strong>Parameters</strong></p>
+<dl class="docutils">
+<dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">drm_bridge</span> <span class="pre">*</span> <span class="pre">bridge</span></code></dt>
+<dd>bridge object</dd>
+</dl>
+<p><strong>Description</strong></p>
+<p>Allocates a new bridge state and initializes it with the current bridge
+state values. This helper is meant to be used as a bridge
+<a class="reference internal" href="#c.drm_bridge_funcs" title="drm_bridge_funcs"><code class="xref c c-type docutils literal notranslate"><span class="pre">drm_bridge_funcs.atomic_duplicate_state</span></code></a> hook for bridges that don’t
+subclass the bridge state.</p>
+<dl class="function">
+<dt id="c.drm_atomic_helper_bridge_destroy_state">
+void <code class="descname">drm_atomic_helper_bridge_destroy_state</code><span class="sig-paren">(</span>struct <a class="reference internal" href="#c.drm_bridge" title="drm_bridge">drm_bridge</a> *<em>&nbsp;bridge</em>, struct <a class="reference internal" href="drm-kms.html#c.drm_bridge_state" title="drm_bridge_state">drm_bridge_state</a> *<em>&nbsp;state</em><span class="sig-paren">)</span><a class="headerlink" href="#c.drm_atomic_helper_bridge_destroy_state" title="Permalink to this definition">¶</a></dt>
+<dd><p>Destroy a bridge state object</p>
+</dd></dl>
+
+<p><strong>Parameters</strong></p>
+<dl class="docutils">
+<dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">drm_bridge</span> <span class="pre">*</span> <span class="pre">bridge</span></code></dt>
+<dd>the bridge this state refers to</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">drm_bridge_state</span> <span class="pre">*</span> <span class="pre">state</span></code></dt>
+<dd>bridge state to destroy</dd>
+</dl>
+<p><strong>Description</strong></p>
+<p>Destroys a bridge state previously created by
+<a class="reference internal" href="#c.drm_bridge_funcs" title="drm_bridge_funcs"><code class="xref c c-type docutils literal notranslate"><span class="pre">drm_atomic_helper_bridge_reset`()</span> <span class="pre">or</span>
+<span class="pre">:c:type:`drm_atomic_helper_bridge_duplicate_state`().</span> <span class="pre">This</span> <span class="pre">helper</span> <span class="pre">is</span> <span class="pre">meant</span> <span class="pre">to</span> <span class="pre">be</span>
+<span class="pre">used</span> <span class="pre">as</span> <span class="pre">a</span> <span class="pre">bridge</span> <span class="pre">:c:type:`drm_bridge_funcs.atomic_destroy_state</span></code></a> hook for bridges
+that don’t subclass the bridge state.</p>
+<dl class="function">
+<dt id="c.__drm_atomic_helper_bridge_reset">
+void <code class="descname">__drm_atomic_helper_bridge_reset</code><span class="sig-paren">(</span>struct <a class="reference internal" href="#c.drm_bridge" title="drm_bridge">drm_bridge</a> *<em>&nbsp;bridge</em>, struct <a class="reference internal" href="drm-kms.html#c.drm_bridge_state" title="drm_bridge_state">drm_bridge_state</a> *<em>&nbsp;state</em><span class="sig-paren">)</span><a class="headerlink" href="#c.__drm_atomic_helper_bridge_reset" title="Permalink to this definition">¶</a></dt>
+<dd><p>Initialize a bridge state to its default</p>
+</dd></dl>
+
+<p><strong>Parameters</strong></p>
+<dl class="docutils">
+<dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">drm_bridge</span> <span class="pre">*</span> <span class="pre">bridge</span></code></dt>
+<dd>the bridge this state refers to</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">drm_bridge_state</span> <span class="pre">*</span> <span class="pre">state</span></code></dt>
+<dd>bridge state to initialize</dd>
+</dl>
+<p><strong>Description</strong></p>
+<p>Initializes the bridge state to default values. This is meant to be called
+by the bridge <a class="reference internal" href="#c.drm_bridge_funcs" title="drm_bridge_funcs"><code class="xref c c-type docutils literal notranslate"><span class="pre">drm_bridge_funcs.atomic_reset</span></code></a> hook for bridges that subclass
+the bridge state.</p>
+<dl class="function">
+<dt id="c.drm_atomic_helper_bridge_reset">
+struct <a class="reference internal" href="drm-kms.html#c.drm_bridge_state" title="drm_bridge_state">drm_bridge_state</a> * <code class="descname">drm_atomic_helper_bridge_reset</code><span class="sig-paren">(</span>struct <a class="reference internal" href="#c.drm_bridge" title="drm_bridge">drm_bridge</a> *<em>&nbsp;bridge</em><span class="sig-paren">)</span><a class="headerlink" href="#c.drm_atomic_helper_bridge_reset" title="Permalink to this definition">¶</a></dt>
+<dd><p>Allocate and initialize a bridge state to its default</p>
+</dd></dl>
+
+<p><strong>Parameters</strong></p>
+<dl class="docutils">
+<dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">drm_bridge</span> <span class="pre">*</span> <span class="pre">bridge</span></code></dt>
+<dd>the bridge this state refers to</dd>
+</dl>
+<p><strong>Description</strong></p>
+<p>Allocates the bridge state and initializes it to default values. This helper
+is meant to be used as a bridge <a class="reference internal" href="#c.drm_bridge_funcs" title="drm_bridge_funcs"><code class="xref c c-type docutils literal notranslate"><span class="pre">drm_bridge_funcs.atomic_reset</span></code></a> hook for
+bridges that don’t subclass the bridge state.</p>
 </div>
 </div>
 <div class="section" id="simple-kms-helper-reference">
@@ -2672,6 +2814,10 @@ together <a class="reference internal" href="drm-kms.html#c.drm_plane" title="dr
 entity. Some flexibility for code reuse is provided through a separately
 allocated <a class="reference internal" href="drm-kms.html#c.drm_connector" title="drm_connector"><code class="xref c c-type docutils literal notranslate"><span class="pre">drm_connector</span></code></a> object and supporting optional <a class="reference internal" href="#c.drm_bridge" title="drm_bridge"><code class="xref c c-type docutils literal notranslate"><span class="pre">drm_bridge</span></code></a>
 encoder drivers.</p>
+<p>Many drivers require only a very simple encoder that fulfills the minimum
+requirements of the display pipeline and does not add additional
+functionality. The function <a class="reference internal" href="#c.drm_simple_encoder_init" title="drm_simple_encoder_init"><code class="xref c c-func docutils literal notranslate"><span class="pre">drm_simple_encoder_init()</span></code></a> provides an
+implementation of such an encoder.</p>
 <dl class="type">
 <dt id="c.drm_simple_display_pipe_funcs">
 struct <code class="descname">drm_simple_display_pipe_funcs</code><a class="headerlink" href="#c.drm_simple_display_pipe_funcs" title="Permalink to this definition">¶</a></dt>
@@ -2745,8 +2891,11 @@ This hook is optional.</p>
 <p class="last">This is the function drivers should submit the
 <a class="reference internal" href="drm-kms.html#c.drm_pending_vblank_event" title="drm_pending_vblank_event"><code class="xref c c-type docutils literal notranslate"><span class="pre">drm_pending_vblank_event</span></code></a> from. Using either
 <a class="reference internal" href="drm-kms.html#c.drm_crtc_arm_vblank_event" title="drm_crtc_arm_vblank_event"><code class="xref c c-func docutils literal notranslate"><span class="pre">drm_crtc_arm_vblank_event()</span></code></a>, when the driver supports vblank
-interrupt handling, or <a class="reference internal" href="drm-kms.html#c.drm_crtc_send_vblank_event" title="drm_crtc_send_vblank_event"><code class="xref c c-func docutils literal notranslate"><span class="pre">drm_crtc_send_vblank_event()</span></code></a> directly in case
-the hardware lacks vblank support entirely.</p>
+interrupt handling, or <a class="reference internal" href="drm-kms.html#c.drm_crtc_send_vblank_event" title="drm_crtc_send_vblank_event"><code class="xref c c-func docutils literal notranslate"><span class="pre">drm_crtc_send_vblank_event()</span></code></a> for more
+complex case. In case the hardware lacks vblank support entirely,
+drivers can set <a class="reference internal" href="drm-kms.html#c.drm_crtc_state" title="drm_crtc_state"><code class="xref c c-type docutils literal notranslate"><span class="pre">struct</span> <span class="pre">drm_crtc_state</span></code></a>.no_vblank in
+<a class="reference internal" href="#c.drm_simple_display_pipe_funcs" title="drm_simple_display_pipe_funcs"><code class="xref c c-type docutils literal notranslate"><span class="pre">struct</span> <span class="pre">drm_simple_display_pipe_funcs</span></code></a>.check and let DRM’s
+atomic helper fake a vblank event.</p>
 </dd>
 <dt><code class="docutils literal notranslate"><span class="pre">prepare_fb</span></code></dt>
 <dd><p class="first">Optional, called by <a class="reference internal" href="#c.drm_plane_helper_funcs" title="drm_plane_helper_funcs"><code class="xref c c-type docutils literal notranslate"><span class="pre">drm_plane_helper_funcs.prepare_fb</span></code></a>.  Please read
@@ -2800,6 +2949,37 @@ struct <code class="descname">drm_simple_display_pipe</code><a class="headerlink
 <p><strong>Description</strong></p>
 <p>Simple display pipeline with plane, crtc and encoder collapsed into one
 entity. It should be initialized by calling <a class="reference internal" href="#c.drm_simple_display_pipe_init" title="drm_simple_display_pipe_init"><code class="xref c c-func docutils literal notranslate"><span class="pre">drm_simple_display_pipe_init()</span></code></a>.</p>
+<dl class="function">
+<dt id="c.drm_simple_encoder_init">
+int <code class="descname">drm_simple_encoder_init</code><span class="sig-paren">(</span>struct <a class="reference internal" href="drm-internals.html#c.drm_device" title="drm_device">drm_device</a> *<em>&nbsp;dev</em>, struct <a class="reference internal" href="drm-kms.html#c.drm_encoder" title="drm_encoder">drm_encoder</a> *<em>&nbsp;encoder</em>, int<em>&nbsp;encoder_type</em><span class="sig-paren">)</span><a class="headerlink" href="#c.drm_simple_encoder_init" title="Permalink to this definition">¶</a></dt>
+<dd><p>Initialize a preallocated encoder with basic functionality.</p>
+</dd></dl>
+
+<p><strong>Parameters</strong></p>
+<dl class="docutils">
+<dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">drm_device</span> <span class="pre">*</span> <span class="pre">dev</span></code></dt>
+<dd>drm device</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">drm_encoder</span> <span class="pre">*</span> <span class="pre">encoder</span></code></dt>
+<dd>the encoder to initialize</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">int</span> <span class="pre">encoder_type</span></code></dt>
+<dd>user visible type of the encoder</dd>
+</dl>
+<p><strong>Description</strong></p>
+<p>Initialises a preallocated encoder that has no further functionality.
+Settings for possible CRTC and clones are left to their initial values.
+The encoder will be cleaned up automatically as part of the mode-setting
+cleanup.</p>
+<p>The caller of <a class="reference internal" href="#c.drm_simple_encoder_init" title="drm_simple_encoder_init"><code class="xref c c-func docutils literal notranslate"><span class="pre">drm_simple_encoder_init()</span></code></a> is responsible for freeing
+the encoder’s memory after the encoder has been cleaned up. At the
+moment this only works reliably if the encoder data structure is
+stored in the device structure. Free the encoder’s memory as part of
+the device release function.</p>
+<dl class="docutils">
+<dt>FIXME: Later improvements to DRM’s resource management may allow for</dt>
+<dd>an automated <a class="reference internal" href="../core-api/mm-api.html#c.kfree" title="kfree"><code class="xref c c-func docutils literal notranslate"><span class="pre">kfree()</span></code></a> of the encoder’s memory.</dd>
+</dl>
+<p><strong>Return</strong></p>
+<p>Zero on success, error code on failure.</p>
 <dl class="function">
 <dt id="c.drm_simple_display_pipe_attach_bridge">
 int <code class="descname">drm_simple_display_pipe_attach_bridge</code><span class="sig-paren">(</span>struct <a class="reference internal" href="#c.drm_simple_display_pipe" title="drm_simple_display_pipe">drm_simple_display_pipe</a> *<em>&nbsp;pipe</em>, struct <a class="reference internal" href="#c.drm_bridge" title="drm_bridge">drm_bridge</a> *<em>&nbsp;bridge</em><span class="sig-paren">)</span><a class="headerlink" href="#c.drm_simple_display_pipe_attach_bridge" title="Permalink to this definition">¶</a></dt>
@@ -3164,7 +3344,7 @@ void <code class="descname">drm_fb_helper_prepare</code><span class="sig-paren">
 useful to implement race-free initialization of the polling helpers.</p>
 <dl class="function">
 <dt id="c.drm_fb_helper_init">
-int <code class="descname">drm_fb_helper_init</code><span class="sig-paren">(</span>struct <a class="reference internal" href="drm-internals.html#c.drm_device" title="drm_device">drm_device</a> *<em>&nbsp;dev</em>, struct <a class="reference internal" href="#c.drm_fb_helper" title="drm_fb_helper">drm_fb_helper</a> *<em>&nbsp;fb_helper</em>, int<em>&nbsp;max_conn_count</em><span class="sig-paren">)</span><a class="headerlink" href="#c.drm_fb_helper_init" title="Permalink to this definition">¶</a></dt>
+int <code class="descname">drm_fb_helper_init</code><span class="sig-paren">(</span>struct <a class="reference internal" href="drm-internals.html#c.drm_device" title="drm_device">drm_device</a> *<em>&nbsp;dev</em>, struct <a class="reference internal" href="#c.drm_fb_helper" title="drm_fb_helper">drm_fb_helper</a> *<em>&nbsp;fb_helper</em><span class="sig-paren">)</span><a class="headerlink" href="#c.drm_fb_helper_init" title="Permalink to this definition">¶</a></dt>
 <dd><p>initialize a <a class="reference internal" href="#c.drm_fb_helper" title="drm_fb_helper"><code class="xref c c-type docutils literal notranslate"><span class="pre">struct</span> <span class="pre">drm_fb_helper</span></code></a></p>
 </dd></dl>
 
@@ -3174,8 +3354,6 @@ int <code class="descname">drm_fb_helper_init</code><span class="sig-paren">(</s
 <dd>drm device</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">drm_fb_helper</span> <span class="pre">*</span> <span class="pre">fb_helper</span></code></dt>
 <dd>driver-allocated fbdev helper structure to initialize</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">int</span> <span class="pre">max_conn_count</span></code></dt>
-<dd>max connector count (not used)</dd>
 </dl>
 <p><strong>Description</strong></p>
 <p>This allocates the structures for the fbdev helper with the given limits.
@@ -4027,33 +4205,170 @@ explicit fencing in atomic modeset updates.</p>
 handy when a regular <a class="reference internal" href="drm-kms.html#c.drm_encoder" title="drm_encoder"><code class="xref c c-type docutils literal notranslate"><span class="pre">drm_encoder</span></code></a> entity isn’t enough to represent the entire
 encoder chain.</p>
 <p>A bridge is always attached to a single <a class="reference internal" href="drm-kms.html#c.drm_encoder" title="drm_encoder"><code class="xref c c-type docutils literal notranslate"><span class="pre">drm_encoder</span></code></a> at a time, but can be
-either connected to it directly, or through an intermediate bridge:</p>
-<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>encoder ---&gt; bridge B ---&gt; bridge A
+either connected to it directly, or through a chain of bridges:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>[ CRTC ---&gt; ] Encoder ---&gt; Bridge A ---&gt; Bridge B
 </pre></div>
 </div>
-<p>Here, the output of the encoder feeds to bridge B, and that furthers feeds to
-bridge A.</p>
-<p>The driver using the bridge is responsible to make the associations between
-the encoder and bridges. Once these links are made, the bridges will
-participate along with encoder functions to perform mode_set/enable/disable
-through the ops provided in <a class="reference internal" href="#c.drm_bridge_funcs" title="drm_bridge_funcs"><code class="xref c c-type docutils literal notranslate"><span class="pre">drm_bridge_funcs</span></code></a>.</p>
-<p>drm_bridge, like drm_panel, aren’t drm_mode_object entities like planes,
+<p>Here, the output of the encoder feeds to bridge A, and that furthers feeds to
+bridge B. Bridge chains can be arbitrarily long, and shall be fully linear:
+Chaining multiple bridges to the output of a bridge, or the same bridge to
+the output of different bridges, is not supported.</p>
+<p>Display drivers are responsible for linking encoders with the first bridge
+in the chains. This is done by acquiring the appropriate bridge with
+<a class="reference internal" href="#c.of_drm_find_bridge" title="of_drm_find_bridge"><code class="xref c c-func docutils literal notranslate"><span class="pre">of_drm_find_bridge()</span></code></a> or <a class="reference internal" href="#c.drm_of_find_panel_or_bridge" title="drm_of_find_panel_or_bridge"><code class="xref c c-func docutils literal notranslate"><span class="pre">drm_of_find_panel_or_bridge()</span></code></a>, or creating it for a
+panel with <a class="reference internal" href="#c.drm_panel_bridge_add_typed" title="drm_panel_bridge_add_typed"><code class="xref c c-func docutils literal notranslate"><span class="pre">drm_panel_bridge_add_typed()</span></code></a> (or the managed version
+<a class="reference internal" href="#c.devm_drm_panel_bridge_add_typed" title="devm_drm_panel_bridge_add_typed"><code class="xref c c-func docutils literal notranslate"><span class="pre">devm_drm_panel_bridge_add_typed()</span></code></a>). Once acquired, the bridge shall be
+attached to the encoder with a call to <a class="reference internal" href="#c.drm_bridge_attach" title="drm_bridge_attach"><code class="xref c c-func docutils literal notranslate"><span class="pre">drm_bridge_attach()</span></code></a>.</p>
+<p>Bridges are responsible for linking themselves with the next bridge in the
+chain, if any. This is done the same way as for encoders, with the call to
+<a class="reference internal" href="#c.drm_bridge_attach" title="drm_bridge_attach"><code class="xref c c-func docutils literal notranslate"><span class="pre">drm_bridge_attach()</span></code></a> occurring in the <a class="reference internal" href="#c.drm_bridge_funcs" title="drm_bridge_funcs"><code class="xref c c-type docutils literal notranslate"><span class="pre">drm_bridge_funcs.attach</span></code></a> operation.</p>
+<p>Once these links are created, the bridges can participate along with encoder
+functions to perform mode validation and fixup (through
+<a class="reference internal" href="#c.drm_bridge_chain_mode_valid" title="drm_bridge_chain_mode_valid"><code class="xref c c-func docutils literal notranslate"><span class="pre">drm_bridge_chain_mode_valid()</span></code></a> and <a class="reference internal" href="#c.drm_atomic_bridge_chain_check" title="drm_atomic_bridge_chain_check"><code class="xref c c-func docutils literal notranslate"><span class="pre">drm_atomic_bridge_chain_check()</span></code></a>), mode
+setting (through <a class="reference internal" href="#c.drm_bridge_chain_mode_set" title="drm_bridge_chain_mode_set"><code class="xref c c-func docutils literal notranslate"><span class="pre">drm_bridge_chain_mode_set()</span></code></a>), enable (through
+<a class="reference internal" href="#c.drm_atomic_bridge_chain_pre_enable" title="drm_atomic_bridge_chain_pre_enable"><code class="xref c c-func docutils literal notranslate"><span class="pre">drm_atomic_bridge_chain_pre_enable()</span></code></a> and <a class="reference internal" href="#c.drm_atomic_bridge_chain_enable" title="drm_atomic_bridge_chain_enable"><code class="xref c c-func docutils literal notranslate"><span class="pre">drm_atomic_bridge_chain_enable()</span></code></a>)
+and disable (through <a class="reference internal" href="#c.drm_atomic_bridge_chain_disable" title="drm_atomic_bridge_chain_disable"><code class="xref c c-func docutils literal notranslate"><span class="pre">drm_atomic_bridge_chain_disable()</span></code></a> and
+<a class="reference internal" href="#c.drm_atomic_bridge_chain_post_disable" title="drm_atomic_bridge_chain_post_disable"><code class="xref c c-func docutils literal notranslate"><span class="pre">drm_atomic_bridge_chain_post_disable()</span></code></a>). Those functions call the
+corresponding operations provided in <a class="reference internal" href="#c.drm_bridge_funcs" title="drm_bridge_funcs"><code class="xref c c-type docutils literal notranslate"><span class="pre">drm_bridge_funcs</span></code></a> in sequence for all
+bridges in the chain.</p>
+<p>For display drivers that use the atomic helpers
+<a class="reference internal" href="#c.drm_atomic_helper_check_modeset" title="drm_atomic_helper_check_modeset"><code class="xref c c-func docutils literal notranslate"><span class="pre">drm_atomic_helper_check_modeset()</span></code></a>,
+<a class="reference internal" href="#c.drm_atomic_helper_commit_modeset_enables" title="drm_atomic_helper_commit_modeset_enables"><code class="xref c c-func docutils literal notranslate"><span class="pre">drm_atomic_helper_commit_modeset_enables()</span></code></a> and
+<a class="reference internal" href="#c.drm_atomic_helper_commit_modeset_disables" title="drm_atomic_helper_commit_modeset_disables"><code class="xref c c-func docutils literal notranslate"><span class="pre">drm_atomic_helper_commit_modeset_disables()</span></code></a> (either directly in hand-rolled
+commit check and commit tail handlers, or through the higher-level
+<a class="reference internal" href="#c.drm_atomic_helper_check" title="drm_atomic_helper_check"><code class="xref c c-func docutils literal notranslate"><span class="pre">drm_atomic_helper_check()</span></code></a> and <a class="reference internal" href="#c.drm_atomic_helper_commit_tail" title="drm_atomic_helper_commit_tail"><code class="xref c c-func docutils literal notranslate"><span class="pre">drm_atomic_helper_commit_tail()</span></code></a> or
+<a class="reference internal" href="#c.drm_atomic_helper_commit_tail_rpm" title="drm_atomic_helper_commit_tail_rpm"><code class="xref c c-func docutils literal notranslate"><span class="pre">drm_atomic_helper_commit_tail_rpm()</span></code></a> helpers), this is done transparently and
+requires no intervention from the driver. For other drivers, the relevant
+DRM bridge chain functions shall be called manually.</p>
+<p>Bridges also participate in implementing the <a class="reference internal" href="drm-kms.html#c.drm_connector" title="drm_connector"><code class="xref c c-type docutils literal notranslate"><span class="pre">drm_connector</span></code></a> at the end of
+the bridge chain. Display drivers may use the <a class="reference internal" href="#c.drm_bridge_connector_init" title="drm_bridge_connector_init"><code class="xref c c-func docutils literal notranslate"><span class="pre">drm_bridge_connector_init()</span></code></a>
+helper to create the <a class="reference internal" href="drm-kms.html#c.drm_connector" title="drm_connector"><code class="xref c c-type docutils literal notranslate"><span class="pre">drm_connector</span></code></a>, or implement it manually on top of the
+connector-related operations exposed by the bridge (see the overview
+documentation of bridge operations for more details).</p>
+<p><a class="reference internal" href="#c.drm_bridge" title="drm_bridge"><code class="xref c c-type docutils literal notranslate"><span class="pre">drm_bridge</span></code></a>, like <a class="reference internal" href="#c.drm_panel" title="drm_panel"><code class="xref c c-type docutils literal notranslate"><span class="pre">drm_panel</span></code></a>, aren’t <a class="reference internal" href="drm-kms.html#c.drm_mode_object" title="drm_mode_object"><code class="xref c c-type docutils literal notranslate"><span class="pre">drm_mode_object</span></code></a> entities like planes,
 CRTCs, encoders or connectors and hence are not visible to userspace. They
 just provide additional hooks to get the desired output at the end of the
 encoder chain.</p>
-<p>Bridges can also be chained up using the <a class="reference internal" href="#c.drm_bridge" title="drm_bridge"><code class="xref c c-type docutils literal notranslate"><span class="pre">drm_bridge.chain_node</span></code></a> field.</p>
-<p>Both legacy CRTC helpers and the new atomic modeset helpers support bridges.</p>
 </div>
-<div class="section" id="default-bridge-callback-sequence">
-<h3>Default bridge callback sequence<a class="headerlink" href="#default-bridge-callback-sequence" title="Permalink to this headline">¶</a></h3>
-<p>The <a class="reference internal" href="#c.drm_bridge_funcs" title="drm_bridge_funcs"><code class="xref c c-type docutils literal notranslate"><span class="pre">drm_bridge_funcs</span></code></a> ops are populated by the bridge driver. The DRM
-internals (atomic and CRTC helpers) use the helpers defined in drm_bridge.c
-These helpers call a specific <a class="reference internal" href="#c.drm_bridge_funcs" title="drm_bridge_funcs"><code class="xref c c-type docutils literal notranslate"><span class="pre">drm_bridge_funcs</span></code></a> op for all the bridges
-during encoder configuration.</p>
-<p>For detailed specification of the bridge callbacks see <a class="reference internal" href="#c.drm_bridge_funcs" title="drm_bridge_funcs"><code class="xref c c-type docutils literal notranslate"><span class="pre">drm_bridge_funcs</span></code></a>.</p>
+<div class="section" id="bridge-operations">
+<h3>Bridge Operations<a class="headerlink" href="#bridge-operations" title="Permalink to this headline">¶</a></h3>
+<p>Bridge drivers expose operations through the <a class="reference internal" href="#c.drm_bridge_funcs" title="drm_bridge_funcs"><code class="xref c c-type docutils literal notranslate"><span class="pre">drm_bridge_funcs</span></code></a> structure.
+The DRM internals (atomic and CRTC helpers) use the helpers defined in
+drm_bridge.c to call bridge operations. Those operations are divided in
+three big categories to support different parts of the bridge usage.</p>
+<ul>
+<li><p class="first">The encoder-related operations support control of the bridges in the
+chain, and are roughly counterparts to the <a class="reference internal" href="#c.drm_encoder_helper_funcs" title="drm_encoder_helper_funcs"><code class="xref c c-type docutils literal notranslate"><span class="pre">drm_encoder_helper_funcs</span></code></a>
+operations. They are used by the legacy CRTC and the atomic modeset
+helpers to perform mode validation, fixup and setting, and enable and
+disable the bridge automatically.</p>
+<p>The enable and disable operations are split in
+<a class="reference internal" href="#c.drm_bridge_funcs" title="drm_bridge_funcs"><code class="xref c c-type docutils literal notranslate"><span class="pre">drm_bridge_funcs.pre_enable</span></code></a>, <a class="reference internal" href="#c.drm_bridge_funcs" title="drm_bridge_funcs"><code class="xref c c-type docutils literal notranslate"><span class="pre">drm_bridge_funcs.enable</span></code></a>,
+<a class="reference internal" href="#c.drm_bridge_funcs" title="drm_bridge_funcs"><code class="xref c c-type docutils literal notranslate"><span class="pre">drm_bridge_funcs.disable</span></code></a> and <a class="reference internal" href="#c.drm_bridge_funcs" title="drm_bridge_funcs"><code class="xref c c-type docutils literal notranslate"><span class="pre">drm_bridge_funcs.post_disable</span></code></a> to provide
+finer-grained control.</p>
+<p>Bridge drivers may implement the legacy version of those operations, or
+the atomic version (prefixed with atomic_), in which case they shall also
+implement the atomic state bookkeeping operations
+(<a class="reference internal" href="#c.drm_bridge_funcs" title="drm_bridge_funcs"><code class="xref c c-type docutils literal notranslate"><span class="pre">drm_bridge_funcs.atomic_duplicate_state</span></code></a>,
+<a class="reference internal" href="#c.drm_bridge_funcs" title="drm_bridge_funcs"><code class="xref c c-type docutils literal notranslate"><span class="pre">drm_bridge_funcs.atomic_destroy_state</span></code></a> and <a class="reference internal" href="#c.drm_bridge_funcs" title="drm_bridge_funcs"><code class="xref c c-type docutils literal notranslate"><span class="pre">drm_bridge_funcs.reset</span></code></a>).
+Mixing atomic and non-atomic versions of the operations is not supported.</p>
+</li>
+<li><p class="first">The bus format negotiation operations
+<a class="reference internal" href="#c.drm_bridge_funcs" title="drm_bridge_funcs"><code class="xref c c-type docutils literal notranslate"><span class="pre">drm_bridge_funcs.atomic_get_output_bus_fmts</span></code></a> and
+<a class="reference internal" href="#c.drm_bridge_funcs" title="drm_bridge_funcs"><code class="xref c c-type docutils literal notranslate"><span class="pre">drm_bridge_funcs.atomic_get_input_bus_fmts</span></code></a> allow bridge drivers to
+negotiate the formats transmitted between bridges in the chain when
+multiple formats are supported. Negotiation for formats is performed
+transparently for display drivers by the atomic modeset helpers. Only
+atomic versions of those operations exist, bridge drivers that need to
+implement them shall thus also implement the atomic version of the
+encoder-related operations. This feature is not supported by the legacy
+CRTC helpers.</p>
+</li>
+<li><p class="first">The connector-related operations support implementing a <a class="reference internal" href="drm-kms.html#c.drm_connector" title="drm_connector"><code class="xref c c-type docutils literal notranslate"><span class="pre">drm_connector</span></code></a>
+based on a chain of bridges. DRM bridges traditionally create a
+<a class="reference internal" href="drm-kms.html#c.drm_connector" title="drm_connector"><code class="xref c c-type docutils literal notranslate"><span class="pre">drm_connector</span></code></a> for bridges meant to be used at the end of the chain. This
+puts additional burden on bridge drivers, especially for bridges that may
+be used in the middle of a chain or at the end of it. Furthermore, it
+requires all operations of the <a class="reference internal" href="drm-kms.html#c.drm_connector" title="drm_connector"><code class="xref c c-type docutils literal notranslate"><span class="pre">drm_connector</span></code></a> to be handled by a single
+bridge, which doesn’t always match the hardware architecture.</p>
+<p>To simplify bridge drivers and make the connector implementation more
+flexible, a new model allows bridges to unconditionally skip creation of
+<a class="reference internal" href="drm-kms.html#c.drm_connector" title="drm_connector"><code class="xref c c-type docutils literal notranslate"><span class="pre">drm_connector</span></code></a> and instead expose <a class="reference internal" href="#c.drm_bridge_funcs" title="drm_bridge_funcs"><code class="xref c c-type docutils literal notranslate"><span class="pre">drm_bridge_funcs</span></code></a> operations to support
+an externally-implemented <a class="reference internal" href="drm-kms.html#c.drm_connector" title="drm_connector"><code class="xref c c-type docutils literal notranslate"><span class="pre">drm_connector</span></code></a>. Those operations are
+<a class="reference internal" href="#c.drm_bridge_funcs" title="drm_bridge_funcs"><code class="xref c c-type docutils literal notranslate"><span class="pre">drm_bridge_funcs.detect</span></code></a>, <a class="reference internal" href="#c.drm_bridge_funcs" title="drm_bridge_funcs"><code class="xref c c-type docutils literal notranslate"><span class="pre">drm_bridge_funcs.get_modes</span></code></a>,
+<a class="reference internal" href="#c.drm_bridge_funcs" title="drm_bridge_funcs"><code class="xref c c-type docutils literal notranslate"><span class="pre">drm_bridge_funcs.get_edid</span></code></a>, <a class="reference internal" href="#c.drm_bridge_funcs" title="drm_bridge_funcs"><code class="xref c c-type docutils literal notranslate"><span class="pre">drm_bridge_funcs.hpd_notify</span></code></a>,
+<a class="reference internal" href="#c.drm_bridge_funcs" title="drm_bridge_funcs"><code class="xref c c-type docutils literal notranslate"><span class="pre">drm_bridge_funcs.hpd_enable</span></code></a> and <a class="reference internal" href="#c.drm_bridge_funcs" title="drm_bridge_funcs"><code class="xref c c-type docutils literal notranslate"><span class="pre">drm_bridge_funcs.hpd_disable</span></code></a>. When
+implemented, display drivers shall create a <a class="reference internal" href="drm-kms.html#c.drm_connector" title="drm_connector"><code class="xref c c-type docutils literal notranslate"><span class="pre">drm_connector</span></code></a> instance for
+each chain of bridges, and implement those connector instances based on
+the bridge connector operations.</p>
+<p>Bridge drivers shall implement the connector-related operations for all
+the features that the bridge hardware support. For instance, if a bridge
+supports reading EDID, the <a class="reference internal" href="#c.drm_bridge_funcs" title="drm_bridge_funcs"><code class="xref c c-type docutils literal notranslate"><span class="pre">drm_bridge_funcs.get_edid</span></code></a> shall be
+implemented. This however doesn’t mean that the DDC lines are wired to the
+bridge on a particular platform, as they could also be connected to an I2C
+controller of the SoC. Support for the connector-related operations on the
+running platform is reported through the <a class="reference internal" href="#c.drm_bridge" title="drm_bridge"><code class="xref c c-type docutils literal notranslate"><span class="pre">drm_bridge.ops</span></code></a> flags. Bridge
+drivers shall detect which operations they can support on the platform
+(usually this information is provided by ACPI or DT), and set the
+<a class="reference internal" href="#c.drm_bridge" title="drm_bridge"><code class="xref c c-type docutils literal notranslate"><span class="pre">drm_bridge.ops</span></code></a> flags for all supported operations. A flag shall only be
+set if the corresponding <a class="reference internal" href="#c.drm_bridge_funcs" title="drm_bridge_funcs"><code class="xref c c-type docutils literal notranslate"><span class="pre">drm_bridge_funcs</span></code></a> operation is implemented, but
+an implemented operation doesn’t necessarily imply that the corresponding
+flag will be set. Display drivers shall use the <a class="reference internal" href="#c.drm_bridge" title="drm_bridge"><code class="xref c c-type docutils literal notranslate"><span class="pre">drm_bridge.ops</span></code></a> flags to
+decide which bridge to delegate a connector operation to. This mechanism
+allows providing a single static const <a class="reference internal" href="#c.drm_bridge_funcs" title="drm_bridge_funcs"><code class="xref c c-type docutils literal notranslate"><span class="pre">drm_bridge_funcs</span></code></a> instance in
+bridge drivers, improving security by storing function pointers in
+read-only memory.</p>
+<p>In order to ease transition, bridge drivers may support both the old and
+new models by making connector creation optional and implementing the
+connected-related bridge operations. Connector creation is then controlled
+by the flags argument to the <a class="reference internal" href="#c.drm_bridge_attach" title="drm_bridge_attach"><code class="xref c c-func docutils literal notranslate"><span class="pre">drm_bridge_attach()</span></code></a> function. Display drivers
+that support the new model and create connectors themselves shall set the
+<code class="docutils literal notranslate"><span class="pre">DRM_BRIDGE_ATTACH_NO_CONNECTOR</span></code> flag, and bridge drivers shall then skip
+connector creation. For intermediate bridges in the chain, the flag shall
+be passed to the <a class="reference internal" href="#c.drm_bridge_attach" title="drm_bridge_attach"><code class="xref c c-func docutils literal notranslate"><span class="pre">drm_bridge_attach()</span></code></a> call for the downstream bridge.
+Bridge drivers that implement the new model only shall return an error
+from their <a class="reference internal" href="#c.drm_bridge_funcs" title="drm_bridge_funcs"><code class="xref c c-type docutils literal notranslate"><span class="pre">drm_bridge_funcs.attach</span></code></a> handler when the
+<code class="docutils literal notranslate"><span class="pre">DRM_BRIDGE_ATTACH_NO_CONNECTOR</span></code> flag is not set. New display drivers
+should use the new model, and convert the bridge drivers they use if
+needed, in order to gradually transition to the new model.</p>
+</li>
+</ul>
+</div>
+<div class="section" id="bridge-connector-helper">
+<h3>Bridge Connector Helper<a class="headerlink" href="#bridge-connector-helper" title="Permalink to this headline">¶</a></h3>
+<p>The DRM bridge connector helper object provides a DRM connector
+implementation that wraps a chain of <a class="reference internal" href="#c.drm_bridge" title="drm_bridge"><code class="xref c c-type docutils literal notranslate"><span class="pre">struct</span> <span class="pre">drm_bridge</span></code></a>. The connector
+operations are fully implemented based on the operations of the bridges in
+the chain, and don’t require any intervention from the display controller
+driver at runtime.</p>
+<p>To use the helper, display controller drivers create a bridge connector with
+a call to <a class="reference internal" href="#c.drm_bridge_connector_init" title="drm_bridge_connector_init"><code class="xref c c-func docutils literal notranslate"><span class="pre">drm_bridge_connector_init()</span></code></a>. This associates the newly created
+connector with the chain of bridges passed to the function and registers it
+with the DRM device. At that point the connector becomes fully usable, no
+further operation is needed.</p>
+<p>The DRM bridge connector operations are implemented based on the operations
+provided by the bridges in the chain. Each connector operation is delegated
+to the bridge closest to the connector (at the end of the chain) that
+provides the relevant functionality.</p>
+<p>To make use of this helper, all bridges in the chain shall report bridge
+operation flags (<a class="reference internal" href="#c.drm_bridge" title="drm_bridge"><code class="xref c c-type docutils literal notranslate"><span class="pre">drm_bridge-&gt;ops</span></code></a>) and bridge output type
+(<a class="reference internal" href="#c.drm_bridge" title="drm_bridge"><code class="xref c c-type docutils literal notranslate"><span class="pre">drm_bridge-&gt;type</span></code></a>), as well as the DRM_BRIDGE_ATTACH_NO_CONNECTOR attach
+flag (none of the bridges shall create a DRM connector directly).</p>
 </div>
 <div class="section" id="bridge-helper-reference">
 <h3>Bridge Helper Reference<a class="headerlink" href="#bridge-helper-reference" title="Permalink to this headline">¶</a></h3>
+<dl class="type">
+<dt id="c.drm_bridge_attach_flags">
+enum <code class="descname">drm_bridge_attach_flags</code><a class="headerlink" href="#c.drm_bridge_attach_flags" title="Permalink to this definition">¶</a></dt>
+<dd><p>Flags for <a class="reference internal" href="#c.drm_bridge_funcs" title="drm_bridge_funcs"><code class="xref c c-type docutils literal notranslate"><span class="pre">drm_bridge_funcs.attach</span></code></a></p>
+</dd></dl>
+
+<p><strong>Constants</strong></p>
+<dl class="docutils">
+<dt><code class="docutils literal notranslate"><span class="pre">DRM_BRIDGE_ATTACH_NO_CONNECTOR</span></code></dt>
+<dd>When this flag is set the bridge
+shall not create a drm_connector.</dd>
+</dl>
 <dl class="type">
 <dt id="c.drm_bridge_funcs">
 struct <code class="descname">drm_bridge_funcs</code><a class="headerlink" href="#c.drm_bridge_funcs" title="Permalink to this definition">¶</a></dt>
@@ -4062,7 +4377,7 @@ struct <code class="descname">drm_bridge_funcs</code><a class="headerlink" href=
 
 <p><strong>Definition</strong></p>
 <div class="highlight-none notranslate"><div class="highlight"><pre><span></span>struct drm_bridge_funcs {
-  int (*attach)(struct drm_bridge *bridge);
+  int (*attach)(struct drm_bridge *bridge, enum drm_bridge_attach_flags flags);
   void (*detach)(struct drm_bridge *bridge);
   enum drm_mode_status (*mode_valid)(struct drm_bridge *bridge, const struct drm_display_mode *mode);
   bool (*mode_fixup)(struct drm_bridge *bridge,const struct drm_display_mode *mode, struct drm_display_mode *adjusted_mode);
@@ -4071,10 +4386,22 @@ struct <code class="descname">drm_bridge_funcs</code><a class="headerlink" href=
   void (*mode_set)(struct drm_bridge *bridge,const struct drm_display_mode *mode, const struct drm_display_mode *adjusted_mode);
   void (*pre_enable)(struct drm_bridge *bridge);
   void (*enable)(struct drm_bridge *bridge);
-  void (*atomic_pre_enable)(struct drm_bridge *bridge, struct drm_atomic_state *old_state);
-  void (*atomic_enable)(struct drm_bridge *bridge, struct drm_atomic_state *old_state);
-  void (*atomic_disable)(struct drm_bridge *bridge, struct drm_atomic_state *old_state);
-  void (*atomic_post_disable)(struct drm_bridge *bridge, struct drm_atomic_state *old_state);
+  void (*atomic_pre_enable)(struct drm_bridge *bridge, struct drm_bridge_state *old_bridge_state);
+  void (*atomic_enable)(struct drm_bridge *bridge, struct drm_bridge_state *old_bridge_state);
+  void (*atomic_disable)(struct drm_bridge *bridge, struct drm_bridge_state *old_bridge_state);
+  void (*atomic_post_disable)(struct drm_bridge *bridge, struct drm_bridge_state *old_bridge_state);
+  struct drm_bridge_state *(*atomic_duplicate_state)(struct drm_bridge *bridge);
+  void (*atomic_destroy_state)(struct drm_bridge *bridge, struct drm_bridge_state *state);
+  u32 *(*atomic_get_output_bus_fmts)(struct drm_bridge *bridge,struct drm_bridge_state *bridge_state,struct drm_crtc_state *crtc_state,struct drm_connector_state *conn_state, unsigned int *num_output_fmts);
+  u32 *(*atomic_get_input_bus_fmts)(struct drm_bridge *bridge,struct drm_bridge_state *bridge_state,struct drm_crtc_state *crtc_state,struct drm_connector_state *conn_state,u32 output_fmt, unsigned int *num_input_fmts);
+  int (*atomic_check)(struct drm_bridge *bridge,struct drm_bridge_state *bridge_state,struct drm_crtc_state *crtc_state, struct drm_connector_state *conn_state);
+  struct drm_bridge_state *(*atomic_reset)(struct drm_bridge *bridge);
+  enum drm_connector_status (*detect)(struct drm_bridge *bridge);
+  int (*get_modes)(struct drm_bridge *bridge, struct drm_connector *connector);
+  struct edid *(*get_edid)(struct drm_bridge *bridge, struct drm_connector *connector);
+  void (*hpd_notify)(struct drm_bridge *bridge, enum drm_connector_status status);
+  void (*hpd_enable)(struct drm_bridge *bridge);
+  void (*hpd_disable)(struct drm_bridge *bridge);
 };
 </pre></div>
 </div>
@@ -4082,7 +4409,8 @@ struct <code class="descname">drm_bridge_funcs</code><a class="headerlink" href=
 <dl class="docutils">
 <dt><code class="docutils literal notranslate"><span class="pre">attach</span></code></dt>
 <dd><p class="first">This callback is invoked whenever our bridge is being attached to a
-<a class="reference internal" href="drm-kms.html#c.drm_encoder" title="drm_encoder"><code class="xref c c-type docutils literal notranslate"><span class="pre">drm_encoder</span></code></a>.</p>
+<a class="reference internal" href="drm-kms.html#c.drm_encoder" title="drm_encoder"><code class="xref c c-type docutils literal notranslate"><span class="pre">drm_encoder</span></code></a>. The flags argument tunes the behaviour of the attach
+operation (see DRM_BRIDGE_ATTACH_*).</p>
 <p>The <strong>attach</strong> callback is optional.</p>
 <p>RETURNS:</p>
 <p class="last">Zero on success, error code on failure.</p>
@@ -4125,7 +4453,9 @@ match mode. See also <a class="reference internal" href="drm-kms.html#c.drm_crtc
 <p>This is the only hook that allows a bridge to reject a modeset. If
 this function passes all other callbacks must succeed for this
 configuration.</p>
-<p>The <strong>mode_fixup</strong> callback is optional.</p>
+<p>The mode_fixup callback is optional. <a class="reference internal" href="#c.drm_bridge_funcs" title="drm_bridge_funcs"><code class="xref c c-type docutils literal notranslate"><span class="pre">drm_bridge_funcs.mode_fixup()</span></code></a>
+is not called when <a class="reference internal" href="#c.drm_bridge_funcs" title="drm_bridge_funcs"><code class="xref c c-type docutils literal notranslate"><span class="pre">drm_bridge_funcs.atomic_check()</span></code></a> is implemented,
+so only one of them should be provided.</p>
 <p>NOTE:</p>
 <p>This function is called in the check phase of atomic modesets, which
 can be aborted for any reason (including on userspace’s request to
@@ -4283,6 +4613,179 @@ It would be prudent to also provide an implementation of
 <a class="reference internal" href="#c.drm_bridge_chain_post_disable" title="drm_bridge_chain_post_disable"><code class="xref c c-type docutils literal notranslate"><span class="pre">drm_bridge_chain_post_disable</span></code></a>.</p>
 <p class="last">The <strong>atomic_post_disable</strong> callback is optional.</p>
 </dd>
+<dt><code class="docutils literal notranslate"><span class="pre">atomic_duplicate_state</span></code></dt>
+<dd><p class="first">Duplicate the current bridge state object (which is guaranteed to be
+non-NULL).</p>
+<p>The atomic_duplicate_state hook is mandatory if the bridge
+implements any of the atomic hooks, and should be left unassigned
+otherwise. For bridges that don’t subclass <a class="reference internal" href="drm-kms.html#c.drm_bridge_state" title="drm_bridge_state"><code class="xref c c-type docutils literal notranslate"><span class="pre">drm_bridge_state</span></code></a>, the
+<a class="reference internal" href="#c.drm_atomic_helper_bridge_duplicate_state" title="drm_atomic_helper_bridge_duplicate_state"><code class="xref c c-func docutils literal notranslate"><span class="pre">drm_atomic_helper_bridge_duplicate_state()</span></code></a> helper function shall be
+used to implement this hook.</p>
+<p class="last">RETURNS:
+A valid drm_bridge_state object or NULL if the allocation fails.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">atomic_destroy_state</span></code></dt>
+<dd><p class="first">Destroy a bridge state object previously allocated by
+<a class="reference internal" href="#c.drm_bridge_funcs" title="drm_bridge_funcs"><code class="xref c c-type docutils literal notranslate"><span class="pre">drm_bridge_funcs.atomic_duplicate_state()</span></code></a>.</p>
+<p class="last">The atomic_destroy_state hook is mandatory if the bridge implements
+any of the atomic hooks, and should be left unassigned otherwise.
+For bridges that don’t subclass <a class="reference internal" href="drm-kms.html#c.drm_bridge_state" title="drm_bridge_state"><code class="xref c c-type docutils literal notranslate"><span class="pre">drm_bridge_state</span></code></a>, the
+<a class="reference internal" href="#c.drm_atomic_helper_bridge_destroy_state" title="drm_atomic_helper_bridge_destroy_state"><code class="xref c c-func docutils literal notranslate"><span class="pre">drm_atomic_helper_bridge_destroy_state()</span></code></a> helper function shall be
+used to implement this hook.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">atomic_get_output_bus_fmts</span></code></dt>
+<dd><p class="first">Return the supported bus formats on the output end of a bridge.
+The returned array must be allocated with <a class="reference internal" href="../core-api/mm-api.html#c.kmalloc" title="kmalloc"><code class="xref c c-func docutils literal notranslate"><span class="pre">kmalloc()</span></code></a> and will be
+freed by the caller. If the allocation fails, NULL should be
+returned. num_output_fmts must be set to the returned array size.
+Formats listed in the returned array should be listed in decreasing
+preference order (the core will try all formats until it finds one
+that works).</p>
+<p class="last">This method is only called on the last element of the bridge chain
+as part of the bus format negotiation process that happens in
+<a class="reference internal" href="drm-kms.html#c.drm_connector" title="drm_connector"><code class="xref c c-type docutils literal notranslate"><span class="pre">drm_atomic_bridge_chain_select_bus_fmts`().</span>
+<span class="pre">This</span> <span class="pre">method</span> <span class="pre">is</span> <span class="pre">optional.</span> <span class="pre">When</span> <span class="pre">not</span> <span class="pre">implemented,</span> <span class="pre">the</span> <span class="pre">core</span> <span class="pre">will</span>
+<span class="pre">fall</span> <span class="pre">back</span> <span class="pre">to</span> <span class="pre">:c:type:`drm_connector.display_info</span></code></a>.bus_formats[0] if
+<a class="reference internal" href="drm-kms.html#c.drm_connector" title="drm_connector"><code class="xref c c-type docutils literal notranslate"><span class="pre">drm_connector.display_info</span></code></a>.num_bus_formats &gt; 0,
+or to MEDIA_BUS_FMT_FIXED otherwise.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">atomic_get_input_bus_fmts</span></code></dt>
+<dd><p class="first">Return the supported bus formats on the input end of a bridge for
+a specific output bus format.</p>
+<p>The returned array must be allocated with <a class="reference internal" href="../core-api/mm-api.html#c.kmalloc" title="kmalloc"><code class="xref c c-func docutils literal notranslate"><span class="pre">kmalloc()</span></code></a> and will be
+freed by the caller. If the allocation fails, NULL should be
+returned. num_output_fmts must be set to the returned array size.
+Formats listed in the returned array should be listed in decreasing
+preference order (the core will try all formats until it finds one
+that works). When the format is not supported NULL should be
+returned and num_output_fmts should be set to 0.</p>
+<p>This method is called on all elements of the bridge chain as part of
+the bus format negotiation process that happens in
+drm_atomic_bridge_chain_select_bus_fmts().
+This method is optional. When not implemented, the core will bypass
+bus format negotiation on this element of the bridge without
+failing, and the previous element in the chain will be passed
+MEDIA_BUS_FMT_FIXED as its output bus format.</p>
+<p>Bridge drivers that need to support being linked to bridges that are
+not supporting bus format negotiation should handle the
+output_fmt == MEDIA_BUS_FMT_FIXED case appropriately, by selecting a
+sensible default value or extracting this information from somewhere
+else (FW property, <a class="reference internal" href="drm-kms.html#c.drm_display_mode" title="drm_display_mode"><code class="xref c c-type docutils literal notranslate"><span class="pre">drm_display_mode</span></code></a>, <a class="reference internal" href="drm-kms.html#c.drm_display_info" title="drm_display_info"><code class="xref c c-type docutils literal notranslate"><span class="pre">drm_display_info</span></code></a>, …)</p>
+<p class="last">Note: Even if input format selection on the first bridge has no
+impact on the negotiation process (bus format negotiation stops once
+we reach the first element of the chain), drivers are expected to
+return accurate input formats as the input format may be used to
+configure the CRTC output appropriately.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">atomic_check</span></code></dt>
+<dd><p class="first">This method is responsible for checking bridge state correctness.
+It can also check the state of the surrounding components in chain
+to make sure the whole pipeline can work properly.</p>
+<p><a class="reference internal" href="#c.drm_bridge_funcs" title="drm_bridge_funcs"><code class="xref c c-type docutils literal notranslate"><span class="pre">drm_bridge_funcs.atomic_check()</span></code></a> hooks are called in reverse
+order (from the last to the first bridge).</p>
+<p>This method is optional. <a class="reference internal" href="#c.drm_bridge_funcs" title="drm_bridge_funcs"><code class="xref c c-type docutils literal notranslate"><span class="pre">drm_bridge_funcs.mode_fixup()</span></code></a> is not
+called when <a class="reference internal" href="#c.drm_bridge_funcs" title="drm_bridge_funcs"><code class="xref c c-type docutils literal notranslate"><span class="pre">drm_bridge_funcs.atomic_check()</span></code></a> is implemented, so only
+one of them should be provided.</p>
+<p>If drivers need to tweak <a class="reference internal" href="drm-kms.html#c.drm_bridge_state" title="drm_bridge_state"><code class="xref c c-type docutils literal notranslate"><span class="pre">drm_bridge_state.input_bus_cfg</span></code></a>.flags or
+<a class="reference internal" href="drm-kms.html#c.drm_bridge_state" title="drm_bridge_state"><code class="xref c c-type docutils literal notranslate"><span class="pre">drm_bridge_state.output_bus_cfg</span></code></a>.flags it should should happen in
+this function. By default the <a class="reference internal" href="drm-kms.html#c.drm_bridge_state" title="drm_bridge_state"><code class="xref c c-type docutils literal notranslate"><span class="pre">drm_bridge_state.output_bus_cfg</span></code></a>.flags
+field is set to the next bridge
+<a class="reference internal" href="drm-kms.html#c.drm_bridge_state" title="drm_bridge_state"><code class="xref c c-type docutils literal notranslate"><span class="pre">drm_bridge_state.input_bus_cfg</span></code></a>.flags value or
+<a class="reference internal" href="drm-kms.html#c.drm_connector" title="drm_connector"><code class="xref c c-type docutils literal notranslate"><span class="pre">drm_connector.display_info</span></code></a>.bus_flags if the bridge is the last
+element in the chain.</p>
+<p class="last">RETURNS:
+zero if the check passed, a negative error code otherwise.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">atomic_reset</span></code></dt>
+<dd><p class="first">Reset the bridge to a predefined state (or retrieve its current
+state) and return a <a class="reference internal" href="drm-kms.html#c.drm_bridge_state" title="drm_bridge_state"><code class="xref c c-type docutils literal notranslate"><span class="pre">drm_bridge_state</span></code></a> object matching this state.
+This function is called at attach time.</p>
+<p>The atomic_reset hook is mandatory if the bridge implements any of
+the atomic hooks, and should be left unassigned otherwise. For
+bridges that don’t subclass <a class="reference internal" href="drm-kms.html#c.drm_bridge_state" title="drm_bridge_state"><code class="xref c c-type docutils literal notranslate"><span class="pre">drm_bridge_state</span></code></a>, the
+<a class="reference internal" href="#c.drm_atomic_helper_bridge_reset" title="drm_atomic_helper_bridge_reset"><code class="xref c c-func docutils literal notranslate"><span class="pre">drm_atomic_helper_bridge_reset()</span></code></a> helper function shall be used to
+implement this hook.</p>
+<p>Note that the atomic_reset() semantics is not exactly matching the
+reset() semantics found on other components (connector, plane, …).</p>
+<ol class="arabic simple">
+<li>The reset operation happens when the bridge is attached, not when
+<a class="reference internal" href="drm-kms.html#c.drm_mode_config_reset" title="drm_mode_config_reset"><code class="xref c c-func docutils literal notranslate"><span class="pre">drm_mode_config_reset()</span></code></a> is called</li>
+<li>It’s meant to be used exclusively on bridges that have been
+converted to the ATOMIC API</li>
+</ol>
+<p class="last">RETURNS:
+A valid drm_bridge_state object in case of success, an ERR_PTR()
+giving the reason of the failure otherwise.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">detect</span></code></dt>
+<dd><p class="first">Check if anything is attached to the bridge output.</p>
+<p>This callback is optional, if not implemented the bridge will be
+considered as always having a component attached to its output.
+Bridges that implement this callback shall set the
+DRM_BRIDGE_OP_DETECT flag in their <a class="reference internal" href="#c.drm_bridge" title="drm_bridge"><code class="xref c c-type docutils literal notranslate"><span class="pre">drm_bridge-&gt;ops</span></code></a>.</p>
+<p>RETURNS:</p>
+<p class="last">drm_connector_status indicating the bridge output status.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">get_modes</span></code></dt>
+<dd><p class="first">Fill all modes currently valid for the sink into the <a class="reference internal" href="drm-kms.html#c.drm_connector" title="drm_connector"><code class="xref c c-type docutils literal notranslate"><span class="pre">drm_connector</span></code></a>
+with <a class="reference internal" href="drm-kms.html#c.drm_mode_probed_add" title="drm_mode_probed_add"><code class="xref c c-func docutils literal notranslate"><span class="pre">drm_mode_probed_add()</span></code></a>.</p>
+<p>The <strong>get_modes</strong> callback is mostly intended to support non-probeable
+displays such as many fixed panels. Bridges that support reading
+EDID shall leave <strong>get_modes</strong> unimplemented and implement the
+<a class="reference internal" href="#c.drm_bridge_funcs" title="drm_bridge_funcs"><code class="xref c c-type docutils literal notranslate"><span class="pre">drm_bridge_funcs-&gt;get_edid</span></code></a> callback instead.</p>
+<p>This callback is optional. Bridges that implement it shall set the
+DRM_BRIDGE_OP_MODES flag in their <a class="reference internal" href="#c.drm_bridge" title="drm_bridge"><code class="xref c c-type docutils literal notranslate"><span class="pre">drm_bridge-&gt;ops</span></code></a>.</p>
+<p>The connector parameter shall be used for the sole purpose of
+filling modes, and shall not be stored internally by bridge drivers
+for future usage.</p>
+<p>RETURNS:</p>
+<p class="last">The number of modes added by calling <a class="reference internal" href="drm-kms.html#c.drm_mode_probed_add" title="drm_mode_probed_add"><code class="xref c c-func docutils literal notranslate"><span class="pre">drm_mode_probed_add()</span></code></a>.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">get_edid</span></code></dt>
+<dd><p class="first">Read and parse the EDID data of the connected display.</p>
+<p>The <strong>get_edid</strong> callback is the preferred way of reporting mode
+information for a display connected to the bridge output. Bridges
+that support reading EDID shall implement this callback and leave
+the <strong>get_modes</strong> callback unimplemented.</p>
+<p>The caller of this operation shall first verify the output
+connection status and refrain from reading EDID from a disconnected
+output.</p>
+<p>This callback is optional. Bridges that implement it shall set the
+DRM_BRIDGE_OP_EDID flag in their <a class="reference internal" href="#c.drm_bridge" title="drm_bridge"><code class="xref c c-type docutils literal notranslate"><span class="pre">drm_bridge-&gt;ops</span></code></a>.</p>
+<p>The connector parameter shall be used for the sole purpose of EDID
+retrieval and parsing, and shall not be stored internally by bridge
+drivers for future usage.</p>
+<p>RETURNS:</p>
+<p class="last">An edid structure newly allocated with <a class="reference internal" href="../core-api/mm-api.html#c.kmalloc" title="kmalloc"><code class="xref c c-func docutils literal notranslate"><span class="pre">kmalloc()</span></code></a> (or similar) on
+success, or NULL otherwise. The caller is responsible for freeing
+the returned edid structure with <a class="reference internal" href="../core-api/mm-api.html#c.kfree" title="kfree"><code class="xref c c-func docutils literal notranslate"><span class="pre">kfree()</span></code></a>.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">hpd_notify</span></code></dt>
+<dd><p class="first">Notify the bridge of hot plug detection.</p>
+<p class="last">This callback is optional, it may be implemented by bridges that
+need to be notified of display connection or disconnection for
+internal reasons. One use case is to reset the internal state of CEC
+controllers for HDMI bridges.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">hpd_enable</span></code></dt>
+<dd><p class="first">Enable hot plug detection. From now on the bridge shall call
+<a class="reference internal" href="#c.drm_bridge_hpd_notify" title="drm_bridge_hpd_notify"><code class="xref c c-func docutils literal notranslate"><span class="pre">drm_bridge_hpd_notify()</span></code></a> each time a change is detected in the output
+connection status, until hot plug detection gets disabled with
+<strong>hpd_disable</strong>.</p>
+<p class="last">This callback is optional and shall only be implemented by bridges
+that support hot-plug notification without polling. Bridges that
+implement it shall also implement the <strong>hpd_disable</strong> callback and set
+the DRM_BRIDGE_OP_HPD flag in their <a class="reference internal" href="#c.drm_bridge" title="drm_bridge"><code class="xref c c-type docutils literal notranslate"><span class="pre">drm_bridge-&gt;ops</span></code></a>.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">hpd_disable</span></code></dt>
+<dd><p class="first">Disable hot plug detection. Once this function returns the bridge
+shall not call <a class="reference internal" href="#c.drm_bridge_hpd_notify" title="drm_bridge_hpd_notify"><code class="xref c c-func docutils literal notranslate"><span class="pre">drm_bridge_hpd_notify()</span></code></a> when a change in the output
+connection status occurs.</p>
+<p class="last">This callback is optional and shall only be implemented by bridges
+that support hot-plug notification without polling. Bridges that
+implement it shall also implement the <strong>hpd_enable</strong> callback and set
+the DRM_BRIDGE_OP_HPD flag in their <a class="reference internal" href="#c.drm_bridge" title="drm_bridge"><code class="xref c c-type docutils literal notranslate"><span class="pre">drm_bridge-&gt;ops</span></code></a>.</p>
+</dd>
 </dl>
 <dl class="type">
 <dt id="c.drm_bridge_timings">
@@ -4317,6 +4820,34 @@ dependent on the bus type. For LVDS buses, this indicates that even-
 and odd-numbered pixels are received on separate links.</dd>
 </dl>
 <dl class="type">
+<dt id="c.drm_bridge_ops">
+enum <code class="descname">drm_bridge_ops</code><a class="headerlink" href="#c.drm_bridge_ops" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bitmask of operations supported by the bridge</p>
+</dd></dl>
+
+<p><strong>Constants</strong></p>
+<dl class="docutils">
+<dt><code class="docutils literal notranslate"><span class="pre">DRM_BRIDGE_OP_DETECT</span></code></dt>
+<dd>The bridge can detect displays connected to
+its output. Bridges that set this flag shall implement the
+<a class="reference internal" href="#c.drm_bridge_funcs" title="drm_bridge_funcs"><code class="xref c c-type docutils literal notranslate"><span class="pre">drm_bridge_funcs-&gt;detect</span></code></a> callback.</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">DRM_BRIDGE_OP_EDID</span></code></dt>
+<dd>The bridge can retrieve the EDID of the display
+connected to its output. Bridges that set this flag shall implement
+the <a class="reference internal" href="#c.drm_bridge_funcs" title="drm_bridge_funcs"><code class="xref c c-type docutils literal notranslate"><span class="pre">drm_bridge_funcs-&gt;get_edid</span></code></a> callback.</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">DRM_BRIDGE_OP_HPD</span></code></dt>
+<dd>The bridge can detect hot-plug and hot-unplug
+without requiring polling. Bridges that set this flag shall
+implement the <a class="reference internal" href="#c.drm_bridge_funcs" title="drm_bridge_funcs"><code class="xref c c-type docutils literal notranslate"><span class="pre">drm_bridge_funcs-&gt;hpd_enable</span></code></a> and
+<a class="reference internal" href="#c.drm_bridge_funcs" title="drm_bridge_funcs"><code class="xref c c-type docutils literal notranslate"><span class="pre">drm_bridge_funcs-&gt;hpd_disable</span></code></a> callbacks if they support enabling
+and disabling hot-plug detection dynamically.</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">DRM_BRIDGE_OP_MODES</span></code></dt>
+<dd>The bridge can retrieve the modes supported
+by the display at its output. This does not include reading EDID
+which is separately covered by <strong>DRM_BRIDGE_OP_EDID</strong>. Bridges that set
+this flag shall implement the <a class="reference internal" href="#c.drm_bridge_funcs" title="drm_bridge_funcs"><code class="xref c c-type docutils literal notranslate"><span class="pre">drm_bridge_funcs-&gt;get_modes</span></code></a> callback.</dd>
+</dl>
+<dl class="type">
 <dt id="c.drm_bridge">
 struct <code class="descname">drm_bridge</code><a class="headerlink" href="#c.drm_bridge" title="Permalink to this definition">¶</a></dt>
 <dd><p>central DRM bridge control structure</p>
@@ -4324,6 +4855,7 @@ struct <code class="descname">drm_bridge</code><a class="headerlink" href="#c.dr
 
 <p><strong>Definition</strong></p>
 <div class="highlight-none notranslate"><div class="highlight"><pre><span></span>struct drm_bridge {
+  struct drm_private_obj base;
   struct drm_device *dev;
   struct drm_encoder *encoder;
   struct list_head chain_node;
@@ -4334,11 +4866,20 @@ struct <code class="descname">drm_bridge</code><a class="headerlink" href="#c.dr
   const struct drm_bridge_timings *timings;
   const struct drm_bridge_funcs *funcs;
   void *driver_private;
+  enum drm_bridge_ops ops;
+  int type;
+  bool interlace_allowed;
+  struct i2c_adapter *ddc;
+  struct mutex hpd_mutex;
+  void (*hpd_cb)(void *data, enum drm_connector_status status);
+  void *hpd_data;
 };
 </pre></div>
 </div>
 <p><strong>Members</strong></p>
 <dl class="docutils">
+<dt><code class="docutils literal notranslate"><span class="pre">base</span></code></dt>
+<dd>inherit from <code class="xref c c-type docutils literal notranslate"><span class="pre">drm_private_object</span></code></dd>
 <dt><code class="docutils literal notranslate"><span class="pre">dev</span></code></dt>
 <dd>DRM device this bridge belongs to</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">encoder</span></code></dt>
@@ -4355,6 +4896,25 @@ struct <code class="descname">drm_bridge</code><a class="headerlink" href="#c.dr
 <dd>control functions</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">driver_private</span></code></dt>
 <dd>pointer to the bridge driver’s internal context</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">ops</span></code></dt>
+<dd>bitmask of operations supported by the bridge</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">type</span></code></dt>
+<dd>Type of the connection at the bridge output
+(DRM_MODE_CONNECTOR_*). For bridges at the end of this chain this
+identifies the type of connected display.</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">interlace_allowed</span></code></dt>
+<dd>Indicate that the bridge can handle interlaced
+modes.</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">ddc</span></code></dt>
+<dd>Associated I2C adapter for DDC access, if any.</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">hpd_mutex</span></code></dt>
+<dd>Protects the <strong>hpd_cb</strong> and <strong>hpd_data</strong> fields.</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">hpd_cb</span></code></dt>
+<dd>Hot plug detection callback, registered with
+<a class="reference internal" href="#c.drm_bridge_hpd_enable" title="drm_bridge_hpd_enable"><code class="xref c c-func docutils literal notranslate"><span class="pre">drm_bridge_hpd_enable()</span></code></a>.</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">hpd_data</span></code></dt>
+<dd>Private data passed to the Hot plug detection callback
+<strong>hpd_cb</strong>.</dd>
 </dl>
 <dl class="function">
 <dt id="c.drm_bridge_get_next_bridge">
@@ -4436,7 +4996,7 @@ void <code class="descname">drm_bridge_remove</code><span class="sig-paren">(</s
 </dl>
 <dl class="function">
 <dt id="c.drm_bridge_attach">
-int <code class="descname">drm_bridge_attach</code><span class="sig-paren">(</span>struct <a class="reference internal" href="drm-kms.html#c.drm_encoder" title="drm_encoder">drm_encoder</a> *<em>&nbsp;encoder</em>, struct <a class="reference internal" href="#c.drm_bridge" title="drm_bridge">drm_bridge</a> *<em>&nbsp;bridge</em>, struct <a class="reference internal" href="#c.drm_bridge" title="drm_bridge">drm_bridge</a> *<em>&nbsp;previous</em><span class="sig-paren">)</span><a class="headerlink" href="#c.drm_bridge_attach" title="Permalink to this definition">¶</a></dt>
+int <code class="descname">drm_bridge_attach</code><span class="sig-paren">(</span>struct <a class="reference internal" href="drm-kms.html#c.drm_encoder" title="drm_encoder">drm_encoder</a> *<em>&nbsp;encoder</em>, struct <a class="reference internal" href="#c.drm_bridge" title="drm_bridge">drm_bridge</a> *<em>&nbsp;bridge</em>, struct <a class="reference internal" href="#c.drm_bridge" title="drm_bridge">drm_bridge</a> *<em>&nbsp;previous</em>, enum <a class="reference internal" href="#c.drm_bridge_attach_flags" title="drm_bridge_attach_flags">drm_bridge_attach_flags</a><em>&nbsp;flags</em><span class="sig-paren">)</span><a class="headerlink" href="#c.drm_bridge_attach" title="Permalink to this definition">¶</a></dt>
 <dd><p>attach the bridge to an encoder’s chain</p>
 </dd></dl>
 
@@ -4448,6 +5008,8 @@ int <code class="descname">drm_bridge_attach</code><span class="sig-paren">(</sp
 <dd>bridge to attach</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">drm_bridge</span> <span class="pre">*</span> <span class="pre">previous</span></code></dt>
 <dd>previous bridge in the chain (optional)</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">enum</span> <span class="pre">drm_bridge_attach_flags</span> <span class="pre">flags</span></code></dt>
+<dd>DRM_BRIDGE_ATTACH_* flags</dd>
 </dl>
 <p><strong>Description</strong></p>
 <p>Called by a kms driver to link the bridge to an encoder’s chain. The previous
@@ -4672,6 +5234,148 @@ starting from the first bridge to the last. These are called after completing
 <p><strong>Note</strong></p>
 <p>the bridge passed should be the one closest to the encoder</p>
 <dl class="function">
+<dt id="c.drm_atomic_bridge_chain_check">
+int <code class="descname">drm_atomic_bridge_chain_check</code><span class="sig-paren">(</span>struct <a class="reference internal" href="#c.drm_bridge" title="drm_bridge">drm_bridge</a> *<em>&nbsp;bridge</em>, struct <a class="reference internal" href="drm-kms.html#c.drm_crtc_state" title="drm_crtc_state">drm_crtc_state</a> *<em>&nbsp;crtc_state</em>, struct <a class="reference internal" href="drm-kms.html#c.drm_connector_state" title="drm_connector_state">drm_connector_state</a> *<em>&nbsp;conn_state</em><span class="sig-paren">)</span><a class="headerlink" href="#c.drm_atomic_bridge_chain_check" title="Permalink to this definition">¶</a></dt>
+<dd><p>Do an atomic check on the bridge chain</p>
+</dd></dl>
+
+<p><strong>Parameters</strong></p>
+<dl class="docutils">
+<dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">drm_bridge</span> <span class="pre">*</span> <span class="pre">bridge</span></code></dt>
+<dd>bridge control structure</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">drm_crtc_state</span> <span class="pre">*</span> <span class="pre">crtc_state</span></code></dt>
+<dd>new CRTC state</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">drm_connector_state</span> <span class="pre">*</span> <span class="pre">conn_state</span></code></dt>
+<dd>new connector state</dd>
+</dl>
+<p><strong>Description</strong></p>
+<p>First trigger a bus format negotiation before calling
+<a class="reference internal" href="#c.drm_bridge_funcs" title="drm_bridge_funcs"><code class="xref c c-type docutils literal notranslate"><span class="pre">drm_bridge_funcs.atomic_check()</span></code></a> (falls back on
+<a class="reference internal" href="#c.drm_bridge_funcs" title="drm_bridge_funcs"><code class="xref c c-type docutils literal notranslate"><span class="pre">drm_bridge_funcs.mode_fixup()</span></code></a>) op for all the bridges in the encoder chain,
+starting from the last bridge to the first. These are called before calling
+<a class="reference internal" href="#c.drm_encoder_helper_funcs" title="drm_encoder_helper_funcs"><code class="xref c c-type docutils literal notranslate"><span class="pre">drm_encoder_helper_funcs.atomic_check()</span></code></a></p>
+<p><strong>Return</strong></p>
+<p>0 on success, a negative error code on failure</p>
+<dl class="function">
+<dt id="c.drm_bridge_detect">
+enum <a class="reference internal" href="drm-kms.html#c.drm_connector_status" title="drm_connector_status">drm_connector_status</a> <code class="descname">drm_bridge_detect</code><span class="sig-paren">(</span>struct <a class="reference internal" href="#c.drm_bridge" title="drm_bridge">drm_bridge</a> *<em>&nbsp;bridge</em><span class="sig-paren">)</span><a class="headerlink" href="#c.drm_bridge_detect" title="Permalink to this definition">¶</a></dt>
+<dd><p>check if anything is attached to the bridge output</p>
+</dd></dl>
+
+<p><strong>Parameters</strong></p>
+<dl class="docutils">
+<dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">drm_bridge</span> <span class="pre">*</span> <span class="pre">bridge</span></code></dt>
+<dd>bridge control structure</dd>
+</dl>
+<p><strong>Description</strong></p>
+<p>If the bridge supports output detection, as reported by the
+DRM_BRIDGE_OP_DETECT bridge ops flag, call <a class="reference internal" href="#c.drm_bridge_funcs" title="drm_bridge_funcs"><code class="xref c c-type docutils literal notranslate"><span class="pre">drm_bridge_funcs.detect</span></code></a> for the
+bridge and return the connection status. Otherwise return
+connector_status_unknown.</p>
+<p><strong>Return</strong></p>
+<p>The detection status on success, or connector_status_unknown if the bridge
+doesn’t support output detection.</p>
+<dl class="function">
+<dt id="c.drm_bridge_get_modes">
+int <code class="descname">drm_bridge_get_modes</code><span class="sig-paren">(</span>struct <a class="reference internal" href="#c.drm_bridge" title="drm_bridge">drm_bridge</a> *<em>&nbsp;bridge</em>, struct <a class="reference internal" href="drm-kms.html#c.drm_connector" title="drm_connector">drm_connector</a> *<em>&nbsp;connector</em><span class="sig-paren">)</span><a class="headerlink" href="#c.drm_bridge_get_modes" title="Permalink to this definition">¶</a></dt>
+<dd><p>fill all modes currently valid for the sink into the <strong>connector</strong></p>
+</dd></dl>
+
+<p><strong>Parameters</strong></p>
+<dl class="docutils">
+<dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">drm_bridge</span> <span class="pre">*</span> <span class="pre">bridge</span></code></dt>
+<dd>bridge control structure</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">drm_connector</span> <span class="pre">*</span> <span class="pre">connector</span></code></dt>
+<dd>the connector to fill with modes</dd>
+</dl>
+<p><strong>Description</strong></p>
+<p>If the bridge supports output modes retrieval, as reported by the
+DRM_BRIDGE_OP_MODES bridge ops flag, call <a class="reference internal" href="#c.drm_bridge_funcs" title="drm_bridge_funcs"><code class="xref c c-type docutils literal notranslate"><span class="pre">drm_bridge_funcs.get_modes</span></code></a> to
+fill the connector with all valid modes and return the number of modes
+added. Otherwise return 0.</p>
+<p><strong>Return</strong></p>
+<p>The number of modes added to the connector.</p>
+<dl class="function">
+<dt id="c.drm_bridge_get_edid">
+struct edid * <code class="descname">drm_bridge_get_edid</code><span class="sig-paren">(</span>struct <a class="reference internal" href="#c.drm_bridge" title="drm_bridge">drm_bridge</a> *<em>&nbsp;bridge</em>, struct <a class="reference internal" href="drm-kms.html#c.drm_connector" title="drm_connector">drm_connector</a> *<em>&nbsp;connector</em><span class="sig-paren">)</span><a class="headerlink" href="#c.drm_bridge_get_edid" title="Permalink to this definition">¶</a></dt>
+<dd><p>get the EDID data of the connected display</p>
+</dd></dl>
+
+<p><strong>Parameters</strong></p>
+<dl class="docutils">
+<dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">drm_bridge</span> <span class="pre">*</span> <span class="pre">bridge</span></code></dt>
+<dd>bridge control structure</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">drm_connector</span> <span class="pre">*</span> <span class="pre">connector</span></code></dt>
+<dd>the connector to read EDID for</dd>
+</dl>
+<p><strong>Description</strong></p>
+<p>If the bridge supports output EDID retrieval, as reported by the
+DRM_BRIDGE_OP_EDID bridge ops flag, call <a class="reference internal" href="#c.drm_bridge_funcs" title="drm_bridge_funcs"><code class="xref c c-type docutils literal notranslate"><span class="pre">drm_bridge_funcs.get_edid</span></code></a> to
+get the EDID and return it. Otherwise return ERR_PTR(-ENOTSUPP).</p>
+<p><strong>Return</strong></p>
+<p>The retrieved EDID on success, or an error pointer otherwise.</p>
+<dl class="function">
+<dt id="c.drm_bridge_hpd_enable">
+void <code class="descname">drm_bridge_hpd_enable</code><span class="sig-paren">(</span>struct <a class="reference internal" href="#c.drm_bridge" title="drm_bridge">drm_bridge</a> *<em>&nbsp;bridge</em>, void (<em>*cb</em>)(void *data, enum <a class="reference internal" href="drm-kms.html#c.drm_connector_status" title="drm_connector_status">drm_connector_status</a> status), void *<em>&nbsp;data</em><span class="sig-paren">)</span><a class="headerlink" href="#c.drm_bridge_hpd_enable" title="Permalink to this definition">¶</a></dt>
+<dd><p>enable hot plug detection for the bridge</p>
+</dd></dl>
+
+<p><strong>Parameters</strong></p>
+<dl class="docutils">
+<dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">drm_bridge</span> <span class="pre">*</span> <span class="pre">bridge</span></code></dt>
+<dd>bridge control structure</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">void</span> <span class="pre">(*)(void</span> <span class="pre">*data,</span> <span class="pre">enum</span> <span class="pre">drm_connector_status</span> <span class="pre">status)</span> <span class="pre">cb</span></code></dt>
+<dd>hot-plug detection callback</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">void</span> <span class="pre">*</span> <span class="pre">data</span></code></dt>
+<dd>data to be passed to the hot-plug detection callback</dd>
+</dl>
+<p><strong>Description</strong></p>
+<p>Call <a class="reference internal" href="#c.drm_bridge_funcs" title="drm_bridge_funcs"><code class="xref c c-type docutils literal notranslate"><span class="pre">drm_bridge_funcs.hpd_enable</span></code></a> if implemented and register the given <strong>cb</strong>
+and <strong>data</strong> as hot plug notification callback. From now on the <strong>cb</strong> will be
+called with <strong>data</strong> when an output status change is detected by the bridge,
+until hot plug notification gets disabled with <a class="reference internal" href="#c.drm_bridge_hpd_disable" title="drm_bridge_hpd_disable"><code class="xref c c-func docutils literal notranslate"><span class="pre">drm_bridge_hpd_disable()</span></code></a>.</p>
+<p>Hot plug detection is supported only if the DRM_BRIDGE_OP_HPD flag is set in
+bridge-&gt;ops. This function shall not be called when the flag is not set.</p>
+<p>Only one hot plug detection callback can be registered at a time, it is an
+error to call this function when hot plug detection is already enabled for
+the bridge.</p>
+<dl class="function">
+<dt id="c.drm_bridge_hpd_disable">
+void <code class="descname">drm_bridge_hpd_disable</code><span class="sig-paren">(</span>struct <a class="reference internal" href="#c.drm_bridge" title="drm_bridge">drm_bridge</a> *<em>&nbsp;bridge</em><span class="sig-paren">)</span><a class="headerlink" href="#c.drm_bridge_hpd_disable" title="Permalink to this definition">¶</a></dt>
+<dd><p>disable hot plug detection for the bridge</p>
+</dd></dl>
+
+<p><strong>Parameters</strong></p>
+<dl class="docutils">
+<dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">drm_bridge</span> <span class="pre">*</span> <span class="pre">bridge</span></code></dt>
+<dd>bridge control structure</dd>
+</dl>
+<p><strong>Description</strong></p>
+<p>Call <a class="reference internal" href="#c.drm_bridge_funcs" title="drm_bridge_funcs"><code class="xref c c-type docutils literal notranslate"><span class="pre">drm_bridge_funcs.hpd_disable</span></code></a> if implemented and unregister the hot
+plug detection callback previously registered with <a class="reference internal" href="#c.drm_bridge_hpd_enable" title="drm_bridge_hpd_enable"><code class="xref c c-func docutils literal notranslate"><span class="pre">drm_bridge_hpd_enable()</span></code></a>.
+Once this function returns the callback will not be called by the bridge
+when an output status change occurs.</p>
+<p>Hot plug detection is supported only if the DRM_BRIDGE_OP_HPD flag is set in
+bridge-&gt;ops. This function shall not be called when the flag is not set.</p>
+<dl class="function">
+<dt id="c.drm_bridge_hpd_notify">
+void <code class="descname">drm_bridge_hpd_notify</code><span class="sig-paren">(</span>struct <a class="reference internal" href="#c.drm_bridge" title="drm_bridge">drm_bridge</a> *<em>&nbsp;bridge</em>, enum <a class="reference internal" href="drm-kms.html#c.drm_connector_status" title="drm_connector_status">drm_connector_status</a><em>&nbsp;status</em><span class="sig-paren">)</span><a class="headerlink" href="#c.drm_bridge_hpd_notify" title="Permalink to this definition">¶</a></dt>
+<dd><p>notify hot plug detection events</p>
+</dd></dl>
+
+<p><strong>Parameters</strong></p>
+<dl class="docutils">
+<dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">drm_bridge</span> <span class="pre">*</span> <span class="pre">bridge</span></code></dt>
+<dd>bridge control structure</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">enum</span> <span class="pre">drm_connector_status</span> <span class="pre">status</span></code></dt>
+<dd>output connection status</dd>
+</dl>
+<p><strong>Description</strong></p>
+<p>Bridge drivers shall call this function to report hot plug events when they
+detect a change in the output status, when hot plug detection has been
+enabled by <a class="reference internal" href="#c.drm_bridge_hpd_enable" title="drm_bridge_hpd_enable"><code class="xref c c-func docutils literal notranslate"><span class="pre">drm_bridge_hpd_enable()</span></code></a>.</p>
+<p>This function shall be called in a context that can sleep.</p>
+<dl class="function">
 <dt id="c.of_drm_find_bridge">
 struct <a class="reference internal" href="#c.drm_bridge" title="drm_bridge">drm_bridge</a> * <code class="descname">of_drm_find_bridge</code><span class="sig-paren">(</span>struct device_node *<em>&nbsp;np</em><span class="sig-paren">)</span><a class="headerlink" href="#c.of_drm_find_bridge" title="Permalink to this definition">¶</a></dt>
 <dd><p>find the bridge corresponding to the device node in the global bridge list</p>
@@ -4684,6 +5388,58 @@ struct <a class="reference internal" href="#c.drm_bridge" title="drm_bridge">drm
 </dl>
 <p><strong>Return</strong></p>
 <p>drm_bridge control struct on success, NULL on failure</p>
+</div>
+<div class="section" id="bridge-connector-helper-reference">
+<h3>Bridge Connector Helper Reference<a class="headerlink" href="#bridge-connector-helper-reference" title="Permalink to this headline">¶</a></h3>
+<dl class="function">
+<dt id="c.drm_bridge_connector_enable_hpd">
+void <code class="descname">drm_bridge_connector_enable_hpd</code><span class="sig-paren">(</span>struct <a class="reference internal" href="drm-kms.html#c.drm_connector" title="drm_connector">drm_connector</a> *<em>&nbsp;connector</em><span class="sig-paren">)</span><a class="headerlink" href="#c.drm_bridge_connector_enable_hpd" title="Permalink to this definition">¶</a></dt>
+<dd><p>Enable hot-plug detection for the connector</p>
+</dd></dl>
+
+<p><strong>Parameters</strong></p>
+<dl class="docutils">
+<dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">drm_connector</span> <span class="pre">*</span> <span class="pre">connector</span></code></dt>
+<dd>The DRM bridge connector</dd>
+</dl>
+<p><strong>Description</strong></p>
+<p>This function enables hot-plug detection for the given bridge connector.
+This is typically used by display drivers in their resume handler.</p>
+<dl class="function">
+<dt id="c.drm_bridge_connector_disable_hpd">
+void <code class="descname">drm_bridge_connector_disable_hpd</code><span class="sig-paren">(</span>struct <a class="reference internal" href="drm-kms.html#c.drm_connector" title="drm_connector">drm_connector</a> *<em>&nbsp;connector</em><span class="sig-paren">)</span><a class="headerlink" href="#c.drm_bridge_connector_disable_hpd" title="Permalink to this definition">¶</a></dt>
+<dd><p>Disable hot-plug detection for the connector</p>
+</dd></dl>
+
+<p><strong>Parameters</strong></p>
+<dl class="docutils">
+<dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">drm_connector</span> <span class="pre">*</span> <span class="pre">connector</span></code></dt>
+<dd>The DRM bridge connector</dd>
+</dl>
+<p><strong>Description</strong></p>
+<p>This function disables hot-plug detection for the given bridge connector.
+This is typically used by display drivers in their suspend handler.</p>
+<dl class="function">
+<dt id="c.drm_bridge_connector_init">
+struct <a class="reference internal" href="drm-kms.html#c.drm_connector" title="drm_connector">drm_connector</a> * <code class="descname">drm_bridge_connector_init</code><span class="sig-paren">(</span>struct <a class="reference internal" href="drm-internals.html#c.drm_device" title="drm_device">drm_device</a> *<em>&nbsp;drm</em>, struct <a class="reference internal" href="drm-kms.html#c.drm_encoder" title="drm_encoder">drm_encoder</a> *<em>&nbsp;encoder</em><span class="sig-paren">)</span><a class="headerlink" href="#c.drm_bridge_connector_init" title="Permalink to this definition">¶</a></dt>
+<dd><p>Initialise a connector for a chain of bridges</p>
+</dd></dl>
+
+<p><strong>Parameters</strong></p>
+<dl class="docutils">
+<dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">drm_device</span> <span class="pre">*</span> <span class="pre">drm</span></code></dt>
+<dd>the DRM device</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">drm_encoder</span> <span class="pre">*</span> <span class="pre">encoder</span></code></dt>
+<dd>the encoder where the bridge chain starts</dd>
+</dl>
+<p><strong>Description</strong></p>
+<p>Allocate, initialise and register a <code class="xref c c-type docutils literal notranslate"><span class="pre">drm_bridge_connector</span></code> with the <strong>drm</strong>
+device. The connector is associated with a chain of bridges that starts at
+the <strong>encoder</strong>. All bridges in the chain shall report bridge operation flags
+(<a class="reference internal" href="#c.drm_bridge" title="drm_bridge"><code class="xref c c-type docutils literal notranslate"><span class="pre">drm_bridge-&gt;ops</span></code></a>) and bridge output type (<a class="reference internal" href="#c.drm_bridge" title="drm_bridge"><code class="xref c c-type docutils literal notranslate"><span class="pre">drm_bridge-&gt;type</span></code></a>), and none of
+them may create a DRM connector directly.</p>
+<p>Returns a pointer to the new connector on success, or a negative error
+pointer otherwise.</p>
 </div>
 <div class="section" id="panel-bridge-helper-reference">
 <h3>Panel-Bridge Helper Reference<a class="headerlink" href="#panel-bridge-helper-reference" title="Permalink to this headline">¶</a></h3>
@@ -4713,7 +5469,7 @@ with connector creation.  When done with the bridge (after
 <p>The connector type is set to <strong>panel-&gt;connector_type</strong>, which must be set to a
 known type. Calling this function with a panel whose connector type is
 DRM_MODE_CONNECTOR_Unknown will return NULL.</p>
-<p>See <a class="reference internal" href="#c.devm_drm_panel_bridge_add" title="devm_drm_panel_bridge_add"><code class="xref c c-func docutils literal notranslate"><span class="pre">devm_drm_panel_bridge_add()</span></code></a> for an automatically manged version of this
+<p>See <a class="reference internal" href="#c.devm_drm_panel_bridge_add" title="devm_drm_panel_bridge_add"><code class="xref c c-func docutils literal notranslate"><span class="pre">devm_drm_panel_bridge_add()</span></code></a> for an automatically managed version of this
 function.</p>
 <dl class="function">
 <dt id="c.drm_panel_bridge_add_typed">
@@ -5252,7 +6008,7 @@ void <code class="descname">drm_self_refresh_helper_cleanup</code><span class="s
 <h2>HDCP Helper Functions Reference<a class="headerlink" href="#hdcp-helper-functions-reference" title="Permalink to this headline">¶</a></h2>
 <dl class="function">
 <dt id="c.drm_hdcp_check_ksvs_revoked">
-bool <code class="descname">drm_hdcp_check_ksvs_revoked</code><span class="sig-paren">(</span>struct <a class="reference internal" href="drm-internals.html#c.drm_device" title="drm_device">drm_device</a> *<em>&nbsp;drm_dev</em>, u8 *<em>&nbsp;ksvs</em>, u32<em>&nbsp;ksv_count</em><span class="sig-paren">)</span><a class="headerlink" href="#c.drm_hdcp_check_ksvs_revoked" title="Permalink to this definition">¶</a></dt>
+int <code class="descname">drm_hdcp_check_ksvs_revoked</code><span class="sig-paren">(</span>struct <a class="reference internal" href="drm-internals.html#c.drm_device" title="drm_device">drm_device</a> *<em>&nbsp;drm_dev</em>, u8 *<em>&nbsp;ksvs</em>, u32<em>&nbsp;ksv_count</em><span class="sig-paren">)</span><a class="headerlink" href="#c.drm_hdcp_check_ksvs_revoked" title="Permalink to this definition">¶</a></dt>
 <dd><p>Check the revoked status of the IDs</p>
 </dd></dl>
 
@@ -5279,7 +6035,7 @@ is defined at:
 2. Renewability chapter on 63rd page of HDCP 2.2 specification
 <a class="reference external" href="https://www.digital-cp.com/sites/default/files/specifications">https://www.digital-cp.com/sites/default/files/specifications</a>/HDCP``20on````20HDMI````20Specification````20Rev2_2_Final1``.pdf</p>
 <p><strong>Return</strong></p>
-<p>TRUE on any of the KSV is revoked, else FALSE.</p>
+<p>Count of the revoked KSVs or -ve error number incase of the failure.</p>
 <dl class="function">
 <dt id="c.drm_connector_attach_content_protection_property">
 int <code class="descname">drm_connector_attach_content_protection_property</code><span class="sig-paren">(</span>struct <a class="reference internal" href="drm-kms.html#c.drm_connector" title="drm_connector">drm_connector</a> *<em>&nbsp;connector</em>, bool<em>&nbsp;hdcp_content_type</em><span class="sig-paren">)</span><a class="headerlink" href="#c.drm_connector_attach_content_protection_property" title="Permalink to this definition">¶</a></dt>
@@ -5611,14 +6367,22 @@ The driver should ignore SINK_COUNT during detection.</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">DP_DPCD_QUIRK_DSC_WITHOUT_VIRTUAL_DPCD</span></code></dt>
 <dd>The device supports MST DSC despite not supporting Virtual DPCD.
 The DSC caps can be read from the physical aux instead.</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">DP_QUIRK_FORCE_DPCD_BACKLIGHT</span></code></dt>
+<dd>The device is telling the truth when it says that it uses DPCD
+backlight controls, even if the system’s firmware disagrees. This
+quirk should be checked against both the ident and panel EDID.
+When present, the driver should honor the DPCD backlight
+capabilities advertised.</dd>
 </dl>
 <p><strong>Description</strong></p>
 <p>Display Port sink and branch devices in the wild have a variety of bugs, try
 to collect them here. The quirks are shared, but it’s up to the drivers to
-implement workarounds for them.</p>
+implement workarounds for them. Note that because some devices have
+unreliable OUIDs, the EDID of sinks should also be checked for quirks using
+<a class="reference internal" href="#c.drm_dp_get_edid_quirks" title="drm_dp_get_edid_quirks"><code class="xref c c-func docutils literal notranslate"><span class="pre">drm_dp_get_edid_quirks()</span></code></a>.</p>
 <dl class="function">
 <dt id="c.drm_dp_has_quirk">
-bool <code class="descname">drm_dp_has_quirk</code><span class="sig-paren">(</span>const struct <a class="reference internal" href="#c.drm_dp_desc" title="drm_dp_desc">drm_dp_desc</a> *<em>&nbsp;desc</em>, enum <a class="reference internal" href="#c.drm_dp_quirk" title="drm_dp_quirk">drm_dp_quirk</a><em>&nbsp;quirk</em><span class="sig-paren">)</span><a class="headerlink" href="#c.drm_dp_has_quirk" title="Permalink to this definition">¶</a></dt>
+bool <code class="descname">drm_dp_has_quirk</code><span class="sig-paren">(</span>const struct <a class="reference internal" href="#c.drm_dp_desc" title="drm_dp_desc">drm_dp_desc</a> *<em>&nbsp;desc</em>, u32<em>&nbsp;edid_quirks</em>, enum <a class="reference internal" href="#c.drm_dp_quirk" title="drm_dp_quirk">drm_dp_quirk</a><em>&nbsp;quirk</em><span class="sig-paren">)</span><a class="headerlink" href="#c.drm_dp_has_quirk" title="Permalink to this definition">¶</a></dt>
 <dd><p>does the DP device have a specific quirk</p>
 </dd></dl>
 
@@ -5626,6 +6390,8 @@ bool <code class="descname">drm_dp_has_quirk</code><span class="sig-paren">(</sp
 <dl class="docutils">
 <dt><code class="docutils literal notranslate"><span class="pre">const</span> <span class="pre">struct</span> <span class="pre">drm_dp_desc</span> <span class="pre">*</span> <span class="pre">desc</span></code></dt>
 <dd>Device decriptor filled by <a class="reference internal" href="#c.drm_dp_read_desc" title="drm_dp_read_desc"><code class="xref c c-func docutils literal notranslate"><span class="pre">drm_dp_read_desc()</span></code></a></dd>
+<dt><code class="docutils literal notranslate"><span class="pre">u32</span> <span class="pre">edid_quirks</span></code></dt>
+<dd>Optional quirk bitmask filled by <a class="reference internal" href="#c.drm_dp_get_edid_quirks" title="drm_dp_get_edid_quirks"><code class="xref c c-func docutils literal notranslate"><span class="pre">drm_dp_get_edid_quirks()</span></code></a></dd>
 <dt><code class="docutils literal notranslate"><span class="pre">enum</span> <span class="pre">drm_dp_quirk</span> <span class="pre">quirk</span></code></dt>
 <dd>Quirk to query for</dd>
 </dl>
@@ -5695,6 +6461,21 @@ int <code class="descname">drm_dp_dpcd_read_link_status</code><span class="sig-p
 <p><strong>Description</strong></p>
 <p>Returns the number of bytes transferred on success or a negative error
 code on failure.</p>
+<dl class="function">
+<dt id="c.drm_dp_send_real_edid_checksum">
+bool <code class="descname">drm_dp_send_real_edid_checksum</code><span class="sig-paren">(</span>struct <a class="reference internal" href="#c.drm_dp_aux" title="drm_dp_aux">drm_dp_aux</a> *<em>&nbsp;aux</em>, u8<em>&nbsp;real_edid_checksum</em><span class="sig-paren">)</span><a class="headerlink" href="#c.drm_dp_send_real_edid_checksum" title="Permalink to this definition">¶</a></dt>
+<dd><p>send back real edid checksum value</p>
+</dd></dl>
+
+<p><strong>Parameters</strong></p>
+<dl class="docutils">
+<dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">drm_dp_aux</span> <span class="pre">*</span> <span class="pre">aux</span></code></dt>
+<dd>DisplayPort AUX channel</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">u8</span> <span class="pre">real_edid_checksum</span></code></dt>
+<dd>real edid checksum for the last block</dd>
+</dl>
+<p><strong>Return</strong></p>
+<p>True on success</p>
 <dl class="function">
 <dt id="c.drm_dp_downstream_max_clock">
 int <code class="descname">drm_dp_downstream_max_clock</code><span class="sig-paren">(</span>const u8<em>&nbsp;dpcd</em>, const u8<em>&nbsp;port_cap</em><span class="sig-paren">)</span><a class="headerlink" href="#c.drm_dp_downstream_max_clock" title="Permalink to this definition">¶</a></dt>
@@ -5861,6 +6642,27 @@ int <code class="descname">drm_dp_stop_crc</code><span class="sig-paren">(</span
 </dl>
 <p><strong>Description</strong></p>
 <p>Returns 0 on success or a negative error code on failure.</p>
+<dl class="function">
+<dt id="c.drm_dp_get_edid_quirks">
+u32 <code class="descname">drm_dp_get_edid_quirks</code><span class="sig-paren">(</span>const struct edid *<em>&nbsp;edid</em><span class="sig-paren">)</span><a class="headerlink" href="#c.drm_dp_get_edid_quirks" title="Permalink to this definition">¶</a></dt>
+<dd><p>Check the EDID of a DP device to find additional DP-specific quirks</p>
+</dd></dl>
+
+<p><strong>Parameters</strong></p>
+<dl class="docutils">
+<dt><code class="docutils literal notranslate"><span class="pre">const</span> <span class="pre">struct</span> <span class="pre">edid</span> <span class="pre">*</span> <span class="pre">edid</span></code></dt>
+<dd>The EDID to check</dd>
+</dl>
+<p><strong>Description</strong></p>
+<p>While OUIDs are meant to be used to recognize a DisplayPort device, a lot
+of manufacturers don’t seem to like following standards and neglect to fill
+the dev-ID in, making it impossible to only use OUIDs for determining
+quirks in some cases. This function can be used to check the EDID and look
+up any additional DP quirks. The bits returned by this function correspond
+to the quirk bits in <a class="reference internal" href="#c.drm_dp_quirk" title="drm_dp_quirk"><code class="xref c c-type docutils literal notranslate"><span class="pre">drm_dp_quirk</span></code></a>.</p>
+<p><strong>Return</strong></p>
+<p>a bitmask of quirks, if any. The driver can check this using
+<a class="reference internal" href="#c.drm_dp_has_quirk" title="drm_dp_has_quirk"><code class="xref c c-func docutils literal notranslate"><span class="pre">drm_dp_has_quirk()</span></code></a>.</p>
 <dl class="function">
 <dt id="c.drm_dp_read_desc">
 int <code class="descname">drm_dp_read_desc</code><span class="sig-paren">(</span>struct <a class="reference internal" href="#c.drm_dp_aux" title="drm_dp_aux">drm_dp_aux</a> *<em>&nbsp;aux</em>, struct <a class="reference internal" href="#c.drm_dp_desc" title="drm_dp_desc">drm_dp_desc</a> *<em>&nbsp;desc</em>, bool<em>&nbsp;is_branch</em><span class="sig-paren">)</span><a class="headerlink" href="#c.drm_dp_read_desc" title="Permalink to this definition">¶</a></dt>
@@ -6540,13 +7342,13 @@ struct <code class="descname">drm_dp_mst_topology_mgr</code><a class="headerlink
   struct mutex probe_lock;
   bool mst_state : 1;
   bool payload_id_table_cleared : 1;
+  bool is_waiting_for_dwn_reply : 1;
   struct drm_dp_mst_branch *mst_primary;
   u8 dpcd[DP_RECEIVER_CAP_SIZE];
   u8 sink_count;
   int pbn_div;
   const struct drm_private_state_funcs *funcs;
   struct mutex qlock;
-  bool is_waiting_for_dwn_reply;
   struct list_head tx_msg_downq;
   struct mutex payload_lock;
   struct drm_dp_vcpi **proposed_vcpis;
@@ -6605,6 +7407,8 @@ if no MST sink/branch devices is connected.</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">payload_id_table_cleared</span></code></dt>
 <dd>Whether or not we’ve cleared the payload
 ID table for <strong>mst_primary</strong>. Protected by <strong>lock</strong>.</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">is_waiting_for_dwn_reply</span></code></dt>
+<dd>whether we’re waiting for a down reply.</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">mst_primary</span></code></dt>
 <dd>Pointer to the primary/first branch device.</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">dpcd</span></code></dt>
@@ -6618,17 +7422,17 @@ ID table for <strong>mst_primary</strong>. Protected by <strong>lock</strong>.</
 <dt><code class="docutils literal notranslate"><span class="pre">qlock</span></code></dt>
 <dd>protects <strong>tx_msg_downq</strong>, the <a class="reference internal" href="#c.drm_dp_mst_branch" title="drm_dp_mst_branch"><code class="xref c c-type docutils literal notranslate"><span class="pre">drm_dp_mst_branch.txslost</span></code></a> and
 <code class="xref c c-type docutils literal notranslate"><span class="pre">drm_dp_sideband_msg_tx.state</span></code> once they are queued</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">is_waiting_for_dwn_reply</span></code></dt>
-<dd>indicate whether is waiting for down reply</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">tx_msg_downq</span></code></dt>
 <dd>List of pending down replies.</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">payload_lock</span></code></dt>
 <dd>Protect payload information.</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">proposed_vcpis</span></code></dt>
 <dd>Array of pointers for the new VCPI allocation. The
-VCPI structure itself is <a class="reference internal" href="#c.drm_dp_mst_port" title="drm_dp_mst_port"><code class="xref c c-type docutils literal notranslate"><span class="pre">drm_dp_mst_port.vcpi</span></code></a>.</dd>
+VCPI structure itself is <a class="reference internal" href="#c.drm_dp_mst_port" title="drm_dp_mst_port"><code class="xref c c-type docutils literal notranslate"><span class="pre">drm_dp_mst_port.vcpi</span></code></a>, and the size of
+this array is determined by <strong>max_payloads</strong>.</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">payloads</span></code></dt>
-<dd>Array of payloads.</dd>
+<dd>Array of payloads. The size of this array is determined
+by <strong>max_payloads</strong>.</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">payload_mask</span></code></dt>
 <dd>Elements of <strong>payloads</strong> actually in use. Since
 reallocation of active outputs isn’t possible gaps can be created by
@@ -7574,6 +8378,8 @@ struct <code class="descname">mipi_dbi_dev</code><a class="headerlink" href="#c.
   bool enabled;
   u16 *tx_buf;
   unsigned int rotation;
+  unsigned int left_offset;
+  unsigned int top_offset;
   struct backlight_device *backlight;
   struct regulator *regulator;
   struct mipi_dbi dbi;
@@ -7596,6 +8402,18 @@ struct <code class="descname">mipi_dbi_dev</code><a class="headerlink" href="#c.
 <dd>Buffer used for transfer (copy clip rect area)</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">rotation</span></code></dt>
 <dd>initial rotation in degrees Counter Clock Wise</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">left_offset</span></code></dt>
+<dd><dl class="first last docutils">
+<dt>Horizontal offset of the display relative to the</dt>
+<dd>controller’s driver array</dd>
+</dl>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">top_offset</span></code></dt>
+<dd><dl class="first last docutils">
+<dt>Vertical offset of the display relative to the</dt>
+<dd>controller’s driver array</dd>
+</dl>
+</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">backlight</span></code></dt>
 <dd>backlight device (optional)</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">regulator</span></code></dt>
@@ -9657,7 +10475,7 @@ skipped.</p>
 <p>The number of modes added or 0 if we couldn’t find any.</p>
 <dl class="function">
 <dt id="c.drm_do_get_edid">
-struct edid * <code class="descname">drm_do_get_edid</code><span class="sig-paren">(</span>struct <a class="reference internal" href="drm-kms.html#c.drm_connector" title="drm_connector">drm_connector</a> *<em>&nbsp;connector</em>, int (*get_edid_block) (void<em>&nbsp;*data</em>, u8<em>&nbsp;*buf</em>, unsigned int<em>&nbsp;block</em>, size_t<em>&nbsp;len</em>, void *<em>&nbsp;data</em><span class="sig-paren">)</span><a class="headerlink" href="#c.drm_do_get_edid" title="Permalink to this definition">¶</a></dt>
+struct edid * <code class="descname">drm_do_get_edid</code><span class="sig-paren">(</span>struct <a class="reference internal" href="drm-kms.html#c.drm_connector" title="drm_connector">drm_connector</a> *<em>&nbsp;connector</em>, int (<em>*get_edid_block</em>)(void *data, u8 *buf, unsigned int block, size_t len), void *<em>&nbsp;data</em><span class="sig-paren">)</span><a class="headerlink" href="#c.drm_do_get_edid" title="Permalink to this definition">¶</a></dt>
 <dd><p>get EDID data using a custom EDID block read function</p>
 </dd></dl>
 
@@ -9842,6 +10660,8 @@ bool <code class="descname">drm_detect_hdmi_monitor</code><span class="sig-paren
 </dl>
 <p><strong>Description</strong></p>
 <p>Parse the CEA extension according to CEA-861-B.</p>
+<p>Drivers that have added the modes parsed from EDID to drm_display_info
+should use <a class="reference internal" href="drm-kms.html#c.drm_display_info" title="drm_display_info"><code class="xref c c-type docutils literal notranslate"><span class="pre">drm_display_info.is_hdmi</span></code></a> instead of calling this function.</p>
 <p><strong>Return</strong></p>
 <p>True if the monitor is HDMI, false if not or unknown.</p>
 <dl class="function">
@@ -10263,7 +11083,7 @@ have the same header which also indicates which type of infoframe should be
 packed.</p>
 <dl class="function">
 <dt id="c.hdmi_avi_infoframe_init">
-int <code class="descname">hdmi_avi_infoframe_init</code><span class="sig-paren">(</span>struct hdmi_avi_infoframe *<em>&nbsp;frame</em><span class="sig-paren">)</span><a class="headerlink" href="#c.hdmi_avi_infoframe_init" title="Permalink to this definition">¶</a></dt>
+void <code class="descname">hdmi_avi_infoframe_init</code><span class="sig-paren">(</span>struct hdmi_avi_infoframe *<em>&nbsp;frame</em><span class="sig-paren">)</span><a class="headerlink" href="#c.hdmi_avi_infoframe_init" title="Permalink to this definition">¶</a></dt>
 <dd><p>initialize an HDMI AVI infoframe</p>
 </dd></dl>
 
@@ -10272,8 +11092,6 @@ int <code class="descname">hdmi_avi_infoframe_init</code><span class="sig-paren"
 <dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">hdmi_avi_infoframe</span> <span class="pre">*</span> <span class="pre">frame</span></code></dt>
 <dd>HDMI AVI infoframe</dd>
 </dl>
-<p><strong>Description</strong></p>
-<p>Returns 0 on success or a negative error code on failure.</p>
 <dl class="function">
 <dt id="c.hdmi_avi_infoframe_check">
 int <code class="descname">hdmi_avi_infoframe_check</code><span class="sig-paren">(</span>struct hdmi_avi_infoframe *<em>&nbsp;frame</em><span class="sig-paren">)</span><a class="headerlink" href="#c.hdmi_avi_infoframe_check" title="Permalink to this definition">¶</a></dt>
@@ -11415,7 +12233,7 @@ encoder.</p>
 <p>See Documentation/devicetree/bindings/graph.txt for the bindings.</p>
 <dl class="function">
 <dt id="c.drm_of_component_match_add">
-void <code class="descname">drm_of_component_match_add</code><span class="sig-paren">(</span>struct <a class="reference internal" href="../driver-api/infrastructure.html#c.device" title="device">device</a> *<em>&nbsp;master</em>, struct component_match **<em>&nbsp;matchptr</em>, int (*compare) (struct <a class="reference internal" href="../driver-api/infrastructure.html#c.device" title="device">device</a><em>&nbsp;*</em>, void<em>&nbsp;*</em>, struct device_node *<em>&nbsp;node</em><span class="sig-paren">)</span><a class="headerlink" href="#c.drm_of_component_match_add" title="Permalink to this definition">¶</a></dt>
+void <code class="descname">drm_of_component_match_add</code><span class="sig-paren">(</span>struct <a class="reference internal" href="../driver-api/infrastructure.html#c.device" title="device">device</a> *<em>&nbsp;master</em>, struct component_match **<em>&nbsp;matchptr</em>, int (<em>*compare</em>)(struct <a class="reference internal" href="../driver-api/infrastructure.html#c.device" title="device">device</a> *, void *), struct device_node *<em>&nbsp;node</em><span class="sig-paren">)</span><a class="headerlink" href="#c.drm_of_component_match_add" title="Permalink to this definition">¶</a></dt>
 <dd><p>Add a component helper OF node match rule</p>
 </dd></dl>
 
@@ -11432,7 +12250,7 @@ void <code class="descname">drm_of_component_match_add</code><span class="sig-pa
 </dl>
 <dl class="function">
 <dt id="c.drm_of_component_probe">
-int <code class="descname">drm_of_component_probe</code><span class="sig-paren">(</span>struct <a class="reference internal" href="../driver-api/infrastructure.html#c.device" title="device">device</a> *<em>&nbsp;dev</em>, int (*compare_of) (struct <a class="reference internal" href="../driver-api/infrastructure.html#c.device" title="device">device</a><em>&nbsp;*</em>, void<em>&nbsp;*</em>, const struct <a class="reference internal" href="../driver-api/component.html#c.component_master_ops" title="component_master_ops">component_master_ops</a> *<em>&nbsp;m_ops</em><span class="sig-paren">)</span><a class="headerlink" href="#c.drm_of_component_probe" title="Permalink to this definition">¶</a></dt>
+int <code class="descname">drm_of_component_probe</code><span class="sig-paren">(</span>struct <a class="reference internal" href="../driver-api/infrastructure.html#c.device" title="device">device</a> *<em>&nbsp;dev</em>, int (<em>*compare_of</em>)(struct <a class="reference internal" href="../driver-api/infrastructure.html#c.device" title="device">device</a> *, void *), const struct <a class="reference internal" href="../driver-api/component.html#c.component_master_ops" title="component_master_ops">component_master_ops</a> *<em>&nbsp;m_ops</em><span class="sig-paren">)</span><a class="headerlink" href="#c.drm_of_component_probe" title="Permalink to this definition">¶</a></dt>
 <dd><p>Generic probe function for a component based master</p>
 </dd></dl>
 

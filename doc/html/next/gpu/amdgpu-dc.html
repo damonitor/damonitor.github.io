@@ -68,7 +68,7 @@
             
             
               <div class="version">
-                5.6.0
+                5.7.0
               </div>
             
           
@@ -228,26 +228,42 @@ struct <code class="descname">dm_comressor_info</code><a class="headerlink" href
 <dl class="type">
 <dt id="c.amdgpu_dm_backlight_caps">
 struct <code class="descname">amdgpu_dm_backlight_caps</code><a class="headerlink" href="#c.amdgpu_dm_backlight_caps" title="Permalink to this definition">¶</a></dt>
-<dd><p>Usable range of backlight values from ACPI</p>
+<dd><p>Information about backlight</p>
 </dd></dl>
 
 <p><strong>Definition</strong></p>
 <div class="highlight-none notranslate"><div class="highlight"><pre><span></span>struct amdgpu_dm_backlight_caps {
+  union dpcd_sink_ext_caps *ext_caps;
+  u32 aux_min_input_signal;
+  u32 aux_max_input_signal;
   int min_input_signal;
   int max_input_signal;
   bool caps_valid;
+  bool aux_support;
 };
 </pre></div>
 </div>
 <p><strong>Members</strong></p>
 <dl class="docutils">
+<dt><code class="docutils literal notranslate"><span class="pre">ext_caps</span></code></dt>
+<dd>Keep the data struct with all the information about the
+display support for HDR.</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">aux_min_input_signal</span></code></dt>
+<dd>Min brightness value supported by the display</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">aux_max_input_signal</span></code></dt>
+<dd>Max brightness value supported by the display
+in nits.</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">min_input_signal</span></code></dt>
-<dd>minimum possible input in range 0-255</dd>
+<dd>minimum possible input in range 0-255.</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">max_input_signal</span></code></dt>
-<dd>maximum possible input in range 0-255</dd>
+<dd>maximum possible input in range 0-255.</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">caps_valid</span></code></dt>
-<dd>true if these values are from the ACPI interface</dd>
+<dd>true if these values are from the ACPI interface.</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">aux_support</span></code></dt>
+<dd>Describes if the display supports AUX backlight.</dd>
 </dl>
+<p><strong>Description</strong></p>
+<p>Describe the backlight support for ACPI or eDP AUX.</p>
 <dl class="type">
 <dt id="c.amdgpu_display_manager">
 struct <code class="descname">amdgpu_display_manager</code><a class="headerlink" href="#c.amdgpu_display_manager" title="Permalink to this definition">¶</a></dt>
@@ -496,7 +512,7 @@ void <code class="descname">dm_irq_work_func</code><span class="sig-paren">(</sp
 </dl>
 <dl class="function">
 <dt id="c.amdgpu_dm_irq_register_interrupt">
-void * <code class="descname">amdgpu_dm_irq_register_interrupt</code><span class="sig-paren">(</span>struct amdgpu_device *<em>&nbsp;adev</em>, struct dc_interrupt_params *<em>&nbsp;int_params</em>, void (*ih) (void<em>&nbsp;*</em>, void *<em>&nbsp;handler_args</em><span class="sig-paren">)</span><a class="headerlink" href="#c.amdgpu_dm_irq_register_interrupt" title="Permalink to this definition">¶</a></dt>
+void * <code class="descname">amdgpu_dm_irq_register_interrupt</code><span class="sig-paren">(</span>struct amdgpu_device *<em>&nbsp;adev</em>, struct dc_interrupt_params *<em>&nbsp;int_params</em>, void (<em>*ih</em>)(void *), void *<em>&nbsp;handler_args</em><span class="sig-paren">)</span><a class="headerlink" href="#c.amdgpu_dm_irq_register_interrupt" title="Permalink to this definition">¶</a></dt>
 <dd><p>Register a handler within DM.</p>
 </dd></dl>
 
@@ -642,7 +658,7 @@ void <code class="descname">dm_crtc_high_irq</code><span class="sig-paren">(</sp
 <p><strong>Parameters</strong></p>
 <dl class="docutils">
 <dt><code class="docutils literal notranslate"><span class="pre">void</span> <span class="pre">*</span> <span class="pre">interrupt_params</span></code></dt>
-<dd>ignored</dd>
+<dd>used for determining the CRTC instance</dd>
 </dl>
 <p><strong>Description</strong></p>
 <p>Handles the CRTC/VSYNC interrupt by notfying DRM’s VBLANK

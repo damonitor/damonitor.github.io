@@ -68,7 +68,7 @@
             
             
               <div class="version">
-                5.6.0
+                5.7.0
               </div>
             
           
@@ -837,6 +837,8 @@ struct <code class="descname">iio_dev</code><a class="headerlink" href="#c.iio_d
 #if defined(CONFIG_DEBUG_FS);
   struct dentry                   *debugfs_dentry;
   unsigned cached_reg_addr;
+  char read_buf[20];
+  unsigned int                    read_buf_len;
 #endif;
 };
 </pre></div>
@@ -1103,6 +1105,19 @@ struct dentry * <code class="descname">iio_get_debugfs_dentry</code><span class=
 </dl>
 <p><strong>Description</strong></p>
 <p>Returns the given value converted from meter / second**2 to g</p>
+<dl class="function">
+<dt id="c.iio_device_set_clock">
+int <code class="descname">iio_device_set_clock</code><span class="sig-paren">(</span>struct <a class="reference internal" href="#c.iio_dev" title="iio_dev">iio_dev</a> *<em>&nbsp;indio_dev</em>, clockid_t<em>&nbsp;clock_id</em><span class="sig-paren">)</span><a class="headerlink" href="#c.iio_device_set_clock" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set current timestamping clock for the device</p>
+</dd></dl>
+
+<p><strong>Parameters</strong></p>
+<dl class="docutils">
+<dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">iio_dev</span> <span class="pre">*</span> <span class="pre">indio_dev</span></code></dt>
+<dd>IIO device structure containing the device</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">clockid_t</span> <span class="pre">clock_id</span></code></dt>
+<dd>timestamping clock posix identifier to set.</dd>
+</dl>
 <dl class="function">
 <dt id="c.iio_get_time_ns">
 s64 <code class="descname">iio_get_time_ns</code><span class="sig-paren">(</span>const struct <a class="reference internal" href="#c.iio_dev" title="iio_dev">iio_dev</a> *<em>&nbsp;indio_dev</em><span class="sig-paren">)</span><a class="headerlink" href="#c.iio_get_time_ns" title="Permalink to this definition">¶</a></dt>

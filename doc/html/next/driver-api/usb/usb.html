@@ -68,7 +68,7 @@
             
             
               <div class="version">
-                5.6.0
+                5.7.0
               </div>
             
           
@@ -510,7 +510,7 @@ struct <code class="descname">usb_interface_cache</code><a class="headerlink" hr
 <div class="highlight-none notranslate"><div class="highlight"><pre><span></span>struct usb_interface_cache {
   unsigned num_altsetting;
   struct kref ref;
-  struct usb_host_interface altsetting[0];
+  struct usb_host_interface altsetting[];
 };
 </pre></div>
 </div>
@@ -662,6 +662,7 @@ struct <code class="descname">usb_device</code><a class="headerlink" href="#c.us
   struct usb3_lpm_parameters u2_params;
   unsigned lpm_disable_count;
   u16 hub_delay;
+  unsigned use_generic_driver:1;
 };
 </pre></div>
 </div>
@@ -1176,13 +1177,16 @@ struct <code class="descname">usb_device_driver</code><a class="headerlink" href
 <p><strong>Definition</strong></p>
 <div class="highlight-none notranslate"><div class="highlight"><pre><span></span>struct usb_device_driver {
   const char *name;
+  bool (*match) (struct usb_device *udev);
   int (*probe) (struct usb_device *udev);
   void (*disconnect) (struct usb_device *udev);
   int (*suspend) (struct usb_device *udev, pm_message_t message);
   int (*resume) (struct usb_device *udev, pm_message_t message);
   const struct attribute_group **dev_groups;
   struct usbdrv_wrap drvwrap;
+  const struct usb_device_id *id_table;
   unsigned int supports_autosuspend:1;
+  unsigned int generic_subclass:1;
 };
 </pre></div>
 </div>
@@ -1212,6 +1216,10 @@ is bound to the driver.</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">supports_autosuspend</span></code></dt>
 <dd>if set to 0, the USB core will not allow autosuspend
 for devices bound to this driver.</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">generic_subclass</span></code></dt>
+<dd>if set to 1, the generic USB driver’s probe, disconnect,
+resume and suspend functions will be called in addition to the driver’s
+own, so this part of the setup does not need to be replicated.</dd>
 </dl>
 <p><strong>Description</strong></p>
 <p>USB drivers must provide all the fields listed above except drvwrap.</p>
@@ -1293,7 +1301,7 @@ struct <code class="descname">urb</code><a class="headerlink" href="#c.urb" titl
   int error_count;
   void *context;
   usb_complete_t complete;
-  struct usb_iso_packet_descriptor iso_frame_desc[0];
+  struct usb_iso_packet_descriptor iso_frame_desc[];
 };
 </pre></div>
 </div>
@@ -3232,7 +3240,7 @@ that share the USB major number.</p>
 <p>A pointer to the interface with the matching major and <strong>minor</strong>.</p>
 <dl class="function">
 <dt id="c.usb_for_each_dev">
-int <code class="descname">usb_for_each_dev</code><span class="sig-paren">(</span>void *<em>&nbsp;data</em>, int (*fn) (struct <a class="reference internal" href="#c.usb_device" title="usb_device">usb_device</a><em>&nbsp;*</em>, void<em>&nbsp;*</em><span class="sig-paren">)</span><a class="headerlink" href="#c.usb_for_each_dev" title="Permalink to this definition">¶</a></dt>
+int <code class="descname">usb_for_each_dev</code><span class="sig-paren">(</span>void *<em>&nbsp;data</em>, int (<em>*fn</em>)(struct <a class="reference internal" href="#c.usb_device" title="usb_device">usb_device</a> *, void *)<span class="sig-paren">)</span><a class="headerlink" href="#c.usb_for_each_dev" title="Permalink to this definition">¶</a></dt>
 <dd><p>iterate over all USB devices in the system</p>
 </dd></dl>
 

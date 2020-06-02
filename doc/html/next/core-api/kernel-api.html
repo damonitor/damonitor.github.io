@@ -68,7 +68,7 @@
             
             
               <div class="version">
-                5.6.0
+                5.7.0
               </div>
             
           
@@ -1114,7 +1114,7 @@ reference of the first entry if it exists.</p>
 <dt><code class="docutils literal notranslate"><span class="pre">pos</span></code></dt>
 <dd>the type * to use as a loop cursor.</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">n</span></code></dt>
-<dd>another <code class="xref c c-type docutils literal notranslate"><span class="pre">struct</span> <span class="pre">hlist_node</span></code> to use as temporary storage</dd>
+<dd>a <code class="xref c c-type docutils literal notranslate"><span class="pre">struct</span> <span class="pre">hlist_node</span></code> to use as temporary storage</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">head</span></code></dt>
 <dd>the head for your list.</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">member</span></code></dt>
@@ -3014,7 +3014,13 @@ bitmap_weight(src, nbits)                   Hamming Weight: number set bits
 bitmap_set(dst, pos, nbits)                 Set specified bit area
 bitmap_clear(dst, pos, nbits)               Clear specified bit area
 bitmap_find_next_zero_area(buf, len, pos, n, mask)  Find bit free area
-bitmap_find_next_zero_area_off(buf, len, pos, n, mask)  as above
+bitmap_find_next_zero_area_off(buf, len, pos, n, mask, mask_off)  as above
+bitmap_next_clear_region(map, :c:type:`start`, :c:type:`end`, nbits)  Find next clear region
+bitmap_next_set_region(map, :c:type:`start`, :c:type:`end`, nbits)  Find next set region
+bitmap_for_each_clear_region(map, rs, re, start, end)
+                                            Iterate over all clear regions
+bitmap_for_each_set_region(map, rs, re, start, end)
+                                            Iterate over all set regions
 bitmap_shift_right(dst, src, n, nbits)      *dst = *src &gt;&gt; n
 bitmap_shift_left(dst, src, n, nbits)       *dst = *src &lt;&lt; n
 bitmap_cut(dst, src, first, n, nbits)       Cut n bits from first, copy rest
@@ -3931,7 +3937,7 @@ O(n*n) worst-case behavior and extra memory requirements that make
 it less suitable for kernel use.</p>
 <dl class="function">
 <dt id="c.list_sort">
-void <code class="descname">list_sort</code><span class="sig-paren">(</span>void *<em>&nbsp;priv</em>, struct list_head *<em>&nbsp;head</em>, int (*cmp) (void<em>&nbsp;*priv</em>, struct list_head<em>&nbsp;*a</em>, struct list_head<em>&nbsp;*b</em><span class="sig-paren">)</span><a class="headerlink" href="#c.list_sort" title="Permalink to this definition">¶</a></dt>
+void <code class="descname">list_sort</code><span class="sig-paren">(</span>void *<em>&nbsp;priv</em>, struct list_head *<em>&nbsp;head</em>, int (<em>*cmp</em>)(void *priv, struct list_head *a, struct list_head *b)<span class="sig-paren">)</span><a class="headerlink" href="#c.list_sort" title="Permalink to this definition">¶</a></dt>
 <dd><p>sort a list</p>
 </dd></dl>
 
@@ -4962,7 +4968,7 @@ void <code class="descname">ipc_init_ids</code><span class="sig-paren">(</span>s
 below ipc_mni) then initialise the keys hashtable and ids idr.</p>
 <dl class="function">
 <dt id="c.ipc_init_proc_interface">
-void <code class="descname">ipc_init_proc_interface</code><span class="sig-paren">(</span>const char *<em>&nbsp;path</em>, const char *<em>&nbsp;header</em>, int<em>&nbsp;ids</em>, int (*show) (struct seq_file<em>&nbsp;*</em>, void<em>&nbsp;*</em><span class="sig-paren">)</span><a class="headerlink" href="#c.ipc_init_proc_interface" title="Permalink to this definition">¶</a></dt>
+void <code class="descname">ipc_init_proc_interface</code><span class="sig-paren">(</span>const char *<em>&nbsp;path</em>, const char *<em>&nbsp;header</em>, int<em>&nbsp;ids</em>, int (<em>*show</em>)(struct seq_file *, void *)<span class="sig-paren">)</span><a class="headerlink" href="#c.ipc_init_proc_interface" title="Permalink to this definition">¶</a></dt>
 <dd><p>create a proc interface for sysipc types using a seq_file interface.</p>
 </dd></dl>
 
@@ -5459,6 +5465,32 @@ it is dangerous and must be handled in the same way as <a class="reference inter
 <dd>address of the fifo to be used</dd>
 </dl>
 <dl class="function">
+<dt id="c.kfifo_is_empty_spinlocked">
+<code class="descname">kfifo_is_empty_spinlocked</code><span class="sig-paren">(</span><em>fifo</em>, <em>lock</em><span class="sig-paren">)</span><a class="headerlink" href="#c.kfifo_is_empty_spinlocked" title="Permalink to this definition">¶</a></dt>
+<dd><p>returns true if the fifo is empty using a spinlock for locking</p>
+</dd></dl>
+
+<p><strong>Parameters</strong></p>
+<dl class="docutils">
+<dt><code class="docutils literal notranslate"><span class="pre">fifo</span></code></dt>
+<dd>address of the fifo to be used</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">lock</span></code></dt>
+<dd>spinlock to be used for locking</dd>
+</dl>
+<dl class="function">
+<dt id="c.kfifo_is_empty_spinlocked_noirqsave">
+<code class="descname">kfifo_is_empty_spinlocked_noirqsave</code><span class="sig-paren">(</span><em>fifo</em>, <em>lock</em><span class="sig-paren">)</span><a class="headerlink" href="#c.kfifo_is_empty_spinlocked_noirqsave" title="Permalink to this definition">¶</a></dt>
+<dd><p>returns true if the fifo is empty using a spinlock for locking, doesn’t disable interrupts</p>
+</dd></dl>
+
+<p><strong>Parameters</strong></p>
+<dl class="docutils">
+<dt><code class="docutils literal notranslate"><span class="pre">fifo</span></code></dt>
+<dd>address of the fifo to be used</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">lock</span></code></dt>
+<dd>spinlock to be used for locking</dd>
+</dl>
+<dl class="function">
 <dt id="c.kfifo_is_full">
 <code class="descname">kfifo_is_full</code><span class="sig-paren">(</span><em>fifo</em><span class="sig-paren">)</span><a class="headerlink" href="#c.kfifo_is_full" title="Permalink to this definition">¶</a></dt>
 <dd><p>returns true if the fifo is full</p>
@@ -5652,6 +5684,26 @@ writer, you don’t need extra locking to use these macro.</p>
 <p>This macro copies the given values buffer into the fifo and returns the
 number of copied elements.</p>
 <dl class="function">
+<dt id="c.kfifo_in_spinlocked_noirqsave">
+<code class="descname">kfifo_in_spinlocked_noirqsave</code><span class="sig-paren">(</span><em>fifo</em>, <em>buf</em>, <em>n</em>, <em>lock</em><span class="sig-paren">)</span><a class="headerlink" href="#c.kfifo_in_spinlocked_noirqsave" title="Permalink to this definition">¶</a></dt>
+<dd><p>put data into fifo using a spinlock for locking, don’t disable interrupts</p>
+</dd></dl>
+
+<p><strong>Parameters</strong></p>
+<dl class="docutils">
+<dt><code class="docutils literal notranslate"><span class="pre">fifo</span></code></dt>
+<dd>address of the fifo to be used</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">buf</span></code></dt>
+<dd>the data to be added</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">n</span></code></dt>
+<dd>number of elements to be added</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">lock</span></code></dt>
+<dd>pointer to the spinlock to use for locking</dd>
+</dl>
+<p><strong>Description</strong></p>
+<p>This is a variant of <a class="reference internal" href="#c.kfifo_in_spinlocked" title="kfifo_in_spinlocked"><code class="xref c c-func docutils literal notranslate"><span class="pre">kfifo_in_spinlocked()</span></code></a> but uses spin_lock/unlock()
+for locking and doesn’t disable interrupts.</p>
+<dl class="function">
 <dt id="c.kfifo_out">
 <code class="descname">kfifo_out</code><span class="sig-paren">(</span><em>fifo</em>, <em>buf</em>, <em>n</em><span class="sig-paren">)</span><a class="headerlink" href="#c.kfifo_out" title="Permalink to this definition">¶</a></dt>
 <dd><p>get data from the fifo</p>
@@ -5691,6 +5743,26 @@ writer, you don’t need extra locking to use these macro.</p>
 <p><strong>Description</strong></p>
 <p>This macro get the data from the fifo and return the numbers of elements
 copied.</p>
+<dl class="function">
+<dt id="c.kfifo_out_spinlocked_noirqsave">
+<code class="descname">kfifo_out_spinlocked_noirqsave</code><span class="sig-paren">(</span><em>fifo</em>, <em>buf</em>, <em>n</em>, <em>lock</em><span class="sig-paren">)</span><a class="headerlink" href="#c.kfifo_out_spinlocked_noirqsave" title="Permalink to this definition">¶</a></dt>
+<dd><p>get data from the fifo using a spinlock for locking, don’t disable interrupts</p>
+</dd></dl>
+
+<p><strong>Parameters</strong></p>
+<dl class="docutils">
+<dt><code class="docutils literal notranslate"><span class="pre">fifo</span></code></dt>
+<dd>address of the fifo to be used</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">buf</span></code></dt>
+<dd>pointer to the storage buffer</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">n</span></code></dt>
+<dd>max. number of elements to get</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">lock</span></code></dt>
+<dd>pointer to the spinlock to use for locking</dd>
+</dl>
+<p><strong>Description</strong></p>
+<p>This is a variant of <a class="reference internal" href="#c.kfifo_out_spinlocked" title="kfifo_out_spinlocked"><code class="xref c c-func docutils literal notranslate"><span class="pre">kfifo_out_spinlocked()</span></code></a> which uses spin_lock/unlock()
+for locking and doesn’t disable interrupts.</p>
 <dl class="function">
 <dt id="c.kfifo_from_user">
 <code class="descname">kfifo_from_user</code><span class="sig-paren">(</span><em>fifo</em>, <em>from</em>, <em>len</em>, <em>copied</em><span class="sig-paren">)</span><a class="headerlink" href="#c.kfifo_from_user" title="Permalink to this definition">¶</a></dt>
@@ -6295,7 +6367,7 @@ the module did not then unload and exit on an error of its own. Callers
 must check that the service they requested is now available not blindly
 invoke it.</p>
 <p>If module auto-loading support is disabled then this function
-becomes a no-operation.</p>
+simply returns -ENOENT.</p>
 </div>
 <div class="section" id="inter-module-support">
 <h3>Inter Module support<a class="headerlink" href="#inter-module-support" title="Permalink to this headline">¶</a></h3>
@@ -6524,36 +6596,6 @@ void <code class="descname">irq_wake_thread</code><span class="sig-paren">(</spa
 <dt><code class="docutils literal notranslate"><span class="pre">void</span> <span class="pre">*</span> <span class="pre">dev_id</span></code></dt>
 <dd>Device identity for which the thread should be woken</dd>
 </dl>
-<dl class="function">
-<dt id="c.setup_irq">
-int <code class="descname">setup_irq</code><span class="sig-paren">(</span>unsigned int<em>&nbsp;irq</em>, struct <a class="reference internal" href="genericirq.html#c.irqaction" title="irqaction">irqaction</a> *<em>&nbsp;act</em><span class="sig-paren">)</span><a class="headerlink" href="#c.setup_irq" title="Permalink to this definition">¶</a></dt>
-<dd><p>setup an interrupt</p>
-</dd></dl>
-
-<p><strong>Parameters</strong></p>
-<dl class="docutils">
-<dt><code class="docutils literal notranslate"><span class="pre">unsigned</span> <span class="pre">int</span> <span class="pre">irq</span></code></dt>
-<dd>Interrupt line to setup</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">irqaction</span> <span class="pre">*</span> <span class="pre">act</span></code></dt>
-<dd>irqaction for the interrupt</dd>
-</dl>
-<p><strong>Description</strong></p>
-<p>Used to statically setup interrupts in the early boot process.</p>
-<dl class="function">
-<dt id="c.remove_irq">
-void <code class="descname">remove_irq</code><span class="sig-paren">(</span>unsigned int<em>&nbsp;irq</em>, struct <a class="reference internal" href="genericirq.html#c.irqaction" title="irqaction">irqaction</a> *<em>&nbsp;act</em><span class="sig-paren">)</span><a class="headerlink" href="#c.remove_irq" title="Permalink to this definition">¶</a></dt>
-<dd><p>free an interrupt</p>
-</dd></dl>
-
-<p><strong>Parameters</strong></p>
-<dl class="docutils">
-<dt><code class="docutils literal notranslate"><span class="pre">unsigned</span> <span class="pre">int</span> <span class="pre">irq</span></code></dt>
-<dd>Interrupt line to free</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">irqaction</span> <span class="pre">*</span> <span class="pre">act</span></code></dt>
-<dd>irqaction for the interrupt</dd>
-</dl>
-<p><strong>Description</strong></p>
-<p>Used to remove interrupts statically setup by the early boot process.</p>
 <dl class="function">
 <dt id="c.free_irq">
 const void * <code class="descname">free_irq</code><span class="sig-paren">(</span>unsigned int<em>&nbsp;irq</em>, void *<em>&nbsp;dev_id</em><span class="sig-paren">)</span><a class="headerlink" href="#c.free_irq" title="Permalink to this definition">¶</a></dt>
@@ -6980,7 +7022,7 @@ int <code class="descname">release_resource</code><span class="sig-paren">(</spa
 </dl>
 <dl class="function">
 <dt id="c.walk_iomem_res_desc">
-int <code class="descname">walk_iomem_res_desc</code><span class="sig-paren">(</span>unsigned long<em>&nbsp;desc</em>, unsigned long<em>&nbsp;flags</em>, u64<em>&nbsp;start</em>, u64<em>&nbsp;end</em>, void *<em>&nbsp;arg</em>, int (*func) (struct resource<em>&nbsp;*</em>, void<em>&nbsp;*</em><span class="sig-paren">)</span><a class="headerlink" href="#c.walk_iomem_res_desc" title="Permalink to this definition">¶</a></dt>
+int <code class="descname">walk_iomem_res_desc</code><span class="sig-paren">(</span>unsigned long<em>&nbsp;desc</em>, unsigned long<em>&nbsp;flags</em>, u64<em>&nbsp;start</em>, u64<em>&nbsp;end</em>, void *<em>&nbsp;arg</em>, int (<em>*func</em>)(struct resource *, void *)<span class="sig-paren">)</span><a class="headerlink" href="#c.walk_iomem_res_desc" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <p><strong>Parameters</strong></p>
@@ -7036,7 +7078,7 @@ the user is not remapping RAM and is a vast speed up over walking
 through the resource table page by page.</p>
 <dl class="function">
 <dt id="c.allocate_resource">
-int <code class="descname">allocate_resource</code><span class="sig-paren">(</span>struct resource *<em>&nbsp;root</em>, struct resource *<em>&nbsp;new</em>, resource_size_t<em>&nbsp;size</em>, resource_size_t<em>&nbsp;min</em>, resource_size_t<em>&nbsp;max</em>, resource_size_t<em>&nbsp;align</em>, resource_size_t (*alignf) (void<em>&nbsp;*</em>, const struct resource<em>&nbsp;*</em>, resource_size_t, resource_size_t, void *<em>&nbsp;alignf_data</em><span class="sig-paren">)</span><a class="headerlink" href="#c.allocate_resource" title="Permalink to this definition">¶</a></dt>
+int <code class="descname">allocate_resource</code><span class="sig-paren">(</span>struct resource *<em>&nbsp;root</em>, struct resource *<em>&nbsp;new</em>, resource_size_t<em>&nbsp;size</em>, resource_size_t<em>&nbsp;min</em>, resource_size_t<em>&nbsp;max</em>, resource_size_t<em>&nbsp;align</em>, resource_size_t (<em>*alignf</em>)(void *, const struct resource *, resource_size_t, resource_size_t), void *<em>&nbsp;alignf_data</em><span class="sig-paren">)</span><a class="headerlink" href="#c.allocate_resource" title="Permalink to this definition">¶</a></dt>
 <dd><p>allocate empty slot in the resource tree given range &amp; alignment. The resource will be reallocated with a new size if it was already allocated</p>
 </dd></dl>
 
@@ -8132,19 +8174,6 @@ void <code class="descname">blk_cleanup_queue</code><span class="sig-paren">(</s
 <p>Mark <strong>q</strong> DYING, drain all pending requests, mark <strong>q</strong> DEAD, destroy and
 put it.  All future requests will be failed immediately with -ENODEV.</p>
 <dl class="function">
-<dt id="c.blk_alloc_queue_node">
-struct request_queue * <code class="descname">blk_alloc_queue_node</code><span class="sig-paren">(</span>gfp_t<em>&nbsp;gfp_mask</em>, int<em>&nbsp;node_id</em><span class="sig-paren">)</span><a class="headerlink" href="#c.blk_alloc_queue_node" title="Permalink to this definition">¶</a></dt>
-<dd><p>allocate a request queue</p>
-</dd></dl>
-
-<p><strong>Parameters</strong></p>
-<dl class="docutils">
-<dt><code class="docutils literal notranslate"><span class="pre">gfp_t</span> <span class="pre">gfp_mask</span></code></dt>
-<dd>memory allocation flags</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">int</span> <span class="pre">node_id</span></code></dt>
-<dd>NUMA node to allocate memory from</dd>
-</dl>
-<dl class="function">
 <dt id="c.blk_get_request">
 struct request * <code class="descname">blk_get_request</code><span class="sig-paren">(</span>struct request_queue *<em>&nbsp;q</em>, unsigned int<em>&nbsp;op</em>, blk_mq_req_flags_t<em>&nbsp;flags</em><span class="sig-paren">)</span><a class="headerlink" href="#c.blk_get_request" title="Permalink to this definition">¶</a></dt>
 <dd><p>allocate a request</p>
@@ -8342,7 +8371,7 @@ void <code class="descname">blk_rq_unprep_clone</code><span class="sig-paren">(<
 <div>Free all bios in <strong>rq</strong> for a cloned request.</div></blockquote>
 <dl class="function">
 <dt id="c.blk_rq_prep_clone">
-int <code class="descname">blk_rq_prep_clone</code><span class="sig-paren">(</span>struct request *<em>&nbsp;rq</em>, struct request *<em>&nbsp;rq_src</em>, struct bio_set *<em>&nbsp;bs</em>, gfp_t<em>&nbsp;gfp_mask</em>, int (*bio_ctr) (struct bio<em>&nbsp;*</em>, struct bio<em>&nbsp;*</em>, void<em>&nbsp;*</em>, void *<em>&nbsp;data</em><span class="sig-paren">)</span><a class="headerlink" href="#c.blk_rq_prep_clone" title="Permalink to this definition">¶</a></dt>
+int <code class="descname">blk_rq_prep_clone</code><span class="sig-paren">(</span>struct request *<em>&nbsp;rq</em>, struct request *<em>&nbsp;rq_src</em>, struct bio_set *<em>&nbsp;bs</em>, gfp_t<em>&nbsp;gfp_mask</em>, int (<em>*bio_ctr</em>)(struct bio *, struct bio *, void *), void *<em>&nbsp;data</em><span class="sig-paren">)</span><a class="headerlink" href="#c.blk_rq_prep_clone" title="Permalink to this definition">¶</a></dt>
 <dd><p>Helper function to setup clone request</p>
 </dd></dl>
 
@@ -8365,8 +8394,6 @@ Returns <code class="docutils literal notranslate"><span class="pre">0</span></c
 <p><strong>Description</strong></p>
 <blockquote>
 <div>Clones bios in <strong>rq_src</strong> to <strong>rq</strong>, and copies attributes of <strong>rq_src</strong> to <strong>rq</strong>.
-The actual data parts of <strong>rq_src</strong> (e.g. -&gt;cmd, -&gt;sense)
-are not copied, and copying such parts is the caller’s responsibility.
 Also, pages which the original bios are pointing to are not copied
 and the cloned bios just point same pages.
 So cloned bios must be completed before original bios, which means
@@ -8463,7 +8490,7 @@ merging parameters without querying the elevator.</p>
 <dl class="function">
 <dt id="c.blk_cloned_rq_check_limits">
 int <code class="descname">blk_cloned_rq_check_limits</code><span class="sig-paren">(</span>struct request_queue *<em>&nbsp;q</em>, struct request *<em>&nbsp;rq</em><span class="sig-paren">)</span><a class="headerlink" href="#c.blk_cloned_rq_check_limits" title="Permalink to this definition">¶</a></dt>
-<dd><p>Helper function to check a cloned request for new the queue limits</p>
+<dd><p>Helper function to check a cloned request for the new queue limits</p>
 </dd></dl>
 
 <p><strong>Parameters</strong></p>
@@ -8620,37 +8647,6 @@ void <code class="descname">blk_set_stacking_limits</code><span class="sig-paren
 <blockquote>
 <div>Returns a queue_limit struct to its default state. Should be used
 by stacking drivers like DM that have no internal limits.</div></blockquote>
-<dl class="function">
-<dt id="c.blk_queue_make_request">
-void <code class="descname">blk_queue_make_request</code><span class="sig-paren">(</span>struct request_queue *<em>&nbsp;q</em>, make_request_fn *<em>&nbsp;mfn</em><span class="sig-paren">)</span><a class="headerlink" href="#c.blk_queue_make_request" title="Permalink to this definition">¶</a></dt>
-<dd><p>define an alternate make_request function for a device</p>
-</dd></dl>
-
-<p><strong>Parameters</strong></p>
-<dl class="docutils">
-<dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">request_queue</span> <span class="pre">*</span> <span class="pre">q</span></code></dt>
-<dd>the request queue for the device to be affected</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">make_request_fn</span> <span class="pre">*</span> <span class="pre">mfn</span></code></dt>
-<dd>the alternate make_request function</dd>
-</dl>
-<p><strong>Description</strong></p>
-<blockquote>
-<div>The normal way for <code class="xref c c-type docutils literal notranslate"><span class="pre">struct</span> <span class="pre">bios</span></code> to be passed to a device
-driver is for them to be collected into requests on a request
-queue, and then to allow the device driver to select requests
-off that queue when it is ready.  This works well for many block
-devices. However some block devices (typically virtual devices
-such as md or lvm) do not benefit from the processing on the
-request queue, and are served best by having the requests passed
-directly to them.  This can be achieved by providing a function
-to <a class="reference internal" href="#c.blk_queue_make_request" title="blk_queue_make_request"><code class="xref c c-func docutils literal notranslate"><span class="pre">blk_queue_make_request()</span></code></a>.</div></blockquote>
-<dl class="docutils">
-<dt>Caveat:</dt>
-<dd>The driver that does this <em>must</em> be able to deal appropriately
-with buffers in “highmemory”. This can be accomplished by either calling
-kmap_atomic() to get a temporary kernel mapping, or by calling
-blk_queue_bounce() to create a buffer in normal memory.</dd>
-</dl>
 <dl class="function">
 <dt id="c.blk_queue_bounce_limit">
 void <code class="descname">blk_queue_bounce_limit</code><span class="sig-paren">(</span>struct request_queue *<em>&nbsp;q</em>, u64<em>&nbsp;max_addr</em><span class="sig-paren">)</span><a class="headerlink" href="#c.blk_queue_bounce_limit" title="Permalink to this definition">¶</a></dt>
@@ -9568,6 +9564,47 @@ void <code class="descname">blk_add_trace_rq_remap</code><span class="sig-paren"
 <div>Device mapper remaps request to other devices.
 Add a trace for that action.</div></blockquote>
 <dl class="function">
+<dt id="c.disk_get_part">
+struct hd_struct * <code class="descname">disk_get_part</code><span class="sig-paren">(</span>struct gendisk *<em>&nbsp;disk</em>, int<em>&nbsp;partno</em><span class="sig-paren">)</span><a class="headerlink" href="#c.disk_get_part" title="Permalink to this definition">¶</a></dt>
+<dd><p>get partition</p>
+</dd></dl>
+
+<p><strong>Parameters</strong></p>
+<dl class="docutils">
+<dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">gendisk</span> <span class="pre">*</span> <span class="pre">disk</span></code></dt>
+<dd>disk to look partition from</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">int</span> <span class="pre">partno</span></code></dt>
+<dd>partition number</dd>
+</dl>
+<p><strong>Description</strong></p>
+<p>Look for partition <strong>partno</strong> from <strong>disk</strong>.  If found, increment
+reference count and return it.</p>
+<p><strong>Context</strong></p>
+<p>Don’t care.</p>
+<p><strong>Return</strong></p>
+<p>Pointer to the found partition on success, NULL if not found.</p>
+<dl class="function">
+<dt id="c.disk_map_sector_rcu">
+struct hd_struct * <code class="descname">disk_map_sector_rcu</code><span class="sig-paren">(</span>struct gendisk *<em>&nbsp;disk</em>, sector_t<em>&nbsp;sector</em><span class="sig-paren">)</span><a class="headerlink" href="#c.disk_map_sector_rcu" title="Permalink to this definition">¶</a></dt>
+<dd><p>map sector to partition</p>
+</dd></dl>
+
+<p><strong>Parameters</strong></p>
+<dl class="docutils">
+<dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">gendisk</span> <span class="pre">*</span> <span class="pre">disk</span></code></dt>
+<dd>gendisk of interest</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">sector_t</span> <span class="pre">sector</span></code></dt>
+<dd>sector to map</dd>
+</dl>
+<p><strong>Description</strong></p>
+<p>Find out which partition <strong>sector</strong> maps to on <strong>disk</strong>.  This is
+primarily used for stats accounting.</p>
+<p><strong>Context</strong></p>
+<p>RCU read locked.  The returned partition pointer is valid only
+while preemption is disabled.</p>
+<p><strong>Return</strong></p>
+<p>Found partition on success, part0 is returned if no partition matches</p>
+<dl class="function">
 <dt id="c.blk_mangle_minor">
 int <code class="descname">blk_mangle_minor</code><span class="sig-paren">(</span>int<em>&nbsp;minor</em><span class="sig-paren">)</span><a class="headerlink" href="#c.blk_mangle_minor" title="Permalink to this definition">¶</a></dt>
 <dd><p>scatter minor numbers apart</p>
@@ -9641,6 +9678,22 @@ void <code class="descname">__device_add_disk</code><span class="sig-paren">(</s
 <p>This function registers the partitioning information in <strong>disk</strong>
 with the kernel.</p>
 <p>FIXME: error handling</p>
+<dl class="function">
+<dt id="c.get_gendisk">
+struct gendisk * <code class="descname">get_gendisk</code><span class="sig-paren">(</span>dev_t<em>&nbsp;devt</em>, int *<em>&nbsp;partno</em><span class="sig-paren">)</span><a class="headerlink" href="#c.get_gendisk" title="Permalink to this definition">¶</a></dt>
+<dd><p>get partitioning information for a given device</p>
+</dd></dl>
+
+<p><strong>Parameters</strong></p>
+<dl class="docutils">
+<dt><code class="docutils literal notranslate"><span class="pre">dev_t</span> <span class="pre">devt</span></code></dt>
+<dd>device to get partitioning information for</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">int</span> <span class="pre">*</span> <span class="pre">partno</span></code></dt>
+<dd>returned partition index</dd>
+</dl>
+<p><strong>Description</strong></p>
+<p>This function gets the structure containing partitioning
+information for the given device <strong>devt</strong>.</p>
 <dl class="function">
 <dt id="c.disk_replace_part_tbl">
 void <code class="descname">disk_replace_part_tbl</code><span class="sig-paren">(</span>struct gendisk *<em>&nbsp;disk</em>, struct disk_part_tbl *<em>&nbsp;new_ptbl</em><span class="sig-paren">)</span><a class="headerlink" href="#c.disk_replace_part_tbl" title="Permalink to this definition">¶</a></dt>
@@ -9754,26 +9807,6 @@ are cleared and returned.  This ignores the block count.</p>
 <p><strong>Context</strong></p>
 <p>Might sleep.</p>
 <dl class="function">
-<dt id="c.disk_get_part">
-struct hd_struct * <code class="descname">disk_get_part</code><span class="sig-paren">(</span>struct gendisk *<em>&nbsp;disk</em>, int<em>&nbsp;partno</em><span class="sig-paren">)</span><a class="headerlink" href="#c.disk_get_part" title="Permalink to this definition">¶</a></dt>
-<dd><p>get partition</p>
-</dd></dl>
-
-<p><strong>Parameters</strong></p>
-<dl class="docutils">
-<dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">gendisk</span> <span class="pre">*</span> <span class="pre">disk</span></code></dt>
-<dd>disk to look partition from</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">int</span> <span class="pre">partno</span></code></dt>
-<dd>partition number</dd>
-</dl>
-<p><strong>Description</strong></p>
-<p>Look for partition <strong>partno</strong> from <strong>disk</strong>.  If found, increment
-reference count and return it.</p>
-<p><strong>Context</strong></p>
-<p>Don’t care.</p>
-<p><strong>Return</strong></p>
-<p>Pointer to the found partition on success, NULL if not found.</p>
-<dl class="function">
 <dt id="c.disk_part_iter_init">
 void <code class="descname">disk_part_iter_init</code><span class="sig-paren">(</span>struct disk_part_iter *<em>&nbsp;piter</em>, struct gendisk *<em>&nbsp;disk</em>, unsigned int<em>&nbsp;flags</em><span class="sig-paren">)</span><a class="headerlink" href="#c.disk_part_iter_init" title="Permalink to this definition">¶</a></dt>
 <dd><p>initialize partition iterator</p>
@@ -9823,27 +9856,6 @@ void <code class="descname">disk_part_iter_exit</code><span class="sig-paren">(<
 <p><strong>Context</strong></p>
 <p>Don’t care.</p>
 <dl class="function">
-<dt id="c.disk_map_sector_rcu">
-struct hd_struct * <code class="descname">disk_map_sector_rcu</code><span class="sig-paren">(</span>struct gendisk *<em>&nbsp;disk</em>, sector_t<em>&nbsp;sector</em><span class="sig-paren">)</span><a class="headerlink" href="#c.disk_map_sector_rcu" title="Permalink to this definition">¶</a></dt>
-<dd><p>map sector to partition</p>
-</dd></dl>
-
-<p><strong>Parameters</strong></p>
-<dl class="docutils">
-<dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">gendisk</span> <span class="pre">*</span> <span class="pre">disk</span></code></dt>
-<dd>gendisk of interest</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">sector_t</span> <span class="pre">sector</span></code></dt>
-<dd>sector to map</dd>
-</dl>
-<p><strong>Description</strong></p>
-<p>Find out which partition <strong>sector</strong> maps to on <strong>disk</strong>.  This is
-primarily used for stats accounting.</p>
-<p><strong>Context</strong></p>
-<p>RCU read locked.  The returned partition pointer is valid only
-while preemption is disabled.</p>
-<p><strong>Return</strong></p>
-<p>Found partition on success, part0 is returned if no partition matches</p>
-<dl class="function">
 <dt id="c.disk_has_partitions">
 bool <code class="descname">disk_has_partitions</code><span class="sig-paren">(</span>struct gendisk *<em>&nbsp;disk</em><span class="sig-paren">)</span><a class="headerlink" href="#c.disk_has_partitions" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
@@ -9888,22 +9900,6 @@ then the return value is the allocated major number in range
 </div></blockquote>
 <p>See Documentation/admin-guide/devices.txt for the list of allocated
 major numbers.</p>
-<dl class="function">
-<dt id="c.get_gendisk">
-struct gendisk * <code class="descname">get_gendisk</code><span class="sig-paren">(</span>dev_t<em>&nbsp;devt</em>, int *<em>&nbsp;partno</em><span class="sig-paren">)</span><a class="headerlink" href="#c.get_gendisk" title="Permalink to this definition">¶</a></dt>
-<dd><p>get partitioning information for a given device</p>
-</dd></dl>
-
-<p><strong>Parameters</strong></p>
-<dl class="docutils">
-<dt><code class="docutils literal notranslate"><span class="pre">dev_t</span> <span class="pre">devt</span></code></dt>
-<dd>device to get partitioning information for</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">int</span> <span class="pre">*</span> <span class="pre">partno</span></code></dt>
-<dd>returned partition index</dd>
-</dl>
-<p><strong>Description</strong></p>
-<p>This function gets the structure containing partitioning
-information for the given device <strong>devt</strong>.</p>
 <dl class="function">
 <dt id="c.bdget_disk">
 struct block_device * <code class="descname">bdget_disk</code><span class="sig-paren">(</span>struct gendisk *<em>&nbsp;disk</em>, int<em>&nbsp;partno</em><span class="sig-paren">)</span><a class="headerlink" href="#c.bdget_disk" title="Permalink to this definition">¶</a></dt>
@@ -11845,6 +11841,32 @@ between the call to <a class="reference internal" href="../driver-api/basics.htm
 if CPU A and CPU B are the same CPU (but again only if the system has
 more than one CPU).</p>
 <dl class="type">
+<dt id="c.kfree_rcu_bulk_data">
+struct <code class="descname">kfree_rcu_bulk_data</code><a class="headerlink" href="#c.kfree_rcu_bulk_data" title="Permalink to this definition">¶</a></dt>
+<dd><p>single block to store <a class="reference internal" href="#c.kfree_rcu" title="kfree_rcu"><code class="xref c c-func docutils literal notranslate"><span class="pre">kfree_rcu()</span></code></a> pointers</p>
+</dd></dl>
+
+<p><strong>Definition</strong></p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>struct kfree_rcu_bulk_data {
+  unsigned long nr_records;
+  void *records[KFREE_BULK_MAX_ENTR];
+  struct kfree_rcu_bulk_data *next;
+  struct rcu_head *head_free_debug;
+};
+</pre></div>
+</div>
+<p><strong>Members</strong></p>
+<dl class="docutils">
+<dt><code class="docutils literal notranslate"><span class="pre">nr_records</span></code></dt>
+<dd>Number of active pointers in the array</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">records</span></code></dt>
+<dd>Array of the <a class="reference internal" href="#c.kfree_rcu" title="kfree_rcu"><code class="xref c c-func docutils literal notranslate"><span class="pre">kfree_rcu()</span></code></a> pointers</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">next</span></code></dt>
+<dd>Next bulk object in the block chain</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">head_free_debug</span></code></dt>
+<dd>For debug, when CONFIG_DEBUG_OBJECTS_RCU_HEAD is set</dd>
+</dl>
+<dl class="type">
 <dt id="c.kfree_rcu_cpu_work">
 struct <code class="descname">kfree_rcu_cpu_work</code><a class="headerlink" href="#c.kfree_rcu_cpu_work" title="Permalink to this definition">¶</a></dt>
 <dd><p>single batch of <a class="reference internal" href="#c.kfree_rcu" title="kfree_rcu"><code class="xref c c-func docutils literal notranslate"><span class="pre">kfree_rcu()</span></code></a> requests</p>
@@ -11854,6 +11876,7 @@ struct <code class="descname">kfree_rcu_cpu_work</code><a class="headerlink" hre
 <div class="highlight-none notranslate"><div class="highlight"><pre><span></span>struct kfree_rcu_cpu_work {
   struct rcu_work rcu_work;
   struct rcu_head *head_free;
+  struct kfree_rcu_bulk_data *bhead_free;
   struct kfree_rcu_cpu *krcp;
 };
 </pre></div>
@@ -11864,6 +11887,8 @@ struct <code class="descname">kfree_rcu_cpu_work</code><a class="headerlink" hre
 <dd>Let <a class="reference internal" href="../driver-api/basics.html#c.queue_rcu_work" title="queue_rcu_work"><code class="xref c c-func docutils literal notranslate"><span class="pre">queue_rcu_work()</span></code></a> invoke workqueue handler after grace period</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">head_free</span></code></dt>
 <dd>List of <a class="reference internal" href="#c.kfree_rcu" title="kfree_rcu"><code class="xref c c-func docutils literal notranslate"><span class="pre">kfree_rcu()</span></code></a> objects waiting for a grace period</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">bhead_free</span></code></dt>
+<dd>Bulk-List of <a class="reference internal" href="#c.kfree_rcu" title="kfree_rcu"><code class="xref c c-func docutils literal notranslate"><span class="pre">kfree_rcu()</span></code></a> objects waiting for a grace period</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">krcp</span></code></dt>
 <dd>Pointer to <strong>kfree_rcu_cpu</strong> structure</dd>
 </dl>
@@ -11876,6 +11901,8 @@ struct <code class="descname">kfree_rcu_cpu</code><a class="headerlink" href="#c
 <p><strong>Definition</strong></p>
 <div class="highlight-none notranslate"><div class="highlight"><pre><span></span>struct kfree_rcu_cpu {
   struct rcu_head *head;
+  struct kfree_rcu_bulk_data *bhead;
+  struct kfree_rcu_bulk_data *bcached;
   struct kfree_rcu_cpu_work krw_arr[KFREE_N_BATCHES];
   spinlock_t lock;
   struct delayed_work monitor_work;
@@ -11888,6 +11915,10 @@ struct <code class="descname">kfree_rcu_cpu</code><a class="headerlink" href="#c
 <dl class="docutils">
 <dt><code class="docutils literal notranslate"><span class="pre">head</span></code></dt>
 <dd>List of <a class="reference internal" href="#c.kfree_rcu" title="kfree_rcu"><code class="xref c c-func docutils literal notranslate"><span class="pre">kfree_rcu()</span></code></a> objects not yet waiting for a grace period</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">bhead</span></code></dt>
+<dd>Bulk-List of <a class="reference internal" href="#c.kfree_rcu" title="kfree_rcu"><code class="xref c c-func docutils literal notranslate"><span class="pre">kfree_rcu()</span></code></a> objects not yet waiting for a grace period</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">bcached</span></code></dt>
+<dd>Keeps at most one object for later reuse when build chain blocks</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">krw_arr</span></code></dt>
 <dd>Array of batches of <a class="reference internal" href="#c.kfree_rcu" title="kfree_rcu"><code class="xref c c-func docutils literal notranslate"><span class="pre">kfree_rcu()</span></code></a> objects waiting for a grace period</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">lock</span></code></dt>
@@ -12742,7 +12773,7 @@ void <code class="descname">list_replace_rcu</code><span class="sig-paren">(</sp
 <p><strong>old</strong> should not be empty.</p>
 <dl class="function">
 <dt id="c.__list_splice_init_rcu">
-void <code class="descname">__list_splice_init_rcu</code><span class="sig-paren">(</span>struct list_head *<em>&nbsp;list</em>, struct list_head *<em>&nbsp;prev</em>, struct list_head *<em>&nbsp;next</em>, void (*sync)<em>&nbsp;(void</em><span class="sig-paren">)</span><a class="headerlink" href="#c.__list_splice_init_rcu" title="Permalink to this definition">¶</a></dt>
+void <code class="descname">__list_splice_init_rcu</code><span class="sig-paren">(</span>struct list_head *<em>&nbsp;list</em>, struct list_head *<em>&nbsp;prev</em>, struct list_head *<em>&nbsp;next</em>, void (<em>*sync</em>)(void)<span class="sig-paren">)</span><a class="headerlink" href="#c.__list_splice_init_rcu" title="Permalink to this definition">¶</a></dt>
 <dd><p>join an RCU-protected list into an existing list.</p>
 </dd></dl>
 
@@ -12769,7 +12800,7 @@ created.  But only if -really- needed – there is no shortage of RCU API
 members.</p>
 <dl class="function">
 <dt id="c.list_splice_init_rcu">
-void <code class="descname">list_splice_init_rcu</code><span class="sig-paren">(</span>struct list_head *<em>&nbsp;list</em>, struct list_head *<em>&nbsp;head</em>, void (*sync)<em>&nbsp;(void</em><span class="sig-paren">)</span><a class="headerlink" href="#c.list_splice_init_rcu" title="Permalink to this definition">¶</a></dt>
+void <code class="descname">list_splice_init_rcu</code><span class="sig-paren">(</span>struct list_head *<em>&nbsp;list</em>, struct list_head *<em>&nbsp;head</em>, void (<em>*sync</em>)(void)<span class="sig-paren">)</span><a class="headerlink" href="#c.list_splice_init_rcu" title="Permalink to this definition">¶</a></dt>
 <dd><p>splice an RCU-protected list into an existing list, designed for stacks.</p>
 </dd></dl>
 
@@ -12784,7 +12815,7 @@ void <code class="descname">list_splice_init_rcu</code><span class="sig-paren">(
 </dl>
 <dl class="function">
 <dt id="c.list_splice_tail_init_rcu">
-void <code class="descname">list_splice_tail_init_rcu</code><span class="sig-paren">(</span>struct list_head *<em>&nbsp;list</em>, struct list_head *<em>&nbsp;head</em>, void (*sync)<em>&nbsp;(void</em><span class="sig-paren">)</span><a class="headerlink" href="#c.list_splice_tail_init_rcu" title="Permalink to this definition">¶</a></dt>
+void <code class="descname">list_splice_tail_init_rcu</code><span class="sig-paren">(</span>struct list_head *<em>&nbsp;list</em>, struct list_head *<em>&nbsp;head</em>, void (<em>*sync</em>)(void)<span class="sig-paren">)</span><a class="headerlink" href="#c.list_splice_tail_init_rcu" title="Permalink to this definition">¶</a></dt>
 <dd><p>splice an RCU-protected list into an existing list, designed for queues.</p>
 </dd></dl>
 

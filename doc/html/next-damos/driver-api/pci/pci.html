@@ -68,7 +68,7 @@
             
             
               <div class="version">
-                5.6.0
+                5.7.0
               </div>
             
           
@@ -175,6 +175,19 @@ unsigned char <code class="descname">pci_bus_max_busnr</code><span class="sig-pa
 <p>Given a PCI bus, returns the highest PCI bus number present in the set
 including the given PCI bus and its list of child PCI buses.</p>
 <dl class="function">
+<dt id="c.pci_status_get_and_clear_errors">
+int <code class="descname">pci_status_get_and_clear_errors</code><span class="sig-paren">(</span>struct pci_dev *<em>&nbsp;pdev</em><span class="sig-paren">)</span><a class="headerlink" href="#c.pci_status_get_and_clear_errors" title="Permalink to this definition">¶</a></dt>
+<dd><p>return and clear error bits in PCI_STATUS</p>
+</dd></dl>
+
+<p><strong>Parameters</strong></p>
+<dl class="docutils">
+<dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">pci_dev</span> <span class="pre">*</span> <span class="pre">pdev</span></code></dt>
+<dd>the PCI device</dd>
+</dl>
+<p><strong>Description</strong></p>
+<p>Returns error bits set in PCI_STATUS and clears them.</p>
+<dl class="function">
 <dt id="c.pci_find_capability">
 int <code class="descname">pci_find_capability</code><span class="sig-paren">(</span>struct pci_dev *<em>&nbsp;dev</em>, int<em>&nbsp;cap</em><span class="sig-paren">)</span><a class="headerlink" href="#c.pci_find_capability" title="Permalink to this definition">¶</a></dt>
 <dd><p>query for devices’ capabilities</p>
@@ -264,6 +277,21 @@ not support it.  Possible values for <strong>cap</strong> include:</p>
 <code class="docutils literal notranslate"><span class="pre">PCI_EXT_CAP_ID_VC</span></code>          Virtual Channel
 <code class="docutils literal notranslate"><span class="pre">PCI_EXT_CAP_ID_DSN</span></code>         Device Serial Number
 <code class="docutils literal notranslate"><span class="pre">PCI_EXT_CAP_ID_PWR</span></code>         Power Budgeting</div></blockquote>
+<dl class="function">
+<dt id="c.pci_get_dsn">
+u64 <code class="descname">pci_get_dsn</code><span class="sig-paren">(</span>struct pci_dev *<em>&nbsp;dev</em><span class="sig-paren">)</span><a class="headerlink" href="#c.pci_get_dsn" title="Permalink to this definition">¶</a></dt>
+<dd><p>Read and return the 8-byte Device Serial Number</p>
+</dd></dl>
+
+<p><strong>Parameters</strong></p>
+<dl class="docutils">
+<dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">pci_dev</span> <span class="pre">*</span> <span class="pre">dev</span></code></dt>
+<dd>PCI device to query</dd>
+</dl>
+<p><strong>Description</strong></p>
+<p>Looks up the PCI_EXT_CAP_ID_DSN and reads the 8 bytes of the Device Serial
+Number.</p>
+<p>Returns the DSN, or zero if the capability does not exist.</p>
 <dl class="function">
 <dt id="c.pci_find_next_ht_capability">
 int <code class="descname">pci_find_next_ht_capability</code><span class="sig-paren">(</span>struct pci_dev *<em>&nbsp;dev</em>, int<em>&nbsp;pos</em>, int<em>&nbsp;ht_cap</em><span class="sig-paren">)</span><a class="headerlink" href="#c.pci_find_next_ht_capability" title="Permalink to this definition">¶</a></dt>
@@ -1989,7 +2017,7 @@ struct irq_domain * <code class="descname">pci_msi_create_irq_domain</code><span
 <p>A domain pointer or NULL in case of failure.</p>
 <dl class="function">
 <dt id="c.pci_bus_alloc_resource">
-int <code class="descname">pci_bus_alloc_resource</code><span class="sig-paren">(</span>struct pci_bus *<em>&nbsp;bus</em>, struct resource *<em>&nbsp;res</em>, resource_size_t<em>&nbsp;size</em>, resource_size_t<em>&nbsp;align</em>, resource_size_t<em>&nbsp;min</em>, unsigned long<em>&nbsp;type_mask</em>, resource_size_t (*alignf) (void<em>&nbsp;*</em>, const struct resource<em>&nbsp;*</em>, resource_size_t, resource_size_t, void *<em>&nbsp;alignf_data</em><span class="sig-paren">)</span><a class="headerlink" href="#c.pci_bus_alloc_resource" title="Permalink to this definition">¶</a></dt>
+int <code class="descname">pci_bus_alloc_resource</code><span class="sig-paren">(</span>struct pci_bus *<em>&nbsp;bus</em>, struct resource *<em>&nbsp;res</em>, resource_size_t<em>&nbsp;size</em>, resource_size_t<em>&nbsp;align</em>, resource_size_t<em>&nbsp;min</em>, unsigned long<em>&nbsp;type_mask</em>, resource_size_t (<em>*alignf</em>)(void *, const struct resource *, resource_size_t, resource_size_t), void *<em>&nbsp;alignf_data</em><span class="sig-paren">)</span><a class="headerlink" href="#c.pci_bus_alloc_resource" title="Permalink to this definition">¶</a></dt>
 <dd><p>allocate a resource from a parent bus</p>
 </dd></dl>
 
@@ -2381,19 +2409,6 @@ void <code class="descname">pci_unmap_rom</code><span class="sig-paren">(</span>
 </dl>
 <p><strong>Description</strong></p>
 <p>Remove a mapping of a previously mapped ROM</p>
-<dl class="function">
-<dt id="c.pci_platform_rom">
-void __iomem * <code class="descname">pci_platform_rom</code><span class="sig-paren">(</span>struct pci_dev *<em>&nbsp;pdev</em>, size_t *<em>&nbsp;size</em><span class="sig-paren">)</span><a class="headerlink" href="#c.pci_platform_rom" title="Permalink to this definition">¶</a></dt>
-<dd><p>provides a pointer to any ROM image provided by the platform</p>
-</dd></dl>
-
-<p><strong>Parameters</strong></p>
-<dl class="docutils">
-<dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">pci_dev</span> <span class="pre">*</span> <span class="pre">pdev</span></code></dt>
-<dd>pointer to pci device struct</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">size_t</span> <span class="pre">*</span> <span class="pre">size</span></code></dt>
-<dd>pointer to receive size of pci window over ROM</dd>
-</dl>
 <dl class="function">
 <dt id="c.pci_enable_sriov">
 int <code class="descname">pci_enable_sriov</code><span class="sig-paren">(</span>struct pci_dev *<em>&nbsp;dev</em>, int<em>&nbsp;nr_virtfn</em><span class="sig-paren">)</span><a class="headerlink" href="#c.pci_enable_sriov" title="Permalink to this definition">¶</a></dt>

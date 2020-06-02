@@ -68,7 +68,7 @@
             
             
               <div class="version">
-                5.6.0
+                5.7.0
               </div>
             
           
@@ -215,41 +215,33 @@ introduced in Linux 3.3. They are, however, mandatory for stateful mem2mem decod
 <table border="1" class="longtable docutils" id="id1">
 <caption><span class="caption-text">struct v4l2_decoder_cmd</span><a class="headerlink" href="#id1" title="Permalink to this table">¶</a></caption>
 <colgroup>
-<col width="7%" />
-<col width="14%" />
-<col width="7%" />
-<col width="9%" />
-<col width="63%" />
+<col width="17%" />
+<col width="17%" />
+<col width="17%" />
+<col width="50%" />
 </colgroup>
 <tbody valign="top">
 <tr class="row-odd"><td>__u32</td>
 <td><code class="docutils literal notranslate"><span class="pre">cmd</span></code></td>
-<td>&#160;</td>
 <td>&#160;</td>
 <td>The decoder command, see <a class="reference internal" href="#decoder-cmds"><span class="std std-ref">Decoder Commands</span></a>.</td>
 </tr>
 <tr class="row-even"><td>__u32</td>
 <td><code class="docutils literal notranslate"><span class="pre">flags</span></code></td>
 <td>&#160;</td>
-<td>&#160;</td>
 <td>Flags to go with the command. If no flags are defined for this
 command, drivers and applications must set this field to zero.</td>
 </tr>
-<tr class="row-odd"><td>union</td>
-<td>(anonymous)</td>
-<td>&#160;</td>
-<td>&#160;</td>
-<td>&#160;</td>
+<tr class="row-odd"><td>union {</td>
+<td colspan="3">(anonymous)</td>
 </tr>
-<tr class="row-even"><td>&#160;</td>
-<td>struct</td>
+<tr class="row-even"><td>struct</td>
 <td><code class="docutils literal notranslate"><span class="pre">start</span></code></td>
 <td>&#160;</td>
 <td>Structure containing additional data for the
 <code class="docutils literal notranslate"><span class="pre">V4L2_DEC_CMD_START</span></code> command.</td>
 </tr>
 <tr class="row-odd"><td>&#160;</td>
-<td>&#160;</td>
 <td>__s32</td>
 <td><code class="docutils literal notranslate"><span class="pre">speed</span></code></td>
 <td>Playback speed and direction. The playback speed is defined as
@@ -261,7 +253,6 @@ of 1 steps just one frame forward, a speed of -1 steps just one
 frame back.</td>
 </tr>
 <tr class="row-even"><td>&#160;</td>
-<td>&#160;</td>
 <td>__u32</td>
 <td><code class="docutils literal notranslate"><span class="pre">format</span></code></td>
 <td>Format restrictions. This field is set by the driver, not the
@@ -273,33 +264,30 @@ GOPs, which it can then play in reverse order. So to implement
 reverse playback the application must feed the decoder the last
 GOP in the video file, then the GOP before that, etc. etc.</td>
 </tr>
-<tr class="row-odd"><td>&#160;</td>
-<td>struct</td>
+<tr class="row-odd"><td>struct</td>
 <td><code class="docutils literal notranslate"><span class="pre">stop</span></code></td>
 <td>&#160;</td>
 <td>Structure containing additional data for the <code class="docutils literal notranslate"><span class="pre">V4L2_DEC_CMD_STOP</span></code>
 command.</td>
 </tr>
 <tr class="row-even"><td>&#160;</td>
-<td>&#160;</td>
 <td>__u64</td>
 <td><code class="docutils literal notranslate"><span class="pre">pts</span></code></td>
 <td>Stop playback at this <code class="docutils literal notranslate"><span class="pre">pts</span></code> or immediately if the playback is
 already past that timestamp. Leave to 0 if you want to stop after
 the last frame was decoded.</td>
 </tr>
-<tr class="row-odd"><td>&#160;</td>
-<td>struct</td>
-<td><code class="docutils literal notranslate"><span class="pre">raw</span></code></td>
-<td>&#160;</td>
-<td>&#160;</td>
+<tr class="row-odd"><td>struct</td>
+<td colspan="3"><code class="docutils literal notranslate"><span class="pre">raw</span></code></td>
 </tr>
 <tr class="row-even"><td>&#160;</td>
-<td>&#160;</td>
 <td>__u32</td>
 <td><code class="docutils literal notranslate"><span class="pre">data</span></code>[16]</td>
 <td>Reserved for future extensions. Drivers and applications must set
 the array to zero.</td>
+</tr>
+<tr class="row-odd"><td>}</td>
+<td colspan="3">&#160;</td>
 </tr>
 </tbody>
 </table>

@@ -68,7 +68,7 @@
             
             
               <div class="version">
-                5.6.0
+                5.7.0
               </div>
             
           
@@ -339,9 +339,10 @@ probed.</p>
 <p>While the typical use case for sync_state() is to have the kernel cleanly take
 over management of devices from the bootloader, the usage of sync_state() is
 not restricted to that. Use it whenever it makes sense to take an action after
-all the consumers of a device have probed.</p>
-<blockquote>
-<div>int     (<a href="#id1"><span class="problematic" id="id2">*</span></a>remove)       (struct device <a href="#id3"><span class="problematic" id="id4">*</span></a>dev);</div></blockquote>
+all the consumers of a device have probed:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>int     (*remove)       (struct device *dev);
+</pre></div>
+</div>
 <p>remove is called to unbind a driver from a device. This may be
 called if a device is physically removed from the system, if the
 driver module is being unloaded, during a reboot sequence, or

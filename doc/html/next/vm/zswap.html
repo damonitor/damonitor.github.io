@@ -68,7 +68,7 @@
             
             
               <div class="version">
-                5.6.0
+                5.7.0
               </div>
             
           
@@ -189,9 +189,11 @@ drastically reducing life-shortening writes.</li>
 <p>Zswap evicts pages from compressed cache on an LRU basis to the backing swap
 device when the compressed pool reaches its size limit.  This requirement had
 been identified in prior community discussions.</p>
-<p>Zswap is disabled by default but can be enabled at boot time by setting
-the <code class="docutils literal notranslate"><span class="pre">enabled</span></code> attribute to 1 at boot time. ie: <code class="docutils literal notranslate"><span class="pre">zswap.enabled=1</span></code>.  Zswap
-can also be enabled and disabled at runtime using the sysfs interface.
+<p>Whether Zswap is enabled at the boot time depends on whether
+the <code class="docutils literal notranslate"><span class="pre">CONFIG_ZSWAP_DEFAULT_ON</span></code> Kconfig option is enabled or not.
+This setting can then be overridden by providing the kernel command line
+<code class="docutils literal notranslate"><span class="pre">zswap.enabled=</span></code> option, for example <code class="docutils literal notranslate"><span class="pre">zswap.enabled=0</span></code>.
+Zswap can also be enabled and disabled at runtime using the sysfs interface.
 An example command to enable zswap at runtime, assuming sysfs is mounted
 at <code class="docutils literal notranslate"><span class="pre">/sys</span></code>, is:</p>
 <div class="highlight-none notranslate"><div class="highlight"><pre><span></span>echo 1 &gt; /sys/module/zswap/parameters/enabled
@@ -216,9 +218,10 @@ allocation in zpool is not directly accessible by address.  Rather, a handle is
 returned by the allocation routine and that handle must be mapped before being
 accessed.  The compressed memory pool grows on demand and shrinks as compressed
 pages are freed.  The pool is not preallocated.  By default, a zpool
-of type zbud is created, but it can be selected at boot time by
-setting the <code class="docutils literal notranslate"><span class="pre">zpool</span></code> attribute, e.g. <code class="docutils literal notranslate"><span class="pre">zswap.zpool=zbud</span></code>. It can
-also be changed at runtime using the sysfs <code class="docutils literal notranslate"><span class="pre">zpool</span></code> attribute, e.g.:</p>
+of type selected in <code class="docutils literal notranslate"><span class="pre">CONFIG_ZSWAP_ZPOOL_DEFAULT</span></code> Kconfig option is created,
+but it can be overridden at boot time by setting the <code class="docutils literal notranslate"><span class="pre">zpool</span></code> attribute,
+e.g. <code class="docutils literal notranslate"><span class="pre">zswap.zpool=zbud</span></code>. It can also be changed at runtime using the sysfs
+<code class="docutils literal notranslate"><span class="pre">zpool</span></code> attribute, e.g.:</p>
 <div class="highlight-none notranslate"><div class="highlight"><pre><span></span>echo zbud &gt; /sys/module/zswap/parameters/zpool
 </pre></div>
 </div>
@@ -245,8 +248,9 @@ controlled policy:</p>
 <li>max_pool_percent - The maximum percentage of memory that the compressed
 pool can occupy.</li>
 </ul>
-<p>The default compressor is lzo, but it can be selected at boot time by
-setting the <code class="docutils literal notranslate"><span class="pre">compressor</span></code> attribute, e.g. <code class="docutils literal notranslate"><span class="pre">zswap.compressor=lzo</span></code>.
+<p>The default compressor is selected in <code class="docutils literal notranslate"><span class="pre">CONFIG_ZSWAP_COMPRESSOR_DEFAULT</span></code>
+Kconfig option, but it can be overridden at boot time by setting the
+<code class="docutils literal notranslate"><span class="pre">compressor</span></code> attribute, e.g. <code class="docutils literal notranslate"><span class="pre">zswap.compressor=lzo</span></code>.
 It can also be changed at runtime using the sysfs “compressor”
 attribute, e.g.:</p>
 <div class="highlight-none notranslate"><div class="highlight"><pre><span></span>echo lzo &gt; /sys/module/zswap/parameters/compressor

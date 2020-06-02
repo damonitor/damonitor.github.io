@@ -68,7 +68,7 @@
             
             
               <div class="version">
-                5.6.0
+                5.7.0
               </div>
             
           
@@ -520,7 +520,7 @@ fi
 <h2>Kernel Inline Documentations Reference<a class="headerlink" href="#kernel-inline-documentations-reference" title="Permalink to this headline">¶</a></h2>
 <dl class="function">
 <dt id="c.cpuhp_setup_state">
-int <code class="descname">cpuhp_setup_state</code><span class="sig-paren">(</span>enum cpuhp_state<em>&nbsp;state</em>, const char *<em>&nbsp;name</em>, int (*startup) (unsigned int<em>&nbsp;cpu</em>, int (*teardown) (unsigned int<em>&nbsp;cpu</em><span class="sig-paren">)</span><a class="headerlink" href="#c.cpuhp_setup_state" title="Permalink to this definition">¶</a></dt>
+int <code class="descname">cpuhp_setup_state</code><span class="sig-paren">(</span>enum cpuhp_state<em>&nbsp;state</em>, const char *<em>&nbsp;name</em>, int (<em>*startup</em>)(unsigned int cpu), int (*teardown) (unsigned int cpu)<span class="sig-paren">)</span><a class="headerlink" href="#c.cpuhp_setup_state" title="Permalink to this definition">¶</a></dt>
 <dd><p>Setup hotplug state callbacks with calling the callbacks</p>
 </dd></dl>
 
@@ -540,7 +540,7 @@ int <code class="descname">cpuhp_setup_state</code><span class="sig-paren">(</sp
 the present cpus which have already reached the <strong>state</strong>.</p>
 <dl class="function">
 <dt id="c.cpuhp_setup_state_nocalls">
-int <code class="descname">cpuhp_setup_state_nocalls</code><span class="sig-paren">(</span>enum cpuhp_state<em>&nbsp;state</em>, const char *<em>&nbsp;name</em>, int (*startup) (unsigned int<em>&nbsp;cpu</em>, int (*teardown) (unsigned int<em>&nbsp;cpu</em><span class="sig-paren">)</span><a class="headerlink" href="#c.cpuhp_setup_state_nocalls" title="Permalink to this definition">¶</a></dt>
+int <code class="descname">cpuhp_setup_state_nocalls</code><span class="sig-paren">(</span>enum cpuhp_state<em>&nbsp;state</em>, const char *<em>&nbsp;name</em>, int (<em>*startup</em>)(unsigned int cpu), int (*teardown) (unsigned int cpu)<span class="sig-paren">)</span><a class="headerlink" href="#c.cpuhp_setup_state_nocalls" title="Permalink to this definition">¶</a></dt>
 <dd><p>Setup hotplug state callbacks without calling the callbacks</p>
 </dd></dl>
 
@@ -560,7 +560,7 @@ int <code class="descname">cpuhp_setup_state_nocalls</code><span class="sig-pare
 during installation of this callback. NOP if SMP=n or HOTPLUG_CPU=n.</p>
 <dl class="function">
 <dt id="c.cpuhp_setup_state_multi">
-int <code class="descname">cpuhp_setup_state_multi</code><span class="sig-paren">(</span>enum cpuhp_state<em>&nbsp;state</em>, const char *<em>&nbsp;name</em>, int (*startup) (unsigned int<em>&nbsp;cpu</em>, struct hlist_node<em>&nbsp;*node</em>, int (*teardown) (unsigned int<em>&nbsp;cpu</em>, struct hlist_node<em>&nbsp;*node</em><span class="sig-paren">)</span><a class="headerlink" href="#c.cpuhp_setup_state_multi" title="Permalink to this definition">¶</a></dt>
+int <code class="descname">cpuhp_setup_state_multi</code><span class="sig-paren">(</span>enum cpuhp_state<em>&nbsp;state</em>, const char *<em>&nbsp;name</em>, int (<em>*startup</em>)(unsigned int cpu, struct hlist_node *node), int (*teardown) (unsigned int cpu, struct hlist_node *node)<span class="sig-paren">)</span><a class="headerlink" href="#c.cpuhp_setup_state_multi" title="Permalink to this definition">¶</a></dt>
 <dd><p>Add callbacks for multi state</p>
 </dd></dl>
 

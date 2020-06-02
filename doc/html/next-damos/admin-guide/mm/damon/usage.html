@@ -70,7 +70,7 @@
             
             
               <div class="version">
-                5.6.0
+                5.7.0
               </div>
             
           
@@ -409,9 +409,8 @@ to <code class="docutils literal notranslate"><span class="pre">schemes</span></
 and human readable action names.  Currently supported operation actions are
 <code class="docutils literal notranslate"><span class="pre">willneed</span></code>, <code class="docutils literal notranslate"><span class="pre">cold</span></code>, <code class="docutils literal notranslate"><span class="pre">pageout</span></code>, <code class="docutils literal notranslate"><span class="pre">hugepage</span></code> and <code class="docutils literal notranslate"><span class="pre">nohugepage</span></code>.  Each of
 the actions works same to the madvise() system call hints having the name.
-Please also note that both the ‘min’ and the ‘max’ are inclusive (closed
-interval), and <code class="docutils literal notranslate"><span class="pre">0</span></code> for max values means infinite. Below example schemes are
-possible.</p>
+Please also note that the range is inclusive (closed interval), and <code class="docutils literal notranslate"><span class="pre">0</span></code> for
+max values means infinite. Below example schemes are possible.</p>
 <div class="highlight-none notranslate"><div class="highlight"><pre><span></span># format is:
 # &lt;min/max size&gt; &lt;min/max frequency (0-99)&gt; &lt;min/max age&gt; &lt;action&gt;
 #
@@ -512,13 +511,13 @@ debugfs file.  Reading the file also shows the statistics of each scheme.  To
 the file, each of the schemes should be represented in each line in below form:</p>
 <blockquote>
 <div>min-size max-size min-acc max-acc min-age max-age action</div></blockquote>
-<p>Note that the ranges are closed interval (both the min and the max are
-inclusive).  Bytes for the size of regions (<code class="docutils literal notranslate"><span class="pre">min-size</span></code> and <code class="docutils literal notranslate"><span class="pre">max-size</span></code>),
-number of monitored accesses per aggregate interval for access frequency
-(<code class="docutils literal notranslate"><span class="pre">min-acc</span></code> and <code class="docutils literal notranslate"><span class="pre">max-acc</span></code>), number of aggregate intervals for the age of
-regions (<code class="docutils literal notranslate"><span class="pre">min-age</span></code> and <code class="docutils literal notranslate"><span class="pre">max-age</span></code>), and a predefined integer for memory
-management actions should be used.  The supported numbers and their meanings
-are as below.</p>
+<p>Note that the ranges are closed interval.  Bytes for the size of regions
+(<code class="docutils literal notranslate"><span class="pre">min-size</span></code> and <code class="docutils literal notranslate"><span class="pre">max-size</span></code>), number of monitored accesses per aggregate
+interval for access frequency (<code class="docutils literal notranslate"><span class="pre">min-acc</span></code> and <code class="docutils literal notranslate"><span class="pre">max-acc</span></code>), number of
+aggregate intervals for the age of regions (<code class="docutils literal notranslate"><span class="pre">min-age</span></code> and <code class="docutils literal notranslate"><span class="pre">max-age</span></code>), and a
+predefined integer for memory management actions should be used.  The supported
+numbers and their
+meanings are as below.</p>
 <blockquote>
 <div><ul class="simple">
 <li>0: Call <code class="docutils literal notranslate"><span class="pre">madvise()</span></code> for the region with <code class="docutils literal notranslate"><span class="pre">MADV_WILLNEED</span></code></li>

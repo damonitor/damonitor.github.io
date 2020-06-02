@@ -68,7 +68,7 @@
             
             
               <div class="version">
-                5.6.0
+                5.7.0
               </div>
             
           
@@ -507,6 +507,24 @@ invocation of <a class="reference internal" href="#c.snd_card_register" title="s
 <p><strong>Return</strong></p>
 <p>Zero if successful, or a negative error code on failure or if the
 device not found.</p>
+<dl class="function">
+<dt id="c.snd_device_get_state">
+int <code class="descname">snd_device_get_state</code><span class="sig-paren">(</span>struct snd_card *<em>&nbsp;card</em>, void *<em>&nbsp;device_data</em><span class="sig-paren">)</span><a class="headerlink" href="#c.snd_device_get_state" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the current state of the given device</p>
+</dd></dl>
+
+<p><strong>Parameters</strong></p>
+<dl class="docutils">
+<dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">snd_card</span> <span class="pre">*</span> <span class="pre">card</span></code></dt>
+<dd>the card instance</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">void</span> <span class="pre">*</span> <span class="pre">device_data</span></code></dt>
+<dd>the data pointer to release</dd>
+</dl>
+<p><strong>Description</strong></p>
+<p>Returns the current state of the given device object.  For the valid
+device, either <strong>SNDRV_DEV_BUILD</strong>, <strong>SNDRV_DEV_REGISTERED</strong> or
+<strong>SNDRV_DEV_DISCONNECTED</strong> is returned.
+Or for a non-existing device, -1 is returned as an error.</p>
 </div>
 <div class="section" id="module-requests-and-device-file-entries">
 <h3>Module requests and Device File Entries<a class="headerlink" href="#module-requests-and-device-file-entries" title="Permalink to this headline">¶</a></h3>
@@ -2224,6 +2242,17 @@ u64 <code class="descname">pcm_format_to_bits</code><span class="sig-paren">(</s
 <dt><code class="docutils literal notranslate"><span class="pre">snd_pcm_format_t</span> <span class="pre">pcm_format</span></code></dt>
 <dd>PCM format</dd>
 </dl>
+<dl class="function">
+<dt id="c.pcm_for_each_format">
+<code class="descname">pcm_for_each_format</code><span class="sig-paren">(</span><em>f</em><span class="sig-paren">)</span><a class="headerlink" href="#c.pcm_for_each_format" title="Permalink to this definition">¶</a></dt>
+<dd><p>helper to iterate for each format type</p>
+</dd></dl>
+
+<p><strong>Parameters</strong></p>
+<dl class="docutils">
+<dt><code class="docutils literal notranslate"><span class="pre">f</span></code></dt>
+<dd>the iterator variable in snd_pcm_format_t type</dd>
+</dl>
 </div>
 <div class="section" id="pcm-format-helpers">
 <h3>PCM Format Helpers<a class="headerlink" href="#pcm-format-helpers" title="Permalink to this headline">¶</a></h3>
@@ -2373,19 +2402,19 @@ int <code class="descname">snd_pcm_format_set_silence</code><span class="sig-par
 <p><strong>Return</strong></p>
 <p>Zero if successful, or a negative error code on failure.</p>
 <dl class="function">
-<dt id="c.snd_pcm_limit_hw_rates">
-int <code class="descname">snd_pcm_limit_hw_rates</code><span class="sig-paren">(</span>struct snd_pcm_runtime *<em>&nbsp;runtime</em><span class="sig-paren">)</span><a class="headerlink" href="#c.snd_pcm_limit_hw_rates" title="Permalink to this definition">¶</a></dt>
+<dt id="c.snd_pcm_hw_limit_rates">
+int <code class="descname">snd_pcm_hw_limit_rates</code><span class="sig-paren">(</span>struct snd_pcm_hardware *<em>&nbsp;hw</em><span class="sig-paren">)</span><a class="headerlink" href="#c.snd_pcm_hw_limit_rates" title="Permalink to this definition">¶</a></dt>
 <dd><p>determine rate_min/rate_max fields</p>
 </dd></dl>
 
 <p><strong>Parameters</strong></p>
 <dl class="docutils">
-<dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">snd_pcm_runtime</span> <span class="pre">*</span> <span class="pre">runtime</span></code></dt>
-<dd>the runtime instance</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">snd_pcm_hardware</span> <span class="pre">*</span> <span class="pre">hw</span></code></dt>
+<dd>the pcm hw instance</dd>
 </dl>
 <p><strong>Description</strong></p>
 <p>Determines the rate_min and rate_max fields from the rates bits of
-the given runtime-&gt;hw.</p>
+the given hw.</p>
 <p><strong>Return</strong></p>
 <p>Zero if successful.</p>
 <dl class="function">
@@ -3665,7 +3694,7 @@ with #SNDRV_CTL_TLVT_DB_SCALE, #SNDRV_CTL_TLV_DB_MINMAX or
 <p>The created control element, or <code class="docutils literal notranslate"><span class="pre">NULL</span></code> for errors (ENOMEM).</p>
 <dl class="function">
 <dt id="c.snd_ctl_add_vmaster_hook">
-int <code class="descname">snd_ctl_add_vmaster_hook</code><span class="sig-paren">(</span>struct snd_kcontrol *<em>&nbsp;kcontrol</em>, void (*hook) (void<em>&nbsp;*private_data</em>, int, void *<em>&nbsp;private_data</em><span class="sig-paren">)</span><a class="headerlink" href="#c.snd_ctl_add_vmaster_hook" title="Permalink to this definition">¶</a></dt>
+int <code class="descname">snd_ctl_add_vmaster_hook</code><span class="sig-paren">(</span>struct snd_kcontrol *<em>&nbsp;kcontrol</em>, void (<em>*hook</em>)(void *private_data, int), void *<em>&nbsp;private_data</em><span class="sig-paren">)</span><a class="headerlink" href="#c.snd_ctl_add_vmaster_hook" title="Permalink to this definition">¶</a></dt>
 <dd><p>Add a hook to a vmaster control</p>
 </dd></dl>
 
@@ -3702,7 +3731,7 @@ to synchronize with the current value of the given vmaster element.
 NOP when NULL is passed to <strong>kcontrol</strong>.</p>
 <dl class="function">
 <dt id="c.snd_ctl_apply_vmaster_slaves">
-int <code class="descname">snd_ctl_apply_vmaster_slaves</code><span class="sig-paren">(</span>struct snd_kcontrol *<em>&nbsp;kctl</em>, int (*func) (struct snd_kcontrol<em>&nbsp;*vslave</em>, struct snd_kcontrol<em>&nbsp;*slave</em>, void<em>&nbsp;*arg</em>, void *<em>&nbsp;arg</em><span class="sig-paren">)</span><a class="headerlink" href="#c.snd_ctl_apply_vmaster_slaves" title="Permalink to this definition">¶</a></dt>
+int <code class="descname">snd_ctl_apply_vmaster_slaves</code><span class="sig-paren">(</span>struct snd_kcontrol *<em>&nbsp;kctl</em>, int (<em>*func</em>)(struct snd_kcontrol *vslave, struct snd_kcontrol *slave, void *arg), void *<em>&nbsp;arg</em><span class="sig-paren">)</span><a class="headerlink" href="#c.snd_ctl_apply_vmaster_slaves" title="Permalink to this definition">¶</a></dt>
 <dd><p>Apply function to each vmaster slave</p>
 </dd></dl>
 
@@ -4134,7 +4163,7 @@ The all children entries are registered recursively.</p>
 <p>Zero if successful, or a negative error code on failure.</p>
 <dl class="function">
 <dt id="c.snd_card_rw_proc_new">
-int <code class="descname">snd_card_rw_proc_new</code><span class="sig-paren">(</span>struct snd_card *<em>&nbsp;card</em>, const char *<em>&nbsp;name</em>, void *<em>&nbsp;private_data</em>, void (*read) (struct snd_info_entry<em>&nbsp;*</em>, struct snd_info_buffer<em>&nbsp;*</em>, void (*<a class="reference internal" href="../../media/uapi/dvb/video-fwrite.html#c.write" title="write">write</a>) (struct snd_info_entry<em>&nbsp;*entry</em>, struct snd_info_buffer<em>&nbsp;*buffer</em><span class="sig-paren">)</span><a class="headerlink" href="#c.snd_card_rw_proc_new" title="Permalink to this definition">¶</a></dt>
+int <code class="descname">snd_card_rw_proc_new</code><span class="sig-paren">(</span>struct snd_card *<em>&nbsp;card</em>, const char *<em>&nbsp;name</em>, void *<em>&nbsp;private_data</em>, void (<em>*read</em>)(struct snd_info_entry *, struct snd_info_buffer *), void (*<a class="reference internal" href="../../media/uapi/dvb/video-fwrite.html#c.write" title="write">write</a>) (struct snd_info_entry *entry, struct snd_info_buffer *buffer)<span class="sig-paren">)</span><a class="headerlink" href="#c.snd_card_rw_proc_new" title="Permalink to this definition">¶</a></dt>
 <dd><p>Create a read/write text proc file entry for the card</p>
 </dd></dl>
 
@@ -4484,7 +4513,6 @@ struct <code class="descname">snd_compr_runtime</code><a class="headerlink" href
 <div class="highlight-none notranslate"><div class="highlight"><pre><span></span>struct snd_compr_runtime {
   snd_pcm_state_t state;
   struct snd_compr_ops *ops;
-  struct snd_dma_buffer *dma_buffer_p;
   void *buffer;
   u64 buffer_size;
   u32 fragment_size;
@@ -4493,6 +4521,10 @@ struct <code class="descname">snd_compr_runtime</code><a class="headerlink" href
   u64 total_bytes_transferred;
   wait_queue_head_t sleep;
   void *private_data;
+  unsigned char *dma_area;
+  dma_addr_t dma_addr;
+  size_t dma_bytes;
+  struct snd_dma_buffer *dma_buffer_p;
 };
 </pre></div>
 </div>
@@ -4502,8 +4534,6 @@ struct <code class="descname">snd_compr_runtime</code><a class="headerlink" href
 <dd>stream state</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">ops</span></code></dt>
 <dd>pointer to DSP callbacks</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">dma_buffer_p</span></code></dt>
-<dd>runtime dma buffer pointer</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">buffer</span></code></dt>
 <dd>pointer to kernel buffer, valid only when not in mmap mode or
 DSP doesn’t implement copy</dd>
@@ -4522,6 +4552,14 @@ the ring buffer</dd>
 <dd>poll sleep</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">private_data</span></code></dt>
 <dd>driver private data pointer</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">dma_area</span></code></dt>
+<dd>virtual buffer address</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">dma_addr</span></code></dt>
+<dd>physical buffer address (not accessible from main CPU)</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">dma_bytes</span></code></dt>
+<dd>size of DMA area</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">dma_buffer_p</span></code></dt>
+<dd>runtime dma buffer pointer</dd>
 </dl>
 <dl class="type">
 <dt id="c.snd_compr_stream">
@@ -4539,6 +4577,7 @@ struct <code class="descname">snd_compr_stream</code><a class="headerlink" href=
   bool metadata_set;
   bool next_track;
   void *private_data;
+  struct snd_dma_buffer dma_buffer;
 };
 </pre></div>
 </div>
@@ -4562,6 +4601,8 @@ struct <code class="descname">snd_compr_stream</code><a class="headerlink" href=
 <dd>has userspace signal next track transition, true when set</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">private_data</span></code></dt>
 <dd>pointer to DSP private data</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">dma_buffer</span></code></dt>
+<dd>allocated buffer if any</dd>
 </dl>
 <dl class="type">
 <dt id="c.snd_compr_ops">
@@ -4662,14 +4703,14 @@ struct <code class="descname">snd_compr</code><a class="headerlink" href="#c.snd
 </dl>
 <dl class="function">
 <dt id="c.snd_compr_set_runtime_buffer">
-void <code class="descname">snd_compr_set_runtime_buffer</code><span class="sig-paren">(</span>struct <a class="reference internal" href="#c.snd_compr_stream" title="snd_compr_stream">snd_compr_stream</a> *<em>&nbsp;substream</em>, struct snd_dma_buffer *<em>&nbsp;bufp</em><span class="sig-paren">)</span><a class="headerlink" href="#c.snd_compr_set_runtime_buffer" title="Permalink to this definition">¶</a></dt>
+void <code class="descname">snd_compr_set_runtime_buffer</code><span class="sig-paren">(</span>struct <a class="reference internal" href="#c.snd_compr_stream" title="snd_compr_stream">snd_compr_stream</a> *<em>&nbsp;stream</em>, struct snd_dma_buffer *<em>&nbsp;bufp</em><span class="sig-paren">)</span><a class="headerlink" href="#c.snd_compr_set_runtime_buffer" title="Permalink to this definition">¶</a></dt>
 <dd><p>Set the Compress runtime buffer</p>
 </dd></dl>
 
 <p><strong>Parameters</strong></p>
 <dl class="docutils">
-<dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">snd_compr_stream</span> <span class="pre">*</span> <span class="pre">substream</span></code></dt>
-<dd>compress substream to set</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">snd_compr_stream</span> <span class="pre">*</span> <span class="pre">stream</span></code></dt>
+<dd>compress stream to set</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">snd_dma_buffer</span> <span class="pre">*</span> <span class="pre">bufp</span></code></dt>
 <dd>the buffer information, NULL to clear</dd>
 </dl>
@@ -5326,6 +5367,24 @@ int <code class="descname">snd_soc_set_runtime_hwparams</code><span class="sig-p
 <p><strong>Description</strong></p>
 <p>Sets the substream runtime hardware parameters.</p>
 <dl class="function">
+<dt id="c.snd_soc_runtime_calc_hw">
+int <code class="descname">snd_soc_runtime_calc_hw</code><span class="sig-paren">(</span>struct snd_soc_pcm_runtime *<em>&nbsp;rtd</em>, struct snd_pcm_hardware *<em>&nbsp;hw</em>, int<em>&nbsp;stream</em><span class="sig-paren">)</span><a class="headerlink" href="#c.snd_soc_runtime_calc_hw" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculate hw limits for a PCM stream</p>
+</dd></dl>
+
+<p><strong>Parameters</strong></p>
+<dl class="docutils">
+<dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">snd_soc_pcm_runtime</span> <span class="pre">*</span> <span class="pre">rtd</span></code></dt>
+<dd>ASoC PCM runtime</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">snd_pcm_hardware</span> <span class="pre">*</span> <span class="pre">hw</span></code></dt>
+<dd>PCM hardware parameters (output)</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">int</span> <span class="pre">stream</span></code></dt>
+<dd>Direction of the PCM stream</dd>
+</dl>
+<p><strong>Description</strong></p>
+<p>Calculates the subset of stream parameters supported by all DAIs
+associated with the PCM stream.</p>
+<dl class="function">
 <dt id="c.snd_soc_info_enum_double">
 int <code class="descname">snd_soc_info_enum_double</code><span class="sig-paren">(</span>struct snd_kcontrol *<em>&nbsp;kcontrol</em>, struct snd_ctl_elem_info *<em>&nbsp;uinfo</em><span class="sig-paren">)</span><a class="headerlink" href="#c.snd_soc_info_enum_double" title="Permalink to this definition">¶</a></dt>
 <dd><p>enumerated double mixer info callback</p>
@@ -5745,7 +5804,7 @@ int <code class="descname">snd_soc_dapm_set_bias_level</code><span class="sig-pa
 <p>Returns 0 for success else error.</p>
 <dl class="function">
 <dt id="c.snd_soc_dapm_dai_get_connected_widgets">
-int <code class="descname">snd_soc_dapm_dai_get_connected_widgets</code><span class="sig-paren">(</span>struct snd_soc_dai *<em>&nbsp;dai</em>, int<em>&nbsp;stream</em>, struct snd_soc_dapm_widget_list **<em>&nbsp;list</em>, bool (*custom_stop_condition) (struct snd_soc_dapm_widget<em>&nbsp;*</em>, enum<em>&nbsp;snd_soc_dapm_direction</em><span class="sig-paren">)</span><a class="headerlink" href="#c.snd_soc_dapm_dai_get_connected_widgets" title="Permalink to this definition">¶</a></dt>
+int <code class="descname">snd_soc_dapm_dai_get_connected_widgets</code><span class="sig-paren">(</span>struct snd_soc_dai *<em>&nbsp;dai</em>, int<em>&nbsp;stream</em>, struct snd_soc_dapm_widget_list **<em>&nbsp;list</em>, bool (<em>*custom_stop_condition</em>)(struct snd_soc_dapm_widget *, enum snd_soc_dapm_direction)<span class="sig-paren">)</span><a class="headerlink" href="#c.snd_soc_dapm_dai_get_connected_widgets" title="Permalink to this definition">¶</a></dt>
 <dd><p>query audio path and it’s widgets.</p>
 </dd></dl>
 

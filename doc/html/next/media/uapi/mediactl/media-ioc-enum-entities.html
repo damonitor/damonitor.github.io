@@ -68,7 +68,7 @@
             
             
               <div class="version">
-                5.6.0
+                5.7.0
               </div>
             
           
@@ -203,16 +203,14 @@ id’s until they get an error.</p>
 <table border="1" class="docutils" id="id1">
 <caption><span class="caption-text">struct media_entity_desc</span><a class="headerlink" href="#id1" title="Permalink to this table">¶</a></caption>
 <colgroup>
+<col width="15%" />
+<col width="15%" />
 <col width="8%" />
-<col width="8%" />
-<col width="8%" />
-<col width="8%" />
-<col width="67%" />
+<col width="62%" />
 </colgroup>
 <tbody valign="top">
 <tr class="row-odd"><td>__u32</td>
 <td><code class="docutils literal notranslate"><span class="pre">id</span></code></td>
-<td>&#160;</td>
 <td>&#160;</td>
 <td>Entity ID, set by the application. When the ID is or’ed with
 <code class="docutils literal notranslate"><span class="pre">MEDIA_ENT_ID_FLAG_NEXT</span></code>, the driver clears the flag and returns
@@ -223,43 +221,36 @@ do not hardcode entity IDs in an application.</td>
 <tr class="row-even"><td>char</td>
 <td><code class="docutils literal notranslate"><span class="pre">name</span></code>[32]</td>
 <td>&#160;</td>
-<td>&#160;</td>
 <td>Entity name as an UTF-8 NULL-terminated string. This name must be unique
 within the media topology.</td>
 </tr>
 <tr class="row-odd"><td>__u32</td>
 <td><code class="docutils literal notranslate"><span class="pre">type</span></code></td>
 <td>&#160;</td>
-<td>&#160;</td>
 <td>Entity type, see <a class="reference internal" href="media-types.html#media-entity-functions"><span class="std std-ref">Media entity functions</span></a> for details.</td>
 </tr>
 <tr class="row-even"><td>__u32</td>
 <td><code class="docutils literal notranslate"><span class="pre">revision</span></code></td>
-<td>&#160;</td>
 <td>&#160;</td>
 <td>Entity revision. Always zero (obsolete)</td>
 </tr>
 <tr class="row-odd"><td>__u32</td>
 <td><code class="docutils literal notranslate"><span class="pre">flags</span></code></td>
 <td>&#160;</td>
-<td>&#160;</td>
 <td>Entity flags, see <a class="reference internal" href="media-types.html#media-entity-flag"><span class="std std-ref">Media entity flags</span></a> for details.</td>
 </tr>
 <tr class="row-even"><td>__u32</td>
 <td><code class="docutils literal notranslate"><span class="pre">group_id</span></code></td>
-<td>&#160;</td>
 <td>&#160;</td>
 <td>Entity group ID. Always zero (obsolete)</td>
 </tr>
 <tr class="row-odd"><td>__u16</td>
 <td><code class="docutils literal notranslate"><span class="pre">pads</span></code></td>
 <td>&#160;</td>
-<td>&#160;</td>
 <td>Number of pads</td>
 </tr>
 <tr class="row-even"><td>__u16</td>
 <td><code class="docutils literal notranslate"><span class="pre">links</span></code></td>
-<td>&#160;</td>
 <td>&#160;</td>
 <td>Total number of outbound links. Inbound links are not counted in
 this field.</td>
@@ -267,35 +258,34 @@ this field.</td>
 <tr class="row-odd"><td>__u32</td>
 <td><code class="docutils literal notranslate"><span class="pre">reserved[4]</span></code></td>
 <td>&#160;</td>
-<td>&#160;</td>
 <td>Reserved for future extensions. Drivers and applications must set
 the array to zero.</td>
 </tr>
-<tr class="row-even"><td colspan="5">union</td>
+<tr class="row-even"><td>union {</td>
+<td colspan="3">(anonymous)</td>
 </tr>
-<tr class="row-odd"><td>&#160;</td>
-<td>struct</td>
+<tr class="row-odd"><td>struct</td>
 <td><code class="docutils literal notranslate"><span class="pre">dev</span></code></td>
 <td>&#160;</td>
 <td>Valid for (sub-)devices that create a single device node.</td>
 </tr>
 <tr class="row-even"><td>&#160;</td>
-<td>&#160;</td>
 <td>__u32</td>
 <td><code class="docutils literal notranslate"><span class="pre">major</span></code></td>
 <td>Device node major number.</td>
 </tr>
 <tr class="row-odd"><td>&#160;</td>
-<td>&#160;</td>
 <td>__u32</td>
 <td><code class="docutils literal notranslate"><span class="pre">minor</span></code></td>
 <td>Device node minor number.</td>
 </tr>
-<tr class="row-even"><td>&#160;</td>
-<td>__u8</td>
+<tr class="row-even"><td>__u8</td>
 <td><code class="docutils literal notranslate"><span class="pre">raw</span></code>[184]</td>
 <td>&#160;</td>
 <td>&#160;</td>
+</tr>
+<tr class="row-odd"><td>}</td>
+<td colspan="3">&#160;</td>
 </tr>
 </tbody>
 </table>

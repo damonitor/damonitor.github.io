@@ -68,7 +68,7 @@
             
             
               <div class="version">
-                5.6.0
+                5.7.0
               </div>
             
           
@@ -320,11 +320,11 @@ mutex, and <a class="reference internal" href="../translations/it_IT/kernel-hack
 <a class="reference internal" href="../translations/it_IT/kernel-hacking/locking.html#c.mutex_lock" title="mutex_lock"><code class="xref c c-func docutils literal notranslate"><span class="pre">mutex_lock()</span></code></a>, which should be avoided, because it will
 not return if a signal is received.</p>
 <p>Example: <code class="docutils literal notranslate"><span class="pre">net/netfilter/nf_sockopt.c</span></code> allows registration of new
-<code class="xref c c-func docutils literal notranslate"><span class="pre">setsockopt()</span></code> and <code class="xref c c-func docutils literal notranslate"><span class="pre">getsockopt()</span></code> calls, with
-<code class="xref c c-func docutils literal notranslate"><span class="pre">nf_register_sockopt()</span></code>. Registration and de-registration
+setsockopt() and getsockopt() calls, with
+nf_register_sockopt(). Registration and de-registration
 are only done on module load and unload (and boot time, where there is
 no concurrency), and the list of registrations is only consulted for an
-unknown <code class="xref c c-func docutils literal notranslate"><span class="pre">setsockopt()</span></code> or <code class="xref c c-func docutils literal notranslate"><span class="pre">getsockopt()</span></code> system
+unknown setsockopt() or getsockopt() system
 call. The <code class="docutils literal notranslate"><span class="pre">nf_sockopt_mutex</span></code> is perfect to protect this, especially
 since the setsockopt and getsockopt calls may well sleep.</p>
 </div>
@@ -333,17 +333,17 @@ since the setsockopt and getsockopt calls may well sleep.</p>
 <p>If a softirq shares data with user context, you have two problems.
 Firstly, the current user context can be interrupted by a softirq, and
 secondly, the critical region could be entered from another CPU. This is
-where <code class="xref c c-func docutils literal notranslate"><span class="pre">spin_lock_bh()</span></code> (<code class="docutils literal notranslate"><span class="pre">include/linux/spinlock.h</span></code>) is
+where spin_lock_bh() (<code class="docutils literal notranslate"><span class="pre">include/linux/spinlock.h</span></code>) is
 used. It disables softirqs on that CPU, then grabs the lock.
-<code class="xref c c-func docutils literal notranslate"><span class="pre">spin_unlock_bh()</span></code> does the reverse. (The ‘_bh’ suffix is
+spin_unlock_bh() does the reverse. (The ‘_bh’ suffix is
 a historical reference to “Bottom Halves”, the old name for software
 interrupts. It should really be called spin_lock_softirq()’ in a
 perfect world).</p>
-<p>Note that you can also use <code class="xref c c-func docutils literal notranslate"><span class="pre">spin_lock_irq()</span></code> or
-<code class="xref c c-func docutils literal notranslate"><span class="pre">spin_lock_irqsave()</span></code> here, which stop hardware interrupts
+<p>Note that you can also use spin_lock_irq() or
+spin_lock_irqsave() here, which stop hardware interrupts
 as well: see <a class="reference external" href="#hard-irq-context">Hard IRQ Context</a>.</p>
 <p>This works perfectly for UP as well: the spin lock vanishes, and this
-macro simply becomes <code class="xref c c-func docutils literal notranslate"><span class="pre">local_bh_disable()</span></code>
+macro simply becomes local_bh_disable()
 (<code class="docutils literal notranslate"><span class="pre">include/linux/interrupt.h</span></code>), which protects you from the softirq
 being run.</p>
 </div>
@@ -371,8 +371,8 @@ on SMP.</p>
 <div class="section" id="different-tasklets-timers">
 <h4>Different Tasklets/Timers<a class="headerlink" href="#different-tasklets-timers" title="Permalink to this headline">¶</a></h4>
 <p>If another tasklet/timer wants to share data with your tasklet or timer
-, you will both need to use <code class="xref c c-func docutils literal notranslate"><span class="pre">spin_lock()</span></code> and
-<code class="xref c c-func docutils literal notranslate"><span class="pre">spin_unlock()</span></code> calls. <code class="xref c c-func docutils literal notranslate"><span class="pre">spin_lock_bh()</span></code> is
+, you will both need to use spin_lock() and
+spin_unlock() calls. spin_lock_bh() is
 unnecessary here, as you are already in a tasklet, and none will be run
 on the same CPU.</p>
 </div>
@@ -386,13 +386,13 @@ on the same CPU.</p>
 (see <a class="reference external" href="#per-cpu-data">Per-CPU Data</a>) for better performance. If you’re
 going so far as to use a softirq, you probably care about scalable
 performance enough to justify the extra complexity.</p>
-<p>You’ll need to use <code class="xref c c-func docutils literal notranslate"><span class="pre">spin_lock()</span></code> and
-<code class="xref c c-func docutils literal notranslate"><span class="pre">spin_unlock()</span></code> for shared data.</p>
+<p>You’ll need to use spin_lock() and
+spin_unlock() for shared data.</p>
 </div>
 <div class="section" id="different-softirqs">
 <h4>Different Softirqs<a class="headerlink" href="#different-softirqs" title="Permalink to this headline">¶</a></h4>
-<p>You’ll need to use <code class="xref c c-func docutils literal notranslate"><span class="pre">spin_lock()</span></code> and
-<code class="xref c c-func docutils literal notranslate"><span class="pre">spin_unlock()</span></code> for shared data, whether it be a timer,
+<p>You’ll need to use spin_lock() and
+spin_unlock() for shared data, whether it be a timer,
 tasklet, different softirq or the same or another softirq: any of them
 could be running on a different CPU.</p>
 </div>
@@ -409,33 +409,33 @@ take out.</p>
 concerns. Firstly, the softirq processing can be interrupted by a
 hardware interrupt, and secondly, the critical region could be entered
 by a hardware interrupt on another CPU. This is where
-<code class="xref c c-func docutils literal notranslate"><span class="pre">spin_lock_irq()</span></code> is used. It is defined to disable
+spin_lock_irq() is used. It is defined to disable
 interrupts on that cpu, then grab the lock.
-<code class="xref c c-func docutils literal notranslate"><span class="pre">spin_unlock_irq()</span></code> does the reverse.</p>
-<p>The irq handler does not to use <code class="xref c c-func docutils literal notranslate"><span class="pre">spin_lock_irq()</span></code>, because
+spin_unlock_irq() does the reverse.</p>
+<p>The irq handler does not need to use spin_lock_irq(), because
 the softirq cannot run while the irq handler is running: it can use
-<code class="xref c c-func docutils literal notranslate"><span class="pre">spin_lock()</span></code>, which is slightly faster. The only exception
+spin_lock(), which is slightly faster. The only exception
 would be if a different hardware irq handler uses the same lock:
-<code class="xref c c-func docutils literal notranslate"><span class="pre">spin_lock_irq()</span></code> will stop that from interrupting us.</p>
+spin_lock_irq() will stop that from interrupting us.</p>
 <p>This works perfectly for UP as well: the spin lock vanishes, and this
-macro simply becomes <code class="xref c c-func docutils literal notranslate"><span class="pre">local_irq_disable()</span></code>
+macro simply becomes local_irq_disable()
 (<code class="docutils literal notranslate"><span class="pre">include/asm/smp.h</span></code>), which protects you from the softirq/tasklet/BH
 being run.</p>
-<p><code class="xref c c-func docutils literal notranslate"><span class="pre">spin_lock_irqsave()</span></code> (<code class="docutils literal notranslate"><span class="pre">include/linux/spinlock.h</span></code>) is a
+<p>spin_lock_irqsave() (<code class="docutils literal notranslate"><span class="pre">include/linux/spinlock.h</span></code>) is a
 variant which saves whether interrupts were on or off in a flags word,
-which is passed to <code class="xref c c-func docutils literal notranslate"><span class="pre">spin_unlock_irqrestore()</span></code>. This means
+which is passed to spin_unlock_irqrestore(). This means
 that the same code can be used inside an hard irq handler (where
 interrupts are already off) and in softirqs (where the irq disabling is
 required).</p>
 <p>Note that softirqs (and hence tasklets and timers) are run on return
-from hardware interrupts, so <code class="xref c c-func docutils literal notranslate"><span class="pre">spin_lock_irq()</span></code> also stops
-these. In that sense, <code class="xref c c-func docutils literal notranslate"><span class="pre">spin_lock_irqsave()</span></code> is the most
+from hardware interrupts, so spin_lock_irq() also stops
+these. In that sense, spin_lock_irqsave() is the most
 general and powerful locking function.</p>
 </div>
 <div class="section" id="locking-between-two-hard-irq-handlers">
 <h3>Locking Between Two Hard IRQ Handlers<a class="headerlink" href="#locking-between-two-hard-irq-handlers" title="Permalink to this headline">¶</a></h3>
 <p>It is rare to have to share data between two IRQ handlers, but if you
-do, <code class="xref c c-func docutils literal notranslate"><span class="pre">spin_lock_irqsave()</span></code> should be used: it is
+do, spin_lock_irqsave() should be used: it is
 architecture-specific whether all interrupts are disabled inside irq
 handlers themselves.</p>
 </div>
@@ -448,10 +448,10 @@ handlers themselves.</p>
 process out, use a mutex. You can take a mutex and sleep
 (<code class="docutils literal notranslate"><span class="pre">copy_from_user*(</span></code> or <code class="docutils literal notranslate"><span class="pre">kmalloc(x,GFP_KERNEL)</span></code>).</li>
 <li>Otherwise (== data can be touched in an interrupt), use
-<code class="xref c c-func docutils literal notranslate"><span class="pre">spin_lock_irqsave()</span></code> and
-<code class="xref c c-func docutils literal notranslate"><span class="pre">spin_unlock_irqrestore()</span></code>.</li>
+spin_lock_irqsave() and
+spin_unlock_irqrestore().</li>
 <li>Avoid holding spinlock for more than 5 lines of code and across any
-function call (except accessors like <code class="xref c c-func docutils literal notranslate"><span class="pre">readb()</span></code>).</li>
+function call (except accessors like readb()).</li>
 </ul>
 <div class="section" id="table-of-minimum-requirements">
 <h3>Table of Minimum Requirements<a class="headerlink" href="#table-of-minimum-requirements" title="Permalink to this headline">¶</a></h3>
@@ -461,7 +461,7 @@ one CPU at a time, so no locking is required for that context (eg. a
 particular thread can only run on one CPU at a time, but if it needs
 shares data with another thread, locking is required).</p>
 <p>Remember the advice above: you can always use
-<code class="xref c c-func docutils literal notranslate"><span class="pre">spin_lock_irqsave()</span></code>, which is a superset of all other
+spin_lock_irqsave(), which is a superset of all other
 spinlock primitives.</p>
 <table border="1" class="docutils">
 <colgroup>
@@ -648,9 +648,9 @@ return a value telling about success or failure to acquire the lock.
 They can be used if you need no access to the data protected with the
 lock when some other thread is holding the lock. You should acquire the
 lock later if you then need access to the data protected with the lock.</p>
-<p><code class="xref c c-func docutils literal notranslate"><span class="pre">spin_trylock()</span></code> does not spin but returns non-zero if it
+<p>spin_trylock() does not spin but returns non-zero if it
 acquires the spinlock on the first try or 0 if not. This function can be
-used in all contexts like <code class="xref c c-func docutils literal notranslate"><span class="pre">spin_lock()</span></code>: you must have
+used in all contexts like spin_lock(): you must have
 disabled the contexts that might interrupt you and acquire the spin
 lock.</p>
 <p><a class="reference internal" href="../translations/it_IT/kernel-hacking/locking.html#c.mutex_trylock" title="mutex_trylock"><code class="xref c c-func docutils literal notranslate"><span class="pre">mutex_trylock()</span></code></a> does not suspend your task but returns
@@ -770,13 +770,13 @@ the contents of the objects are protected by the lock. In this case it’s
 easy, since we copy the data for the user, and never let them access the
 objects directly.</p>
 <p>There is a slight (and common) optimization here: in
-<code class="xref c c-func docutils literal notranslate"><span class="pre">cache_add()</span></code> we set up the fields of the object before
+cache_add() we set up the fields of the object before
 grabbing the lock. This is safe, as no-one else can access it until we
 put it in cache.</p>
 </div>
 <div class="section" id="accessing-from-interrupt-context">
 <h3>Accessing From Interrupt Context<a class="headerlink" href="#accessing-from-interrupt-context" title="Permalink to this headline">¶</a></h3>
-<p>Now consider the case where <code class="xref c c-func docutils literal notranslate"><span class="pre">cache_find()</span></code> can be called
+<p>Now consider the case where cache_find() can be called
 from interrupt context: either a hardware interrupt or a softirq. An
 example would be a timer which deletes object from the cache.</p>
 <p>The change is shown below, in standard patch format: the <code class="docutils literal notranslate"><span class="pre">-</span></code> are lines
@@ -842,15 +842,15 @@ which are taken away, and the <code class="docutils literal notranslate"><span c
  }
 </pre></div>
 </div>
-<p>Note that the <code class="xref c c-func docutils literal notranslate"><span class="pre">spin_lock_irqsave()</span></code> will turn off
+<p>Note that the spin_lock_irqsave() will turn off
 interrupts if they are on, otherwise does nothing (if we are already in
 an interrupt handler), hence these functions are safe to call from any
 context.</p>
-<p>Unfortunately, <code class="xref c c-func docutils literal notranslate"><span class="pre">cache_add()</span></code> calls <a class="reference internal" href="../core-api/mm-api.html#c.kmalloc" title="kmalloc"><code class="xref c c-func docutils literal notranslate"><span class="pre">kmalloc()</span></code></a>
+<p>Unfortunately, cache_add() calls <a class="reference internal" href="../core-api/mm-api.html#c.kmalloc" title="kmalloc"><code class="xref c c-func docutils literal notranslate"><span class="pre">kmalloc()</span></code></a>
 with the <code class="docutils literal notranslate"><span class="pre">GFP_KERNEL</span></code> flag, which is only legal in user context. I
-have assumed that <code class="xref c c-func docutils literal notranslate"><span class="pre">cache_add()</span></code> is still only called in
+have assumed that cache_add() is still only called in
 user context, otherwise this should become a parameter to
-<code class="xref c c-func docutils literal notranslate"><span class="pre">cache_add()</span></code>.</p>
+cache_add().</p>
 </div>
 <div class="section" id="exposing-objects-outside-this-file">
 <h3>Exposing Objects Outside This File<a class="headerlink" href="#exposing-objects-outside-this-file" title="Permalink to this headline">¶</a></h3>
@@ -864,7 +864,7 @@ This makes locking trickier, as it is no longer all in one place.</p>
 <p>The second problem is the lifetime problem: if another structure keeps a
 pointer to an object, it presumably expects that pointer to remain
 valid. Unfortunately, this is only guaranteed while you hold the lock,
-otherwise someone might call <code class="xref c c-func docutils literal notranslate"><span class="pre">cache_delete()</span></code> and even
+otherwise someone might call cache_delete() and even
 worse, add another object, re-using the same address.</p>
 <p>As there is only one lock, you can’t hold it forever: no-one else would
 get any work done.</p>
@@ -962,8 +962,8 @@ drops it to zero knows it is unused, and can actually delete it.</p>
 </div>
 <p>We encapsulate the reference counting in the standard ‘get’ and ‘put’
 functions. Now we can return the object itself from
-<code class="xref c c-func docutils literal notranslate"><span class="pre">cache_find()</span></code> which has the advantage that the user can
-now sleep holding the object (eg. to <code class="xref c c-func docutils literal notranslate"><span class="pre">copy_to_user()</span></code> to
+cache_find() which has the advantage that the user can
+now sleep holding the object (eg. to copy_to_user() to
 name to userspace).</p>
 <p>The other point to note is that I said a reference should be held for
 every pointer to the object: thus the reference count is 1 when first
@@ -976,7 +976,7 @@ number of atomic operations defined in <code class="docutils literal notranslate
 are guaranteed to be seen atomically from all CPUs in the system, so no
 lock is required. In this case, it is simpler than using spinlocks,
 although for anything non-trivial using spinlocks is clearer. The
-<code class="xref c c-func docutils literal notranslate"><span class="pre">atomic_inc()</span></code> and <code class="xref c c-func docutils literal notranslate"><span class="pre">atomic_dec_and_test()</span></code>
+atomic_inc() and atomic_dec_and_test()
 are used instead of the standard increment and decrement operators, and
 the lock is no longer used to protect the reference count itself.</p>
 <div class="highlight-none notranslate"><div class="highlight"><pre><span></span>--- cache.c.refcnt  2003-12-09 15:00:35.000000000 +1100
@@ -1066,7 +1066,7 @@ name to change, there are three possibilities:</p>
 <ul class="simple">
 <li>You can make <code class="docutils literal notranslate"><span class="pre">cache_lock</span></code> non-static, and tell people to grab that
 lock before changing the name in any object.</li>
-<li>You can provide a <code class="xref c c-func docutils literal notranslate"><span class="pre">cache_obj_rename()</span></code> which grabs this
+<li>You can provide a cache_obj_rename() which grabs this
 lock and changes the name for the caller, and tell everyone to use
 that function.</li>
 <li>You can make the <code class="docutils literal notranslate"><span class="pre">cache_lock</span></code> protect only the cache itself, and
@@ -1120,10 +1120,10 @@ chain), possibly with a separate per-object lock.</li>
 <code class="docutils literal notranslate"><span class="pre">cache_lock</span></code> rather than the per-object lock: this is because it (like
 the <code class="xref c c-type docutils literal notranslate"><span class="pre">struct</span> <span class="pre">list_head</span></code> inside the object)
 is logically part of the infrastructure. This way, I don’t need to grab
-the lock of every object in <code class="xref c c-func docutils literal notranslate"><span class="pre">__cache_add()</span></code> when seeking
+the lock of every object in __cache_add() when seeking
 the least popular.</p>
 <p>I also decided that the id member is unchangeable, so I don’t need to
-grab each object lock in <code class="xref c c-func docutils literal notranslate"><span class="pre">__cache_find()</span></code> to examine the
+grab each object lock in __cache_find() to examine the
 id: the object lock is only used by a caller who wants to read or write
 the name field.</p>
 <p>Note also that I added a comment describing what data was protected by
@@ -1142,7 +1142,7 @@ twice: it will spin forever, waiting for the lock to be released
 trivial to diagnose: not a
 stay-up-five-nights-talk-to-fluffy-code-bunnies kind of problem.</p>
 <p>For a slightly more complex case, imagine you have a region shared by a
-softirq and user context. If you use a <code class="xref c c-func docutils literal notranslate"><span class="pre">spin_lock()</span></code> call
+softirq and user context. If you use a spin_lock() call
 to protect it, it is possible that the user context will be interrupted
 by the softirq while it holds the lock, and the softirq will then spin
 forever trying to get the same lock.</p>
@@ -1237,8 +1237,8 @@ spin_unlock_bh(&amp;list_lock);
 </pre></div>
 </div>
 <p>Sooner or later, this will crash on SMP, because a timer can have just
-gone off before the <code class="xref c c-func docutils literal notranslate"><span class="pre">spin_lock_bh()</span></code>, and it will only get
-the lock after we <code class="xref c c-func docutils literal notranslate"><span class="pre">spin_unlock_bh()</span></code>, and then try to free
+gone off before the spin_lock_bh(), and it will only get
+the lock after we spin_unlock_bh(), and then try to free
 the element (which has already been freed!).</p>
 <p>This can be avoided by checking the result of
 <a class="reference internal" href="../driver-api/basics.html#c.del_timer" title="del_timer"><code class="xref c c-func docutils literal notranslate"><span class="pre">del_timer()</span></code></a>: if it returns 1, the timer has been deleted.
@@ -1326,7 +1326,7 @@ wmb();
 list-&gt;next = new;
 </pre></div>
 </div>
-<p>The <code class="xref c c-func docutils literal notranslate"><span class="pre">wmb()</span></code> is a write memory barrier. It ensures that the
+<p>The wmb() is a write memory barrier. It ensures that the
 first operation (setting the new element’s <code class="docutils literal notranslate"><span class="pre">next</span></code> pointer) is complete
 and will be seen by all CPUs, before the second operation is (putting
 the new element into the list). This is important, since modern
@@ -1452,11 +1452,11 @@ this is the fundamental idea.</p>
 </pre></div>
 </div>
 <p>Note that the reader will alter the popularity member in
-<code class="xref c c-func docutils literal notranslate"><span class="pre">__cache_find()</span></code>, and now it doesn’t hold a lock. One
+__cache_find(), and now it doesn’t hold a lock. One
 solution would be to make it an <code class="docutils literal notranslate"><span class="pre">atomic_t</span></code>, but for this usage, we
 don’t really care about races: an approximate result is good enough, so
 I didn’t change it.</p>
-<p>The result is that <code class="xref c c-func docutils literal notranslate"><span class="pre">cache_find()</span></code> requires no
+<p>The result is that cache_find() requires no
 synchronization with any other functions, so is almost as fast on SMP as
 it would be on UP.</p>
 <p>There is a further optimization possible here: remember our original
@@ -1466,9 +1466,9 @@ hold the lock, no one can delete the object, so you don’t need to get
 and put the reference count.</p>
 <p>Now, because the ‘read lock’ in RCU is simply disabling preemption, a
 caller which always has preemption disabled between calling
-<code class="xref c c-func docutils literal notranslate"><span class="pre">cache_find()</span></code> and <code class="xref c c-func docutils literal notranslate"><span class="pre">object_put()</span></code> does not
+cache_find() and object_put() does not
 need to actually get and put the reference count: we could expose
-<code class="xref c c-func docutils literal notranslate"><span class="pre">__cache_find()</span></code> by making it non-static, and such
+__cache_find() by making it non-static, and such
 callers could simply call that.</p>
 <p>The benefit here is that the reference count is not written to: the
 object is not altered in any way, which is much faster on SMP machines
@@ -1483,10 +1483,10 @@ counter. Nice and simple.</p>
 <p>If that was too slow (it’s usually not, but if you’ve got a really big
 machine to test on and can show that it is), you could instead use a
 counter for each CPU, then none of them need an exclusive lock. See
-<code class="xref c c-func docutils literal notranslate"><span class="pre">DEFINE_PER_CPU()</span></code>, <code class="xref c c-func docutils literal notranslate"><span class="pre">get_cpu_var()</span></code> and
-<code class="xref c c-func docutils literal notranslate"><span class="pre">put_cpu_var()</span></code> (<code class="docutils literal notranslate"><span class="pre">include/linux/percpu.h</span></code>).</p>
+DEFINE_PER_CPU(), get_cpu_var() and
+put_cpu_var() (<code class="docutils literal notranslate"><span class="pre">include/linux/percpu.h</span></code>).</p>
 <p>Of particular use for simple per-cpu counters is the <code class="docutils literal notranslate"><span class="pre">local_t</span></code> type,
-and the <code class="xref c c-func docutils literal notranslate"><span class="pre">cpu_local_inc()</span></code> and related functions, which are
+and the cpu_local_inc() and related functions, which are
 more efficient than simple code on some architectures
 (<code class="docutils literal notranslate"><span class="pre">include/asm/local.h</span></code>).</p>
 <p>Note that there is no simple, reliable way of getting an exact value of
@@ -1511,7 +1511,7 @@ spin_unlock(&amp;lock);
 <p>The <a class="reference internal" href="../core-api/kernel-api.html#c.disable_irq" title="disable_irq"><code class="xref c c-func docutils literal notranslate"><span class="pre">disable_irq()</span></code></a> prevents the irq handler from running
 (and waits for it to finish if it’s currently running on other CPUs).
 The spinlock prevents any other accesses happening at the same time.
-Naturally, this is slower than just a <code class="xref c c-func docutils literal notranslate"><span class="pre">spin_lock_irq()</span></code>
+Naturally, this is slower than just a spin_lock_irq()
 call, so it only makes sense if this type of access happens extremely
 rarely.</p>
 </div>
@@ -1532,13 +1532,13 @@ from user context, and can sleep.</p>
 <ul>
 <li><p class="first">Accesses to userspace:</p>
 <ul class="simple">
-<li><code class="xref c c-func docutils literal notranslate"><span class="pre">copy_from_user()</span></code></li>
-<li><code class="xref c c-func docutils literal notranslate"><span class="pre">copy_to_user()</span></code></li>
+<li>copy_from_user()</li>
+<li>copy_to_user()</li>
 <li><a class="reference internal" href="../core-api/mm-api.html#c.get_user" title="get_user"><code class="xref c c-func docutils literal notranslate"><span class="pre">get_user()</span></code></a></li>
 <li><a class="reference internal" href="../core-api/mm-api.html#c.put_user" title="put_user"><code class="xref c c-func docutils literal notranslate"><span class="pre">put_user()</span></code></a></li>
 </ul>
 </li>
-<li><p class="first"><a class="reference internal" href="../core-api/mm-api.html#c.kmalloc" title="kmalloc"><code class="xref c c-func docutils literal notranslate"><span class="pre">kmalloc(GFP_KERNEL)</span></code></a></p>
+<li><p class="first">kmalloc(GP_KERNEL) &lt;kmalloc&gt;`</p>
 </li>
 <li><p class="first"><a class="reference internal" href="../translations/it_IT/kernel-hacking/locking.html#c.mutex_lock_interruptible" title="mutex_lock_interruptible"><code class="xref c c-func docutils literal notranslate"><span class="pre">mutex_lock_interruptible()</span></code></a> and
 <a class="reference internal" href="../translations/it_IT/kernel-hacking/locking.html#c.mutex_lock" title="mutex_lock"><code class="xref c c-func docutils literal notranslate"><span class="pre">mutex_lock()</span></code></a></p>
@@ -2391,22 +2391,22 @@ priority tasks can “cut in”: spinlocks were changed to disable
 preemption, even on UP.</dd>
 <dt>bh</dt>
 <dd>Bottom Half: for historical reasons, functions with ‘_bh’ in them often
-now refer to any software interrupt, e.g. <code class="xref c c-func docutils literal notranslate"><span class="pre">spin_lock_bh()</span></code>
+now refer to any software interrupt, e.g. spin_lock_bh()
 blocks any software interrupt on the current CPU. Bottom halves are
 deprecated, and will eventually be replaced by tasklets. Only one bottom
 half will be running at any time.</dd>
 <dt>Hardware Interrupt / Hardware IRQ</dt>
-<dd>Hardware interrupt request. <code class="xref c c-func docutils literal notranslate"><span class="pre">in_irq()</span></code> returns true in a
+<dd>Hardware interrupt request. in_irq() returns true in a
 hardware interrupt handler.</dd>
 <dt>Interrupt Context</dt>
 <dd>Not user context: processing a hardware irq or software irq. Indicated
-by the <code class="xref c c-func docutils literal notranslate"><span class="pre">in_interrupt()</span></code> macro returning true.</dd>
+by the in_interrupt() macro returning true.</dd>
 <dt>SMP</dt>
 <dd>Symmetric Multi-Processor: kernels compiled for multiple-CPU machines.
 (<code class="docutils literal notranslate"><span class="pre">CONFIG_SMP=y</span></code>).</dd>
 <dt>Software Interrupt / softirq</dt>
-<dd><p class="first">Software interrupt handler. <code class="xref c c-func docutils literal notranslate"><span class="pre">in_irq()</span></code> returns false;
-<code class="xref c c-func docutils literal notranslate"><span class="pre">in_softirq()</span></code> returns true. Tasklets and softirqs both
+<dd><p class="first">Software interrupt handler. in_irq() returns false;
+in_softirq() returns true. Tasklets and softirqs both
 fall into the category of ‘software interrupts’.</p>
 <p class="last">Strictly speaking a softirq is one of up to 32 enumerated software
 interrupts which can run on multiple CPUs at once. Sometimes used to

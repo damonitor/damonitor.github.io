@@ -68,7 +68,7 @@
             
             
               <div class="version">
-                5.6.0
+                5.7.0
               </div>
             
           
@@ -244,68 +244,61 @@ recommended drivers are not required to implement this ioctl.</p>
 <table border="1" class="docutils" id="id1">
 <caption><span class="caption-text">struct v4l2_format</span><a class="headerlink" href="#id1" title="Permalink to this table">¶</a></caption>
 <colgroup>
-<col width="25%" />
-<col width="25%" />
-<col width="25%" />
-<col width="25%" />
+<col width="33%" />
+<col width="33%" />
+<col width="33%" />
 </colgroup>
 <tbody valign="top">
 <tr class="row-odd"><td>__u32</td>
 <td><code class="docutils literal notranslate"><span class="pre">type</span></code></td>
-<td>&#160;</td>
 <td>Type of the data stream, see <a class="reference internal" href="buffer.html#c.v4l2_buf_type" title="v4l2_buf_type"><code class="xref c c-type docutils literal notranslate"><span class="pre">v4l2_buf_type</span></code></a>.</td>
 </tr>
-<tr class="row-even"><td>union</td>
-<td colspan="3"><code class="docutils literal notranslate"><span class="pre">fmt</span></code></td>
+<tr class="row-even"><td>union {</td>
+<td colspan="2"><code class="docutils literal notranslate"><span class="pre">fmt</span></code></td>
 </tr>
-<tr class="row-odd"><td>&#160;</td>
-<td>struct <a class="reference internal" href="pixfmt-v4l2.html#c.v4l2_pix_format" title="v4l2_pix_format"><code class="xref c c-type docutils literal notranslate"><span class="pre">v4l2_pix_format</span></code></a></td>
+<tr class="row-odd"><td>struct <a class="reference internal" href="pixfmt-v4l2.html#c.v4l2_pix_format" title="v4l2_pix_format"><code class="xref c c-type docutils literal notranslate"><span class="pre">v4l2_pix_format</span></code></a></td>
 <td><code class="docutils literal notranslate"><span class="pre">pix</span></code></td>
 <td>Definition of an image format, see <a class="reference internal" href="pixfmt.html#pixfmt"><span class="std std-ref">Image Formats</span></a>, used by video
 capture and output devices.</td>
 </tr>
-<tr class="row-even"><td>&#160;</td>
-<td>struct <a class="reference internal" href="pixfmt-v4l2-mplane.html#c.v4l2_pix_format_mplane" title="v4l2_pix_format_mplane"><code class="xref c c-type docutils literal notranslate"><span class="pre">v4l2_pix_format_mplane</span></code></a></td>
+<tr class="row-even"><td>struct <a class="reference internal" href="pixfmt-v4l2-mplane.html#c.v4l2_pix_format_mplane" title="v4l2_pix_format_mplane"><code class="xref c c-type docutils literal notranslate"><span class="pre">v4l2_pix_format_mplane</span></code></a></td>
 <td><code class="docutils literal notranslate"><span class="pre">pix_mp</span></code></td>
 <td>Definition of an image format, see <a class="reference internal" href="pixfmt.html#pixfmt"><span class="std std-ref">Image Formats</span></a>, used by video
 capture and output devices that support the
 <a class="reference internal" href="planar-apis.html#planar-apis"><span class="std std-ref">multi-planar version of the API</span></a>.</td>
 </tr>
-<tr class="row-odd"><td>&#160;</td>
-<td>struct <a class="reference internal" href="dev-overlay.html#c.v4l2_window" title="v4l2_window"><code class="xref c c-type docutils literal notranslate"><span class="pre">v4l2_window</span></code></a></td>
+<tr class="row-odd"><td>struct <a class="reference internal" href="dev-overlay.html#c.v4l2_window" title="v4l2_window"><code class="xref c c-type docutils literal notranslate"><span class="pre">v4l2_window</span></code></a></td>
 <td><code class="docutils literal notranslate"><span class="pre">win</span></code></td>
 <td>Definition of an overlaid image, see <a class="reference internal" href="dev-overlay.html#overlay"><span class="std std-ref">Video Overlay Interface</span></a>, used by
 video overlay devices.</td>
 </tr>
-<tr class="row-even"><td>&#160;</td>
-<td>struct <a class="reference internal" href="dev-raw-vbi.html#c.v4l2_vbi_format" title="v4l2_vbi_format"><code class="xref c c-type docutils literal notranslate"><span class="pre">v4l2_vbi_format</span></code></a></td>
+<tr class="row-even"><td>struct <a class="reference internal" href="dev-raw-vbi.html#c.v4l2_vbi_format" title="v4l2_vbi_format"><code class="xref c c-type docutils literal notranslate"><span class="pre">v4l2_vbi_format</span></code></a></td>
 <td><code class="docutils literal notranslate"><span class="pre">vbi</span></code></td>
 <td>Raw VBI capture or output parameters. This is discussed in more
 detail in <a class="reference internal" href="dev-raw-vbi.html#raw-vbi"><span class="std std-ref">Raw VBI Data Interface</span></a>. Used by raw VBI capture and output
 devices.</td>
 </tr>
-<tr class="row-odd"><td>&#160;</td>
-<td>struct <a class="reference internal" href="dev-sliced-vbi.html#c.v4l2_sliced_vbi_format" title="v4l2_sliced_vbi_format"><code class="xref c c-type docutils literal notranslate"><span class="pre">v4l2_sliced_vbi_format</span></code></a></td>
+<tr class="row-odd"><td>struct <a class="reference internal" href="dev-sliced-vbi.html#c.v4l2_sliced_vbi_format" title="v4l2_sliced_vbi_format"><code class="xref c c-type docutils literal notranslate"><span class="pre">v4l2_sliced_vbi_format</span></code></a></td>
 <td><code class="docutils literal notranslate"><span class="pre">sliced</span></code></td>
 <td>Sliced VBI capture or output parameters. See <a class="reference internal" href="dev-sliced-vbi.html#sliced"><span class="std std-ref">Sliced VBI Data Interface</span></a> for
 details. Used by sliced VBI capture and output devices.</td>
 </tr>
-<tr class="row-even"><td>&#160;</td>
-<td>struct <a class="reference internal" href="dev-sdr.html#c.v4l2_sdr_format" title="v4l2_sdr_format"><code class="xref c c-type docutils literal notranslate"><span class="pre">v4l2_sdr_format</span></code></a></td>
+<tr class="row-even"><td>struct <a class="reference internal" href="dev-sdr.html#c.v4l2_sdr_format" title="v4l2_sdr_format"><code class="xref c c-type docutils literal notranslate"><span class="pre">v4l2_sdr_format</span></code></a></td>
 <td><code class="docutils literal notranslate"><span class="pre">sdr</span></code></td>
 <td>Definition of a data format, see <a class="reference internal" href="pixfmt.html#pixfmt"><span class="std std-ref">Image Formats</span></a>, used by SDR
 capture and output devices.</td>
 </tr>
-<tr class="row-odd"><td>&#160;</td>
-<td>struct <a class="reference internal" href="dev-meta.html#c.v4l2_meta_format" title="v4l2_meta_format"><code class="xref c c-type docutils literal notranslate"><span class="pre">v4l2_meta_format</span></code></a></td>
+<tr class="row-odd"><td>struct <a class="reference internal" href="dev-meta.html#c.v4l2_meta_format" title="v4l2_meta_format"><code class="xref c c-type docutils literal notranslate"><span class="pre">v4l2_meta_format</span></code></a></td>
 <td><code class="docutils literal notranslate"><span class="pre">meta</span></code></td>
 <td>Definition of a metadata format, see <a class="reference internal" href="meta-formats.html#meta-formats"><span class="std std-ref">Metadata Formats</span></a>, used by
 metadata capture devices.</td>
 </tr>
-<tr class="row-even"><td>&#160;</td>
-<td>__u8</td>
+<tr class="row-even"><td>__u8</td>
 <td><code class="docutils literal notranslate"><span class="pre">raw_data</span></code>[200]</td>
 <td>Place holder for future extensions.</td>
+</tr>
+<tr class="row-odd"><td>}</td>
+<td colspan="2">&#160;</td>
 </tr>
 </tbody>
 </table>

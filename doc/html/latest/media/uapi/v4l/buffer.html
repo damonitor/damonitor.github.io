@@ -68,7 +68,7 @@
             
             
               <div class="version">
-                5.6.0
+                5.7.0
               </div>
             
           
@@ -309,15 +309,13 @@ of appropriately sized buffers for each use case).</p>
 <table border="1" class="longtable docutils" id="id3">
 <caption><span class="caption-text">struct v4l2_buffer</span><a class="headerlink" href="#id3" title="Permalink to this table">¶</a></caption>
 <colgroup>
-<col width="7%" />
-<col width="14%" />
-<col width="7%" />
-<col width="71%" />
+<col width="8%" />
+<col width="15%" />
+<col width="77%" />
 </colgroup>
 <tbody valign="top">
 <tr class="row-odd"><td>__u32</td>
 <td><code class="docutils literal notranslate"><span class="pre">index</span></code></td>
-<td>&#160;</td>
 <td>Number of the buffer, set by the application except when calling
 <a class="reference internal" href="vidioc-qbuf.html#vidioc-qbuf"><span class="std std-ref">VIDIOC_DQBUF</span></a>, then it is set by the
 driver. This field can range from zero to the number of buffers
@@ -328,7 +326,6 @@ allocated with the <a class="reference internal" href="vidioc-reqbufs.html#vidio
 </tr>
 <tr class="row-even"><td>__u32</td>
 <td><code class="docutils literal notranslate"><span class="pre">type</span></code></td>
-<td>&#160;</td>
 <td>Type of the buffer, same as struct
 <a class="reference internal" href="vidioc-g-fmt.html#c.v4l2_format" title="v4l2_format"><code class="xref c c-type docutils literal notranslate"><span class="pre">v4l2_format</span></code></a> <code class="docutils literal notranslate"><span class="pre">type</span></code> or struct
 <a class="reference internal" href="vidioc-reqbufs.html#c.v4l2_requestbuffers" title="v4l2_requestbuffers"><code class="xref c c-type docutils literal notranslate"><span class="pre">v4l2_requestbuffers</span></code></a> <code class="docutils literal notranslate"><span class="pre">type</span></code>, set
@@ -336,7 +333,6 @@ by the application. See <a class="reference internal" href="#c.v4l2_buf_type" ti
 </tr>
 <tr class="row-odd"><td>__u32</td>
 <td><code class="docutils literal notranslate"><span class="pre">bytesused</span></code></td>
-<td>&#160;</td>
 <td>The number of bytes occupied by the data in the buffer. It depends
 on the negotiated data format and may change with each buffer for
 compressed variable size data like JPEG images. Drivers must set
@@ -349,12 +345,10 @@ the driver. For multiplanar formats this field is ignored and the
 </tr>
 <tr class="row-even"><td>__u32</td>
 <td><code class="docutils literal notranslate"><span class="pre">flags</span></code></td>
-<td>&#160;</td>
 <td>Flags set by the application or driver, see <a class="reference internal" href="#buffer-flags"><span class="std std-ref">Buffer Flags</span></a>.</td>
 </tr>
 <tr class="row-odd"><td>__u32</td>
 <td><code class="docutils literal notranslate"><span class="pre">field</span></code></td>
-<td>&#160;</td>
 <td>Indicates the field order of the image in the buffer, see
 <a class="reference internal" href="field-order.html#c.v4l2_field" title="v4l2_field"><code class="xref c c-type docutils literal notranslate"><span class="pre">v4l2_field</span></code></a>. This field is not used when the buffer
 contains VBI data. Drivers must set it when <code class="docutils literal notranslate"><span class="pre">type</span></code> refers to a
@@ -362,7 +356,6 @@ capture stream, applications when it refers to an output stream.</td>
 </tr>
 <tr class="row-even"><td>struct timeval</td>
 <td><code class="docutils literal notranslate"><span class="pre">timestamp</span></code></td>
-<td>&#160;</td>
 <td>For capture streams this is time when the first data byte was
 captured, as returned by the <code class="xref c c-func docutils literal notranslate"><span class="pre">clock_gettime()</span></code> function
 for the relevant clock id; see <code class="docutils literal notranslate"><span class="pre">V4L2_BUF_FLAG_TIMESTAMP_*</span></code> in
@@ -376,7 +369,6 @@ stream.</td>
 </tr>
 <tr class="row-odd"><td>struct <a class="reference internal" href="#c.v4l2_timecode" title="v4l2_timecode"><code class="xref c c-type docutils literal notranslate"><span class="pre">v4l2_timecode</span></code></a></td>
 <td><code class="docutils literal notranslate"><span class="pre">timecode</span></code></td>
-<td>&#160;</td>
 <td>When the <code class="docutils literal notranslate"><span class="pre">V4L2_BUF_FLAG_TIMECODE</span></code> flag is set in <code class="docutils literal notranslate"><span class="pre">flags</span></code>, this
 structure contains a frame timecode. In
 <a class="reference internal" href="field-order.html#c.v4l2_field" title="v4l2_field"><code class="xref c c-type docutils literal notranslate"><span class="pre">V4L2_FIELD_ALTERNATE</span></code></a> mode the top and
@@ -387,11 +379,10 @@ independent of the <code class="docutils literal notranslate"><span class="pre">
 </tr>
 <tr class="row-even"><td>__u32</td>
 <td><code class="docutils literal notranslate"><span class="pre">sequence</span></code></td>
-<td>&#160;</td>
 <td>Set by the driver, counting the frames (not fields!) in sequence.
 This field is set for both input and output devices.</td>
 </tr>
-<tr class="row-odd"><td colspan="4"><p class="first"></p>
+<tr class="row-odd"><td colspan="3"><p class="first"></p>
 <p>In <a class="reference internal" href="field-order.html#c.v4l2_field" title="v4l2_field"><code class="xref c c-type docutils literal notranslate"><span class="pre">V4L2_FIELD_ALTERNATE</span></code></a> mode the top and
 bottom field have the same sequence number. The count starts at
 zero and includes dropped or repeated frames. A dropped frame was
@@ -411,15 +402,13 @@ identify by not enumerating any video standards, see
 </tr>
 <tr class="row-even"><td>__u32</td>
 <td><code class="docutils literal notranslate"><span class="pre">memory</span></code></td>
-<td>&#160;</td>
 <td>This field must be set by applications and/or drivers in
 accordance with the selected I/O method. See <a class="reference internal" href="#c.v4l2_memory" title="v4l2_memory"><code class="xref c c-type docutils literal notranslate"><span class="pre">v4l2_memory</span></code></a></td>
 </tr>
-<tr class="row-odd"><td>union</td>
-<td colspan="3"><code class="docutils literal notranslate"><span class="pre">m</span></code></td>
+<tr class="row-odd"><td>union {</td>
+<td colspan="2"><code class="docutils literal notranslate"><span class="pre">m</span></code></td>
 </tr>
-<tr class="row-even"><td>&#160;</td>
-<td>__u32</td>
+<tr class="row-even"><td>__u32</td>
 <td><code class="docutils literal notranslate"><span class="pre">offset</span></code></td>
 <td>For the single-planar API and when <code class="docutils literal notranslate"><span class="pre">memory</span></code> is
 <code class="docutils literal notranslate"><span class="pre">V4L2_MEMORY_MMAP</span></code> this is the offset of the buffer from the
@@ -428,32 +417,31 @@ and apart of serving as parameter to the
 <a class="reference internal" href="func-mmap.html#func-mmap"><span class="std std-ref">mmap()</span></a> function not useful for applications.
 See <a class="reference internal" href="mmap.html#mmap"><span class="std std-ref">Streaming I/O (Memory Mapping)</span></a> for details</td>
 </tr>
-<tr class="row-odd"><td>&#160;</td>
-<td>unsigned long</td>
+<tr class="row-odd"><td>unsigned long</td>
 <td><code class="docutils literal notranslate"><span class="pre">userptr</span></code></td>
 <td>For the single-planar API and when <code class="docutils literal notranslate"><span class="pre">memory</span></code> is
 <code class="docutils literal notranslate"><span class="pre">V4L2_MEMORY_USERPTR</span></code> this is a pointer to the buffer (casted to
 unsigned long type) in virtual memory, set by the application. See
 <a class="reference internal" href="userp.html#userp"><span class="std std-ref">Streaming I/O (User Pointers)</span></a> for details.</td>
 </tr>
-<tr class="row-even"><td>&#160;</td>
-<td>struct v4l2_plane</td>
+<tr class="row-even"><td>struct v4l2_plane</td>
 <td><code class="docutils literal notranslate"><span class="pre">*planes</span></code></td>
 <td>When using the multi-planar API, contains a userspace pointer to
 an array of struct <a class="reference internal" href="#c.v4l2_plane" title="v4l2_plane"><code class="xref c c-type docutils literal notranslate"><span class="pre">v4l2_plane</span></code></a>. The size of
 the array should be put in the <code class="docutils literal notranslate"><span class="pre">length</span></code> field of this
 struct <a class="reference internal" href="#c.v4l2_buffer" title="v4l2_buffer"><code class="xref c c-type docutils literal notranslate"><span class="pre">v4l2_buffer</span></code></a> structure.</td>
 </tr>
-<tr class="row-odd"><td>&#160;</td>
-<td>int</td>
+<tr class="row-odd"><td>int</td>
 <td><code class="docutils literal notranslate"><span class="pre">fd</span></code></td>
 <td>For the single-plane API and when <code class="docutils literal notranslate"><span class="pre">memory</span></code> is
 <code class="docutils literal notranslate"><span class="pre">V4L2_MEMORY_DMABUF</span></code> this is the file descriptor associated with
 a DMABUF buffer.</td>
 </tr>
-<tr class="row-even"><td>__u32</td>
+<tr class="row-even"><td>}</td>
+<td colspan="2">&#160;</td>
+</tr>
+<tr class="row-odd"><td>__u32</td>
 <td><code class="docutils literal notranslate"><span class="pre">length</span></code></td>
-<td>&#160;</td>
 <td>Size of the buffer (not the payload) in bytes for the
 single-planar API. This is set by the driver based on the calls to
 <a class="reference internal" href="vidioc-reqbufs.html#vidioc-reqbufs"><span class="std std-ref">ioctl VIDIOC_REQBUFS</span></a> and/or
@@ -462,15 +450,13 @@ multi-planar API the application sets this to the number of
 elements in the <code class="docutils literal notranslate"><span class="pre">planes</span></code> array. The driver will fill in the
 actual number of valid elements in that array.</td>
 </tr>
-<tr class="row-odd"><td>__u32</td>
+<tr class="row-even"><td>__u32</td>
 <td><code class="docutils literal notranslate"><span class="pre">reserved2</span></code></td>
-<td>&#160;</td>
 <td>A place holder for future extensions. Drivers and applications
 must set this to 0.</td>
 </tr>
-<tr class="row-even"><td>__u32</td>
+<tr class="row-odd"><td>__u32</td>
 <td><code class="docutils literal notranslate"><span class="pre">request_fd</span></code></td>
-<td>&#160;</td>
 <td><p class="first">The file descriptor of the request to queue the buffer to. If the flag
 <code class="docutils literal notranslate"><span class="pre">V4L2_BUF_FLAG_REQUEST_FD</span></code> is set, then the buffer will be
 queued to this request. If the flag is not set, then this field will
@@ -497,15 +483,13 @@ given, then <code class="docutils literal notranslate"><span class="pre">EINVAL<
 <h2>3.6.3. struct v4l2_plane<a class="headerlink" href="#struct-v4l2-plane" title="Permalink to this headline">¶</a></h2>
 <table border="1" class="longtable docutils">
 <colgroup>
-<col width="20%" />
-<col width="20%" />
-<col width="20%" />
-<col width="40%" />
+<col width="25%" />
+<col width="25%" />
+<col width="50%" />
 </colgroup>
 <tbody valign="top">
 <tr class="row-odd"><td>__u32</td>
 <td><code class="docutils literal notranslate"><span class="pre">bytesused</span></code></td>
-<td>&#160;</td>
 <td><p class="first">The number of bytes occupied by data in the plane (its payload).
 Drivers must set this field when <code class="docutils literal notranslate"><span class="pre">type</span></code> refers to a capture
 stream, applications when it refers to an output stream. If the
@@ -521,19 +505,15 @@ which may not be 0.</p>
 </tr>
 <tr class="row-even"><td>__u32</td>
 <td><code class="docutils literal notranslate"><span class="pre">length</span></code></td>
-<td>&#160;</td>
 <td>Size in bytes of the plane (not its payload). This is set by the
 driver based on the calls to
 <a class="reference internal" href="vidioc-reqbufs.html#vidioc-reqbufs"><span class="std std-ref">ioctl VIDIOC_REQBUFS</span></a> and/or
 <a class="reference internal" href="vidioc-create-bufs.html#vidioc-create-bufs"><span class="std std-ref">ioctl VIDIOC_CREATE_BUFS</span></a>.</td>
 </tr>
-<tr class="row-odd"><td>union</td>
-<td><code class="docutils literal notranslate"><span class="pre">m</span></code></td>
-<td>&#160;</td>
-<td>&#160;</td>
+<tr class="row-odd"><td>union {</td>
+<td colspan="2"><code class="docutils literal notranslate"><span class="pre">m</span></code></td>
 </tr>
-<tr class="row-even"><td>&#160;</td>
-<td>__u32</td>
+<tr class="row-even"><td>__u32</td>
 <td><code class="docutils literal notranslate"><span class="pre">mem_offset</span></code></td>
 <td>When the memory type in the containing struct
 <a class="reference internal" href="#c.v4l2_buffer" title="v4l2_buffer"><code class="xref c c-type docutils literal notranslate"><span class="pre">v4l2_buffer</span></code></a> is <code class="docutils literal notranslate"><span class="pre">V4L2_MEMORY_MMAP</span></code>, this
@@ -541,25 +521,25 @@ is the value that should be passed to <a class="reference internal" href="func-m
 similar to the <code class="docutils literal notranslate"><span class="pre">offset</span></code> field in struct
 <a class="reference internal" href="#c.v4l2_buffer" title="v4l2_buffer"><code class="xref c c-type docutils literal notranslate"><span class="pre">v4l2_buffer</span></code></a>.</td>
 </tr>
-<tr class="row-odd"><td>&#160;</td>
-<td>unsigned long</td>
+<tr class="row-odd"><td>unsigned long</td>
 <td><code class="docutils literal notranslate"><span class="pre">userptr</span></code></td>
 <td>When the memory type in the containing struct
 <a class="reference internal" href="#c.v4l2_buffer" title="v4l2_buffer"><code class="xref c c-type docutils literal notranslate"><span class="pre">v4l2_buffer</span></code></a> is <code class="docutils literal notranslate"><span class="pre">V4L2_MEMORY_USERPTR</span></code>,
 this is a userspace pointer to the memory allocated for this plane
 by an application.</td>
 </tr>
-<tr class="row-even"><td>&#160;</td>
-<td>int</td>
+<tr class="row-even"><td>int</td>
 <td><code class="docutils literal notranslate"><span class="pre">fd</span></code></td>
 <td>When the memory type in the containing struct
 <a class="reference internal" href="#c.v4l2_buffer" title="v4l2_buffer"><code class="xref c c-type docutils literal notranslate"><span class="pre">v4l2_buffer</span></code></a> is <code class="docutils literal notranslate"><span class="pre">V4L2_MEMORY_DMABUF</span></code>,
 this is a file descriptor associated with a DMABUF buffer, similar
 to the <code class="docutils literal notranslate"><span class="pre">fd</span></code> field in struct <a class="reference internal" href="#c.v4l2_buffer" title="v4l2_buffer"><code class="xref c c-type docutils literal notranslate"><span class="pre">v4l2_buffer</span></code></a>.</td>
 </tr>
-<tr class="row-odd"><td>__u32</td>
+<tr class="row-odd"><td>}</td>
+<td colspan="2">&#160;</td>
+</tr>
+<tr class="row-even"><td>__u32</td>
 <td><code class="docutils literal notranslate"><span class="pre">data_offset</span></code></td>
-<td>&#160;</td>
 <td><p class="first">Offset in bytes to video data in the plane. Drivers must set this
 field when <code class="docutils literal notranslate"><span class="pre">type</span></code> refers to a capture stream, applications when
 it refers to an output stream.</p>
@@ -571,9 +551,8 @@ at offset <code class="docutils literal notranslate"><span class="pre">data_offs
 </div>
 </td>
 </tr>
-<tr class="row-even"><td>__u32</td>
+<tr class="row-odd"><td>__u32</td>
 <td><code class="docutils literal notranslate"><span class="pre">reserved[11]</span></code></td>
-<td>&#160;</td>
 <td>Reserved for future use. Should be zeroed by drivers and
 applications.</td>
 </tr>
