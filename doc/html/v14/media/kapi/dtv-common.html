@@ -392,7 +392,7 @@ order to create the device nodes. Usually, driver should not initialize
 this struct diretly.</p>
 <dl class="function">
 <dt id="c.dvb_register_adapter">
-int <code class="descname">dvb_register_adapter</code><span class="sig-paren">(</span>struct <a class="reference internal" href="#c.dvb_adapter" title="dvb_adapter">dvb_adapter</a> *<em>&nbsp;adap</em>, const char *<em>&nbsp;name</em>, struct module *<em>&nbsp;module</em>, struct device *<em>&nbsp;device</em>, short *<em>&nbsp;adapter_nums</em><span class="sig-paren">)</span><a class="headerlink" href="#c.dvb_register_adapter" title="Permalink to this definition">¶</a></dt>
+int <code class="descname">dvb_register_adapter</code><span class="sig-paren">(</span>struct <a class="reference internal" href="#c.dvb_adapter" title="dvb_adapter">dvb_adapter</a> *<em>&nbsp;adap</em>, const char *<em>&nbsp;name</em>, struct module *<em>&nbsp;module</em>, struct <a class="reference internal" href="../../driver-api/infrastructure.html#c.device" title="device">device</a> *<em>&nbsp;device</em>, short *<em>&nbsp;adapter_nums</em><span class="sig-paren">)</span><a class="headerlink" href="#c.dvb_register_adapter" title="Permalink to this definition">¶</a></dt>
 <dd><p>Registers a new DVB adapter</p>
 </dd></dl>
 
@@ -604,7 +604,7 @@ userspace. Then, it calls <strong>func</strong>, and, if needed, data is copied 
 to userspace.</p>
 <dl class="function">
 <dt id="c.dvb_module_probe">
-struct i2c_client * <code class="descname">dvb_module_probe</code><span class="sig-paren">(</span>const char *<em>&nbsp;module_name</em>, const char *<em>&nbsp;name</em>, struct i2c_adapter *<em>&nbsp;adap</em>, unsigned char<em>&nbsp;addr</em>, void *<em>&nbsp;platform_data</em><span class="sig-paren">)</span><a class="headerlink" href="#c.dvb_module_probe" title="Permalink to this definition">¶</a></dt>
+struct <a class="reference internal" href="../../driver-api/i2c.html#c.i2c_client" title="i2c_client">i2c_client</a> * <code class="descname">dvb_module_probe</code><span class="sig-paren">(</span>const char *<em>&nbsp;module_name</em>, const char *<em>&nbsp;name</em>, struct i2c_adapter *<em>&nbsp;adap</em>, unsigned char<em>&nbsp;addr</em>, void *<em>&nbsp;platform_data</em><span class="sig-paren">)</span><a class="headerlink" href="#c.dvb_module_probe" title="Permalink to this definition">¶</a></dt>
 <dd><p>helper routine to probe an I2C module</p>
 </dd></dl>
 
@@ -629,7 +629,7 @@ all drivers that use I2C bus to control the hardware. A module bound
 with <a class="reference internal" href="#c.dvb_module_probe" title="dvb_module_probe"><code class="xref c c-func docutils literal notranslate"><span class="pre">dvb_module_probe()</span></code></a> should use <a class="reference internal" href="#c.dvb_module_release" title="dvb_module_release"><code class="xref c c-func docutils literal notranslate"><span class="pre">dvb_module_release()</span></code></a> to unbind.</p>
 <p><strong>Return</strong></p>
 <blockquote>
-<div>On success, return an <code class="xref c c-type docutils literal notranslate"><span class="pre">struct</span> <span class="pre">i2c_client</span></code>, pointing the the bound
+<div>On success, return an <a class="reference internal" href="../../driver-api/i2c.html#c.i2c_client" title="i2c_client"><code class="xref c c-type docutils literal notranslate"><span class="pre">struct</span> <span class="pre">i2c_client</span></code></a>, pointing the the bound
 I2C device. <code class="docutils literal notranslate"><span class="pre">NULL</span></code> otherwise.</div></blockquote>
 <div class="admonition note">
 <p class="first admonition-title">Note</p>
@@ -639,14 +639,14 @@ usage is deprecated and will be removed soon. Instead, use this routine.</p>
 </div>
 <dl class="function">
 <dt id="c.dvb_module_release">
-void <code class="descname">dvb_module_release</code><span class="sig-paren">(</span>struct i2c_client *<em>&nbsp;client</em><span class="sig-paren">)</span><a class="headerlink" href="#c.dvb_module_release" title="Permalink to this definition">¶</a></dt>
+void <code class="descname">dvb_module_release</code><span class="sig-paren">(</span>struct <a class="reference internal" href="../../driver-api/i2c.html#c.i2c_client" title="i2c_client">i2c_client</a> *<em>&nbsp;client</em><span class="sig-paren">)</span><a class="headerlink" href="#c.dvb_module_release" title="Permalink to this definition">¶</a></dt>
 <dd><p>releases an I2C device allocated with <a class="reference internal" href="#c.dvb_module_probe" title="dvb_module_probe"><code class="xref c c-func docutils literal notranslate"><span class="pre">dvb_module_probe()</span></code></a>.</p>
 </dd></dl>
 
 <p><strong>Parameters</strong></p>
 <dl class="docutils">
 <dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">i2c_client</span> <span class="pre">*</span> <span class="pre">client</span></code></dt>
-<dd>pointer to <code class="xref c c-type docutils literal notranslate"><span class="pre">struct</span> <span class="pre">i2c_client</span></code> with the I2C client to be released.
+<dd>pointer to <a class="reference internal" href="../../driver-api/i2c.html#c.i2c_client" title="i2c_client"><code class="xref c c-type docutils literal notranslate"><span class="pre">struct</span> <span class="pre">i2c_client</span></code></a> with the I2C client to be released.
 can be <code class="docutils literal notranslate"><span class="pre">NULL</span></code>.</dd>
 </dl>
 <p><strong>Description</strong></p>

@@ -2197,7 +2197,7 @@ capabilities that indicate whether or not a device will implement a
 destination ID register. Returns 1 if true or 0 if false.</p>
 <dl class="function">
 <dt id="c.rio_release_dev">
-void <code class="descname">rio_release_dev</code><span class="sig-paren">(</span>struct device *<em>&nbsp;dev</em><span class="sig-paren">)</span><a class="headerlink" href="#c.rio_release_dev" title="Permalink to this definition">¶</a></dt>
+void <code class="descname">rio_release_dev</code><span class="sig-paren">(</span>struct <a class="reference internal" href="../driver-api/infrastructure.html#c.device" title="device">device</a> *<em>&nbsp;dev</em><span class="sig-paren">)</span><a class="headerlink" href="#c.rio_release_dev" title="Permalink to this definition">¶</a></dt>
 <dd><p>Frees a RIO device struct</p>
 </dd></dl>
 
@@ -2713,7 +2713,7 @@ configuration space registers on the local device.</p>
 <h3>Device model support<a class="headerlink" href="#device-model-support" title="Permalink to this headline">¶</a></h3>
 <dl class="function">
 <dt id="c.rio_match_device">
-const struct rio_device_id * <code class="descname">rio_match_device</code><span class="sig-paren">(</span>const struct rio_device_id *<em>&nbsp;id</em>, const struct <a class="reference internal" href="#c.rio_dev" title="rio_dev">rio_dev</a> *<em>&nbsp;rdev</em><span class="sig-paren">)</span><a class="headerlink" href="#c.rio_match_device" title="Permalink to this definition">¶</a></dt>
+const struct <a class="reference internal" href="../driver-api/basics.html#c.rio_device_id" title="rio_device_id">rio_device_id</a> * <code class="descname">rio_match_device</code><span class="sig-paren">(</span>const struct <a class="reference internal" href="../driver-api/basics.html#c.rio_device_id" title="rio_device_id">rio_device_id</a> *<em>&nbsp;id</em>, const struct <a class="reference internal" href="#c.rio_dev" title="rio_dev">rio_dev</a> *<em>&nbsp;rdev</em><span class="sig-paren">)</span><a class="headerlink" href="#c.rio_match_device" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tell if a RIO device has a matching RIO device id structure</p>
 </dd></dl>
 
@@ -2728,10 +2728,10 @@ const struct rio_device_id * <code class="descname">rio_match_device</code><span
 <blockquote>
 <div>Used from driver probe and bus matching to check whether a RIO device
 matches a device id structure provided by a RIO driver. Returns the
-matching <code class="xref c c-type docutils literal notranslate"><span class="pre">struct</span> <span class="pre">rio_device_id</span></code> or <code class="docutils literal notranslate"><span class="pre">NULL</span></code> if there is no match.</div></blockquote>
+matching <a class="reference internal" href="../driver-api/basics.html#c.rio_device_id" title="rio_device_id"><code class="xref c c-type docutils literal notranslate"><span class="pre">struct</span> <span class="pre">rio_device_id</span></code></a> or <code class="docutils literal notranslate"><span class="pre">NULL</span></code> if there is no match.</div></blockquote>
 <dl class="function">
 <dt id="c.rio_device_probe">
-int <code class="descname">rio_device_probe</code><span class="sig-paren">(</span>struct device *<em>&nbsp;dev</em><span class="sig-paren">)</span><a class="headerlink" href="#c.rio_device_probe" title="Permalink to this definition">¶</a></dt>
+int <code class="descname">rio_device_probe</code><span class="sig-paren">(</span>struct <a class="reference internal" href="../driver-api/infrastructure.html#c.device" title="device">device</a> *<em>&nbsp;dev</em><span class="sig-paren">)</span><a class="headerlink" href="#c.rio_device_probe" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tell if a RIO device structure has a matching RIO device id structure</p>
 </dd></dl>
 
@@ -2744,7 +2744,7 @@ int <code class="descname">rio_device_probe</code><span class="sig-paren">(</spa
 <p>return 0 and set rio_dev-&gt;driver when drv claims rio_dev, else error</p>
 <dl class="function">
 <dt id="c.rio_device_remove">
-int <code class="descname">rio_device_remove</code><span class="sig-paren">(</span>struct device *<em>&nbsp;dev</em><span class="sig-paren">)</span><a class="headerlink" href="#c.rio_device_remove" title="Permalink to this definition">¶</a></dt>
+int <code class="descname">rio_device_remove</code><span class="sig-paren">(</span>struct <a class="reference internal" href="../driver-api/infrastructure.html#c.device" title="device">device</a> *<em>&nbsp;dev</em><span class="sig-paren">)</span><a class="headerlink" href="#c.rio_device_remove" title="Permalink to this definition">¶</a></dt>
 <dd><p>Remove a RIO device from the system</p>
 </dd></dl>
 
@@ -2759,7 +2759,7 @@ driver, then run the driver remove() method.  Then update
 the reference count.</p>
 <dl class="function">
 <dt id="c.rio_match_bus">
-int <code class="descname">rio_match_bus</code><span class="sig-paren">(</span>struct device *<em>&nbsp;dev</em>, struct device_driver *<em>&nbsp;drv</em><span class="sig-paren">)</span><a class="headerlink" href="#c.rio_match_bus" title="Permalink to this definition">¶</a></dt>
+int <code class="descname">rio_match_bus</code><span class="sig-paren">(</span>struct <a class="reference internal" href="../driver-api/infrastructure.html#c.device" title="device">device</a> *<em>&nbsp;dev</em>, struct device_driver *<em>&nbsp;drv</em><span class="sig-paren">)</span><a class="headerlink" href="#c.rio_match_bus" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tell if a RIO device structure has a matching RIO driver device id structure</p>
 </dd></dl>
 
@@ -2774,7 +2774,7 @@ int <code class="descname">rio_match_bus</code><span class="sig-paren">(</span>s
 <blockquote>
 <div>Used by a driver to check whether a RIO device present in the
 system is in its list of supported devices. Returns 1 if
-there is a matching <code class="xref c c-type docutils literal notranslate"><span class="pre">struct</span> <span class="pre">rio_device_id</span></code> or 0 if there is
+there is a matching <a class="reference internal" href="../driver-api/basics.html#c.rio_device_id" title="rio_device_id"><code class="xref c c-type docutils literal notranslate"><span class="pre">struct</span> <span class="pre">rio_device_id</span></code></a> or 0 if there is
 no match.</div></blockquote>
 <dl class="function">
 <dt id="c.rio_bus_init">

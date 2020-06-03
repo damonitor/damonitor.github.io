@@ -193,7 +193,7 @@ it is possible.  Unfortunately, it is not always possible; working with
 this kind of buffer normally requires hardware which can do
 scatter/gather DMA operations.</li>
 <li>Buffers which are physically scattered, but which are virtually
-contiguous; buffers allocated with vmalloc(), in other words.  These
+contiguous; buffers allocated with <a class="reference internal" href="../../core-api/mm-api.html#c.vmalloc" title="vmalloc"><code class="xref c c-func docutils literal notranslate"><span class="pre">vmalloc()</span></code></a>, in other words.  These
 buffers are just as hard to use for DMA operations, but they can be
 useful in situations where DMA is not available but virtually-contiguous
 buffers are convenient.</li>
@@ -267,7 +267,7 @@ VIDEOBUF_QUEUED.  Note that this function is called with the queue spinlock
 held; if it tries to acquire it as well things will come to a screeching
 halt.  Yes, this is the voice of experience.  Note also that videobuf may
 wait on the first buffer in the queue; placing other buffers in front of it
-could again gum up the works.  So use list_add_tail() to enqueue buffers.</p>
+could again gum up the works.  So use <a class="reference internal" href="../../core-api/kernel-api.html#c.list_add_tail" title="list_add_tail"><code class="xref c c-func docutils literal notranslate"><span class="pre">list_add_tail()</span></code></a> to enqueue buffers.</p>
 <p>Finally, buf_release() is called when a buffer is no longer intended to be
 used.  The driver should ensure that there is no I/O active on the buffer,
 then pass it to the appropriate free routine(s):</p>
@@ -439,7 +439,7 @@ int                 sglen;
 <p>The driver must allocate an appropriately-sized scatterlist array and
 populate it with pointers to the pieces of the allocated buffer; sglen
 should be set to the length of the array.</p>
-<p>Drivers using the vmalloc() method need not (and cannot) concern themselves
+<p>Drivers using the <a class="reference internal" href="../../core-api/mm-api.html#c.vmalloc" title="vmalloc"><code class="xref c c-func docutils literal notranslate"><span class="pre">vmalloc()</span></code></a> method need not (and cannot) concern themselves
 with buffer allocation at all; videobuf will handle those details.  The
 same is normally true of contiguous-DMA drivers as well; videobuf will
 allocate the buffers (with dma_alloc_coherent()) when it sees fit.  That
@@ -471,16 +471,16 @@ waiting for it.</li>
 - the one which is filled in the buf_queue() callback.  Because starting
 the engine and enqueueing buffers are done in separate steps, it’s possible
 for the engine to be running without any buffers available - in the
-vmalloc() case especially.  So the driver should be prepared for the list
+<a class="reference internal" href="../../core-api/mm-api.html#c.vmalloc" title="vmalloc"><code class="xref c c-func docutils literal notranslate"><span class="pre">vmalloc()</span></code></a> case especially.  So the driver should be prepared for the list
 to be empty.  It is equally possible that nobody is yet interested in the
 buffer; the driver should not remove it from the list or fill it until a
 process is waiting on it.  That test can be done by examining the buffer’s
-done field (a wait_queue_head_t structure) with waitqueue_active().</p>
+done field (a wait_queue_head_t structure) with <a class="reference internal" href="../../driver-api/basics.html#c.waitqueue_active" title="waitqueue_active"><code class="xref c c-func docutils literal notranslate"><span class="pre">waitqueue_active()</span></code></a>.</p>
 <p>A buffer’s state should be set to VIDEOBUF_ACTIVE before being mapped for
 DMA; that ensures that the videobuf layer will not try to do anything with
 it while the device is transferring data.</p>
 <p>For scatter/gather drivers, the needed memory pointers will be found in the
-scatterlist structure described above.  Drivers using the vmalloc() method
+scatterlist structure described above.  Drivers using the <a class="reference internal" href="../../core-api/mm-api.html#c.vmalloc" title="vmalloc"><code class="xref c c-func docutils literal notranslate"><span class="pre">vmalloc()</span></code></a> method
 can get a memory pointer with:</p>
 <div class="highlight-none notranslate"><div class="highlight"><pre><span></span>void *videobuf_to_vmalloc(struct videobuf_buffer *buf);
 </pre></div>
@@ -500,7 +500,7 @@ again.</p>
 header files; there are a few low-level functions declared there which have
 not been talked about here.  Also worthwhile is the vivi driver
 (drivers/media/platform/vivi.c), which is maintained as an example of how V4L2
-drivers should be written.  Vivi only uses the vmalloc() API, but it’s good
+drivers should be written.  Vivi only uses the <a class="reference internal" href="../../core-api/mm-api.html#c.vmalloc" title="vmalloc"><code class="xref c c-func docutils literal notranslate"><span class="pre">vmalloc()</span></code></a> API, but it’s good
 enough to get started with.  Note also that all of these calls are exported
 GPL-only, so they will not be available to non-GPL kernel modules.</p>
 </div>

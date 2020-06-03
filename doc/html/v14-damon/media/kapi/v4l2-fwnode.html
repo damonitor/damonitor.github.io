@@ -631,11 +631,11 @@ allocated memory must be freed when no longer needed. Both is done by calling
 <p><strong>Parameters</strong></p>
 <dl class="docutils">
 <dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">device</span> <span class="pre">*</span> <span class="pre">dev</span></code></dt>
-<dd>pointer to <code class="xref c c-type docutils literal notranslate"><span class="pre">struct</span> <span class="pre">device</span></code></dd>
+<dd>pointer to <a class="reference internal" href="../../driver-api/infrastructure.html#c.device" title="device"><code class="xref c c-type docutils literal notranslate"><span class="pre">struct</span> <span class="pre">device</span></code></a></dd>
 <dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">v4l2_fwnode_endpoint</span> <span class="pre">*</span> <span class="pre">vep</span></code></dt>
 <dd>pointer to <a class="reference internal" href="#c.v4l2_fwnode_endpoint" title="v4l2_fwnode_endpoint"><code class="xref c c-type docutils literal notranslate"><span class="pre">struct</span> <span class="pre">v4l2_fwnode_endpoint</span></code></a></dd>
 <dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">v4l2_async_subdev</span> <span class="pre">*</span> <span class="pre">asd</span></code></dt>
-<dd>pointer to <a class="reference internal" href="v4l2-async.html#c.v4l2_async_subdev" title="v4l2_async_subdev"><code class="xref c c-type docutils literal notranslate"><span class="pre">struct</span> <span class="pre">v4l2_async_subdev</span></code></a></dd>
+<dd>pointer to <a class="reference internal" href="v4l2-subdev.html#c.v4l2_async_subdev" title="v4l2_async_subdev"><code class="xref c c-type docutils literal notranslate"><span class="pre">struct</span> <span class="pre">v4l2_async_subdev</span></code></a></dd>
 </dl>
 <p><strong>Return</strong></p>
 <ul class="simple">
@@ -646,7 +646,7 @@ should not be considered as an error</li>
 </ul>
 <dl class="function">
 <dt id="c.v4l2_async_notifier_parse_fwnode_endpoints">
-int <code class="descname">v4l2_async_notifier_parse_fwnode_endpoints</code><span class="sig-paren">(</span>struct device *<em>&nbsp;dev</em>, struct <a class="reference internal" href="v4l2-async.html#c.v4l2_async_notifier" title="v4l2_async_notifier">v4l2_async_notifier</a> *<em>&nbsp;notifier</em>, size_t<em>&nbsp;asd_struct_size</em>, <a class="reference internal" href="#c.parse_endpoint_func" title="parse_endpoint_func">parse_endpoint_func</a><em>&nbsp;parse_endpoint</em><span class="sig-paren">)</span><a class="headerlink" href="#c.v4l2_async_notifier_parse_fwnode_endpoints" title="Permalink to this definition">¶</a></dt>
+int <code class="descname">v4l2_async_notifier_parse_fwnode_endpoints</code><span class="sig-paren">(</span>struct <a class="reference internal" href="../../driver-api/infrastructure.html#c.device" title="device">device</a> *<em>&nbsp;dev</em>, struct <a class="reference internal" href="v4l2-subdev.html#c.v4l2_async_notifier" title="v4l2_async_notifier">v4l2_async_notifier</a> *<em>&nbsp;notifier</em>, size_t<em>&nbsp;asd_struct_size</em>, <a class="reference internal" href="#c.parse_endpoint_func" title="parse_endpoint_func">parse_endpoint_func</a><em>&nbsp;parse_endpoint</em><span class="sig-paren">)</span><a class="headerlink" href="#c.v4l2_async_notifier_parse_fwnode_endpoints" title="Permalink to this definition">¶</a></dt>
 <dd><p>Parse V4L2 fwnode endpoints in a device node</p>
 </dd></dl>
 
@@ -658,7 +658,7 @@ int <code class="descname">v4l2_async_notifier_parse_fwnode_endpoints</code><spa
 <dd>notifier for <strong>dev</strong></dd>
 <dt><code class="docutils literal notranslate"><span class="pre">size_t</span> <span class="pre">asd_struct_size</span></code></dt>
 <dd>size of the driver’s async sub-device struct, including
-sizeof(struct v4l2_async_subdev). The <a class="reference internal" href="v4l2-async.html#c.v4l2_async_subdev" title="v4l2_async_subdev"><code class="xref c c-type docutils literal notranslate"><span class="pre">struct</span>
+sizeof(struct v4l2_async_subdev). The <a class="reference internal" href="v4l2-subdev.html#c.v4l2_async_subdev" title="v4l2_async_subdev"><code class="xref c c-type docutils literal notranslate"><span class="pre">struct</span>
 <span class="pre">v4l2_async_subdev</span></code></a> shall be the first member of
 the driver’s async sub-device struct, i.e. both
 begin at the same memory address.</dd>
@@ -680,7 +680,7 @@ a notifier only once.</p>
 <strong>parse_endpoint</strong> is released once the function is finished. If there is a need
 to retain that configuration, the user needs to allocate memory for it.</p>
 <p>Any notifier populated using this function must be released with a call to
-<a class="reference internal" href="v4l2-async.html#c.v4l2_async_notifier_cleanup" title="v4l2_async_notifier_cleanup"><code class="xref c c-func docutils literal notranslate"><span class="pre">v4l2_async_notifier_cleanup()</span></code></a> after it has been unregistered and the async
+<a class="reference internal" href="v4l2-subdev.html#c.v4l2_async_notifier_cleanup" title="v4l2_async_notifier_cleanup"><code class="xref c c-func docutils literal notranslate"><span class="pre">v4l2_async_notifier_cleanup()</span></code></a> after it has been unregistered and the async
 sub-devices are no longer in use, even if the function returned an error.</p>
 <p><strong>Return</strong></p>
 <dl class="docutils">
@@ -691,7 +691,7 @@ Other error codes as returned by <strong>parse_endpoint</strong></dd>
 </dl>
 <dl class="function">
 <dt id="c.v4l2_async_notifier_parse_fwnode_endpoints_by_port">
-int <code class="descname">v4l2_async_notifier_parse_fwnode_endpoints_by_port</code><span class="sig-paren">(</span>struct device *<em>&nbsp;dev</em>, struct <a class="reference internal" href="v4l2-async.html#c.v4l2_async_notifier" title="v4l2_async_notifier">v4l2_async_notifier</a> *<em>&nbsp;notifier</em>, size_t<em>&nbsp;asd_struct_size</em>, unsigned int<em>&nbsp;port</em>, <a class="reference internal" href="#c.parse_endpoint_func" title="parse_endpoint_func">parse_endpoint_func</a><em>&nbsp;parse_endpoint</em><span class="sig-paren">)</span><a class="headerlink" href="#c.v4l2_async_notifier_parse_fwnode_endpoints_by_port" title="Permalink to this definition">¶</a></dt>
+int <code class="descname">v4l2_async_notifier_parse_fwnode_endpoints_by_port</code><span class="sig-paren">(</span>struct <a class="reference internal" href="../../driver-api/infrastructure.html#c.device" title="device">device</a> *<em>&nbsp;dev</em>, struct <a class="reference internal" href="v4l2-subdev.html#c.v4l2_async_notifier" title="v4l2_async_notifier">v4l2_async_notifier</a> *<em>&nbsp;notifier</em>, size_t<em>&nbsp;asd_struct_size</em>, unsigned int<em>&nbsp;port</em>, <a class="reference internal" href="#c.parse_endpoint_func" title="parse_endpoint_func">parse_endpoint_func</a><em>&nbsp;parse_endpoint</em><span class="sig-paren">)</span><a class="headerlink" href="#c.v4l2_async_notifier_parse_fwnode_endpoints_by_port" title="Permalink to this definition">¶</a></dt>
 <dd><p>Parse V4L2 fwnode endpoints of a port in a device node</p>
 </dd></dl>
 
@@ -703,7 +703,7 @@ int <code class="descname">v4l2_async_notifier_parse_fwnode_endpoints_by_port</c
 <dd>notifier for <strong>dev</strong></dd>
 <dt><code class="docutils literal notranslate"><span class="pre">size_t</span> <span class="pre">asd_struct_size</span></code></dt>
 <dd>size of the driver’s async sub-device struct, including
-sizeof(struct v4l2_async_subdev). The <a class="reference internal" href="v4l2-async.html#c.v4l2_async_subdev" title="v4l2_async_subdev"><code class="xref c c-type docutils literal notranslate"><span class="pre">struct</span>
+sizeof(struct v4l2_async_subdev). The <a class="reference internal" href="v4l2-subdev.html#c.v4l2_async_subdev" title="v4l2_async_subdev"><code class="xref c c-type docutils literal notranslate"><span class="pre">struct</span>
 <span class="pre">v4l2_async_subdev</span></code></a> shall be the first member of
 the driver’s async sub-device struct, i.e. both
 begin at the same memory address.</dd>
@@ -732,7 +732,7 @@ a notifier only once per port.</p>
 <strong>parse_endpoint</strong> is released once the function is finished. If there is a need
 to retain that configuration, the user needs to allocate memory for it.</p>
 <p>Any notifier populated using this function must be released with a call to
-<a class="reference internal" href="v4l2-async.html#c.v4l2_async_notifier_cleanup" title="v4l2_async_notifier_cleanup"><code class="xref c c-func docutils literal notranslate"><span class="pre">v4l2_async_notifier_cleanup()</span></code></a> after it has been unregistered and the async
+<a class="reference internal" href="v4l2-subdev.html#c.v4l2_async_notifier_cleanup" title="v4l2_async_notifier_cleanup"><code class="xref c c-func docutils literal notranslate"><span class="pre">v4l2_async_notifier_cleanup()</span></code></a> after it has been unregistered and the async
 sub-devices are no longer in use, even if the function returned an error.</p>
 <p><strong>Return</strong></p>
 <dl class="docutils">
@@ -743,7 +743,7 @@ Other error codes as returned by <strong>parse_endpoint</strong></dd>
 </dl>
 <dl class="function">
 <dt id="c.v4l2_async_notifier_parse_fwnode_sensor_common">
-int <code class="descname">v4l2_async_notifier_parse_fwnode_sensor_common</code><span class="sig-paren">(</span>struct device *<em>&nbsp;dev</em>, struct <a class="reference internal" href="v4l2-async.html#c.v4l2_async_notifier" title="v4l2_async_notifier">v4l2_async_notifier</a> *<em>&nbsp;notifier</em><span class="sig-paren">)</span><a class="headerlink" href="#c.v4l2_async_notifier_parse_fwnode_sensor_common" title="Permalink to this definition">¶</a></dt>
+int <code class="descname">v4l2_async_notifier_parse_fwnode_sensor_common</code><span class="sig-paren">(</span>struct <a class="reference internal" href="../../driver-api/infrastructure.html#c.device" title="device">device</a> *<em>&nbsp;dev</em>, struct <a class="reference internal" href="v4l2-subdev.html#c.v4l2_async_notifier" title="v4l2_async_notifier">v4l2_async_notifier</a> *<em>&nbsp;notifier</em><span class="sig-paren">)</span><a class="headerlink" href="#c.v4l2_async_notifier_parse_fwnode_sensor_common" title="Permalink to this definition">¶</a></dt>
 <dd><p>parse common references on sensors for async sub-devices</p>
 </dd></dl>
 
@@ -779,7 +779,7 @@ int <code class="descname">v4l2_async_register_fwnode_subdev</code><span class="
 <dd>pointer to struct <a class="reference internal" href="v4l2-subdev.html#c.v4l2_subdev" title="v4l2_subdev"><code class="xref c c-type docutils literal notranslate"><span class="pre">v4l2_subdev</span></code></a></dd>
 <dt><code class="docutils literal notranslate"><span class="pre">size_t</span> <span class="pre">asd_struct_size</span></code></dt>
 <dd>size of the driver’s async sub-device struct, including
-sizeof(struct v4l2_async_subdev). The <a class="reference internal" href="v4l2-async.html#c.v4l2_async_subdev" title="v4l2_async_subdev"><code class="xref c c-type docutils literal notranslate"><span class="pre">struct</span>
+sizeof(struct v4l2_async_subdev). The <a class="reference internal" href="v4l2-subdev.html#c.v4l2_async_subdev" title="v4l2_async_subdev"><code class="xref c c-type docutils literal notranslate"><span class="pre">struct</span>
 <span class="pre">v4l2_async_subdev</span></code></a> shall be the first member of
 the driver’s async sub-device struct, i.e. both
 begin at the same memory address.</dd>
@@ -793,13 +793,13 @@ parse all ports owned by the sub-device.</dd>
 endpoint. Optional.</dd>
 </dl>
 <p><strong>Description</strong></p>
-<p>This function is just like <a class="reference internal" href="v4l2-async.html#c.v4l2_async_register_subdev" title="v4l2_async_register_subdev"><code class="xref c c-func docutils literal notranslate"><span class="pre">v4l2_async_register_subdev()</span></code></a> with the
+<p>This function is just like <a class="reference internal" href="v4l2-subdev.html#c.v4l2_async_register_subdev" title="v4l2_async_register_subdev"><code class="xref c c-func docutils literal notranslate"><span class="pre">v4l2_async_register_subdev()</span></code></a> with the
 exception that calling it will also allocate a notifier for the
 sub-device, parse the sub-device’s firmware node endpoints using
 <a class="reference internal" href="#c.v4l2_async_notifier_parse_fwnode_endpoints" title="v4l2_async_notifier_parse_fwnode_endpoints"><code class="xref c c-func docutils literal notranslate"><span class="pre">v4l2_async_notifier_parse_fwnode_endpoints()</span></code></a> or
 <a class="reference internal" href="#c.v4l2_async_notifier_parse_fwnode_endpoints_by_port" title="v4l2_async_notifier_parse_fwnode_endpoints_by_port"><code class="xref c c-func docutils literal notranslate"><span class="pre">v4l2_async_notifier_parse_fwnode_endpoints_by_port()</span></code></a>, and
 registers the sub-device notifier. The sub-device is similarly
-unregistered by calling <a class="reference internal" href="v4l2-async.html#c.v4l2_async_unregister_subdev" title="v4l2_async_unregister_subdev"><code class="xref c c-func docutils literal notranslate"><span class="pre">v4l2_async_unregister_subdev()</span></code></a>.</p>
+unregistered by calling <a class="reference internal" href="v4l2-subdev.html#c.v4l2_async_unregister_subdev" title="v4l2_async_unregister_subdev"><code class="xref c c-func docutils literal notranslate"><span class="pre">v4l2_async_unregister_subdev()</span></code></a>.</p>
 <p>While registered, the subdev module is marked as in-use.</p>
 <p>An error is returned if the module is no longer loaded on any attempts
 to register it.</p>
