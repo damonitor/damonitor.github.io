@@ -23,6 +23,7 @@ The three patchsets are:
 For each posting of any patchset, 'damon/master' is updated to point the latest
 commit of 'damon/next', and 'damon/next' continues development.
 
+
 Documents
 =========
 
@@ -36,6 +37,16 @@ The documents under 'doc/html/' in this site are organized in below way.
 - 'v13' is the document for the 'damon/master' when 'v13' of DAMON patchset is
   posted.
 - 'v13-(damon|damos)' are similar in that way.
+</pre>
+" > $INDEX_FILE
+
+for f in `find doc -maxdepth 3 -name 'index.html' | sort`
+do
+	echo "<a href=$f>$f</a><br>" >> $INDEX_FILE
+done
+
+echo "
+<pre>
 
 Test Results
 ============
@@ -45,16 +56,7 @@ changes.  Therefore, version name rules that similar to that of documents are
 applied to the test results in this site, but '(damon|damos)' suffixes are not
 used.
 </pre>
-" > $INDEX_FILE
-
-echo '<h3>documentations</h3>' >> $INDEX_FILE
-
-for f in `find doc -maxdepth 3 -name 'index.html' | sort`
-do
-	echo "<a href=$f>$f</a><br>" >> $INDEX_FILE
-done
-
-echo '<br><br><h3>test results</h3>' >> $INDEX_FILE
+" >> $INDEX_FILE
 
 for f in `find test -name 'index.html' | sort`
 do
