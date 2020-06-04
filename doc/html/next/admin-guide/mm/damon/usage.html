@@ -235,9 +235,11 @@ brevity.  It is not mandatory for use of <code class="docutils literal notransla
 <div class="section" id="recording-data-access-pattern">
 <h3>Recording Data Access Pattern<a class="headerlink" href="#recording-data-access-pattern" title="Permalink to this headline">¶</a></h3>
 <p>The <code class="docutils literal notranslate"><span class="pre">record</span></code> subcommand records the data access pattern of target processes
-in a file (<code class="docutils literal notranslate"><span class="pre">./damon.data</span></code> by default).  You can specify the target as either
-pid of running target or a command for execution of the process.  Below example
-shows a command target usage:</p>
+in a file (<code class="docutils literal notranslate"><span class="pre">./damon.data</span></code> by default).  You can specify the target with 1)
+the command for execution of the monitoring target process, 2) pid of running
+target process, or 3) the special keyword, ‘paddr’, if you want to monitor the
+system’s physical memory address space.  Below example shows a command target
+usage:</p>
 <div class="highlight-none notranslate"><div class="highlight"><pre><span></span># cd &lt;kernel&gt;/tools/damon/
 # damo record &quot;sleep 5&quot;
 </pre></div>
@@ -248,6 +250,14 @@ of the process.  Below example shows a pid target usage:</p>
 # damo record `pidof sleep`
 </pre></div>
 </div>
+<p>Finally, below example shows the use of the special keyword, ‘paddr’:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span># damo record paddr
+</pre></div>
+</div>
+<p>In this case, the monitoring target regions defaults to the largetst ‘System
+RAM’ region specified in ‘/proc/iomem’ file.  Note that the initial monitoring
+target region is maintained rather than dynamically updated like the virtual
+memory address spaces monitoring mode.</p>
 <p>You can tune this by setting the monitoring attributes and path to the record
 file using optional arguments to the subcommand.  To know about the monitoring
 attributes in detail, please refer to <a class="reference internal" href="mechanisms.html"><span class="doc">Mechanisms</span></a>.</p>
