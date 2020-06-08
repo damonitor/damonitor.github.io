@@ -1,0 +1,469 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>ARM Virtual Interrupt Translation Service (ITS) &mdash; The Linux Kernel  documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript">
+          var DOCUMENTATION_OPTIONS = {
+              URL_ROOT:'../../../',
+              VERSION:'',
+              LANGUAGE:'None',
+              COLLAPSE_INDEX:false,
+              FILE_SUFFIX:'.html',
+              HAS_SOURCE:  true,
+              SOURCELINK_SUFFIX: '.txt'
+          };
+      </script>
+        <script type="text/javascript" src="../../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/theme_overrides.css" type="text/css" />
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home"> The Linux Kernel
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                5.7.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../admin-guide/mm/damon/index.html">DAMON: Data Access MONitor</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">The Linux Kernel</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../index.html">Docs</a> &raquo;</li>
+        
+      <li>ARM Virtual Interrupt Translation Service (ITS)</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../../../_sources/virt/kvm/devices/arm-vgic-its.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="arm-virtual-interrupt-translation-service-its">
+<h1>ARM Virtual Interrupt Translation Service (ITS)<a class="headerlink" href="#arm-virtual-interrupt-translation-service-its" title="Permalink to this headline">¶</a></h1>
+<dl class="docutils">
+<dt>Device types supported:</dt>
+<dd>KVM_DEV_TYPE_ARM_VGIC_ITS    ARM Interrupt Translation Service Controller</dd>
+</dl>
+<p>The ITS allows MSI(-X) interrupts to be injected into guests. This extension is
+optional.  Creating a virtual ITS controller also requires a host GICv3 (see
+arm-vgic-v3.txt), but does not depend on having physical ITS controllers.</p>
+<p>There can be multiple ITS controllers per guest, each of them has to have
+a separate, non-overlapping MMIO region.</p>
+<div class="section" id="groups">
+<h2>Groups<a class="headerlink" href="#groups" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="kvm-dev-arm-vgic-grp-addr">
+<h3>KVM_DEV_ARM_VGIC_GRP_ADDR<a class="headerlink" href="#kvm-dev-arm-vgic-grp-addr" title="Permalink to this headline">¶</a></h3>
+<blockquote>
+<div><dl class="docutils">
+<dt>Attributes:</dt>
+<dd><dl class="first last docutils">
+<dt>KVM_VGIC_ITS_ADDR_TYPE (rw, 64-bit)</dt>
+<dd>Base address in the guest physical address space of the GICv3 ITS
+control register frame.
+This address needs to be 64K aligned and the region covers 128K.</dd>
+</dl>
+</dd>
+</dl>
+<p>Errors:</p>
+<blockquote>
+<div><table border="1" class="docutils">
+<colgroup>
+<col width="13%" />
+<col width="88%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td>-E2BIG</td>
+<td>Address outside of addressable IPA range</td>
+</tr>
+<tr class="row-even"><td>-EINVAL</td>
+<td>Incorrectly aligned address</td>
+</tr>
+<tr class="row-odd"><td>-EEXIST</td>
+<td>Address already configured</td>
+</tr>
+<tr class="row-even"><td>-EFAULT</td>
+<td>Invalid user pointer for attr-&gt;addr.</td>
+</tr>
+<tr class="row-odd"><td>-ENODEV</td>
+<td>Incorrect attribute or the ITS is not supported.</td>
+</tr>
+</tbody>
+</table>
+</div></blockquote>
+</div></blockquote>
+</div>
+<div class="section" id="kvm-dev-arm-vgic-grp-ctrl">
+<h3>KVM_DEV_ARM_VGIC_GRP_CTRL<a class="headerlink" href="#kvm-dev-arm-vgic-grp-ctrl" title="Permalink to this headline">¶</a></h3>
+<blockquote>
+<div><dl class="docutils">
+<dt>Attributes:</dt>
+<dd><dl class="first last docutils">
+<dt>KVM_DEV_ARM_VGIC_CTRL_INIT</dt>
+<dd>request the initialization of the ITS, no additional parameter in
+kvm_device_attr.addr.</dd>
+<dt>KVM_DEV_ARM_ITS_CTRL_RESET</dt>
+<dd>reset the ITS, no additional parameter in kvm_device_attr.addr.
+See “ITS Reset State” section.</dd>
+<dt>KVM_DEV_ARM_ITS_SAVE_TABLES</dt>
+<dd><p class="first">save the ITS table data into guest RAM, at the location provisioned
+by the guest in corresponding registers/table entries.</p>
+<p class="last">The layout of the tables in guest memory defines an ABI. The entries
+are laid out in little endian format as described in the last paragraph.</p>
+</dd>
+<dt>KVM_DEV_ARM_ITS_RESTORE_TABLES</dt>
+<dd><p class="first">restore the ITS tables from guest RAM to ITS internal structures.</p>
+<p>The GICV3 must be restored before the ITS and all ITS registers but
+the GITS_CTLR must be restored before restoring the ITS tables.</p>
+<p>The GITS_IIDR read-only register must also be restored before
+calling KVM_DEV_ARM_ITS_RESTORE_TABLES as the IIDR revision field
+encodes the ABI revision.</p>
+<p class="last">The expected ordering when restoring the GICv3/ITS is described in section
+“ITS Restore Sequence”.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<p>Errors:</p>
+<blockquote>
+<div><table border="1" class="docutils">
+<colgroup>
+<col width="11%" />
+<col width="89%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td>-ENXIO</td>
+<td>ITS not properly configured as required prior to setting
+this attribute</td>
+</tr>
+<tr class="row-even"><td>-ENOMEM</td>
+<td>Memory shortage when allocating ITS internal data</td>
+</tr>
+<tr class="row-odd"><td>-EINVAL</td>
+<td>Inconsistent restored data</td>
+</tr>
+<tr class="row-even"><td>-EFAULT</td>
+<td>Invalid guest ram access</td>
+</tr>
+<tr class="row-odd"><td>-EBUSY</td>
+<td>One or more VCPUS are running</td>
+</tr>
+<tr class="row-even"><td>-EACCES</td>
+<td>The virtual ITS is backed by a physical GICv4 ITS, and the
+state is not available</td>
+</tr>
+</tbody>
+</table>
+</div></blockquote>
+</div></blockquote>
+</div>
+<div class="section" id="kvm-dev-arm-vgic-grp-its-regs">
+<h3>KVM_DEV_ARM_VGIC_GRP_ITS_REGS<a class="headerlink" href="#kvm-dev-arm-vgic-grp-its-regs" title="Permalink to this headline">¶</a></h3>
+<blockquote>
+<div><dl class="docutils">
+<dt>Attributes:</dt>
+<dd><p class="first">The attr field of kvm_device_attr encodes the offset of the
+ITS register, relative to the ITS control frame base address
+(ITS_base).</p>
+<p>kvm_device_attr.addr points to a __u64 value whatever the width
+of the addressed register (32/64 bits). 64 bit registers can only
+be accessed with full length.</p>
+<p>Writes to read-only registers are ignored by the kernel except for:</p>
+<ul class="simple">
+<li>GITS_CREADR. It must be restored otherwise commands in the queue
+will be re-executed after restoring CWRITER. GITS_CREADR must be
+restored before restoring the GITS_CTLR which is likely to enable the
+ITS. Also it must be restored after GITS_CBASER since a write to
+GITS_CBASER resets GITS_CREADR.</li>
+<li>GITS_IIDR. The Revision field encodes the table layout ABI revision.
+In the future we might implement direct injection of virtual LPIs.
+This will require an upgrade of the table layout and an evolution of
+the ABI. GITS_IIDR must be restored before calling
+KVM_DEV_ARM_ITS_RESTORE_TABLES.</li>
+</ul>
+<p class="last">For other registers, getting or setting a register has the same
+effect as reading/writing the register on real hardware.</p>
+</dd>
+</dl>
+<p>Errors:</p>
+<blockquote>
+<div><table border="1" class="docutils">
+<colgroup>
+<col width="12%" />
+<col width="88%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td>-ENXIO</td>
+<td>Offset does not correspond to any supported register</td>
+</tr>
+<tr class="row-even"><td>-EFAULT</td>
+<td>Invalid user pointer for attr-&gt;addr</td>
+</tr>
+<tr class="row-odd"><td>-EINVAL</td>
+<td>Offset is not 64-bit aligned</td>
+</tr>
+<tr class="row-even"><td>-EBUSY</td>
+<td>one or more VCPUS are running</td>
+</tr>
+</tbody>
+</table>
+</div></blockquote>
+</div></blockquote>
+</div>
+<div class="section" id="its-restore-sequence">
+<h3>ITS Restore Sequence:<a class="headerlink" href="#its-restore-sequence" title="Permalink to this headline">¶</a></h3>
+<p>The following ordering must be followed when restoring the GIC and the ITS:</p>
+<ol class="loweralpha">
+<li><p class="first">restore all guest memory and create vcpus</p>
+</li>
+<li><p class="first">restore all redistributors</p>
+</li>
+<li><p class="first">provide the ITS base address
+(KVM_DEV_ARM_VGIC_GRP_ADDR)</p>
+</li>
+<li><p class="first">restore the ITS in the following order:</p>
+<blockquote>
+<div><ol class="arabic simple">
+<li>Restore GITS_CBASER</li>
+<li>Restore all other <code class="docutils literal notranslate"><span class="pre">GITS_</span></code> registers, except GITS_CTLR!</li>
+<li>Load the ITS table data (KVM_DEV_ARM_ITS_RESTORE_TABLES)</li>
+<li>Restore GITS_CTLR</li>
+</ol>
+</div></blockquote>
+</li>
+</ol>
+<p>Then vcpus can be started.</p>
+</div>
+<div class="section" id="its-table-abi-rev0">
+<h3>ITS Table ABI REV0:<a class="headerlink" href="#its-table-abi-rev0" title="Permalink to this headline">¶</a></h3>
+<blockquote>
+<div><p>Revision 0 of the ABI only supports the features of a virtual GICv3, and does
+not support a virtual GICv4 with support for direct injection of virtual
+interrupts for nested hypervisors.</p>
+<p>The device table and ITT are indexed by the DeviceID and EventID,
+respectively. The collection table is not indexed by CollectionID, and the
+entries in the collection are listed in no particular order.
+All entries are 8 bytes.</p>
+<p>Device Table Entry (DTE):</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>bits:     | 63| 62 ... 49 | 48 ... 5 | 4 ... 0 |
+values:   | V |   next    | ITT_addr |  Size   |
+</pre></div>
+</div>
+<p>where:</p>
+<ul class="simple">
+<li>V indicates whether the entry is valid. If not, other fields
+are not meaningful.</li>
+<li>next: equals to 0 if this entry is the last one; otherwise it
+corresponds to the DeviceID offset to the next DTE, capped by
+2^14 -1.</li>
+<li>ITT_addr matches bits [51:8] of the ITT address (256 Byte aligned).</li>
+<li>Size specifies the supported number of bits for the EventID,
+minus one</li>
+</ul>
+<p>Collection Table Entry (CTE):</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>bits:     | 63| 62 ..  52  | 51 ... 16 | 15  ...   0 |
+values:   | V |    RES0    |  RDBase   |    ICID     |
+</pre></div>
+</div>
+<p>where:</p>
+<ul class="simple">
+<li>V indicates whether the entry is valid. If not, other fields are
+not meaningful.</li>
+<li>RES0: reserved field with Should-Be-Zero-or-Preserved behavior.</li>
+<li>RDBase is the PE number (GICR_TYPER.Processor_Number semantic),</li>
+<li>ICID is the collection ID</li>
+</ul>
+<p>Interrupt Translation Entry (ITE):</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>bits:     | 63 ... 48 | 47 ... 16 | 15 ... 0 |
+values:   |    next   |   pINTID  |  ICID    |
+</pre></div>
+</div>
+<p>where:</p>
+<ul class="simple">
+<li>next: equals to 0 if this entry is the last one; otherwise it corresponds
+to the EventID offset to the next ITE capped by 2^16 -1.</li>
+<li>pINTID is the physical LPI ID; if zero, it means the entry is not valid
+and other fields are not meaningful.</li>
+<li>ICID is the collection ID</li>
+</ul>
+</div></blockquote>
+</div>
+<div class="section" id="its-reset-state">
+<h3>ITS Reset State:<a class="headerlink" href="#its-reset-state" title="Permalink to this headline">¶</a></h3>
+<p>RESET returns the ITS to the same state that it was when first created and
+initialized. When the RESET command returns, the following things are
+guaranteed:</p>
+<ul class="simple">
+<li>The ITS is not enabled and quiescent
+GITS_CTLR.Enabled = 0 .Quiescent=1</li>
+<li>There is no internally cached state</li>
+<li>No collection or device table are used
+GITS_BASER&lt;n&gt;.Valid = 0</li>
+<li>GITS_CBASER = 0, GITS_CREADR = 0, GITS_CWRITER = 0</li>
+<li>The ABI version is unchanged and remains the one set when the ITS
+device was first created.</li>
+</ul>
+</div>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright The kernel development community
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>
