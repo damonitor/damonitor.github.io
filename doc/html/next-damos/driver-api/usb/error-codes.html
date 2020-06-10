@@ -1,0 +1,481 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>USB Error codes &mdash; The Linux Kernel  documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript">
+          var DOCUMENTATION_OPTIONS = {
+              URL_ROOT:'../../',
+              VERSION:'',
+              LANGUAGE:'None',
+              COLLAPSE_INDEX:false,
+              FILE_SUFFIX:'.html',
+              HAS_SOURCE:  true,
+              SOURCELINK_SUFFIX: '.txt'
+          };
+      </script>
+        <script type="text/javascript" src="../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../_static/doctools.js"></script>
+    
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/theme_overrides.css" type="text/css" />
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../index.html" class="icon icon-home"> The Linux Kernel
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                5.7.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../admin-guide/mm/damon/index.html">DAMON: Data Access MONitor</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">The Linux Kernel</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html">Docs</a> &raquo;</li>
+        
+      <li>USB Error codes</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../../_sources/driver-api/usb/error-codes.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="usb-error-codes">
+<span id="id1"></span><h1>USB Error codes<a class="headerlink" href="#usb-error-codes" title="Permalink to this headline">¶</a></h1>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Revised:</th><td class="field-body">2004-Oct-21</td>
+</tr>
+</tbody>
+</table>
+<p>This is the documentation of (hopefully) all possible error codes (and
+their interpretation) that can be returned from usbcore.</p>
+<p>Some of them are returned by the Host Controller Drivers (HCDs), which
+device drivers only see through usbcore.  As a rule, all the HCDs should
+behave the same except for transfer speed dependent behaviors and the
+way certain faults are reported.</p>
+<div class="section" id="error-codes-returned-by-usb-submit-urb">
+<h2>Error codes returned by <a class="reference internal" href="usb.html#c.usb_submit_urb" title="usb_submit_urb"><code class="xref c c-func docutils literal notranslate"><span class="pre">usb_submit_urb()</span></code></a><a class="headerlink" href="#error-codes-returned-by-usb-submit-urb" title="Permalink to this headline">¶</a></h2>
+<p>Non-USB-specific:</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="24%" />
+<col width="76%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td>0</td>
+<td>URB submission went fine</td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal notranslate"><span class="pre">-ENOMEM</span></code></td>
+<td>no memory for allocation of internal structures</td>
+</tr>
+</tbody>
+</table>
+<p>USB-specific:</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="29%" />
+<col width="71%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><code class="docutils literal notranslate"><span class="pre">-EBUSY</span></code></td>
+<td>The URB is already active.</td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal notranslate"><span class="pre">-ENODEV</span></code></td>
+<td>specified USB-device or bus doesn’t exist</td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal notranslate"><span class="pre">-ENOENT</span></code></td>
+<td>specified interface or endpoint does not exist or
+is not enabled</td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal notranslate"><span class="pre">-ENXIO</span></code></td>
+<td>host controller driver does not support queuing of
+this type of urb.  (treat as a host controller bug.)</td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal notranslate"><span class="pre">-EINVAL</span></code></td>
+<td><ol class="first last loweralpha simple">
+<li>Invalid transfer type specified (or not supported)</li>
+<li>Invalid or unsupported periodic transfer interval</li>
+<li>ISO: attempted to change transfer interval</li>
+<li>ISO: <code class="docutils literal notranslate"><span class="pre">number_of_packets</span></code> is &lt; 0</li>
+<li>various other cases</li>
+</ol>
+</td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal notranslate"><span class="pre">-EXDEV</span></code></td>
+<td>ISO: <code class="docutils literal notranslate"><span class="pre">URB_ISO_ASAP</span></code> wasn’t specified and all the
+frames the URB would be scheduled in have already
+expired.</td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal notranslate"><span class="pre">-EFBIG</span></code></td>
+<td>Host controller driver can’t schedule that many ISO
+frames.</td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal notranslate"><span class="pre">-EPIPE</span></code></td>
+<td>The pipe type specified in the URB doesn’t match the
+endpoint’s actual type.</td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal notranslate"><span class="pre">-EMSGSIZE</span></code></td>
+<td><ol class="first last loweralpha simple">
+<li>endpoint maxpacket size is zero; it is not usable
+in the current interface altsetting.</li>
+<li>ISO packet is larger than the endpoint maxpacket.</li>
+<li>requested data transfer length is invalid: negative
+or too large for the host controller.</li>
+</ol>
+</td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal notranslate"><span class="pre">-ENOSPC</span></code></td>
+<td>This request would overcommit the usb bandwidth reserved
+for periodic transfers (interrupt, isochronous).</td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal notranslate"><span class="pre">-ESHUTDOWN</span></code></td>
+<td>The device or host controller has been disabled due to
+some problem that could not be worked around.</td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal notranslate"><span class="pre">-EPERM</span></code></td>
+<td>Submission failed because <code class="docutils literal notranslate"><span class="pre">urb-&gt;reject</span></code> was set.</td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal notranslate"><span class="pre">-EHOSTUNREACH</span></code></td>
+<td>URB was rejected because the device is suspended.</td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal notranslate"><span class="pre">-ENOEXEC</span></code></td>
+<td>A control URB doesn’t contain a Setup packet.</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="error-codes-returned-by-in-urb-status-or-in-iso-frame-desc-n-status-for-iso">
+<h2>Error codes returned by <code class="docutils literal notranslate"><span class="pre">in</span> <span class="pre">urb-&gt;status</span></code> or in <code class="docutils literal notranslate"><span class="pre">iso_frame_desc[n].status</span></code> (for ISO)<a class="headerlink" href="#error-codes-returned-by-in-urb-status-or-in-iso-frame-desc-n-status-for-iso" title="Permalink to this headline">¶</a></h2>
+<p>USB device drivers may only test urb status values in completion handlers.
+This is because otherwise there would be a race between HCDs updating
+these values on one CPU, and device drivers testing them on another CPU.</p>
+<p>A transfer’s actual_length may be positive even when an error has been
+reported.  That’s because transfers often involve several packets, so that
+one or more packets could finish before an error stops further endpoint I/O.</p>
+<p>For isochronous URBs, the urb status value is non-zero only if the URB is
+unlinked, the device is removed, the host controller is disabled, or the total
+transferred length is less than the requested length and the
+<code class="docutils literal notranslate"><span class="pre">URB_SHORT_NOT_OK</span></code> flag is set.  Completion handlers for isochronous URBs
+should only see <code class="docutils literal notranslate"><span class="pre">urb-&gt;status</span></code> set to zero, <code class="docutils literal notranslate"><span class="pre">-ENOENT</span></code>, <code class="docutils literal notranslate"><span class="pre">-ECONNRESET</span></code>,
+<code class="docutils literal notranslate"><span class="pre">-ESHUTDOWN</span></code>, or <code class="docutils literal notranslate"><span class="pre">-EREMOTEIO</span></code>. Individual frame descriptor status fields
+may report more status codes.</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="40%" />
+<col width="60%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td>0</td>
+<td>Transfer completed successfully</td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal notranslate"><span class="pre">-ENOENT</span></code></td>
+<td>URB was synchronously unlinked by
+<a class="reference internal" href="usb.html#c.usb_unlink_urb" title="usb_unlink_urb"><code class="xref c c-func docutils literal notranslate"><span class="pre">usb_unlink_urb()</span></code></a></td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal notranslate"><span class="pre">-EINPROGRESS</span></code></td>
+<td>URB still pending, no results yet
+(That is, if drivers see this it’s a bug.)</td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal notranslate"><span class="pre">-EPROTO</span></code> <a class="footnote-reference" href="#f1" id="id2">[1]</a>, <a class="footnote-reference" href="#f2" id="id3">[2]</a></td>
+<td><ol class="first last loweralpha simple">
+<li>bitstuff error</li>
+<li>no response packet received within the
+prescribed bus turn-around time</li>
+<li>unknown USB error</li>
+</ol>
+</td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal notranslate"><span class="pre">-EILSEQ</span></code> <a class="footnote-reference" href="#f1" id="id4">[1]</a>, <a class="footnote-reference" href="#f2" id="id5">[2]</a></td>
+<td><ol class="first loweralpha simple">
+<li>CRC mismatch</li>
+<li>no response packet received within the
+prescribed bus turn-around time</li>
+<li>unknown USB error</li>
+</ol>
+<p class="last">Note that often the controller hardware does
+not distinguish among cases a), b), and c), so
+a driver cannot tell whether there was a
+protocol error, a failure to respond (often
+caused by device disconnect), or some other
+fault.</p>
+</td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal notranslate"><span class="pre">-ETIME</span></code> <a class="footnote-reference" href="#f2" id="id6">[2]</a></td>
+<td>No response packet received within the
+prescribed bus turn-around time.  This error
+may instead be reported as
+<code class="docutils literal notranslate"><span class="pre">-EPROTO</span></code> or <code class="docutils literal notranslate"><span class="pre">-EILSEQ</span></code>.</td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal notranslate"><span class="pre">-ETIMEDOUT</span></code></td>
+<td>Synchronous USB message functions use this code
+to indicate timeout expired before the transfer
+completed, and no other error was reported
+by HC.</td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal notranslate"><span class="pre">-EPIPE</span></code> <a class="footnote-reference" href="#f2" id="id7">[2]</a></td>
+<td>Endpoint stalled.  For non-control endpoints,
+reset this status with
+<a class="reference internal" href="usb.html#c.usb_clear_halt" title="usb_clear_halt"><code class="xref c c-func docutils literal notranslate"><span class="pre">usb_clear_halt()</span></code></a>.</td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal notranslate"><span class="pre">-ECOMM</span></code></td>
+<td>During an IN transfer, the host controller
+received data from an endpoint faster than it
+could be written to system memory</td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal notranslate"><span class="pre">-ENOSR</span></code></td>
+<td>During an OUT transfer, the host controller
+could not retrieve data from system memory fast
+enough to keep up with the USB data rate</td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal notranslate"><span class="pre">-EOVERFLOW</span></code> <a class="footnote-reference" href="#f1" id="id8">[1]</a></td>
+<td>The amount of data returned by the endpoint was
+greater than either the max packet size of the
+endpoint or the remaining buffer size.
+“Babble”.</td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal notranslate"><span class="pre">-EREMOTEIO</span></code></td>
+<td>The data read from the endpoint did not fill
+the specified buffer, and <code class="docutils literal notranslate"><span class="pre">URB_SHORT_NOT_OK</span></code>
+was set in <code class="docutils literal notranslate"><span class="pre">urb-&gt;transfer_flags</span></code>.</td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal notranslate"><span class="pre">-ENODEV</span></code></td>
+<td>Device was removed.  Often preceded by a burst
+of other errors, since the hub driver doesn’t
+detect device removal events immediately.</td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal notranslate"><span class="pre">-EXDEV</span></code></td>
+<td>ISO transfer only partially completed
+(only set in <code class="docutils literal notranslate"><span class="pre">iso_frame_desc[n].status</span></code>,
+not <code class="docutils literal notranslate"><span class="pre">urb-&gt;status</span></code>)</td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal notranslate"><span class="pre">-EINVAL</span></code></td>
+<td>ISO madness, if this happens: Log off and
+go home</td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal notranslate"><span class="pre">-ECONNRESET</span></code></td>
+<td>URB was asynchronously unlinked by
+<a class="reference internal" href="usb.html#c.usb_unlink_urb" title="usb_unlink_urb"><code class="xref c c-func docutils literal notranslate"><span class="pre">usb_unlink_urb()</span></code></a></td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal notranslate"><span class="pre">-ESHUTDOWN</span></code></td>
+<td>The device or host controller has been
+disabled due to some problem that could not
+be worked around, such as a physical
+disconnect.</td>
+</tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="f1" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label">[1]</td><td><em>(<a class="fn-backref" href="#id2">1</a>, <a class="fn-backref" href="#id4">2</a>, <a class="fn-backref" href="#id8">3</a>)</em> Error codes like <code class="docutils literal notranslate"><span class="pre">-EPROTO</span></code>, <code class="docutils literal notranslate"><span class="pre">-EILSEQ</span></code> and <code class="docutils literal notranslate"><span class="pre">-EOVERFLOW</span></code> normally
+indicate hardware problems such as bad devices (including firmware)
+or cables.</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="f2" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label">[2]</td><td><em>(<a class="fn-backref" href="#id3">1</a>, <a class="fn-backref" href="#id5">2</a>, <a class="fn-backref" href="#id6">3</a>, <a class="fn-backref" href="#id7">4</a>)</em> This is also one of several codes that different kinds of host
+controller use to indicate a transfer has failed because of device
+disconnect.  In the interval before the hub driver starts disconnect
+processing, devices may receive such fault reports for every request.</td></tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="error-codes-returned-by-usbcore-functions">
+<h2>Error codes returned by usbcore-functions<a class="headerlink" href="#error-codes-returned-by-usbcore-functions" title="Permalink to this headline">¶</a></h2>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">expect also other submit and transfer status codes</p>
+</div>
+<p><code class="xref c c-func docutils literal notranslate"><span class="pre">usb_register()</span></code>:</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="40%" />
+<col width="60%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><code class="docutils literal notranslate"><span class="pre">-EINVAL</span></code></td>
+<td>error during registering new driver</td>
+</tr>
+</tbody>
+</table>
+<p><code class="docutils literal notranslate"><span class="pre">usb_get_*/usb_set_*()</span></code>,
+<a class="reference internal" href="usb.html#c.usb_control_msg" title="usb_control_msg"><code class="xref c c-func docutils literal notranslate"><span class="pre">usb_control_msg()</span></code></a>,
+<a class="reference internal" href="usb.html#c.usb_bulk_msg" title="usb_bulk_msg"><code class="xref c c-func docutils literal notranslate"><span class="pre">usb_bulk_msg()</span></code></a>:</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="33%" />
+<col width="67%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><code class="docutils literal notranslate"><span class="pre">-ETIMEDOUT</span></code></td>
+<td>Timeout expired before the transfer completed.</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright The kernel development community
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

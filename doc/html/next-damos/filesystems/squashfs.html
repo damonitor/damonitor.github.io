@@ -1,0 +1,501 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Squashfs 4.0 Filesystem &mdash; The Linux Kernel  documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript">
+          var DOCUMENTATION_OPTIONS = {
+              URL_ROOT:'../',
+              VERSION:'',
+              LANGUAGE:'None',
+              COLLAPSE_INDEX:false,
+              FILE_SUFFIX:'.html',
+              HAS_SOURCE:  true,
+              SOURCELINK_SUFFIX: '.txt'
+          };
+      </script>
+        <script type="text/javascript" src="../_static/jquery.js"></script>
+        <script type="text/javascript" src="../_static/underscore.js"></script>
+        <script type="text/javascript" src="../_static/doctools.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/theme_overrides.css" type="text/css" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> The Linux Kernel
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                5.7.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../admin-guide/mm/damon/index.html">DAMON: Data Access MONitor</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">The Linux Kernel</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+      <li>Squashfs 4.0 Filesystem</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/filesystems/squashfs.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="squashfs-4-0-filesystem">
+<h1>Squashfs 4.0 Filesystem<a class="headerlink" href="#squashfs-4-0-filesystem" title="Permalink to this headline">¶</a></h1>
+<p>Squashfs is a compressed read-only filesystem for Linux.</p>
+<p>It uses zlib, lz4, lzo, or xz compression to compress files, inodes and
+directories.  Inodes in the system are very small and all blocks are packed to
+minimise data overhead. Block sizes greater than 4K are supported up to a
+maximum of 1Mbytes (default block size 128K).</p>
+<p>Squashfs is intended for general read-only filesystem use, for archival
+use (i.e. in cases where a .tar.gz file may be used), and in constrained
+block device/memory systems (e.g. embedded systems) where low overhead is
+needed.</p>
+<p>Mailing list: <a class="reference external" href="mailto:squashfs-devel&#37;&#52;&#48;lists&#46;sourceforge&#46;net">squashfs-devel<span>&#64;</span>lists<span>&#46;</span>sourceforge<span>&#46;</span>net</a>
+Web site: www.squashfs.org</p>
+<div class="section" id="filesystem-features">
+<h2>1. Filesystem Features<a class="headerlink" href="#filesystem-features" title="Permalink to this headline">¶</a></h2>
+<p>Squashfs filesystem features versus Cramfs:</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="61%" />
+<col width="18%" />
+<col width="20%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">&#160;</th>
+<th class="head">&#160;</th>
+<th class="head">&#160;</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>Max filesystem size</td>
+<td>2^64</td>
+<td>256 MiB</td>
+</tr>
+<tr class="row-odd"><td>Max file size</td>
+<td>~ 2 TiB</td>
+<td>16 MiB</td>
+</tr>
+<tr class="row-even"><td>Max files</td>
+<td>unlimited</td>
+<td>unlimited</td>
+</tr>
+<tr class="row-odd"><td>Max directories</td>
+<td>unlimited</td>
+<td>unlimited</td>
+</tr>
+<tr class="row-even"><td>Max entries per directory</td>
+<td>unlimited</td>
+<td>unlimited</td>
+</tr>
+<tr class="row-odd"><td>Max block size</td>
+<td>1 MiB</td>
+<td>4 KiB</td>
+</tr>
+<tr class="row-even"><td>Metadata compression</td>
+<td>yes</td>
+<td>no</td>
+</tr>
+<tr class="row-odd"><td>Directory indexes</td>
+<td>yes</td>
+<td>no</td>
+</tr>
+<tr class="row-even"><td>Sparse file support</td>
+<td>yes</td>
+<td>no</td>
+</tr>
+<tr class="row-odd"><td>Tail-end packing (fragments)</td>
+<td>yes</td>
+<td>no</td>
+</tr>
+<tr class="row-even"><td>Exportable (NFS etc.)</td>
+<td>yes</td>
+<td>no</td>
+</tr>
+<tr class="row-odd"><td>Hard link support</td>
+<td>yes</td>
+<td>no</td>
+</tr>
+<tr class="row-even"><td>“.” and “..” in readdir</td>
+<td>yes</td>
+<td>no</td>
+</tr>
+<tr class="row-odd"><td>Real inode numbers</td>
+<td>yes</td>
+<td>no</td>
+</tr>
+<tr class="row-even"><td>32-bit uids/gids</td>
+<td>yes</td>
+<td>no</td>
+</tr>
+<tr class="row-odd"><td>File creation time</td>
+<td>yes</td>
+<td>no</td>
+</tr>
+<tr class="row-even"><td>Xattr support</td>
+<td>yes</td>
+<td>no</td>
+</tr>
+<tr class="row-odd"><td>ACL support</td>
+<td>no</td>
+<td>no</td>
+</tr>
+</tbody>
+</table>
+<p>Squashfs compresses data, inodes and directories.  In addition, inode and
+directory data are highly compacted, and packed on byte boundaries.  Each
+compressed inode is on average 8 bytes in length (the exact length varies on
+file type, i.e. regular file, directory, symbolic link, and block/char device
+inodes have different sizes).</p>
+</div>
+<div class="section" id="using-squashfs">
+<h2>2. Using Squashfs<a class="headerlink" href="#using-squashfs" title="Permalink to this headline">¶</a></h2>
+<p>As squashfs is a read-only filesystem, the mksquashfs program must be used to
+create populated squashfs filesystems.  This and other squashfs utilities
+can be obtained from <a class="reference external" href="http://www.squashfs.org">http://www.squashfs.org</a>.  Usage instructions can be
+obtained from this site also.</p>
+<dl class="docutils">
+<dt>The squashfs-tools development tree is now located on kernel.org</dt>
+<dd>git://git.kernel.org/pub/scm/fs/squashfs/squashfs-tools.git</dd>
+</dl>
+</div>
+<div class="section" id="squashfs-filesystem-design">
+<h2>3. Squashfs Filesystem Design<a class="headerlink" href="#squashfs-filesystem-design" title="Permalink to this headline">¶</a></h2>
+<p>A squashfs filesystem consists of a maximum of nine parts, packed together on a
+byte alignment:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span> ---------------
+|  superblock   |
+|---------------|
+|  compression  |
+|    options    |
+|---------------|
+|  datablocks   |
+|  &amp; fragments  |
+|---------------|
+|  inode table  |
+|---------------|
+|   directory   |
+|     table     |
+|---------------|
+|   fragment    |
+|    table      |
+|---------------|
+|    export     |
+|    table      |
+|---------------|
+|    uid/gid    |
+|  lookup table |
+|---------------|
+|     xattr     |
+|     table     |
+ ---------------
+</pre></div>
+</div>
+<p>Compressed data blocks are written to the filesystem as files are read from
+the source directory, and checked for duplicates.  Once all file data has been
+written the completed inode, directory, fragment, export, uid/gid lookup and
+xattr tables are written.</p>
+</div>
+<div class="section" id="compression-options">
+<h2>3.1 Compression options<a class="headerlink" href="#compression-options" title="Permalink to this headline">¶</a></h2>
+<p>Compressors can optionally support compression specific options (e.g.
+dictionary size).  If non-default compression options have been used, then
+these are stored here.</p>
+</div>
+<div class="section" id="inodes">
+<h2>3.2 Inodes<a class="headerlink" href="#inodes" title="Permalink to this headline">¶</a></h2>
+<p>Metadata (inodes and directories) are compressed in 8Kbyte blocks.  Each
+compressed block is prefixed by a two byte length, the top bit is set if the
+block is uncompressed.  A block will be uncompressed if the -noI option is set,
+or if the compressed block was larger than the uncompressed block.</p>
+<p>Inodes are packed into the metadata blocks, and are not aligned to block
+boundaries, therefore inodes overlap compressed blocks.  Inodes are identified
+by a 48-bit number which encodes the location of the compressed metadata block
+containing the inode, and the byte offset into that block where the inode is
+placed (&lt;block, offset&gt;).</p>
+<p>To maximise compression there are different inodes for each file type
+(regular file, directory, device, etc.), the inode contents and length
+varying with the type.</p>
+<p>To further maximise compression, two types of regular file inode and
+directory inode are defined: inodes optimised for frequently occurring
+regular files and directories, and extended types where extra
+information has to be stored.</p>
+</div>
+<div class="section" id="directories">
+<h2>3.3 Directories<a class="headerlink" href="#directories" title="Permalink to this headline">¶</a></h2>
+<p>Like inodes, directories are packed into compressed metadata blocks, stored
+in a directory table.  Directories are accessed using the start address of
+the metablock containing the directory and the offset into the
+decompressed block (&lt;block, offset&gt;).</p>
+<p>Directories are organised in a slightly complex way, and are not simply
+a list of file names.  The organisation takes advantage of the
+fact that (in most cases) the inodes of the files will be in the same
+compressed metadata block, and therefore, can share the start block.
+Directories are therefore organised in a two level list, a directory
+header containing the shared start block value, and a sequence of directory
+entries, each of which share the shared start block.  A new directory header
+is written once/if the inode start block changes.  The directory
+header/directory entry list is repeated as many times as necessary.</p>
+<p>Directories are sorted, and can contain a directory index to speed up
+file lookup.  Directory indexes store one entry per metablock, each entry
+storing the index/filename mapping to the first directory header
+in each metadata block.  Directories are sorted in alphabetical order,
+and at lookup the index is scanned linearly looking for the first filename
+alphabetically larger than the filename being looked up.  At this point the
+location of the metadata block the filename is in has been found.
+The general idea of the index is to ensure only one metadata block needs to be
+decompressed to do a lookup irrespective of the length of the directory.
+This scheme has the advantage that it doesn’t require extra memory overhead
+and doesn’t require much extra storage on disk.</p>
+</div>
+<div class="section" id="file-data">
+<h2>3.4 File data<a class="headerlink" href="#file-data" title="Permalink to this headline">¶</a></h2>
+<p>Regular files consist of a sequence of contiguous compressed blocks, and/or a
+compressed fragment block (tail-end packed block).   The compressed size
+of each datablock is stored in a block list contained within the
+file inode.</p>
+<p>To speed up access to datablocks when reading ‘large’ files (256 Mbytes or
+larger), the code implements an index cache that caches the mapping from
+block index to datablock location on disk.</p>
+<p>The index cache allows Squashfs to handle large files (up to 1.75 TiB) while
+retaining a simple and space-efficient block list on disk.  The cache
+is split into slots, caching up to eight 224 GiB files (128 KiB blocks).
+Larger files use multiple slots, with 1.75 TiB files using all 8 slots.
+The index cache is designed to be memory efficient, and by default uses
+16 KiB.</p>
+</div>
+<div class="section" id="fragment-lookup-table">
+<h2>3.5 Fragment lookup table<a class="headerlink" href="#fragment-lookup-table" title="Permalink to this headline">¶</a></h2>
+<p>Regular files can contain a fragment index which is mapped to a fragment
+location on disk and compressed size using a fragment lookup table.  This
+fragment lookup table is itself stored compressed into metadata blocks.
+A second index table is used to locate these.  This second index table for
+speed of access (and because it is small) is read at mount time and cached
+in memory.</p>
+</div>
+<div class="section" id="uid-gid-lookup-table">
+<h2>3.6 Uid/gid lookup table<a class="headerlink" href="#uid-gid-lookup-table" title="Permalink to this headline">¶</a></h2>
+<p>For space efficiency regular files store uid and gid indexes, which are
+converted to 32-bit uids/gids using an id look up table.  This table is
+stored compressed into metadata blocks.  A second index table is used to
+locate these.  This second index table for speed of access (and because it
+is small) is read at mount time and cached in memory.</p>
+</div>
+<div class="section" id="export-table">
+<h2>3.7 Export table<a class="headerlink" href="#export-table" title="Permalink to this headline">¶</a></h2>
+<p>To enable Squashfs filesystems to be exportable (via NFS etc.) filesystems
+can optionally (disabled with the -no-exports Mksquashfs option) contain
+an inode number to inode disk location lookup table.  This is required to
+enable Squashfs to map inode numbers passed in filehandles to the inode
+location on disk, which is necessary when the export code reinstantiates
+expired/flushed inodes.</p>
+<p>This table is stored compressed into metadata blocks.  A second index table is
+used to locate these.  This second index table for speed of access (and because
+it is small) is read at mount time and cached in memory.</p>
+</div>
+<div class="section" id="xattr-table">
+<h2>3.8 Xattr table<a class="headerlink" href="#xattr-table" title="Permalink to this headline">¶</a></h2>
+<p>The xattr table contains extended attributes for each inode.  The xattrs
+for each inode are stored in a list, each list entry containing a type,
+name and value field.  The type field encodes the xattr prefix
+(“user.”, “trusted.” etc) and it also encodes how the name/value fields
+should be interpreted.  Currently the type indicates whether the value
+is stored inline (in which case the value field contains the xattr value),
+or if it is stored out of line (in which case the value field stores a
+reference to where the actual value is stored).  This allows large values
+to be stored out of line improving scanning and lookup performance and it
+also allows values to be de-duplicated, the value being stored once, and
+all other occurrences holding an out of line reference to that value.</p>
+<p>The xattr lists are packed into compressed 8K metadata blocks.
+To reduce overhead in inodes, rather than storing the on-disk
+location of the xattr list inside each inode, a 32-bit xattr id
+is stored.  This xattr id is mapped into the location of the xattr
+list using a second xattr id lookup table.</p>
+</div>
+<div class="section" id="todos-and-outstanding-issues">
+<h2>4. TODOs and Outstanding Issues<a class="headerlink" href="#todos-and-outstanding-issues" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="todo-list">
+<h2>4.1 TODO list<a class="headerlink" href="#todo-list" title="Permalink to this headline">¶</a></h2>
+<p>Implement ACL support.</p>
+</div>
+<div class="section" id="squashfs-internal-cache">
+<h2>4.2 Squashfs Internal Cache<a class="headerlink" href="#squashfs-internal-cache" title="Permalink to this headline">¶</a></h2>
+<p>Blocks in Squashfs are compressed.  To avoid repeatedly decompressing
+recently accessed data Squashfs uses two small metadata and fragment caches.</p>
+<p>The cache is not used for file datablocks, these are decompressed and cached in
+the page-cache in the normal way.  The cache is used to temporarily cache
+fragment and metadata blocks which have been read as a result of a metadata
+(i.e. inode or directory) or fragment access.  Because metadata and fragments
+are packed together into blocks (to gain greater compression) the read of a
+particular piece of metadata or fragment will retrieve other metadata/fragments
+which have been packed with it, these because of locality-of-reference may be
+read in the near future. Temporarily caching them ensures they are available
+for near future access without requiring an additional read and decompress.</p>
+<p>In the future this internal cache may be replaced with an implementation which
+uses the kernel page cache.  Because the page cache operates on page sized
+units this may introduce additional complexity in terms of locking and
+associated race conditions.</p>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright The kernel development community
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

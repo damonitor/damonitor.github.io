@@ -1,0 +1,281 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Sync File API Guide &mdash; The Linux Kernel  documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript">
+          var DOCUMENTATION_OPTIONS = {
+              URL_ROOT:'../',
+              VERSION:'',
+              LANGUAGE:'None',
+              COLLAPSE_INDEX:false,
+              FILE_SUFFIX:'.html',
+              HAS_SOURCE:  true,
+              SOURCELINK_SUFFIX: '.txt'
+          };
+      </script>
+        <script type="text/javascript" src="../_static/jquery.js"></script>
+        <script type="text/javascript" src="../_static/underscore.js"></script>
+        <script type="text/javascript" src="../_static/doctools.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/theme_overrides.css" type="text/css" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> The Linux Kernel
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                5.7.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../admin-guide/mm/damon/index.html">DAMON: Data Access MONitor</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">The Linux Kernel</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+      <li>Sync File API Guide</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/driver-api/sync_file.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="sync-file-api-guide">
+<h1>Sync File API Guide<a class="headerlink" href="#sync-file-api-guide" title="Permalink to this headline">¶</a></h1>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Author:</th><td class="field-body">Gustavo Padovan &lt;gustavo at padovan dot org&gt;</td>
+</tr>
+</tbody>
+</table>
+<p>This document serves as a guide for device drivers writers on what the
+sync_file API is, and how drivers can support it. Sync file is the carrier of
+the fences(struct dma_fence) that are needed to synchronize between drivers or
+across process boundaries.</p>
+<p>The sync_file API is meant to be used to send and receive fence information
+to/from userspace. It enables userspace to do explicit fencing, where instead
+of attaching a fence to the buffer a producer driver (such as a GPU or V4L
+driver) sends the fence related to the buffer to userspace via a sync_file.</p>
+<p>The sync_file then can be sent to the consumer (DRM driver for example), that
+will not use the buffer for anything before the fence(s) signals, i.e., the
+driver that issued the fence is not using/processing the buffer anymore, so it
+signals that the buffer is ready to use. And vice-versa for the consumer -&gt;
+producer part of the cycle.</p>
+<p>Sync files allows userspace awareness on buffer sharing synchronization between
+drivers.</p>
+<p>Sync file was originally added in the Android kernel but current Linux Desktop
+can benefit a lot from it.</p>
+<div class="section" id="in-fences-and-out-fences">
+<h2>in-fences and out-fences<a class="headerlink" href="#in-fences-and-out-fences" title="Permalink to this headline">¶</a></h2>
+<p>Sync files can go either to or from userspace. When a sync_file is sent from
+the driver to userspace we call the fences it contains ‘out-fences’. They are
+related to a buffer that the driver is processing or is going to process, so
+the driver creates an out-fence to be able to notify, through
+<a class="reference internal" href="dma-buf.html#c.dma_fence_signal" title="dma_fence_signal"><code class="xref c c-func docutils literal notranslate"><span class="pre">dma_fence_signal()</span></code></a>, when it has finished using (or processing) that buffer.
+Out-fences are fences that the driver creates.</p>
+<p>On the other hand if the driver receives fence(s) through a sync_file from
+userspace we call these fence(s) ‘in-fences’. Receiving in-fences means that
+we need to wait for the fence(s) to signal before using any buffer related to
+the in-fences.</p>
+</div>
+<div class="section" id="creating-sync-files">
+<h2>Creating Sync Files<a class="headerlink" href="#creating-sync-files" title="Permalink to this headline">¶</a></h2>
+<p>When a driver needs to send an out-fence userspace it creates a sync_file.</p>
+<p>Interface:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>struct sync_file *sync_file_create(struct dma_fence *fence);
+</pre></div>
+</div>
+<p>The caller pass the out-fence and gets back the sync_file. That is just the
+first step, next it needs to install an fd on sync_file-&gt;file. So it gets an
+fd:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>fd = get_unused_fd_flags(O_CLOEXEC);
+</pre></div>
+</div>
+<p>and installs it on sync_file-&gt;file:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>fd_install(fd, sync_file-&gt;file);
+</pre></div>
+</div>
+<p>The sync_file fd now can be sent to userspace.</p>
+<p>If the creation process fail, or the sync_file needs to be released by any
+other reason fput(sync_file-&gt;file) should be used.</p>
+</div>
+<div class="section" id="receiving-sync-files-from-userspace">
+<h2>Receiving Sync Files from Userspace<a class="headerlink" href="#receiving-sync-files-from-userspace" title="Permalink to this headline">¶</a></h2>
+<p>When userspace needs to send an in-fence to the driver it passes file descriptor
+of the Sync File to the kernel. The kernel can then retrieve the fences
+from it.</p>
+<p>Interface:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>struct dma_fence *sync_file_get_fence(int fd);
+</pre></div>
+</div>
+<p>The returned reference is owned by the caller and must be disposed of
+afterwards using <a class="reference internal" href="dma-buf.html#c.dma_fence_put" title="dma_fence_put"><code class="xref c c-func docutils literal notranslate"><span class="pre">dma_fence_put()</span></code></a>. In case of error, a NULL is returned instead.</p>
+<p>References:</p>
+<ol class="arabic simple">
+<li>struct sync_file in include/linux/sync_file.h</li>
+<li>All interfaces mentioned above defined in include/linux/sync_file.h</li>
+</ol>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright The kernel development community
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

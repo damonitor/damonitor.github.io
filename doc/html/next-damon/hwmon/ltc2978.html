@@ -1,0 +1,659 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Kernel driver ltc2978 &mdash; The Linux Kernel  documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript">
+          var DOCUMENTATION_OPTIONS = {
+              URL_ROOT:'../',
+              VERSION:'',
+              LANGUAGE:'None',
+              COLLAPSE_INDEX:false,
+              FILE_SUFFIX:'.html',
+              HAS_SOURCE:  true,
+              SOURCELINK_SUFFIX: '.txt'
+          };
+      </script>
+        <script type="text/javascript" src="../_static/jquery.js"></script>
+        <script type="text/javascript" src="../_static/underscore.js"></script>
+        <script type="text/javascript" src="../_static/doctools.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/theme_overrides.css" type="text/css" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> The Linux Kernel
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                5.7.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../admin-guide/mm/damon/index.html">DAMON: Data Access MONitor</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">The Linux Kernel</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+      <li>Kernel driver ltc2978</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/hwmon/ltc2978.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="kernel-driver-ltc2978">
+<h1>Kernel driver ltc2978<a class="headerlink" href="#kernel-driver-ltc2978" title="Permalink to this headline">¶</a></h1>
+<p>Supported chips:</p>
+<blockquote>
+<div><ul>
+<li><p class="first">Linear Technology LTC2972</p>
+<p>Prefix: ‘ltc2972’</p>
+<p>Addresses scanned: -</p>
+<p>Datasheet: <a class="reference external" href="https://www.analog.com/en/products/ltc2972.html">https://www.analog.com/en/products/ltc2972.html</a></p>
+</li>
+<li><p class="first">Linear Technology LTC2974</p>
+<p>Prefix: ‘ltc2974’</p>
+<p>Addresses scanned: -</p>
+<p>Datasheet: <a class="reference external" href="https://www.analog.com/en/products/ltc2974">https://www.analog.com/en/products/ltc2974</a></p>
+</li>
+<li><p class="first">Linear Technology LTC2975</p>
+<p>Prefix: ‘ltc2975’</p>
+<p>Addresses scanned: -</p>
+<p>Datasheet: <a class="reference external" href="https://www.analog.com/en/products/ltc2975">https://www.analog.com/en/products/ltc2975</a></p>
+</li>
+<li><p class="first">Linear Technology LTC2977</p>
+<p>Prefix: ‘ltc2977’</p>
+<p>Addresses scanned: -</p>
+<p>Datasheet: <a class="reference external" href="https://www.analog.com/en/products/ltc2977">https://www.analog.com/en/products/ltc2977</a></p>
+</li>
+<li><p class="first">Linear Technology LTC2978, LTC2978A</p>
+<p>Prefix: ‘ltc2978’</p>
+<p>Addresses scanned: -</p>
+<p>Datasheet: <a class="reference external" href="https://www.analog.com/en/products/ltc2978">https://www.analog.com/en/products/ltc2978</a></p>
+<blockquote>
+<div><p><a class="reference external" href="https://www.analog.com/en/products/ltc2978a">https://www.analog.com/en/products/ltc2978a</a></p>
+</div></blockquote>
+</li>
+<li><p class="first">Linear Technology LTC2979</p>
+<p>Prefix: ‘ltc2979’</p>
+<p>Addresses scanned: -</p>
+<p>Datasheet: <a class="reference external" href="https://www.analog.com/en/products/ltc2979">https://www.analog.com/en/products/ltc2979</a></p>
+</li>
+<li><p class="first">Linear Technology LTC2980</p>
+<p>Prefix: ‘ltc2980’</p>
+<p>Addresses scanned: -</p>
+<p>Datasheet: <a class="reference external" href="https://www.analog.com/en/products/ltc2980">https://www.analog.com/en/products/ltc2980</a></p>
+</li>
+<li><p class="first">Linear Technology LTC3880</p>
+<p>Prefix: ‘ltc3880’</p>
+<p>Addresses scanned: -</p>
+<p>Datasheet: <a class="reference external" href="https://www.analog.com/en/products/ltc3880">https://www.analog.com/en/products/ltc3880</a></p>
+</li>
+<li><p class="first">Linear Technology LTC3882</p>
+<p>Prefix: ‘ltc3882’</p>
+<p>Addresses scanned: -</p>
+<p>Datasheet: <a class="reference external" href="https://www.analog.com/en/products/ltc3882">https://www.analog.com/en/products/ltc3882</a></p>
+</li>
+<li><p class="first">Linear Technology LTC3883</p>
+<p>Prefix: ‘ltc3883’</p>
+<p>Addresses scanned: -</p>
+<p>Datasheet: <a class="reference external" href="https://www.analog.com/en/products/ltc3883">https://www.analog.com/en/products/ltc3883</a></p>
+</li>
+<li><p class="first">Linear Technology LTC3884</p>
+<p>Prefix: ‘ltc3884’</p>
+<p>Addresses scanned: -</p>
+<p>Datasheet: <a class="reference external" href="https://www.analog.com/en/products/ltc3884">https://www.analog.com/en/products/ltc3884</a></p>
+</li>
+<li><p class="first">Linear Technology LTC3886</p>
+<p>Prefix: ‘ltc3886’</p>
+<p>Addresses scanned: -</p>
+<p>Datasheet: <a class="reference external" href="https://www.analog.com/en/products/ltc3886">https://www.analog.com/en/products/ltc3886</a></p>
+</li>
+<li><p class="first">Linear Technology LTC3887</p>
+<p>Prefix: ‘ltc3887’</p>
+<p>Addresses scanned: -</p>
+<p>Datasheet: <a class="reference external" href="https://www.analog.com/en/products/ltc3887">https://www.analog.com/en/products/ltc3887</a></p>
+</li>
+<li><p class="first">Linear Technology LTC3889</p>
+<p>Prefix: ‘ltc3889’</p>
+<p>Addresses scanned: -</p>
+<p>Datasheet: <a class="reference external" href="https://www.analog.com/en/products/ltc3889">https://www.analog.com/en/products/ltc3889</a></p>
+</li>
+<li><p class="first">Linear Technology LTC7880</p>
+<p>Prefix: ‘ltc7880’</p>
+<p>Addresses scanned: -</p>
+<p>Datasheet: <a class="reference external" href="https://www.analog.com/en/products/ltc7880">https://www.analog.com/en/products/ltc7880</a></p>
+</li>
+<li><p class="first">Linear Technology LTM2987</p>
+<p>Prefix: ‘ltm2987’</p>
+<p>Addresses scanned: -</p>
+<p>Datasheet: <a class="reference external" href="https://www.analog.com/en/products/ltm2987">https://www.analog.com/en/products/ltm2987</a></p>
+</li>
+<li><p class="first">Linear Technology LTM4644</p>
+<p>Prefix: ‘ltm4644’</p>
+<p>Addresses scanned: -</p>
+<p>Datasheet: <a class="reference external" href="https://www.analog.com/en/products/ltm4644">https://www.analog.com/en/products/ltm4644</a></p>
+</li>
+</ul>
+<blockquote>
+<div><ul class="simple">
+<li>Linear Technology LTM4675</li>
+</ul>
+<blockquote>
+<div><p>Prefix: ‘ltm4675’</p>
+<p>Addresses scanned: -</p>
+<p>Datasheet: <a class="reference external" href="https://www.analog.com/en/products/ltm4675">https://www.analog.com/en/products/ltm4675</a></p>
+</div></blockquote>
+</div></blockquote>
+<ul>
+<li><p class="first">Linear Technology LTM4676</p>
+<p>Prefix: ‘ltm4676’</p>
+<p>Addresses scanned: -</p>
+<p>Datasheet: <a class="reference external" href="https://www.analog.com/en/products/ltm4676">https://www.analog.com/en/products/ltm4676</a></p>
+</li>
+<li><p class="first">Linear Technology LTM4677</p>
+<p>Prefix: ‘ltm4677’</p>
+<p>Addresses scanned: -</p>
+<p>Datasheet: <a class="reference external" href="https://www.analog.com/en/products/ltm4677">https://www.analog.com/en/products/ltm4677</a></p>
+</li>
+<li><p class="first">Linear Technology LTM4678</p>
+<p>Prefix: ‘ltm4678’</p>
+<p>Addresses scanned: -</p>
+<p>Datasheet: <a class="reference external" href="https://www.analog.com/en/products/ltm4678">https://www.analog.com/en/products/ltm4678</a></p>
+</li>
+<li><p class="first">Analog Devices LTM4680</p>
+<p>Prefix: ‘ltm4680’</p>
+<p>Addresses scanned: -</p>
+<p>Datasheet: <a class="reference external" href="http://www.analog.com/ltm4680">http://www.analog.com/ltm4680</a></p>
+</li>
+<li><p class="first">Analog Devices LTM4686</p>
+<p>Prefix: ‘ltm4686’</p>
+<p>Addresses scanned: -</p>
+<p>Datasheet: <a class="reference external" href="http://www.analog.com/ltm4686">http://www.analog.com/ltm4686</a></p>
+</li>
+<li><p class="first">Analog Devices LTM4700</p>
+<p>Prefix: ‘ltm4700’</p>
+<p>Addresses scanned: -</p>
+<p>Datasheet: <a class="reference external" href="http://www.analog.com/ltm4700">http://www.analog.com/ltm4700</a></p>
+</li>
+</ul>
+</div></blockquote>
+<p>Author: Guenter Roeck &lt;<a class="reference external" href="mailto:linux&#37;&#52;&#48;roeck-us&#46;net">linux<span>&#64;</span>roeck-us<span>&#46;</span>net</a>&gt;</p>
+<div class="section" id="description">
+<h2>Description<a class="headerlink" href="#description" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li>LTC2974 and LTC2975 are quad digital power supply managers.</li>
+<li>LTC2978 is an octal power supply monitor.</li>
+<li>LTC2977 is a pin compatible replacement for LTC2978.</li>
+<li>LTC2980 is a 16-channel Power System Manager, consisting of two LTC2977</li>
+<li>in a single die. The chip is instantiated and reported as two separate chips</li>
+<li>on two different I2C bus addresses.</li>
+<li>LTC3880, LTC3882, LTC3886, and LTC3887 are dual output poly-phase step-down</li>
+<li>DC/DC controllers.</li>
+<li>LTC3883 is a single phase step-down DC/DC controller.</li>
+<li>LTM2987 is a 16-channel Power System Manager with two LTC2977 plus</li>
+<li>additional components on a single die. The chip is instantiated and reported</li>
+<li>as two separate chips on two different I2C bus addresses.</li>
+<li>LTM4675 is a dual 9A or single 18A μModule regulator</li>
+<li>LTM4676 is a dual 13A or single 26A uModule regulator.</li>
+<li>LTM4686 is a dual 10A or single 20A uModule regulator.</li>
+</ul>
+</div>
+<div class="section" id="usage-notes">
+<h2>Usage Notes<a class="headerlink" href="#usage-notes" title="Permalink to this headline">¶</a></h2>
+<p>This driver does not probe for PMBus devices. You will have to instantiate
+devices explicitly.</p>
+<p>Example: the following commands will load the driver for an LTC2978 at address
+0x60 on I2C bus #1:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span># modprobe ltc2978
+# echo ltc2978 0x60 &gt; /sys/bus/i2c/devices/i2c-1/new_device
+</pre></div>
+</div>
+</div>
+<div class="section" id="sysfs-attributes">
+<h2>Sysfs attributes<a class="headerlink" href="#sysfs-attributes" title="Permalink to this headline">¶</a></h2>
+<table border="1" class="docutils">
+<colgroup>
+<col width="29%" />
+<col width="71%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td>in1_label</td>
+<td>“vin”</td>
+</tr>
+<tr class="row-even"><td>in1_input</td>
+<td>Measured input voltage.</td>
+</tr>
+<tr class="row-odd"><td>in1_min</td>
+<td>Minimum input voltage.</td>
+</tr>
+<tr class="row-even"><td>in1_max</td>
+<td><p class="first">Maximum input voltage.</p>
+<p class="last">LTC2974, LTC2975, LTC2977, LTC2980, LTC2978,
+LTC2979 and LTM2987 only.</p>
+</td>
+</tr>
+<tr class="row-odd"><td>in1_lcrit</td>
+<td><p class="first">Critical minimum input voltage.</p>
+<p class="last">LTC2972, LTC2974, LTC2975, LTC2977, LTC2980, LTC2978,
+LTC2979 and LTM2987 only.</p>
+</td>
+</tr>
+<tr class="row-even"><td>in1_crit</td>
+<td>Critical maximum input voltage.</td>
+</tr>
+<tr class="row-odd"><td>in1_min_alarm</td>
+<td>Input voltage low alarm.</td>
+</tr>
+<tr class="row-even"><td>in1_max_alarm</td>
+<td><p class="first">Input voltage high alarm.</p>
+<p class="last">LTC2972, LTC2974, LTC2975, LTC2977, LTC2980, LTC2978,
+LTC2979 and LTM2987 only.</p>
+</td>
+</tr>
+<tr class="row-odd"><td>in1_lcrit_alarm</td>
+<td><p class="first">Input voltage critical low alarm.</p>
+<p class="last">LTC2972, LTC2974, LTC2975, LTC2977, LTC2980, LTC2978,
+LTC2979 and LTM2987 only.</p>
+</td>
+</tr>
+<tr class="row-even"><td>in1_crit_alarm</td>
+<td>Input voltage critical high alarm.</td>
+</tr>
+<tr class="row-odd"><td>in1_lowest</td>
+<td><p class="first">Lowest input voltage.</p>
+<p class="last">LTC2972, LTC2974, LTC2975, LTC2977, LTC2980, LTC2978,
+and LTM2987 only.</p>
+</td>
+</tr>
+<tr class="row-even"><td>in1_highest</td>
+<td>Highest input voltage.</td>
+</tr>
+<tr class="row-odd"><td>in1_reset_history</td>
+<td>Reset input voltage history.</td>
+</tr>
+<tr class="row-even"><td>in[N]_label</td>
+<td><p class="first">“vout[1-8]”.</p>
+<ul class="last simple">
+<li>LTC2972: N=2-3</li>
+<li>LTC2974, LTC2975: N=2-5</li>
+<li>LTC2977, LTC2979, LTC2980, LTM2987: N=2-9</li>
+<li>LTC2978: N=2-9</li>
+<li>LTC3880, LTC3882, LTC3884, LTC23886 LTC3887, LTC3889,
+LTC7880, LTM4644, LTM4675, LTM4676, LTM4677, LTM4678,
+LTM4680, LTM4700: N=2-3</li>
+<li>LTC3883: N=2</li>
+</ul>
+</td>
+</tr>
+<tr class="row-odd"><td>in[N]_input</td>
+<td>Measured output voltage.</td>
+</tr>
+<tr class="row-even"><td>in[N]_min</td>
+<td>Minimum output voltage.</td>
+</tr>
+<tr class="row-odd"><td>in[N]_max</td>
+<td>Maximum output voltage.</td>
+</tr>
+<tr class="row-even"><td>in[N]_lcrit</td>
+<td>Critical minimum output voltage.</td>
+</tr>
+<tr class="row-odd"><td>in[N]_crit</td>
+<td>Critical maximum output voltage.</td>
+</tr>
+<tr class="row-even"><td>in[N]_min_alarm</td>
+<td>Output voltage low alarm.</td>
+</tr>
+<tr class="row-odd"><td>in[N]_max_alarm</td>
+<td>Output voltage high alarm.</td>
+</tr>
+<tr class="row-even"><td>in[N]_lcrit_alarm</td>
+<td>Output voltage critical low alarm.</td>
+</tr>
+<tr class="row-odd"><td>in[N]_crit_alarm</td>
+<td>Output voltage critical high alarm.</td>
+</tr>
+<tr class="row-even"><td>in[N]_lowest</td>
+<td><p class="first">Lowest output voltage.</p>
+<p class="last">LTC2972, LTC2974, LTC2975,and LTC2978 only.</p>
+</td>
+</tr>
+<tr class="row-odd"><td>in[N]_highest</td>
+<td>Highest output voltage.</td>
+</tr>
+<tr class="row-even"><td>in[N]_reset_history</td>
+<td>Reset output voltage history.</td>
+</tr>
+<tr class="row-odd"><td>temp[N]_input</td>
+<td><p class="first">Measured temperature.</p>
+<ul class="last simple">
+<li>On LTC2972, temp[1-2] report external temperatures,
+and temp 3 reports the chip temperature.</li>
+<li>On LTC2974 and LTC2975, temp[1-4] report external
+temperatures, and temp5 reports the chip temperature.</li>
+<li>On LTC2977, LTC2979, LTC2980, LTC2978, and LTM2987,
+only one temperature measurement is supported and
+reports the chip temperature.</li>
+<li>On LTC3880, LTC3882, LTC3886, LTC3887, LTC3889,
+LTM4664, LTM4675, LTM4676, LTM4677, LTM4678, LTM4680,
+and LTM4700, temp1 and temp2 report external
+temperatures, and temp3 reports the chip temperature.</li>
+<li>On LTC3883, temp1 reports an external temperature,
+and temp2 reports the chip temperature.</li>
+</ul>
+</td>
+</tr>
+<tr class="row-even"><td>temp[N]_min</td>
+<td><p class="first">Mimimum temperature.</p>
+<p class="last">LTC2972, LTC2974, LCT2977, LTM2980, LTC2978,
+LTC2979, and LTM2987 only.</p>
+</td>
+</tr>
+<tr class="row-odd"><td>temp[N]_max</td>
+<td>Maximum temperature.</td>
+</tr>
+<tr class="row-even"><td>temp[N]_lcrit</td>
+<td>Critical low temperature.</td>
+</tr>
+<tr class="row-odd"><td>temp[N]_crit</td>
+<td>Critical high temperature.</td>
+</tr>
+<tr class="row-even"><td>temp[N]_min_alarm</td>
+<td><p class="first">Temperature low alarm.</p>
+<p class="last">LTC2972, LTC2974, LTC2975, LTC2977, LTM2980, LTC2978,
+LTC2979, and LTM2987 only.</p>
+</td>
+</tr>
+<tr class="row-odd"><td>temp[N]_max_alarm</td>
+<td>Temperature high alarm.</td>
+</tr>
+<tr class="row-even"><td>temp[N]_lcrit_alarm</td>
+<td>Temperature critical low alarm.</td>
+</tr>
+<tr class="row-odd"><td>temp[N]_crit_alarm</td>
+<td>Temperature critical high alarm.</td>
+</tr>
+<tr class="row-even"><td>temp[N]_lowest</td>
+<td><p class="first">Lowest measured temperature.</p>
+<ul class="last simple">
+<li>LTC2972, LTC2974, LTC2975, LTC2977, LTM2980, LTC2978,
+LTC2979, and LTM2987 only.</li>
+<li>Not supported for chip temperature sensor on LTC2974
+and LTC2975.</li>
+</ul>
+</td>
+</tr>
+<tr class="row-odd"><td>temp[N]_highest</td>
+<td><p class="first">Highest measured temperature.</p>
+<p class="last">Not supported for chip temperature sensor on
+LTC2974 and LTC2975.</p>
+</td>
+</tr>
+<tr class="row-even"><td>temp[N]_reset_history</td>
+<td><p class="first">Reset temperature history.</p>
+<p class="last">Not supported for chip temperature sensor on
+LTC2974 and LTC2975.</p>
+</td>
+</tr>
+<tr class="row-odd"><td>power1_label</td>
+<td>“pin”. LTC3883 and LTC3886 only.</td>
+</tr>
+<tr class="row-even"><td>power1_input</td>
+<td>Measured input power.</td>
+</tr>
+<tr class="row-odd"><td>power[N]_label</td>
+<td><p class="first">“pout[1-4]”.</p>
+<ul class="last simple">
+<li>LTC2972: N=1-2</li>
+<li>LTC2974, LTC2975: N=1-4</li>
+<li>LTC2977, LTC2979, LTC2980, LTM2987: Not supported</li>
+<li>LTC2978: Not supported</li>
+<li>LTC3880, LTC3882, LTC3884, LTC3886, LTC3887, LTC3889,
+LTM4664, LTM4675, LTM4676, LTM4677, LTM4678, LTM4680,
+LTM4700: N=1-2</li>
+<li>LTC3883: N=2</li>
+</ul>
+</td>
+</tr>
+<tr class="row-even"><td>power[N]_input</td>
+<td>Measured output power.</td>
+</tr>
+<tr class="row-odd"><td>curr1_label</td>
+<td><p class="first">“iin”.</p>
+<p class="last">LTC3880, LTC3883, LTC3884, LTC3886, LTC3887, LTC3889,
+LTM4644, LTM4675, LTM4676, LTM4677, LTM4678, LTM4680,
+and LTM4700 only.</p>
+</td>
+</tr>
+<tr class="row-even"><td>curr1_input</td>
+<td>Measured input current.</td>
+</tr>
+<tr class="row-odd"><td>curr1_max</td>
+<td>Maximum input current.</td>
+</tr>
+<tr class="row-even"><td>curr1_max_alarm</td>
+<td>Input current high alarm.</td>
+</tr>
+<tr class="row-odd"><td>curr1_highest</td>
+<td><p class="first">Highest input current.</p>
+<p class="last">LTC3883 and LTC3886 only.</p>
+</td>
+</tr>
+<tr class="row-even"><td>curr1_reset_history</td>
+<td><p class="first">Reset input current history.</p>
+<p class="last">LTC3883 and LTC3886 only.</p>
+</td>
+</tr>
+<tr class="row-odd"><td>curr[N]_label</td>
+<td><p class="first">“iout[1-4]”.</p>
+<ul class="last simple">
+<li>LTC2972: N-1-2</li>
+<li>LTC2974, LTC2975: N=1-4</li>
+<li>LTC2977, LTC2979, LTC2980, LTM2987: not supported</li>
+<li>LTC2978: not supported</li>
+<li>LTC3880, LTC3882, LTC3884, LTC3886, LTC3887, LTC3889,
+LTM4664, LTM4675, LTM4676, LTM4677, LTM4678, LTM4680,
+LTM4700: N=2-3</li>
+<li>LTC3883: N=2</li>
+</ul>
+</td>
+</tr>
+<tr class="row-even"><td>curr[N]_input</td>
+<td>Measured output current.</td>
+</tr>
+<tr class="row-odd"><td>curr[N]_max</td>
+<td>Maximum output current.</td>
+</tr>
+<tr class="row-even"><td>curr[N]_crit</td>
+<td>Critical high output current.</td>
+</tr>
+<tr class="row-odd"><td>curr[N]_lcrit</td>
+<td><p class="first">Critical low output current.</p>
+<p class="last">LTC2972, LTC2974 and LTC2975 only.</p>
+</td>
+</tr>
+<tr class="row-even"><td>curr[N]_max_alarm</td>
+<td>Output current high alarm.</td>
+</tr>
+<tr class="row-odd"><td>curr[N]_crit_alarm</td>
+<td>Output current critical high alarm.</td>
+</tr>
+<tr class="row-even"><td>curr[N]_lcrit_alarm</td>
+<td><p class="first">Output current critical low alarm.</p>
+<p class="last">LTC2972, LTC2974 and LTC2975 only.</p>
+</td>
+</tr>
+<tr class="row-odd"><td>curr[N]_lowest</td>
+<td><p class="first">Lowest output current.</p>
+<p class="last">LTC2972, LTC2974 and LTC2975 only.</p>
+</td>
+</tr>
+<tr class="row-even"><td>curr[N]_highest</td>
+<td>Highest output current.</td>
+</tr>
+<tr class="row-odd"><td>curr[N]_reset_history</td>
+<td>Reset output current history.</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright The kernel development community
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

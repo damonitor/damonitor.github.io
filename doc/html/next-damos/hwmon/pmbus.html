@@ -1,0 +1,515 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Kernel driver pmbus &mdash; The Linux Kernel  documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript">
+          var DOCUMENTATION_OPTIONS = {
+              URL_ROOT:'../',
+              VERSION:'',
+              LANGUAGE:'None',
+              COLLAPSE_INDEX:false,
+              FILE_SUFFIX:'.html',
+              HAS_SOURCE:  true,
+              SOURCELINK_SUFFIX: '.txt'
+          };
+      </script>
+        <script type="text/javascript" src="../_static/jquery.js"></script>
+        <script type="text/javascript" src="../_static/underscore.js"></script>
+        <script type="text/javascript" src="../_static/doctools.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/theme_overrides.css" type="text/css" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> The Linux Kernel
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                5.7.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../admin-guide/mm/damon/index.html">DAMON: Data Access MONitor</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">The Linux Kernel</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+      <li>Kernel driver pmbus</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/hwmon/pmbus.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="kernel-driver-pmbus">
+<h1>Kernel driver pmbus<a class="headerlink" href="#kernel-driver-pmbus" title="Permalink to this headline">¶</a></h1>
+<p>Supported chips:</p>
+<blockquote>
+<div><blockquote>
+<div><ul>
+<li><p class="first">Ericsson BMR453, BMR454</p>
+<p>Prefixes: ‘bmr453’, ‘bmr454’</p>
+<p>Addresses scanned: -</p>
+<p>Datasheet:</p>
+</li>
+</ul>
+</div></blockquote>
+<p><a class="reference external" href="http://archive.ericsson.net/service/internet/picov/get?DocNo=28701-EN/LZT146395">http://archive.ericsson.net/service/internet/picov/get?DocNo=28701-EN/LZT146395</a></p>
+<blockquote>
+<div><ul>
+<li><p class="first">ON Semiconductor ADP4000, NCP4200, NCP4208</p>
+<p>Prefixes: ‘adp4000’, ‘ncp4200’, ‘ncp4208’</p>
+<p>Addresses scanned: -</p>
+<p>Datasheets:</p>
+<blockquote>
+<div><p><a class="reference external" href="http://www.onsemi.com/pub_link/Collateral/ADP4000-D.PDF">http://www.onsemi.com/pub_link/Collateral/ADP4000-D.PDF</a></p>
+<p><a class="reference external" href="http://www.onsemi.com/pub_link/Collateral/NCP4200-D.PDF">http://www.onsemi.com/pub_link/Collateral/NCP4200-D.PDF</a></p>
+<p><a class="reference external" href="http://www.onsemi.com/pub_link/Collateral/JUNE%202009-%20REV.%200.PDF">http://www.onsemi.com/pub_link/Collateral/JUNE%202009-%20REV.%200.PDF</a></p>
+</div></blockquote>
+</li>
+<li><p class="first">Lineage Power</p>
+<p>Prefixes: ‘mdt040’, ‘pdt003’, ‘pdt006’, ‘pdt012’, ‘udt020’</p>
+<p>Addresses scanned: -</p>
+<p>Datasheets:</p>
+<blockquote>
+<div><p><a class="reference external" href="http://www.lineagepower.com/oem/pdf/PDT003A0X.pdf">http://www.lineagepower.com/oem/pdf/PDT003A0X.pdf</a></p>
+<p><a class="reference external" href="http://www.lineagepower.com/oem/pdf/PDT006A0X.pdf">http://www.lineagepower.com/oem/pdf/PDT006A0X.pdf</a></p>
+<p><a class="reference external" href="http://www.lineagepower.com/oem/pdf/PDT012A0X.pdf">http://www.lineagepower.com/oem/pdf/PDT012A0X.pdf</a></p>
+<p><a class="reference external" href="http://www.lineagepower.com/oem/pdf/UDT020A0X.pdf">http://www.lineagepower.com/oem/pdf/UDT020A0X.pdf</a></p>
+<p><a class="reference external" href="http://www.lineagepower.com/oem/pdf/MDT040A0X.pdf">http://www.lineagepower.com/oem/pdf/MDT040A0X.pdf</a></p>
+</div></blockquote>
+</li>
+<li><p class="first">Texas Instruments TPS40400, TPS544B20, TPS544B25, TPS544C20, TPS544C25</p>
+<p>Prefixes: ‘tps40400’, ‘tps544b20’, ‘tps544b25’, ‘tps544c20’, ‘tps544c25’</p>
+<p>Addresses scanned: -</p>
+<p>Datasheets:</p>
+<blockquote>
+<div><p><a class="reference external" href="http://www.ti.com/lit/gpn/tps40400">http://www.ti.com/lit/gpn/tps40400</a></p>
+<p><a class="reference external" href="http://www.ti.com/lit/gpn/tps544b20">http://www.ti.com/lit/gpn/tps544b20</a></p>
+<p><a class="reference external" href="http://www.ti.com/lit/gpn/tps544b25">http://www.ti.com/lit/gpn/tps544b25</a></p>
+<p><a class="reference external" href="http://www.ti.com/lit/gpn/tps544c20">http://www.ti.com/lit/gpn/tps544c20</a></p>
+<p><a class="reference external" href="http://www.ti.com/lit/gpn/tps544c25">http://www.ti.com/lit/gpn/tps544c25</a></p>
+</div></blockquote>
+</li>
+<li><p class="first">Maxim MAX20796</p>
+<p>Prefix: ‘max20796’</p>
+<p>Addresses scanned: -</p>
+<p>Datasheet:</p>
+<blockquote>
+<div><p>Not published</p>
+</div></blockquote>
+</li>
+<li><p class="first">Generic PMBus devices</p>
+<p>Prefix: ‘pmbus’</p>
+<p>Addresses scanned: -</p>
+<p>Datasheet: n.a.</p>
+</li>
+</ul>
+</div></blockquote>
+</div></blockquote>
+<p>Author: Guenter Roeck &lt;<a class="reference external" href="mailto:linux&#37;&#52;&#48;roeck-us&#46;net">linux<span>&#64;</span>roeck-us<span>&#46;</span>net</a>&gt;</p>
+<div class="section" id="description">
+<h2>Description<a class="headerlink" href="#description" title="Permalink to this headline">¶</a></h2>
+<p>This driver supports hardware monitoring for various PMBus compliant devices.
+It supports voltage, current, power, and temperature sensors as supported
+by the device.</p>
+<p>Each monitored channel has its own high and low limits, plus a critical
+limit.</p>
+<p>Fan support will be added in a later version of this driver.</p>
+</div>
+<div class="section" id="usage-notes">
+<h2>Usage Notes<a class="headerlink" href="#usage-notes" title="Permalink to this headline">¶</a></h2>
+<p>This driver does not probe for PMBus devices, since there is no register
+which can be safely used to identify the chip (The MFG_ID register is not
+supported by all chips), and since there is no well defined address range for
+PMBus devices. You will have to instantiate the devices explicitly.</p>
+<p>Example: the following will load the driver for an LTC2978 at address 0x60
+on I2C bus #1:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>$ modprobe pmbus
+$ echo ltc2978 0x60 &gt; /sys/bus/i2c/devices/i2c-1/new_device
+</pre></div>
+</div>
+</div>
+<div class="section" id="platform-data-support">
+<h2>Platform data support<a class="headerlink" href="#platform-data-support" title="Permalink to this headline">¶</a></h2>
+<p>Support for additional PMBus chips can be added by defining chip parameters in
+a new chip specific driver file. For example, (untested) code to add support for
+Emerson DS1200 power modules might look as follows:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>static struct pmbus_driver_info ds1200_info = {
+      .pages = 1,
+      /* Note: All other sensors are in linear mode */
+      .direct[PSC_VOLTAGE_OUT] = true,
+      .direct[PSC_TEMPERATURE] = true,
+      .direct[PSC_CURRENT_OUT] = true,
+      .m[PSC_VOLTAGE_IN] = 1,
+      .b[PSC_VOLTAGE_IN] = 0,
+      .R[PSC_VOLTAGE_IN] = 3,
+      .m[PSC_VOLTAGE_OUT] = 1,
+      .b[PSC_VOLTAGE_OUT] = 0,
+      .R[PSC_VOLTAGE_OUT] = 3,
+      .m[PSC_TEMPERATURE] = 1,
+      .b[PSC_TEMPERATURE] = 0,
+      .R[PSC_TEMPERATURE] = 3,
+      .func[0] = PMBUS_HAVE_VIN | PMBUS_HAVE_IIN | PMBUS_HAVE_STATUS_INPUT
+                 | PMBUS_HAVE_VOUT | PMBUS_HAVE_STATUS_VOUT
+                 | PMBUS_HAVE_IOUT | PMBUS_HAVE_STATUS_IOUT
+                 | PMBUS_HAVE_PIN | PMBUS_HAVE_POUT
+                 | PMBUS_HAVE_TEMP | PMBUS_HAVE_STATUS_TEMP
+                 | PMBUS_HAVE_FAN12 | PMBUS_HAVE_STATUS_FAN12,
+};
+
+static int ds1200_probe(struct i2c_client *client,
+                        const struct i2c_device_id *id)
+{
+      return pmbus_do_probe(client, id, &amp;ds1200_info);
+}
+
+static int ds1200_remove(struct i2c_client *client)
+{
+      return pmbus_do_remove(client);
+}
+
+static const struct i2c_device_id ds1200_id[] = {
+      {&quot;ds1200&quot;, 0},
+      {}
+};
+
+MODULE_DEVICE_TABLE(i2c, ds1200_id);
+
+/* This is the driver that will be inserted */
+static struct i2c_driver ds1200_driver = {
+      .driver = {
+                 .name = &quot;ds1200&quot;,
+                 },
+      .probe = ds1200_probe,
+      .remove = ds1200_remove,
+      .id_table = ds1200_id,
+};
+
+static int __init ds1200_init(void)
+{
+      return i2c_add_driver(&amp;ds1200_driver);
+}
+
+static void __exit ds1200_exit(void)
+{
+      i2c_del_driver(&amp;ds1200_driver);
+}
+</pre></div>
+</div>
+</div>
+<div class="section" id="sysfs-entries">
+<h2>Sysfs entries<a class="headerlink" href="#sysfs-entries" title="Permalink to this headline">¶</a></h2>
+<p>When probing the chip, the driver identifies which PMBus registers are
+supported, and determines available sensors from this information.
+Attribute files only exist if respective sensors are supported by the chip.
+Labels are provided to inform the user about the sensor associated with
+a given sysfs entry.</p>
+<p>The following attributes are supported. Limits are read-write; all other
+attributes are read-only.</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="29%" />
+<col width="71%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td>inX_input</td>
+<td>Measured voltage. From READ_VIN or READ_VOUT register.</td>
+</tr>
+<tr class="row-even"><td>inX_min</td>
+<td>Minimum Voltage.
+From VIN_UV_WARN_LIMIT or VOUT_UV_WARN_LIMIT register.</td>
+</tr>
+<tr class="row-odd"><td>inX_max</td>
+<td>Maximum voltage.
+From VIN_OV_WARN_LIMIT or VOUT_OV_WARN_LIMIT register.</td>
+</tr>
+<tr class="row-even"><td>inX_lcrit</td>
+<td>Critical minimum Voltage.
+From VIN_UV_FAULT_LIMIT or VOUT_UV_FAULT_LIMIT register.</td>
+</tr>
+<tr class="row-odd"><td>inX_crit</td>
+<td>Critical maximum voltage.
+From VIN_OV_FAULT_LIMIT or VOUT_OV_FAULT_LIMIT register.</td>
+</tr>
+<tr class="row-even"><td>inX_min_alarm</td>
+<td>Voltage low alarm. From VOLTAGE_UV_WARNING status.</td>
+</tr>
+<tr class="row-odd"><td>inX_max_alarm</td>
+<td>Voltage high alarm. From VOLTAGE_OV_WARNING status.</td>
+</tr>
+<tr class="row-even"><td>inX_lcrit_alarm</td>
+<td>Voltage critical low alarm.
+From VOLTAGE_UV_FAULT status.</td>
+</tr>
+<tr class="row-odd"><td>inX_crit_alarm</td>
+<td>Voltage critical high alarm.
+From VOLTAGE_OV_FAULT status.</td>
+</tr>
+<tr class="row-even"><td>inX_label</td>
+<td>“vin”, “vcap”, or “voutY”</td>
+</tr>
+<tr class="row-odd"><td>currX_input</td>
+<td>Measured current. From READ_IIN or READ_IOUT register.</td>
+</tr>
+<tr class="row-even"><td>currX_max</td>
+<td>Maximum current.
+From IIN_OC_WARN_LIMIT or IOUT_OC_WARN_LIMIT register.</td>
+</tr>
+<tr class="row-odd"><td>currX_lcrit</td>
+<td>Critical minimum output current.
+From IOUT_UC_FAULT_LIMIT register.</td>
+</tr>
+<tr class="row-even"><td>currX_crit</td>
+<td>Critical maximum current.
+From IIN_OC_FAULT_LIMIT or IOUT_OC_FAULT_LIMIT register.</td>
+</tr>
+<tr class="row-odd"><td>currX_alarm</td>
+<td>Current high alarm.
+From IIN_OC_WARNING or IOUT_OC_WARNING status.</td>
+</tr>
+<tr class="row-even"><td>currX_max_alarm</td>
+<td>Current high alarm.
+From IIN_OC_WARN_LIMIT or IOUT_OC_WARN_LIMIT status.</td>
+</tr>
+<tr class="row-odd"><td>currX_lcrit_alarm</td>
+<td>Output current critical low alarm.
+From IOUT_UC_FAULT status.</td>
+</tr>
+<tr class="row-even"><td>currX_crit_alarm</td>
+<td>Current critical high alarm.
+From IIN_OC_FAULT or IOUT_OC_FAULT status.</td>
+</tr>
+<tr class="row-odd"><td>currX_label</td>
+<td>“iin”, “iinY”, “iinY.Z”, “ioutY”, or “ioutY.Z”,
+where Y reflects the page number and Z reflects the
+phase.</td>
+</tr>
+<tr class="row-even"><td>powerX_input</td>
+<td>Measured power. From READ_PIN or READ_POUT register.</td>
+</tr>
+<tr class="row-odd"><td>powerX_cap</td>
+<td>Output power cap. From POUT_MAX register.</td>
+</tr>
+<tr class="row-even"><td>powerX_max</td>
+<td>Power limit. From PIN_OP_WARN_LIMIT or
+POUT_OP_WARN_LIMIT register.</td>
+</tr>
+<tr class="row-odd"><td>powerX_crit</td>
+<td>Critical output power limit.
+From POUT_OP_FAULT_LIMIT register.</td>
+</tr>
+<tr class="row-even"><td>powerX_alarm</td>
+<td>Power high alarm.
+From PIN_OP_WARNING or POUT_OP_WARNING status.</td>
+</tr>
+<tr class="row-odd"><td>powerX_crit_alarm</td>
+<td>Output power critical high alarm.
+From POUT_OP_FAULT status.</td>
+</tr>
+<tr class="row-even"><td>powerX_label</td>
+<td>“pin”, “pinY”, “pinY.Z”, “poutY”, or “poutY.Z”,
+where Y reflects the page number and Z reflects the
+phase.</td>
+</tr>
+<tr class="row-odd"><td>tempX_input</td>
+<td>Measured temperature.
+From READ_TEMPERATURE_X register.</td>
+</tr>
+<tr class="row-even"><td>tempX_min</td>
+<td>Mimimum temperature. From UT_WARN_LIMIT register.</td>
+</tr>
+<tr class="row-odd"><td>tempX_max</td>
+<td>Maximum temperature. From OT_WARN_LIMIT register.</td>
+</tr>
+<tr class="row-even"><td>tempX_lcrit</td>
+<td>Critical low temperature.
+From UT_FAULT_LIMIT register.</td>
+</tr>
+<tr class="row-odd"><td>tempX_crit</td>
+<td>Critical high temperature.
+From OT_FAULT_LIMIT register.</td>
+</tr>
+<tr class="row-even"><td>tempX_min_alarm</td>
+<td>Chip temperature low alarm. Set by comparing
+READ_TEMPERATURE_X with UT_WARN_LIMIT if
+TEMP_UT_WARNING status is set.</td>
+</tr>
+<tr class="row-odd"><td>tempX_max_alarm</td>
+<td>Chip temperature high alarm. Set by comparing
+READ_TEMPERATURE_X with OT_WARN_LIMIT if
+TEMP_OT_WARNING status is set.</td>
+</tr>
+<tr class="row-even"><td>tempX_lcrit_alarm</td>
+<td>Chip temperature critical low alarm. Set by comparing
+READ_TEMPERATURE_X with UT_FAULT_LIMIT if
+TEMP_UT_FAULT status is set.</td>
+</tr>
+<tr class="row-odd"><td>tempX_crit_alarm</td>
+<td>Chip temperature critical high alarm. Set by comparing
+READ_TEMPERATURE_X with OT_FAULT_LIMIT if
+TEMP_OT_FAULT status is set.</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright The kernel development community
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

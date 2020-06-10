@@ -1,0 +1,374 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Boot-time tracing &mdash; The Linux Kernel  documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript">
+          var DOCUMENTATION_OPTIONS = {
+              URL_ROOT:'../',
+              VERSION:'',
+              LANGUAGE:'None',
+              COLLAPSE_INDEX:false,
+              FILE_SUFFIX:'.html',
+              HAS_SOURCE:  true,
+              SOURCELINK_SUFFIX: '.txt'
+          };
+      </script>
+        <script type="text/javascript" src="../_static/jquery.js"></script>
+        <script type="text/javascript" src="../_static/underscore.js"></script>
+        <script type="text/javascript" src="../_static/doctools.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/theme_overrides.css" type="text/css" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> The Linux Kernel
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                5.7.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../admin-guide/mm/damon/index.html">DAMON: Data Access MONitor</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">The Linux Kernel</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+      <li>Boot-time tracing</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/trace/boottime-trace.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="boot-time-tracing">
+<h1>Boot-time tracing<a class="headerlink" href="#boot-time-tracing" title="Permalink to this headline">¶</a></h1>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Author:</th><td class="field-body">Masami Hiramatsu &lt;<a class="reference external" href="mailto:mhiramat&#37;&#52;&#48;kernel&#46;org">mhiramat<span>&#64;</span>kernel<span>&#46;</span>org</a>&gt;</td>
+</tr>
+</tbody>
+</table>
+<div class="section" id="overview">
+<h2>Overview<a class="headerlink" href="#overview" title="Permalink to this headline">¶</a></h2>
+<p>Boot-time tracing allows users to trace boot-time process including
+device initialization with full features of ftrace including per-event
+filter and actions, histograms, kprobe-events and synthetic-events,
+and trace instances.
+Since kernel command line is not enough to control these complex features,
+this uses bootconfig file to describe tracing feature programming.</p>
+</div>
+<div class="section" id="options-in-the-boot-config">
+<h2>Options in the Boot Config<a class="headerlink" href="#options-in-the-boot-config" title="Permalink to this headline">¶</a></h2>
+<p>Here is the list of available options list for boot time tracing in
+boot config file <a class="footnote-reference" href="#id3" id="id1">[1]</a>. All options are under “ftrace.” or “kernel.”
+prefix. See kernel parameters for the options which starts
+with “kernel.” prefix <a class="footnote-reference" href="#id4" id="id2">[2]</a>.</p>
+<table class="docutils footnote" frame="void" id="id3" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id1">[1]</a></td><td>See <a class="reference internal" href="../admin-guide/bootconfig.html#bootconfig"><span class="std std-ref">Documentation/admin-guide/bootconfig.rst</span></a></td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="id4" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id2">[2]</a></td><td>See <a class="reference internal" href="../admin-guide/kernel-parameters.html#kernelparameters"><span class="std std-ref">Documentation/admin-guide/kernel-parameters.rst</span></a></td></tr>
+</tbody>
+</table>
+<div class="section" id="ftrace-global-options">
+<h3>Ftrace Global Options<a class="headerlink" href="#ftrace-global-options" title="Permalink to this headline">¶</a></h3>
+<p>Ftrace global options have “kernel.” prefix in boot config, which means
+these options are passed as a part of kernel legacy command line.</p>
+<dl class="docutils">
+<dt>kernel.tp_printk</dt>
+<dd>Output trace-event data on printk buffer too.</dd>
+<dt>kernel.dump_on_oops [= MODE]</dt>
+<dd>Dump ftrace on Oops. If MODE = 1 or omitted, dump trace buffer
+on all CPUs. If MODE = 2, dump a buffer on a CPU which kicks Oops.</dd>
+<dt>kernel.traceoff_on_warning</dt>
+<dd>Stop tracing if WARN_ON() occurs.</dd>
+<dt>kernel.fgraph_max_depth = MAX_DEPTH</dt>
+<dd>Set MAX_DEPTH to maximum depth of fgraph tracer.</dd>
+<dt>kernel.fgraph_filters = FILTER[, FILTER2…]</dt>
+<dd>Add fgraph tracing function filters.</dd>
+<dt>kernel.fgraph_notraces = FILTER[, FILTER2…]</dt>
+<dd>Add fgraph non-tracing function filters.</dd>
+</dl>
+</div>
+<div class="section" id="ftrace-per-instance-options">
+<h3>Ftrace Per-instance Options<a class="headerlink" href="#ftrace-per-instance-options" title="Permalink to this headline">¶</a></h3>
+<p>These options can be used for each instance including global ftrace node.</p>
+<dl class="docutils">
+<dt>ftrace.[instance.INSTANCE.]options = OPT1[, OPT2[…]]</dt>
+<dd>Enable given ftrace options.</dd>
+<dt>ftrace.[instance.INSTANCE.]trace_clock = CLOCK</dt>
+<dd>Set given CLOCK to ftrace’s trace_clock.</dd>
+<dt>ftrace.[instance.INSTANCE.]buffer_size = SIZE</dt>
+<dd>Configure ftrace buffer size to SIZE. You can use “KB” or “MB”
+for that SIZE.</dd>
+<dt>ftrace.[instance.INSTANCE.]alloc_snapshot</dt>
+<dd>Allocate snapshot buffer.</dd>
+<dt>ftrace.[instance.INSTANCE.]cpumask = CPUMASK</dt>
+<dd>Set CPUMASK as trace cpu-mask.</dd>
+<dt>ftrace.[instance.INSTANCE.]events = EVENT[, EVENT2[…]]</dt>
+<dd>Enable given events on boot. You can use a wild card in EVENT.</dd>
+<dt>ftrace.[instance.INSTANCE.]tracer = TRACER</dt>
+<dd>Set TRACER to current tracer on boot. (e.g. function)</dd>
+<dt>ftrace.[instance.INSTANCE.]ftrace.filters</dt>
+<dd>This will take an array of tracing function filter rules.</dd>
+<dt>ftrace.[instance.INSTANCE.]ftrace.notraces</dt>
+<dd>This will take an array of NON-tracing function filter rules.</dd>
+</dl>
+</div>
+<div class="section" id="ftrace-per-event-options">
+<h3>Ftrace Per-Event Options<a class="headerlink" href="#ftrace-per-event-options" title="Permalink to this headline">¶</a></h3>
+<p>These options are setting per-event options.</p>
+<dl class="docutils">
+<dt>ftrace.[instance.INSTANCE.]event.GROUP.EVENT.enable</dt>
+<dd>Enable GROUP:EVENT tracing.</dd>
+<dt>ftrace.[instance.INSTANCE.]event.GROUP.EVENT.filter = FILTER</dt>
+<dd>Set FILTER rule to the GROUP:EVENT.</dd>
+<dt>ftrace.[instance.INSTANCE.]event.GROUP.EVENT.actions = ACTION[, ACTION2[…]]</dt>
+<dd>Set ACTIONs to the GROUP:EVENT.</dd>
+<dt>ftrace.[instance.INSTANCE.]event.kprobes.EVENT.probes = PROBE[, PROBE2[…]]</dt>
+<dd>Defines new kprobe event based on PROBEs. It is able to define
+multiple probes on one event, but those must have same type of
+arguments. This option is available only for the event which
+group name is “kprobes”.</dd>
+<dt>ftrace.[instance.INSTANCE.]event.synthetic.EVENT.fields = FIELD[, FIELD2[…]]</dt>
+<dd>Defines new synthetic event with FIELDs. Each field should be
+“type varname”.</dd>
+</dl>
+<p>Note that kprobe and synthetic event definitions can be written under
+instance node, but those are also visible from other instances. So please
+take care for event name conflict.</p>
+</div>
+</div>
+<div class="section" id="examples">
+<h2>Examples<a class="headerlink" href="#examples" title="Permalink to this headline">¶</a></h2>
+<p>For example, to add filter and actions for each event, define kprobe
+events, and synthetic events with histogram, write a boot config like
+below:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>ftrace.event {
+      task.task_newtask {
+              filter = &quot;pid &lt; 128&quot;
+              enable
+      }
+      kprobes.vfs_read {
+              probes = &quot;vfs_read $arg1 $arg2&quot;
+              filter = &quot;common_pid &lt; 200&quot;
+              enable
+      }
+      synthetic.initcall_latency {
+              fields = &quot;unsigned long func&quot;, &quot;u64 lat&quot;
+              actions = &quot;hist:keys=func.sym,lat:vals=lat:sort=lat&quot;
+      }
+      initcall.initcall_start {
+              actions = &quot;hist:keys=func:ts0=common_timestamp.usecs&quot;
+      }
+      initcall.initcall_finish {
+              actions = &quot;hist:keys=func:lat=common_timestamp.usecs-$ts0:onmatch(initcall.initcall_start).initcall_latency(func,$lat)&quot;
+      }
+}
+</pre></div>
+</div>
+<p>Also, boot-time tracing supports “instance” node, which allows us to run
+several tracers for different purpose at once. For example, one tracer
+is for tracing functions starting with “user_”, and others tracing
+“kernel_” functions, you can write boot config as below:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>ftrace.instance {
+      foo {
+              tracer = &quot;function&quot;
+              ftrace.filters = &quot;user_*&quot;
+      }
+      bar {
+              tracer = &quot;function&quot;
+              ftrace.filters = &quot;kernel_*&quot;
+      }
+}
+</pre></div>
+</div>
+<p>The instance node also accepts event nodes so that each instance
+can customize its event tracing.</p>
+<p>This boot-time tracing also supports ftrace kernel parameters via boot
+config.
+For example, following kernel parameters:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>trace_options=sym-addr trace_event=initcall:* tp_printk trace_buf_size=1M ftrace=function ftrace_filter=&quot;vfs*&quot;
+</pre></div>
+</div>
+<p>This can be written in boot config like below:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>kernel {
+      trace_options = sym-addr
+      trace_event = &quot;initcall:*&quot;
+      tp_printk
+      trace_buf_size = 1M
+      ftrace = function
+      ftrace_filter = &quot;vfs*&quot;
+}
+</pre></div>
+</div>
+<p>Note that parameters start with “kernel” prefix instead of “ftrace”.</p>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright The kernel development community
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>
