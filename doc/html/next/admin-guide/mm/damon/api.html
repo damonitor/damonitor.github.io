@@ -262,6 +262,9 @@ struct <code class="descname">damon_task</code><a class="headerlink" href="#c.da
 <dt><code class="docutils literal notranslate"><span class="pre">list</span></code></dt>
 <dd>List head for siblings.</dd>
 </dl>
+<p><strong>Description</strong></p>
+<p>If the monitoring target address space is task independent (e.g., physical
+memory address space monitoring), <strong>pid</strong> should be ‘-1’.</p>
 <dl class="type">
 <dt id="c.damos_action">
 enum <code class="descname">damos_action</code><a class="headerlink" href="#c.damos_action" title="Permalink to this definition">¶</a></dt>
@@ -427,13 +430,20 @@ to <strong>kdamond_stop</strong>.  Reads and writes to <strong>kdamond</strong> 
 outside of the monitoring thread must be protected by <strong>kdamond_lock</strong>.</p>
 <p>Note that the monitoring thread protects only <strong>kdamond</strong> and <strong>kdamond_stop</strong> via
 <strong>kdamond_lock</strong>.  Accesses to other fields must be protected by themselves.</p>
-<p>The monitoring thread calls <strong>init_target_regions</strong> before starting the
-monitoring, <strong>update_target_regions</strong> for each <strong>regions_update_interval</strong>, and
-<strong>prepare_access_checks</strong> and <strong>check_accesses</strong> for each <strong>sample_interval</strong>.  By
-setting these callbacks to appropriate functions, therefore, users can
-monitor any address space with special handling.  If these are not
-explicitly configured, the functions for virtual memory address space
-monitoring are used.</p>
+<p>DAMON can be extended for various address spaces by users.  For this, users
+can register the target address space dependent low level functions for
+their usecases via the callback pointers of the context.  The monitoring
+thread calls <strong>init_target_regions</strong> before starting the monitoring,
+<strong>update_target_regions</strong> for each <strong>regions_update_interval</strong>, and
+<strong>prepare_access_checks</strong> and <strong>check_accesses</strong> for each <strong>sample_interval</strong>.</p>
+<p><strong>init_target_regions</strong> should construct proper monitoring target regions and
+link those to the DAMON context struct.
+<strong>update_target_regions</strong> should update the monitoring target regions for
+current status.
+<strong>prepare_access_checks</strong> should manipulate the monitoring regions to be
+prepare for the next access check.
+<strong>check_accesses</strong> should check the accesses to each region that made after the
+last preparation and update the <cite>-&gt;nr_accesses</cite> of each region.</p>
 <p><strong>sample_cb</strong> and <strong>aggregate_cb</strong> are called from <strong>kdamond</strong> for each of the
 sampling intervals and aggregation intervals, respectively.  Therefore,
 users can safely access to the monitoring results via <strong>tasks_list</strong> without
@@ -542,7 +552,7 @@ int <code class="descname">damon_set_attrs</code><span class="sig-paren">(</span
 <dt><code class="docutils literal notranslate"><span class="pre">unsigned</span> <span class="pre">long</span> <span class="pre">aggr_int</span></code></dt>
 <dd>time interval between aggregations</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">unsigned</span> <span class="pre">long</span> <span class="pre">regions_update_int</span></code></dt>
-<dd>time interval between vma update checks</dd>
+<dd>time interval between target regions update</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">unsigned</span> <span class="pre">long</span> <span class="pre">min_nr_reg</span></code></dt>
 <dd>minimal number of regions</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">unsigned</span> <span class="pre">long</span> <span class="pre">max_nr_reg</span></code></dt>

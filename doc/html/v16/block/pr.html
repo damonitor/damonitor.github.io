@@ -1,0 +1,328 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Block layer support for Persistent Reservations &mdash; The Linux Kernel  documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript">
+          var DOCUMENTATION_OPTIONS = {
+              URL_ROOT:'../',
+              VERSION:'',
+              LANGUAGE:'None',
+              COLLAPSE_INDEX:false,
+              FILE_SUFFIX:'.html',
+              HAS_SOURCE:  true,
+              SOURCELINK_SUFFIX: '.txt'
+          };
+      </script>
+        <script type="text/javascript" src="../_static/jquery.js"></script>
+        <script type="text/javascript" src="../_static/underscore.js"></script>
+        <script type="text/javascript" src="../_static/doctools.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/theme_overrides.css" type="text/css" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> The Linux Kernel
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                5.7.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../admin-guide/mm/damon/index.html">DAMON: Data Access MONitor</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">The Linux Kernel</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+      <li>Block layer support for Persistent Reservations</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/block/pr.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="block-layer-support-for-persistent-reservations">
+<h1>Block layer support for Persistent Reservations<a class="headerlink" href="#block-layer-support-for-persistent-reservations" title="Permalink to this headline">¶</a></h1>
+<p>The Linux kernel supports a user space interface for simplified
+Persistent Reservations which map to block devices that support
+these (like SCSI). Persistent Reservations allow restricting
+access to block devices to specific initiators in a shared storage
+setup.</p>
+<p>This document gives a general overview of the support ioctl commands.
+For a more detailed reference please refer the the SCSI Primary
+Commands standard, specifically the section on Reservations and the
+“PERSISTENT RESERVE IN” and “PERSISTENT RESERVE OUT” commands.</p>
+<p>All implementations are expected to ensure the reservations survive
+a power loss and cover all connections in a multi path environment.
+These behaviors are optional in SPC but will be automatically applied
+by Linux.</p>
+<div class="section" id="the-following-types-of-reservations-are-supported">
+<h2>The following types of reservations are supported:<a class="headerlink" href="#the-following-types-of-reservations-are-supported" title="Permalink to this headline">¶</a></h2>
+<blockquote>
+<div><ul>
+<li><dl class="first docutils">
+<dt>PR_WRITE_EXCLUSIVE</dt>
+<dd><p class="first last">Only the initiator that owns the reservation can write to the
+device.  Any initiator can read from the device.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt>PR_EXCLUSIVE_ACCESS</dt>
+<dd><p class="first last">Only the initiator that owns the reservation can access the
+device.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt>PR_WRITE_EXCLUSIVE_REG_ONLY</dt>
+<dd><p class="first last">Only initiators with a registered key can write to the device,
+Any initiator can read from the device.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt>PR_EXCLUSIVE_ACCESS_REG_ONLY</dt>
+<dd><p class="first last">Only initiators with a registered key can access the device.</p>
+</dd>
+</dl>
+</li>
+<li><p class="first">PR_WRITE_EXCLUSIVE_ALL_REGS</p>
+<blockquote>
+<div><p>Only initiators with a registered key can write to the device,
+Any initiator can read from the device.
+All initiators with a registered key are considered reservation
+holders.
+Please reference the SPC spec on the meaning of a reservation
+holder if you want to use this type.</p>
+</div></blockquote>
+</li>
+<li><dl class="first docutils">
+<dt>PR_EXCLUSIVE_ACCESS_ALL_REGS</dt>
+<dd><p class="first last">Only initiators with a registered key can access the device.
+All initiators with a registered key are considered reservation
+holders.
+Please reference the SPC spec on the meaning of a reservation
+holder if you want to use this type.</p>
+</dd>
+</dl>
+</li>
+</ul>
+</div></blockquote>
+</div>
+<div class="section" id="the-following-ioctl-are-supported">
+<h2>The following ioctl are supported:<a class="headerlink" href="#the-following-ioctl-are-supported" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="ioc-pr-register">
+<h3>1. IOC_PR_REGISTER<a class="headerlink" href="#ioc-pr-register" title="Permalink to this headline">¶</a></h3>
+<p>This ioctl command registers a new reservation if the new_key argument
+is non-null.  If no existing reservation exists old_key must be zero,
+if an existing reservation should be replaced old_key must contain
+the old reservation key.</p>
+<p>If the new_key argument is 0 it unregisters the existing reservation passed
+in old_key.</p>
+</div>
+<div class="section" id="ioc-pr-reserve">
+<h3>2. IOC_PR_RESERVE<a class="headerlink" href="#ioc-pr-reserve" title="Permalink to this headline">¶</a></h3>
+<p>This ioctl command reserves the device and thus restricts access for other
+devices based on the type argument.  The key argument must be the existing
+reservation key for the device as acquired by the IOC_PR_REGISTER,
+IOC_PR_REGISTER_IGNORE, IOC_PR_PREEMPT or IOC_PR_PREEMPT_ABORT commands.</p>
+</div>
+<div class="section" id="ioc-pr-release">
+<h3>3. IOC_PR_RELEASE<a class="headerlink" href="#ioc-pr-release" title="Permalink to this headline">¶</a></h3>
+<p>This ioctl command releases the reservation specified by key and flags
+and thus removes any access restriction implied by it.</p>
+</div>
+<div class="section" id="ioc-pr-preempt">
+<h3>4. IOC_PR_PREEMPT<a class="headerlink" href="#ioc-pr-preempt" title="Permalink to this headline">¶</a></h3>
+<p>This ioctl command releases the existing reservation referred to by
+old_key and replaces it with a new reservation of type for the
+reservation key new_key.</p>
+</div>
+<div class="section" id="ioc-pr-preempt-abort">
+<h3>5. IOC_PR_PREEMPT_ABORT<a class="headerlink" href="#ioc-pr-preempt-abort" title="Permalink to this headline">¶</a></h3>
+<p>This ioctl command works like IOC_PR_PREEMPT except that it also aborts
+any outstanding command sent over a connection identified by old_key.</p>
+</div>
+<div class="section" id="ioc-pr-clear">
+<h3>6. IOC_PR_CLEAR<a class="headerlink" href="#ioc-pr-clear" title="Permalink to this headline">¶</a></h3>
+<p>This ioctl command unregisters both key and any other reservation key
+registered with the device and drops any existing reservation.</p>
+</div>
+</div>
+<div class="section" id="flags">
+<h2>Flags<a class="headerlink" href="#flags" title="Permalink to this headline">¶</a></h2>
+<p>All the ioctls have a flag field.  Currently only one flag is supported:</p>
+<blockquote>
+<div><ul class="simple">
+<li><dl class="first docutils">
+<dt>PR_FL_IGNORE_KEY</dt>
+<dd>Ignore the existing reservation key.  This is commonly supported for
+IOC_PR_REGISTER, and some implementation may support the flag for
+IOC_PR_RESERVE.</dd>
+</dl>
+</li>
+</ul>
+</div></blockquote>
+<p>For all unknown flags the kernel will return -EOPNOTSUPP.</p>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright The kernel development community
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

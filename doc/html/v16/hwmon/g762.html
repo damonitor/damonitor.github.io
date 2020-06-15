@@ -1,0 +1,266 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Kernel driver g762 &mdash; The Linux Kernel  documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript">
+          var DOCUMENTATION_OPTIONS = {
+              URL_ROOT:'../',
+              VERSION:'',
+              LANGUAGE:'None',
+              COLLAPSE_INDEX:false,
+              FILE_SUFFIX:'.html',
+              HAS_SOURCE:  true,
+              SOURCELINK_SUFFIX: '.txt'
+          };
+      </script>
+        <script type="text/javascript" src="../_static/jquery.js"></script>
+        <script type="text/javascript" src="../_static/underscore.js"></script>
+        <script type="text/javascript" src="../_static/doctools.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/theme_overrides.css" type="text/css" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> The Linux Kernel
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                5.7.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../admin-guide/mm/damon/index.html">DAMON: Data Access MONitor</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">The Linux Kernel</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+      <li>Kernel driver g762</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/hwmon/g762.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="kernel-driver-g762">
+<h1>Kernel driver g762<a class="headerlink" href="#kernel-driver-g762" title="Permalink to this headline">¶</a></h1>
+<p>The GMT G762 Fan Speed PWM Controller is connected directly to a fan
+and performs closed-loop or open-loop control of the fan speed. Two
+modes - PWM or DC - are supported by the device.</p>
+<p>For additional information, a detailed datasheet is available at
+<a class="reference external" href="http://natisbad.org/NAS/ref/GMT_EDS-762_763-080710-0.2.pdf">http://natisbad.org/NAS/ref/GMT_EDS-762_763-080710-0.2.pdf</a>. sysfs
+bindings are described in Documentation/hwmon/sysfs-interface.rst.</p>
+<p>The following entries are available to the user in a subdirectory of
+/sys/bus/i2c/drivers/g762/ to control the operation of the device.
+This can be done manually using the following entries but is usually
+done via a userland daemon like fancontrol.</p>
+<p>Note that those entries do not provide ways to setup the specific
+hardware characteristics of the system (reference clock, pulses per
+fan revolution, …); Those can be modified via devicetree bindings
+documented in Documentation/devicetree/bindings/hwmon/g762.txt or
+using a specific platform_data structure in board initialization
+file (see include/linux/platform_data/g762.h).</p>
+<blockquote>
+<div><dl class="docutils">
+<dt>fan1_target:</dt>
+<dd>set desired fan speed. This only makes sense in closed-loop
+fan speed control (i.e. when pwm1_enable is set to 2).</dd>
+<dt>fan1_input:</dt>
+<dd>provide current fan rotation value in RPM as reported by
+the fan to the device.</dd>
+<dt>fan1_div:</dt>
+<dd>fan clock divisor. Supported value are 1, 2, 4 and 8.</dd>
+<dt>fan1_pulses:</dt>
+<dd>number of pulses per fan revolution. Supported values
+are 2 and 4.</dd>
+<dt>fan1_fault:</dt>
+<dd>reports fan failure, i.e. no transition on fan gear pin for
+about 0.7s (if the fan is not voluntarily set off).</dd>
+<dt>fan1_alarm:</dt>
+<dd>in closed-loop control mode, if fan RPM value is 25% out
+of the programmed value for over 6 seconds ‘fan1_alarm’ is
+set to 1.</dd>
+<dt>pwm1_enable:</dt>
+<dd>set current fan speed control mode i.e. 1 for manual fan
+speed control (open-loop) via pwm1 described below, 2 for
+automatic fan speed control (closed-loop) via fan1_target
+above.</dd>
+<dt>pwm1_mode:</dt>
+<dd>set or get fan driving mode: 1 for PWM mode, 0 for DC mode.</dd>
+<dt>pwm1:</dt>
+<dd>get or set PWM fan control value in open-loop mode. This is an
+integer value between 0 and 255. 0 stops the fan, 255 makes
+it run at full speed.</dd>
+</dl>
+</div></blockquote>
+<p>Both in PWM mode (‘pwm1_mode’ set to 1) and DC mode (‘pwm1_mode’ set to 0),
+when current fan speed control mode is open-loop (‘pwm1_enable’ set to 1),
+the fan speed is programmed by setting a value between 0 and 255 via ‘pwm1’
+entry (0 stops the fan, 255 makes it run at full speed). In closed-loop mode
+(‘pwm1_enable’ set to 2), the expected rotation speed in RPM can be passed to
+the chip via ‘fan1_target’. In closed-loop mode, the target speed is compared
+with current speed (available via ‘fan1_input’) by the device and a feedback
+is performed to match that target value. The fan speed value is computed
+based on the parameters associated with the physical characteristics of the
+system: a reference clock source frequency, a number of pulses per fan
+revolution, etc.</p>
+<p>Note that the driver will update its values at most once per second.</p>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright The kernel development community
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

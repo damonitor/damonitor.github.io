@@ -1,0 +1,434 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Kernel driver mc13783-adc &mdash; The Linux Kernel  documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript">
+          var DOCUMENTATION_OPTIONS = {
+              URL_ROOT:'../',
+              VERSION:'',
+              LANGUAGE:'None',
+              COLLAPSE_INDEX:false,
+              FILE_SUFFIX:'.html',
+              HAS_SOURCE:  true,
+              SOURCELINK_SUFFIX: '.txt'
+          };
+      </script>
+        <script type="text/javascript" src="../_static/jquery.js"></script>
+        <script type="text/javascript" src="../_static/underscore.js"></script>
+        <script type="text/javascript" src="../_static/doctools.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/theme_overrides.css" type="text/css" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> The Linux Kernel
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                5.7.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../admin-guide/mm/damon/index.html">DAMON: Data Access MONitor</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">The Linux Kernel</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+      <li>Kernel driver mc13783-adc</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/hwmon/mc13783-adc.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="kernel-driver-mc13783-adc">
+<h1>Kernel driver mc13783-adc<a class="headerlink" href="#kernel-driver-mc13783-adc" title="Permalink to this headline">¶</a></h1>
+<p>Supported chips:</p>
+<blockquote>
+<div><ul>
+<li><p class="first">Freescale MC13783</p>
+<p>Prefix: ‘mc13783’</p>
+<p>Datasheet: <a class="reference external" href="https://www.nxp.com/docs/en/data-sheet/MC13783.pdf">https://www.nxp.com/docs/en/data-sheet/MC13783.pdf</a></p>
+</li>
+<li><p class="first">Freescale MC13892</p>
+<p>Prefix: ‘mc13892’</p>
+<p>Datasheet: <a class="reference external" href="https://www.nxp.com/docs/en/data-sheet/MC13892.pdf">https://www.nxp.com/docs/en/data-sheet/MC13892.pdf</a></p>
+</li>
+</ul>
+</div></blockquote>
+<p>Authors:</p>
+<blockquote>
+<div><ul class="simple">
+<li>Sascha Hauer &lt;<a class="reference external" href="mailto:s&#46;hauer&#37;&#52;&#48;pengutronix&#46;de">s<span>&#46;</span>hauer<span>&#64;</span>pengutronix<span>&#46;</span>de</a>&gt;</li>
+<li>Luotao Fu &lt;<a class="reference external" href="mailto:l&#46;fu&#37;&#52;&#48;pengutronix&#46;de">l<span>&#46;</span>fu<span>&#64;</span>pengutronix<span>&#46;</span>de</a>&gt;</li>
+</ul>
+</div></blockquote>
+<div class="section" id="description">
+<h2>Description<a class="headerlink" href="#description" title="Permalink to this headline">¶</a></h2>
+<p>The Freescale MC13783 and MC13892 are Power Management and Audio Circuits.
+Among other things they contain a 10-bit A/D converter. The converter has 16
+(MC13783) resp. 12 (MC13892) channels which can be used in different modes. The
+A/D converter has a resolution of 2.25mV.</p>
+<p>Some channels can be used as General Purpose inputs or in a dedicated mode with
+a chip internal scaling applied .</p>
+<p>Currently the driver only supports the Application Supply channel (BP / BPSNS),
+the General Purpose inputs and touchscreen.</p>
+<p>See the following tables for the meaning of the different channels and their
+chip internal scaling:</p>
+<ul class="simple">
+<li>MC13783:</li>
+</ul>
+<table border="1" class="docutils">
+<colgroup>
+<col width="9%" />
+<col width="60%" />
+<col width="19%" />
+<col width="12%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Channel</th>
+<th class="head">Signal</th>
+<th class="head">Input Range</th>
+<th class="head">Scaling</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>0</td>
+<td>Battery Voltage (BATT)</td>
+<td>2.50 - 4.65V</td>
+<td>-2.40V</td>
+</tr>
+<tr class="row-odd"><td>1</td>
+<td>Battery Current (BATT - BATTISNS)</td>
+<td>-50 - 50 mV</td>
+<td>x20</td>
+</tr>
+<tr class="row-even"><td>2</td>
+<td>Application Supply (BP)</td>
+<td>2.50 - 4.65V</td>
+<td>-2.40V</td>
+</tr>
+<tr class="row-odd"><td>3</td>
+<td>Charger Voltage (CHRGRAW)</td>
+<td>0 - 10V /
+0 - 20V</td>
+<td>/5
+/10</td>
+</tr>
+<tr class="row-even"><td>4</td>
+<td>Charger Current (CHRGISNSP-CHRGISNSN)</td>
+<td>-0.25 - 0.25V</td>
+<td>x4</td>
+</tr>
+<tr class="row-odd"><td>5</td>
+<td>General Purpose ADIN5 / Battery Pack Thermistor</td>
+<td>0 - 2.30V</td>
+<td>No</td>
+</tr>
+<tr class="row-even"><td>6</td>
+<td>General Purpose ADIN6 / Backup Voltage (LICELL)</td>
+<td>0 - 2.30V /
+1.50 - 3.50V</td>
+<td>No /
+-1.20V</td>
+</tr>
+<tr class="row-odd"><td>7</td>
+<td>General Purpose ADIN7 / UID / Die Temperature</td>
+<td>0 - 2.30V /
+0 - 2.55V /</td>
+<td>No /
+x0.9 / No</td>
+</tr>
+<tr class="row-even"><td>8</td>
+<td>General Purpose ADIN8</td>
+<td>0 - 2.30V</td>
+<td>No</td>
+</tr>
+<tr class="row-odd"><td>9</td>
+<td>General Purpose ADIN9</td>
+<td>0 - 2.30V</td>
+<td>No</td>
+</tr>
+<tr class="row-even"><td>10</td>
+<td>General Purpose ADIN10</td>
+<td>0 - 2.30V</td>
+<td>No</td>
+</tr>
+<tr class="row-odd"><td>11</td>
+<td>General Purpose ADIN11</td>
+<td>0 - 2.30V</td>
+<td>No</td>
+</tr>
+<tr class="row-even"><td>12</td>
+<td>General Purpose TSX1 / Touchscreen X-plate 1</td>
+<td>0 - 2.30V</td>
+<td>No</td>
+</tr>
+<tr class="row-odd"><td>13</td>
+<td>General Purpose TSX2 / Touchscreen X-plate 2</td>
+<td>0 - 2.30V</td>
+<td>No</td>
+</tr>
+<tr class="row-even"><td>14</td>
+<td>General Purpose TSY1 / Touchscreen Y-plate 1</td>
+<td>0 - 2.30V</td>
+<td>No</td>
+</tr>
+<tr class="row-odd"><td>15</td>
+<td>General Purpose TSY2 / Touchscreen Y-plate 2</td>
+<td>0 - 2.30V</td>
+<td>No</td>
+</tr>
+</tbody>
+</table>
+<ul class="simple">
+<li>MC13892:</li>
+</ul>
+<table border="1" class="docutils">
+<colgroup>
+<col width="9%" />
+<col width="62%" />
+<col width="20%" />
+<col width="9%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Channel</th>
+<th class="head">Signal</th>
+<th class="head">Input Range</th>
+<th class="head">Scaling</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>0</td>
+<td>Battery Voltage (BATT)</td>
+<td>0 - 4.8V</td>
+<td>/2</td>
+</tr>
+<tr class="row-odd"><td>1</td>
+<td>Battery Current (BATT - BATTISNSCC)</td>
+<td>-60 - 60 mV</td>
+<td>x20</td>
+</tr>
+<tr class="row-even"><td>2</td>
+<td>Application Supply (BPSNS)</td>
+<td>0 - 4.8V</td>
+<td>/2</td>
+</tr>
+<tr class="row-odd"><td>3</td>
+<td>Charger Voltage (CHRGRAW)</td>
+<td>0 - 12V /
+0 - 20V</td>
+<td>/5
+/10</td>
+</tr>
+<tr class="row-even"><td>4</td>
+<td>Charger Current (CHRGISNS-BPSNS) /
+Touchscreen X-plate 1</td>
+<td>-0.3 - 0.3V /
+0 - 2.4V</td>
+<td>x4 /
+No</td>
+</tr>
+<tr class="row-odd"><td>5</td>
+<td>General Purpose ADIN5 / Battery Pack Thermistor</td>
+<td>0 - 2.4V</td>
+<td>No</td>
+</tr>
+<tr class="row-even"><td>6</td>
+<td>General Purpose ADIN6 / Backup Voltage (LICELL)
+Backup Voltage (LICELL)</td>
+<td>0 - 2.4V /
+0 - 3.6V</td>
+<td>No
+x2/3</td>
+</tr>
+<tr class="row-odd"><td>7</td>
+<td>General Purpose ADIN7 / UID / Die Temperature</td>
+<td>0 - 2.4V /
+0 - 4.8V</td>
+<td>No /
+/2</td>
+</tr>
+<tr class="row-even"><td>12</td>
+<td>General Purpose TSX1 / Touchscreen X-plate 1</td>
+<td>0 - 2.4V</td>
+<td>No</td>
+</tr>
+<tr class="row-odd"><td>13</td>
+<td>General Purpose TSX2 / Touchscreen X-plate 2</td>
+<td>0 - 2.4V</td>
+<td>No</td>
+</tr>
+<tr class="row-even"><td>14</td>
+<td>General Purpose TSY1 / Touchscreen Y-plate 1</td>
+<td>0 - 2.4V</td>
+<td>No</td>
+</tr>
+<tr class="row-odd"><td>15</td>
+<td>General Purpose TSY2 / Touchscreen Y-plate 2</td>
+<td>0 - 2.4V</td>
+<td>No</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright The kernel development community
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

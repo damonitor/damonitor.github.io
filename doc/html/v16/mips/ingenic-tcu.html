@@ -1,0 +1,298 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>1. Ingenic JZ47xx SoCs Timer/Counter Unit hardware &mdash; The Linux Kernel  documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript">
+          var DOCUMENTATION_OPTIONS = {
+              URL_ROOT:'../',
+              VERSION:'',
+              LANGUAGE:'None',
+              COLLAPSE_INDEX:false,
+              FILE_SUFFIX:'.html',
+              HAS_SOURCE:  true,
+              SOURCELINK_SUFFIX: '.txt'
+          };
+      </script>
+        <script type="text/javascript" src="../_static/jquery.js"></script>
+        <script type="text/javascript" src="../_static/underscore.js"></script>
+        <script type="text/javascript" src="../_static/doctools.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/theme_overrides.css" type="text/css" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> The Linux Kernel
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                5.7.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../admin-guide/mm/damon/index.html">DAMON: Data Access MONitor</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">The Linux Kernel</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+      <li>1. Ingenic JZ47xx SoCs Timer/Counter Unit hardware</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/mips/ingenic-tcu.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="ingenic-jz47xx-socs-timer-counter-unit-hardware">
+<h1>1. Ingenic JZ47xx SoCs Timer/Counter Unit hardware<a class="headerlink" href="#ingenic-jz47xx-socs-timer-counter-unit-hardware" title="Permalink to this headline">¶</a></h1>
+<p>The Timer/Counter Unit (TCU) in Ingenic JZ47xx SoCs is a multi-function
+hardware block. It features up to to eight channels, that can be used as
+counters, timers, or PWM.</p>
+<ul>
+<li><p class="first">JZ4725B, JZ4750, JZ4755 only have six TCU channels. The other SoCs all
+have eight channels.</p>
+</li>
+<li><p class="first">JZ4725B introduced a separate channel, called Operating System Timer
+(OST). It is a 32-bit programmable timer. On JZ4760B and above, it is
+64-bit.</p>
+</li>
+<li><p class="first">Each one of the TCU channels has its own clock, which can be reparented to three
+different clocks (pclk, ext, rtc), gated, and reclocked, through their TCSR register.</p>
+<blockquote>
+<div><ul class="simple">
+<li>The watchdog and OST hardware blocks also feature a TCSR register with the same
+format in their register space.</li>
+<li>The TCU registers used to gate/ungate can also gate/ungate the watchdog and
+OST clocks.</li>
+</ul>
+</div></blockquote>
+</li>
+<li><p class="first">Each TCU channel works in one of two modes:</p>
+<blockquote>
+<div><ul class="simple">
+<li>mode TCU1: channels cannot work in sleep mode, but are easier to
+operate.</li>
+<li>mode TCU2: channels can work in sleep mode, but the operation is a bit
+more complicated than with TCU1 channels.</li>
+</ul>
+</div></blockquote>
+</li>
+<li><p class="first">The mode of each TCU channel depends on the SoC used:</p>
+<blockquote>
+<div><ul class="simple">
+<li>On the oldest SoCs (up to JZ4740), all of the eight channels operate in
+TCU1 mode.</li>
+<li>On JZ4725B, channel 5 operates as TCU2, the others operate as TCU1.</li>
+<li>On newest SoCs (JZ4750 and above), channels 1-2 operate as TCU2, the
+others operate as TCU1.</li>
+</ul>
+</div></blockquote>
+</li>
+<li><p class="first">Each channel can generate an interrupt. Some channels share an interrupt
+line, some don’t, and this changes between SoC versions:</p>
+<blockquote>
+<div><ul class="simple">
+<li>on older SoCs (JZ4740 and below), channel 0 and channel 1 have their
+own interrupt line; channels 2-7 share the last interrupt line.</li>
+<li>On JZ4725B, channel 0 has its own interrupt; channels 1-5 share one
+interrupt line; the OST uses the last interrupt line.</li>
+<li>on newer SoCs (JZ4750 and above), channel 5 has its own interrupt;
+channels 0-4 and (if eight channels) 6-7 all share one interrupt line;
+the OST uses the last interrupt line.</li>
+</ul>
+</div></blockquote>
+</li>
+</ul>
+<div class="section" id="implementation">
+<h2>1.1. Implementation<a class="headerlink" href="#implementation" title="Permalink to this headline">¶</a></h2>
+<p>The functionalities of the TCU hardware are spread across multiple drivers:</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="24%" />
+<col width="76%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td>clocks</td>
+<td>drivers/clk/ingenic/tcu.c</td>
+</tr>
+<tr class="row-even"><td>interrupts</td>
+<td>drivers/irqchip/irq-ingenic-tcu.c</td>
+</tr>
+<tr class="row-odd"><td>timers</td>
+<td>drivers/clocksource/ingenic-timer.c</td>
+</tr>
+<tr class="row-even"><td>OST</td>
+<td>drivers/clocksource/ingenic-ost.c</td>
+</tr>
+<tr class="row-odd"><td>PWM</td>
+<td>drivers/pwm/pwm-jz4740.c</td>
+</tr>
+<tr class="row-even"><td>watchdog</td>
+<td>drivers/watchdog/jz4740_wdt.c</td>
+</tr>
+</tbody>
+</table>
+<p>Because various functionalities of the TCU that belong to different drivers
+and frameworks can be controlled from the same registers, all of these
+drivers access their registers through the same regmap.</p>
+<p>For more information regarding the devicetree bindings of the TCU drivers,
+have a look at Documentation/devicetree/bindings/timer/ingenic,tcu.txt.</p>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright The kernel development community
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

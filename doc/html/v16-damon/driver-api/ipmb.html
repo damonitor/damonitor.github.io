@@ -1,0 +1,308 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>IPMB Driver for a Satellite MC &mdash; The Linux Kernel  documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript">
+          var DOCUMENTATION_OPTIONS = {
+              URL_ROOT:'../',
+              VERSION:'',
+              LANGUAGE:'None',
+              COLLAPSE_INDEX:false,
+              FILE_SUFFIX:'.html',
+              HAS_SOURCE:  true,
+              SOURCELINK_SUFFIX: '.txt'
+          };
+      </script>
+        <script type="text/javascript" src="../_static/jquery.js"></script>
+        <script type="text/javascript" src="../_static/underscore.js"></script>
+        <script type="text/javascript" src="../_static/doctools.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/theme_overrides.css" type="text/css" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> The Linux Kernel
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                5.7.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../admin-guide/mm/damon/index.html">DAMON: Data Access MONitor</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">The Linux Kernel</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+      <li>IPMB Driver for a Satellite MC</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/driver-api/ipmb.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="ipmb-driver-for-a-satellite-mc">
+<h1>IPMB Driver for a Satellite MC<a class="headerlink" href="#ipmb-driver-for-a-satellite-mc" title="Permalink to this headline">¶</a></h1>
+<p>The Intelligent Platform Management Bus or IPMB, is an
+I2C bus that provides a standardized interconnection between
+different boards within a chassis. This interconnection is
+between the baseboard management (BMC) and chassis electronics.
+IPMB is also associated with the messaging protocol through the
+IPMB bus.</p>
+<p>The devices using the IPMB are usually management
+controllers that perform management functions such as servicing
+the front panel interface, monitoring the baseboard,
+hot-swapping disk drivers in the system chassis, etc…</p>
+<p>When an IPMB is implemented in the system, the BMC serves as
+a controller to give system software access to the IPMB. The BMC
+sends IPMI requests to a device (usually a Satellite Management
+Controller or Satellite MC) via IPMB and the device
+sends a response back to the BMC.</p>
+<p>For more information on IPMB and the format of an IPMB message,
+refer to the IPMB and IPMI specifications.</p>
+<div class="section" id="ipmb-driver-for-satellite-mc">
+<h2>IPMB driver for Satellite MC<a class="headerlink" href="#ipmb-driver-for-satellite-mc" title="Permalink to this headline">¶</a></h2>
+<p>ipmb-dev-int - This is the driver needed on a Satellite MC to
+receive IPMB messages from a BMC and send a response back.
+This driver works with the I2C driver and a userspace
+program such as OpenIPMI:</p>
+<ol class="arabic simple">
+<li>It is an I2C slave backend driver. So, it defines a callback
+function to set the Satellite MC as an I2C slave.
+This callback function handles the received IPMI requests.</li>
+<li>It defines the read and write functions to enable a user
+space program (such as OpenIPMI) to communicate with the kernel.</li>
+</ol>
+</div>
+<div class="section" id="load-the-ipmb-driver">
+<h2>Load the IPMB driver<a class="headerlink" href="#load-the-ipmb-driver" title="Permalink to this headline">¶</a></h2>
+<p>The driver needs to be loaded at boot time or manually first.
+First, make sure you have the following in your config file:
+CONFIG_IPMB_DEVICE_INTERFACE=y</p>
+<ol class="arabic simple">
+<li>If you want the driver to be loaded at boot time:</li>
+</ol>
+<ol class="loweralpha">
+<li><p class="first">Add this entry to your ACPI table, under the appropriate SMBus:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>Device (SMB0) // Example SMBus host controller
+{
+Name (_HID, &quot;&lt;Vendor-Specific HID&gt;&quot;) // Vendor-Specific HID
+Name (_UID, 0) // Unique ID of particular host controller
+:
+:
+  Device (IPMB)
+  {
+    Name (_HID, &quot;IPMB0001&quot;) // IPMB device interface
+    Name (_UID, 0) // Unique device identifier
+  }
+}
+</pre></div>
+</div>
+</li>
+<li><p class="first">Example for device tree:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>&amp;i2c2 {
+       status = &quot;okay&quot;;
+
+       ipmb@10 {
+               compatible = &quot;ipmb-dev&quot;;
+               reg = &lt;0x10&gt;;
+               i2c-protocol;
+       };
+};
+</pre></div>
+</div>
+</li>
+</ol>
+<p>If xmit of data to be done using raw i2c block vs smbus
+then “i2c-protocol” needs to be defined as above.</p>
+<ol class="arabic" start="2">
+<li><p class="first">Manually from Linux:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>modprobe ipmb-dev-int
+</pre></div>
+</div>
+</li>
+</ol>
+</div>
+<div class="section" id="instantiate-the-device">
+<h2>Instantiate the device<a class="headerlink" href="#instantiate-the-device" title="Permalink to this headline">¶</a></h2>
+<p>After loading the driver, you can instantiate the device as
+described in ‘Documentation/i2c/instantiating-devices.rst’.
+If you have multiple BMCs, each connected to your Satellite MC via
+a different I2C bus, you can instantiate a device for each of
+those BMCs.</p>
+<p>The name of the instantiated device contains the I2C bus number
+associated with it as follows:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>BMC1 ------ IPMB/I2C bus 1 ---------|   /dev/ipmb-1
+                              Satellite MC
+BMC1 ------ IPMB/I2C bus 2 ---------|   /dev/ipmb-2
+</pre></div>
+</div>
+<p>For instance, you can instantiate the ipmb-dev-int device from
+user space at the 7 bit address 0x10 on bus 2:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span># echo ipmb-dev 0x1010 &gt; /sys/bus/i2c/devices/i2c-2/new_device
+</pre></div>
+</div>
+<p>This will create the device file /dev/ipmb-2, which can be accessed
+by the user space program. The device needs to be instantiated
+before running the user space program.</p>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright The kernel development community
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

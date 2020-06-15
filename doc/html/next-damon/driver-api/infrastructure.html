@@ -753,7 +753,7 @@ of the link.  If DL_FLAG_PM_RUNTIME is not set, DL_FLAG_RPM_ACTIVE will be
 ignored.</p>
 <p>If DL_FLAG_STATELESS is set in <strong>flags</strong>, the caller of this function is
 expected to release the link returned by it directly with the help of either
-<a class="reference internal" href="#c.device_link_del" title="device_link_del"><code class="xref c c-func docutils literal notranslate"><span class="pre">device_link_del()</span></code></a> or <a class="reference internal" href="#c.device_link_remove" title="device_link_remove"><code class="xref c c-func docutils literal notranslate"><span class="pre">device_link_remove()</span></code></a>.</p>
+<a class="reference internal" href="device_link.html#c.device_link_del" title="device_link_del"><code class="xref c c-func docutils literal notranslate"><span class="pre">device_link_del()</span></code></a> or <a class="reference internal" href="device_link.html#c.device_link_remove" title="device_link_remove"><code class="xref c c-func docutils literal notranslate"><span class="pre">device_link_remove()</span></code></a>.</p>
 <p>If that flag is not set, however, the caller of this function is handing the
 management of the link over to the driver core entirely and its return value
 can only be used to check whether or not the link is present.  In that case,
@@ -802,7 +802,7 @@ void <code class="descname">device_link_del</code><span class="sig-paren">(</spa
 <p>The caller must ensure proper synchronization of this function with runtime
 PM.  If the link was added multiple times, it needs to be deleted as often.
 Care is required for hotplugged devices:  Their links are purged on removal
-and calling <a class="reference internal" href="#c.device_link_del" title="device_link_del"><code class="xref c c-func docutils literal notranslate"><span class="pre">device_link_del()</span></code></a> is then no longer allowed.</p>
+and calling <a class="reference internal" href="device_link.html#c.device_link_del" title="device_link_del"><code class="xref c c-func docutils literal notranslate"><span class="pre">device_link_del()</span></code></a> is then no longer allowed.</p>
 <dl class="function">
 <dt id="c.device_link_remove">
 void <code class="descname">device_link_remove</code><span class="sig-paren">(</span>void *<em>&nbsp;consumer</em>, struct <a class="reference internal" href="#c.device" title="device">device</a> *<em>&nbsp;supplier</em><span class="sig-paren">)</span><a class="headerlink" href="#c.device_link_remove" title="Permalink to this definition">¶</a></dt>
@@ -1891,7 +1891,7 @@ int <code class="descname">firmware_request_nowarn</code><span class="sig-paren"
 <dd>device for which firmware is being loaded</dd>
 </dl>
 <p><strong>Description</strong></p>
-<p>This function is similar in behaviour to <a class="reference internal" href="#c.request_firmware" title="request_firmware"><code class="xref c c-func docutils literal notranslate"><span class="pre">request_firmware()</span></code></a>, except
+<p>This function is similar in behaviour to <a class="reference internal" href="firmware/request_firmware.html#c.request_firmware" title="request_firmware"><code class="xref c c-func docutils literal notranslate"><span class="pre">request_firmware()</span></code></a>, except
 it doesn’t produce warning messages when the file is not found.
 The sysfs fallback mechanism is enabled if direct filesystem lookup fails,
 however, however failures to find the firmware file with it are still
@@ -1913,7 +1913,7 @@ int <code class="descname">request_firmware_direct</code><span class="sig-paren"
 <dd>device for which firmware is being loaded</dd>
 </dl>
 <p><strong>Description</strong></p>
-<p>This function works pretty much like <a class="reference internal" href="#c.request_firmware" title="request_firmware"><code class="xref c c-func docutils literal notranslate"><span class="pre">request_firmware()</span></code></a>, but this doesn’t
+<p>This function works pretty much like <a class="reference internal" href="firmware/request_firmware.html#c.request_firmware" title="request_firmware"><code class="xref c c-func docutils literal notranslate"><span class="pre">request_firmware()</span></code></a>, but this doesn’t
 fall back to usermode helper even if the firmware couldn’t be loaded
 directly from fs.  Hence it’s useful for loading optional firmwares, which
 aren’t always present, without extra long timeouts of udev.</p>
@@ -1955,7 +1955,7 @@ require loading firmware on system reboot. This optimization may still
 require the firmware present on resume from suspend. This routine can be
 used to ensure the firmware is present on resume from suspend in these
 situations. This helper is not compatible with drivers which use
-<a class="reference internal" href="#c.request_firmware_into_buf" title="request_firmware_into_buf"><code class="xref c c-func docutils literal notranslate"><span class="pre">request_firmware_into_buf()</span></code></a> or <a class="reference internal" href="#c.request_firmware_nowait" title="request_firmware_nowait"><code class="xref c c-func docutils literal notranslate"><span class="pre">request_firmware_nowait()</span></code></a> with no uevent set.</p>
+<a class="reference internal" href="firmware/request_firmware.html#c.request_firmware_into_buf" title="request_firmware_into_buf"><code class="xref c c-func docutils literal notranslate"><span class="pre">request_firmware_into_buf()</span></code></a> or <a class="reference internal" href="firmware/request_firmware.html#c.request_firmware_nowait" title="request_firmware_nowait"><code class="xref c c-func docutils literal notranslate"><span class="pre">request_firmware_nowait()</span></code></a> with no uevent set.</p>
 <dl class="function">
 <dt id="c.request_firmware_into_buf">
 int <code class="descname">request_firmware_into_buf</code><span class="sig-paren">(</span>const struct firmware **<em>&nbsp;firmware_p</em>, const char *<em>&nbsp;name</em>, struct <a class="reference internal" href="#c.device" title="device">device</a> *<em>&nbsp;device</em>, void *<em>&nbsp;buf</em>, size_t<em>&nbsp;size</em><span class="sig-paren">)</span><a class="headerlink" href="#c.request_firmware_into_buf" title="Permalink to this definition">¶</a></dt>
@@ -1976,7 +1976,7 @@ int <code class="descname">request_firmware_into_buf</code><span class="sig-pare
 <dd>size of buffer</dd>
 </dl>
 <p><strong>Description</strong></p>
-<p>This function works pretty much like <a class="reference internal" href="#c.request_firmware" title="request_firmware"><code class="xref c c-func docutils literal notranslate"><span class="pre">request_firmware()</span></code></a>, but it doesn’t
+<p>This function works pretty much like <a class="reference internal" href="firmware/request_firmware.html#c.request_firmware" title="request_firmware"><code class="xref c c-func docutils literal notranslate"><span class="pre">request_firmware()</span></code></a>, but it doesn’t
 allocate a buffer to hold the firmware data. Instead, the firmware
 is loaded directly into the buffer pointed to by <strong>buf</strong> and the <strong>firmware_p</strong>
 data member is pointed at <strong>buf</strong>.</p>

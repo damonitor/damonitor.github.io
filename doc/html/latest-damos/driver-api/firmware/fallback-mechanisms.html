@@ -169,13 +169,13 @@ configuration options related to supporting the firmware fallback mechanism are:
 <li>CONFIG_FW_LOADER_USER_HELPER: enables building the firmware fallback
 mechanism. Most distributions enable this option today. If enabled but
 CONFIG_FW_LOADER_USER_HELPER_FALLBACK is disabled, only the custom fallback
-mechanism is available and for the <a class="reference internal" href="../infrastructure.html#c.request_firmware_nowait" title="request_firmware_nowait"><code class="xref c c-func docutils literal notranslate"><span class="pre">request_firmware_nowait()</span></code></a> call.</li>
+mechanism is available and for the <a class="reference internal" href="request_firmware.html#c.request_firmware_nowait" title="request_firmware_nowait"><code class="xref c c-func docutils literal notranslate"><span class="pre">request_firmware_nowait()</span></code></a> call.</li>
 <li>CONFIG_FW_LOADER_USER_HELPER_FALLBACK: force enables each request to
 enable the kobject uevent fallback mechanism on all firmware API calls
-except <a class="reference internal" href="../infrastructure.html#c.request_firmware_direct" title="request_firmware_direct"><code class="xref c c-func docutils literal notranslate"><span class="pre">request_firmware_direct()</span></code></a>. Most distributions disable this option
-today. The call <a class="reference internal" href="../infrastructure.html#c.request_firmware_nowait" title="request_firmware_nowait"><code class="xref c c-func docutils literal notranslate"><span class="pre">request_firmware_nowait()</span></code></a> allows for one alternative
+except <a class="reference internal" href="request_firmware.html#c.request_firmware_direct" title="request_firmware_direct"><code class="xref c c-func docutils literal notranslate"><span class="pre">request_firmware_direct()</span></code></a>. Most distributions disable this option
+today. The call <a class="reference internal" href="request_firmware.html#c.request_firmware_nowait" title="request_firmware_nowait"><code class="xref c c-func docutils literal notranslate"><span class="pre">request_firmware_nowait()</span></code></a> allows for one alternative
 fallback mechanism: if this kconfig option is enabled and your second
-argument to <a class="reference internal" href="../infrastructure.html#c.request_firmware_nowait" title="request_firmware_nowait"><code class="xref c c-func docutils literal notranslate"><span class="pre">request_firmware_nowait()</span></code></a>, uevent, is set to false you are
+argument to <a class="reference internal" href="request_firmware.html#c.request_firmware_nowait" title="request_firmware_nowait"><code class="xref c c-func docutils literal notranslate"><span class="pre">request_firmware_nowait()</span></code></a>, uevent, is set to false you are
 informing the kernel that you have a custom fallback mechanism and it will
 manually load the firmware. Read below for more details.</li>
 </ul>
@@ -184,7 +184,7 @@ manually load the firmware. Read below for more details.</li>
 <p>CONFIG_FW_LOADER_USER_HELPER=y
 CONFIG_FW_LOADER_USER_HELPER_FALLBACK=n</p>
 <p>the kobject uevent fallback mechanism will never take effect even
-for <a class="reference internal" href="../infrastructure.html#c.request_firmware_nowait" title="request_firmware_nowait"><code class="xref c c-func docutils literal notranslate"><span class="pre">request_firmware_nowait()</span></code></a> when uevent is set to true.</p>
+for <a class="reference internal" href="request_firmware.html#c.request_firmware_nowait" title="request_firmware_nowait"><code class="xref c c-func docutils literal notranslate"><span class="pre">request_firmware_nowait()</span></code></a> when uevent is set to true.</p>
 <div class="section" id="justifying-the-firmware-fallback-mechanism">
 <h2>Justifying the firmware fallback mechanism<a class="headerlink" href="#justifying-the-firmware-fallback-mechanism" title="Permalink to this headline">¶</a></h2>
 <p>Direct filesystem lookups may fail for a variety of reasons. Known reasons for
@@ -194,7 +194,7 @@ fallback mechanism:</p>
 <li>Race against access with the root filesystem upon bootup.</li>
 <li>Races upon resume from suspend. This is resolved by the firmware cache, but
 the firmware cache is only supported if you use uevents, and its not
-supported for <a class="reference internal" href="../infrastructure.html#c.request_firmware_into_buf" title="request_firmware_into_buf"><code class="xref c c-func docutils literal notranslate"><span class="pre">request_firmware_into_buf()</span></code></a>.</li>
+supported for <a class="reference internal" href="request_firmware.html#c.request_firmware_into_buf" title="request_firmware_into_buf"><code class="xref c c-func docutils literal notranslate"><span class="pre">request_firmware_into_buf()</span></code></a>.</li>
 <li><dl class="first docutils">
 <dt>Firmware is not accessible through typical means:</dt>
 <dd><ul class="first last">
@@ -346,7 +346,7 @@ echo 0 &gt; /sys/$DEVPATH/loading
 </div>
 <div class="section" id="firmware-custom-fallback-mechanism">
 <h2>Firmware custom fallback mechanism<a class="headerlink" href="#firmware-custom-fallback-mechanism" title="Permalink to this headline">¶</a></h2>
-<p>Users of the <a class="reference internal" href="../infrastructure.html#c.request_firmware_nowait" title="request_firmware_nowait"><code class="xref c c-func docutils literal notranslate"><span class="pre">request_firmware_nowait()</span></code></a> call have yet another option available
+<p>Users of the <a class="reference internal" href="request_firmware.html#c.request_firmware_nowait" title="request_firmware_nowait"><code class="xref c c-func docutils literal notranslate"><span class="pre">request_firmware_nowait()</span></code></a> call have yet another option available
 at their disposal: rely on the sysfs fallback mechanism but request that no
 kobject uevents be issued to userspace. The original logic behind this
 was that utilities other than udev might be required to lookup firmware
@@ -356,10 +356,10 @@ the other API calls as uevents are always forced for them.</p>
 <p>Since uevents are only meaningful if the fallback mechanism is enabled
 in your kernel it would seem odd to enable uevents with kernels that do not
 have the fallback mechanism enabled in their kernels. Unfortunately we also
-rely on the uevent flag which can be disabled by <a class="reference internal" href="../infrastructure.html#c.request_firmware_nowait" title="request_firmware_nowait"><code class="xref c c-func docutils literal notranslate"><span class="pre">request_firmware_nowait()</span></code></a> to
+rely on the uevent flag which can be disabled by <a class="reference internal" href="request_firmware.html#c.request_firmware_nowait" title="request_firmware_nowait"><code class="xref c c-func docutils literal notranslate"><span class="pre">request_firmware_nowait()</span></code></a> to
 also setup the firmware cache for firmware requests. As documented above,
 the firmware cache is only set up if uevent is enabled for an API call.
-Although this can disable the firmware cache for <a class="reference internal" href="../infrastructure.html#c.request_firmware_nowait" title="request_firmware_nowait"><code class="xref c c-func docutils literal notranslate"><span class="pre">request_firmware_nowait()</span></code></a>
+Although this can disable the firmware cache for <a class="reference internal" href="request_firmware.html#c.request_firmware_nowait" title="request_firmware_nowait"><code class="xref c c-func docutils literal notranslate"><span class="pre">request_firmware_nowait()</span></code></a>
 calls, users of this API should not use it for the purposes of disabling
 the cache as that was not the original purpose of the flag. Not setting
 the uevent flag means you want to opt-in for the firmware fallback mechanism
@@ -389,7 +389,7 @@ for the timeout is an int.</p>
 of firmware for some of the system’s integrated peripheral devices and
 the peripheral’s Linux device-driver needs to access this firmware.</p>
 <p>Device drivers which need such firmware can use the
-<a class="reference internal" href="../infrastructure.html#c.firmware_request_platform" title="firmware_request_platform"><code class="xref c c-func docutils literal notranslate"><span class="pre">firmware_request_platform()</span></code></a> function for this, note that this is a
+<a class="reference internal" href="request_firmware.html#c.firmware_request_platform" title="firmware_request_platform"><code class="xref c c-func docutils literal notranslate"><span class="pre">firmware_request_platform()</span></code></a> function for this, note that this is a
 separate fallback mechanism from the other fallback mechanisms and
 this does not use the sysfs interface.</p>
 <p>A device driver which needs this can describe the firmware it needs
@@ -438,7 +438,7 @@ drivers/firmware/efi/embedded-firmware.c wrapped in a #ifdef testing that
 the driver is being builtin.</li>
 <li>Add “select EFI_EMBEDDED_FIRMWARE if EFI_STUB” to its Kconfig entry.</li>
 </ol>
-<p>The <a class="reference internal" href="../infrastructure.html#c.firmware_request_platform" title="firmware_request_platform"><code class="xref c c-func docutils literal notranslate"><span class="pre">firmware_request_platform()</span></code></a> function will always first try to load firmware
+<p>The <a class="reference internal" href="request_firmware.html#c.firmware_request_platform" title="firmware_request_platform"><code class="xref c c-func docutils literal notranslate"><span class="pre">firmware_request_platform()</span></code></a> function will always first try to load firmware
 with the specified name directly from the disk, so the EFI embedded-fw can
 always be overridden by placing a file under /lib/firmware.</p>
 <p>Note that:</p>

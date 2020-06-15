@@ -1,0 +1,381 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>README for the SCSI media changer driver &mdash; The Linux Kernel  documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript">
+          var DOCUMENTATION_OPTIONS = {
+              URL_ROOT:'../',
+              VERSION:'',
+              LANGUAGE:'None',
+              COLLAPSE_INDEX:false,
+              FILE_SUFFIX:'.html',
+              HAS_SOURCE:  true,
+              SOURCELINK_SUFFIX: '.txt'
+          };
+      </script>
+        <script type="text/javascript" src="../_static/jquery.js"></script>
+        <script type="text/javascript" src="../_static/underscore.js"></script>
+        <script type="text/javascript" src="../_static/doctools.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/theme_overrides.css" type="text/css" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> The Linux Kernel
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                5.7.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../admin-guide/mm/damon/index.html">DAMON: Data Access MONitor</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">The Linux Kernel</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+      <li>README for the SCSI media changer driver</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/scsi/scsi-changer.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="readme-for-the-scsi-media-changer-driver">
+<h1>README for the SCSI media changer driver<a class="headerlink" href="#readme-for-the-scsi-media-changer-driver" title="Permalink to this headline">¶</a></h1>
+<p>This is a driver for SCSI Medium Changer devices, which are listed
+with “Type: Medium Changer” in /proc/scsi/scsi.</p>
+<p>This is for <em>real</em> Jukeboxes.  It is <em>not</em> supported to work with
+common small CD-ROM changers, neither one-lun-per-slot SCSI changers
+nor IDE drives.</p>
+<dl class="docutils">
+<dt>Userland tools available from here:</dt>
+<dd><a class="reference external" href="http://linux.bytesex.org/misc/changer.html">http://linux.bytesex.org/misc/changer.html</a></dd>
+</dl>
+<div class="section" id="general-information">
+<h2>General Information<a class="headerlink" href="#general-information" title="Permalink to this headline">¶</a></h2>
+<p>First some words about how changers work: A changer has 2 (possibly
+more) SCSI ID’s. One for the changer device which controls the robot,
+and one for the device which actually reads and writes the data. The
+later may be anything, a MOD, a CD-ROM, a tape or whatever. For the
+changer device this is a “don’t care”, he <em>only</em> shuffles around the
+media, nothing else.</p>
+<p>The SCSI changer model is complex, compared to - for example - IDE-CD
+changers. But it allows to handle nearly all possible cases. It knows
+4 different types of changer elements:</p>
+<blockquote>
+<div><table border="1" class="docutils">
+<colgroup>
+<col width="23%" />
+<col width="77%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td>media transport</td>
+<td>this one shuffles around the media, i.e. the
+transport arm.  Also known as “picker”.</td>
+</tr>
+<tr class="row-even"><td>storage</td>
+<td>a slot which can hold a media.</td>
+</tr>
+<tr class="row-odd"><td>import/export</td>
+<td>the same as above, but is accessible from outside,
+i.e. there the operator (you !) can use this to
+fill in and remove media from the changer.
+Sometimes named “mailslot”.</td>
+</tr>
+<tr class="row-even"><td>data transfer</td>
+<td>this is the device which reads/writes, i.e. the
+CD-ROM / Tape / whatever drive.</td>
+</tr>
+</tbody>
+</table>
+</div></blockquote>
+<p>None of these is limited to one: A huge Jukebox could have slots for
+123 CD-ROM’s, 5 CD-ROM readers (and therefore 6 SCSI ID’s: the changer
+and each CD-ROM) and 2 transport arms. No problem to handle.</p>
+</div>
+<div class="section" id="how-it-is-implemented">
+<h2>How it is implemented<a class="headerlink" href="#how-it-is-implemented" title="Permalink to this headline">¶</a></h2>
+<p>I implemented the driver as character device driver with a NetBSD-like
+ioctl interface. Just grabbed NetBSD’s header file and one of the
+other linux SCSI device drivers as starting point. The interface
+should be source code compatible with NetBSD. So if there is any
+software (anybody knows ???) which supports a BSDish changer driver,
+it should work with this driver too.</p>
+<p>Over time a few more ioctls where added, volume tag support for example
+wasn’t covered by the NetBSD ioctl API.</p>
+</div>
+<div class="section" id="current-state">
+<h2>Current State<a class="headerlink" href="#current-state" title="Permalink to this headline">¶</a></h2>
+<p>Support for more than one transport arm is not implemented yet (and
+nobody asked for it so far…).</p>
+<p>I test and use the driver myself with a 35 slot cdrom jukebox from
+Grundig.  I got some reports telling it works ok with tape autoloaders
+(Exabyte, HP and DEC).  Some People use this driver with amanda.  It
+works fine with small (11 slots) and a huge (4 MOs, 88 slots)
+magneto-optical Jukebox.  Probably with lots of other changers too, most
+(but not all :-) people mail me only if it does <em>not</em> work…</p>
+<p>I don’t have any device lists, neither black-list nor white-list.  Thus
+it is quite useless to ask me whenever a specific device is supported or
+not.  In theory every changer device which supports the SCSI-2 media
+changer command set should work out-of-the-box with this driver.  If it
+doesn’t, it is a bug.  Either within the driver or within the firmware
+of the changer device.</p>
+</div>
+<div class="section" id="using-it">
+<h2>Using it<a class="headerlink" href="#using-it" title="Permalink to this headline">¶</a></h2>
+<p>This is a character device with major number is 86, so use
+“mknod /dev/sch0 c 86 0” to create the special file for the driver.</p>
+<p>If the module finds the changer, it prints some messages about the
+device [ try “dmesg” if you don’t see anything ] and should show up in
+/proc/devices. If not….  some changers use ID ? / LUN 0 for the
+device and ID ? / LUN 1 for the robot mechanism. But Linux does <em>not</em>
+look for LUNs other than 0 as default, because there are too many
+broken devices. So you can try:</p>
+<blockquote>
+<div><ol class="arabic simple">
+<li>echo “scsi add-single-device 0 0 ID 1” &gt; /proc/scsi/scsi
+(replace ID with the SCSI-ID of the device)</li>
+<li>boot the kernel with “max_scsi_luns=1” on the command line
+(append=”max_scsi_luns=1” in lilo.conf should do the trick)</li>
+</ol>
+</div></blockquote>
+</div>
+<div class="section" id="trouble">
+<h2>Trouble?<a class="headerlink" href="#trouble" title="Permalink to this headline">¶</a></h2>
+<p>If you insmod the driver with “insmod debug=1”, it will be verbose and
+prints a lot of stuff to the syslog.  Compiling the kernel with
+CONFIG_SCSI_CONSTANTS=y improves the quality of the error messages a lot
+because the kernel will translate the error codes into human-readable
+strings then.</p>
+<p>You can display these messages with the dmesg command (or check the
+logfiles).  If you email me some question because of a problem with the
+driver, please include these messages.</p>
+</div>
+<div class="section" id="insmod-options">
+<h2>Insmod options<a class="headerlink" href="#insmod-options" title="Permalink to this headline">¶</a></h2>
+<dl class="docutils">
+<dt>debug=0/1</dt>
+<dd>Enable debug messages (see above, default: 0).</dd>
+<dt>verbose=0/1</dt>
+<dd>Be verbose (default: 1).</dd>
+<dt>init=0/1</dt>
+<dd>Send INITIALIZE ELEMENT STATUS command to the changer
+at insmod time (default: 1).</dd>
+<dt>timeout_init=&lt;seconds&gt;</dt>
+<dd>timeout for the INITIALIZE ELEMENT STATUS command
+(default: 3600).</dd>
+<dt>timeout_move=&lt;seconds&gt;</dt>
+<dd>timeout for all other commands (default: 120).</dd>
+<dt>dt_id=&lt;id1&gt;,&lt;id2&gt;,… / dt_lun=&lt;lun1&gt;,&lt;lun2&gt;,…</dt>
+<dd>These two allow to specify the SCSI ID and LUN for the data
+transfer elements.  You likely don’t need this as the jukebox
+should provide this information.  But some devices don’t …</dd>
+<dt>vendor_firsts=, vendor_counts=, vendor_labels=</dt>
+<dd><p class="first">These insmod options can be used to tell the driver that there
+are some vendor-specific element types.  Grundig for example
+does this.  Some jukeboxes have a printer to label fresh burned
+CDs, which is addressed as element 0xc000 (type 5).  To tell the
+driver about this vendor-specific element, use this:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>$ insmod ch                     \
+        vendor_firsts=0xc000    \
+        vendor_counts=1         \
+        vendor_labels=printer
+</pre></div>
+</div>
+<p class="last">All three insmod options accept up to four comma-separated
+values, this way you can configure the element types 5-8.
+You likely need the SCSI specs for the device in question to
+find the correct values as they are not covered by the SCSI-2
+standard.</p>
+</dd>
+</dl>
+</div>
+<div class="section" id="credits">
+<h2>Credits<a class="headerlink" href="#credits" title="Permalink to this headline">¶</a></h2>
+<p>I wrote this driver using the famous mailing-patches-around-the-world
+method.  With (more or less) help from:</p>
+<blockquote>
+<div><ul class="simple">
+<li>Daniel Moehwald &lt;<a class="reference external" href="mailto:moehwald&#37;&#52;&#48;hdg&#46;de">moehwald<span>&#64;</span>hdg<span>&#46;</span>de</a>&gt;</li>
+<li>Dane Jasper &lt;<a class="reference external" href="mailto:dane&#37;&#52;&#48;sonic&#46;net">dane<span>&#64;</span>sonic<span>&#46;</span>net</a>&gt;</li>
+<li><ol class="first upperalpha" start="18">
+<li>Scott Bailey &lt;<a class="reference external" href="mailto:sbailey&#37;&#52;&#48;dsddi&#46;eds&#46;com">sbailey<span>&#64;</span>dsddi<span>&#46;</span>eds<span>&#46;</span>com</a>&gt;</li>
+</ol>
+</li>
+<li>Jonathan Corbet &lt;<a class="reference external" href="mailto:corbet&#37;&#52;&#48;lwn&#46;net">corbet<span>&#64;</span>lwn<span>&#46;</span>net</a>&gt;</li>
+</ul>
+</div></blockquote>
+<p>Special thanks go to</p>
+<blockquote>
+<div><ul class="simple">
+<li>Martin Kuehne &lt;<a class="reference external" href="mailto:martin&#46;kuehne&#37;&#52;&#48;bnbt&#46;de">martin<span>&#46;</span>kuehne<span>&#64;</span>bnbt<span>&#46;</span>de</a>&gt;</li>
+</ul>
+</div></blockquote>
+<p>for a old, second-hand (but full functional) cdrom jukebox which I use
+to develop/test driver and tools now.</p>
+<p>Have fun,</p>
+<blockquote>
+<div>Gerd</div></blockquote>
+<p>Gerd Knorr &lt;<a class="reference external" href="mailto:kraxel&#37;&#52;&#48;bytesex&#46;org">kraxel<span>&#64;</span>bytesex<span>&#46;</span>org</a>&gt;</p>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright The kernel development community
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

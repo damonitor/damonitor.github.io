@@ -1,0 +1,285 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>How to get s2ram working &mdash; The Linux Kernel  documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript">
+          var DOCUMENTATION_OPTIONS = {
+              URL_ROOT:'../',
+              VERSION:'',
+              LANGUAGE:'None',
+              COLLAPSE_INDEX:false,
+              FILE_SUFFIX:'.html',
+              HAS_SOURCE:  true,
+              SOURCELINK_SUFFIX: '.txt'
+          };
+      </script>
+        <script type="text/javascript" src="../_static/jquery.js"></script>
+        <script type="text/javascript" src="../_static/underscore.js"></script>
+        <script type="text/javascript" src="../_static/doctools.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/theme_overrides.css" type="text/css" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> The Linux Kernel
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                5.7.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../admin-guide/mm/damon/index.html">DAMON: Data Access MONitor</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">The Linux Kernel</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+      <li>How to get s2ram working</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/power/s2ram.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="how-to-get-s2ram-working">
+<h1>How to get s2ram working<a class="headerlink" href="#how-to-get-s2ram-working" title="Permalink to this headline">¶</a></h1>
+<p>2006 Linus Torvalds
+2006 Pavel Machek</p>
+<ol class="arabic simple">
+<li>Check suspend.sf.net, program s2ram there has long whitelist of
+“known ok” machines, along with tricks to use on each one.</li>
+<li>If that does not help, try reading tricks.txt and
+video.txt. Perhaps problem is as simple as broken module, and
+simple module unload can fix it.</li>
+<li>You can use Linus’ TRACE_RESUME infrastructure, described below.</li>
+</ol>
+<div class="section" id="using-trace-resume">
+<h2>Using TRACE_RESUME<a class="headerlink" href="#using-trace-resume" title="Permalink to this headline">¶</a></h2>
+<p>I’ve been working at making the machines I have able to STR, and almost
+always it’s a driver that is buggy. Thank God for the suspend/resume
+debugging - the thing that Chuck tried to disable. That’s often the _only_
+way to debug these things, and it’s actually pretty powerful (but
+time-consuming - having to insert TRACE_RESUME() markers into the device
+driver that doesn’t resume and recompile and reboot).</p>
+<p>Anyway, the way to debug this for people who are interested (have a
+machine that doesn’t boot) is:</p>
+<blockquote>
+<div><ul>
+<li><p class="first">enable PM_DEBUG, and PM_TRACE</p>
+</li>
+<li><p class="first">use a script like this:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>#!/bin/sh
+sync
+echo 1 &gt; /sys/power/pm_trace
+echo mem &gt; /sys/power/state
+</pre></div>
+</div>
+<p>to suspend</p>
+</li>
+<li><p class="first">if it doesn’t come back up (which is usually the problem), reboot by
+holding the power button down, and look at the dmesg output for things
+like:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>Magic number: 4:156:725
+hash matches drivers/base/power/resume.c:28
+hash matches device 0000:01:00.0
+</pre></div>
+</div>
+<p>which means that the last trace event was just before trying to resume
+device 0000:01:00.0. Then figure out what driver is controlling that
+device (lspci and /sys/devices/pci* is your friend), and see if you can
+fix it, disable it, or trace into its resume function.</p>
+<p>If no device matches the hash (or any matches appear to be false positives),
+the culprit may be a device from a loadable kernel module that is not loaded
+until after the hash is checked. You can check the hash against the current
+devices again after more modules are loaded using sysfs:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>cat /sys/power/pm_trace_dev_match
+</pre></div>
+</div>
+</li>
+</ul>
+</div></blockquote>
+<p>For example, the above happens to be the VGA device on my EVO, which I
+used to run with “radeonfb” (it’s an ATI Radeon mobility). It turns out
+that “radeonfb” simply cannot resume that device - it tries to set the
+PLL’s, and it just _hangs_. Using the regular VGA console and letting X
+resume it instead works fine.</p>
+<div class="section" id="note">
+<h3>NOTE<a class="headerlink" href="#note" title="Permalink to this headline">¶</a></h3>
+<p>pm_trace uses the system’s Real Time Clock (RTC) to save the magic number.
+Reason for this is that the RTC is the only reliably available piece of
+hardware during resume operations where a value can be set that will
+survive a reboot.</p>
+<p>pm_trace is not compatible with asynchronous suspend, so it turns
+asynchronous suspend off (which may work around timing or
+ordering-sensitive bugs).</p>
+<p>Consequence is that after a resume (even if it is successful) your system
+clock will have a value corresponding to the magic number instead of the
+correct date/time! It is therefore advisable to use a program like ntp-date
+or rdate to reset the correct date/time from an external time source when
+using this trace option.</p>
+<p>As the clock keeps ticking it is also essential that the reboot is done
+quickly after the resume failure. The trace option does not use the seconds
+or the low order bits of the minutes of the RTC, but a too long delay will
+corrupt the magic value.</p>
+</div>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright The kernel development community
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

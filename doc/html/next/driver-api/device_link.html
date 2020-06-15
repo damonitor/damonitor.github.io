@@ -254,22 +254,22 @@ consumer will never be probed.</p>
 by the driver core when they are not necessary any more in accordance with the
 <code class="docutils literal notranslate"><span class="pre">DL_FLAG_AUTOREMOVE_CONSUMER</span></code> and <code class="docutils literal notranslate"><span class="pre">DL_FLAG_AUTOREMOVE_SUPPLIER</span></code> flags.
 However, stateless device links (i.e. device links with <code class="docutils literal notranslate"><span class="pre">DL_FLAG_STATELESS</span></code>
-set) are expected to be removed by whoever called <a class="reference internal" href="infrastructure.html#c.device_link_add" title="device_link_add"><code class="xref c c-func docutils literal notranslate"><span class="pre">device_link_add()</span></code></a>
-to add them with the help of either <a class="reference internal" href="infrastructure.html#c.device_link_del" title="device_link_del"><code class="xref c c-func docutils literal notranslate"><span class="pre">device_link_del()</span></code></a> or
-<a class="reference internal" href="infrastructure.html#c.device_link_remove" title="device_link_remove"><code class="xref c c-func docutils literal notranslate"><span class="pre">device_link_remove()</span></code></a>.</p>
+set) are expected to be removed by whoever called <a class="reference internal" href="#c.device_link_add" title="device_link_add"><code class="xref c c-func docutils literal notranslate"><span class="pre">device_link_add()</span></code></a>
+to add them with the help of either <a class="reference internal" href="#c.device_link_del" title="device_link_del"><code class="xref c c-func docutils literal notranslate"><span class="pre">device_link_del()</span></code></a> or
+<a class="reference internal" href="#c.device_link_remove" title="device_link_remove"><code class="xref c c-func docutils literal notranslate"><span class="pre">device_link_remove()</span></code></a>.</p>
 <p>Passing <code class="docutils literal notranslate"><span class="pre">DL_FLAG_RPM_ACTIVE</span></code> along with <code class="docutils literal notranslate"><span class="pre">DL_FLAG_STATELESS</span></code> to
-<a class="reference internal" href="infrastructure.html#c.device_link_add" title="device_link_add"><code class="xref c c-func docutils literal notranslate"><span class="pre">device_link_add()</span></code></a> may cause the PM-runtime usage counter of the
+<a class="reference internal" href="#c.device_link_add" title="device_link_add"><code class="xref c c-func docutils literal notranslate"><span class="pre">device_link_add()</span></code></a> may cause the PM-runtime usage counter of the
 supplier device to remain nonzero after a subsequent invocation of either
-<a class="reference internal" href="infrastructure.html#c.device_link_del" title="device_link_del"><code class="xref c c-func docutils literal notranslate"><span class="pre">device_link_del()</span></code></a> or <a class="reference internal" href="infrastructure.html#c.device_link_remove" title="device_link_remove"><code class="xref c c-func docutils literal notranslate"><span class="pre">device_link_remove()</span></code></a> to remove the
-device link returned by it.  This happens if <a class="reference internal" href="infrastructure.html#c.device_link_add" title="device_link_add"><code class="xref c c-func docutils literal notranslate"><span class="pre">device_link_add()</span></code></a> is
+<a class="reference internal" href="#c.device_link_del" title="device_link_del"><code class="xref c c-func docutils literal notranslate"><span class="pre">device_link_del()</span></code></a> or <a class="reference internal" href="#c.device_link_remove" title="device_link_remove"><code class="xref c c-func docutils literal notranslate"><span class="pre">device_link_remove()</span></code></a> to remove the
+device link returned by it.  This happens if <a class="reference internal" href="#c.device_link_add" title="device_link_add"><code class="xref c c-func docutils literal notranslate"><span class="pre">device_link_add()</span></code></a> is
 called twice in a row for the same consumer-supplier pair without removing the
 link between these calls, in which case allowing the PM-runtime usage counter
 of the supplier to drop on an attempt to remove the link may cause it to be
 suspended while the consumer is still PM-runtime-active and that has to be
 avoided.  [To work around this limitation it is sufficient to let the consumer
 runtime suspend at least once, or call <code class="xref c c-func docutils literal notranslate"><span class="pre">pm_runtime_set_suspended()</span></code> for
-it with PM-runtime disabled, between the <a class="reference internal" href="infrastructure.html#c.device_link_add" title="device_link_add"><code class="xref c c-func docutils literal notranslate"><span class="pre">device_link_add()</span></code></a> and
-<a class="reference internal" href="infrastructure.html#c.device_link_del" title="device_link_del"><code class="xref c c-func docutils literal notranslate"><span class="pre">device_link_del()</span></code></a> or <a class="reference internal" href="infrastructure.html#c.device_link_remove" title="device_link_remove"><code class="xref c c-func docutils literal notranslate"><span class="pre">device_link_remove()</span></code></a> calls.]</p>
+it with PM-runtime disabled, between the <a class="reference internal" href="#c.device_link_add" title="device_link_add"><code class="xref c c-func docutils literal notranslate"><span class="pre">device_link_add()</span></code></a> and
+<a class="reference internal" href="#c.device_link_del" title="device_link_del"><code class="xref c c-func docutils literal notranslate"><span class="pre">device_link_del()</span></code></a> or <a class="reference internal" href="#c.device_link_remove" title="device_link_remove"><code class="xref c c-func docutils literal notranslate"><span class="pre">device_link_remove()</span></code></a> calls.]</p>
 <p>Sometimes drivers depend on optional resources.  They are able to operate
 in a degraded mode (reduced feature set or performance) when those resources
 are not present.  An example is an SPI controller that can use a DMA engine
@@ -363,12 +363,12 @@ constraint that a device is placed behind all its suppliers, recursively.
 To ensure this, upon addition of the device link the consumer and the
 entire sub-graph below it (all children and consumers of the consumer)
 are moved to the end of the list.  (Call to <code class="xref c c-func docutils literal notranslate"><span class="pre">device_reorder_to_tail()</span></code>
-from <a class="reference internal" href="infrastructure.html#c.device_link_add" title="device_link_add"><code class="xref c c-func docutils literal notranslate"><span class="pre">device_link_add()</span></code></a>.)</p>
+from <a class="reference internal" href="#c.device_link_add" title="device_link_add"><code class="xref c c-func docutils literal notranslate"><span class="pre">device_link_add()</span></code></a>.)</p>
 <p>To prevent introduction of dependency loops into the graph, it is
 verified upon device link addition that the supplier is not dependent
 on the consumer or any children or consumers of the consumer.
-(Call to <code class="xref c c-func docutils literal notranslate"><span class="pre">device_is_dependent()</span></code> from <a class="reference internal" href="infrastructure.html#c.device_link_add" title="device_link_add"><code class="xref c c-func docutils literal notranslate"><span class="pre">device_link_add()</span></code></a>.)
-If that constraint is violated, <a class="reference internal" href="infrastructure.html#c.device_link_add" title="device_link_add"><code class="xref c c-func docutils literal notranslate"><span class="pre">device_link_add()</span></code></a> will return
+(Call to <code class="xref c c-func docutils literal notranslate"><span class="pre">device_is_dependent()</span></code> from <a class="reference internal" href="#c.device_link_add" title="device_link_add"><code class="xref c c-func docutils literal notranslate"><span class="pre">device_link_add()</span></code></a>.)
+If that constraint is violated, <a class="reference internal" href="#c.device_link_add" title="device_link_add"><code class="xref c c-func docutils literal notranslate"><span class="pre">device_link_add()</span></code></a> will return
 <code class="docutils literal notranslate"><span class="pre">NULL</span></code> and a <code class="docutils literal notranslate"><span class="pre">WARNING</span></code> will be logged.</p>
 <p>Notably this also prevents the addition of a device link from a parent
 device to a child.  However the converse is allowed, i.e. a device link
@@ -415,7 +415,7 @@ DORMANT &lt;=&gt; AVAILABLE &lt;=&gt; CONSUMER_PROBE =&gt; ACTIVE
 </div>
 <ul class="simple">
 <li>The initial state of a device link is automatically determined by
-<a class="reference internal" href="infrastructure.html#c.device_link_add" title="device_link_add"><code class="xref c c-func docutils literal notranslate"><span class="pre">device_link_add()</span></code></a> based on the driver presence on the supplier
+<a class="reference internal" href="#c.device_link_add" title="device_link_add"><code class="xref c c-func docutils literal notranslate"><span class="pre">device_link_add()</span></code></a> based on the driver presence on the supplier
 and consumer.  If the link is created before any devices are probed, it
 is set to <code class="docutils literal notranslate"><span class="pre">DL_STATE_DORMANT</span></code>.</li>
 <li>When a supplier device is bound to a driver, links to its consumers
@@ -484,7 +484,7 @@ of the link.  If DL_FLAG_PM_RUNTIME is not set, DL_FLAG_RPM_ACTIVE will be
 ignored.</p>
 <p>If DL_FLAG_STATELESS is set in <strong>flags</strong>, the caller of this function is
 expected to release the link returned by it directly with the help of either
-<a class="reference internal" href="infrastructure.html#c.device_link_del" title="device_link_del"><code class="xref c c-func docutils literal notranslate"><span class="pre">device_link_del()</span></code></a> or <a class="reference internal" href="infrastructure.html#c.device_link_remove" title="device_link_remove"><code class="xref c c-func docutils literal notranslate"><span class="pre">device_link_remove()</span></code></a>.</p>
+<a class="reference internal" href="#c.device_link_del" title="device_link_del"><code class="xref c c-func docutils literal notranslate"><span class="pre">device_link_del()</span></code></a> or <a class="reference internal" href="#c.device_link_remove" title="device_link_remove"><code class="xref c c-func docutils literal notranslate"><span class="pre">device_link_remove()</span></code></a>.</p>
 <p>If that flag is not set, however, the caller of this function is handing the
 management of the link over to the driver core entirely and its return value
 can only be used to check whether or not the link is present.  In that case,
@@ -533,7 +533,7 @@ void <code class="descname">device_link_del</code><span class="sig-paren">(</spa
 <p>The caller must ensure proper synchronization of this function with runtime
 PM.  If the link was added multiple times, it needs to be deleted as often.
 Care is required for hotplugged devices:  Their links are purged on removal
-and calling <a class="reference internal" href="infrastructure.html#c.device_link_del" title="device_link_del"><code class="xref c c-func docutils literal notranslate"><span class="pre">device_link_del()</span></code></a> is then no longer allowed.</p>
+and calling <a class="reference internal" href="#c.device_link_del" title="device_link_del"><code class="xref c c-func docutils literal notranslate"><span class="pre">device_link_del()</span></code></a> is then no longer allowed.</p>
 <dl class="function">
 <dt id="c.device_link_remove">
 void <code class="descname">device_link_remove</code><span class="sig-paren">(</span>void *<em>&nbsp;consumer</em>, struct <a class="reference internal" href="infrastructure.html#c.device" title="device">device</a> *<em>&nbsp;supplier</em><span class="sig-paren">)</span><a class="headerlink" href="#c.device_link_remove" title="Permalink to this definition">¶</a></dt>

@@ -1,0 +1,361 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>FLIC (floating interrupt controller) &mdash; The Linux Kernel  documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript">
+          var DOCUMENTATION_OPTIONS = {
+              URL_ROOT:'../../../',
+              VERSION:'',
+              LANGUAGE:'None',
+              COLLAPSE_INDEX:false,
+              FILE_SUFFIX:'.html',
+              HAS_SOURCE:  true,
+              SOURCELINK_SUFFIX: '.txt'
+          };
+      </script>
+        <script type="text/javascript" src="../../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/theme_overrides.css" type="text/css" />
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home"> The Linux Kernel
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                5.7.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../admin-guide/mm/damon/index.html">DAMON: Data Access MONitor</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">The Linux Kernel</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../index.html">Docs</a> &raquo;</li>
+        
+      <li>FLIC (floating interrupt controller)</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../../../_sources/virt/kvm/devices/s390_flic.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="flic-floating-interrupt-controller">
+<h1>FLIC (floating interrupt controller)<a class="headerlink" href="#flic-floating-interrupt-controller" title="Permalink to this headline">¶</a></h1>
+<p>FLIC handles floating (non per-cpu) interrupts, i.e. I/O, service and some
+machine check interruptions. All interrupts are stored in a per-vm list of
+pending interrupts. FLIC performs operations on this list.</p>
+<p>Only one FLIC instance may be instantiated.</p>
+<p>FLIC provides support to
+- add interrupts (KVM_DEV_FLIC_ENQUEUE)
+- inspect currently pending interrupts (KVM_FLIC_GET_ALL_IRQS)
+- purge all pending floating interrupts (KVM_DEV_FLIC_CLEAR_IRQS)
+- purge one pending floating I/O interrupt (KVM_DEV_FLIC_CLEAR_IO_IRQ)
+- enable/disable for the guest transparent async page faults
+- register and modify adapter interrupt sources (KVM_DEV_FLIC_ADAPTER_*)
+- modify AIS (adapter-interruption-suppression) mode state (KVM_DEV_FLIC_AISM)
+- inject adapter interrupts on a specified adapter (KVM_DEV_FLIC_AIRQ_INJECT)
+- get/set all AIS mode states (KVM_DEV_FLIC_AISM_ALL)</p>
+<dl class="docutils">
+<dt>Groups:</dt>
+<dd><dl class="first last docutils">
+<dt>KVM_DEV_FLIC_ENQUEUE</dt>
+<dd>Passes a buffer and length into the kernel which are then injected into
+the list of pending interrupts.
+attr-&gt;addr contains the pointer to the buffer and attr-&gt;attr contains
+the length of the buffer.
+The format of the data structure kvm_s390_irq as it is copied from userspace
+is defined in usr/include/linux/kvm.h.</dd>
+<dt>KVM_DEV_FLIC_GET_ALL_IRQS</dt>
+<dd><p class="first">Copies all floating interrupts into a buffer provided by userspace.
+When the buffer is too small it returns -ENOMEM, which is the indication
+for userspace to try again with a bigger buffer.</p>
+<p>-ENOBUFS is returned when the allocation of a kernelspace buffer has
+failed.</p>
+<p class="last">-EFAULT is returned when copying data to userspace failed.
+All interrupts remain pending, i.e. are not deleted from the list of
+currently pending interrupts.
+attr-&gt;addr contains the userspace address of the buffer into which all
+interrupt data will be copied.
+attr-&gt;attr contains the size of the buffer in bytes.</p>
+</dd>
+<dt>KVM_DEV_FLIC_CLEAR_IRQS</dt>
+<dd>Simply deletes all elements from the list of currently pending floating
+interrupts.  No interrupts are injected into the guest.</dd>
+<dt>KVM_DEV_FLIC_CLEAR_IO_IRQ</dt>
+<dd>Deletes one (if any) I/O interrupt for a subchannel identified by the
+subsystem identification word passed via the buffer specified by
+attr-&gt;addr (address) and attr-&gt;attr (length).</dd>
+<dt>KVM_DEV_FLIC_APF_ENABLE</dt>
+<dd>Enables async page faults for the guest. So in case of a major page fault
+the host is allowed to handle this async and continues the guest.</dd>
+<dt>KVM_DEV_FLIC_APF_DISABLE_WAIT</dt>
+<dd>Disables async page faults for the guest and waits until already pending
+async page faults are done. This is necessary to trigger a completion interrupt
+for every init interrupt before migrating the interrupt list.</dd>
+<dt>KVM_DEV_FLIC_ADAPTER_REGISTER</dt>
+<dd><blockquote class="first">
+<div><p>Register an I/O adapter interrupt source. Takes a kvm_s390_io_adapter
+describing the adapter to register:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>struct kvm_s390_io_adapter {
+        __u32 id;
+        __u8 isc;
+        __u8 maskable;
+        __u8 swap;
+        __u8 flags;
+};
+</pre></div>
+</div>
+</div></blockquote>
+<p>id contains the unique id for the adapter, isc the I/O interruption subclass
+to use, maskable whether this adapter may be masked (interrupts turned off),
+swap whether the indicators need to be byte swapped, and flags contains
+further characteristics of the adapter.</p>
+<p>Currently defined values for ‘flags’ are:</p>
+<ul class="simple">
+<li>KVM_S390_ADAPTER_SUPPRESSIBLE: adapter is subject to AIS
+(adapter-interrupt-suppression) facility. This flag only has an effect if
+the AIS capability is enabled.</li>
+</ul>
+<p class="last">Unknown flag values are ignored.</p>
+</dd>
+<dt>KVM_DEV_FLIC_ADAPTER_MODIFY</dt>
+<dd><p class="first">Modifies attributes of an existing I/O adapter interrupt source. Takes
+a kvm_s390_io_adapter_req specifying the adapter and the operation:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>struct kvm_s390_io_adapter_req {
+        __u32 id;
+        __u8 type;
+        __u8 mask;
+        __u16 pad0;
+        __u64 addr;
+};
+</pre></div>
+</div>
+<p>id specifies the adapter and type the operation. The supported operations
+are:</p>
+<dl class="last docutils">
+<dt>KVM_S390_IO_ADAPTER_MASK</dt>
+<dd>mask or unmask the adapter, as specified in mask</dd>
+<dt>KVM_S390_IO_ADAPTER_MAP</dt>
+<dd>This is now a no-op. The mapping is purely done by the irq route.</dd>
+<dt>KVM_S390_IO_ADAPTER_UNMAP</dt>
+<dd>This is now a no-op. The mapping is purely done by the irq route.</dd>
+</dl>
+</dd>
+<dt>KVM_DEV_FLIC_AISM</dt>
+<dd><p class="first">modify the adapter-interruption-suppression mode for a given isc if the
+AIS capability is enabled. Takes a kvm_s390_ais_req describing:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>struct kvm_s390_ais_req {
+        __u8 isc;
+        __u16 mode;
+};
+</pre></div>
+</div>
+<p>isc contains the target I/O interruption subclass, mode the target
+adapter-interruption-suppression mode. The following modes are
+currently supported:</p>
+<ul class="last simple">
+<li>KVM_S390_AIS_MODE_ALL: ALL-Interruptions Mode, i.e. airq injection
+is always allowed;</li>
+<li>KVM_S390_AIS_MODE_SINGLE: SINGLE-Interruption Mode, i.e. airq
+injection is only allowed once and the following adapter interrupts
+will be suppressed until the mode is set again to ALL-Interruptions
+or SINGLE-Interruption mode.</li>
+</ul>
+</dd>
+<dt>KVM_DEV_FLIC_AIRQ_INJECT</dt>
+<dd>Inject adapter interrupts on a specified adapter.
+attr-&gt;attr contains the unique id for the adapter, which allows for
+adapter-specific checks and actions.
+For adapters subject to AIS, handle the airq injection suppression for
+an isc according to the adapter-interruption-suppression mode on condition
+that the AIS capability is enabled.</dd>
+<dt>KVM_DEV_FLIC_AISM_ALL</dt>
+<dd><p class="first">Gets or sets the adapter-interruption-suppression mode for all ISCs. Takes
+a kvm_s390_ais_all describing:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>struct kvm_s390_ais_all {
+       __u8 simm; /* Single-Interruption-Mode mask */
+       __u8 nimm; /* No-Interruption-Mode mask *
+};
+</pre></div>
+</div>
+<p>simm contains Single-Interruption-Mode mask for all ISCs, nimm contains
+No-Interruption-Mode mask for all ISCs. Each bit in simm and nimm corresponds
+to an ISC (MSB0 bit 0 to ISC 0 and so on). The combination of simm bit and
+nimm bit presents AIS mode for a ISC.</p>
+<p class="last">KVM_DEV_FLIC_AISM_ALL is indicated by KVM_CAP_S390_AIS_MIGRATION.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<p>Note: The KVM_SET_DEVICE_ATTR/KVM_GET_DEVICE_ATTR device ioctls executed on
+FLIC with an unknown group or attribute gives the error code EINVAL (instead of
+ENXIO, as specified in the API documentation). It is not possible to conclude
+that a FLIC operation is unavailable based on the error code resulting from a
+usage attempt.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">The KVM_DEV_FLIC_CLEAR_IO_IRQ ioctl will return EINVAL in case a
+zero schid is specified.</p>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright The kernel development community
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>
