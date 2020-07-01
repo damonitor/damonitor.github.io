@@ -97,7 +97,7 @@
               <ul class="current">
 <li class="toctree-l1 current"><a class="reference internal" href="index.html">DAMON: Data Access MONitor</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="start.html">Getting Started</a></li>
-<li class="toctree-l2"><a class="reference internal" href="guide.html">The Beginner’s Guide</a></li>
+<li class="toctree-l2"><a class="reference internal" href="guide.html">Optimization Guide</a></li>
 <li class="toctree-l2"><a class="reference internal" href="usage.html">Detailed Usages</a></li>
 <li class="toctree-l2"><a class="reference internal" href="api.html">API Reference</a></li>
 <li class="toctree-l2 current"><a class="current reference internal" href="#">Frequently Asked Questions</a><ul>
@@ -105,6 +105,7 @@
 <li class="toctree-l3"><a class="reference internal" href="#can-idle-pages-tracking-or-perf-mem-substitute-damon">Can ‘idle pages tracking’ or ‘perf mem’ substitute DAMON?</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#how-can-i-optimize-my-system-s-memory-management-using-damon">How can I optimize my system’s memory management using DAMON?</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#does-damon-support-virtual-memory-only">Does DAMON support virtual memory only?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#can-i-simply-monitor-page-granularity">Can I simply monitor page granularity?</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="mechanisms.html">Mechanisms</a></li>
@@ -191,32 +192,38 @@ is implemented in the kernel space.</p>
 </div>
 <div class="section" id="can-idle-pages-tracking-or-perf-mem-substitute-damon">
 <h2>Can ‘idle pages tracking’ or ‘perf mem’ substitute DAMON?<a class="headerlink" href="#can-idle-pages-tracking-or-perf-mem-substitute-damon" title="Permalink to this headline">¶</a></h2>
-<p>Idle page tracking is a low level primitive for access check of each physical
-page frame.  ‘perf mem’ is similar, though it can use sampling to minimize the
-overhead.  DAMON is a higher-level framework for access patterns of data objects
-that focused on memory management optimization and providing sophisticated
-features for that including the overhead handling.  Therefore, ‘idle pages
-tracking’ and ‘perf mem’ could provide a subset of DAMON’s output, but cannot
-substitute DAMON.  Rather than that, DAMON could use those as it’s low-level
-primitives.</p>
+<p>Idle page tracking is a low level primitive for access check of the physical
+address space.  ‘perf mem’ is similar, though it can use sampling to minimize
+the overhead.  On the other hand, DAMON is a higher-level framework for the
+monitoring of various address spaces.  It is focused on memory management
+optimization and provides sophisticated accuracy/overhead handling mechanisms.
+Therefore, ‘idle pages tracking’ and ‘perf mem’ could provide a subset of
+DAMON’s output, but cannot substitute DAMON.  Rather than that, thouse could be
+configured as DAMON’s low-level primitives for specific address spaces.</p>
 </div>
 <div class="section" id="how-can-i-optimize-my-system-s-memory-management-using-damon">
 <h2>How can I optimize my system’s memory management using DAMON?<a class="headerlink" href="#how-can-i-optimize-my-system-s-memory-management-using-damon" title="Permalink to this headline">¶</a></h2>
 <p>Because there are several ways for the DAMON-based optimizations, we wrote a
-separate document, <a class="reference internal" href="guide.html"><span class="doc">The Beginner’s Guide</span></a>.  Please refer to that.</p>
+separate document, <a class="reference internal" href="guide.html"><span class="doc">Optimization Guide</span></a>.  Please refer to that.</p>
 </div>
 <div class="section" id="does-damon-support-virtual-memory-only">
 <h2>Does DAMON support virtual memory only?<a class="headerlink" href="#does-damon-support-virtual-memory-only" title="Permalink to this headline">¶</a></h2>
-<p>For now, yes.  But, DAMON will be able to support various address spaces
-including physical memory in near future.  An RFC patchset <a class="footnote-reference" href="#id2" id="id1">[1]</a> for this
-extension is already available.  Please refer <a class="reference internal" href="plans.html"><span class="doc">Future Plans</span></a> for detailed plan
-for this.</p>
-<table class="docutils footnote" frame="void" id="id2" rules="none">
-<colgroup><col class="label" /><col /></colgroup>
-<tbody valign="top">
-<tr><td class="label"><a class="fn-backref" href="#id1">[1]</a></td><td><a class="reference external" href="https://lore.kernel.org/linux-mm/20200409094232.29680-1-sjpark&#64;amazon.com/">https://lore.kernel.org/linux-mm/20200409094232.29680-1-sjpark&#64;amazon.com/</a></td></tr>
-</tbody>
-</table>
+<p>No.  The core of the DAMON is address space independent.  The address space
+specific low level primitive parts including monitoring target regions
+constructions and actual access checks can be implemented and configured on the
+DAMON core by the users.  In this way, DAMON users can monitor any address
+space with any access check technique.</p>
+<p>Nonetheless, DAMON provides a vma tracking and PTE Accessed bit check based
+implementation of the address space dependent functions for the virtual memory
+by default, for a reference and convenient use.  In near future, we will also
+provide that for physical memory address space.</p>
+</div>
+<div class="section" id="can-i-simply-monitor-page-granularity">
+<h2>Can I simply monitor page granularity?<a class="headerlink" href="#can-i-simply-monitor-page-granularity" title="Permalink to this headline">¶</a></h2>
+<p>Yes.  You can do so by setting the <code class="docutils literal notranslate"><span class="pre">min_nr_regions</span></code> attribute higher than the
+working set size divided by the page size.  Because the monitoring target
+regions size is forced to be <code class="docutils literal notranslate"><span class="pre">&gt;=page</span> <span class="pre">size</span></code>, the region split will make no
+effect.</p>
 </div>
 </div>
 

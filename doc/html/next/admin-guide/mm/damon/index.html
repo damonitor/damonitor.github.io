@@ -97,7 +97,7 @@
               <ul class="current">
 <li class="toctree-l1 current"><a class="current reference internal" href="#">DAMON: Data Access MONitor</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="start.html">Getting Started</a></li>
-<li class="toctree-l2"><a class="reference internal" href="guide.html">The Beginner’s Guide</a></li>
+<li class="toctree-l2"><a class="reference internal" href="guide.html">Optimization Guide</a></li>
 <li class="toctree-l2"><a class="reference internal" href="usage.html">Detailed Usages</a></li>
 <li class="toctree-l2"><a class="reference internal" href="api.html">API Reference</a></li>
 <li class="toctree-l2"><a class="reference internal" href="faq.html">Frequently Asked Questions</a></li>
@@ -172,25 +172,24 @@
   <div class="section" id="damon-data-access-monitor">
 <h1>DAMON: Data Access MONitor<a class="headerlink" href="#damon-data-access-monitor" title="Permalink to this headline">¶</a></h1>
 <p>DAMON is a data access monitoring framework subsystem for the Linux kernel.
-The core mechanisms of DAMON called ‘region based sampling’ and ‘adaptive
-regions adjustment’ (refer to <a class="reference internal" href="mechanisms.html"><span class="doc">Mechanisms</span></a> for the detail) make it</p>
+The core mechanisms of DAMON (refer to <a class="reference internal" href="mechanisms.html"><span class="doc">Mechanisms</span></a> for the detail) make
+it</p>
 <blockquote>
 <div><ul class="simple">
-<li><em>accurate</em> (The monitored information is useful for DRAM level memory
-management; It might not appropriate for Cache-level accuracy, though),</li>
-<li><em>ligfht-weight</em> (The monitoring overhead is low enough to be applied online
-while making no impact on the performance of the target workloads), and</li>
-<li><em>scalable</em> (The upper-bound of the instrumentation overhead is controllable
-regardless of the size of target workloads).</li>
+<li><em>accurate</em> (the monitoring output is useful enough for DRAM level memory
+management; It might not appropriate for CPU Cache levels, though),</li>
+<li><em>light-weight</em> (the monitoring overhead is low enough to be applied online),
+and</li>
+<li><em>scalable</em> (the upper-bound of the overhead is in constant range regardless
+of the size of target workloads).</li>
 </ul>
 </div></blockquote>
-<p>Using this framework, therefore, the kernel’s core memory management mechanisms
-including reclamation and THP can be optimized for better memory management.
-The experimental memory management optimization works that incurring high
-instrumentation overhead will be able to have another try.  In user space,
-meanwhile, users who have some special workloads will be able to write
-personalized tools or applications for deeper understanding and specialized
-optimizations of their systems.</p>
+<p>Using this framework, therefore, the kernel’s memory management mechanisms can
+make advanced decisions.  Experimental memory management optimization works
+that incurring high data accesses monitoring overhead could implemented again.
+In user space, meanwhile, users who have some special workloads can write
+personalized applications for better understanding and optimizations of their
+workloads and systems.</p>
 <div class="toctree-wrapper compound">
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="start.html">Getting Started</a><ul>
@@ -198,9 +197,10 @@ optimizations of their systems.</p>
 <li class="toctree-l2"><a class="reference internal" href="start.html#prerequisites">Prerequisites</a></li>
 <li class="toctree-l2"><a class="reference internal" href="start.html#recording-data-access-patterns">Recording Data Access Patterns</a></li>
 <li class="toctree-l2"><a class="reference internal" href="start.html#visualizing-recorded-patterns">Visualizing Recorded Patterns</a></li>
+<li class="toctree-l2"><a class="reference internal" href="start.html#data-access-pattern-aware-memory-management">Data Access Pattern Aware Memory Management</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="guide.html">The Beginner’s Guide</a><ul>
+<li class="toctree-l1"><a class="reference internal" href="guide.html">Optimization Guide</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="guide.html#check-the-signs">Check The Signs</a></li>
 <li class="toctree-l2"><a class="reference internal" href="guide.html#profile">Profile</a></li>
 <li class="toctree-l2"><a class="reference internal" href="guide.html#optimize">Optimize</a></li>
@@ -208,7 +208,7 @@ optimizations of their systems.</p>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="usage.html">Detailed Usages</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="usage.html#user-space-tool-for-damon">User Space Tool for DAMON</a></li>
+<li class="toctree-l2"><a class="reference internal" href="usage.html#damon-user-sapce-tool">DAMON User Sapce Tool</a></li>
 <li class="toctree-l2"><a class="reference internal" href="usage.html#debugfs-interface">debugfs Interface</a></li>
 </ul>
 </li>
@@ -222,13 +222,16 @@ optimizations of their systems.</p>
 <li class="toctree-l2"><a class="reference internal" href="faq.html#can-idle-pages-tracking-or-perf-mem-substitute-damon">Can ‘idle pages tracking’ or ‘perf mem’ substitute DAMON?</a></li>
 <li class="toctree-l2"><a class="reference internal" href="faq.html#how-can-i-optimize-my-system-s-memory-management-using-damon">How can I optimize my system’s memory management using DAMON?</a></li>
 <li class="toctree-l2"><a class="reference internal" href="faq.html#does-damon-support-virtual-memory-only">Does DAMON support virtual memory only?</a></li>
+<li class="toctree-l2"><a class="reference internal" href="faq.html#can-i-simply-monitor-page-granularity">Can I simply monitor page granularity?</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="mechanisms.html">Mechanisms</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="mechanisms.html#address-space-specific-low-level-access-monitoring-primitives">Address Space Specific Low Level Access Monitoring Primitives</a></li>
 <li class="toctree-l2"><a class="reference internal" href="mechanisms.html#basic-access-check">Basic Access Check</a></li>
 <li class="toctree-l2"><a class="reference internal" href="mechanisms.html#region-based-sampling">Region Based Sampling</a></li>
 <li class="toctree-l2"><a class="reference internal" href="mechanisms.html#adaptive-regions-adjustment">Adaptive Regions Adjustment</a></li>
-<li class="toctree-l2"><a class="reference internal" href="mechanisms.html#handling-virtual-memory-mappings">Handling Virtual Memory Mappings</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mechanisms.html#handling-dynamic-target-space-changes">Handling Dynamic Target Space Changes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mechanisms.html#address-space-specific-low-primitives">Address Space Specific Low Primitives</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="eval.html">Evaluation</a><ul>

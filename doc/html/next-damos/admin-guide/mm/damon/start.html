@@ -45,7 +45,7 @@
   <link rel="stylesheet" href="../../../_static/theme_overrides.css" type="text/css" />
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" />
-    <link rel="next" title="The Beginner’s Guide" href="guide.html" />
+    <link rel="next" title="Optimization Guide" href="guide.html" />
     <link rel="prev" title="DAMON: Data Access MONitor" href="index.html" /> 
 </head>
 
@@ -105,9 +105,10 @@
 </li>
 <li class="toctree-l3"><a class="reference internal" href="#recording-data-access-patterns">Recording Data Access Patterns</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#visualizing-recorded-patterns">Visualizing Recorded Patterns</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#automated-memory-management-optimization">Automated Memory Management Optimization</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="guide.html">The Beginner’s Guide</a></li>
+<li class="toctree-l2"><a class="reference internal" href="guide.html">Optimization Guide</a></li>
 <li class="toctree-l2"><a class="reference internal" href="usage.html">Detailed Usages</a></li>
 <li class="toctree-l2"><a class="reference internal" href="api.html">API Reference</a></li>
 <li class="toctree-l2"><a class="reference internal" href="faq.html">Frequently Asked Questions</a></li>
@@ -184,19 +185,19 @@
             
   <div class="section" id="getting-started">
 <h1>Getting Started<a class="headerlink" href="#getting-started" title="Permalink to this headline">¶</a></h1>
-<p>This document briefly describes how you can use DAMON by demonstrating the user
-space tool.  Please note that this document describes only a part of the
-features for brevity.  Please refer to <a class="reference internal" href="usage.html"><span class="doc">Detailed Usages</span></a> for more details.</p>
+<p>This document briefly describes how you can use DAMON by demonstrating its
+default user space tool.  Please note that this document describes only a part
+of its features for brevity.  Please refer to <a class="reference internal" href="usage.html"><span class="doc">Detailed Usages</span></a> for more details.</p>
 <div class="section" id="tl-dr">
 <h2>TL; DR<a class="headerlink" href="#tl-dr" title="Permalink to this headline">¶</a></h2>
-<p>Simply follow below 5 commands.  Don’t forget replacing <code class="docutils literal notranslate"><span class="pre">&lt;your</span> <span class="pre">workload&gt;</span></code>
-with your <em>real</em> workload, though.</p>
+<p>Follow below 5 commands to monitor and visualize the access pattern of your
+workload.</p>
 <div class="highlight-none notranslate"><div class="highlight"><pre><span></span>$ git clone https://github.com/sjp38/linux -b damon/master
 /* build the kernel with CONFIG_DAMON=y, install, reboot */
+$ mount -t debugfs none /sys/kernel/debug/
 $ cd linux/tools/damon
 $ ./damo record $(pidof &lt;your workload&gt;)
-$ ./damo report heats --heatmap access_pattern.pdf
-$ ./damo report wss --range 0 101 1 --plot wss_dist.pdf
+$ ./damo report heats --heatmap access_pattern.png
 </pre></div>
 </div>
 </div>
@@ -205,22 +206,20 @@ $ ./damo report wss --range 0 101 1 --plot wss_dist.pdf
 <div class="section" id="kernel">
 <h3>Kernel<a class="headerlink" href="#kernel" title="Permalink to this headline">¶</a></h3>
 <p>You should first ensure your system is running on a kernel built with
-<code class="docutils literal notranslate"><span class="pre">CONFIG_DAMON</span></code>.  If the value is set as <code class="docutils literal notranslate"><span class="pre">m</span></code>, you should load the module
-first:</p>
+<code class="docutils literal notranslate"><span class="pre">CONFIG_DAMON</span></code>.  If the value is set to <code class="docutils literal notranslate"><span class="pre">m</span></code>, load the module first:</p>
 <div class="highlight-none notranslate"><div class="highlight"><pre><span></span># modprobe damon
 </pre></div>
 </div>
 </div>
 <div class="section" id="user-space-tool">
 <h3>User Space Tool<a class="headerlink" href="#user-space-tool" title="Permalink to this headline">¶</a></h3>
-<p>For the demonstration, we will use a user space tool for the convenient use of
-DAMON, called DAMON Operator (DAMO).  It is located at <code class="docutils literal notranslate"><span class="pre">tools/damon/damo</span></code> of
-the kernel source tree.  We assume that you set <code class="docutils literal notranslate"><span class="pre">$PATH</span></code> to point it.  The
-<code class="docutils literal notranslate"><span class="pre">$PATH</span></code> setting is not mandatory but we make the assumption here for the
-brevity of the below examples.</p>
+<p>For the demonstration, we will use the default user space tool for DAMON,
+called DAMON Operator (DAMO).  It is located at <code class="docutils literal notranslate"><span class="pre">tools/damon/damo</span></code> of the
+kernel source tree.  For brevity, below examples assume you set <code class="docutils literal notranslate"><span class="pre">$PATH</span></code> to
+point it.  It’s not mandatory, though.</p>
 <p>Because DAMO is using the debugfs interface (refer to <a class="reference internal" href="usage.html"><span class="doc">Detailed Usages</span></a> for the
-detail) of DAMON, you should also ensure debugfs is mounted.  Mount it manually
-as below:</p>
+detail) of DAMON, you should ensure debugfs is mounted.  Mount it manually as
+below:</p>
 <div class="highlight-none notranslate"><div class="highlight"><pre><span></span># mount -t debugfs none /sys/kernel/debug/
 </pre></div>
 </div>
@@ -233,24 +232,24 @@ automatically mount debugfs from next booting:</p>
 </div>
 <div class="section" id="recording-data-access-patterns">
 <h2>Recording Data Access Patterns<a class="headerlink" href="#recording-data-access-patterns" title="Permalink to this headline">¶</a></h2>
-<p>Below commands record memory access pattern of a program, <code class="docutils literal notranslate"><span class="pre">masim</span></code>, and save
-it in a file, <code class="docutils literal notranslate"><span class="pre">damon.data</span></code>.  The program will access two 100 MiB memory
-regions one by one.</p>
+<p>Below commands record memory access pattern of a program and save the
+monitoring results in a file.</p>
 <div class="highlight-none notranslate"><div class="highlight"><pre><span></span>$ git clone https://github.com/sjp38/masim
 $ cd masim; make; ./masim ./configs/zigzag.cfg &amp;
 $ sudo damo record -o damon.data $(pidof masim)
 </pre></div>
 </div>
-<p>The first two lines of commands start the monitoring target process in the
-background.  You can substitute this with your real workload.  The last line
-asks <code class="docutils literal notranslate"><span class="pre">damo</span> <span class="pre">record</span></code> to record the access pattern.</p>
+<p>The first two lines of the commands get an artificial memory access generator
+program and runs it in the background.  It will repeatedly access two 100 MiB
+sized memory regions one by one.  You can substitute this with your real
+workload.  The last line asks <code class="docutils literal notranslate"><span class="pre">damo</span></code> to record the access pattern in
+<code class="docutils literal notranslate"><span class="pre">damon.data</span></code> file.</p>
 </div>
 <div class="section" id="visualizing-recorded-patterns">
 <h2>Visualizing Recorded Patterns<a class="headerlink" href="#visualizing-recorded-patterns" title="Permalink to this headline">¶</a></h2>
 <p>Below three commands visualize the recorded access patterns into three
-image files, <code class="docutils literal notranslate"><span class="pre">access_pattern_heatmap.png</span></code>, <code class="docutils literal notranslate"><span class="pre">wss_dist.png</span></code>, and
-<code class="docutils literal notranslate"><span class="pre">wss_chron_change.png</span></code>.</p>
-<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>$ damo report heats --heatmap -i damon.data access_pattern_heatmap.png
+image files.</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>$ damo report heats --heatmap access_pattern_heatmap.png
 $ damo report wss --range 0 101 1 --plot wss_dist.png
 $ damo report wss --range 0 101 1 --sortby time --plot wss_chron_change.png
 </pre></div>
@@ -290,22 +289,31 @@ workloads at external web pages <a class="footnote-reference" href="#id4" id="id
 </tr>
 </tbody>
 </table>
+</div>
+<div class="section" id="automated-memory-management-optimization">
+<h2>Automated Memory Management Optimization<a class="headerlink" href="#automated-memory-management-optimization" title="Permalink to this headline">¶</a></h2>
+<p>Below three commands make every memory region of size &gt;=4K that kept low access
+frequency for &gt;=60 seconds in your workload to be swapped out.</p>
+<blockquote>
+<div>$ echo “#min-size max-size min-acc max-acc min-age max-age action” &gt; scheme
+$ echo “4K        null     null    5       60s     null    pageout” &gt;&gt; scheme
+$ damo schemes -c my_thp_scheme &lt;pid of your workload&gt;</div></blockquote>
 <table class="docutils footnote" frame="void" id="id4" rules="none">
 <colgroup><col class="label" /><col /></colgroup>
 <tbody valign="top">
-<tr><td class="label"><a class="fn-backref" href="#id1">[1]</a></td><td><a class="reference external" href="https://damonitor.github.io/test/result/visual/latest/heatmap.1.html">https://damonitor.github.io/test/result/visual/latest/heatmap.1.html</a></td></tr>
+<tr><td class="label"><a class="fn-backref" href="#id1">[1]</a></td><td><a class="reference external" href="https://damonitor.github.io/test/result/visual/latest/rec.heatmap.1.png.html">https://damonitor.github.io/test/result/visual/latest/rec.heatmap.1.png.html</a></td></tr>
 </tbody>
 </table>
 <table class="docutils footnote" frame="void" id="id5" rules="none">
 <colgroup><col class="label" /><col /></colgroup>
 <tbody valign="top">
-<tr><td class="label"><a class="fn-backref" href="#id2">[2]</a></td><td><a class="reference external" href="https://damonitor.github.io/test/result/visual/latest/wss_sz.html">https://damonitor.github.io/test/result/visual/latest/wss_sz.html</a></td></tr>
+<tr><td class="label"><a class="fn-backref" href="#id2">[2]</a></td><td><a class="reference external" href="https://damonitor.github.io/test/result/visual/latest/rec.wss_sz.png.html">https://damonitor.github.io/test/result/visual/latest/rec.wss_sz.png.html</a></td></tr>
 </tbody>
 </table>
 <table class="docutils footnote" frame="void" id="id6" rules="none">
 <colgroup><col class="label" /><col /></colgroup>
 <tbody valign="top">
-<tr><td class="label"><a class="fn-backref" href="#id3">[3]</a></td><td><a class="reference external" href="https://damonitor.github.io/test/result/visual/latest/wss_time.html">https://damonitor.github.io/test/result/visual/latest/wss_time.html</a></td></tr>
+<tr><td class="label"><a class="fn-backref" href="#id3">[3]</a></td><td><a class="reference external" href="https://damonitor.github.io/test/result/visual/latest/rec.wss_time.png.html">https://damonitor.github.io/test/result/visual/latest/rec.wss_time.png.html</a></td></tr>
 </tbody>
 </table>
 </div>
@@ -319,7 +327,7 @@ workloads at external web pages <a class="footnote-reference" href="#id4" id="id
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="guide.html" class="btn btn-neutral float-right" title="The Beginner’s Guide" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="guide.html" class="btn btn-neutral float-right" title="Optimization Guide" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
         <a href="index.html" class="btn btn-neutral float-left" title="DAMON: Data Access MONitor" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>

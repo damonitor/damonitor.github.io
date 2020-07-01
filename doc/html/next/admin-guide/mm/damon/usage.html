@@ -46,7 +46,7 @@
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" />
     <link rel="next" title="API Reference" href="api.html" />
-    <link rel="prev" title="The Beginner’s Guide" href="guide.html" /> 
+    <link rel="prev" title="Optimization Guide" href="guide.html" /> 
 </head>
 
 <body class="wy-body-for-nav">
@@ -97,9 +97,9 @@
               <ul class="current">
 <li class="toctree-l1 current"><a class="reference internal" href="index.html">DAMON: Data Access MONitor</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="start.html">Getting Started</a></li>
-<li class="toctree-l2"><a class="reference internal" href="guide.html">The Beginner’s Guide</a></li>
+<li class="toctree-l2"><a class="reference internal" href="guide.html">Optimization Guide</a></li>
 <li class="toctree-l2 current"><a class="current reference internal" href="#">Detailed Usages</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#user-space-tool-for-damon">User Space Tool for DAMON</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#damon-user-sapce-tool">DAMON User Sapce Tool</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#recording-data-access-pattern">Recording Data Access Pattern</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#analyzing-data-access-pattern">Analyzing Data Access Pattern</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#damon-based-operation-schemes">DAMON-based Operation Schemes</a></li>
@@ -190,50 +190,43 @@
             
   <div class="section" id="detailed-usages">
 <h1>Detailed Usages<a class="headerlink" href="#detailed-usages" title="Permalink to this headline">¶</a></h1>
-<p>DAMON provides below three interfaces for various use cases.</p>
+<p>DAMON provides below three interfaces for different users.</p>
 <ul class="simple">
 <li><em>DAMON user space tool.</em>
 This is for privileged people such as system administrators who want a
-just-working human-friendly interface.  This interface is a reference
-implementation of the DAMON debugfs wrapper user space tool.  Using this
-tool, you can easily use the DAMON’s major features in a human-friendly way,
-though it may not be highly tuned for your specific use-cases.</li>
+just-working human-friendly interface.  Using this, users can use the DAMON’s
+major features in a human-friendly way.  It may not be highly tuned for
+special cases, though.  It supports both virtual and physical address spaces
+monitoring.</li>
 <li><em>debugfs interface.</em>
-This is for user space programmers who want optimized use of DAMON. Using
-this interface, you can use DAMON’s major features by reading from and
-writing to specific debugfs files.  Of course, you can write and use your
-personalized DAMON debugfs wrapper user space tool that reads/writes the
-debugfs files instead of you and provides a more human-friendly interface.</li>
+This is for privileged user space programmers who want more optimized use of
+DAMON.  Using this, users can use DAMON’s major features by reading
+from and writing to special debugfs files.  Therefore, you can write and use
+your personalized DAMON debugfs wrapper programs that reads/writes the
+debugfs files instead of you.  The DAMON user space tool is also a reference
+implementation of such programs.  It supports both virtual and physical
+address spaces monitoring.</li>
 <li><em>Kernel Space Programming Interface.</em>
-This is for kernel space programmers.  Using this, you can utilize every
+This is for kernel space programmers.  Using this, users can utilize every
 feature of DAMON most flexibly and efficiently by writing kernel space
-DAMON application programs for you.</li>
+DAMON application programs for you.  You can even extend DAMON for various
+address spaces.</li>
 </ul>
-<p>We recommend you to start with the DAMON user space tool and move to debugfs
-interface only if the real requirement is found, and prohibit the use of the
-kernel space programming interface unless you need it, for the following
-reasons.  First of all, there will be no big difference between the overheads
-of these three interfaces, unless the use case is so special.  Also, all these
-three interfaces support all major features of DAMON.</p>
-<p>This document, therefore, does not describe the kernel space programming
-interface in detail.  For the programming interface, please refer to <a class="reference internal" href="api.html"><span class="doc">API Reference</span></a>
-or <code class="docutils literal notranslate"><span class="pre">include/linux/damon.h</span></code> file in the kernel source tree.</p>
-<div class="section" id="user-space-tool-for-damon">
-<h2>User Space Tool for DAMON<a class="headerlink" href="#user-space-tool-for-damon" title="Permalink to this headline">¶</a></h2>
-<p>A reference implementation of the DAMON user space tool which provides a
-convenient user interface is located at <code class="docutils literal notranslate"><span class="pre">tools/damon/damo</span></code> in the kernel
-source tree.  Please note that this is initially aimed to be used for minimal
-reference of the DAMON’s debugfs interfaces and for tests of the DAMON itself.
-Based on the debugfs interface, you can create another cool and more convenient
-user space tools.</p>
-<p>The interface of the tool is basically subcommand based.  You can almost always
-use <code class="docutils literal notranslate"><span class="pre">-h</span></code> option to get the help of the use of each subcommand.  Currently, it
+<p>This document does not describe the kernel space programming interface in
+detail.  For that, please refer to <a class="reference internal" href="api.html"><span class="doc">API Reference</span></a>.</p>
+<div class="section" id="damon-user-sapce-tool">
+<h2>DAMON User Sapce Tool<a class="headerlink" href="#damon-user-sapce-tool" title="Permalink to this headline">¶</a></h2>
+<p>A reference implementation of the DAMON user space tools which provides a
+convenient user interface is in the kernel source tree.  It is located at
+<code class="docutils literal notranslate"><span class="pre">tools/damon/damo</span></code> of the tree.</p>
+<p>The tool provides a subcommands based interface.  Every subcommand provides
+<code class="docutils literal notranslate"><span class="pre">-h</span></code> option, which provides the minimal usage of it.  Currently, the tool
 supports two subcommands, <code class="docutils literal notranslate"><span class="pre">record</span></code> and <code class="docutils literal notranslate"><span class="pre">report</span></code>.</p>
-<p>Below example commands assume you set <code class="docutils literal notranslate"><span class="pre">$PATH</span></code> to points <code class="docutils literal notranslate"><span class="pre">tools/damon/</span></code> for
+<p>Below example commands assume you set <code class="docutils literal notranslate"><span class="pre">$PATH</span></code> to point <code class="docutils literal notranslate"><span class="pre">tools/damon/</span></code> for
 brevity.  It is not mandatory for use of <code class="docutils literal notranslate"><span class="pre">damo</span></code>, though.</p>
 <div class="section" id="recording-data-access-pattern">
 <h3>Recording Data Access Pattern<a class="headerlink" href="#recording-data-access-pattern" title="Permalink to this headline">¶</a></h3>
-<p>The <code class="docutils literal notranslate"><span class="pre">record</span></code> subcommand records the data access pattern of target processes
+<p>The <code class="docutils literal notranslate"><span class="pre">record</span></code> subcommand records the data access pattern of target workloads
 in a file (<code class="docutils literal notranslate"><span class="pre">./damon.data</span></code> by default).  You can specify the target with 1)
 the command for execution of the monitoring target process, 2) pid of running
 target process, or 3) the special keyword, ‘paddr’, if you want to monitor the
@@ -256,22 +249,22 @@ of the process.  Below example shows a pid target usage:</p>
 <p>In this case, the monitoring target regions defaults to the largetst ‘System
 RAM’ region specified in ‘/proc/iomem’ file.  Note that the initial monitoring
 target region is maintained rather than dynamically updated like the virtual
-memory address spaces monitoring mode.</p>
-<p>You can tune this by setting the monitoring attributes and path to the record
-file using optional arguments to the subcommand.  To know about the monitoring
-attributes in detail, please refer to <a class="reference internal" href="mechanisms.html"><span class="doc">Mechanisms</span></a>.</p>
+memory address spaces monitoring case.</p>
+<p>The location of the recorded file can be explicitly set using <code class="docutils literal notranslate"><span class="pre">-o</span></code> option.
+You can further tune this by setting the monitoring attributes.  To know about
+the monitoring attributes in detail, please refer to <a class="reference internal" href="mechanisms.html"><span class="doc">Mechanisms</span></a>.</p>
 </div>
 <div class="section" id="analyzing-data-access-pattern">
 <h3>Analyzing Data Access Pattern<a class="headerlink" href="#analyzing-data-access-pattern" title="Permalink to this headline">¶</a></h3>
 <p>The <code class="docutils literal notranslate"><span class="pre">report</span></code> subcommand reads a data access pattern record file (if not
-explicitly specified, reads <code class="docutils literal notranslate"><span class="pre">./damon.data</span></code> file by default) and generates
-human-readable reports of various types.  You can specify what type of report
-you want using a sub-subcommand to <code class="docutils literal notranslate"><span class="pre">report</span></code> subcommand.  <code class="docutils literal notranslate"><span class="pre">raw</span></code>, <code class="docutils literal notranslate"><span class="pre">heats</span></code>,
-and <code class="docutils literal notranslate"><span class="pre">wss</span></code> report types are supported for now.</p>
+explicitly specified using <code class="docutils literal notranslate"><span class="pre">-i</span></code> option, reads <code class="docutils literal notranslate"><span class="pre">./damon.data</span></code> file by
+default) and generates human-readable reports.  You can specify what type of
+report you want using a sub-subcommand to <code class="docutils literal notranslate"><span class="pre">report</span></code> subcommand.  <code class="docutils literal notranslate"><span class="pre">raw</span></code>,
+<code class="docutils literal notranslate"><span class="pre">heats</span></code>, and <code class="docutils literal notranslate"><span class="pre">wss</span></code> report types are supported for now.</p>
 <div class="section" id="raw">
 <h4>raw<a class="headerlink" href="#raw" title="Permalink to this headline">¶</a></h4>
-<p><code class="docutils literal notranslate"><span class="pre">raw</span></code> sub-subcommand simply transforms the binary record into human-readable
-text.  For example:</p>
+<p><code class="docutils literal notranslate"><span class="pre">raw</span></code> sub-subcommand simply transforms the binary record into a
+human-readable text.  For example:</p>
 <div class="highlight-none notranslate"><div class="highlight"><pre><span></span>$ damo report raw
 start_time:  193485829398
 rel time:                0
@@ -296,22 +289,22 @@ nr_regions:  6
 </pre></div>
 </div>
 <p>The first line shows the recording started timestamp (nanosecond).  Records of
-data access patterns are following this.  Each record is separated by a blank
-line.  Each record first specifies the recorded time (<code class="docutils literal notranslate"><span class="pre">rel</span> <span class="pre">time</span></code>), the number
-of monitored tasks in this record (<code class="docutils literal notranslate"><span class="pre">nr_tasks</span></code>).  A numbers of records of data
-access patterns for each task follow.  Each data access pattern for each task
-shows it’s pid (<code class="docutils literal notranslate"><span class="pre">pid</span></code>) and a number of monitored virtual address regions in
-this access pattern (<code class="docutils literal notranslate"><span class="pre">nr_regions</span></code>) first.  After that, each line shows the
-start/end address, size, and the number of monitored accesses to the region for
-each of the regions.</p>
+data access patterns follows.  Each record is separated by a blank line.  Each
+record first specifies the recorded time (<code class="docutils literal notranslate"><span class="pre">rel</span> <span class="pre">time</span></code>) in relative to the
+start time, the number of monitored tasks in this record (<code class="docutils literal notranslate"><span class="pre">nr_tasks</span></code>).
+Recorded data access patterns of each task follow.  Each data access pattern
+for each task shows the target’s pid (<code class="docutils literal notranslate"><span class="pre">pid</span></code>) and a number of monitored
+address regions in this access pattern (<code class="docutils literal notranslate"><span class="pre">nr_regions</span></code>) first.  After that,
+each line shows the start/end address, size, and the number of observed
+accesses of each region.</p>
 </div>
 <div class="section" id="heats">
 <h4>heats<a class="headerlink" href="#heats" title="Permalink to this headline">¶</a></h4>
-<p>The <code class="docutils literal notranslate"><span class="pre">raw</span></code> output is very detailed but hard to manually read and analyze.
-<code class="docutils literal notranslate"><span class="pre">heats</span></code> sub-subcommand plots the data in 3-dimensional form, which represents
-the time in x-axis, virtual address in y-axis, and the access frequency in
-z-axis.  Users can set the resolution of the map (<code class="docutils literal notranslate"><span class="pre">--tres</span></code> and <code class="docutils literal notranslate"><span class="pre">--ares</span></code>)
-and start/end point of each axis (<code class="docutils literal notranslate"><span class="pre">--tmin</span></code>, <code class="docutils literal notranslate"><span class="pre">--tmax</span></code>, <code class="docutils literal notranslate"><span class="pre">--amin</span></code>, and
+<p>The <code class="docutils literal notranslate"><span class="pre">raw</span></code> output is very detailed but hard to manually read.  <code class="docutils literal notranslate"><span class="pre">heats</span></code>
+sub-subcommand plots the data in 3-dimensional form, which represents the time
+in x-axis, address of regions in y-axis, and the access frequency in z-axis.
+Users can set the resolution of the map (<code class="docutils literal notranslate"><span class="pre">--tres</span></code> and <code class="docutils literal notranslate"><span class="pre">--ares</span></code>) and
+start/end point of each axis (<code class="docutils literal notranslate"><span class="pre">--tmin</span></code>, <code class="docutils literal notranslate"><span class="pre">--tmax</span></code>, <code class="docutils literal notranslate"><span class="pre">--amin</span></code>, and
 <code class="docutils literal notranslate"><span class="pre">--amax</span></code>) via optional arguments.  For example:</p>
 <div class="highlight-none notranslate"><div class="highlight"><pre><span></span>$ damo report heats --tres 3 --ares 3
 0               0               0.0
@@ -327,24 +320,24 @@ and start/end point of each axis (<code class="docutils literal notranslate"><sp
 </div>
 <p>This command shows a recorded access pattern in heatmap of 3x3 resolution.
 Therefore it shows 9 data points in total.  Each line shows each of the data
-points.  The three numbers in each line represent time in nanosecond, virtual
-address in bytes, and the observed access frequency.</p>
-<p>Users can easily convert this text output into a heatmap image (represent z-axis
-values with colors) or other 3D representations using various tools such as
-‘gnuplot’.  <code class="docutils literal notranslate"><span class="pre">heats</span></code> sub-subcommand also provides ‘gnuplot’ based heatmap
-image creation.  For this, you can use <code class="docutils literal notranslate"><span class="pre">--heatmap</span></code> option.  Also, note that
-because it uses ‘gnuplot’ internally, it will fail if ‘gnuplot’ is not
-installed on your system.  For example:</p>
+points.  The three numbers in each line represent time in nanosecond, address,
+and the observed access frequency.</p>
+<p>Users will be able to convert this text output into a heatmap image (represents
+z-axis values with colors) or other 3D representations using various tools such
+as ‘gnuplot’.  For more convenience, <code class="docutils literal notranslate"><span class="pre">heats</span></code> sub-subcommand provides the
+‘gnuplot’ based heatmap image creation.  For this, you can use <code class="docutils literal notranslate"><span class="pre">--heatmap</span></code>
+option.  Also, note that because it uses ‘gnuplot’ internally, it will fail if
+‘gnuplot’ is not installed on your system.  For example:</p>
 <div class="highlight-none notranslate"><div class="highlight"><pre><span></span>$ ./damo report heats --heatmap heatmap.png
 </pre></div>
 </div>
-<p>Creates <code class="docutils literal notranslate"><span class="pre">heatmap.png</span></code> file containing the heatmap image.  It supports
-<code class="docutils literal notranslate"><span class="pre">pdf</span></code>, <code class="docutils literal notranslate"><span class="pre">png</span></code>, <code class="docutils literal notranslate"><span class="pre">jpeg</span></code>, and <code class="docutils literal notranslate"><span class="pre">svg</span></code>.</p>
+<p>Creates the heatmap image in <code class="docutils literal notranslate"><span class="pre">heatmap.png</span></code> file.  It supports <code class="docutils literal notranslate"><span class="pre">pdf</span></code>,
+<code class="docutils literal notranslate"><span class="pre">png</span></code>, <code class="docutils literal notranslate"><span class="pre">jpeg</span></code>, and <code class="docutils literal notranslate"><span class="pre">svg</span></code>.</p>
 <p>If the target address space is virtual memory address space and you plot the
 entire address space, the huge unmapped regions will make the picture looks
-only black.  Therefore you should do proper zoom in / zoom out using the axis
-boundary-setting optional arguments.  To make this effort minimal, you can use
-<code class="docutils literal notranslate"><span class="pre">--guide</span></code> option.  For example:</p>
+only black.  Therefore you should do proper zoom in / zoom out using the
+resolution and axis boundary-setting arguments.  To make this effort minimal,
+you can use <code class="docutils literal notranslate"><span class="pre">--guide</span></code> option as below:</p>
 <div class="highlight-none notranslate"><div class="highlight"><pre><span></span>$ ./damo report heats --guide
 pid:1348
 time: 193485829398-198337863555 (4852034157)
@@ -354,10 +347,10 @@ region   2: 00000140731597193216-00000140731597443072 (249856)
 </pre></div>
 </div>
 <p>The output shows unions of monitored regions (start and end addresses in byte)
-and union of monitored time duration (start and end time in nanoseconds) of
+and the union of monitored time duration (start and end time in nanoseconds) of
 each target task.  Therefore, it would be wise to plot the data points in each
 union.  If no axis boundary option is given, it will automatically find the
-biggest union in <code class="docutils literal notranslate"><span class="pre">--guide</span></code> output and plot for it.</p>
+biggest union in <code class="docutils literal notranslate"><span class="pre">--guide</span></code> output and set the boundary in it.</p>
 </div>
 <div class="section" id="wss">
 <h4>wss<a class="headerlink" href="#wss" title="Permalink to this headline">¶</a></h4>
@@ -393,10 +386,10 @@ the working set size has chronologically changed.  For example:</p>
 </pre></div>
 </div>
 <p>The average is still 66,228.  And, because the access was spiked in very short
-duration but we use only 4 data points, we cannot show when the access spikes
-made.  Users can specify the resolution of the distribution (<code class="docutils literal notranslate"><span class="pre">--range</span></code>).  By
-giving more fine resolution, users will be able to see the short duration
-spikes.</p>
+duration and this command plots only 4 data points, we cannot show when the
+access spikes made.  Users can specify the resolution of the distribution
+(<code class="docutils literal notranslate"><span class="pre">--range</span></code>).  By giving more fine resolution, the short duration spikes could
+be found.</p>
 <p>Similar to that of <code class="docutils literal notranslate"><span class="pre">heats</span> <span class="pre">--heatmap</span></code>, it also supports ‘gnuplot’ based simple
 visualization of the distribution via <code class="docutils literal notranslate"><span class="pre">--plot</span></code> option.</p>
 </div>
@@ -504,13 +497,13 @@ file will show <code class="docutils literal notranslate"><span class="pre">-1</
 </div>
 <div class="section" id="initial-monitoring-target-regions">
 <h3>Initial Monitoring Target Regions<a class="headerlink" href="#initial-monitoring-target-regions" title="Permalink to this headline">¶</a></h3>
-<p>In case of the virtual memory monitoring, DAMON automatically sets and updates
+<p>In case of the debugfs based monitoring, DAMON automatically sets and updates
 the monitoring target regions so that entire memory mappings of target
-processes can be covered.  However, users might want to limit the monitoring
+processes can be covered. However, users might want to limit the monitoring
 region to specific address ranges, such as the heap, the stack, or specific
-file-mapped area.  Or, some users might know the initial access pattern of
-their workloads and therefore want to set optimal initial regions for the
-‘adaptive regions adjustment’.</p>
+file-mapped area. Or, some users might know the initial access pattern of their
+workloads and therefore want to set optimal initial regions for the ‘adaptive
+regions adjustment’.</p>
 <p>In contrast, DAMON do not automatically sets and updates the monitoring target
 regions in case of physical memory monitoring.  Therefore, users should set the
 monitoring target regions by themselves.</p>
@@ -520,7 +513,7 @@ of the input should represent one region in below form.:</p>
 <div class="highlight-none notranslate"><div class="highlight"><pre><span></span>&lt;pid&gt; &lt;start address&gt; &lt;end address&gt;
 </pre></div>
 </div>
-<p>The <code class="docutils literal notranslate"><span class="pre">pid</span></code> should be already in <code class="docutils literal notranslate"><span class="pre">pids</span></code> file, and the regions should be
+<p>The <code class="docutils literal notranslate"><span class="pre">pid</span></code> should already in <code class="docutils literal notranslate"><span class="pre">pids</span></code> file, and the regions should be
 passed in address order.  For example, below commands will set a couple of
 address ranges, <code class="docutils literal notranslate"><span class="pre">1-100</span></code> and <code class="docutils literal notranslate"><span class="pre">100-200</span></code> as the initial monitoring target
 region of process 42, and another couple of address ranges, <code class="docutils literal notranslate"><span class="pre">20-40</span></code> and
@@ -541,7 +534,7 @@ update.</p>
 <div class="section" id="record">
 <h3>Record<a class="headerlink" href="#record" title="Permalink to this headline">¶</a></h3>
 <p>This debugfs file allows you to record monitored access patterns in a regular
-binary file.  The recorded results are first written to an in-memory buffer and
+binary file.  The recorded results are first written in an in-memory buffer and
 flushed to a file in batch.  Users can get and set the size of the buffer and
 the path to the result file by reading from and writing to the <code class="docutils literal notranslate"><span class="pre">record</span></code> file.
 For example, below commands set the buffer to be 4 KiB and the result to be
@@ -552,6 +545,7 @@ saved in <code class="docutils literal notranslate"><span class="pre">/damon.dat
 4096 /damon.data
 </pre></div>
 </div>
+<p>The recording can be disabled by setting the buffer size zero.</p>
 </div>
 <div class="section" id="schemes">
 <h3>Schemes<a class="headerlink" href="#schemes" title="Permalink to this headline">¶</a></h3>
@@ -601,14 +595,14 @@ the total size of the regions that the scheme is applied.</p>
 </div>
 <div class="section" id="turning-on-off">
 <h3>Turning On/Off<a class="headerlink" href="#turning-on-off" title="Permalink to this headline">¶</a></h3>
-<p>Setting the attributes and schemes as described above doesn’t incur effect
-unless you explicitly start the monitoring.  You can start, stop, and check
-the current status of the monitoring by writing to and reading from the
-<code class="docutils literal notranslate"><span class="pre">monitor_on</span></code> file.  Writing <code class="docutils literal notranslate"><span class="pre">on</span></code> to the file make DAMON start monitoring
-of the target processes with the attributes.  Recording and schemes applying
-will also start if requested before.  Writing <code class="docutils literal notranslate"><span class="pre">off</span></code> to the file stops those.
-DAMON also stops if every target process is terminated.  Below example
-commands turn on, off, and check the status of DAMON:</p>
+<p>Setting the files as described above doesn’t incur effect unless you explicitly
+start the monitoring.  You can start, stop, and check the current status of the
+monitoring by writing to and reading from the <code class="docutils literal notranslate"><span class="pre">monitor_on</span></code> file.  Writing
+<code class="docutils literal notranslate"><span class="pre">on</span></code> to the file starts the monitoring of the targets with the attributes.
+Recording and schemes will also start work if requested before.  Writing
+<code class="docutils literal notranslate"><span class="pre">off</span></code> to the file stops those.  DAMON also stops if every target process is
+terminated.  Below example commands turn on, off, and check the status of
+DAMON:</p>
 <div class="highlight-none notranslate"><div class="highlight"><pre><span></span># cd &lt;debugfs&gt;/damon
 # echo on &gt; monitor_on
 # echo off &gt; monitor_on
@@ -634,7 +628,7 @@ an error code such as <code class="docutils literal notranslate"><span class="pr
         <a href="api.html" class="btn btn-neutral float-right" title="API Reference" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="guide.html" class="btn btn-neutral float-left" title="The Beginner’s Guide" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="guide.html" class="btn btn-neutral float-left" title="Optimization Guide" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   
