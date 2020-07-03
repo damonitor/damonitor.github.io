@@ -291,10 +291,10 @@ workloads at external web pages <a class="footnote-reference" href="#id4" id="id
 </div>
 <div class="section" id="data-access-pattern-aware-memory-management">
 <h2>Data Access Pattern Aware Memory Management<a class="headerlink" href="#data-access-pattern-aware-memory-management" title="Permalink to this headline">¶</a></h2>
-<p>Below three commands make every memory region of size &gt;=4K that kept low access
-frequency for &gt;=60 seconds in your workload to be swapped out.</p>
+<p>Below three commands make every memory region of size &gt;=4K that doesn’t
+accessed for &gt;=60 seconds in your workload to be swapped out.</p>
 <div class="highlight-none notranslate"><div class="highlight"><pre><span></span>$ echo &quot;#min-size max-size min-acc max-acc min-age max-age action&quot; &gt; scheme
-$ echo &quot;4K        null     null    5       60s     null    pageout&quot; &gt;&gt; scheme
+$ echo &quot;4K        max      0       0       60s     max     pageout&quot; &gt;&gt; scheme
 $ damo schemes -c my_thp_scheme &lt;pid of your workload&gt;
 </pre></div>
 </div>

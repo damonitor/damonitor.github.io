@@ -296,8 +296,8 @@ struct <code class="descname">damos</code><a class="headerlink" href="#c.damos" 
 
 <p><strong>Definition</strong></p>
 <div class="highlight-none notranslate"><div class="highlight"><pre><span></span>struct damos {
-  unsigned int min_sz_region;
-  unsigned int max_sz_region;
+  unsigned long min_sz_region;
+  unsigned long max_sz_region;
   unsigned int min_nr_accesses;
   unsigned int max_nr_accesses;
   unsigned int min_age_region;
@@ -378,7 +378,7 @@ struct <code class="descname">damon_ctx</code><a class="headerlink" href="#c.dam
 <dt><code class="docutils literal notranslate"><span class="pre">regions_update_interval</span></code></dt>
 <dd>The time between monitor regions updates.</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">min_nr_regions</span></code></dt>
-<dd>The number of initial monitoring regions.</dd>
+<dd>The minimum number of monitoring regions.</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">max_nr_regions</span></code></dt>
 <dd>The maximum number of monitoring regions.</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">rbuf</span></code></dt>
@@ -413,8 +413,6 @@ struct <code class="descname">damon_ctx</code><a class="headerlink" href="#c.dam
 <dd>Called for each aggregation interval.</dd>
 </dl>
 <p><strong>Description</strong></p>
-<p>For each monitoring request (<a class="reference internal" href="#c.damon_start" title="damon_start"><code class="xref c c-func docutils literal notranslate"><span class="pre">damon_start()</span></code></a>), a kernel thread for the
-monitoring is created.  The pointer to the thread is stored in <strong>kdamond</strong>.</p>
 <p>For each <strong>sample_interval</strong>, DAMON checks whether each region is accessed or
 not.  It aggregates and keeps the access information (number of accesses to
 each region) for <strong>aggr_interval</strong> time.  DAMON also checks whether the target
@@ -423,6 +421,8 @@ in case of virtual memory monitoring) and applies the changes for each
 <strong>regions_update_interval</strong>.  All time intervals are in micro-seconds.</p>
 <p>If <strong>rbuf</strong>, <strong>rbuf_len</strong>, and <strong>rfile_path</strong> are set, the monitored results are
 automatically stored in <strong>rfile_path</strong> file.</p>
+<p>For each monitoring request (<a class="reference internal" href="#c.damon_start" title="damon_start"><code class="xref c c-func docutils literal notranslate"><span class="pre">damon_start()</span></code></a>), a kernel thread for the
+monitoring is created.  The pointer to the thread is stored in <strong>kdamond</strong>.</p>
 <p>The monitoring thread sets <strong>kdamond</strong> to NULL when it terminates.  Therefore,
 users can know whether the monitoring is ongoing or terminated by reading
 <strong>kdamond</strong>.  Also, users can ask <strong>kdamond</strong> to be terminated by writing non-zero

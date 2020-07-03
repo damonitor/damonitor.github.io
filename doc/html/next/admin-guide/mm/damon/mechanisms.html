@@ -287,7 +287,7 @@ low level primitive only.</p>
 <div class="section" id="pte-accessed-bit-based-access-check">
 <h3>PTE Accessed-bit Based Access Check<a class="headerlink" href="#pte-accessed-bit-based-access-check" title="Permalink to this headline">¶</a></h3>
 <p>Both of the implementations for physical and virtual address spaces use PTE
-Accessed-bit for basic access check.  That is, those clears the bit for next
+Accessed-bit for basic access checks.  That is, those clears the bit for next
 sampling target page and checks whether it set again after one sampling period.
 To avoid disturbing other Accessed bit users such as the reclamation logic, the
 implementations adjust the <code class="docutils literal notranslate"><span class="pre">PG_Idle</span></code> and <code class="docutils literal notranslate"><span class="pre">PG_Young</span></code> appropriately, as same
@@ -297,21 +297,20 @@ to the ‘Idle Page Tracking’.</p>
 <h3>VMA-based Target Address Range Construction<a class="headerlink" href="#vma-based-target-address-range-construction" title="Permalink to this headline">¶</a></h3>
 <p>This is for the virtual address space specific primitives implementation.</p>
 <p>Only small parts in the super-huge virtual address space of the processes are
-mapped to physical memory and accessed.  Thus, tracking the unmapped address
-regions is just wasteful.  However, because DAMON can deal with some level of
-noise using the adaptive regions adjustment mechanism, tracking every mapping
-is not strictly required but could even incur a high overhead in some cases.
-That said, too huge unmapped areas inside the monitoring target should be
-removed to not take the time for the adaptive mechanism.</p>
+mapped to the physical memory and accessed.  Thus, tracking the unmapped
+address regions is just wasteful.  However, because DAMON can deal with some
+level of noise using the adaptive regions adjustment mechanism, tracking every
+mapping is not strictly required but could even incur a high overhead in some
+cases.  That said, too huge unmapped areas inside the monitoring target should
+be removed to not take the time for the adaptive mechanism.</p>
 <p>For the reason, this implementation converts the complex mappings to three
-distinct regions that cover every mapped area of the address space.  Also, the
-two gaps between the three regions are the two biggest unmapped areas in the
-given address space.  The two biggest unmapped areas might be the gap between
-the heap and the uppermost mmap()-ed region, and the gap between the lowermost
-mmap()-ed region and the stack will be two biggest unmapped regions.  Because
-these gaps are exceptionally huge areas in usual address space, excluding these
-two biggest unmapped regions will be sufficient to make a trade-off.  Below
-shows this in detail:</p>
+distinct regions that cover every mapped area of the address space.  The two
+gaps between the three regions are the two biggest unmapped areas in the given
+address space.  The two biggest unmapped areas would be the gap between the
+heap and the uppermost mmap()-ed region, and the gap between the lowermost
+mmap()-ed region and the stack in most of the cases.  Because these gaps are
+exceptionally huge in usual address spaces, excluding these will be sufficient
+to make a reasonable trade-off.  Below shows this in detail:</p>
 <div class="highlight-none notranslate"><div class="highlight"><pre><span></span>&lt;heap&gt;
 &lt;BIG UNMAPPED REGION 1&gt;
 &lt;uppermost mmap()-ed region&gt;
