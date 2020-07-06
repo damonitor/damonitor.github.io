@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>The Beginner’s Guide &mdash; The Linux Kernel  documentation</title>
+  <title>Optimization Guide &mdash; The Linux Kernel  documentation</title>
   
 
   
@@ -97,7 +97,7 @@
               <ul class="current">
 <li class="toctree-l1 current"><a class="reference internal" href="index.html">DAMON: Data Access MONitor</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="start.html">Getting Started</a></li>
-<li class="toctree-l2 current"><a class="current reference internal" href="#">The Beginner’s Guide</a><ul>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Optimization Guide</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#check-the-signs">Check The Signs</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#profile">Profile</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#optimize">Optimize</a><ul>
@@ -165,7 +165,7 @@
         
           <li><a href="index.html">DAMON: Data Access MONitor</a> &raquo;</li>
         
-      <li>The Beginner’s Guide</li>
+      <li>Optimization Guide</li>
     
     
       <li class="wy-breadcrumbs-aside">
@@ -184,17 +184,16 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="the-beginner-s-guide">
-<h1>The Beginner’s Guide<a class="headerlink" href="#the-beginner-s-guide" title="Permalink to this headline">¶</a></h1>
-<p>This document is to help you estimating the amount of benefit that you could
-get from DAMON, and to let you know how you could maximize the improvement.
-You are assumed to already read <a class="reference internal" href="start.html"><span class="doc">Getting Started</span></a>.</p>
+  <div class="section" id="optimization-guide">
+<h1>Optimization Guide<a class="headerlink" href="#optimization-guide" title="Permalink to this headline">¶</a></h1>
+<p>This document helps you estimating the amount of benefit that you could get
+from DAMON-based optimizations, and describes how you could achieve it.  You
+are assumed to already read <a class="reference internal" href="start.html"><span class="doc">Getting Started</span></a>.</p>
 <div class="section" id="check-the-signs">
 <h2>Check The Signs<a class="headerlink" href="#check-the-signs" title="Permalink to this headline">¶</a></h2>
-<p>DAMON cannot provide the same amount of benefit to every workload.  Therefore
+<p>No optimization can provide same extent of benefit to every case.  Therefore
 you should first guess how much improvements you could get using DAMON.  If
-some of the below conditions match your situation, you could consider the use
-of DAMON.</p>
+some of below conditions match your situation, you could consider using DAMON.</p>
 <ul class="simple">
 <li><em>Low IPC and High Cache Miss Ratios.</em>  Low IPC means most of the CPU time is
 spent waiting for the completion of time-consuming operations such as memory
@@ -207,9 +206,9 @@ overcommitment and you cannot control every user of your system, a memory
 bank run could happen at any time.  You can estimate when it will happen
 based on DAMON’s monitoring results and act earlier to avoid or deal better
 with the crisis.</li>
-<li><em>Frequent Memory Pressure.</em>  Frequent memory pressure means the wrong
-configuration or existence of memory hogs.  DAMON will help you find the
-right configuration and/or the criminals.</li>
+<li><em>Frequent Memory Pressure.</em>  Frequent memory pressure means your system has
+wrong configurations or memory hogs.  DAMON will help you find the right
+configuration and/or the criminals.</li>
 <li><em>Heterogeneous Memory System.</em>  If your system is utilizing memory devices
 that placed between DRAM and traditional hard disks, such as non-volatile
 memory or fast SSDs, DAMON could help you utilizing the devices more
@@ -221,49 +220,49 @@ efficiently.</li>
 <p>If you found some positive signals, you could start by profiling your workloads
 using DAMON.  Find major workloads on your systems and analyze their data
 access pattern to find something wrong or can be improved.  The DAMON user
-space tool (<code class="docutils literal notranslate"><span class="pre">damo</span></code>) will be enough for this.</p>
+space tool (<code class="docutils literal notranslate"><span class="pre">damo</span></code>) will be useful for this.</p>
 <p>We recommend you to start from working set size distribution check using <code class="docutils literal notranslate"><span class="pre">damo</span>
 <span class="pre">report</span> <span class="pre">wss</span></code>.  If the distribution is ununiform or quite different from what
 you estimated, you could consider <a class="reference internal" href="#memory-configuration">Memory Configuration</a> optimization.</p>
 <p>Then, review the overall access pattern in heatmap form using <code class="docutils literal notranslate"><span class="pre">damo</span> <span class="pre">report</span>
 <span class="pre">heats</span></code>.  If it shows a simple pattern consists of a small number of memory
-regions having high contrast of access temperature, you could consider <a href="#id22"><span class="problematic" id="id23">`Manual
-Program Optimization`_</span></a>.</p>
+regions having high contrast of access temperature, you could consider manual
+<a class="reference internal" href="#program-modification">Program Modification</a>.</p>
 <p>If the access pattern is very frequently changing so that you cannot figure out
 what is the performance important region using your human eye, <a class="reference internal" href="#automated-damon-based-memory-operations">Automated
 DAMON-based Memory Operations</a> might help the case owing to its machine-level
 microscope view.</p>
+<p>If you still want to absorb more benefits, you should develop <a class="reference internal" href="#personalized-damon-application">Personalized
+DAMON Application</a> for your special case.</p>
 <p>You don’t need to take only one approach among the above plans, but you could
-use multiple of the above approaches to maximize the benefit.  If you still
-want to absorb more benefits, you should develop <a class="reference internal" href="#personalized-damon-application">Personalized DAMON
-Application</a> for your special case.</p>
+use multiple of the above approaches to maximize the benefit.</p>
 </div>
 <div class="section" id="optimize">
 <h2>Optimize<a class="headerlink" href="#optimize" title="Permalink to this headline">¶</a></h2>
 <p>If the profiling result also says it’s worth trying some optimization, you
-could consider the below approaches.  Note that some of the below approaches
-assume that your systems are configured with swap devices or other types of
-auxiliary memory so that you don’t need to accommodate the whole working set in
-the main memory.  Most of the detailed optimization should be made on your
-concrete understanding of your swap and/or your auxiliary memory performance.</p>
+could consider below approaches.  Note that some of the below approaches assume
+that your systems are configured with swap devices or other types of auxiliary
+memory so that you don’t strictly required to accommodate the whole working set
+in the main memory.  Most of the detailed optimization should be made on your
+concrete understanding of your memory devices.</p>
 <div class="section" id="memory-configuration">
 <h3>Memory Configuration<a class="headerlink" href="#memory-configuration" title="Permalink to this headline">¶</a></h3>
-<p>DRAM is highly performance critical but expensive and heavily consumes the
-power.  However, knowing the real important working set size is hard and thus
-people usually equips unnecessarily large or too small DRAM.  So many problems
-come from such wrong configurations.</p>
+<p>No more no less, DRAM should be large enough to accommodate only important
+working sets, because DRAM is highly performance critical but expensive and
+heavily consumes the power.  However, knowing the size of the real important
+working sets is difficult.  As a consequence, people usually equips
+unnecessarily large or too small DRAM.  Many problems stem from such wrong
+configurations.</p>
 <p>Using the working set size distribution report provided by <code class="docutils literal notranslate"><span class="pre">damo</span> <span class="pre">report</span> <span class="pre">wss</span></code>,
-you can know the real needs and make reasonable tradeoffs.  For example,
-roughly speaking, if you worry about only 95 percentile latency, you don’t need
-to equip DRAM of a size larger than 95 percentile working set size.  If you
-were suffered from frequent memory pressure, you will also easily know how much
-DRAM you should buy.</p>
+you can know the appropriate DRAM size for you.  For example, roughly speaking,
+if you worry about only 95 percentile latency, you don’t need to equip DRAM of
+a size larger than 95 percentile working set size.</p>
 <p>Let’s see a real example.  Below are the heatmap and the working set size
 distributions/changes of <code class="docutils literal notranslate"><span class="pre">freqmine</span></code> workload in PARSEC3 benchmark suite.  The
-working set size spikes up to 700 MiB, but keeps smaller than 100 MiB for more
-than 95% of the time.  Even though you give only 100 MiB of memory space to the
+working set size spikes up to 180 MiB, but keeps smaller than 50 MiB for more
+than 95% of the time.  Even though you give only 50 MiB of memory space to the
 workload, it will work well for 95% of the time.  Meanwhile, you can save the
-600 MiB of memory space.</p>
+130 MiB of memory space.</p>
 <table border="1" class="docutils">
 <colgroup>
 <col width="33%" />
@@ -271,17 +270,17 @@ workload, it will work well for 95% of the time.  Meanwhile, you can save the
 <col width="33%" />
 </colgroup>
 <tbody valign="top">
-<tr class="row-odd"><td><div class="figure align-center" id="id16">
+<tr class="row-odd"><td><div class="figure align-center" id="id13">
 <img alt="the access pattern in heatmap format" src="../../../_images/freqmine_heatmap.png" />
 <p class="caption"><span class="caption-text">The access pattern in heatmap format.</span></p>
 </div>
 </td>
-<td><div class="figure align-center" id="id17">
+<td><div class="figure align-center" id="id14">
 <img alt="the distribution of working set size" src="../../../_images/freqmine_wss_sz.png" />
 <p class="caption"><span class="caption-text">The distribution of working set size.</span></p>
 </div>
 </td>
-<td><div class="figure align-center" id="id18">
+<td><div class="figure align-center" id="id15">
 <img alt="the chronological changes of working set size" src="../../../_images/freqmine_wss_time.png" />
 <p class="caption"><span class="caption-text">The chronological changes of working set size.</span></p>
 </div>
@@ -292,21 +291,22 @@ workload, it will work well for 95% of the time.  Meanwhile, you can save the
 </div>
 <div class="section" id="program-modification">
 <h3>Program Modification<a class="headerlink" href="#program-modification" title="Permalink to this headline">¶</a></h3>
-<p>If the data access pattern heatmap plotted using <code class="docutils literal notranslate"><span class="pre">damo</span> <span class="pre">report</span> <span class="pre">heats</span></code> is quite
-simple and clear, you could be able to know how the thing is going in the
-workload, and how you could make optimize memory management.</p>
+<p>If the data access pattern heatmap plotted by <code class="docutils literal notranslate"><span class="pre">damo</span> <span class="pre">report</span> <span class="pre">heats</span></code> is quite
+simple so that you can understand how the things are going in the workload with
+your human eye, you could manually optimize the memory management.</p>
 <p>For example, suppose that the workload has two big memory object but only one
-object is frequently accessed while the other is only occasionally scanned.
-Then, you could modify the program source code to invoke <code class="docutils literal notranslate"><span class="pre">mlock()</span></code> or
-<code class="docutils literal notranslate"><span class="pre">madvise()</span></code> with <code class="docutils literal notranslate"><span class="pre">WILLNEED</span></code> system call for the hot object.  Or, you could
-use <code class="docutils literal notranslate"><span class="pre">madvise()</span></code> with <code class="docutils literal notranslate"><span class="pre">MADV_COLD</span></code> or <code class="docutils literal notranslate"><span class="pre">MADV_PAGEOUT</span></code> for the cold objects.
-Using both together would be also worth trying.</p>
-<p>A previous work <a class="footnote-reference" href="#id10" id="id1">[1]</a> using the <code class="docutils literal notranslate"><span class="pre">mlock()</span></code> achieved up to 2.55x performance
+object is frequently accessed while the other one is only occasionally
+accessed.  Then, you could modify the program source code to keep the hot
+object in the main memory by invoking <code class="docutils literal notranslate"><span class="pre">mlock()</span></code> or <code class="docutils literal notranslate"><span class="pre">madvise()</span></code> with
+<code class="docutils literal notranslate"><span class="pre">MADV_WILLNEED</span></code>.  Or, you could proactively evict the cold object using
+<code class="docutils literal notranslate"><span class="pre">madvise()</span></code> with <code class="docutils literal notranslate"><span class="pre">MADV_COLD</span></code> or <code class="docutils literal notranslate"><span class="pre">MADV_PAGEOUT</span></code>.  Using both together
+would be also worthy.</p>
+<p>A research work <a class="footnote-reference" href="#id8" id="id1">[1]</a> using the <code class="docutils literal notranslate"><span class="pre">mlock()</span></code> achieved up to 2.55x performance
 speedup.</p>
 <p>Let’s see another realistic example access pattern for this kind of
 optimizations.  Below are the visualized access patterns of streamcluster
-workload in PARSEC3 benchmark suite.  We can easily see a 100 MiB sized memory
-object is the hot object.</p>
+workload in PARSEC3 benchmark suite.  We can easily identify the 100 MiB sized
+hot object.</p>
 <table border="1" class="docutils">
 <colgroup>
 <col width="33%" />
@@ -314,17 +314,17 @@ object is the hot object.</p>
 <col width="33%" />
 </colgroup>
 <tbody valign="top">
-<tr class="row-odd"><td><div class="figure align-center" id="id19">
+<tr class="row-odd"><td><div class="figure align-center" id="id16">
 <img alt="the access pattern in heatmap format" src="../../../_images/streamcluster_heatmap.png" />
 <p class="caption"><span class="caption-text">The access pattern in heatmap format.</span></p>
 </div>
 </td>
-<td><div class="figure align-center" id="id20">
+<td><div class="figure align-center" id="id17">
 <img alt="the distribution of working set size" src="../../../_images/streamcluster_wss_sz.png" />
 <p class="caption"><span class="caption-text">The distribution of working set size.</span></p>
 </div>
 </td>
-<td><div class="figure align-center" id="id21">
+<td><div class="figure align-center" id="id18">
 <img alt="the chronological changes of working set size" src="../../../_images/streamcluster_wss_time.png" />
 <p class="caption"><span class="caption-text">The chronological changes of working set size.</span></p>
 </div>
@@ -345,7 +345,7 @@ system calls inside the code will also be quite challenging.</p>
 <p>By using DAMON-based operation schemes (DAMOS) via <code class="docutils literal notranslate"><span class="pre">damo</span> <span class="pre">schemes</span></code>, you will
 be able to easily optimize your workload in such a case.  Our example schemes
 called ‘efficient THP’ and ‘proactive reclamation’ achieved significant speedup
-and memory space saves against 25 realistic workloads <a class="footnote-reference" href="#id11" id="id2">[2]</a>, <a class="footnote-reference" href="#id12" id="id3">[3]</a>.</p>
+and memory space saves against 25 realistic workloads <a class="footnote-reference" href="#id9" id="id2">[2]</a>.</p>
 <p>That said, note that you need careful tune of the schemes (e.g., target region
 size and age) and monitoring attributes for the successful use of this
 approach.  Because the optimal values of the parameters will be dependent on
@@ -360,63 +360,56 @@ parameter could be an option.</p>
 </div>
 <div class="section" id="personalized-damon-application">
 <h3>Personalized DAMON Application<a class="headerlink" href="#personalized-damon-application" title="Permalink to this headline">¶</a></h3>
-<p>Below approaches will work well for many cases, but would not be able to
-squeeze the last benefit in some special cases because only very simple
-optimizations are available.</p>
+<p>Above approaches will work well for many general cases, but would not enough
+for some special cases.</p>
 <p>If this is the case, it might be the time to forget the comfortable use of the
 user space tool and dive into the debugfs interface (refer to <a class="reference internal" href="usage.html"><span class="doc">Detailed Usages</span></a> for
 the detail) of DAMON.  Using the interface, you can control the DAMON more
 flexibly.  Therefore, you can write your personalized DAMON application that
 controls the monitoring via the debugfs interface, analyzes the result, and
-apply complex optimizations itself.  Using this, you will be able to make more
-creative and wise optimizations.</p>
-<p>If you are kernel space programmer, writing kernel space DAMON applications
+applies complex optimizations itself.  Using this, you can make more creative
+and wise optimizations.</p>
+<p>If you are a kernel space programmer, writing kernel space DAMON applications
 using the API (refer to <a class="reference internal" href="api.html"><span class="doc">API Reference</span></a> for more detail) would be also an option.</p>
 </div>
 </div>
 <div class="section" id="reference-practices">
 <h2>Reference Practices<a class="headerlink" href="#reference-practices" title="Permalink to this headline">¶</a></h2>
 <p>Referencing previously done successful practices could help you getting the
-sense for this kind of optimizations.  There is an academic paper <a class="footnote-reference" href="#id10" id="id4">[1]</a>
-previously reported the visualized access pattern and <a href="#id24"><span class="problematic" id="id25">`Manual Program
-Optimization`_</span></a> results for a number of realistic workloads.  You can also get
-the visualized access pattern <a class="footnote-reference" href="#id13" id="id5">[4]</a>, <a class="footnote-reference" href="#id14" id="id6">[5]</a>, <a class="footnote-reference" href="#id15" id="id7">[6]</a> and <a class="reference internal" href="#automated-damon-based-memory-operations">Automated DAMON-based
-Memory Operations</a> results for other realistic workloads that collected with
-latest version of DAMON <a class="footnote-reference" href="#id11" id="id8">[2]</a>, <a class="footnote-reference" href="#id12" id="id9">[3]</a>.</p>
+sense for this kind of optimizations.  There is an academic paper <a class="footnote-reference" href="#id8" id="id3">[1]</a>
+reporting the visualized access pattern and manual <a class="reference internal" href="#program-modification">Program
+Modification</a> results for a number of realistic workloads.  You can also get
+the visualized access patterns <a class="footnote-reference" href="#id10" id="id4">[3]</a> <a class="footnote-reference" href="#id11" id="id5">[4]</a> <a class="footnote-reference" href="#id12" id="id6">[5]</a> and
+<a class="reference internal" href="#automated-damon-based-memory-operations">Automated DAMON-based Memory Operations</a> results for other realistic
+workloads that collected with latest version of DAMON <a class="footnote-reference" href="#id9" id="id7">[2]</a> .</p>
+<table class="docutils footnote" frame="void" id="id8" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label">[1]</td><td><em>(<a class="fn-backref" href="#id1">1</a>, <a class="fn-backref" href="#id3">2</a>)</em> <a class="reference external" href="https://dl.acm.org/doi/10.1145/3366626.3368125">https://dl.acm.org/doi/10.1145/3366626.3368125</a></td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="id9" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label">[2]</td><td><em>(<a class="fn-backref" href="#id2">1</a>, <a class="fn-backref" href="#id7">2</a>)</em> <a class="reference external" href="https://damonitor.github.io/test/result/perf/latest/html/">https://damonitor.github.io/test/result/perf/latest/html/</a></td></tr>
+</tbody>
+</table>
 <table class="docutils footnote" frame="void" id="id10" rules="none">
 <colgroup><col class="label" /><col /></colgroup>
 <tbody valign="top">
-<tr><td class="label">[1]</td><td><em>(<a class="fn-backref" href="#id1">1</a>, <a class="fn-backref" href="#id4">2</a>)</em> <a class="reference external" href="https://dl.acm.org/doi/10.1145/3366626.3368125">https://dl.acm.org/doi/10.1145/3366626.3368125</a></td></tr>
+<tr><td class="label"><a class="fn-backref" href="#id4">[3]</a></td><td><a class="reference external" href="https://damonitor.github.io/test/result/visual/latest/rec.heatmap.1.png.html">https://damonitor.github.io/test/result/visual/latest/rec.heatmap.1.png.html</a></td></tr>
 </tbody>
 </table>
 <table class="docutils footnote" frame="void" id="id11" rules="none">
 <colgroup><col class="label" /><col /></colgroup>
 <tbody valign="top">
-<tr><td class="label">[2]</td><td><em>(<a class="fn-backref" href="#id2">1</a>, <a class="fn-backref" href="#id8">2</a>)</em> <a class="reference external" href="https://damonitor.github.io/test/result/perf/latest/html/">https://damonitor.github.io/test/result/perf/latest/html/</a></td></tr>
+<tr><td class="label"><a class="fn-backref" href="#id5">[4]</a></td><td><a class="reference external" href="https://damonitor.github.io/test/result/visual/latest/rec.wss_sz.png.html">https://damonitor.github.io/test/result/visual/latest/rec.wss_sz.png.html</a></td></tr>
 </tbody>
 </table>
 <table class="docutils footnote" frame="void" id="id12" rules="none">
 <colgroup><col class="label" /><col /></colgroup>
 <tbody valign="top">
-<tr><td class="label">[3]</td><td><em>(<a class="fn-backref" href="#id3">1</a>, <a class="fn-backref" href="#id9">2</a>)</em> <a class="reference external" href="https://lore.kernel.org/linux-mm/20200512115343.27699-1-sjpark&#64;amazon.com/">https://lore.kernel.org/linux-mm/20200512115343.27699-1-sjpark&#64;amazon.com/</a></td></tr>
-</tbody>
-</table>
-<table class="docutils footnote" frame="void" id="id13" rules="none">
-<colgroup><col class="label" /><col /></colgroup>
-<tbody valign="top">
-<tr><td class="label"><a class="fn-backref" href="#id5">[4]</a></td><td><a class="reference external" href="https://damonitor.github.io/test/result/visual/latest/heatmap.1.html">https://damonitor.github.io/test/result/visual/latest/heatmap.1.html</a></td></tr>
-</tbody>
-</table>
-<table class="docutils footnote" frame="void" id="id14" rules="none">
-<colgroup><col class="label" /><col /></colgroup>
-<tbody valign="top">
-<tr><td class="label"><a class="fn-backref" href="#id6">[5]</a></td><td><a class="reference external" href="https://damonitor.github.io/test/result/visual/latest/wss_sz.html">https://damonitor.github.io/test/result/visual/latest/wss_sz.html</a></td></tr>
-</tbody>
-</table>
-<table class="docutils footnote" frame="void" id="id15" rules="none">
-<colgroup><col class="label" /><col /></colgroup>
-<tbody valign="top">
-<tr><td class="label"><a class="fn-backref" href="#id7">[6]</a></td><td><a class="reference external" href="https://damonitor.github.io/test/result/visual/latest/wss_time.html">https://damonitor.github.io/test/result/visual/latest/wss_time.html</a></td></tr>
+<tr><td class="label"><a class="fn-backref" href="#id6">[5]</a></td><td><a class="reference external" href="https://damonitor.github.io/test/result/visual/latest/rec.wss_time.png.html">https://damonitor.github.io/test/result/visual/latest/rec.wss_time.png.html</a></td></tr>
 </tbody>
 </table>
 </div>

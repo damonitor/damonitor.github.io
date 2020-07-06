@@ -1,0 +1,316 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Kernel driver ina3221 &mdash; The Linux Kernel  documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript">
+          var DOCUMENTATION_OPTIONS = {
+              URL_ROOT:'../',
+              VERSION:'',
+              LANGUAGE:'None',
+              COLLAPSE_INDEX:false,
+              FILE_SUFFIX:'.html',
+              HAS_SOURCE:  true,
+              SOURCELINK_SUFFIX: '.txt'
+          };
+      </script>
+        <script type="text/javascript" src="../_static/jquery.js"></script>
+        <script type="text/javascript" src="../_static/underscore.js"></script>
+        <script type="text/javascript" src="../_static/doctools.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/theme_overrides.css" type="text/css" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> The Linux Kernel
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                5.7.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../admin-guide/mm/damon/index.html">DAMON: Data Access MONitor</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">The Linux Kernel</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+      <li>Kernel driver ina3221</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/hwmon/ina3221.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="kernel-driver-ina3221">
+<h1>Kernel driver ina3221<a class="headerlink" href="#kernel-driver-ina3221" title="Permalink to this headline">¶</a></h1>
+<p>Supported chips:</p>
+<blockquote>
+<div><ul>
+<li><p class="first">Texas Instruments INA3221</p>
+<p>Prefix: ‘ina3221’</p>
+<p>Addresses: I2C 0x40 - 0x43</p>
+<p>Datasheet: Publicly available at the Texas Instruments website</p>
+<blockquote>
+<div><p><a class="reference external" href="http://www.ti.com/">http://www.ti.com/</a></p>
+</div></blockquote>
+</li>
+</ul>
+</div></blockquote>
+<p>Author: Andrew F. Davis &lt;<a class="reference external" href="mailto:afd&#37;&#52;&#48;ti&#46;com">afd<span>&#64;</span>ti<span>&#46;</span>com</a>&gt;</p>
+<div class="section" id="description">
+<h2>Description<a class="headerlink" href="#description" title="Permalink to this headline">¶</a></h2>
+<p>The Texas Instruments INA3221 monitors voltage, current, and power on the high
+side of up to three D.C. power supplies. The INA3221 monitors both shunt drop
+and supply voltage, with programmable conversion times and averaging, current
+and power are calculated host-side from these.</p>
+</div>
+<div class="section" id="sysfs-entries">
+<h2>Sysfs entries<a class="headerlink" href="#sysfs-entries" title="Permalink to this headline">¶</a></h2>
+<table border="1" class="docutils">
+<colgroup>
+<col width="29%" />
+<col width="71%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td>in[123]_label</td>
+<td>Voltage channel labels</td>
+</tr>
+<tr class="row-even"><td>in[123]_enable</td>
+<td>Voltage channel enable controls</td>
+</tr>
+<tr class="row-odd"><td>in[123]_input</td>
+<td>Bus voltage(mV) channels</td>
+</tr>
+<tr class="row-even"><td>curr[123]_input</td>
+<td>Current(mA) measurement channels</td>
+</tr>
+<tr class="row-odd"><td>shunt[123]_resistor</td>
+<td>Shunt resistance(uOhm) channels</td>
+</tr>
+<tr class="row-even"><td>curr[123]_crit</td>
+<td>Critical alert current(mA) setting, activates the
+corresponding alarm when the respective current
+is above this value</td>
+</tr>
+<tr class="row-odd"><td>curr[123]_crit_alarm</td>
+<td>Critical alert current limit exceeded</td>
+</tr>
+<tr class="row-even"><td>curr[123]_max</td>
+<td>Warning alert current(mA) setting, activates the
+corresponding alarm when the respective current
+average is above this value.</td>
+</tr>
+<tr class="row-odd"><td>curr[123]_max_alarm</td>
+<td>Warning alert current limit exceeded</td>
+</tr>
+<tr class="row-even"><td>in[456]_input</td>
+<td>Shunt voltage(uV) for channels 1, 2, and 3 respectively</td>
+</tr>
+<tr class="row-odd"><td>in7_input</td>
+<td>Sum of shunt voltage(uV) channels</td>
+</tr>
+<tr class="row-even"><td>in7_label</td>
+<td>Channel label for sum of shunt voltage</td>
+</tr>
+<tr class="row-odd"><td>curr4_input</td>
+<td>Sum of current(mA) measurement channels,
+(only available when all channels use the same resistor
+value for their shunt resistors)</td>
+</tr>
+<tr class="row-even"><td>curr4_crit</td>
+<td>Critical alert current(mA) setting for sum of current
+measurements, activates the corresponding alarm
+when the respective current is above this value
+(only effective when all channels use the same resistor
+value for their shunt resistors)</td>
+</tr>
+<tr class="row-odd"><td>curr4_crit_alarm</td>
+<td>Critical alert current limit exceeded for sum of
+current measurements.</td>
+</tr>
+<tr class="row-even"><td>samples</td>
+<td><p class="first">Number of samples using in the averaging mode.</p>
+<p>Supports the list of number of samples:</p>
+<blockquote class="last">
+<div>1, 4, 16, 64, 128, 256, 512, 1024</div></blockquote>
+</td>
+</tr>
+<tr class="row-odd"><td>update_interval</td>
+<td><p class="first">Data conversion time in millisecond, following:</p>
+<blockquote>
+<div><p>update_interval = C x S x (BC + SC)</p>
+<ul class="simple">
+<li>C:  number of enabled channels</li>
+<li>S:  number of samples</li>
+<li>BC: bus-voltage conversion time in millisecond</li>
+<li>SC: shunt-voltage conversion time in millisecond</li>
+</ul>
+</div></blockquote>
+<p class="last">Affects both Bus- and Shunt-voltage conversion time.
+Note that setting update_interval to 0ms sets both BC
+and SC to 140 us (minimum conversion time).</p>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright The kernel development community
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

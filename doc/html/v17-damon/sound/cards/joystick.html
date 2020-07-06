@@ -1,0 +1,353 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Analog Joystick Support on ALSA Drivers &mdash; The Linux Kernel  documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript">
+          var DOCUMENTATION_OPTIONS = {
+              URL_ROOT:'../../',
+              VERSION:'',
+              LANGUAGE:'None',
+              COLLAPSE_INDEX:false,
+              FILE_SUFFIX:'.html',
+              HAS_SOURCE:  true,
+              SOURCELINK_SUFFIX: '.txt'
+          };
+      </script>
+        <script type="text/javascript" src="../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../_static/doctools.js"></script>
+    
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/theme_overrides.css" type="text/css" />
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../index.html" class="icon icon-home"> The Linux Kernel
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                5.7.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../admin-guide/mm/damon/index.html">DAMON: Data Access MONitor</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">The Linux Kernel</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html">Docs</a> &raquo;</li>
+        
+      <li>Analog Joystick Support on ALSA Drivers</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../../_sources/sound/cards/joystick.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="analog-joystick-support-on-alsa-drivers">
+<h1>Analog Joystick Support on ALSA Drivers<a class="headerlink" href="#analog-joystick-support-on-alsa-drivers" title="Permalink to this headline">¶</a></h1>
+<p>Oct. 14, 2003</p>
+<p>Takashi Iwai &lt;<a class="reference external" href="mailto:tiwai&#37;&#52;&#48;suse&#46;de">tiwai<span>&#64;</span>suse<span>&#46;</span>de</a>&gt;</p>
+<div class="section" id="general">
+<h2>General<a class="headerlink" href="#general" title="Permalink to this headline">¶</a></h2>
+<p>First of all, you need to enable GAMEPORT support on Linux kernel for
+using a joystick with the ALSA driver.  For the details of gameport
+support, refer to Documentation/input/joydev/joystick.rst.</p>
+<p>The joystick support of ALSA drivers is different between ISA and PCI
+cards.  In the case of ISA (PnP) cards, it’s usually handled by the
+independent module (ns558).  Meanwhile, the ALSA PCI drivers have the
+built-in gameport support.  Hence, when the ALSA PCI driver is built
+in the kernel, CONFIG_GAMEPORT must be ‘y’, too.  Otherwise, the
+gameport support on that card will be (silently) disabled.</p>
+<p>Some adapter modules probe the physical connection of the device at
+the load time.  It’d be safer to plug in the joystick device before
+loading the module.</p>
+</div>
+<div class="section" id="pci-cards">
+<h2>PCI Cards<a class="headerlink" href="#pci-cards" title="Permalink to this headline">¶</a></h2>
+<p>For PCI cards, the joystick is enabled when the appropriate module
+option is specified.  Some drivers don’t need options, and the
+joystick support is always enabled.  In the former ALSA version, there
+was a dynamic control API for the joystick activation.  It was
+changed, however, to the static module options because of the system
+stability and the resource management.</p>
+<p>The following PCI drivers support the joystick natively.</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="20%" />
+<col width="18%" />
+<col width="62%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Driver</th>
+<th class="head">Module Option</th>
+<th class="head">Available Values</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>als4000</td>
+<td>joystick_port</td>
+<td>0 = disable (default), 1 = auto-detect,
+manual: any address (e.g. 0x200)</td>
+</tr>
+<tr class="row-odd"><td>au88x0</td>
+<td>N/A</td>
+<td>N/A</td>
+</tr>
+<tr class="row-even"><td>azf3328</td>
+<td>joystick</td>
+<td>0 = disable, 1 = enable, -1 = auto (default)</td>
+</tr>
+<tr class="row-odd"><td>ens1370</td>
+<td>joystick</td>
+<td>0 = disable (default), 1 = enable</td>
+</tr>
+<tr class="row-even"><td>ens1371</td>
+<td>joystick_port</td>
+<td>0 = disable (default), 1 = auto-detect,
+manual: 0x200, 0x208, 0x210, 0x218</td>
+</tr>
+<tr class="row-odd"><td>cmipci</td>
+<td>joystick_port</td>
+<td>0 = disable (default), 1 = auto-detect,
+manual: any address (e.g. 0x200)</td>
+</tr>
+<tr class="row-even"><td>cs4281</td>
+<td>N/A</td>
+<td>N/A</td>
+</tr>
+<tr class="row-odd"><td>cs46xx</td>
+<td>N/A</td>
+<td>N/A</td>
+</tr>
+<tr class="row-even"><td>es1938</td>
+<td>N/A</td>
+<td>N/A</td>
+</tr>
+<tr class="row-odd"><td>es1968</td>
+<td>joystick</td>
+<td>0 = disable (default), 1 = enable</td>
+</tr>
+<tr class="row-even"><td>sonicvibes</td>
+<td>N/A</td>
+<td>N/A</td>
+</tr>
+<tr class="row-odd"><td>trident</td>
+<td>N/A</td>
+<td>N/A</td>
+</tr>
+<tr class="row-even"><td>via82xx <a class="footnote-reference" href="#f1" id="id1">[1]</a></td>
+<td>joystick</td>
+<td>0 = disable (default), 1 = enable</td>
+</tr>
+<tr class="row-odd"><td>ymfpci</td>
+<td>joystick_port</td>
+<td>0 = disable (default), 1 = auto-detect,
+manual: 0x201, 0x202, 0x204, 0x205 <a class="footnote-reference" href="#f2" id="id2">[2]</a></td>
+</tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="f1" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id1">[1]</a></td><td>VIA686A/B only</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="f2" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id2">[2]</a></td><td>With YMF744/754 chips, the port address can be chosen arbitrarily</td></tr>
+</tbody>
+</table>
+<p>The following drivers don’t support gameport natively, but there are
+additional modules.  Load the corresponding module to add the gameport
+support.</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="29%" />
+<col width="71%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Driver</th>
+<th class="head">Additional Module</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>emu10k1</td>
+<td>emu10k1-gp</td>
+</tr>
+<tr class="row-odd"><td>fm801</td>
+<td>fm801-gp</td>
+</tr>
+</tbody>
+</table>
+<p>Note: the “pcigame” and “cs461x” modules are for the OSS drivers only.
+These ALSA drivers (cs46xx, trident and au88x0) have the
+built-in gameport support.</p>
+<p>As mentioned above, ALSA PCI drivers have the built-in gameport
+support, so you don’t have to load ns558 module.  Just load “joydev”
+and the appropriate adapter module (e.g. “analog”).</p>
+</div>
+<div class="section" id="isa-cards">
+<h2>ISA Cards<a class="headerlink" href="#isa-cards" title="Permalink to this headline">¶</a></h2>
+<p>ALSA ISA drivers don’t have the built-in gameport support.
+Instead, you need to load “ns558” module in addition to “joydev” and
+the adapter module (e.g. “analog”).</p>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright The kernel development community
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

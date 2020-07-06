@@ -615,7 +615,7 @@ report vulnerability.</p>
 by code audit or scanning tools) is annotated on a case by case
 basis to use nospec accessor macros for bounds clipping <a class="reference internal" href="#spec-ref2"><span class="std std-ref">[2]</span></a> to avoid any usable disclosure gadgets. However, it may
 not cover all attack vectors for Spectre variant 1.</p>
-<p>Copy-from-user code has an LFENCE barrier to prevent the access_ok()
+<p>Copy-from-user code has an LFENCE barrier to prevent the <a class="reference internal" href="../../core-api/mm-api.html#c.access_ok" title="access_ok"><code class="xref c c-func docutils literal notranslate"><span class="pre">access_ok()</span></code></a>
 check from being mis-speculated.  The barrier is done by the
 barrier_nospec() macro.</p>
 <p>For the swapgs variant of Spectre variant 1, LFENCE barriers are
@@ -667,7 +667,7 @@ can be compiled with return trampolines for indirect branches.
 This protects them from consuming poisoned entries in the branch
 target buffer left by malicious software.  Alternatively, the
 programs can disable their indirect branch speculation via prctl()
-(See <span class="xref std std-ref">Documentation/userspace-api/spec_ctrl.rst</span>).
+(See <a class="reference internal" href="../../userspace-api/spec_ctrl.html#set-spec-ctrl"><span class="std std-ref">Documentation/userspace-api/spec_ctrl.rst</span></a>).
 On x86, this will turn on STIBP to guard against attacks from the
 sibling thread when the user program is running, and use IBPB to
 flush the branch target buffer when switching to/from the program.</p>
@@ -829,14 +829,14 @@ be disabled.</div></blockquote>
 <div>For security-sensitive programs that have secrets (e.g. crypto
 keys), protection against Spectre variant 2 can be put in place by
 disabling indirect branch speculation when the program is running
-(See <span class="xref std std-ref">Documentation/userspace-api/spec_ctrl.rst</span>).</div></blockquote>
+(See <a class="reference internal" href="../../userspace-api/spec_ctrl.html#set-spec-ctrl"><span class="std std-ref">Documentation/userspace-api/spec_ctrl.rst</span></a>).</div></blockquote>
 </div>
 <div class="section" id="sandbox-untrusted-programs">
 <h3>3. Sandbox untrusted programs<a class="headerlink" href="#sandbox-untrusted-programs" title="Permalink to this headline">¶</a></h3>
 <blockquote>
 <div>Untrusted programs that could be a source of attacks can be cordoned
 off by disabling their indirect branch speculation when they are run
-(See <span class="xref std std-ref">Documentation/userspace-api/spec_ctrl.rst</span>).
+(See <a class="reference internal" href="../../userspace-api/spec_ctrl.html#set-spec-ctrl"><span class="std std-ref">Documentation/userspace-api/spec_ctrl.rst</span></a>).
 This prevents untrusted programs from polluting the branch target
 buffer.  All programs running in SECCOMP sandboxes have indirect
 branch speculation restricted by default. This behavior can be

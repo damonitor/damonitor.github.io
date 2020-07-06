@@ -1,0 +1,497 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>19. TSX Async Abort (TAA) mitigation &mdash; The Linux Kernel  documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript">
+          var DOCUMENTATION_OPTIONS = {
+              URL_ROOT:'../',
+              VERSION:'',
+              LANGUAGE:'None',
+              COLLAPSE_INDEX:false,
+              FILE_SUFFIX:'.html',
+              HAS_SOURCE:  true,
+              SOURCELINK_SUFFIX: '.txt'
+          };
+      </script>
+        <script type="text/javascript" src="../_static/jquery.js"></script>
+        <script type="text/javascript" src="../_static/underscore.js"></script>
+        <script type="text/javascript" src="../_static/doctools.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/theme_overrides.css" type="text/css" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> The Linux Kernel
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                5.7.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../admin-guide/mm/damon/index.html">DAMON: Data Access MONitor</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">The Linux Kernel</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+      <li>19. TSX Async Abort (TAA) mitigation</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/x86/tsx_async_abort.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="tsx-async-abort-taa-mitigation">
+<h1>19. TSX Async Abort (TAA) mitigation<a class="headerlink" href="#tsx-async-abort-taa-mitigation" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="overview">
+<span id="tsx-async-abort"></span><h2>19.1. Overview<a class="headerlink" href="#overview" title="Permalink to this headline">¶</a></h2>
+<p>TSX Async Abort (TAA) is a side channel attack on internal buffers in some
+Intel processors similar to Microachitectural Data Sampling (MDS).  In this
+case certain loads may speculatively pass invalid data to dependent operations
+when an asynchronous abort condition is pending in a Transactional
+Synchronization Extensions (TSX) transaction.  This includes loads with no
+fault or assist condition. Such loads may speculatively expose stale data from
+the same uarch data structures as in MDS, with same scope of exposure i.e.
+same-thread and cross-thread. This issue affects all current processors that
+support TSX.</p>
+</div>
+<div class="section" id="mitigation-strategy">
+<h2>19.2. Mitigation strategy<a class="headerlink" href="#mitigation-strategy" title="Permalink to this headline">¶</a></h2>
+<p>a) TSX disable - one of the mitigations is to disable TSX. A new MSR
+IA32_TSX_CTRL will be available in future and current processors after
+microcode update which can be used to disable TSX. In addition, it
+controls the enumeration of the TSX feature bits (RTM and HLE) in CPUID.</p>
+<p>b) Clear CPU buffers - similar to MDS, clearing the CPU buffers mitigates this
+vulnerability. More details on this approach can be found in
+<a class="reference internal" href="mds.html#mds"><span class="std std-ref">Documentation/admin-guide/hw-vuln/mds.rst</span></a>.</p>
+</div>
+<div class="section" id="kernel-internal-mitigation-modes">
+<h2>19.3. Kernel internal mitigation modes<a class="headerlink" href="#kernel-internal-mitigation-modes" title="Permalink to this headline">¶</a></h2>
+<blockquote>
+<div><table border="1" class="docutils">
+<colgroup>
+<col width="18%" />
+<col width="82%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td>off</td>
+<td>Mitigation is disabled. Either the CPU is not affected or
+tsx_async_abort=off is supplied on the kernel command line.</td>
+</tr>
+<tr class="row-even"><td>tsx disabled</td>
+<td>Mitigation is enabled. TSX feature is disabled by default at
+bootup on processors that support TSX control.</td>
+</tr>
+<tr class="row-odd"><td>verw</td>
+<td>Mitigation is enabled. CPU is affected and MD_CLEAR is
+advertised in CPUID.</td>
+</tr>
+<tr class="row-even"><td>ucode needed</td>
+<td>Mitigation is enabled. CPU is affected and MD_CLEAR is not
+advertised in CPUID. That is mainly for virtualization
+scenarios where the host has the updated microcode but the
+hypervisor does not expose MD_CLEAR in CPUID. It’s a best
+effort approach without guarantee.</td>
+</tr>
+</tbody>
+</table>
+</div></blockquote>
+<p>If the CPU is affected and the “tsx_async_abort” kernel command line parameter is
+not provided then the kernel selects an appropriate mitigation depending on the
+status of RTM and MD_CLEAR CPUID bits.</p>
+<p>Below tables indicate the impact of tsx=on|off|auto cmdline options on state of
+TAA mitigation, VERW behavior and TSX feature for various combinations of
+MSR_IA32_ARCH_CAPABILITIES bits.</p>
+<ol class="arabic simple">
+<li>“tsx=off”</li>
+</ol>
+<table border="1" class="docutils">
+<colgroup>
+<col width="9%" />
+<col width="9%" />
+<col width="12%" />
+<col width="12%" />
+<col width="14%" />
+<col width="20%" />
+<col width="23%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head" colspan="3">MSR_IA32_ARCH_CAPABILITIES bits</th>
+<th class="head" colspan="4">Result with cmdline tsx=off</th>
+</tr>
+<tr class="row-even"><th class="head">TAA_NO</th>
+<th class="head">MDS_NO</th>
+<th class="head">TSX_CTRL_MSR</th>
+<th class="head">TSX state
+after bootup</th>
+<th class="head">VERW can clear
+CPU buffers</th>
+<th class="head">TAA mitigation
+tsx_async_abort=off</th>
+<th class="head">TAA mitigation
+tsx_async_abort=full</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-odd"><td>0</td>
+<td>0</td>
+<td>0</td>
+<td>HW default</td>
+<td>Yes</td>
+<td>Same as MDS</td>
+<td>Same as MDS</td>
+</tr>
+<tr class="row-even"><td>0</td>
+<td>0</td>
+<td>1</td>
+<td>Invalid case</td>
+<td>Invalid case</td>
+<td>Invalid case</td>
+<td>Invalid case</td>
+</tr>
+<tr class="row-odd"><td>0</td>
+<td>1</td>
+<td>0</td>
+<td>HW default</td>
+<td>No</td>
+<td>Need ucode update</td>
+<td>Need ucode update</td>
+</tr>
+<tr class="row-even"><td>0</td>
+<td>1</td>
+<td>1</td>
+<td>Disabled</td>
+<td>Yes</td>
+<td>TSX disabled</td>
+<td>TSX disabled</td>
+</tr>
+<tr class="row-odd"><td>1</td>
+<td>X</td>
+<td>1</td>
+<td>Disabled</td>
+<td>X</td>
+<td>None needed</td>
+<td>None needed</td>
+</tr>
+</tbody>
+</table>
+<ol class="arabic simple" start="2">
+<li>“tsx=on”</li>
+</ol>
+<table border="1" class="docutils">
+<colgroup>
+<col width="9%" />
+<col width="9%" />
+<col width="12%" />
+<col width="12%" />
+<col width="14%" />
+<col width="20%" />
+<col width="23%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head" colspan="3">MSR_IA32_ARCH_CAPABILITIES bits</th>
+<th class="head" colspan="4">Result with cmdline tsx=on</th>
+</tr>
+<tr class="row-even"><th class="head">TAA_NO</th>
+<th class="head">MDS_NO</th>
+<th class="head">TSX_CTRL_MSR</th>
+<th class="head">TSX state
+after bootup</th>
+<th class="head">VERW can clear
+CPU buffers</th>
+<th class="head">TAA mitigation
+tsx_async_abort=off</th>
+<th class="head">TAA mitigation
+tsx_async_abort=full</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-odd"><td>0</td>
+<td>0</td>
+<td>0</td>
+<td>HW default</td>
+<td>Yes</td>
+<td>Same as MDS</td>
+<td>Same as MDS</td>
+</tr>
+<tr class="row-even"><td>0</td>
+<td>0</td>
+<td>1</td>
+<td>Invalid case</td>
+<td>Invalid case</td>
+<td>Invalid case</td>
+<td>Invalid case</td>
+</tr>
+<tr class="row-odd"><td>0</td>
+<td>1</td>
+<td>0</td>
+<td>HW default</td>
+<td>No</td>
+<td>Need ucode update</td>
+<td>Need ucode update</td>
+</tr>
+<tr class="row-even"><td>0</td>
+<td>1</td>
+<td>1</td>
+<td>Enabled</td>
+<td>Yes</td>
+<td>None</td>
+<td>Same as MDS</td>
+</tr>
+<tr class="row-odd"><td>1</td>
+<td>X</td>
+<td>1</td>
+<td>Enabled</td>
+<td>X</td>
+<td>None needed</td>
+<td>None needed</td>
+</tr>
+</tbody>
+</table>
+<ol class="arabic simple" start="3">
+<li>“tsx=auto”</li>
+</ol>
+<table border="1" class="docutils">
+<colgroup>
+<col width="9%" />
+<col width="9%" />
+<col width="12%" />
+<col width="12%" />
+<col width="14%" />
+<col width="20%" />
+<col width="23%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head" colspan="3">MSR_IA32_ARCH_CAPABILITIES bits</th>
+<th class="head" colspan="4">Result with cmdline tsx=auto</th>
+</tr>
+<tr class="row-even"><th class="head">TAA_NO</th>
+<th class="head">MDS_NO</th>
+<th class="head">TSX_CTRL_MSR</th>
+<th class="head">TSX state
+after bootup</th>
+<th class="head">VERW can clear
+CPU buffers</th>
+<th class="head">TAA mitigation
+tsx_async_abort=off</th>
+<th class="head">TAA mitigation
+tsx_async_abort=full</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-odd"><td>0</td>
+<td>0</td>
+<td>0</td>
+<td>HW default</td>
+<td>Yes</td>
+<td>Same as MDS</td>
+<td>Same as MDS</td>
+</tr>
+<tr class="row-even"><td>0</td>
+<td>0</td>
+<td>1</td>
+<td>Invalid case</td>
+<td>Invalid case</td>
+<td>Invalid case</td>
+<td>Invalid case</td>
+</tr>
+<tr class="row-odd"><td>0</td>
+<td>1</td>
+<td>0</td>
+<td>HW default</td>
+<td>No</td>
+<td>Need ucode update</td>
+<td>Need ucode update</td>
+</tr>
+<tr class="row-even"><td>0</td>
+<td>1</td>
+<td>1</td>
+<td>Disabled</td>
+<td>Yes</td>
+<td>TSX disabled</td>
+<td>TSX disabled</td>
+</tr>
+<tr class="row-odd"><td>1</td>
+<td>X</td>
+<td>1</td>
+<td>Enabled</td>
+<td>X</td>
+<td>None needed</td>
+<td>None needed</td>
+</tr>
+</tbody>
+</table>
+<p>In the tables, TSX_CTRL_MSR is a new bit in MSR_IA32_ARCH_CAPABILITIES that
+indicates whether MSR_IA32_TSX_CTRL is supported.</p>
+<p>There are two control bits in IA32_TSX_CTRL MSR:</p>
+<blockquote>
+<div><dl class="docutils">
+<dt>Bit 0: When set it disables the Restricted Transactional Memory (RTM)</dt>
+<dd>sub-feature of TSX (will force all transactions to abort on the
+XBEGIN instruction).</dd>
+<dt>Bit 1: When set it disables the enumeration of the RTM and HLE feature</dt>
+<dd>(i.e. it will make CPUID(EAX=7).EBX{bit4} and
+CPUID(EAX=7).EBX{bit11} read as 0).</dd>
+</dl>
+</div></blockquote>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright The kernel development community
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>
