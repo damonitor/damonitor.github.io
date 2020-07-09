@@ -102,16 +102,18 @@
 <li class="toctree-l2"><a class="reference internal" href="faq.html">Frequently Asked Questions</a></li>
 <li class="toctree-l2 current"><a class="current reference internal" href="#">Mechanisms</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#configurable-layers">Configurable Layers</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#address-space-specific-low-level-access-monitoring-primitives">Address Space Specific Low Level Access Monitoring Primitives</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#reference-implementations-of-address-space-specific-primitives">Reference Implementations of Address Space Specific Primitives</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#pte-accessed-bit-based-access-check">PTE Accessed-bit Based Access Check</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#vma-based-target-address-range-construction">VMA-based Target Address Range Construction</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="#address-space-independent-core-mechanisms">Address Space Independent Core Mechanisms</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#basic-access-check">Basic Access Check</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#region-based-sampling">Region Based Sampling</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#adaptive-regions-adjustment">Adaptive Regions Adjustment</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#handling-dynamic-target-space-changes">Handling Dynamic Target Space Changes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#address-space-independent-core-mechanisms">Address Space Independent Core Mechanisms</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#access-frequncy-monitoring">Access Frequncy Monitoring</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#region-based-sampling">Region Based Sampling</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#adaptive-regions-adjustment">Adaptive Regions Adjustment</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#dynamic-target-space-updates-handling">Dynamic Target Space Updates Handling</a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="eval.html">Evaluation</a></li>
@@ -204,31 +206,35 @@ processes, NUMA nodes, files, and backing memory devices would be supportable.
 Also, if some architectures or devices support special optimized access check
 primitives, those will be easily configurable.</p>
 </div>
-<div class="section" id="address-space-specific-low-level-access-monitoring-primitives">
-<h2>Address Space Specific Low Level Access Monitoring Primitives<a class="headerlink" href="#address-space-specific-low-level-access-monitoring-primitives" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="reference-implementations-of-address-space-specific-primitives">
+<h2>Reference Implementations of Address Space Specific Primitives<a class="headerlink" href="#reference-implementations-of-address-space-specific-primitives" title="Permalink to this headline">¶</a></h2>
 <p>The low level primitives for the fundamental access monitoring are defined in
 two parts:</p>
 <ol class="arabic simple">
 <li>Identification of the monitoring target address range for the address space.</li>
 <li>Access check of specific address range in the target space.</li>
 </ol>
-<p>DAMON currently provides an implementation of the primitives for the physical
-and virtual address spaces.  The implementation for the physical address space
-ask users to manually set the monitoring target address ranges while the
-implementation for the virtual address space uses VMA for the target address
-range identification.  Both uses PTE Accessed bit for the access check.</p>
+<p>DAMON currently provides the implementations of the primitives for the physical
+and virtual address spaces. Below two subsections describe how those work.</p>
 <div class="section" id="pte-accessed-bit-based-access-check">
 <h3>PTE Accessed-bit Based Access Check<a class="headerlink" href="#pte-accessed-bit-based-access-check" title="Permalink to this headline">¶</a></h3>
 <p>Both of the implementations for physical and virtual address spaces use PTE
-Accessed-bit for basic access checks.  That is, those clears the bit for next
-sampling target page and checks whether it set again after one sampling period.
-To avoid disturbing other Accessed bit users such as the reclamation logic, the
-implementations adjust the <code class="docutils literal notranslate"><span class="pre">PG_Idle</span></code> and <code class="docutils literal notranslate"><span class="pre">PG_Young</span></code> appropriately, as same
-to the ‘Idle Page Tracking’.</p>
+Accessed-bit for basic access checks.  Only one difference is the way of
+finding the relevant PTE Accessed bit(s) from the address.  While the
+implementation for the virtual address walks the page table for the target task
+of the address, the implementation for the physical address walks every page
+table having a mapping to the address.  In this way, the implementations find
+and clear the bit(s) for next sampling target address and checks whether the
+bit(s) set again after one sampling period.  To avoid disturbing other Accessed
+bit users such as the reclamation logic, the implementations adjust the
+<code class="docutils literal notranslate"><span class="pre">PG_Idle</span></code> and <code class="docutils literal notranslate"><span class="pre">PG_Young</span></code> appropriately, as same to the ‘Idle Page
+Tracking’.</p>
 </div>
 <div class="section" id="vma-based-target-address-range-construction">
 <h3>VMA-based Target Address Range Construction<a class="headerlink" href="#vma-based-target-address-range-construction" title="Permalink to this headline">¶</a></h3>
-<p>This is for the virtual address space specific primitives implementation.</p>
+<p>This is only for the virtual address space primitives implementation.  That for
+the physical address space simply asks users to manually set the monitoring
+target address ranges.</p>
 <p>Only small parts in the super-huge virtual address space of the processes are
 mapped to the physical memory and accessed.  Thus, tracking the unmapped
 address regions is just wasteful.  However, because DAMON can deal with some
@@ -261,9 +267,8 @@ to make a reasonable trade-off.  Below shows this in detail:</p>
 monitoring attributes, <code class="docutils literal notranslate"><span class="pre">sampling</span> <span class="pre">interval</span></code>, <code class="docutils literal notranslate"><span class="pre">aggregation</span> <span class="pre">interval</span></code>,
 <code class="docutils literal notranslate"><span class="pre">regions</span> <span class="pre">update</span> <span class="pre">interval</span></code>, <code class="docutils literal notranslate"><span class="pre">minimum</span> <span class="pre">number</span> <span class="pre">of</span> <span class="pre">regions</span></code>, and <code class="docutils literal notranslate"><span class="pre">maximum</span>
 <span class="pre">number</span> <span class="pre">of</span> <span class="pre">regions</span></code>.</p>
-</div>
-<div class="section" id="basic-access-check">
-<h2>Basic Access Check<a class="headerlink" href="#basic-access-check" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="access-frequncy-monitoring">
+<h3>Access Frequncy Monitoring<a class="headerlink" href="#access-frequncy-monitoring" title="Permalink to this headline">¶</a></h3>
 <p>The output of DAMON says what pages are how frequently accessed for a given
 duration.  The resolution of the access frequency is controlled by setting
 <code class="docutils literal notranslate"><span class="pre">sampling</span> <span class="pre">interval</span></code> and <code class="docutils literal notranslate"><span class="pre">aggregation</span> <span class="pre">interval</span></code>.  In detail, DAMON checks
@@ -288,7 +293,7 @@ clears the results.  This can be described in below simple pseudo-code:</p>
 size of the target workload grows.</p>
 </div>
 <div class="section" id="region-based-sampling">
-<h2>Region Based Sampling<a class="headerlink" href="#region-based-sampling" title="Permalink to this headline">¶</a></h2>
+<h3>Region Based Sampling<a class="headerlink" href="#region-based-sampling" title="Permalink to this headline">¶</a></h3>
 <p>To avoid the unbounded increase of the overhead, DAMON groups adjacent pages
 that assumed to have the same access frequencies into a region.  As long as the
 assumption (pages in a region have the same access frequencies) is kept, only
@@ -302,7 +307,7 @@ to set the minimum and the maximum number of regions for the trade-off.</p>
 assumption is not guaranteed.</p>
 </div>
 <div class="section" id="adaptive-regions-adjustment">
-<h2>Adaptive Regions Adjustment<a class="headerlink" href="#adaptive-regions-adjustment" title="Permalink to this headline">¶</a></h2>
+<h3>Adaptive Regions Adjustment<a class="headerlink" href="#adaptive-regions-adjustment" title="Permalink to this headline">¶</a></h3>
 <p>At the beginning of the monitoring, DAMON constructs the initial regions by
 evenly splitting the monitoring target memory region into the user-specified
 minimum number of regions.  In this initial state, the assumption is normally
@@ -317,14 +322,15 @@ will not exceed the user-specified maximum number of regions after the split.</p
 <p>In this way, DAMON provides its best-effort quality and minimal overhead while
 keeping the bounds users set for their trade-off.</p>
 </div>
-<div class="section" id="handling-dynamic-target-space-changes">
-<h2>Handling Dynamic Target Space Changes<a class="headerlink" href="#handling-dynamic-target-space-changes" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="dynamic-target-space-updates-handling">
+<h3>Dynamic Target Space Updates Handling<a class="headerlink" href="#dynamic-target-space-updates-handling" title="Permalink to this headline">¶</a></h3>
 <p>The monitoring target address range could dynamically changed.  For example,
 virtual memory could be dynamically mapped and unmapped.  Physical memory could
 be hot-plugged.</p>
 <p>As the changes could be quite frequent in some cases, DAMON checks the dynamic
 memory mapping changes and applies it to the abstracted target area only for
 each of a user-specified time interval (<code class="docutils literal notranslate"><span class="pre">regions</span> <span class="pre">update</span> <span class="pre">interval</span></code>).</p>
+</div>
 </div>
 </div>
 

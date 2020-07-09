@@ -26,8 +26,8 @@ Also, if some architectures or devices support special optimized access check
 primitives, those will be easily configurable.
 
 
-Address Space Specific Low Level Access Monitoring Primitives
-=============================================================
+Reference Implementations of Address Space Specific Primitives
+==============================================================
 
 The low level primitives for the fundamental access monitoring are defined in
 two parts:
@@ -35,29 +35,32 @@ two parts:
 1. Identification of the monitoring target address range for the address space.
 2. Access check of specific address range in the target space.
 
-
-DAMON currently provides an implementation of the primitives for the physical
-and virtual address spaces.  The implementation for the physical address space
-ask users to manually set the monitoring target address ranges while the
-implementation for the virtual address space uses VMA for the target address
-range identification.  Both uses PTE Accessed bit for the access check.
+DAMON currently provides the implementations of the primitives for the physical
+and virtual address spaces. Below two subsections describe how those work.
 
 
 PTE Accessed-bit Based Access Check
 -----------------------------------
 
 Both of the implementations for physical and virtual address spaces use PTE
-Accessed-bit for basic access checks.  That is, those clears the bit for next
-sampling target page and checks whether it set again after one sampling period.
-To avoid disturbing other Accessed bit users such as the reclamation logic, the
-implementations adjust the ``PG_Idle`` and ``PG_Young`` appropriately, as same
-to the 'Idle Page Tracking'.
+Accessed-bit for basic access checks.  Only one difference is the way of
+finding the relevant PTE Accessed bit(s) from the address.  While the
+implementation for the virtual address walks the page table for the target task
+of the address, the implementation for the physical address walks every page
+table having a mapping to the address.  In this way, the implementations find
+and clear the bit(s) for next sampling target address and checks whether the
+bit(s) set again after one sampling period.  To avoid disturbing other Accessed
+bit users such as the reclamation logic, the implementations adjust the
+``PG_Idle`` and ``PG_Young`` appropriately, as same to the 'Idle Page
+Tracking'.
 
 
 VMA-based Target Address Range Construction
 -------------------------------------------
 
-This is for the virtual address space specific primitives implementation.
+This is only for the virtual address space primitives implementation.  That for
+the physical address space simply asks users to manually set the monitoring
+target address ranges.
 
 Only small parts in the super-huge virtual address space of the processes are
 mapped to the physical memory and accessed.  Thus, tracking the unmapped
@@ -94,8 +97,8 @@ monitoring attributes, ``sampling interval``, ``aggregation interval``,
 number of regions``.
 
 
-Basic Access Check
-==================
+Access Frequncy Monitoring
+--------------------------
 
 The output of DAMON says what pages are how frequently accessed for a given
 duration.  The resolution of the access frequency is controlled by setting
@@ -122,7 +125,7 @@ size of the target workload grows.
 
 
 Region Based Sampling
-=====================
+---------------------
 
 To avoid the unbounded increase of the overhead, DAMON groups adjacent pages
 that assumed to have the same access frequencies into a region.  As long as the
@@ -139,7 +142,7 @@ assumption is not guaranteed.
 
 
 Adaptive Regions Adjustment
-===========================
+---------------------------
 
 At the beginning of the monitoring, DAMON constructs the initial regions by
 evenly splitting the monitoring target memory region into the user-specified
@@ -158,8 +161,8 @@ In this way, DAMON provides its best-effort quality and minimal overhead while
 keeping the bounds users set for their trade-off.
 
 
-Handling Dynamic Target Space Changes
-=====================================
+Dynamic Target Space Updates Handling
+-------------------------------------
 
 The monitoring target address range could dynamically changed.  For example,
 virtual memory could be dynamically mapped and unmapped.  Physical memory could

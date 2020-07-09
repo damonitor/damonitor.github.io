@@ -293,8 +293,9 @@ for at least 100 milliseconds using below commands::
 debugfs Interface
 =================
 
-DAMON exports five files, ``attrs``, ``pids``, ``record``, ``schemes`` and
-``monitor_on`` under its debugfs directory, ``<debugfs>/damon/``.
+DAMON exports six files, ``attrs``, ``pids``, ``init_regions``, ``record``,
+``schemes`` and ``monitor_on`` under its debugfs directory,
+``<debugfs>/damon/``.
 
 
 Attributes
@@ -341,13 +342,13 @@ Note that setting the pids doesn't start the monitoring.
 Initial Monitoring Target Regions
 ---------------------------------
 
-In case of the debugfs based monitoring, DAMON automatically sets and updates
-the monitoring target regions so that entire memory mappings of target
-processes can be covered. However, users might want to limit the monitoring
+In case of the virtual address space monitoring, DAMON automatically sets and
+updates the monitoring target regions so that entire memory mappings of target
+processes can be covered.  However, users might want to limit the monitoring
 region to specific address ranges, such as the heap, the stack, or specific
-file-mapped area. Or, some users might know the initial access pattern of their
-workloads and therefore want to set optimal initial regions for the 'adaptive
-regions adjustment'.
+file-mapped area.  Or, some users might know the initial access pattern of
+their workloads and therefore want to set optimal initial regions for the
+'adaptive regions adjustment'.
 
 In contrast, DAMON do not automatically sets and updates the monitoring target
 regions in case of physical memory monitoring.  Therefore, users should set the
@@ -449,10 +450,9 @@ Setting the files as described above doesn't incur effect unless you explicitly
 start the monitoring.  You can start, stop, and check the current status of the
 monitoring by writing to and reading from the ``monitor_on`` file.  Writing
 ``on`` to the file starts the monitoring of the targets with the attributes.
-Recording and schemes will also start work if requested before.  Writing
-``off`` to the file stops those.  DAMON also stops if every target process is
-terminated.  Below example commands turn on, off, and check the status of
-DAMON::
+Writing ``off`` to the file stops those.  DAMON also stops if every target
+process is terminated.  Below example commands turn on, off, and check the
+status of DAMON::
 
     # cd <debugfs>/damon
     # echo on > monitor_on

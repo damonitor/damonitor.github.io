@@ -45,7 +45,7 @@
   <link rel="stylesheet" href="../../../_static/theme_overrides.css" type="text/css" />
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" />
-    <link rel="next" title="API Reference" href="api.html" />
+    <link rel="next" title="DAMON: Data Access MONitor" href="../../../vm/damon/index.html" />
     <link rel="prev" title="Optimization Guide" href="guide.html" /> 
 </head>
 
@@ -95,7 +95,7 @@
             
             
               <ul class="current">
-<li class="toctree-l1 current"><a class="reference internal" href="index.html">DAMON: Data Access MONitor</a><ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Monitoring Data Accesses</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="start.html">Getting Started</a></li>
 <li class="toctree-l2"><a class="reference internal" href="guide.html">Optimization Guide</a></li>
 <li class="toctree-l2 current"><a class="current reference internal" href="#">Detailed Usages</a><ul>
@@ -115,13 +115,11 @@
 </li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="api.html">API Reference</a></li>
-<li class="toctree-l2"><a class="reference internal" href="faq.html">Frequently Asked Questions</a></li>
-<li class="toctree-l2"><a class="reference internal" href="mechanisms.html">Mechanisms</a></li>
-<li class="toctree-l2"><a class="reference internal" href="eval.html">Evaluation</a></li>
-<li class="toctree-l2"><a class="reference internal" href="plans.html">Future Plans</a></li>
 </ul>
 </li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../vm/damon/index.html">DAMON: Data Access MONitor</a></li>
 </ul>
 
             
@@ -167,7 +165,7 @@
     
       <li><a href="../../../index.html">Docs</a> &raquo;</li>
         
-          <li><a href="index.html">DAMON: Data Access MONitor</a> &raquo;</li>
+          <li><a href="index.html">Monitoring Data Accesses</a> &raquo;</li>
         
       <li>Detailed Usages</li>
     
@@ -196,15 +194,15 @@
 This is for privileged people such as system administrators who want a
 just-working human-friendly interface.  Using this, users can use the DAMON’s
 major features in a human-friendly way.  It may not be highly tuned for
-special cases, though.  It supports virtual address space monitoring only.</li>
+special cases, though.  It supports only virtual address spaces monitoring.</li>
 <li><em>debugfs interface.</em>
 This is for privileged user space programmers who want more optimized use of
 DAMON.  Using this, users can use DAMON’s major features by reading
 from and writing to special debugfs files.  Therefore, you can write and use
 your personalized DAMON debugfs wrapper programs that reads/writes the
 debugfs files instead of you.  The DAMON user space tool is also a reference
-implementation of such programs.  It supports virtual address space
-monitoring only.</li>
+implementation of such programs.  It supports only virtual address spaces
+monitoring.</li>
 <li><em>Kernel Space Programming Interface.</em>
 This is for kernel space programmers.  Using this, users can utilize every
 feature of DAMON most flexibly and efficiently by writing kernel space
@@ -212,7 +210,7 @@ DAMON application programs for you.  You can even extend DAMON for various
 address spaces.</li>
 </ul>
 <p>This document does not describe the kernel space programming interface in
-detail.  For that, please refer to <a class="reference internal" href="api.html"><span class="doc">API Reference</span></a>.</p>
+detail.  For that, please refer to the <a class="reference internal" href="../../../vm/damon/api.html"><span class="doc">API Reference</span></a>.</p>
 <div class="section" id="damon-user-sapce-tool">
 <h2>DAMON User Sapce Tool<a class="headerlink" href="#damon-user-sapce-tool" title="Permalink to this headline">¶</a></h2>
 <p>A reference implementation of the DAMON user space tools which provides a
@@ -226,9 +224,9 @@ brevity.  It is not mandatory for use of <code class="docutils literal notransla
 <div class="section" id="recording-data-access-pattern">
 <h3>Recording Data Access Pattern<a class="headerlink" href="#recording-data-access-pattern" title="Permalink to this headline">¶</a></h3>
 <p>The <code class="docutils literal notranslate"><span class="pre">record</span></code> subcommand records the data access pattern of target workloads
-in a file (<code class="docutils literal notranslate"><span class="pre">./damon.data</span></code> by default).  You can specify the target as either
-process id of running target or a command for execution of it.  Below example
-shows a command target usage:</p>
+in a file (<code class="docutils literal notranslate"><span class="pre">./damon.data</span></code> by default).  You can specify the target with 1)
+the command for execution of the monitoring target process, or 2) pid of
+running target process.  Below example shows a command target usage:</p>
 <div class="highlight-none notranslate"><div class="highlight"><pre><span></span># cd &lt;kernel&gt;/tools/damon/
 # damo record &quot;sleep 5&quot;
 </pre></div>
@@ -241,7 +239,8 @@ of the process.  Below example shows a pid target usage:</p>
 </div>
 <p>The location of the recorded file can be explicitly set using <code class="docutils literal notranslate"><span class="pre">-o</span></code> option.
 You can further tune this by setting the monitoring attributes.  To know about
-the monitoring attributes in detail, please refer to <a class="reference internal" href="mechanisms.html"><span class="doc">Mechanisms</span></a>.</p>
+the monitoring attributes in detail, please refer to the
+<a class="reference internal" href="../../../vm/damon/mechanisms.html"><span class="doc">Mechanisms</span></a>.</p>
 </div>
 <div class="section" id="analyzing-data-access-pattern">
 <h3>Analyzing Data Access Pattern<a class="headerlink" href="#analyzing-data-access-pattern" title="Permalink to this headline">¶</a></h3>
@@ -450,9 +449,9 @@ $ ./damo schemes --schemes my_thp_scheme `pidof foo`
 <p>Users can get and set the <code class="docutils literal notranslate"><span class="pre">sampling</span> <span class="pre">interval</span></code>, <code class="docutils literal notranslate"><span class="pre">aggregation</span> <span class="pre">interval</span></code>,
 <code class="docutils literal notranslate"><span class="pre">regions</span> <span class="pre">update</span> <span class="pre">interval</span></code>, and min/max number of monitoring target regions by
 reading from and writing to the <code class="docutils literal notranslate"><span class="pre">attrs</span></code> file.  To know about the monitoring
-attributes in detail, please refer to <a class="reference internal" href="mechanisms.html"><span class="doc">Mechanisms</span></a>.  For example, below
-commands set those values to 5 ms, 100 ms, 1,000 ms, 10 and 1000, and then
-check it again:</p>
+attributes in detail, please refer to the <a class="reference internal" href="../../../vm/damon/mechanisms.html"><span class="doc">Mechanisms</span></a>.  For
+example, below commands set those values to 5 ms, 100 ms, 1,000 ms, 10 and
+1000, and then check it again:</p>
 <div class="highlight-none notranslate"><div class="highlight"><pre><span></span># cd &lt;debugfs&gt;/damon
 # echo 5000 100000 1000000 10 1000 &gt; attrs
 # cat attrs
@@ -462,9 +461,10 @@ check it again:</p>
 </div>
 <div class="section" id="target-pids">
 <h3>Target PIDs<a class="headerlink" href="#target-pids" title="Permalink to this headline">¶</a></h3>
-<p>Users can get and set the pids of monitoring target processes by reading from
-and writing to the <code class="docutils literal notranslate"><span class="pre">pids</span></code> file.  For example, below commands set processes
-having pids 42 and 4242 as the processes to be monitored and check it again:</p>
+<p>To monitor the virtual memory address spaces of specific processes, users can
+get and set the pids of monitoring target processes by reading from and writing
+to the <code class="docutils literal notranslate"><span class="pre">pids</span></code> file.  For example, below commands set processes having pids 42
+and 4242 as the processes to be monitored and check it again:</p>
 <div class="highlight-none notranslate"><div class="highlight"><pre><span></span># cd &lt;debugfs&gt;/damon
 # echo 42 4242 &gt; pids
 # cat pids
@@ -536,14 +536,13 @@ the total size of the regions that the scheme is applied.</p>
 </div>
 <div class="section" id="turning-on-off">
 <h3>Turning On/Off<a class="headerlink" href="#turning-on-off" title="Permalink to this headline">¶</a></h3>
-<p>Setting the files as described above doesn’t incur effect unless you explicitly
-start the monitoring.  You can start, stop, and check the current status of the
-monitoring by writing to and reading from the <code class="docutils literal notranslate"><span class="pre">monitor_on</span></code> file.  Writing
-<code class="docutils literal notranslate"><span class="pre">on</span></code> to the file starts the monitoring of the targets with the attributes.
-Recording and schemes will also start work if requested before.  Writing
-<code class="docutils literal notranslate"><span class="pre">off</span></code> to the file stops those.  DAMON also stops if every target process is
-terminated.  Below example commands turn on, off, and check the status of
-DAMON:</p>
+<p>Setting the files as described above doesn’t incur any effect on your system
+unless you explicitly start the monitoring.  You can start, stop, and check the
+current status of the monitoring by writing to and reading from the
+<code class="docutils literal notranslate"><span class="pre">monitor_on</span></code> file.  Writing <code class="docutils literal notranslate"><span class="pre">on</span></code> to the file starts the monitoring of the
+targets with the attributes.  Writing <code class="docutils literal notranslate"><span class="pre">off</span></code> to the file stops those.  DAMON
+also stops if every target process is terminated.  Below example commands turn
+on, off, and check the status of DAMON:</p>
 <div class="highlight-none notranslate"><div class="highlight"><pre><span></span># cd &lt;debugfs&gt;/damon
 # echo on &gt; monitor_on
 # echo off &gt; monitor_on
@@ -566,7 +565,7 @@ an error code such as <code class="docutils literal notranslate"><span class="pr
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="api.html" class="btn btn-neutral float-right" title="API Reference" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="../../../vm/damon/index.html" class="btn btn-neutral float-right" title="DAMON: Data Access MONitor" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
         <a href="guide.html" class="btn btn-neutral float-left" title="Optimization Guide" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>

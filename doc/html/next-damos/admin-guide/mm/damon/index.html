@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>DAMON: Data Access MONitor &mdash; The Linux Kernel  documentation</title>
+  <title>Monitoring Data Accesses &mdash; The Linux Kernel  documentation</title>
   
 
   
@@ -46,7 +46,7 @@
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" />
     <link rel="next" title="Getting Started" href="start.html" />
-    <link rel="prev" title="The DAMON documentation" href="../../../index.html" /> 
+    <link rel="prev" title="The Linux Kernel documentation" href="../../../index.html" /> 
 </head>
 
 <body class="wy-body-for-nav">
@@ -95,17 +95,15 @@
             
             
               <ul class="current">
-<li class="toctree-l1 current"><a class="current reference internal" href="#">DAMON: Data Access MONitor</a><ul>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Monitoring Data Accesses</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="start.html">Getting Started</a></li>
 <li class="toctree-l2"><a class="reference internal" href="guide.html">Optimization Guide</a></li>
 <li class="toctree-l2"><a class="reference internal" href="usage.html">Detailed Usages</a></li>
-<li class="toctree-l2"><a class="reference internal" href="api.html">API Reference</a></li>
-<li class="toctree-l2"><a class="reference internal" href="faq.html">Frequently Asked Questions</a></li>
-<li class="toctree-l2"><a class="reference internal" href="mechanisms.html">Mechanisms</a></li>
-<li class="toctree-l2"><a class="reference internal" href="eval.html">Evaluation</a></li>
-<li class="toctree-l2"><a class="reference internal" href="plans.html">Future Plans</a></li>
 </ul>
 </li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../vm/damon/index.html">DAMON: Data Access MONitor</a></li>
 </ul>
 
             
@@ -151,7 +149,7 @@
     
       <li><a href="../../../index.html">Docs</a> &raquo;</li>
         
-      <li>DAMON: Data Access MONitor</li>
+      <li>Monitoring Data Accesses</li>
     
     
       <li class="wy-breadcrumbs-aside">
@@ -170,27 +168,10 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="damon-data-access-monitor">
-<h1>DAMON: Data Access MONitor<a class="headerlink" href="#damon-data-access-monitor" title="Permalink to this headline">¶</a></h1>
-<p>DAMON is a data access monitoring framework subsystem for the Linux kernel.
-The core mechanisms of DAMON (refer to <a class="reference internal" href="mechanisms.html"><span class="doc">Mechanisms</span></a> for the detail) make
-it</p>
-<blockquote>
-<div><ul class="simple">
-<li><em>accurate</em> (the monitoring output is useful enough for DRAM level memory
-management; It might not appropriate for CPU Cache levels, though),</li>
-<li><em>light-weight</em> (the monitoring overhead is low enough to be applied online),
-and</li>
-<li><em>scalable</em> (the upper-bound of the overhead is in constant range regardless
-of the size of target workloads).</li>
-</ul>
-</div></blockquote>
-<p>Using this framework, therefore, the kernel’s memory management mechanisms can
-make advanced decisions.  Experimental memory management optimization works
-that incurring high data accesses monitoring overhead could implemented again.
-In user space, meanwhile, users who have some special workloads can write
-personalized applications for better understanding and optimizations of their
-workloads and systems.</p>
+  <div class="section" id="monitoring-data-accesses">
+<h1>Monitoring Data Accesses<a class="headerlink" href="#monitoring-data-accesses" title="Permalink to this headline">¶</a></h1>
+<p><a class="reference internal" href="../../../vm/damon/index.html"><span class="doc">DAMON</span></a> allows light-weight data access monitoring.
+Using this, users can analyze and optimize their systems.</p>
 <div class="toctree-wrapper compound">
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="start.html">Getting Started</a><ul>
@@ -213,34 +194,6 @@ workloads and systems.</p>
 <li class="toctree-l2"><a class="reference internal" href="usage.html#debugfs-interface">debugfs Interface</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="api.html">API Reference</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="api.html#structures">Structures</a></li>
-<li class="toctree-l2"><a class="reference internal" href="api.html#functions">Functions</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="faq.html">Frequently Asked Questions</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="faq.html#why-a-new-module-instead-of-extending-perf-or-other-user-space-tools">Why a new module, instead of extending perf or other user space tools?</a></li>
-<li class="toctree-l2"><a class="reference internal" href="faq.html#can-idle-pages-tracking-or-perf-mem-substitute-damon">Can ‘idle pages tracking’ or ‘perf mem’ substitute DAMON?</a></li>
-<li class="toctree-l2"><a class="reference internal" href="faq.html#how-can-i-optimize-my-system-s-memory-management-using-damon">How can I optimize my system’s memory management using DAMON?</a></li>
-<li class="toctree-l2"><a class="reference internal" href="faq.html#does-damon-support-virtual-memory-only">Does DAMON support virtual memory only?</a></li>
-<li class="toctree-l2"><a class="reference internal" href="faq.html#can-i-simply-monitor-page-granularity">Can I simply monitor page granularity?</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="mechanisms.html">Mechanisms</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="mechanisms.html#address-space-specific-low-level-access-monitoring-primitives">Address Space Specific Low Level Access Monitoring Primitives</a></li>
-<li class="toctree-l2"><a class="reference internal" href="mechanisms.html#basic-access-check">Basic Access Check</a></li>
-<li class="toctree-l2"><a class="reference internal" href="mechanisms.html#region-based-sampling">Region Based Sampling</a></li>
-<li class="toctree-l2"><a class="reference internal" href="mechanisms.html#adaptive-regions-adjustment">Adaptive Regions Adjustment</a></li>
-<li class="toctree-l2"><a class="reference internal" href="mechanisms.html#handling-dynamic-target-space-changes">Handling Dynamic Target Space Changes</a></li>
-<li class="toctree-l2"><a class="reference internal" href="mechanisms.html#virtual-address-space-specific-low-primitives">Virtual Address Space Specific Low Primitives</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="eval.html">Evaluation</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="eval.html#setup">Setup</a></li>
-<li class="toctree-l2"><a class="reference internal" href="eval.html#results">Results</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="plans.html">Future Plans</a></li>
 </ul>
 </div>
 </div>
@@ -256,7 +209,7 @@ workloads and systems.</p>
         <a href="start.html" class="btn btn-neutral float-right" title="Getting Started" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="../../../index.html" class="btn btn-neutral float-left" title="The DAMON documentation" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="../../../index.html" class="btn btn-neutral float-left" title="The Linux Kernel documentation" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   

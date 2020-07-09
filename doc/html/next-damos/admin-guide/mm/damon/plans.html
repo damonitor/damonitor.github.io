@@ -44,8 +44,7 @@
   <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
   <link rel="stylesheet" href="../../../_static/theme_overrides.css" type="text/css" />
     <link rel="index" title="Index" href="../../../genindex.html" />
-    <link rel="search" title="Search" href="../../../search.html" />
-    <link rel="prev" title="Evaluation" href="eval.html" /> 
+    <link rel="search" title="Search" href="../../../search.html" /> 
 </head>
 
 <body class="wy-body-for-nav">
@@ -93,18 +92,11 @@
               
             
             
-              <ul class="current">
-<li class="toctree-l1 current"><a class="reference internal" href="index.html">DAMON: Data Access MONitor</a><ul class="current">
-<li class="toctree-l2"><a class="reference internal" href="start.html">Getting Started</a></li>
-<li class="toctree-l2"><a class="reference internal" href="guide.html">Optimization Guide</a></li>
-<li class="toctree-l2"><a class="reference internal" href="usage.html">Detailed Usages</a></li>
-<li class="toctree-l2"><a class="reference internal" href="api.html">API Reference</a></li>
-<li class="toctree-l2"><a class="reference internal" href="faq.html">Frequently Asked Questions</a></li>
-<li class="toctree-l2"><a class="reference internal" href="mechanisms.html">Mechanisms</a></li>
-<li class="toctree-l2"><a class="reference internal" href="eval.html">Evaluation</a></li>
-<li class="toctree-l2 current"><a class="current reference internal" href="#">Future Plans</a></li>
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="index.html">Monitoring Data Accesses</a></li>
 </ul>
-</li>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../vm/damon/index.html">DAMON: Data Access MONitor</a></li>
 </ul>
 
             
@@ -150,8 +142,6 @@
     
       <li><a href="../../../index.html">Docs</a> &raquo;</li>
         
-          <li><a href="index.html">DAMON: Data Access MONitor</a> &raquo;</li>
-        
       <li>Future Plans</li>
     
     
@@ -173,7 +163,34 @@
             
   <div class="section" id="future-plans">
 <h1>Future Plans<a class="headerlink" href="#future-plans" title="Permalink to this headline">¶</a></h1>
-<p>TBD.</p>
+<p>DAMON is still on its first stage.  Below plans are still under development.</p>
+<div class="section" id="automate-data-access-monitoring-based-memory-operation-schemes-execution">
+<h2>Automate Data Access Monitoring-based Memory Operation Schemes Execution<a class="headerlink" href="#automate-data-access-monitoring-based-memory-operation-schemes-execution" title="Permalink to this headline">¶</a></h2>
+<p>The ultimate goal of DAMON is to be used as a building block for the data
+access pattern aware kernel memory management optimization.  It will make
+system just works efficiently.  However, some users having very special
+workloads will want to further do their own optimization.  DAMON will automate
+most of the tasks for such manual optimizations in near future.  Users will be
+required to only describe what kind of data access pattern-based operation
+schemes they want in a simple form.</p>
+<p>By applying a very simple scheme for THP promotion/demotion with a prototype
+implementation, DAMON reduced 60% of THP memory footprint overhead while
+preserving 50% of the THP performance benefit.  The detailed results can be
+seen on an external web page <a class="footnote-reference" href="#id3" id="id1">[1]</a>.</p>
+<p>Several RFC patchsets for this plan are available <a class="footnote-reference" href="#id4" id="id2">[2]</a>.</p>
+<table class="docutils footnote" frame="void" id="id3" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id1">[1]</a></td><td><a class="reference external" href="https://damonitor.github.io/test/result/perf/latest/html/">https://damonitor.github.io/test/result/perf/latest/html/</a></td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="id4" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id2">[2]</a></td><td><a class="reference external" href="https://lore.kernel.org/linux-mm/20200616073828.16509-1-sjpark&#64;amazon.com/">https://lore.kernel.org/linux-mm/20200616073828.16509-1-sjpark&#64;amazon.com/</a></td></tr>
+</tbody>
+</table>
+</div>
 </div>
 
 
@@ -181,13 +198,6 @@
            
           </div>
           <footer>
-  
-    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
-      
-      
-        <a href="eval.html" class="btn btn-neutral float-left" title="Evaluation" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
-      
-    </div>
   
 
   <hr/>
