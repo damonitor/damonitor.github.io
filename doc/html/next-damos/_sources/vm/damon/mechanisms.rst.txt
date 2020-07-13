@@ -9,7 +9,7 @@ Configurable Layers
 
 DAMON provides data access monitoring functionality while making the accuracy
 and the overhead controllable.  The fundamental access monitorings require
-primitives that dependant on and optimized for the target address space.  On
+primitives that dependent on and optimized for the target address space.  On
 the other hand, the accuracy and overhead tradeoff mechanism, which is the core
 of DAMON, is in the pure logic space.  DAMON separates the two parts in
 different layers and defines its interface to allow various low level
@@ -90,8 +90,8 @@ monitoring attributes, ``sampling interval``, ``aggregation interval``,
 number of regions``.
 
 
-Access Frequncy Monitoring
---------------------------
+Access Frequency Monitoring
+---------------------------
 
 The output of DAMON says what pages are how frequently accessed for a given
 duration.  The resolution of the access frequency is controlled by setting
@@ -137,12 +137,11 @@ assumption is not guaranteed.
 Adaptive Regions Adjustment
 ---------------------------
 
-At the beginning of the monitoring, DAMON constructs the initial regions by
-evenly splitting the monitoring target memory region into the user-specified
-minimum number of regions.  In this initial state, the assumption is normally
-not kept and therefore the quality would be low.  To keep the assumption as
-much as possible, DAMON adaptively merges and splits each region based on their
-access frequency.
+Even somehow the initial monitoring target regions are well constructed to
+fulfill the assumption (pages in same region have similar access frequencies),
+the data access pattern can be dynamically changed.  This will result in low
+monitoring quality.  To keep the assumption as much as possible, DAMON
+adaptively merges and splits each region based on their access frequency.
 
 For each ``aggregation interval``, it compares the access frequencies of
 adjacent regions and merges those if the frequency difference is small.  Then,

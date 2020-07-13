@@ -222,7 +222,7 @@ int <code class="descname">firmware_request_nowarn</code><span class="sig-paren"
 <dd>device for which firmware is being loaded</dd>
 </dl>
 <p><strong>Description</strong></p>
-<p>This function is similar in behaviour to <a class="reference internal" href="../infrastructure.html#c.request_firmware" title="request_firmware"><code class="xref c c-func docutils literal notranslate"><span class="pre">request_firmware()</span></code></a>, except
+<p>This function is similar in behaviour to <a class="reference internal" href="#c.request_firmware" title="request_firmware"><code class="xref c c-func docutils literal notranslate"><span class="pre">request_firmware()</span></code></a>, except
 it doesn’t produce warning messages when the file is not found.
 The sysfs fallback mechanism is enabled if direct filesystem lookup fails,
 however, however failures to find the firmware file with it are still
@@ -269,7 +269,7 @@ int <code class="descname">request_firmware_direct</code><span class="sig-paren"
 <dd>device for which firmware is being loaded</dd>
 </dl>
 <p><strong>Description</strong></p>
-<p>This function works pretty much like <a class="reference internal" href="../infrastructure.html#c.request_firmware" title="request_firmware"><code class="xref c c-func docutils literal notranslate"><span class="pre">request_firmware()</span></code></a>, but this doesn’t
+<p>This function works pretty much like <a class="reference internal" href="#c.request_firmware" title="request_firmware"><code class="xref c c-func docutils literal notranslate"><span class="pre">request_firmware()</span></code></a>, but this doesn’t
 fall back to usermode helper even if the firmware couldn’t be loaded
 directly from fs.  Hence it’s useful for loading optional firmwares, which
 aren’t always present, without extra long timeouts of udev.</p>
@@ -296,7 +296,7 @@ int <code class="descname">request_firmware_into_buf</code><span class="sig-pare
 <dd>size of buffer</dd>
 </dl>
 <p><strong>Description</strong></p>
-<p>This function works pretty much like <a class="reference internal" href="../infrastructure.html#c.request_firmware" title="request_firmware"><code class="xref c c-func docutils literal notranslate"><span class="pre">request_firmware()</span></code></a>, but it doesn’t
+<p>This function works pretty much like <a class="reference internal" href="#c.request_firmware" title="request_firmware"><code class="xref c c-func docutils literal notranslate"><span class="pre">request_firmware()</span></code></a>, but it doesn’t
 allocate a buffer to hold the firmware data. Instead, the firmware
 is loaded directly into the buffer pointed to by <strong>buf</strong> and the <strong>firmware_p</strong>
 data member is pointed at <strong>buf</strong>.</p>
@@ -308,7 +308,7 @@ data member is pointed at <strong>buf</strong>.</p>
 <p>Asynchronous firmware requests allow driver code to not have to wait
 until the firmware or an error is returned. Function callbacks are
 provided so that when the firmware or an error is found the driver is
-informed through the callback. <a class="reference internal" href="../infrastructure.html#c.request_firmware_nowait" title="request_firmware_nowait"><code class="xref c c-func docutils literal notranslate"><span class="pre">request_firmware_nowait()</span></code></a> cannot be called
+informed through the callback. <a class="reference internal" href="#c.request_firmware_nowait" title="request_firmware_nowait"><code class="xref c c-func docutils literal notranslate"><span class="pre">request_firmware_nowait()</span></code></a> cannot be called
 in atomic contexts.</p>
 <div class="section" id="request-firmware-nowait">
 <h3>request_firmware_nowait<a class="headerlink" href="#request-firmware-nowait" title="Permalink to this headline">¶</a></h3>
@@ -360,7 +360,7 @@ requesting firmware in their -&gt;probe() methods, if
 <p>Some devices have an optimization in place to enable the firmware to be
 retained during system reboot. When such optimizations are used the driver
 author must ensure the firmware is still available on resume from suspend,
-this can be done with <a class="reference internal" href="../infrastructure.html#c.firmware_request_cache" title="firmware_request_cache"><code class="xref c c-func docutils literal notranslate"><span class="pre">firmware_request_cache()</span></code></a> instead of requesting for the
+this can be done with <a class="reference internal" href="#c.firmware_request_cache" title="firmware_request_cache"><code class="xref c c-func docutils literal notranslate"><span class="pre">firmware_request_cache()</span></code></a> instead of requesting for the
 firmware to be loaded.</p>
 <div class="section" id="firmware-request-cache">
 <h3>firmware_request_cache()<a class="headerlink" href="#firmware-request-cache" title="Permalink to this headline">¶</a></h3>
@@ -383,15 +383,15 @@ require loading firmware on system reboot. This optimization may still
 require the firmware present on resume from suspend. This routine can be
 used to ensure the firmware is present on resume from suspend in these
 situations. This helper is not compatible with drivers which use
-<a class="reference internal" href="../infrastructure.html#c.request_firmware_into_buf" title="request_firmware_into_buf"><code class="xref c c-func docutils literal notranslate"><span class="pre">request_firmware_into_buf()</span></code></a> or <a class="reference internal" href="../infrastructure.html#c.request_firmware_nowait" title="request_firmware_nowait"><code class="xref c c-func docutils literal notranslate"><span class="pre">request_firmware_nowait()</span></code></a> with no uevent set.</p>
+<a class="reference internal" href="#c.request_firmware_into_buf" title="request_firmware_into_buf"><code class="xref c c-func docutils literal notranslate"><span class="pre">request_firmware_into_buf()</span></code></a> or <a class="reference internal" href="#c.request_firmware_nowait" title="request_firmware_nowait"><code class="xref c c-func docutils literal notranslate"><span class="pre">request_firmware_nowait()</span></code></a> with no uevent set.</p>
 </div>
 </div>
 <div class="section" id="request-firmware-api-expected-driver-use">
 <h2>request firmware API expected driver use<a class="headerlink" href="#request-firmware-api-expected-driver-use" title="Permalink to this headline">¶</a></h2>
 <p>Once an API call returns you process the firmware and then release the
-firmware. For example if you used <a class="reference internal" href="../infrastructure.html#c.request_firmware" title="request_firmware"><code class="xref c c-func docutils literal notranslate"><span class="pre">request_firmware()</span></code></a> and it returns,
+firmware. For example if you used <a class="reference internal" href="#c.request_firmware" title="request_firmware"><code class="xref c c-func docutils literal notranslate"><span class="pre">request_firmware()</span></code></a> and it returns,
 the driver has the firmware image accessible in fw_entry-&gt;{data,size}.
-If something went wrong <a class="reference internal" href="../infrastructure.html#c.request_firmware" title="request_firmware"><code class="xref c c-func docutils literal notranslate"><span class="pre">request_firmware()</span></code></a> returns non-zero and fw_entry
+If something went wrong <a class="reference internal" href="#c.request_firmware" title="request_firmware"><code class="xref c c-func docutils literal notranslate"><span class="pre">request_firmware()</span></code></a> returns non-zero and fw_entry
 is set to NULL. Once your driver is done with processing the firmware it
 can call call release_firmware(fw_entry) to release the firmware image
 and any related resource.</p>

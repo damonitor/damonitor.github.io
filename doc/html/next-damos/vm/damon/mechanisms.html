@@ -108,7 +108,7 @@
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="#address-space-independent-core-mechanisms">Address Space Independent Core Mechanisms</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#access-frequncy-monitoring">Access Frequncy Monitoring</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#access-frequency-monitoring">Access Frequency Monitoring</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#region-based-sampling">Region Based Sampling</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#adaptive-regions-adjustment">Adaptive Regions Adjustment</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#dynamic-target-space-updates-handling">Dynamic Target Space Updates Handling</a></li>
@@ -192,7 +192,7 @@
 <h2>Configurable Layers<a class="headerlink" href="#configurable-layers" title="Permalink to this headline">¶</a></h2>
 <p>DAMON provides data access monitoring functionality while making the accuracy
 and the overhead controllable.  The fundamental access monitorings require
-primitives that dependant on and optimized for the target address space.  On
+primitives that dependent on and optimized for the target address space.  On
 the other hand, the accuracy and overhead tradeoff mechanism, which is the core
 of DAMON, is in the pure logic space.  DAMON separates the two parts in
 different layers and defines its interface to allow various low level
@@ -261,8 +261,8 @@ to make a reasonable trade-off.  Below shows this in detail:</p>
 monitoring attributes, <code class="docutils literal notranslate"><span class="pre">sampling</span> <span class="pre">interval</span></code>, <code class="docutils literal notranslate"><span class="pre">aggregation</span> <span class="pre">interval</span></code>,
 <code class="docutils literal notranslate"><span class="pre">regions</span> <span class="pre">update</span> <span class="pre">interval</span></code>, <code class="docutils literal notranslate"><span class="pre">minimum</span> <span class="pre">number</span> <span class="pre">of</span> <span class="pre">regions</span></code>, and <code class="docutils literal notranslate"><span class="pre">maximum</span>
 <span class="pre">number</span> <span class="pre">of</span> <span class="pre">regions</span></code>.</p>
-<div class="section" id="access-frequncy-monitoring">
-<h3>Access Frequncy Monitoring<a class="headerlink" href="#access-frequncy-monitoring" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="access-frequency-monitoring">
+<h3>Access Frequency Monitoring<a class="headerlink" href="#access-frequency-monitoring" title="Permalink to this headline">¶</a></h3>
 <p>The output of DAMON says what pages are how frequently accessed for a given
 duration.  The resolution of the access frequency is controlled by setting
 <code class="docutils literal notranslate"><span class="pre">sampling</span> <span class="pre">interval</span></code> and <code class="docutils literal notranslate"><span class="pre">aggregation</span> <span class="pre">interval</span></code>.  In detail, DAMON checks
@@ -302,12 +302,11 @@ assumption is not guaranteed.</p>
 </div>
 <div class="section" id="adaptive-regions-adjustment">
 <h3>Adaptive Regions Adjustment<a class="headerlink" href="#adaptive-regions-adjustment" title="Permalink to this headline">¶</a></h3>
-<p>At the beginning of the monitoring, DAMON constructs the initial regions by
-evenly splitting the monitoring target memory region into the user-specified
-minimum number of regions.  In this initial state, the assumption is normally
-not kept and therefore the quality would be low.  To keep the assumption as
-much as possible, DAMON adaptively merges and splits each region based on their
-access frequency.</p>
+<p>Even somehow the initial monitoring target regions are well constructed to
+fulfill the assumption (pages in same region have similar access frequencies),
+the data access pattern can be dynamically changed.  This will result in low
+monitoring quality.  To keep the assumption as much as possible, DAMON
+adaptively merges and splits each region based on their access frequency.</p>
 <p>For each <code class="docutils literal notranslate"><span class="pre">aggregation</span> <span class="pre">interval</span></code>, it compares the access frequencies of
 adjacent regions and merges those if the frequency difference is small.  Then,
 after it reports and clears the aggregated access frequency of each region, it
