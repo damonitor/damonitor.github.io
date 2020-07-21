@@ -106,7 +106,7 @@
 </li>
 <li class="toctree-l3"><a class="reference internal" href="#debugfs-interface">debugfs Interface</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#attributes">Attributes</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#target-pids">Target PIDs</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#target-ids">Target IDs</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#record">Record</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#turning-on-off">Turning On/Off</a></li>
 </ul>
@@ -255,7 +255,7 @@ human-readable text.  For example:</p>
 start_time:  193485829398
 rel time:                0
 nr_tasks:  1
-pid:  1348
+target_id:  1348
 nr_regions:  4
 560189609000-56018abce000(  22827008):  0
 7fbdff59a000-7fbdffaf1a00(   5601792):  0
@@ -264,7 +264,7 @@ nr_regions:  4
 
 rel time:        100000731
 nr_tasks:  1
-pid:  1348
+target_id:  1348
 nr_regions:  6
 560189609000-56018abce000(  22827008):  0
 7fbdff59a000-7fbdff8ce933(   3361075):  0
@@ -279,7 +279,7 @@ data access patterns follows.  Each record is separated by a blank line.  Each
 record first specifies the recorded time (<code class="docutils literal notranslate"><span class="pre">rel</span> <span class="pre">time</span></code>) in relative to the
 start time, the number of monitored tasks in this record (<code class="docutils literal notranslate"><span class="pre">nr_tasks</span></code>).
 Recorded data access patterns of each task follow.  Each data access pattern
-for each task shows the target’s pid (<code class="docutils literal notranslate"><span class="pre">pid</span></code>) and a number of monitored
+for each task shows the target’s pid (<code class="docutils literal notranslate"><span class="pre">target_id</span></code>) and a number of monitored
 address regions in this access pattern (<code class="docutils literal notranslate"><span class="pre">nr_regions</span></code>) first.  After that,
 each line shows the start/end address, size, and the number of observed
 accesses of each region.</p>
@@ -325,7 +325,7 @@ only black.  Therefore you should do proper zoom in / zoom out using the
 resolution and axis boundary-setting arguments.  To make this effort minimal,
 you can use <code class="docutils literal notranslate"><span class="pre">--guide</span></code> option as below:</p>
 <div class="highlight-none notranslate"><div class="highlight"><pre><span></span>$ ./damo report heats --guide
-pid:1348
+target_id:1348
 time: 193485829398-198337863555 (4852034157)
 region   0: 00000094564599762944-00000094564622589952 (22827008)
 region   1: 00000140454009610240-00000140454016012288 (6402048)
@@ -344,7 +344,7 @@ biggest union in <code class="docutils literal notranslate"><span class="pre">--
 changes from the records.  For example:</p>
 <div class="highlight-none notranslate"><div class="highlight"><pre><span></span>$ ./damo report wss
 # &lt;percentile&gt; &lt;wss&gt;
-# pid   1348
+# target_id   1348
 # avr:  66228
 0       0
 25      0
@@ -362,7 +362,7 @@ and 66,228 bytes on average.</p>
 the working set size has chronologically changed.  For example:</p>
 <div class="highlight-none notranslate"><div class="highlight"><pre><span></span>$ ./damo report wss --sortby time
 # &lt;percentile&gt; &lt;wss&gt;
-# pid   1348
+# target_id   1348
 # avr:  66228
 0       0
 25      0
@@ -383,8 +383,8 @@ visualization of the distribution via <code class="docutils literal notranslate"
 </div>
 <div class="section" id="debugfs-interface">
 <h2>debugfs Interface<a class="headerlink" href="#debugfs-interface" title="Permalink to this headline">¶</a></h2>
-<p>DAMON exports four files, <code class="docutils literal notranslate"><span class="pre">attrs</span></code>, <code class="docutils literal notranslate"><span class="pre">pids</span></code>, <code class="docutils literal notranslate"><span class="pre">record</span></code>, and <code class="docutils literal notranslate"><span class="pre">monitor_on</span></code>
-under its debugfs directory, <code class="docutils literal notranslate"><span class="pre">&lt;debugfs&gt;/damon/</span></code>.</p>
+<p>DAMON exports four files, <code class="docutils literal notranslate"><span class="pre">attrs</span></code>, <code class="docutils literal notranslate"><span class="pre">target_ids</span></code>, <code class="docutils literal notranslate"><span class="pre">record</span></code>, and
+<code class="docutils literal notranslate"><span class="pre">monitor_on</span></code> under its debugfs directory, <code class="docutils literal notranslate"><span class="pre">&lt;debugfs&gt;/damon/</span></code>.</p>
 <div class="section" id="attributes">
 <h3>Attributes<a class="headerlink" href="#attributes" title="Permalink to this headline">¶</a></h3>
 <p>Users can get and set the <code class="docutils literal notranslate"><span class="pre">sampling</span> <span class="pre">interval</span></code>, <code class="docutils literal notranslate"><span class="pre">aggregation</span> <span class="pre">interval</span></code>,
@@ -400,19 +400,23 @@ example, below commands set those values to 5 ms, 100 ms, 1,000 ms, 10 and
 </pre></div>
 </div>
 </div>
-<div class="section" id="target-pids">
-<h3>Target PIDs<a class="headerlink" href="#target-pids" title="Permalink to this headline">¶</a></h3>
-<p>To monitor the virtual memory address spaces of specific processes, users can
-get and set the pids of monitoring target processes by reading from and writing
-to the <code class="docutils literal notranslate"><span class="pre">pids</span></code> file.  For example, below commands set processes having pids 42
-and 4242 as the processes to be monitored and check it again:</p>
+<div class="section" id="target-ids">
+<h3>Target IDs<a class="headerlink" href="#target-ids" title="Permalink to this headline">¶</a></h3>
+<p>Some types of address spaces supports multiple monitoring target.  For example,
+the virtual memory address spaces monitoring can have multiple processes as the
+monitoring targets.  Users can set the targets by writing relevant id values of
+the targets to, and get the ids of the current targets by reading from the
+<code class="docutils literal notranslate"><span class="pre">target_ids</span></code> file.  In case of the virtual address spaces monitoring, the
+values should be pids of the monitoring target processes.  For example, below
+commands set processes having pids 42 and 4242 as the monitoring targets and
+check it again:</p>
 <div class="highlight-none notranslate"><div class="highlight"><pre><span></span># cd &lt;debugfs&gt;/damon
-# echo 42 4242 &gt; pids
-# cat pids
+# echo 42 4242 &gt; target_ids
+# cat target_ids
 42 4242
 </pre></div>
 </div>
-<p>Note that setting the pids doesn’t start the monitoring.</p>
+<p>Note that setting the target ids doesn’t start the monitoring.</p>
 </div>
 <div class="section" id="record">
 <h3>Record<a class="headerlink" href="#record" title="Permalink to this headline">¶</a></h3>
@@ -432,13 +436,13 @@ saved in <code class="docutils literal notranslate"><span class="pre">/damon.dat
 </div>
 <div class="section" id="turning-on-off">
 <h3>Turning On/Off<a class="headerlink" href="#turning-on-off" title="Permalink to this headline">¶</a></h3>
-<p>Setting the files as described above doesn’t incur any effect on your system
-unless you explicitly start the monitoring.  You can start, stop, and check the
-current status of the monitoring by writing to and reading from the
-<code class="docutils literal notranslate"><span class="pre">monitor_on</span></code> file.  Writing <code class="docutils literal notranslate"><span class="pre">on</span></code> to the file starts the monitoring of the
-targets with the attributes.  Writing <code class="docutils literal notranslate"><span class="pre">off</span></code> to the file stops those.  DAMON
-also stops if every target process is terminated.  Below example commands turn
-on, off, and check the status of DAMON:</p>
+<p>Setting the files as described above doesn’t incur effect unless you explicitly
+start the monitoring.  You can start, stop, and check the current status of the
+monitoring by writing to and reading from the <code class="docutils literal notranslate"><span class="pre">monitor_on</span></code> file.  Writing
+<code class="docutils literal notranslate"><span class="pre">on</span></code> to the file starts the monitoring of the targets with the attributes.
+Writing <code class="docutils literal notranslate"><span class="pre">off</span></code> to the file stops those.  DAMON also stops if every target
+process is terminated.  Below example commands turn on, off, and check the
+status of DAMON:</p>
 <div class="highlight-none notranslate"><div class="highlight"><pre><span></span># cd &lt;debugfs&gt;/damon
 # echo on &gt; monitor_on
 # echo off &gt; monitor_on

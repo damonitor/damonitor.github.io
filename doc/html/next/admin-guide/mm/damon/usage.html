@@ -107,7 +107,7 @@
 </li>
 <li class="toctree-l3"><a class="reference internal" href="#debugfs-interface">debugfs Interface</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#attributes">Attributes</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#target-pids">Target PIDs</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#target-ids">Target IDs</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#initial-monitoring-target-regions">Initial Monitoring Target Regions</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#record">Record</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#schemes">Schemes</a></li>
@@ -269,7 +269,7 @@ human-readable text.  For example:</p>
 start_time:  193485829398
 rel time:                0
 nr_tasks:  1
-pid:  1348
+target_id:  1348
 nr_regions:  4
 560189609000-56018abce000(  22827008):  0
 7fbdff59a000-7fbdffaf1a00(   5601792):  0
@@ -278,7 +278,7 @@ nr_regions:  4
 
 rel time:        100000731
 nr_tasks:  1
-pid:  1348
+target_id:  1348
 nr_regions:  6
 560189609000-56018abce000(  22827008):  0
 7fbdff59a000-7fbdff8ce933(   3361075):  0
@@ -293,7 +293,7 @@ data access patterns follows.  Each record is separated by a blank line.  Each
 record first specifies the recorded time (<code class="docutils literal notranslate"><span class="pre">rel</span> <span class="pre">time</span></code>) in relative to the
 start time, the number of monitored tasks in this record (<code class="docutils literal notranslate"><span class="pre">nr_tasks</span></code>).
 Recorded data access patterns of each task follow.  Each data access pattern
-for each task shows the target’s pid (<code class="docutils literal notranslate"><span class="pre">pid</span></code>) and a number of monitored
+for each task shows the target’s pid (<code class="docutils literal notranslate"><span class="pre">target_id</span></code>) and a number of monitored
 address regions in this access pattern (<code class="docutils literal notranslate"><span class="pre">nr_regions</span></code>) first.  After that,
 each line shows the start/end address, size, and the number of observed
 accesses of each region.</p>
@@ -339,7 +339,7 @@ only black.  Therefore you should do proper zoom in / zoom out using the
 resolution and axis boundary-setting arguments.  To make this effort minimal,
 you can use <code class="docutils literal notranslate"><span class="pre">--guide</span></code> option as below:</p>
 <div class="highlight-none notranslate"><div class="highlight"><pre><span></span>$ ./damo report heats --guide
-pid:1348
+target_id:1348
 time: 193485829398-198337863555 (4852034157)
 region   0: 00000094564599762944-00000094564622589952 (22827008)
 region   1: 00000140454009610240-00000140454016012288 (6402048)
@@ -358,7 +358,7 @@ biggest union in <code class="docutils literal notranslate"><span class="pre">--
 changes from the records.  For example:</p>
 <div class="highlight-none notranslate"><div class="highlight"><pre><span></span>$ ./damo report wss
 # &lt;percentile&gt; &lt;wss&gt;
-# pid   1348
+# target_id   1348
 # avr:  66228
 0       0
 25      0
@@ -376,7 +376,7 @@ and 66,228 bytes on average.</p>
 the working set size has chronologically changed.  For example:</p>
 <div class="highlight-none notranslate"><div class="highlight"><pre><span></span>$ ./damo report wss --sortby time
 # &lt;percentile&gt; &lt;wss&gt;
-# pid   1348
+# target_id   1348
 # avr:  66228
 0       0
 25      0
@@ -454,8 +454,8 @@ $ ./damo schemes --schemes my_thp_scheme `pidof foo`
 </div>
 <div class="section" id="debugfs-interface">
 <h2>debugfs Interface<a class="headerlink" href="#debugfs-interface" title="Permalink to this headline">¶</a></h2>
-<p>DAMON exports six files, <code class="docutils literal notranslate"><span class="pre">attrs</span></code>, <code class="docutils literal notranslate"><span class="pre">pids</span></code>, <code class="docutils literal notranslate"><span class="pre">init_regions</span></code>, <code class="docutils literal notranslate"><span class="pre">record</span></code>,
-<code class="docutils literal notranslate"><span class="pre">schemes</span></code> and <code class="docutils literal notranslate"><span class="pre">monitor_on</span></code> under its debugfs directory,
+<p>DAMON exports six files, <code class="docutils literal notranslate"><span class="pre">attrs</span></code>, <code class="docutils literal notranslate"><span class="pre">target_ids</span></code>, <code class="docutils literal notranslate"><span class="pre">init_regions</span></code>,
+<code class="docutils literal notranslate"><span class="pre">record</span></code>, <code class="docutils literal notranslate"><span class="pre">schemes</span></code> and <code class="docutils literal notranslate"><span class="pre">monitor_on</span></code> under its debugfs directory,
 <code class="docutils literal notranslate"><span class="pre">&lt;debugfs&gt;/damon/</span></code>.</p>
 <div class="section" id="attributes">
 <h3>Attributes<a class="headerlink" href="#attributes" title="Permalink to this headline">¶</a></h3>
@@ -472,28 +472,33 @@ example, below commands set those values to 5 ms, 100 ms, 1,000 ms, 10 and
 </pre></div>
 </div>
 </div>
-<div class="section" id="target-pids">
-<h3>Target PIDs<a class="headerlink" href="#target-pids" title="Permalink to this headline">¶</a></h3>
-<p>To monitor the virtual memory address spaces of specific processes, users can
-get and set the pids of monitoring target processes by reading from and writing
-to the <code class="docutils literal notranslate"><span class="pre">pids</span></code> file.  For example, below commands set processes having pids 42
-and 4242 as the processes to be monitored and check it again:</p>
+<div class="section" id="target-ids">
+<h3>Target IDs<a class="headerlink" href="#target-ids" title="Permalink to this headline">¶</a></h3>
+<p>Some types of address spaces supports multiple monitoring target.  For example,
+the virtual memory address spaces monitoring can have multiple processes as the
+monitoring targets.  Users can set the targets by writing relevant id values of
+the targets to, and get the ids of the current targets by reading from the
+<code class="docutils literal notranslate"><span class="pre">target_ids</span></code> file.  In case of the virtual address spaces monitoring, the
+values should be pids of the monitoring target processes.  For example, below
+commands set processes having pids 42 and 4242 as the monitoring targets and
+check it again:</p>
 <div class="highlight-none notranslate"><div class="highlight"><pre><span></span># cd &lt;debugfs&gt;/damon
-# echo 42 4242 &gt; pids
-# cat pids
+# echo 42 4242 &gt; target_ids
+# cat target_ids
 42 4242
 </pre></div>
 </div>
 <p>Users can also monitor the physical memory address space of the system by
-writing a special keyword, “<code class="docutils literal notranslate"><span class="pre">paddr\n</span></code>” to the file.  In this case, reading the
-file will show <code class="docutils literal notranslate"><span class="pre">-1</span></code>, as below:</p>
+writing a special keyword, “<code class="docutils literal notranslate"><span class="pre">paddr\n</span></code>” to the file.  Because physical address
+space monitoring doesn’t support multiple targets, reading the file will show a
+fake value, <code class="docutils literal notranslate"><span class="pre">-1</span></code>, as below:</p>
 <div class="highlight-none notranslate"><div class="highlight"><pre><span></span># cd &lt;debugfs&gt;/damon
-# echo paddr &gt; pids
-# cat pids
+# echo paddr &gt; target_ids
+# cat target_ids
 -1
 </pre></div>
 </div>
-<p>Note that setting the pids doesn’t start the monitoring.</p>
+<p>Note that setting the target ids doesn’t start the monitoring.</p>
 </div>
 <div class="section" id="initial-monitoring-target-regions">
 <h3>Initial Monitoring Target Regions<a class="headerlink" href="#initial-monitoring-target-regions" title="Permalink to this headline">¶</a></h3>
@@ -510,11 +515,11 @@ monitoring target regions by themselves.</p>
 <p>In such cases, users can explicitly set the initial monitoring target regions
 as they want, by writing proper values to the <code class="docutils literal notranslate"><span class="pre">init_regions</span></code> file.  Each line
 of the input should represent one region in below form.:</p>
-<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>&lt;pid&gt; &lt;start address&gt; &lt;end address&gt;
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>&lt;target id&gt; &lt;start address&gt; &lt;end address&gt;
 </pre></div>
 </div>
-<p>The <code class="docutils literal notranslate"><span class="pre">pid</span></code> should already in <code class="docutils literal notranslate"><span class="pre">pids</span></code> file, and the regions should be
-passed in address order.  For example, below commands will set a couple of
+<p>The <code class="docutils literal notranslate"><span class="pre">target</span> <span class="pre">id</span></code> should already in <code class="docutils literal notranslate"><span class="pre">target_ids</span></code> file, and the regions should
+be passed in address order.  For example, below commands will set a couple of
 address ranges, <code class="docutils literal notranslate"><span class="pre">1-100</span></code> and <code class="docutils literal notranslate"><span class="pre">100-200</span></code> as the initial monitoring target
 region of process 42, and another couple of address ranges, <code class="docutils literal notranslate"><span class="pre">20-40</span></code> and
 <code class="docutils literal notranslate"><span class="pre">50-100</span></code> as that of process 4242.:</p>
