@@ -222,10 +222,11 @@ virtual address spaces. Below two subsections describe how it works.</p>
 basic access checks.  It finds the relevant PTE Accessed bit from the address
 by walking the page table for the target task of the address.  In this way, the
 implementation finds and clears the bit for next sampling target address and
-checks whether the bit set again after one sampling period.  To avoid
-disturbing other Accessed bit users such as the reclamation logic, the
-implementation adjusts the <code class="docutils literal notranslate"><span class="pre">PG_Idle</span></code> and <code class="docutils literal notranslate"><span class="pre">PG_Young</span></code> appropriately, as same
-to the ‘Idle Page Tracking’.</p>
+checks whether the bit set again after one sampling period.  This could disturb
+other kernel subsystems using the Accessed bits, namely Idle page tracking and
+the reclaim logic.  To avoid such disturbances, DAMON makes it mutually
+exclusive with Idle page tracking and uses <code class="docutils literal notranslate"><span class="pre">PG_idle</span></code> and <code class="docutils literal notranslate"><span class="pre">PG_young</span></code> page
+flags to solve the conflict with the reclaim logic, as Idle page tracking does.</p>
 </div>
 <div class="section" id="vma-based-target-address-range-construction">
 <h3>VMA-based Target Address Range Construction<a class="headerlink" href="#vma-based-target-address-range-construction" title="Permalink to this headline">¶</a></h3>
