@@ -11,7 +11,8 @@ do
 	for dir in *
 	do
 		if [ ! -d "$dir" ] || [ "$dir" = "vm" ] ||
-			[ "$dir" = "admin-guide" ] || [ "$dir" = "_static" ]
+			[ "$dir" = "admin-guide" ] || [ "$dir" = "_static" ] ||
+			[ "$dir" = "_images" ]
 		then
 			continue
 		fi
