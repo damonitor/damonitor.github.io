@@ -68,7 +68,7 @@
             
             
               <div class="version">
-                5.7.0
+                5.8.0
               </div>
             
           
@@ -350,12 +350,34 @@ definition of the region is:</p>
 } __packed;
 </pre></div>
 </div>
+<p>This region is always available.</p>
 <p>While starting an I/O request, orb_area should be filled with the
 guest ORB, and scsw_area should be filled with the SCSW of the Virtual
 Subchannel.</p>
 <p>irb_area stores the I/O result.</p>
-<p>ret_code stores a return code for each access of the region.</p>
-<p>This region is always available.</p>
+<p>ret_code stores a return code for each access of the region. The following
+values may occur:</p>
+<dl class="docutils">
+<dt><code class="docutils literal notranslate"><span class="pre">0</span></code></dt>
+<dd>The operation was successful.</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">-EOPNOTSUPP</span></code></dt>
+<dd>The orb specified transport mode or an unidentified IDAW format, or the
+scsw specified a function other than the start function.</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">-EIO</span></code></dt>
+<dd>A request was issued while the device was not in a state ready to accept
+requests, or an internal error occurred.</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">-EBUSY</span></code></dt>
+<dd>The subchannel was status pending or busy, or a request is already active.</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">-EAGAIN</span></code></dt>
+<dd>A request was being processed, and the caller should retry.</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">-EACCES</span></code></dt>
+<dd>The channel path(s) used for the I/O were found to be not operational.</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">-ENODEV</span></code></dt>
+<dd>The device was found to be not operational.</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">-EINVAL</span></code></dt>
+<dd>The orb specified a chain longer than 255 ccws, or an internal error
+occurred.</dd>
+</dl>
 </div>
 <div class="section" id="vfio-ccw-cmd-region">
 <h2>vfio-ccw cmd region<a class="headerlink" href="#vfio-ccw-cmd-region" title="Permalink to this headline">¶</a></h2>
@@ -371,6 +393,55 @@ struct ccw_cmd_region {
 </div>
 <p>This region is exposed via region type VFIO_REGION_SUBTYPE_CCW_ASYNC_CMD.</p>
 <p>Currently, CLEAR SUBCHANNEL and HALT SUBCHANNEL use this region.</p>
+<p>command specifies the command to be issued; ret_code stores a return code
+for each access of the region. The following values may occur:</p>
+<dl class="docutils">
+<dt><code class="docutils literal notranslate"><span class="pre">0</span></code></dt>
+<dd>The operation was successful.</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">-ENODEV</span></code></dt>
+<dd>The device was found to be not operational.</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">-EINVAL</span></code></dt>
+<dd>A command other than halt or clear was specified.</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">-EIO</span></code></dt>
+<dd>A request was issued while the device was not in a state ready to accept
+requests.</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">-EAGAIN</span></code></dt>
+<dd>A request was being processed, and the caller should retry.</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">-EBUSY</span></code></dt>
+<dd>The subchannel was status pending or busy while processing a halt request.</dd>
+</dl>
+</div>
+<div class="section" id="vfio-ccw-schib-region">
+<h2>vfio-ccw schib region<a class="headerlink" href="#vfio-ccw-schib-region" title="Permalink to this headline">¶</a></h2>
+<p>The vfio-ccw schib region is used to return Subchannel-Information
+Block (SCHIB) data to userspace:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>struct ccw_schib_region {
+#define SCHIB_AREA_SIZE 52
+       __u8 schib_area[SCHIB_AREA_SIZE];
+} __packed;
+</pre></div>
+</div>
+<p>This region is exposed via region type VFIO_REGION_SUBTYPE_CCW_SCHIB.</p>
+<p>Reading this region triggers a STORE SUBCHANNEL to be issued to the
+associated hardware.</p>
+</div>
+<div class="section" id="vfio-ccw-crw-region">
+<h2>vfio-ccw crw region<a class="headerlink" href="#vfio-ccw-crw-region" title="Permalink to this headline">¶</a></h2>
+<p>The vfio-ccw crw region is used to return Channel Report Word (CRW)
+data to userspace:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>struct ccw_crw_region {
+       __u32 crw;
+       __u32 pad;
+} __packed;
+</pre></div>
+</div>
+<p>This region is exposed via region type VFIO_REGION_SUBTYPE_CCW_CRW.</p>
+<p>Reading this region returns a CRW if one that is relevant for this
+subchannel (e.g. one reporting changes in channel path state) is
+pending, or all zeroes if not. If multiple CRWs are pending (including
+possibly chained CRWs), reading this region again will return the next
+one, until no more CRWs are pending and zeroes are returned. This is
+similar to how STORE CHANNEL REPORT WORD works.</p>
 </div>
 <div class="section" id="vfio-ccw-operation-details">
 <h2>vfio-ccw operation details<a class="headerlink" href="#vfio-ccw-operation-details" title="Permalink to this headline">¶</a></h2>
@@ -475,7 +546,13 @@ More information for DASD and ECKD could be found here:
 through DASD/ECKD device online in a guest now and use it as a block
 device.</p>
 <p>The current code allows the guest to start channel programs via
-START SUBCHANNEL, and to issue HALT SUBCHANNEL and CLEAR SUBCHANNEL.</p>
+START SUBCHANNEL, and to issue HALT SUBCHANNEL, CLEAR SUBCHANNEL,
+and STORE SUBCHANNEL.</p>
+<p>Currently all channel programs are prefetched, regardless of the
+p-bit setting in the ORB.  As a result, self modifying channel
+programs are not supported.  For this reason, IPL has to be handled as
+a special case by a userspace/guest program; this has been implemented
+in QEMU’s s390-ccw bios as of QEMU 4.1.</p>
 <p>vfio-ccw supports classic (command mode) channel I/O only. Transport
 mode (HPF) is not supported.</p>
 <p>QDIO subchannels are currently not supported. Classic devices other than

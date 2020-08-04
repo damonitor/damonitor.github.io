@@ -68,7 +68,7 @@
             
             
               <div class="version">
-                5.7.0
+                5.8.0
               </div>
             
           
@@ -428,7 +428,7 @@ dei nomi descrittivi, così come le funzioni globali.  Se avete una funzione
 che conta gli utenti attivi, dovreste chiamarla <code class="docutils literal notranslate"><span class="pre">count_active_users()</span></code> o
 qualcosa di simile, <strong>non</strong> dovreste chiamarla <code class="docutils literal notranslate"><span class="pre">cntusr()</span></code>.</p>
 <p>Codificare il tipo di funzione nel suo nome (quella cosa chiamata notazione
-ungherese) fa male al cervello - il compilatore conosce comunque il tipo e
+ungherese) è stupido - il compilatore conosce comunque il tipo e
 può verificarli, e inoltre confonde i programmatori.  Non c’è da
 sorprendersi che MicroSoft faccia programmi bacati.</p>
 <p>Le variabili LOCALI dovrebbero avere nomi corti, e significativi.  Se avete
@@ -870,8 +870,8 @@ linguaggio assembler.</p>
 <h2>13) Visualizzare i messaggi del kernel<a class="headerlink" href="#visualizzare-i-messaggi-del-kernel" title="Permalink to this headline">¶</a></h2>
 <p>Agli sviluppatori del kernel piace essere visti come dotti. Tenete un occhio
 di riguardo per l’ortografia e farete una belle figura. In inglese, evitate
-l’uso di parole mozzate come <code class="docutils literal notranslate"><span class="pre">dont</span></code>: usate <code class="docutils literal notranslate"><span class="pre">do</span> <span class="pre">not</span></code> oppure <code class="docutils literal notranslate"><span class="pre">don't</span></code>.
-Scrivete messaggi concisi, chiari, e inequivocabili.</p>
+l’uso incorretto di abbreviazioni come <code class="docutils literal notranslate"><span class="pre">dont</span></code>: usate <code class="docutils literal notranslate"><span class="pre">do</span> <span class="pre">not</span></code> oppure
+<code class="docutils literal notranslate"><span class="pre">don't</span></code>.  Scrivete messaggi concisi, chiari, e inequivocabili.</p>
 <p>I messaggi del kernel non devono terminare con un punto fermo.</p>
 <p>Scrivere i numeri fra parentesi (%d) non migliora alcunché e per questo
 dovrebbero essere evitati.</p>
@@ -879,12 +879,12 @@ dovrebbero essere evitati.</p>
 usare per assicurarvi che i messaggi vengano associati correttamente ai
 dispositivi e ai driver, e che siano etichettati correttamente:  dev_err(),
 dev_warn(), dev_info(), e così via.  Per messaggi che non sono associati ad
-alcun dispositivo, &lt;linux/printk.h&gt; definisce pr_info(), pr_warn(), pr_err(),
+alcun dispositivo, &lt;linux/printk.h&gt; definisce <a class="reference internal" href="../../../core-api/printk-basics.html#c.pr_info" title="pr_info"><code class="xref c c-func docutils literal notranslate"><span class="pre">pr_info()</span></code></a>, <a class="reference internal" href="../../../core-api/printk-basics.html#c.pr_warn" title="pr_warn"><code class="xref c c-func docutils literal notranslate"><span class="pre">pr_warn()</span></code></a>, <a class="reference internal" href="../../../core-api/printk-basics.html#c.pr_err" title="pr_err"><code class="xref c c-func docutils literal notranslate"><span class="pre">pr_err()</span></code></a>,
 eccetera.</p>
 <p>Tirar fuori un buon messaggio di debug può essere una vera sfida; e quando
 l’avete può essere d’enorme aiuto per risolvere problemi da remoto.
 Tuttavia, i messaggi di debug sono gestiti differentemente rispetto agli
-altri.  Le funzioni pr_XXX() stampano incondizionatamente ma pr_debug() no;
+altri.  Le funzioni pr_XXX() stampano incondizionatamente ma <a class="reference internal" href="../../../core-api/printk-basics.html#c.pr_debug" title="pr_debug"><code class="xref c c-func docutils literal notranslate"><span class="pre">pr_debug()</span></code></a> no;
 essa non viene compilata nella configurazione predefinita, a meno che
 DEBUG o CONFIG_DYNAMIC_DEBUG non vengono impostati.  Questo vale anche per
 dev_dbg() e in aggiunta VERBOSE_DEBUG per aggiungere i messaggi dev_vdbg().</p>

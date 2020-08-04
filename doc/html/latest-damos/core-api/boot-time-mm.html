@@ -68,7 +68,7 @@
             
             
               <div class="version">
-                5.7.0
+                5.8.0
               </div>
             
           
@@ -222,7 +222,7 @@ address of the allocated memory</li>
 <li>memblock_alloc*() - these functions return the <strong>virtual</strong> address
 of the allocated memory.</li>
 </ul>
-<p>Note, that both API variants use implict assumptions about allowed
+<p>Note, that both API variants use implicit assumptions about allowed
 memory ranges and the fallback methods. Consult the documentation
 of <a class="reference internal" href="#c.memblock_alloc_internal" title="memblock_alloc_internal"><code class="xref c c-func docutils literal notranslate"><span class="pre">memblock_alloc_internal()</span></code></a> and <a class="reference internal" href="#c.memblock_alloc_range_nid" title="memblock_alloc_range_nid"><code class="xref c c-func docutils literal notranslate"><span class="pre">memblock_alloc_range_nid()</span></code></a>
 functions for more elaborate description.</p>
@@ -267,7 +267,7 @@ struct <code class="descname">memblock_region</code><a class="headerlink" href="
   phys_addr_t base;
   phys_addr_t size;
   enum memblock_flags flags;
-#ifdef CONFIG_HAVE_MEMBLOCK_NODE_MAP;
+#ifdef CONFIG_NEED_MULTIPLE_NODES;
   int nid;
 #endif;
 };
@@ -276,7 +276,7 @@ struct <code class="descname">memblock_region</code><a class="headerlink" href="
 <p><strong>Members</strong></p>
 <dl class="docutils">
 <dt><code class="docutils literal notranslate"><span class="pre">base</span></code></dt>
-<dd>physical address of the region</dd>
+<dd>base address of the region</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">size</span></code></dt>
 <dd>size of the region</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">flags</span></code></dt>
@@ -338,7 +338,7 @@ struct <code class="descname">memblock</code><a class="headerlink" href="#c.memb
 <dt><code class="docutils literal notranslate"><span class="pre">current_limit</span></code></dt>
 <dd>physical address of the current allocation limit</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">memory</span></code></dt>
-<dd>usabe memory regions</dd>
+<dd>usable memory regions</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">reserved</span></code></dt>
 <dd>reserved memory regions</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">physmem</span></code></dt>

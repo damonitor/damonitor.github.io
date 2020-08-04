@@ -68,7 +68,7 @@
             
             
               <div class="version">
-                5.7.0
+                5.8.0
               </div>
             
           
@@ -371,15 +371,22 @@ only ask you for the answers to new questions.</div></blockquote>
                       store the lsmod of that machine into a file
                       and pass it in as a LSMOD parameter.
 
+                      Also, you can preserve modules in certain folders
+                      or kconfig files by specifying their paths in
+                      parameter LMC_KEEP.
+
               target$ lsmod &gt; /tmp/mylsmod
               target$ scp /tmp/mylsmod host:/tmp
 
-              host$ make LSMOD=/tmp/mylsmod localmodconfig
+              host$ make LSMOD=/tmp/mylsmod \
+                      LMC_KEEP=&quot;drivers/usb:drivers/gpu:fs&quot; \
+                      localmodconfig
 
                       The above also works when cross compiling.
 
 &quot;make localyesconfig&quot; Similar to localmodconfig, except it will convert
-                      all module options to built in (=y) options.
+                      all module options to built in (=y) options. You can
+                      also preserve modules by LMC_KEEP.
 
 &quot;make kvmconfig&quot;   Enable additional options for kvm guest kernel support.
 
@@ -419,7 +426,7 @@ should probably answer ‘n’ to the questions for “development”,
 <h2>Compiling the kernel<a class="headerlink" href="#compiling-the-kernel" title="Permalink to this headline">¶</a></h2>
 <blockquote>
 <div><ul>
-<li><p class="first">Make sure you have at least gcc 4.6 available.
+<li><p class="first">Make sure you have at least gcc 4.9 available.
 For more information, refer to <a class="reference internal" href="../process/changes.html#changes"><span class="std std-ref">Documentation/process/changes.rst</span></a>.</p>
 <p>Please note that you can still run a.out user programs with this kernel.</p>
 </li>

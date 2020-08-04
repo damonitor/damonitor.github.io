@@ -68,7 +68,7 @@
             
             
               <div class="version">
-                5.7.0
+                5.8.0
               </div>
             
           
@@ -189,7 +189,6 @@ struct <code class="descname">kunit_resource</code><a class="headerlink" href="#
 <p><strong>Description</strong></p>
 <p>Represents a <em>test managed resource</em>, a resource which will automatically be
 cleaned up at the end of a test case.</p>
-<p><strong>Example</strong></p>
 <div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="k">struct</span> <span class="n">kunit_kmalloc_params</span> <span class="p">{</span>
         <span class="kt">size_t</span> <span class="n">size</span><span class="p">;</span>
         <span class="n">gfp_t</span> <span class="n">gfp</span><span class="p">;</span>
@@ -228,6 +227,7 @@ cleaned up at the end of a test case.</p>
 <span class="p">}</span>
 </pre></div>
 </div>
+<p><strong>Example</strong></p>
 <dl class="type">
 <dt id="c.kunit_case">
 struct <code class="descname">kunit_case</code><a class="headerlink" href="#c.kunit_case" title="Permalink to this definition">¶</a></dt>
@@ -258,7 +258,6 @@ function and followed by the suite’s exit function.</p>
 <p>A test case should be static and should only be created with the
 <a class="reference internal" href="#c.KUNIT_CASE" title="KUNIT_CASE"><code class="xref c c-func docutils literal notranslate"><span class="pre">KUNIT_CASE()</span></code></a> macro; additionally, every array of test cases should be
 terminated with an empty test case.</p>
-<p><strong>Example</strong></p>
 <div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="kt">void</span> <span class="nf">add_test_basic</span><span class="p">(</span><span class="k">struct</span> <span class="n">kunit</span> <span class="o">*</span><span class="n">test</span><span class="p">)</span>
 <span class="p">{</span>
         <span class="n">KUNIT_EXPECT_EQ</span><span class="p">(</span><span class="n">test</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">add</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">));</span>
@@ -274,6 +273,7 @@ terminated with an empty test case.</p>
 <span class="p">};</span>
 </pre></div>
 </div>
+<p><strong>Example</strong></p>
 <dl class="function">
 <dt id="c.KUNIT_CASE">
 <code class="descname">KUNIT_CASE</code><span class="sig-paren">(</span><em>test_name</em><span class="sig-paren">)</span><a class="headerlink" href="#c.KUNIT_CASE" title="Permalink to this definition">¶</a></dt>
@@ -301,8 +301,6 @@ struct <code class="descname">kunit_suite</code><a class="headerlink" href="#c.k
   int (*init)(struct kunit *test);
   void (*exit)(struct kunit *test);
   struct kunit_case *test_cases;
-  struct dentry *debugfs;
-  char *log;
 };
 </pre></div>
 </div>
@@ -349,19 +347,19 @@ indirectly via public functions; the one exception is <strong>priv</strong> whic
 used by the test writer to store arbitrary data.</p>
 <dl class="function">
 <dt id="c.kunit_test_suites">
-<code class="descname">kunit_test_suites</code><span class="sig-paren">(</span><em>…</em><span class="sig-paren">)</span><a class="headerlink" href="#c.kunit_test_suites" title="Permalink to this definition">¶</a></dt>
+<code class="descname">kunit_test_suites</code><span class="sig-paren">(</span><em>suites_list</em><span class="sig-paren">)</span><a class="headerlink" href="#c.kunit_test_suites" title="Permalink to this definition">¶</a></dt>
 <dd><p>used to register one or more <a class="reference internal" href="#c.kunit_suite" title="kunit_suite"><code class="xref c c-type docutils literal notranslate"><span class="pre">struct</span> <span class="pre">kunit_suite</span></code></a> with KUnit.</p>
 </dd></dl>
 
 <p><strong>Parameters</strong></p>
 <dl class="docutils">
-<dt><code class="docutils literal notranslate"><span class="pre">...</span></code></dt>
-<dd>variable arguments</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">suites_list</span></code></dt>
+<dd>a statically allocated list of <a class="reference internal" href="#c.kunit_suite" title="kunit_suite"><code class="xref c c-type docutils literal notranslate"><span class="pre">struct</span> <span class="pre">kunit_suite</span></code></a>.</dd>
 </dl>
 <p><strong>Description</strong></p>
-<p>Registers <strong>suites</strong> with the test framework. See <a class="reference internal" href="#c.kunit_suite" title="kunit_suite"><code class="xref c c-type docutils literal notranslate"><span class="pre">struct</span> <span class="pre">kunit_suite</span></code></a> for
+<p>Registers <strong>suites_list</strong> with the test framework. See <a class="reference internal" href="#c.kunit_suite" title="kunit_suite"><code class="xref c c-type docutils literal notranslate"><span class="pre">struct</span> <span class="pre">kunit_suite</span></code></a> for
 more information.</p>
-<p>When builtin,  KUnit tests are all run as late_initcalls; this means
+<p>When builtin, KUnit tests are all run as late_initcalls; this means
 that they cannot test anything where tests must run at a different init
 phase. One significant restriction resulting from this is that KUnit
 cannot reliably test anything that is initialize in the late_init phase;

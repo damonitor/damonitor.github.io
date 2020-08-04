@@ -68,7 +68,7 @@
             
             
               <div class="version">
-                5.7.0
+                5.8.0
               </div>
             
           
@@ -480,6 +480,10 @@ struct <code class="descname">pipe_inode_info</code><a class="headerlink" href="
   unsigned int tail;
   unsigned int max_usage;
   unsigned int ring_size;
+#ifdef CONFIG_WATCH_QUEUE;
+  bool note_loss;
+#endif;
+  unsigned int nr_accounted;
   unsigned int readers;
   unsigned int writers;
   unsigned int files;
@@ -490,6 +494,9 @@ struct <code class="descname">pipe_inode_info</code><a class="headerlink" href="
   struct fasync_struct *fasync_writers;
   struct pipe_buffer *bufs;
   struct user_struct *user;
+#ifdef CONFIG_WATCH_QUEUE;
+  struct watch_queue *watch_queue;
+#endif;
 };
 </pre></div>
 </div>
@@ -509,6 +516,10 @@ struct <code class="descname">pipe_inode_info</code><a class="headerlink" href="
 <dd>The maximum number of slots that may be used in the ring</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">ring_size</span></code></dt>
 <dd>total number of buffers (should be a power of 2)</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">note_loss</span></code></dt>
+<dd>The next read() should insert a data-lost message</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">nr_accounted</span></code></dt>
+<dd>The amount this pipe accounts for in user-&gt;pipe_bufs</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">readers</span></code></dt>
 <dd>number of current readers of this pipe</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">writers</span></code></dt>
@@ -529,6 +540,8 @@ struct <code class="descname">pipe_inode_info</code><a class="headerlink" href="
 <dd>the circular array of pipe buffers</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">user</span></code></dt>
 <dd>the user who created this pipe</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">watch_queue</span></code></dt>
+<dd>If this pipe is a watch_queue, this is the stuff for that</dd>
 </dl>
 <dl class="function">
 <dt id="c.pipe_empty">
@@ -628,8 +641,8 @@ int <code class="descname">pipe_buf_confirm</code><span class="sig-paren">(</spa
 <dd>the buffer to confirm</dd>
 </dl>
 <dl class="function">
-<dt id="c.pipe_buf_steal">
-int <code class="descname">pipe_buf_steal</code><span class="sig-paren">(</span>struct <a class="reference internal" href="#c.pipe_inode_info" title="pipe_inode_info">pipe_inode_info</a> *<em>&nbsp;pipe</em>, struct <a class="reference internal" href="#c.pipe_buffer" title="pipe_buffer">pipe_buffer</a> *<em>&nbsp;buf</em><span class="sig-paren">)</span><a class="headerlink" href="#c.pipe_buf_steal" title="Permalink to this definition">¶</a></dt>
+<dt id="c.pipe_buf_try_steal">
+bool <code class="descname">pipe_buf_try_steal</code><span class="sig-paren">(</span>struct <a class="reference internal" href="#c.pipe_inode_info" title="pipe_inode_info">pipe_inode_info</a> *<em>&nbsp;pipe</em>, struct <a class="reference internal" href="#c.pipe_buffer" title="pipe_buffer">pipe_buffer</a> *<em>&nbsp;buf</em><span class="sig-paren">)</span><a class="headerlink" href="#c.pipe_buf_try_steal" title="Permalink to this definition">¶</a></dt>
 <dd><p>attempt to take ownership of a pipe_buffer</p>
 </dd></dl>
 
@@ -641,8 +654,8 @@ int <code class="descname">pipe_buf_steal</code><span class="sig-paren">(</span>
 <dd>the buffer to attempt to steal</dd>
 </dl>
 <dl class="function">
-<dt id="c.generic_pipe_buf_steal">
-int <code class="descname">generic_pipe_buf_steal</code><span class="sig-paren">(</span>struct <a class="reference internal" href="#c.pipe_inode_info" title="pipe_inode_info">pipe_inode_info</a> *<em>&nbsp;pipe</em>, struct <a class="reference internal" href="#c.pipe_buffer" title="pipe_buffer">pipe_buffer</a> *<em>&nbsp;buf</em><span class="sig-paren">)</span><a class="headerlink" href="#c.generic_pipe_buf_steal" title="Permalink to this definition">¶</a></dt>
+<dt id="c.generic_pipe_buf_try_steal">
+bool <code class="descname">generic_pipe_buf_try_steal</code><span class="sig-paren">(</span>struct <a class="reference internal" href="#c.pipe_inode_info" title="pipe_inode_info">pipe_inode_info</a> *<em>&nbsp;pipe</em>, struct <a class="reference internal" href="#c.pipe_buffer" title="pipe_buffer">pipe_buffer</a> *<em>&nbsp;buf</em><span class="sig-paren">)</span><a class="headerlink" href="#c.generic_pipe_buf_try_steal" title="Permalink to this definition">¶</a></dt>
 <dd><p>attempt to take ownership of a <a class="reference internal" href="#c.pipe_buffer" title="pipe_buffer"><code class="xref c c-type docutils literal notranslate"><span class="pre">pipe_buffer</span></code></a></p>
 </dd></dl>
 
@@ -679,23 +692,6 @@ bool <code class="descname">generic_pipe_buf_get</code><span class="sig-paren">(
 in the tee() system call, when we duplicate the buffers in one
 pipe into another.</div></blockquote>
 <dl class="function">
-<dt id="c.generic_pipe_buf_confirm">
-int <code class="descname">generic_pipe_buf_confirm</code><span class="sig-paren">(</span>struct <a class="reference internal" href="#c.pipe_inode_info" title="pipe_inode_info">pipe_inode_info</a> *<em>&nbsp;info</em>, struct <a class="reference internal" href="#c.pipe_buffer" title="pipe_buffer">pipe_buffer</a> *<em>&nbsp;buf</em><span class="sig-paren">)</span><a class="headerlink" href="#c.generic_pipe_buf_confirm" title="Permalink to this definition">¶</a></dt>
-<dd><p>verify contents of the pipe buffer</p>
-</dd></dl>
-
-<p><strong>Parameters</strong></p>
-<dl class="docutils">
-<dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">pipe_inode_info</span> <span class="pre">*</span> <span class="pre">info</span></code></dt>
-<dd>the pipe that the buffer belongs to</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">pipe_buffer</span> <span class="pre">*</span> <span class="pre">buf</span></code></dt>
-<dd>the buffer to confirm</dd>
-</dl>
-<p><strong>Description</strong></p>
-<blockquote>
-<div>This function does nothing, because the generic pipe code uses
-pages that are always good when inserted into the pipe.</div></blockquote>
-<dl class="function">
 <dt id="c.generic_pipe_buf_release">
 void <code class="descname">generic_pipe_buf_release</code><span class="sig-paren">(</span>struct <a class="reference internal" href="#c.pipe_inode_info" title="pipe_inode_info">pipe_inode_info</a> *<em>&nbsp;pipe</em>, struct <a class="reference internal" href="#c.pipe_buffer" title="pipe_buffer">pipe_buffer</a> *<em>&nbsp;buf</em><span class="sig-paren">)</span><a class="headerlink" href="#c.generic_pipe_buf_release" title="Permalink to this definition">¶</a></dt>
 <dd><p>put a reference to a <a class="reference internal" href="#c.pipe_buffer" title="pipe_buffer"><code class="xref c c-type docutils literal notranslate"><span class="pre">struct</span> <span class="pre">pipe_buffer</span></code></a></p>
@@ -711,22 +707,6 @@ void <code class="descname">generic_pipe_buf_release</code><span class="sig-pare
 <p><strong>Description</strong></p>
 <blockquote>
 <div>This function releases a reference to <strong>buf</strong>.</div></blockquote>
-<dl class="function">
-<dt id="c.pipe_buf_mark_unmergeable">
-void <code class="descname">pipe_buf_mark_unmergeable</code><span class="sig-paren">(</span>struct <a class="reference internal" href="#c.pipe_buffer" title="pipe_buffer">pipe_buffer</a> *<em>&nbsp;buf</em><span class="sig-paren">)</span><a class="headerlink" href="#c.pipe_buf_mark_unmergeable" title="Permalink to this definition">¶</a></dt>
-<dd><p>mark a <a class="reference internal" href="#c.pipe_buffer" title="pipe_buffer"><code class="xref c c-type docutils literal notranslate"><span class="pre">struct</span> <span class="pre">pipe_buffer</span></code></a> as unmergeable</p>
-</dd></dl>
-
-<p><strong>Parameters</strong></p>
-<dl class="docutils">
-<dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">pipe_buffer</span> <span class="pre">*</span> <span class="pre">buf</span></code></dt>
-<dd>the buffer to mark</dd>
-</dl>
-<p><strong>Description</strong></p>
-<blockquote>
-<div>This function ensures that no future writes will be merged into the
-given <a class="reference internal" href="#c.pipe_buffer" title="pipe_buffer"><code class="xref c c-type docutils literal notranslate"><span class="pre">struct</span> <span class="pre">pipe_buffer</span></code></a>. This is necessary when multiple pipe buffers
-share the same backing page.</div></blockquote>
 </div>
 </div>
 

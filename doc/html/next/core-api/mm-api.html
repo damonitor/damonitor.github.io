@@ -68,7 +68,7 @@
             
             
               <div class="version">
-                5.7.0
+                5.8.0
               </div>
             
           
@@ -347,7 +347,7 @@ int <code class="descname">get_user_pages_fast</code><span class="sig-paren">(</
 Should be at least nr_pages long.</dd>
 </dl>
 <p><strong>Description</strong></p>
-<p>Attempt to pin user pages in memory without taking mm-&gt;mmap_sem.
+<p>Attempt to pin user pages in memory without taking mm-&gt;mmap_lock.
 If not successful, it will fall back to taking the lock and
 calling get_user_pages().</p>
 <p>Returns number of pages pinned. This may be fewer than the number requested.
@@ -389,7 +389,12 @@ used in conjunction with <code class="docutils literal notranslate"><span class=
 <p><code class="docutils literal notranslate"><span class="pre">__GFP_MEMALLOC</span></code> allows access to all memory. This should only be used when
 the caller guarantees the allocation will allow more memory to be freed
 very shortly e.g. process exiting or swapping. Users either should
-be the MM or co-ordinating closely with the VM (e.g. swap over NFS).</p>
+be the MM or co-ordinating closely with the VM (e.g. swap over NFS).
+Users of this flag have to be extremely careful to not deplete the reserve
+completely and implement a throttling mechanism which controls the
+consumption of the reserve based on the amount of freed memory.
+Usage of a pre-allocated pool (e.g. mempool) should be always considered
+before using this flag.</p>
 <p><code class="docutils literal notranslate"><span class="pre">__GFP_NOMEMALLOC</span></code> is used to explicitly forbid access to emergency reserves.
 This takes precedence over the <code class="docutils literal notranslate"><span class="pre">__GFP_MEMALLOC</span></code> flag if both are set.</p>
 </div>
@@ -941,7 +946,7 @@ void <code class="descname">vm_unmap_ram</code><span class="sig-paren">(</span>c
 </dl>
 <dl class="function">
 <dt id="c.vm_map_ram">
-void * <code class="descname">vm_map_ram</code><span class="sig-paren">(</span>struct page **<em>&nbsp;pages</em>, unsigned int<em>&nbsp;count</em>, int<em>&nbsp;node</em>, pgprot_t<em>&nbsp;prot</em><span class="sig-paren">)</span><a class="headerlink" href="#c.vm_map_ram" title="Permalink to this definition">¶</a></dt>
+void * <code class="descname">vm_map_ram</code><span class="sig-paren">(</span>struct page **<em>&nbsp;pages</em>, unsigned int<em>&nbsp;count</em>, int<em>&nbsp;node</em><span class="sig-paren">)</span><a class="headerlink" href="#c.vm_map_ram" title="Permalink to this definition">¶</a></dt>
 <dd><p>map pages linearly into kernel virtual address (vmalloc space)</p>
 </dd></dl>
 
@@ -953,8 +958,6 @@ void * <code class="descname">vm_map_ram</code><span class="sig-paren">(</span>s
 <dd>number of pages</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">int</span> <span class="pre">node</span></code></dt>
 <dd>prefer to allocate data structures on this node</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">pgprot_t</span> <span class="pre">prot</span></code></dt>
-<dd>memory protection to use. PAGE_KERNEL for regular RAM</dd>
 </dl>
 <p><strong>Description</strong></p>
 <p>If you use this function for less than VMAP_MAX_ALLOC pages, it could be
@@ -964,43 +967,6 @@ fragmentation (especially on a 32bit machine).  You could see failures in
 the end.  Please use this function for short-lived objects.</p>
 <p><strong>Return</strong></p>
 <p>a pointer to the address that has been mapped, or <code class="docutils literal notranslate"><span class="pre">NULL</span></code> on failure</p>
-<dl class="function">
-<dt id="c.unmap_kernel_range_noflush">
-void <code class="descname">unmap_kernel_range_noflush</code><span class="sig-paren">(</span>unsigned long<em>&nbsp;addr</em>, unsigned long<em>&nbsp;size</em><span class="sig-paren">)</span><a class="headerlink" href="#c.unmap_kernel_range_noflush" title="Permalink to this definition">¶</a></dt>
-<dd><p>unmap kernel VM area</p>
-</dd></dl>
-
-<p><strong>Parameters</strong></p>
-<dl class="docutils">
-<dt><code class="docutils literal notranslate"><span class="pre">unsigned</span> <span class="pre">long</span> <span class="pre">addr</span></code></dt>
-<dd>start of the VM area to unmap</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">unsigned</span> <span class="pre">long</span> <span class="pre">size</span></code></dt>
-<dd>size of the VM area to unmap</dd>
-</dl>
-<p><strong>Description</strong></p>
-<p>Unmap PFN_UP(<strong>size</strong>) pages at <strong>addr</strong>.  The VM area <strong>addr</strong> and <strong>size</strong>
-specify should have been allocated using get_vm_area() and its
-friends.</p>
-<p><strong>NOTE</strong></p>
-<p>This function does NOT do any cache flushing.  The caller is
-responsible for calling flush_cache_vunmap() on to-be-mapped areas
-before calling this function and flush_tlb_kernel_range() after.</p>
-<dl class="function">
-<dt id="c.unmap_kernel_range">
-void <code class="descname">unmap_kernel_range</code><span class="sig-paren">(</span>unsigned long<em>&nbsp;addr</em>, unsigned long<em>&nbsp;size</em><span class="sig-paren">)</span><a class="headerlink" href="#c.unmap_kernel_range" title="Permalink to this definition">¶</a></dt>
-<dd><p>unmap kernel VM area and flush cache and TLB</p>
-</dd></dl>
-
-<p><strong>Parameters</strong></p>
-<dl class="docutils">
-<dt><code class="docutils literal notranslate"><span class="pre">unsigned</span> <span class="pre">long</span> <span class="pre">addr</span></code></dt>
-<dd>start of the VM area to unmap</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">unsigned</span> <span class="pre">long</span> <span class="pre">size</span></code></dt>
-<dd>size of the VM area to unmap</dd>
-</dl>
-<p><strong>Description</strong></p>
-<p>Similar to <a class="reference internal" href="#c.unmap_kernel_range_noflush" title="unmap_kernel_range_noflush"><code class="xref c c-func docutils literal notranslate"><span class="pre">unmap_kernel_range_noflush()</span></code></a> but flushes vcache before
-the unmapping and tlb after.</p>
 <dl class="function">
 <dt id="c.vfree">
 void <code class="descname">vfree</code><span class="sig-paren">(</span>const void *<em>&nbsp;addr</em><span class="sig-paren">)</span><a class="headerlink" href="#c.vfree" title="Permalink to this definition">¶</a></dt>
@@ -1060,8 +1026,8 @@ space.</p>
 <p><strong>Return</strong></p>
 <p>the address of the area or <code class="docutils literal notranslate"><span class="pre">NULL</span></code> on failure</p>
 <dl class="function">
-<dt id="c.__vmalloc_node_range">
-void * <code class="descname">__vmalloc_node_range</code><span class="sig-paren">(</span>unsigned long<em>&nbsp;size</em>, unsigned long<em>&nbsp;align</em>, unsigned long<em>&nbsp;start</em>, unsigned long<em>&nbsp;end</em>, gfp_t<em>&nbsp;gfp_mask</em>, pgprot_t<em>&nbsp;prot</em>, unsigned long<em>&nbsp;vm_flags</em>, int<em>&nbsp;node</em>, const void *<em>&nbsp;caller</em><span class="sig-paren">)</span><a class="headerlink" href="#c.__vmalloc_node_range" title="Permalink to this definition">¶</a></dt>
+<dt id="c.__vmalloc_node">
+void * <code class="descname">__vmalloc_node</code><span class="sig-paren">(</span>unsigned long<em>&nbsp;size</em>, unsigned long<em>&nbsp;align</em>, gfp_t<em>&nbsp;gfp_mask</em>, int<em>&nbsp;node</em>, const void *<em>&nbsp;caller</em><span class="sig-paren">)</span><a class="headerlink" href="#c.__vmalloc_node" title="Permalink to this definition">¶</a></dt>
 <dd><p>allocate virtually contiguous memory</p>
 </dd></dl>
 
@@ -1071,27 +1037,22 @@ void * <code class="descname">__vmalloc_node_range</code><span class="sig-paren"
 <dd>allocation size</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">unsigned</span> <span class="pre">long</span> <span class="pre">align</span></code></dt>
 <dd>desired alignment</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">unsigned</span> <span class="pre">long</span> <span class="pre">start</span></code></dt>
-<dd>vm area range start</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">unsigned</span> <span class="pre">long</span> <span class="pre">end</span></code></dt>
-<dd>vm area range end</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">gfp_t</span> <span class="pre">gfp_mask</span></code></dt>
 <dd>flags for the page level allocator</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">pgprot_t</span> <span class="pre">prot</span></code></dt>
-<dd>protection mask for the allocated pages</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">unsigned</span> <span class="pre">long</span> <span class="pre">vm_flags</span></code></dt>
-<dd>additional vm area flags (e.g. <code class="docutils literal notranslate"><span class="pre">VM_NO_GUARD</span></code>)</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">int</span> <span class="pre">node</span></code></dt>
 <dd>node to use for allocation or NUMA_NO_NODE</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">const</span> <span class="pre">void</span> <span class="pre">*</span> <span class="pre">caller</span></code></dt>
 <dd>caller’s return address</dd>
 </dl>
 <p><strong>Description</strong></p>
-<p>Allocate enough pages to cover <strong>size</strong> from the page level
-allocator with <strong>gfp_mask</strong> flags.  Map them into contiguous
-kernel virtual space, using a pagetable protection of <strong>prot</strong>.</p>
+<p>Allocate enough pages to cover <strong>size</strong> from the page level allocator with
+<strong>gfp_mask</strong> flags.  Map them into contiguous kernel virtual space.</p>
+<p>Reclaim modifiers in <strong>gfp_mask</strong> - __GFP_NORETRY, __GFP_RETRY_MAYFAIL
+and __GFP_NOFAIL are not supported</p>
+<p>Any use of gfp flags outside of GFP_KERNEL should be consulted
+with mm people.</p>
 <p><strong>Return</strong></p>
-<p>the address of the area or <code class="docutils literal notranslate"><span class="pre">NULL</span></code> on failure</p>
+<p>pointer to the allocated memory or <code class="docutils literal notranslate"><span class="pre">NULL</span></code> on error</p>
 <dl class="function">
 <dt id="c.vmalloc">
 void * <code class="descname">vmalloc</code><span class="sig-paren">(</span>unsigned long<em>&nbsp;size</em><span class="sig-paren">)</span><a class="headerlink" href="#c.vmalloc" title="Permalink to this definition">¶</a></dt>
@@ -1182,28 +1143,6 @@ void * <code class="descname">vzalloc_node</code><span class="sig-paren">(</span
 <p>Allocate enough pages to cover <strong>size</strong> from the page level
 allocator and map them into contiguous kernel virtual space.
 The memory allocated is set to zero.</p>
-<p>For tight control over page level allocator and protection flags
-use __vmalloc_node() instead.</p>
-<p><strong>Return</strong></p>
-<p>pointer to the allocated memory or <code class="docutils literal notranslate"><span class="pre">NULL</span></code> on error</p>
-<dl class="function">
-<dt id="c.vmalloc_user_node_flags">
-void * <code class="descname">vmalloc_user_node_flags</code><span class="sig-paren">(</span>unsigned long<em>&nbsp;size</em>, int<em>&nbsp;node</em>, gfp_t<em>&nbsp;flags</em><span class="sig-paren">)</span><a class="headerlink" href="#c.vmalloc_user_node_flags" title="Permalink to this definition">¶</a></dt>
-<dd><p>allocate memory for userspace on a specific node</p>
-</dd></dl>
-
-<p><strong>Parameters</strong></p>
-<dl class="docutils">
-<dt><code class="docutils literal notranslate"><span class="pre">unsigned</span> <span class="pre">long</span> <span class="pre">size</span></code></dt>
-<dd>allocation size</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">int</span> <span class="pre">node</span></code></dt>
-<dd>numa node</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">gfp_t</span> <span class="pre">flags</span></code></dt>
-<dd>flags for the page level allocator</dd>
-</dl>
-<p><strong>Description</strong></p>
-<p>The resulting memory area is zeroed so it can be mapped to userspace
-without leaking data.</p>
 <p><strong>Return</strong></p>
 <p>pointer to the allocated memory or <code class="docutils literal notranslate"><span class="pre">NULL</span></code> on error</p>
 <dl class="function">
@@ -1259,6 +1198,7 @@ int <code class="descname">remap_vmalloc_range_partial</code><span class="sig-pa
 </dl>
 <p><strong>Return</strong></p>
 <p>0 for success, -Exxx on failure</p>
+<p><strong>Description</strong></p>
 <p>This function checks that <strong>kaddr</strong> is a valid vmalloc’ed area,
 and that it is big enough to cover the range starting at
 <strong>uaddr</strong> in <strong>vma</strong>. Will return failure if that criteria isn’t
@@ -1281,6 +1221,7 @@ int <code class="descname">remap_vmalloc_range</code><span class="sig-paren">(</
 </dl>
 <p><strong>Return</strong></p>
 <p>0 for success, -Exxx on failure</p>
+<p><strong>Description</strong></p>
 <p>This function checks that addr is a valid vmalloc’ed area, and
 that it is big enough to cover the vma. Will return failure if
 that criteria isn’t met.</p>
@@ -1300,6 +1241,7 @@ struct vm_struct * <code class="descname">alloc_vm_area</code><span class="sig-p
 </dl>
 <p><strong>Return</strong></p>
 <p>NULL on failure, vm_struct on success</p>
+<p><strong>Description</strong></p>
 <p>This function reserves a range of kernel address space, and
 allocates pagetables to map that range.  No actual mappings
 are created.</p>
@@ -1331,8 +1273,35 @@ pages have their -&gt;index populated and are otherwise uninitialised.</dd>
 <p><strong>Return</strong></p>
 <p><code class="docutils literal notranslate"><span class="pre">0</span></code> on success, error return by <strong>filler</strong> otherwise</p>
 <dl class="function">
+<dt id="c.page_cache_readahead_unbounded">
+void <code class="descname">page_cache_readahead_unbounded</code><span class="sig-paren">(</span>struct <a class="reference internal" href="../filesystems/api-summary.html#c.address_space" title="address_space">address_space</a> *<em>&nbsp;mapping</em>, struct file *<em>&nbsp;file</em>, pgoff_t<em>&nbsp;index</em>, unsigned long<em>&nbsp;nr_to_read</em>, unsigned long<em>&nbsp;lookahead_size</em><span class="sig-paren">)</span><a class="headerlink" href="#c.page_cache_readahead_unbounded" title="Permalink to this definition">¶</a></dt>
+<dd><p>Start unchecked readahead.</p>
+</dd></dl>
+
+<p><strong>Parameters</strong></p>
+<dl class="docutils">
+<dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">address_space</span> <span class="pre">*</span> <span class="pre">mapping</span></code></dt>
+<dd>File address space.</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">file</span> <span class="pre">*</span> <span class="pre">file</span></code></dt>
+<dd>This instance of the open file; used for authentication.</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">pgoff_t</span> <span class="pre">index</span></code></dt>
+<dd>First page index to read.</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">unsigned</span> <span class="pre">long</span> <span class="pre">nr_to_read</span></code></dt>
+<dd>The number of pages to read.</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">unsigned</span> <span class="pre">long</span> <span class="pre">lookahead_size</span></code></dt>
+<dd>Where to start the next readahead.</dd>
+</dl>
+<p><strong>Description</strong></p>
+<p>This function is for filesystems to call when they want to start
+readahead beyond a file’s stated i_size.  This is almost certainly
+not the function you want to call.  Use <a class="reference internal" href="#c.page_cache_async_readahead" title="page_cache_async_readahead"><code class="xref c c-func docutils literal notranslate"><span class="pre">page_cache_async_readahead()</span></code></a>
+or <a class="reference internal" href="#c.page_cache_sync_readahead" title="page_cache_sync_readahead"><code class="xref c c-func docutils literal notranslate"><span class="pre">page_cache_sync_readahead()</span></code></a> instead.</p>
+<p><strong>Context</strong></p>
+<p>File is referenced by caller.  Mutexes may be held by caller.
+May sleep, but will not reenter filesystem to reclaim memory.</p>
+<dl class="function">
 <dt id="c.page_cache_sync_readahead">
-void <code class="descname">page_cache_sync_readahead</code><span class="sig-paren">(</span>struct <a class="reference internal" href="../filesystems/api-summary.html#c.address_space" title="address_space">address_space</a> *<em>&nbsp;mapping</em>, struct file_ra_state *<em>&nbsp;ra</em>, struct file *<em>&nbsp;filp</em>, pgoff_t<em>&nbsp;offset</em>, unsigned long<em>&nbsp;req_size</em><span class="sig-paren">)</span><a class="headerlink" href="#c.page_cache_sync_readahead" title="Permalink to this definition">¶</a></dt>
+void <code class="descname">page_cache_sync_readahead</code><span class="sig-paren">(</span>struct <a class="reference internal" href="../filesystems/api-summary.html#c.address_space" title="address_space">address_space</a> *<em>&nbsp;mapping</em>, struct file_ra_state *<em>&nbsp;ra</em>, struct file *<em>&nbsp;filp</em>, pgoff_t<em>&nbsp;index</em>, unsigned long<em>&nbsp;req_count</em><span class="sig-paren">)</span><a class="headerlink" href="#c.page_cache_sync_readahead" title="Permalink to this definition">¶</a></dt>
 <dd><p>generic file readahead</p>
 </dd></dl>
 
@@ -1344,11 +1313,10 @@ void <code class="descname">page_cache_sync_readahead</code><span class="sig-par
 <dd>file_ra_state which holds the readahead state</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">file</span> <span class="pre">*</span> <span class="pre">filp</span></code></dt>
 <dd>passed on to -&gt;readpage() and -&gt;readpages()</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">pgoff_t</span> <span class="pre">offset</span></code></dt>
-<dd>start offset into <strong>mapping</strong>, in pagecache page-sized units</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">unsigned</span> <span class="pre">long</span> <span class="pre">req_size</span></code></dt>
-<dd>hint: total size of the read which the caller is performing in
-pagecache pages</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">pgoff_t</span> <span class="pre">index</span></code></dt>
+<dd>Index of first page to be read.</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">unsigned</span> <span class="pre">long</span> <span class="pre">req_count</span></code></dt>
+<dd>Total number of pages being read by the caller.</dd>
 </dl>
 <p><strong>Description</strong></p>
 <p><a class="reference internal" href="#c.page_cache_sync_readahead" title="page_cache_sync_readahead"><code class="xref c c-func docutils literal notranslate"><span class="pre">page_cache_sync_readahead()</span></code></a> should be called when a cache miss happened:
@@ -1357,7 +1325,7 @@ pages onto the read request if access patterns suggest it will improve
 performance.</p>
 <dl class="function">
 <dt id="c.page_cache_async_readahead">
-void <code class="descname">page_cache_async_readahead</code><span class="sig-paren">(</span>struct <a class="reference internal" href="../filesystems/api-summary.html#c.address_space" title="address_space">address_space</a> *<em>&nbsp;mapping</em>, struct file_ra_state *<em>&nbsp;ra</em>, struct file *<em>&nbsp;filp</em>, struct page *<em>&nbsp;page</em>, pgoff_t<em>&nbsp;offset</em>, unsigned long<em>&nbsp;req_size</em><span class="sig-paren">)</span><a class="headerlink" href="#c.page_cache_async_readahead" title="Permalink to this definition">¶</a></dt>
+void <code class="descname">page_cache_async_readahead</code><span class="sig-paren">(</span>struct <a class="reference internal" href="../filesystems/api-summary.html#c.address_space" title="address_space">address_space</a> *<em>&nbsp;mapping</em>, struct file_ra_state *<em>&nbsp;ra</em>, struct file *<em>&nbsp;filp</em>, struct page *<em>&nbsp;page</em>, pgoff_t<em>&nbsp;index</em>, unsigned long<em>&nbsp;req_count</em><span class="sig-paren">)</span><a class="headerlink" href="#c.page_cache_async_readahead" title="Permalink to this definition">¶</a></dt>
 <dd><p>file readahead for marked pages</p>
 </dd></dl>
 
@@ -1370,16 +1338,15 @@ void <code class="descname">page_cache_async_readahead</code><span class="sig-pa
 <dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">file</span> <span class="pre">*</span> <span class="pre">filp</span></code></dt>
 <dd>passed on to -&gt;readpage() and -&gt;readpages()</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">page</span> <span class="pre">*</span> <span class="pre">page</span></code></dt>
-<dd>the page at <strong>offset</strong> which has the PG_readahead flag set</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">pgoff_t</span> <span class="pre">offset</span></code></dt>
-<dd>start offset into <strong>mapping</strong>, in pagecache page-sized units</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">unsigned</span> <span class="pre">long</span> <span class="pre">req_size</span></code></dt>
-<dd>hint: total size of the read which the caller is performing in
-pagecache pages</dd>
+<dd>The page at <strong>index</strong> which triggered the readahead call.</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">pgoff_t</span> <span class="pre">index</span></code></dt>
+<dd>Index of first page to be read.</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">unsigned</span> <span class="pre">long</span> <span class="pre">req_count</span></code></dt>
+<dd>Total number of pages being read by the caller.</dd>
 </dl>
 <p><strong>Description</strong></p>
 <p><a class="reference internal" href="#c.page_cache_async_readahead" title="page_cache_async_readahead"><code class="xref c c-func docutils literal notranslate"><span class="pre">page_cache_async_readahead()</span></code></a> should be called when a page is used which
-has the PG_readahead flag; this is a marker to suggest that the application
+is marked as PageReadahead; this is a marker to suggest that the application
 has used up enough of the readahead window that we should start pulling in
 more pages.</p>
 <dl class="function">
@@ -1859,6 +1826,31 @@ unsigned <code class="descname">find_get_pages_range_tag</code><span class="sig-
 <p><strong>Return</strong></p>
 <p>the number of pages which were found.</p>
 <dl class="function">
+<dt id="c.generic_file_buffered_read">
+ssize_t <code class="descname">generic_file_buffered_read</code><span class="sig-paren">(</span>struct kiocb *<em>&nbsp;iocb</em>, struct iov_iter *<em>&nbsp;iter</em>, ssize_t<em>&nbsp;written</em><span class="sig-paren">)</span><a class="headerlink" href="#c.generic_file_buffered_read" title="Permalink to this definition">¶</a></dt>
+<dd><p>generic file read routine</p>
+</dd></dl>
+
+<p><strong>Parameters</strong></p>
+<dl class="docutils">
+<dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">kiocb</span> <span class="pre">*</span> <span class="pre">iocb</span></code></dt>
+<dd>the iocb to read</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">iov_iter</span> <span class="pre">*</span> <span class="pre">iter</span></code></dt>
+<dd>data destination</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">ssize_t</span> <span class="pre">written</span></code></dt>
+<dd>already copied</dd>
+</dl>
+<p><strong>Description</strong></p>
+<p>This is a generic file read routine, and uses the
+mapping-&gt;a_ops-&gt;readpage() function for the actual low-level stuff.</p>
+<p>This is really ugly. But the goto’s actually try to clarify some
+of the logic when it comes to error handling etc.</p>
+<p><strong>Return</strong></p>
+<ul class="simple">
+<li>total number of bytes copied, including those the were already <strong>written</strong></li>
+<li>negative error code if nothing was copied</li>
+</ul>
+<dl class="function">
 <dt id="c.generic_file_read_iter">
 ssize_t <code class="descname">generic_file_read_iter</code><span class="sig-paren">(</span>struct kiocb *<em>&nbsp;iocb</em>, struct iov_iter *<em>&nbsp;iter</em><span class="sig-paren">)</span><a class="headerlink" href="#c.generic_file_read_iter" title="Permalink to this definition">¶</a></dt>
 <dd><p>generic filesystem read routine</p>
@@ -1874,10 +1866,17 @@ ssize_t <code class="descname">generic_file_read_iter</code><span class="sig-par
 <p><strong>Description</strong></p>
 <p>This is the “read_iter()” routine for all filesystems
 that can use the page cache directly.</p>
+<p>The IOCB_NOWAIT flag in iocb-&gt;ki_flags indicates that -EAGAIN shall
+be returned when no data can be read without waiting for I/O requests
+to complete; it doesn’t prevent readahead.</p>
+<p>The IOCB_NOIO flag in iocb-&gt;ki_flags indicates that no new I/O
+requests shall be made for the read or for readahead.  When no data
+can be read, -EAGAIN shall be returned.  When readahead would be
+triggered, a partial, possibly empty read shall be returned.</p>
 <p><strong>Return</strong></p>
 <ul class="simple">
 <li>number of bytes copied, even for partial reads</li>
-<li>negative error code if nothing was read</li>
+<li>negative error code (or 0 if IOCB_NOIO) if nothing was read</li>
 </ul>
 <dl class="function">
 <dt id="c.filemap_fault">
@@ -1896,10 +1895,10 @@ mapped memory region to read in file data during a page fault.</p>
 <p>The goto’s are kind of ugly, but this streamlines the normal case of having
 it in the page cache, and handles the special cases reasonably without
 having a lot of duplicated code.</p>
-<p>vma-&gt;vm_mm-&gt;mmap_sem must be held on entry.</p>
-<p>If our return value has VM_FAULT_RETRY set, it’s because the mmap_sem
+<p>vma-&gt;vm_mm-&gt;mmap_lock must be held on entry.</p>
+<p>If our return value has VM_FAULT_RETRY set, it’s because the mmap_lock
 may be dropped before doing I/O or by lock_page_maybe_drop_mmap().</p>
-<p>If our return value does not have VM_FAULT_RETRY set, the mmap_sem
+<p>If our return value does not have VM_FAULT_RETRY set, the mmap_lock
 has not been released.</p>
 <p>We never return with VM_FAULT_RETRY and a bit from VM_FAULT_ERROR set.</p>
 <p><strong>Return</strong></p>
@@ -2389,6 +2388,38 @@ internal callers also need to know when writeback errors have occurred.</p>
 mapping_set_error to record the error in the mapping so that it can be
 reported when the application calls fsync(2).</p>
 <dl class="function">
+<dt id="c.attach_page_private">
+void <code class="descname">attach_page_private</code><span class="sig-paren">(</span>struct page *<em>&nbsp;page</em>, void *<em>&nbsp;data</em><span class="sig-paren">)</span><a class="headerlink" href="#c.attach_page_private" title="Permalink to this definition">¶</a></dt>
+<dd><p>Attach private data to a page.</p>
+</dd></dl>
+
+<p><strong>Parameters</strong></p>
+<dl class="docutils">
+<dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">page</span> <span class="pre">*</span> <span class="pre">page</span></code></dt>
+<dd>Page to attach data to.</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">void</span> <span class="pre">*</span> <span class="pre">data</span></code></dt>
+<dd>Data to attach to page.</dd>
+</dl>
+<p><strong>Description</strong></p>
+<p>Attaching private data to a page increments the page’s reference count.
+The data must be detached before the page will be freed.</p>
+<dl class="function">
+<dt id="c.detach_page_private">
+void * <code class="descname">detach_page_private</code><span class="sig-paren">(</span>struct page *<em>&nbsp;page</em><span class="sig-paren">)</span><a class="headerlink" href="#c.detach_page_private" title="Permalink to this definition">¶</a></dt>
+<dd><p>Detach private data from a page.</p>
+</dd></dl>
+
+<p><strong>Parameters</strong></p>
+<dl class="docutils">
+<dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">page</span> <span class="pre">*</span> <span class="pre">page</span></code></dt>
+<dd>Page to detach data from.</dd>
+</dl>
+<p><strong>Description</strong></p>
+<p>Removes the data that was previously attached to the page and decrements
+the refcount on the page.</p>
+<p><strong>Return</strong></p>
+<p>Data that was attached to the page.</p>
+<dl class="function">
 <dt id="c.find_get_page">
 struct page * <code class="descname">find_get_page</code><span class="sig-paren">(</span>struct <a class="reference internal" href="../filesystems/api-summary.html#c.address_space" title="address_space">address_space</a> *<em>&nbsp;mapping</em>, pgoff_t<em>&nbsp;offset</em><span class="sig-paren">)</span><a class="headerlink" href="#c.find_get_page" title="Permalink to this definition">¶</a></dt>
 <dd><p>find and get a page reference</p>
@@ -2469,6 +2500,115 @@ be regenerated if the page couldn’t be grabbed.  This routine should
 be safe to call while holding the lock for another page.</p>
 <p>Clear __GFP_FS when allocating the page to avoid recursion into the fs
 and deadlock against the caller’s locked page.</p>
+<dl class="type">
+<dt id="c.readahead_control">
+struct <code class="descname">readahead_control</code><a class="headerlink" href="#c.readahead_control" title="Permalink to this definition">¶</a></dt>
+<dd><p>Describes a readahead request.</p>
+</dd></dl>
+
+<p><strong>Definition</strong></p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>struct readahead_control {
+  struct file *file;
+  struct address_space *mapping;
+};
+</pre></div>
+</div>
+<p><strong>Members</strong></p>
+<dl class="docutils">
+<dt><code class="docutils literal notranslate"><span class="pre">file</span></code></dt>
+<dd>The file, used primarily by network filesystems for authentication.
+May be NULL if invoked internally by the filesystem.</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">mapping</span></code></dt>
+<dd>Readahead this filesystem object.</dd>
+</dl>
+<p><strong>Description</strong></p>
+<p>A readahead request is for consecutive pages.  Filesystems which
+implement the -&gt;readahead method should call <a class="reference internal" href="#c.readahead_page" title="readahead_page"><code class="xref c c-func docutils literal notranslate"><span class="pre">readahead_page()</span></code></a> or
+<a class="reference internal" href="#c.readahead_page_batch" title="readahead_page_batch"><code class="xref c c-func docutils literal notranslate"><span class="pre">readahead_page_batch()</span></code></a> in a loop and attempt to start I/O against
+each page in the request.</p>
+<p>Most of the fields in this struct are private and should be accessed
+by the functions below.</p>
+<dl class="function">
+<dt id="c.readahead_page">
+struct page * <code class="descname">readahead_page</code><span class="sig-paren">(</span>struct <a class="reference internal" href="#c.readahead_control" title="readahead_control">readahead_control</a> *<em>&nbsp;rac</em><span class="sig-paren">)</span><a class="headerlink" href="#c.readahead_page" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the next page to read.</p>
+</dd></dl>
+
+<p><strong>Parameters</strong></p>
+<dl class="docutils">
+<dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">readahead_control</span> <span class="pre">*</span> <span class="pre">rac</span></code></dt>
+<dd>The current readahead request.</dd>
+</dl>
+<p><strong>Context</strong></p>
+<p>The page is locked and has an elevated refcount.  The caller
+should decreases the refcount once the page has been submitted for I/O
+and unlock the page once all I/O to that page has completed.</p>
+<p><strong>Return</strong></p>
+<p>A pointer to the next page, or <code class="docutils literal notranslate"><span class="pre">NULL</span></code> if we are done.</p>
+<dl class="function">
+<dt id="c.readahead_page_batch">
+<code class="descname">readahead_page_batch</code><span class="sig-paren">(</span><em>rac</em>, <em>array</em><span class="sig-paren">)</span><a class="headerlink" href="#c.readahead_page_batch" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get a batch of pages to read.</p>
+</dd></dl>
+
+<p><strong>Parameters</strong></p>
+<dl class="docutils">
+<dt><code class="docutils literal notranslate"><span class="pre">rac</span></code></dt>
+<dd>The current readahead request.</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">array</span></code></dt>
+<dd>An array of pointers to struct page.</dd>
+</dl>
+<p><strong>Context</strong></p>
+<p>The pages are locked and have an elevated refcount.  The caller
+should decreases the refcount once the page has been submitted for I/O
+and unlock the page once all I/O to that page has completed.</p>
+<p><strong>Return</strong></p>
+<p>The number of pages placed in the array.  0 indicates the request
+is complete.</p>
+<dl class="function">
+<dt id="c.readahead_pos">
+loff_t <code class="descname">readahead_pos</code><span class="sig-paren">(</span>struct <a class="reference internal" href="#c.readahead_control" title="readahead_control">readahead_control</a> *<em>&nbsp;rac</em><span class="sig-paren">)</span><a class="headerlink" href="#c.readahead_pos" title="Permalink to this definition">¶</a></dt>
+<dd><p>The byte offset into the file of this readahead request.</p>
+</dd></dl>
+
+<p><strong>Parameters</strong></p>
+<dl class="docutils">
+<dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">readahead_control</span> <span class="pre">*</span> <span class="pre">rac</span></code></dt>
+<dd>The readahead request.</dd>
+</dl>
+<dl class="function">
+<dt id="c.readahead_length">
+loff_t <code class="descname">readahead_length</code><span class="sig-paren">(</span>struct <a class="reference internal" href="#c.readahead_control" title="readahead_control">readahead_control</a> *<em>&nbsp;rac</em><span class="sig-paren">)</span><a class="headerlink" href="#c.readahead_length" title="Permalink to this definition">¶</a></dt>
+<dd><p>The number of bytes in this readahead request.</p>
+</dd></dl>
+
+<p><strong>Parameters</strong></p>
+<dl class="docutils">
+<dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">readahead_control</span> <span class="pre">*</span> <span class="pre">rac</span></code></dt>
+<dd>The readahead request.</dd>
+</dl>
+<dl class="function">
+<dt id="c.readahead_index">
+pgoff_t <code class="descname">readahead_index</code><span class="sig-paren">(</span>struct <a class="reference internal" href="#c.readahead_control" title="readahead_control">readahead_control</a> *<em>&nbsp;rac</em><span class="sig-paren">)</span><a class="headerlink" href="#c.readahead_index" title="Permalink to this definition">¶</a></dt>
+<dd><p>The index of the first page in this readahead request.</p>
+</dd></dl>
+
+<p><strong>Parameters</strong></p>
+<dl class="docutils">
+<dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">readahead_control</span> <span class="pre">*</span> <span class="pre">rac</span></code></dt>
+<dd>The readahead request.</dd>
+</dl>
+<dl class="function">
+<dt id="c.readahead_count">
+unsigned int <code class="descname">readahead_count</code><span class="sig-paren">(</span>struct <a class="reference internal" href="#c.readahead_control" title="readahead_control">readahead_control</a> *<em>&nbsp;rac</em><span class="sig-paren">)</span><a class="headerlink" href="#c.readahead_count" title="Permalink to this definition">¶</a></dt>
+<dd><p>The number of pages in this readahead request.</p>
+</dd></dl>
+
+<p><strong>Parameters</strong></p>
+<dl class="docutils">
+<dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">readahead_control</span> <span class="pre">*</span> <span class="pre">rac</span></code></dt>
+<dd>The readahead request.</dd>
+</dl>
 <dl class="function">
 <dt id="c.page_mkwrite_check_truncate">
 int <code class="descname">page_mkwrite_check_truncate</code><span class="sig-paren">(</span>struct page *<em>&nbsp;page</em>, struct inode *<em>&nbsp;inode</em><span class="sig-paren">)</span><a class="headerlink" href="#c.page_mkwrite_check_truncate" title="Permalink to this definition">¶</a></dt>
@@ -2836,7 +2976,7 @@ means that if you want a shared writable mapping, you’d better
 ask for a shared writable mapping!</p>
 <p>The page does not need to be reserved.</p>
 <p>Usually this function is called from f_op-&gt;mmap() handler
-under mm-&gt;mmap_sem write-lock, so it can change vma-&gt;vm_flags.
+under mm-&gt;mmap_lock write-lock, so it can change vma-&gt;vm_flags.
 Caller must set VM_MIXEDMAP on vma if it wants to call this
 function from other places, for example from page-fault handler.</p>
 <p><strong>Return</strong></p>
@@ -3261,23 +3401,6 @@ on them otherwise.</p>
 <p><strong>Return</strong></p>
 <p>node id of the found node or <code class="docutils literal notranslate"><span class="pre">NUMA_NO_NODE</span></code> if no node is found.</p>
 <dl class="function">
-<dt id="c.free_bootmem_with_active_regions">
-void <code class="descname">free_bootmem_with_active_regions</code><span class="sig-paren">(</span>int<em>&nbsp;nid</em>, unsigned long<em>&nbsp;max_low_pfn</em><span class="sig-paren">)</span><a class="headerlink" href="#c.free_bootmem_with_active_regions" title="Permalink to this definition">¶</a></dt>
-<dd><p>Call memblock_free_early_nid for each active range</p>
-</dd></dl>
-
-<p><strong>Parameters</strong></p>
-<dl class="docutils">
-<dt><code class="docutils literal notranslate"><span class="pre">int</span> <span class="pre">nid</span></code></dt>
-<dd>The node to free memory on. If MAX_NUMNODES, all nodes are freed.</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">unsigned</span> <span class="pre">long</span> <span class="pre">max_low_pfn</span></code></dt>
-<dd>The highest PFN that will be passed to memblock_free_early_nid</dd>
-</dl>
-<p><strong>Description</strong></p>
-<p>If an architecture guarantees that all ranges registered contain no holes
-and may be freed, this this function may be used instead of calling
-memblock_free_early_nid() manually.</p>
-<dl class="function">
 <dt id="c.sparse_memory_present_with_active_regions">
 void <code class="descname">sparse_memory_present_with_active_regions</code><span class="sig-paren">(</span>int<em>&nbsp;nid</em><span class="sig-paren">)</span><a class="headerlink" href="#c.sparse_memory_present_with_active_regions" title="Permalink to this definition">¶</a></dt>
 <dd><p>Call memory_present for each active range</p>
@@ -3366,8 +3489,8 @@ unsigned long <code class="descname">find_min_pfn_with_active_regions</code><spa
 <p>the minimum PFN based on information provided via
 <a class="reference internal" href="boot-time-mm.html#c.memblock_set_node" title="memblock_set_node"><code class="xref c c-func docutils literal notranslate"><span class="pre">memblock_set_node()</span></code></a>.</p>
 <dl class="function">
-<dt id="c.free_area_init_nodes">
-void <code class="descname">free_area_init_nodes</code><span class="sig-paren">(</span>unsigned long *<em>&nbsp;max_zone_pfn</em><span class="sig-paren">)</span><a class="headerlink" href="#c.free_area_init_nodes" title="Permalink to this definition">¶</a></dt>
+<dt id="c.free_area_init">
+void <code class="descname">free_area_init</code><span class="sig-paren">(</span>unsigned long *<em>&nbsp;max_zone_pfn</em><span class="sig-paren">)</span><a class="headerlink" href="#c.free_area_init" title="Permalink to this definition">¶</a></dt>
 <dd><p>Initialise all pg_data_t and zone data</p>
 </dd></dl>
 

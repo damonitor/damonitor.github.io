@@ -68,7 +68,7 @@
             
             
               <div class="version">
-                5.7.0
+                5.8.0
               </div>
             
           
@@ -364,7 +364,7 @@ struct <code class="descname">dev_links_info</code><a class="headerlink" href="#
   struct list_head suppliers;
   struct list_head consumers;
   struct list_head needs_suppliers;
-  struct list_head defer_sync;
+  struct list_head defer_hook;
   bool need_for_probe;
   enum dl_dev_state status;
 };
@@ -378,8 +378,9 @@ struct <code class="descname">dev_links_info</code><a class="headerlink" href="#
 <dd>List of links to consumer devices.</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">needs_suppliers</span></code></dt>
 <dd>Hook to global list of devices waiting for suppliers.</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">defer_sync</span></code></dt>
-<dd>Hook to global list of devices that have deferred sync_state.</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">defer_hook</span></code></dt>
+<dd>Hook to global list of devices that have deferred sync_state or
+deferred fw_devlink.</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">need_for_probe</span></code></dt>
 <dd>If needs_suppliers is on a list, this indicates if the
 suppliers are needed for probe or not.</dd>
@@ -1036,14 +1037,14 @@ with devices that get unregistered and then spring back to life.
 (Among other things, it’s very hard to guarantee that all references
 to the previous incarnation of <strong>dev</strong> have been dropped.)  Allocate
 and register a fresh new struct device instead.</p>
-<p><strong>NOTE</strong></p>
-<p>_Never_ directly free <strong>dev</strong> after calling this function, even
-if it returned an error! Always use <a class="reference internal" href="#c.put_device" title="put_device"><code class="xref c c-func docutils literal notranslate"><span class="pre">put_device()</span></code></a> to give up your
-reference instead.</p>
 <p>Rule of thumb is: if <a class="reference internal" href="#c.device_add" title="device_add"><code class="xref c c-func docutils literal notranslate"><span class="pre">device_add()</span></code></a> succeeds, you should call
 <a class="reference internal" href="#c.device_del" title="device_del"><code class="xref c c-func docutils literal notranslate"><span class="pre">device_del()</span></code></a> when you want to get rid of it. If <a class="reference internal" href="#c.device_add" title="device_add"><code class="xref c c-func docutils literal notranslate"><span class="pre">device_add()</span></code></a> has
 <em>not</em> succeeded, use <em>only</em> <a class="reference internal" href="#c.put_device" title="put_device"><code class="xref c c-func docutils literal notranslate"><span class="pre">put_device()</span></code></a> to drop the reference
 count.</p>
+<p><strong>NOTE</strong></p>
+<p>_Never_ directly free <strong>dev</strong> after calling this function, even
+if it returned an error! Always use <a class="reference internal" href="#c.put_device" title="put_device"><code class="xref c c-func docutils literal notranslate"><span class="pre">put_device()</span></code></a> to give up your
+reference instead.</p>
 <dl class="function">
 <dt id="c.device_register">
 int <code class="descname">device_register</code><span class="sig-paren">(</span>struct <a class="reference internal" href="#c.device" title="device">device</a> *<em>&nbsp;dev</em><span class="sig-paren">)</span><a class="headerlink" href="#c.device_register" title="Permalink to this definition">¶</a></dt>
@@ -1257,41 +1258,6 @@ void <code class="descname">root_device_unregister</code><span class="sig-paren"
 <p>This function unregisters and cleans up a device that was created by
 root_device_register().</p>
 <dl class="function">
-<dt id="c.device_create_vargs">
-struct <a class="reference internal" href="#c.device" title="device">device</a> * <code class="descname">device_create_vargs</code><span class="sig-paren">(</span>struct class *<em>&nbsp;class</em>, struct <a class="reference internal" href="#c.device" title="device">device</a> *<em>&nbsp;parent</em>, dev_t<em>&nbsp;devt</em>, void *<em>&nbsp;drvdata</em>, const char *<em>&nbsp;fmt</em>, va_list<em>&nbsp;args</em><span class="sig-paren">)</span><a class="headerlink" href="#c.device_create_vargs" title="Permalink to this definition">¶</a></dt>
-<dd><p>creates a device and registers it with sysfs</p>
-</dd></dl>
-
-<p><strong>Parameters</strong></p>
-<dl class="docutils">
-<dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">class</span> <span class="pre">*</span> <span class="pre">class</span></code></dt>
-<dd>pointer to the struct class that this device should be registered to</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">device</span> <span class="pre">*</span> <span class="pre">parent</span></code></dt>
-<dd>pointer to the parent struct device of this new device, if any</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">dev_t</span> <span class="pre">devt</span></code></dt>
-<dd>the dev_t for the char device to be added</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">void</span> <span class="pre">*</span> <span class="pre">drvdata</span></code></dt>
-<dd>the data to be added to the device for callbacks</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">const</span> <span class="pre">char</span> <span class="pre">*</span> <span class="pre">fmt</span></code></dt>
-<dd>string for the device’s name</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">va_list</span> <span class="pre">args</span></code></dt>
-<dd>va_list for the device’s name</dd>
-</dl>
-<p><strong>Description</strong></p>
-<p>This function can be used by char device classes.  A struct device
-will be created in sysfs, registered to the specified class.</p>
-<p>A “dev” file will be created, showing the dev_t for the device, if
-the dev_t is not 0,0.
-If a pointer to a parent struct device is passed in, the newly created
-struct device will be a child of that device in sysfs.
-The pointer to the struct device will be returned from the call.
-Any further sysfs files that might be required can be created using this
-pointer.</p>
-<p>Returns <a class="reference internal" href="#c.device" title="device"><code class="xref c c-type docutils literal notranslate"><span class="pre">struct</span> <span class="pre">device</span></code></a> pointer on success, or ERR_PTR() on error.</p>
-<p><strong>Note</strong></p>
-<p>the struct class passed to this function must have previously
-been created with a call to class_create().</p>
-<dl class="function">
 <dt id="c.device_create">
 struct <a class="reference internal" href="#c.device" title="device">device</a> * <code class="descname">device_create</code><span class="sig-paren">(</span>struct class *<em>&nbsp;class</em>, struct <a class="reference internal" href="#c.device" title="device">device</a> *<em>&nbsp;parent</em>, dev_t<em>&nbsp;devt</em>, void *<em>&nbsp;drvdata</em>, const char *<em>&nbsp;fmt</em>, ...<span class="sig-paren">)</span><a class="headerlink" href="#c.device_create" title="Permalink to this definition">¶</a></dt>
 <dd><p>creates a device and registers it with sysfs</p>
@@ -1399,10 +1365,6 @@ int <code class="descname">device_rename</code><span class="sig-paren">(</span>s
 exclusion between two different calls of device_rename
 on the same device to ensure that new_name is valid and
 won’t conflict with other devices.</p>
-<p><strong>Note</strong></p>
-<p>Don’t call this function.  Currently, the networking layer calls this
-function, but that will change.  The following text from Kay Sievers offers
-some insight:</p>
 <p>Renaming devices is racy at many levels, symlinks and other stuff are not
 replaced atomically, and you get a “move” uevent, but it’s not easy to
 connect the event to the old and new device. Device nodes are not renamed at
@@ -1424,6 +1386,10 @@ some other attributes for userspace to find the device, or use udev to add
 symlinks – but never rename kernel devices later, it’s a complete mess. We
 don’t even want to get into that and try to implement the missing pieces in
 the core. We really have other pieces to fix in the driver core mess. :)</p>
+<p><strong>Note</strong></p>
+<p>Don’t call this function.  Currently, the networking layer calls this
+function, but that will change.  The following text from Kay Sievers offers
+some insight:</p>
 <dl class="function">
 <dt id="c.device_move">
 int <code class="descname">device_move</code><span class="sig-paren">(</span>struct <a class="reference internal" href="#c.device" title="device">device</a> *<em>&nbsp;dev</em>, struct <a class="reference internal" href="#c.device" title="device">device</a> *<em>&nbsp;new_parent</em>, enum dpm_order<em>&nbsp;dpm_order</em><span class="sig-paren">)</span><a class="headerlink" href="#c.device_move" title="Permalink to this definition">¶</a></dt>
@@ -1475,6 +1441,23 @@ void <code class="descname">set_primary_fwnode</code><span class="sig-paren">(</
 <p><strong>Description</strong></p>
 <p>Set the device’s firmware node pointer to <strong>fwnode</strong>, but if a secondary
 firmware node of the device is present, preserve it.</p>
+<dl class="function">
+<dt id="c.set_secondary_fwnode">
+void <code class="descname">set_secondary_fwnode</code><span class="sig-paren">(</span>struct <a class="reference internal" href="#c.device" title="device">device</a> *<em>&nbsp;dev</em>, struct fwnode_handle *<em>&nbsp;fwnode</em><span class="sig-paren">)</span><a class="headerlink" href="#c.set_secondary_fwnode" title="Permalink to this definition">¶</a></dt>
+<dd><p>Change the secondary firmware node of a given device.</p>
+</dd></dl>
+
+<p><strong>Parameters</strong></p>
+<dl class="docutils">
+<dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">device</span> <span class="pre">*</span> <span class="pre">dev</span></code></dt>
+<dd>Device to handle.</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">fwnode_handle</span> <span class="pre">*</span> <span class="pre">fwnode</span></code></dt>
+<dd>New secondary firmware node of the device.</dd>
+</dl>
+<p><strong>Description</strong></p>
+<p>If a primary firmware node of the device is present, set its secondary
+pointer to <strong>fwnode</strong>.  Otherwise, set the device’s firmware node pointer to
+<strong>fwnode</strong>.</p>
 <dl class="function">
 <dt id="c.device_set_of_node_from_dev">
 void <code class="descname">device_set_of_node_from_dev</code><span class="sig-paren">(</span>struct <a class="reference internal" href="#c.device" title="device">device</a> *<em>&nbsp;dev</em>, const struct <a class="reference internal" href="#c.device" title="device">device</a> *<em>&nbsp;dev2</em><span class="sig-paren">)</span><a class="headerlink" href="#c.device_set_of_node_from_dev" title="Permalink to this definition">¶</a></dt>
@@ -1864,20 +1847,18 @@ int <code class="descname">request_firmware</code><span class="sig-paren">(</spa
 <dt><code class="docutils literal notranslate"><span class="pre">const</span> <span class="pre">char</span> <span class="pre">*</span> <span class="pre">name</span></code></dt>
 <dd>name of firmware file</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">device</span> <span class="pre">*</span> <span class="pre">device</span></code></dt>
-<dd>device for which firmware is being loaded</dd>
-</dl>
-<p><strong>Description</strong></p>
-<blockquote>
-<div><p><strong>firmware_p</strong> will be used to return a firmware image by the name
+<dd><p class="first">device for which firmware is being loaded</p>
+<p><strong>firmware_p</strong> will be used to return a firmware image by the name
 of <strong>name</strong> for device <strong>device</strong>.</p>
 <p>Should be called from user context where sleeping is allowed.</p>
 <p><strong>name</strong> will be used as $FIRMWARE in the uevent environment and
 should be distinctive enough not to be confused with any other
 firmware image for this or any other device.</p>
 <p>Caller must hold the reference count of <strong>device</strong>.</p>
-<p>The function can be called safely inside device’s suspend and
+<p class="last">The function can be called safely inside device’s suspend and
 resume callback.</p>
-</div></blockquote>
+</dd>
+</dl>
 <dl class="function">
 <dt id="c.firmware_request_nowarn">
 int <code class="descname">firmware_request_nowarn</code><span class="sig-paren">(</span>const struct firmware **<em>&nbsp;firmware</em>, const char *<em>&nbsp;name</em>, struct <a class="reference internal" href="#c.device" title="device">device</a> *<em>&nbsp;device</em><span class="sig-paren">)</span><a class="headerlink" href="#c.firmware_request_nowarn" title="Permalink to this definition">¶</a></dt>
@@ -1894,7 +1875,7 @@ int <code class="descname">firmware_request_nowarn</code><span class="sig-paren"
 <dd>device for which firmware is being loaded</dd>
 </dl>
 <p><strong>Description</strong></p>
-<p>This function is similar in behaviour to <a class="reference internal" href="firmware/request_firmware.html#c.request_firmware" title="request_firmware"><code class="xref c c-func docutils literal notranslate"><span class="pre">request_firmware()</span></code></a>, except
+<p>This function is similar in behaviour to <a class="reference internal" href="#c.request_firmware" title="request_firmware"><code class="xref c c-func docutils literal notranslate"><span class="pre">request_firmware()</span></code></a>, except
 it doesn’t produce warning messages when the file is not found.
 The sysfs fallback mechanism is enabled if direct filesystem lookup fails,
 however, however failures to find the firmware file with it are still
@@ -1916,7 +1897,7 @@ int <code class="descname">request_firmware_direct</code><span class="sig-paren"
 <dd>device for which firmware is being loaded</dd>
 </dl>
 <p><strong>Description</strong></p>
-<p>This function works pretty much like <a class="reference internal" href="firmware/request_firmware.html#c.request_firmware" title="request_firmware"><code class="xref c c-func docutils literal notranslate"><span class="pre">request_firmware()</span></code></a>, but this doesn’t
+<p>This function works pretty much like <a class="reference internal" href="#c.request_firmware" title="request_firmware"><code class="xref c c-func docutils literal notranslate"><span class="pre">request_firmware()</span></code></a>, but this doesn’t
 fall back to usermode helper even if the firmware couldn’t be loaded
 directly from fs.  Hence it’s useful for loading optional firmwares, which
 aren’t always present, without extra long timeouts of udev.</p>
@@ -1958,7 +1939,7 @@ require loading firmware on system reboot. This optimization may still
 require the firmware present on resume from suspend. This routine can be
 used to ensure the firmware is present on resume from suspend in these
 situations. This helper is not compatible with drivers which use
-<a class="reference internal" href="firmware/request_firmware.html#c.request_firmware_into_buf" title="request_firmware_into_buf"><code class="xref c c-func docutils literal notranslate"><span class="pre">request_firmware_into_buf()</span></code></a> or <a class="reference internal" href="firmware/request_firmware.html#c.request_firmware_nowait" title="request_firmware_nowait"><code class="xref c c-func docutils literal notranslate"><span class="pre">request_firmware_nowait()</span></code></a> with no uevent set.</p>
+<a class="reference internal" href="#c.request_firmware_into_buf" title="request_firmware_into_buf"><code class="xref c c-func docutils literal notranslate"><span class="pre">request_firmware_into_buf()</span></code></a> or <a class="reference internal" href="#c.request_firmware_nowait" title="request_firmware_nowait"><code class="xref c c-func docutils literal notranslate"><span class="pre">request_firmware_nowait()</span></code></a> with no uevent set.</p>
 <dl class="function">
 <dt id="c.request_firmware_into_buf">
 int <code class="descname">request_firmware_into_buf</code><span class="sig-paren">(</span>const struct firmware **<em>&nbsp;firmware_p</em>, const char *<em>&nbsp;name</em>, struct <a class="reference internal" href="#c.device" title="device">device</a> *<em>&nbsp;device</em>, void *<em>&nbsp;buf</em>, size_t<em>&nbsp;size</em><span class="sig-paren">)</span><a class="headerlink" href="#c.request_firmware_into_buf" title="Permalink to this definition">¶</a></dt>
@@ -1979,7 +1960,7 @@ int <code class="descname">request_firmware_into_buf</code><span class="sig-pare
 <dd>size of buffer</dd>
 </dl>
 <p><strong>Description</strong></p>
-<p>This function works pretty much like <a class="reference internal" href="firmware/request_firmware.html#c.request_firmware" title="request_firmware"><code class="xref c c-func docutils literal notranslate"><span class="pre">request_firmware()</span></code></a>, but it doesn’t
+<p>This function works pretty much like <a class="reference internal" href="#c.request_firmware" title="request_firmware"><code class="xref c c-func docutils literal notranslate"><span class="pre">request_firmware()</span></code></a>, but it doesn’t
 allocate a buffer to hold the firmware data. Instead, the firmware
 is loaded directly into the buffer pointed to by <strong>buf</strong> and the <strong>firmware_p</strong>
 data member is pointed at <strong>buf</strong>.</p>
@@ -2018,13 +1999,10 @@ is non-zero else the firmware copy must be done manually.</dd>
 <dd>will be passed over to <strong>cont</strong>, and
 <strong>fw</strong> may be <code class="docutils literal notranslate"><span class="pre">NULL</span></code> if firmware request fails.</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">void</span> <span class="pre">(*)(const</span> <span class="pre">struct</span> <span class="pre">firmware</span> <span class="pre">*fw,</span> <span class="pre">void</span> <span class="pre">*context)</span> <span class="pre">cont</span></code></dt>
-<dd>function will be called asynchronously when the firmware
-request is over.</dd>
-</dl>
-<p><strong>Description</strong></p>
-<blockquote>
-<div><p>Caller must hold the reference count of <strong>device</strong>.</p>
-<dl class="docutils">
+<dd><p class="first">function will be called asynchronously when the firmware
+request is over.</p>
+<p>Caller must hold the reference count of <strong>device</strong>.</p>
+<dl class="last docutils">
 <dt>Asynchronous variant of request_firmware() for user contexts:</dt>
 <dd><ul class="first last simple">
 <li>sleep for as small periods as possible since it may
@@ -2035,7 +2013,8 @@ requesting firmware in their -&gt;probe() methods, if
 </ul>
 </dd>
 </dl>
-</div></blockquote>
+</dd>
+</dl>
 <dl class="function">
 <dt id="c.transport_class_register">
 int <code class="descname">transport_class_register</code><span class="sig-paren">(</span>struct transport_class *<em>&nbsp;tclass</em><span class="sig-paren">)</span><a class="headerlink" href="#c.transport_class_register" title="Permalink to this definition">¶</a></dt>
@@ -2433,15 +2412,14 @@ int <code class="descname">platform_get_irq_optional</code><span class="sig-pare
 value for errors so as to not pass a negative integer value to the
 <a class="reference internal" href="../core-api/genericirq.html#c.request_irq" title="request_irq"><code class="xref c c-func docutils literal notranslate"><span class="pre">request_irq()</span></code></a> APIs. This is the same as <a class="reference internal" href="#c.platform_get_irq" title="platform_get_irq"><code class="xref c c-func docutils literal notranslate"><span class="pre">platform_get_irq()</span></code></a>, except that it
 does not print an error message if an IRQ can not be obtained.</p>
-<p><strong>Example</strong></p>
-<blockquote>
-<div><p>int irq = platform_get_irq_optional(pdev, 0);
-if (irq &lt; 0)</p>
-<blockquote>
-<div>return irq;</div></blockquote>
-</div></blockquote>
+<p>For example:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>int irq = platform_get_irq_optional(pdev, 0);
+if (irq &lt; 0)
+        return irq;
+</pre></div>
+</div>
 <p><strong>Return</strong></p>
-<p>IRQ number on success, negative error number on failure.</p>
+<p>non-zero IRQ number on success, negative error number on failure.</p>
 <dl class="function">
 <dt id="c.platform_get_irq">
 int <code class="descname">platform_get_irq</code><span class="sig-paren">(</span>struct platform_device *<em>&nbsp;dev</em>, unsigned int<em>&nbsp;num</em><span class="sig-paren">)</span><a class="headerlink" href="#c.platform_get_irq" title="Permalink to this definition">¶</a></dt>
@@ -2459,15 +2437,14 @@ int <code class="descname">platform_get_irq</code><span class="sig-paren">(</spa
 <p>Gets an IRQ for a platform device and prints an error message if finding the
 IRQ fails. Device drivers should check the return value for errors so as to
 not pass a negative integer value to the <a class="reference internal" href="../core-api/genericirq.html#c.request_irq" title="request_irq"><code class="xref c c-func docutils literal notranslate"><span class="pre">request_irq()</span></code></a> APIs.</p>
-<p><strong>Example</strong></p>
-<blockquote>
-<div><p>int irq = platform_get_irq(pdev, 0);
-if (irq &lt; 0)</p>
-<blockquote>
-<div>return irq;</div></blockquote>
-</div></blockquote>
+<p>For example:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>int irq = platform_get_irq(pdev, 0);
+if (irq &lt; 0)
+        return irq;
+</pre></div>
+</div>
 <p><strong>Return</strong></p>
-<p>IRQ number on success, negative error number on failure.</p>
+<p>non-zero IRQ number on success, negative error number on failure.</p>
 <dl class="function">
 <dt id="c.platform_irq_count">
 int <code class="descname">platform_irq_count</code><span class="sig-paren">(</span>struct platform_device *<em>&nbsp;dev</em><span class="sig-paren">)</span><a class="headerlink" href="#c.platform_irq_count" title="Permalink to this definition">¶</a></dt>
@@ -2512,7 +2489,7 @@ int <code class="descname">platform_get_irq_byname</code><span class="sig-paren"
 <p><strong>Description</strong></p>
 <p>Get an IRQ like <a class="reference internal" href="#c.platform_get_irq" title="platform_get_irq"><code class="xref c c-func docutils literal notranslate"><span class="pre">platform_get_irq()</span></code></a>, but then by name rather then by index.</p>
 <p><strong>Return</strong></p>
-<p>IRQ number on success, negative error number on failure.</p>
+<p>non-zero IRQ number on success, negative error number on failure.</p>
 <dl class="function">
 <dt id="c.platform_get_irq_byname_optional">
 int <code class="descname">platform_get_irq_byname_optional</code><span class="sig-paren">(</span>struct platform_device *<em>&nbsp;dev</em>, const char *<em>&nbsp;name</em><span class="sig-paren">)</span><a class="headerlink" href="#c.platform_get_irq_byname_optional" title="Permalink to this definition">¶</a></dt>
@@ -2530,7 +2507,7 @@ int <code class="descname">platform_get_irq_byname_optional</code><span class="s
 <p>Get an optional IRQ by name like <a class="reference internal" href="#c.platform_get_irq_byname" title="platform_get_irq_byname"><code class="xref c c-func docutils literal notranslate"><span class="pre">platform_get_irq_byname()</span></code></a>. Except that it
 does not print an error message if an IRQ can not be obtained.</p>
 <p><strong>Return</strong></p>
-<p>IRQ number on success, negative error number on failure.</p>
+<p>non-zero IRQ number on success, negative error number on failure.</p>
 <dl class="function">
 <dt id="c.platform_add_devices">
 int <code class="descname">platform_add_devices</code><span class="sig-paren">(</span>struct platform_device **<em>&nbsp;devs</em>, int<em>&nbsp;num</em><span class="sig-paren">)</span><a class="headerlink" href="#c.platform_add_devices" title="Permalink to this definition">¶</a></dt>
@@ -2810,7 +2787,7 @@ void <code class="descname">platform_unregister_drivers</code><span class="sig-p
 <dd>the number of drivers to unregister</dd>
 </dl>
 <p><strong>Description</strong></p>
-<p>Unegisters platform drivers specified by an array. This is typically used
+<p>Unregisters platform drivers specified by an array. This is typically used
 to complement an earlier call to platform_register_drivers(). Drivers are
 unregistered in the reverse order in which they were registered.</p>
 <dl class="function">
@@ -3181,11 +3158,10 @@ int <code class="descname">pnp_register_protocol</code><span class="sig-paren">(
 <p><strong>Parameters</strong></p>
 <dl class="docutils">
 <dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">pnp_protocol</span> <span class="pre">*</span> <span class="pre">protocol</span></code></dt>
-<dd>pointer to the corresponding pnp_protocol structure</dd>
+<dd><p class="first">pointer to the corresponding pnp_protocol structure</p>
+<p class="last">Ex protocols: ISAPNP, PNPBIOS, etc</p>
+</dd>
 </dl>
-<p><strong>Description</strong></p>
-<blockquote>
-<div>Ex protocols: ISAPNP, PNPBIOS, etc</div></blockquote>
 <dl class="function">
 <dt id="c.pnp_unregister_protocol">
 void <code class="descname">pnp_unregister_protocol</code><span class="sig-paren">(</span>struct pnp_protocol *<em>&nbsp;protocol</em><span class="sig-paren">)</span><a class="headerlink" href="#c.pnp_unregister_protocol" title="Permalink to this definition">¶</a></dt>

@@ -68,7 +68,7 @@
             
             
               <div class="version">
-                5.7.0
+                5.8.0
               </div>
             
           
@@ -458,6 +458,7 @@ struct <code class="descname">usb_request</code><a class="headerlink" href="#c.u
   unsigned num_sgs;
   unsigned num_mapped_sgs;
   unsigned stream_id:16;
+  unsigned is_last:1;
   unsigned no_interrupt:1;
   unsigned zero:1;
   unsigned short_not_ok:1;
@@ -490,6 +491,9 @@ for mapping and unmapping the buffer.</dd>
 <dd>number of SG entries mapped to DMA (internal)</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">stream_id</span></code></dt>
 <dd>The stream id, when USB3.0 bulk streams are being used</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">is_last</span></code></dt>
+<dd>Indicates if this is the last request of a stream_id before
+switching to a different stream (required for DWC3 controllers).</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">no_interrupt</span></code></dt>
 <dd>If true, hints that no completion irq is needed.
 Helpful sometimes with deep request queues that are handled
@@ -692,6 +696,7 @@ struct <code class="descname">usb_gadget</code><a class="headerlink" href="#c.us
   unsigned deactivated:1;
   unsigned connected:1;
   unsigned lpm_capable:1;
+  int irq;
 };
 </pre></div>
 </div>
@@ -776,6 +781,8 @@ be connected.</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">lpm_capable</span></code></dt>
 <dd>If the gadget max_speed is FULL or HIGH, this flag
 indicates that it supports LPM as per the LPM ECN &amp; errata.</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">irq</span></code></dt>
+<dd>the interrupt number for device controller.</dd>
 </dl>
 <p><strong>Description</strong></p>
 <p>Gadgets have a mostly-portable “gadget driver” implementing device
@@ -1147,6 +1154,19 @@ using this routine after choosing which set of UTF-8 strings to use.
 Note that US-ASCII is a strict subset of UTF-8; any string bytes with
 the eighth bit set will be multibyte UTF-8 characters, not ISO-8859/1
 characters (which are also widely used in C strings).</p>
+<dl class="function">
+<dt id="c.usb_validate_langid">
+bool <code class="descname">usb_validate_langid</code><span class="sig-paren">(</span>u16<em>&nbsp;langid</em><span class="sig-paren">)</span><a class="headerlink" href="#c.usb_validate_langid" title="Permalink to this definition">¶</a></dt>
+<dd><p>validate usb language identifiers</p>
+</dd></dl>
+
+<p><strong>Parameters</strong></p>
+<dl class="docutils">
+<dt><code class="docutils literal notranslate"><span class="pre">u16</span> <span class="pre">langid</span></code></dt>
+<dd>usb language identifier</dd>
+</dl>
+<p><strong>Description</strong></p>
+<p>Returns true for valid language identifier, otherwise false.</p>
 <dl class="function">
 <dt id="c.usb_descriptor_fillbuf">
 int <code class="descname">usb_descriptor_fillbuf</code><span class="sig-paren">(</span>void *<em>&nbsp;buf</em>, unsigned<em>&nbsp;buflen</em>, const struct usb_descriptor_header **<em>&nbsp;src</em><span class="sig-paren">)</span><a class="headerlink" href="#c.usb_descriptor_fillbuf" title="Permalink to this definition">¶</a></dt>
@@ -1673,6 +1693,35 @@ configs, including appropriate association setup support;</li>
 <li>more, TBD.</li>
 </ol>
 <dl class="function">
+<dt id="c.config_ep_by_speed_and_alt">
+int <code class="descname">config_ep_by_speed_and_alt</code><span class="sig-paren">(</span>struct <a class="reference internal" href="#c.usb_gadget" title="usb_gadget">usb_gadget</a> *<em>&nbsp;g</em>, struct <a class="reference internal" href="#c.usb_function" title="usb_function">usb_function</a> *<em>&nbsp;f</em>, struct <a class="reference internal" href="#c.usb_ep" title="usb_ep">usb_ep</a> *<em>&nbsp;_ep</em>, u8<em>&nbsp;alt</em><span class="sig-paren">)</span><a class="headerlink" href="#c.config_ep_by_speed_and_alt" title="Permalink to this definition">¶</a></dt>
+<dd><p>configures the given endpoint according to gadget speed.</p>
+</dd></dl>
+
+<p><strong>Parameters</strong></p>
+<dl class="docutils">
+<dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">usb_gadget</span> <span class="pre">*</span> <span class="pre">g</span></code></dt>
+<dd>pointer to the gadget</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">usb_function</span> <span class="pre">*</span> <span class="pre">f</span></code></dt>
+<dd>usb function</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">usb_ep</span> <span class="pre">*</span> <span class="pre">_ep</span></code></dt>
+<dd>the endpoint to configure</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">u8</span> <span class="pre">alt</span></code></dt>
+<dd>alternate setting number</dd>
+</dl>
+<p><strong>Return</strong></p>
+<p>error code, 0 on success</p>
+<p><strong>Description</strong></p>
+<p>This function chooses the right descriptors for a given
+endpoint according to gadget speed and saves it in the
+endpoint desc field. If the endpoint already has a descriptor
+assigned to it - overwrites it with currently corresponding
+descriptor. The endpoint maxpacket field is updated according
+to the chosen descriptor.</p>
+<p><strong>Note</strong></p>
+<p>the supplied function should hold all the descriptors
+for supported speeds</p>
+<dl class="function">
 <dt id="c.config_ep_by_speed">
 int <code class="descname">config_ep_by_speed</code><span class="sig-paren">(</span>struct <a class="reference internal" href="#c.usb_gadget" title="usb_gadget">usb_gadget</a> *<em>&nbsp;g</em>, struct <a class="reference internal" href="#c.usb_function" title="usb_function">usb_function</a> *<em>&nbsp;f</em>, struct <a class="reference internal" href="#c.usb_ep" title="usb_ep">usb_ep</a> *<em>&nbsp;_ep</em><span class="sig-paren">)</span><a class="headerlink" href="#c.config_ep_by_speed" title="Permalink to this definition">¶</a></dt>
 <dd><p>configures the given endpoint according to gadget speed.</p>
@@ -1689,6 +1738,7 @@ int <code class="descname">config_ep_by_speed</code><span class="sig-paren">(</s
 </dl>
 <p><strong>Return</strong></p>
 <p>error code, 0 on success</p>
+<p><strong>Description</strong></p>
 <p>This function chooses the right descriptors for a given
 endpoint according to gadget speed and saves it in the
 endpoint desc field. If the endpoint already has a descriptor

@@ -68,7 +68,7 @@
             
             
               <div class="version">
-                5.7.0
+                5.8.0
               </div>
             
           
@@ -421,18 +421,8 @@ The symbol position of a unique symbol is 0.</dd>
 </dl>
 </div>
 </div>
-<div class="section" id="architecture-specific-sections">
-<h2>5. Architecture-specific sections<a class="headerlink" href="#architecture-specific-sections" title="Permalink to this headline">¶</a></h2>
-<p>Architectures may override arch_klp_init_object_loaded() to perform
-additional arch-specific tasks when a target module loads, such as applying
-arch-specific sections. On x86 for example, we must apply per-object
-.altinstructions and .parainstructions sections when a target module loads.
-These sections must be prefixed with “.klp.arch.$objname.” so that they can
-be easily identified when iterating through a patch module’s Elf sections
-(See arch/x86/kernel/livepatch.c for a complete example).</p>
-</div>
 <div class="section" id="symbol-table-and-elf-section-access">
-<h2>6. Symbol table and Elf section access<a class="headerlink" href="#symbol-table-and-elf-section-access" title="Permalink to this headline">¶</a></h2>
+<h2>5. Symbol table and Elf section access<a class="headerlink" href="#symbol-table-and-elf-section-access" title="Permalink to this headline">¶</a></h2>
 <p>A livepatch module’s symbol table is accessible through module-&gt;symtab.</p>
 <p>Since apply_relocate_add() requires access to a module’s section headers,
 symbol table, and relocation section indices, Elf information is preserved for

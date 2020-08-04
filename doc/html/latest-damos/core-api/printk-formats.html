@@ -68,7 +68,7 @@
             
             
               <div class="version">
-                5.7.0
+                5.8.0
               </div>
             
           
@@ -163,7 +163,7 @@
             
   <div class="section" id="how-to-get-printk-format-specifiers-right">
 <h1>How to get printk format specifiers right<a class="headerlink" href="#how-to-get-printk-format-specifiers-right" title="Permalink to this headline">¶</a></h1>
-<table class="docutils field-list" frame="void" rules="none">
+<table class="docutils field-list" frame="void" id="printk-specifiers" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
@@ -580,18 +580,22 @@ node name, including the path. The modifiers are functionally equivalent to
 </pre></div>
 </div>
 </div>
-<div class="section" id="time-and-date-struct-rtc-time">
-<h3>Time and date (struct rtc_time)<a class="headerlink" href="#time-and-date-struct-rtc-time" title="Permalink to this headline">¶</a></h3>
-<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>%ptR            YYYY-mm-ddTHH:MM:SS
-%ptRd           YYYY-mm-dd
-%ptRt           HH:MM:SS
-%ptR[dt][r]
+<div class="section" id="time-and-date">
+<h3>Time and date<a class="headerlink" href="#time-and-date" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>%pt[RT]                 YYYY-mm-ddTHH:MM:SS
+%pt[RT]d                YYYY-mm-dd
+%pt[RT]t                HH:MM:SS
+%pt[RT][dt][r]
 </pre></div>
 </div>
-<p>For printing date and time as represented by struct rtc_time structure in
-human readable format.</p>
-<p>By default year will be incremented by 1900 and month by 1. Use %ptRr (raw)
-to suppress this behaviour.</p>
+<dl class="docutils">
+<dt>For printing date and time as represented by</dt>
+<dd>R  struct rtc_time structure
+T  time64_t type</dd>
+</dl>
+<p>in human readable format.</p>
+<p>By default year will be incremented by 1900 and month by 1.
+Use %pt[RT]r (raw) to suppress this behaviour.</p>
 <p>Passed by reference.</p>
 </div>
 <div class="section" id="struct-clk">

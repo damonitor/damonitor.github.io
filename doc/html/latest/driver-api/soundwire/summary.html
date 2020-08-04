@@ -68,7 +68,7 @@
             
             
               <div class="version">
-                5.7.0
+                5.8.0
               </div>
             
           
@@ -247,10 +247,11 @@ time but should be trivial to add since capabilities are enabled with the
 <p>The Master interface along with the Master interface capabilities are
 registered based on board file, DT or ACPI.</p>
 <p>Following is the Bus API to register the SoundWire Bus:</p>
-<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="kt">int</span> <span class="nf">sdw_add_bus_master</span><span class="p">(</span><span class="k">struct</span> <span class="n">sdw_bus</span> <span class="o">*</span><span class="n">bus</span><span class="p">)</span>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="kt">int</span> <span class="nf">sdw_bus_master_add</span><span class="p">(</span><span class="k">struct</span> <span class="n">sdw_bus</span> <span class="o">*</span><span class="n">bus</span><span class="p">,</span>
+                        <span class="k">struct</span> <span class="n">device</span> <span class="o">*</span><span class="n">parent</span><span class="p">,</span>
+                        <span class="k">struct</span> <span class="n">fwnode_handle</span><span class="p">)</span>
 <span class="p">{</span>
-        <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">bus</span><span class="o">-&gt;</span><span class="n">dev</span><span class="p">)</span>
-                <span class="k">return</span> <span class="o">-</span><span class="n">ENODEV</span><span class="p">;</span>
+        <span class="n">sdw_master_device_add</span><span class="p">(</span><span class="n">bus</span><span class="p">,</span> <span class="n">parent</span><span class="p">,</span> <span class="n">fwnode</span><span class="p">);</span>
 
         <span class="n">mutex_init</span><span class="p">(</span><span class="o">&amp;</span><span class="n">bus</span><span class="o">-&gt;</span><span class="n">lock</span><span class="p">);</span>
         <span class="n">INIT_LIST_HEAD</span><span class="p">(</span><span class="o">&amp;</span><span class="n">bus</span><span class="o">-&gt;</span><span class="n">slaves</span><span class="p">);</span>

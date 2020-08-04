@@ -1,0 +1,333 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>LC-trie implementation notes &mdash; The Linux Kernel  documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript">
+          var DOCUMENTATION_OPTIONS = {
+              URL_ROOT:'../',
+              VERSION:'',
+              LANGUAGE:'None',
+              COLLAPSE_INDEX:false,
+              FILE_SUFFIX:'.html',
+              HAS_SOURCE:  true,
+              SOURCELINK_SUFFIX: '.txt'
+          };
+      </script>
+        <script type="text/javascript" src="../_static/jquery.js"></script>
+        <script type="text/javascript" src="../_static/underscore.js"></script>
+        <script type="text/javascript" src="../_static/doctools.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/theme_overrides.css" type="text/css" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> The Linux Kernel
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                5.8.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../admin-guide/mm/damon/index.html">Monitoring Data Accesses</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../vm/damon/index.html">DAMON: Data Access MONitor</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">The Linux Kernel</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+      <li>LC-trie implementation notes</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/networking/fib_trie.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="lc-trie-implementation-notes">
+<h1>LC-trie implementation notes<a class="headerlink" href="#lc-trie-implementation-notes" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="node-types">
+<h2>Node types<a class="headerlink" href="#node-types" title="Permalink to this headline">¶</a></h2>
+<dl class="docutils">
+<dt>leaf</dt>
+<dd>An end node with data. This has a copy of the relevant key, along
+with ‘hlist’ with routing table entries sorted by prefix length.
+See struct leaf and struct leaf_info.</dd>
+<dt>trie node or tnode</dt>
+<dd>An internal node, holding an array of child (leaf or tnode) pointers,
+indexed through a subset of the key. See Level Compression.</dd>
+</dl>
+</div>
+<div class="section" id="a-few-concepts-explained">
+<h2>A few concepts explained<a class="headerlink" href="#a-few-concepts-explained" title="Permalink to this headline">¶</a></h2>
+<dl class="docutils">
+<dt>Bits (tnode)</dt>
+<dd>The number of bits in the key segment used for indexing into the
+child array - the “child index”. See Level Compression.</dd>
+<dt>Pos (tnode)</dt>
+<dd>The position (in the key) of the key segment used for indexing into
+the child array. See Path Compression.</dd>
+<dt>Path Compression / skipped bits</dt>
+<dd>Any given tnode is linked to from the child array of its parent, using
+a segment of the key specified by the parent’s “pos” and “bits”
+In certain cases, this tnode’s own “pos” will not be immediately
+adjacent to the parent (pos+bits), but there will be some bits
+in the key skipped over because they represent a single path with no
+deviations. These “skipped bits” constitute Path Compression.
+Note that the search algorithm will simply skip over these bits when
+searching, making it necessary to save the keys in the leaves to
+verify that they actually do match the key we are searching for.</dd>
+<dt>Level Compression / child arrays</dt>
+<dd>the trie is kept level balanced moving, under certain conditions, the
+children of a full child (see “full_children”) up one level, so that
+instead of a pure binary tree, each internal node (“tnode”) may
+contain an arbitrarily large array of links to several children.
+Conversely, a tnode with a mostly empty child array (see empty_children)
+may be “halved”, having some of its children moved downwards one level,
+in order to avoid ever-increasing child arrays.</dd>
+<dt>empty_children</dt>
+<dd>the number of positions in the child array of a given tnode that are
+NULL.</dd>
+<dt>full_children</dt>
+<dd><p class="first">the number of children of a given tnode that aren’t path compressed.
+(in other words, they aren’t NULL or leaves and their “pos” is equal
+to this tnode’s “pos”+”bits”).</p>
+<p class="last">(The word “full” here is used more in the sense of “complete” than
+as the opposite of “empty”, which might be a tad confusing.)</p>
+</dd>
+</dl>
+</div>
+<div class="section" id="comments">
+<h2>Comments<a class="headerlink" href="#comments" title="Permalink to this headline">¶</a></h2>
+<p>We have tried to keep the structure of the code as close to fib_hash as
+possible to allow verification and help up reviewing.</p>
+<dl class="docutils">
+<dt>fib_find_node()</dt>
+<dd>A good start for understanding this code. This function implements a
+straightforward trie lookup.</dd>
+<dt>fib_insert_node()</dt>
+<dd>Inserts a new leaf node in the trie. This is bit more complicated than
+fib_find_node(). Inserting a new node means we might have to run the
+level compression algorithm on part of the trie.</dd>
+<dt>trie_leaf_remove()</dt>
+<dd>Looks up a key, deletes it and runs the level compression algorithm.</dd>
+<dt>trie_rebalance()</dt>
+<dd>The key function for the dynamic trie after any change in the trie
+it is run to optimize and reorganize. It will walk the trie upwards
+towards the root from a given tnode, doing a resize() at each step
+to implement level compression.</dd>
+<dt>resize()</dt>
+<dd>Analyzes a tnode and optimizes the child array size by either inflating
+or shrinking it repeatedly until it fulfills the criteria for optimal
+level compression. This part follows the original paper pretty closely
+and there may be some room for experimentation here.</dd>
+<dt>inflate()</dt>
+<dd>Doubles the size of the child array within a tnode. Used by resize().</dd>
+<dt>halve()</dt>
+<dd>Halves the size of the child array within a tnode - the inverse of
+inflate(). Used by resize();</dd>
+<dt>fn_trie_insert(), fn_trie_delete(), fn_trie_select_default()</dt>
+<dd>The route manipulation functions. Should conform pretty closely to the
+corresponding functions in fib_hash.</dd>
+<dt>fn_trie_flush()</dt>
+<dd>This walks the full trie (using nextleaf()) and searches for empty
+leaves which have to be removed.</dd>
+<dt>fn_trie_dump()</dt>
+<dd>Dumps the routing table ordered by prefix length. This is somewhat
+slower than the corresponding fib_hash function, as we have to walk the
+entire trie for each prefix length. In comparison, fib_hash is organized
+as one “zone”/hash per prefix length.</dd>
+</dl>
+</div>
+<div class="section" id="locking">
+<h2>Locking<a class="headerlink" href="#locking" title="Permalink to this headline">¶</a></h2>
+<p>fib_lock is used for an RW-lock in the same way that this is done in fib_hash.
+However, the functions are somewhat separated for other possible locking
+scenarios. It might conceivably be possible to run trie_rebalance via RCU
+to avoid read_lock in the fn_trie_lookup() function.</p>
+</div>
+<div class="section" id="main-lookup-mechanism">
+<h2>Main lookup mechanism<a class="headerlink" href="#main-lookup-mechanism" title="Permalink to this headline">¶</a></h2>
+<p>fn_trie_lookup() is the main lookup function.</p>
+<p>The lookup is in its simplest form just like fib_find_node(). We descend the
+trie, key segment by key segment, until we find a leaf. check_leaf() does
+the fib_semantic_match in the leaf’s sorted prefix hlist.</p>
+<p>If we find a match, we are done.</p>
+<p>If we don’t find a match, we enter prefix matching mode. The prefix length,
+starting out at the same as the key length, is reduced one step at a time,
+and we backtrack upwards through the trie trying to find a longest matching
+prefix. The goal is always to reach a leaf and get a positive result from the
+fib_semantic_match mechanism.</p>
+<p>Inside each tnode, the search for longest matching prefix consists of searching
+through the child array, chopping off (zeroing) the least significant “1” of
+the child index until we find a match or the child index consists of nothing but
+zeros.</p>
+<p>At this point we backtrack (t-&gt;stats.backtrack++) up the trie, continuing to
+chop off part of the key in order to find the longest matching prefix.</p>
+<p>At this point we will repeatedly descend subtries to look for a match, and there
+are some optimizations available that can provide us with “shortcuts” to avoid
+descending into dead ends. Look for “HL_OPTIMIZE” sections in the code.</p>
+<p>To alleviate any doubts about the correctness of the route selection process,
+a new netlink operation has been added. Look for NETLINK_FIB_LOOKUP, which
+gives userland access to fib_lookup().</p>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright The kernel development community
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

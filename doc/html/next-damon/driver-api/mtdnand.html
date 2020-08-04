@@ -68,7 +68,7 @@
             
             
               <div class="version">
-                5.7.0
+                5.8.0
               </div>
             
           
@@ -406,8 +406,10 @@ unregisters the partitions in the MTD layer.</p>
 <div class="highlight-none notranslate"><div class="highlight"><pre><span></span>#ifdef MODULE
 static void __exit board_cleanup (void)
 {
-    /* Release resources, unregister device */
-    nand_release (mtd_to_nand(board_mtd));
+    /* Unregister device */
+    WARN_ON(mtd_device_unregister(board_mtd));
+    /* Release resources */
+    nand_cleanup(mtd_to_nand(board_mtd));
 
     /* unmap physical address */
     iounmap(baseaddr);
@@ -1284,7 +1286,7 @@ struct <code class="descname">nand_ecc_ctrl</code><a class="headerlink" href="#c
 
 <p><strong>Definition</strong></p>
 <div class="highlight-none notranslate"><div class="highlight"><pre><span></span>struct nand_ecc_ctrl {
-  nand_ecc_modes_t mode;
+  enum nand_ecc_mode mode;
   enum nand_ecc_algo algo;
   int steps;
   int size;
@@ -1548,8 +1550,11 @@ struct <code class="descname">nand_data_interface</code><a class="headerlink" hr
 <p><strong>Definition</strong></p>
 <div class="highlight-none notranslate"><div class="highlight"><pre><span></span>struct nand_data_interface {
   enum nand_data_interface_type type;
-  union {
-    struct nand_sdr_timings sdr;
+  struct nand_timings {
+    unsigned int mode;
+    union {
+      struct nand_sdr_timings sdr;
+    };
   } timings;
 };
 </pre></div>
@@ -1559,7 +1564,11 @@ struct <code class="descname">nand_data_interface</code><a class="headerlink" hr
 <dt><code class="docutils literal notranslate"><span class="pre">type</span></code></dt>
 <dd>type of the timing</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">timings</span></code></dt>
-<dd>The timing, type according to <strong>type</strong></dd>
+<dd>The timing information</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">timings.mode</span></code></dt>
+<dd>Timing mode as defined in the specification</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">{unnamed_union}</span></code></dt>
+<dd>anonymous</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">timings.sdr</span></code></dt>
 <dd>Use it when <strong>type</strong> is <code class="docutils literal notranslate"><span class="pre">NAND_SDR_IFACE</span></code>.</dd>
 </dl>
@@ -1730,6 +1739,7 @@ struct <code class="descname">nand_subop</code><a class="headerlink" href="#c.na
 
 <p><strong>Definition</strong></p>
 <div class="highlight-none notranslate"><div class="highlight"><pre><span></span>struct nand_subop {
+  unsigned int cs;
   const struct nand_op_instr *instrs;
   unsigned int ninstrs;
   unsigned int first_instr_start_off;
@@ -1739,6 +1749,8 @@ struct <code class="descname">nand_subop</code><a class="headerlink" href="#c.na
 </div>
 <p><strong>Members</strong></p>
 <dl class="docutils">
+<dt><code class="docutils literal notranslate"><span class="pre">cs</span></code></dt>
+<dd>the CS line to select for this NAND sub-operation</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">instrs</span></code></dt>
 <dd>array of instructions</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">ninstrs</span></code></dt>
@@ -2322,6 +2334,27 @@ API functions which are exported. Each function has a short description
 which is marked with an [XXX] identifier. See the chapter “Documentation
 hints” for an explanation.</p>
 <dl class="function">
+<dt id="c.nand_extract_bits">
+void <code class="descname">nand_extract_bits</code><span class="sig-paren">(</span>u8 *<em>&nbsp;dst</em>, unsigned int<em>&nbsp;dst_off</em>, const u8 *<em>&nbsp;src</em>, unsigned int<em>&nbsp;src_off</em>, unsigned int<em>&nbsp;nbits</em><span class="sig-paren">)</span><a class="headerlink" href="#c.nand_extract_bits" title="Permalink to this definition">¶</a></dt>
+<dd><p>Copy unaligned bits from one buffer to another one</p>
+</dd></dl>
+
+<p><strong>Parameters</strong></p>
+<dl class="docutils">
+<dt><code class="docutils literal notranslate"><span class="pre">u8</span> <span class="pre">*</span> <span class="pre">dst</span></code></dt>
+<dd>destination buffer</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">unsigned</span> <span class="pre">int</span> <span class="pre">dst_off</span></code></dt>
+<dd>bit offset at which the writing starts</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">const</span> <span class="pre">u8</span> <span class="pre">*</span> <span class="pre">src</span></code></dt>
+<dd>source buffer</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">unsigned</span> <span class="pre">int</span> <span class="pre">src_off</span></code></dt>
+<dd>bit offset at which the reading starts</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">unsigned</span> <span class="pre">int</span> <span class="pre">nbits</span></code></dt>
+<dd>number of bits to copy from <strong>src</strong> to <strong>dst</strong></dd>
+</dl>
+<p><strong>Description</strong></p>
+<p>Copy bits from one memory region to another (overlap authorized).</p>
+<dl class="function">
 <dt id="c.nand_select_target">
 void <code class="descname">nand_select_target</code><span class="sig-paren">(</span>struct <a class="reference internal" href="#c.nand_chip" title="nand_chip">nand_chip</a> *<em>&nbsp;chip</em>, unsigned int<em>&nbsp;cs</em><span class="sig-paren">)</span><a class="headerlink" href="#c.nand_select_target" title="Permalink to this definition">¶</a></dt>
 <dd><p>Select a NAND target (A.K.A. die)</p>
@@ -2624,7 +2657,7 @@ This function does not select/unselect the CS line.</p>
 <p>Returns 0 on success, a negative error code otherwise.</p>
 <dl class="function">
 <dt id="c.nand_read_data_op">
-int <code class="descname">nand_read_data_op</code><span class="sig-paren">(</span>struct <a class="reference internal" href="#c.nand_chip" title="nand_chip">nand_chip</a> *<em>&nbsp;chip</em>, void *<em>&nbsp;buf</em>, unsigned int<em>&nbsp;len</em>, bool<em>&nbsp;force_8bit</em><span class="sig-paren">)</span><a class="headerlink" href="#c.nand_read_data_op" title="Permalink to this definition">¶</a></dt>
+int <code class="descname">nand_read_data_op</code><span class="sig-paren">(</span>struct <a class="reference internal" href="#c.nand_chip" title="nand_chip">nand_chip</a> *<em>&nbsp;chip</em>, void *<em>&nbsp;buf</em>, unsigned int<em>&nbsp;len</em>, bool<em>&nbsp;force_8bit</em>, bool<em>&nbsp;check_only</em><span class="sig-paren">)</span><a class="headerlink" href="#c.nand_read_data_op" title="Permalink to this definition">¶</a></dt>
 <dd><p>Read data from the NAND</p>
 </dd></dl>
 
@@ -2638,6 +2671,9 @@ int <code class="descname">nand_read_data_op</code><span class="sig-paren">(</sp
 <dd>length of the buffer</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">bool</span> <span class="pre">force_8bit</span></code></dt>
 <dd>force 8-bit bus access</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">bool</span> <span class="pre">check_only</span></code></dt>
+<dd>do not actually run the command, only checks if the
+controller driver supports it</dd>
 </dl>
 <p><strong>Description</strong></p>
 <p>This function does a raw data read on the bus. Usually used after launching
@@ -2815,6 +2851,9 @@ int <code class="descname">nand_check_erased_ecc_chunk</code><span class="sig-pa
 ready to be programmed.
 The bitflips_threshold specify the maximum number of bitflips before
 considering the region as not erased.</p>
+<p>Returns a positive number of bitflips less than or equal to
+bitflips_threshold, or -ERROR_CODE for bitflips in excess of the
+threshold. In case of success, the passed buffers are filled with 0xff.</p>
 <p><strong>Note</strong></p>
 <dl class="docutils">
 <dt>1/ ECC algorithms are working on pre-defined block sizes which are usually</dt>
@@ -2834,9 +2873,6 @@ this case.</dd>
 It could also be used if you support subpages and want to attach some
 extra OOB data to an ECC chunk.</dd>
 </dl>
-<p>Returns a positive number of bitflips less than or equal to
-bitflips_threshold, or -ERROR_CODE for bitflips in excess of the
-threshold. In case of success, the passed buffers are filled with 0xff.</p>
 <dl class="function">
 <dt id="c.nand_read_page_raw">
 int <code class="descname">nand_read_page_raw</code><span class="sig-paren">(</span>struct <a class="reference internal" href="#c.nand_chip" title="nand_chip">nand_chip</a> *<em>&nbsp;chip</em>, uint8_t *<em>&nbsp;buf</em>, int<em>&nbsp;oob_required</em>, int<em>&nbsp;page</em><span class="sig-paren">)</span><a class="headerlink" href="#c.nand_read_page_raw" title="Permalink to this definition">¶</a></dt>
@@ -2856,6 +2892,31 @@ int <code class="descname">nand_read_page_raw</code><span class="sig-paren">(</s
 </dl>
 <p><strong>Description</strong></p>
 <p>Not for syndrome calculating ECC controllers, which use a special oob layout.</p>
+<dl class="function">
+<dt id="c.nand_monolithic_read_page_raw">
+int <code class="descname">nand_monolithic_read_page_raw</code><span class="sig-paren">(</span>struct <a class="reference internal" href="#c.nand_chip" title="nand_chip">nand_chip</a> *<em>&nbsp;chip</em>, u8 *<em>&nbsp;buf</em>, int<em>&nbsp;oob_required</em>, int<em>&nbsp;page</em><span class="sig-paren">)</span><a class="headerlink" href="#c.nand_monolithic_read_page_raw" title="Permalink to this definition">¶</a></dt>
+<dd><p>Monolithic page read in raw mode</p>
+</dd></dl>
+
+<p><strong>Parameters</strong></p>
+<dl class="docutils">
+<dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">nand_chip</span> <span class="pre">*</span> <span class="pre">chip</span></code></dt>
+<dd>NAND chip info structure</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">u8</span> <span class="pre">*</span> <span class="pre">buf</span></code></dt>
+<dd>buffer to store read data</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">int</span> <span class="pre">oob_required</span></code></dt>
+<dd>caller requires OOB data read to chip-&gt;oob_poi</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">int</span> <span class="pre">page</span></code></dt>
+<dd>page number to read</dd>
+</dl>
+<p><strong>Description</strong></p>
+<p>This is a raw page read, ie. without any error detection/correction.
+Monolithic means we are requesting all the relevant data (main plus
+eventually OOB) to be loaded in the NAND cache and sent over the
+bus (from the NAND chip to the NAND controller) in a single
+operation. This is an alternative to <a class="reference internal" href="#c.nand_read_page_raw" title="nand_read_page_raw"><code class="xref c c-func docutils literal notranslate"><span class="pre">nand_read_page_raw()</span></code></a>, which
+first reads the main data, and if the OOB data is requested too,
+then reads more data on the bus.</p>
 <dl class="function">
 <dt id="c.nand_read_oob_std">
 int <code class="descname">nand_read_oob_std</code><span class="sig-paren">(</span>struct <a class="reference internal" href="#c.nand_chip" title="nand_chip">nand_chip</a> *<em>&nbsp;chip</em>, int<em>&nbsp;page</em><span class="sig-paren">)</span><a class="headerlink" href="#c.nand_read_oob_std" title="Permalink to this definition">¶</a></dt>
@@ -2901,6 +2962,32 @@ int <code class="descname">nand_write_page_raw</code><span class="sig-paren">(</
 </dl>
 <p><strong>Description</strong></p>
 <p>Not for syndrome calculating ECC controllers, which use a special oob layout.</p>
+<dl class="function">
+<dt id="c.nand_monolithic_write_page_raw">
+int <code class="descname">nand_monolithic_write_page_raw</code><span class="sig-paren">(</span>struct <a class="reference internal" href="#c.nand_chip" title="nand_chip">nand_chip</a> *<em>&nbsp;chip</em>, const u8 *<em>&nbsp;buf</em>, int<em>&nbsp;oob_required</em>, int<em>&nbsp;page</em><span class="sig-paren">)</span><a class="headerlink" href="#c.nand_monolithic_write_page_raw" title="Permalink to this definition">¶</a></dt>
+<dd><p>Monolithic page write in raw mode</p>
+</dd></dl>
+
+<p><strong>Parameters</strong></p>
+<dl class="docutils">
+<dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">nand_chip</span> <span class="pre">*</span> <span class="pre">chip</span></code></dt>
+<dd>NAND chip info structure</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">const</span> <span class="pre">u8</span> <span class="pre">*</span> <span class="pre">buf</span></code></dt>
+<dd>data buffer to write</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">int</span> <span class="pre">oob_required</span></code></dt>
+<dd>must write chip-&gt;oob_poi to OOB</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">int</span> <span class="pre">page</span></code></dt>
+<dd>page number to write</dd>
+</dl>
+<p><strong>Description</strong></p>
+<p>This is a raw page write, ie. without any error detection/correction.
+Monolithic means we are requesting all the relevant data (main plus
+eventually OOB) to be sent over the bus and effectively programmed
+into the NAND chip arrays in a single operation. This is an
+alternative to <a class="reference internal" href="#c.nand_write_page_raw" title="nand_write_page_raw"><code class="xref c c-func docutils literal notranslate"><span class="pre">nand_write_page_raw()</span></code></a>, which first sends the main
+data, then eventually send the OOB data by latching more data
+cycles on the NAND bus, and finally sends the program command to
+synchronyze the NAND chip cache.</p>
 <dl class="function">
 <dt id="c.nand_ecc_choose_conf">
 int <code class="descname">nand_ecc_choose_conf</code><span class="sig-paren">(</span>struct <a class="reference internal" href="#c.nand_chip" title="nand_chip">nand_chip</a> *<em>&nbsp;chip</em>, const struct <a class="reference internal" href="#c.nand_ecc_caps" title="nand_ecc_caps">nand_ecc_caps</a> *<em>&nbsp;caps</em>, int<em>&nbsp;oobavail</em><span class="sig-paren">)</span><a class="headerlink" href="#c.nand_ecc_choose_conf" title="Permalink to this definition">¶</a></dt>
@@ -2950,17 +3037,6 @@ appropriate values.</p>
 <dt id="c.nand_cleanup">
 void <code class="descname">nand_cleanup</code><span class="sig-paren">(</span>struct <a class="reference internal" href="#c.nand_chip" title="nand_chip">nand_chip</a> *<em>&nbsp;chip</em><span class="sig-paren">)</span><a class="headerlink" href="#c.nand_cleanup" title="Permalink to this definition">¶</a></dt>
 <dd><p>[NAND Interface] Free resources held by the NAND device</p>
-</dd></dl>
-
-<p><strong>Parameters</strong></p>
-<dl class="docutils">
-<dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">nand_chip</span> <span class="pre">*</span> <span class="pre">chip</span></code></dt>
-<dd>NAND chip object</dd>
-</dl>
-<dl class="function">
-<dt id="c.nand_release">
-void <code class="descname">nand_release</code><span class="sig-paren">(</span>struct <a class="reference internal" href="#c.nand_chip" title="nand_chip">nand_chip</a> *<em>&nbsp;chip</em><span class="sig-paren">)</span><a class="headerlink" href="#c.nand_release" title="Permalink to this definition">¶</a></dt>
-<dd><p>[NAND Interface] Unregister the MTD device and free resources held by the NAND device</p>
 </dd></dl>
 
 <p><strong>Parameters</strong></p>
@@ -3544,15 +3620,15 @@ int <code class="descname">nand_check_erased_buf</code><span class="sig-paren">(
 <p>Check if a buffer contains only 0xff, which means the underlying region
 has been erased and is ready to be programmed.
 The bitflips_threshold specify the maximum number of bitflips before
-considering the region is not erased.</p>
+considering the region is not erased.
+Returns a positive number of bitflips less than or equal to
+bitflips_threshold, or -ERROR_CODE for bitflips in excess of the
+threshold.</p>
 <p><strong>Note</strong></p>
 <p>The logic of this function has been extracted from the memweight
 implementation, except that nand_check_erased_buf function exit before
 testing the whole buffer if the number of bitflips exceed the
 bitflips_threshold value.</p>
-<p>Returns a positive number of bitflips less than or equal to
-bitflips_threshold, or -ERROR_CODE for bitflips in excess of the
-threshold.</p>
 <dl class="function">
 <dt id="c.nand_read_page_raw_notsupp">
 int <code class="descname">nand_read_page_raw_notsupp</code><span class="sig-paren">(</span>struct <a class="reference internal" href="#c.nand_chip" title="nand_chip">nand_chip</a> *<em>&nbsp;chip</em>, u8 *<em>&nbsp;buf</em>, int<em>&nbsp;oob_required</em>, int<em>&nbsp;page</em><span class="sig-paren">)</span><a class="headerlink" href="#c.nand_read_page_raw_notsupp" title="Permalink to this definition">¶</a></dt>
@@ -3646,29 +3722,6 @@ int <code class="descname">nand_read_page_hwecc</code><span class="sig-paren">(<
 </dl>
 <p><strong>Description</strong></p>
 <p>Not for syndrome calculating ECC controllers which need a special oob layout.</p>
-<dl class="function">
-<dt id="c.nand_read_page_hwecc_oob_first">
-int <code class="descname">nand_read_page_hwecc_oob_first</code><span class="sig-paren">(</span>struct <a class="reference internal" href="#c.nand_chip" title="nand_chip">nand_chip</a> *<em>&nbsp;chip</em>, uint8_t *<em>&nbsp;buf</em>, int<em>&nbsp;oob_required</em>, int<em>&nbsp;page</em><span class="sig-paren">)</span><a class="headerlink" href="#c.nand_read_page_hwecc_oob_first" title="Permalink to this definition">¶</a></dt>
-<dd><p>[REPLACEABLE] hw ecc, read oob first</p>
-</dd></dl>
-
-<p><strong>Parameters</strong></p>
-<dl class="docutils">
-<dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">nand_chip</span> <span class="pre">*</span> <span class="pre">chip</span></code></dt>
-<dd>nand chip info structure</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">uint8_t</span> <span class="pre">*</span> <span class="pre">buf</span></code></dt>
-<dd>buffer to store read data</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">int</span> <span class="pre">oob_required</span></code></dt>
-<dd>caller requires OOB data read to chip-&gt;oob_poi</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">int</span> <span class="pre">page</span></code></dt>
-<dd>page number to read</dd>
-</dl>
-<p><strong>Description</strong></p>
-<p>Hardware ECC for large page chips, require OOB to be read first. For this
-ECC mode, the write_page method is re-used from ECC_HW. These methods
-read/write ECC from the OOB area, unlike the ECC_HW_SYNDROME support with
-multiple ECC steps, follows the “infix ECC” scheme and reads/writes ECC from
-the data area, by overwriting the NAND manufacturer bad block markings.</p>
 <dl class="function">
 <dt id="c.nand_read_page_syndrome">
 int <code class="descname">nand_read_page_syndrome</code><span class="sig-paren">(</span>struct <a class="reference internal" href="#c.nand_chip" title="nand_chip">nand_chip</a> *<em>&nbsp;chip</em>, uint8_t *<em>&nbsp;buf</em>, int<em>&nbsp;oob_required</em>, int<em>&nbsp;page</em><span class="sig-paren">)</span><a class="headerlink" href="#c.nand_read_page_syndrome" title="Permalink to this definition">¶</a></dt>

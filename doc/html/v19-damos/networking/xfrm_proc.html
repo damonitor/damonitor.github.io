@@ -1,0 +1,289 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>XFRM proc - /proc/net/xfrm_* files &mdash; The Linux Kernel  documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript">
+          var DOCUMENTATION_OPTIONS = {
+              URL_ROOT:'../',
+              VERSION:'',
+              LANGUAGE:'None',
+              COLLAPSE_INDEX:false,
+              FILE_SUFFIX:'.html',
+              HAS_SOURCE:  true,
+              SOURCELINK_SUFFIX: '.txt'
+          };
+      </script>
+        <script type="text/javascript" src="../_static/jquery.js"></script>
+        <script type="text/javascript" src="../_static/underscore.js"></script>
+        <script type="text/javascript" src="../_static/doctools.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/theme_overrides.css" type="text/css" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> The Linux Kernel
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                5.8.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../admin-guide/mm/damon/index.html">Monitoring Data Accesses</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../vm/damon/index.html">DAMON: Data Access MONitor</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">The Linux Kernel</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+      <li>XFRM proc - /proc/net/xfrm_* files</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/networking/xfrm_proc.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="xfrm-proc-proc-net-xfrm-files">
+<h1>XFRM proc - /proc/net/xfrm_* files<a class="headerlink" href="#xfrm-proc-proc-net-xfrm-files" title="Permalink to this headline">¶</a></h1>
+<p>Masahide NAKAMURA &lt;<a class="reference external" href="mailto:nakam&#37;&#52;&#48;linux-ipv6&#46;org">nakam<span>&#64;</span>linux-ipv6<span>&#46;</span>org</a>&gt;</p>
+<div class="section" id="transformation-statistics">
+<h2>Transformation Statistics<a class="headerlink" href="#transformation-statistics" title="Permalink to this headline">¶</a></h2>
+<p>The xfrm_proc code is a set of statistics showing numbers of packets
+dropped by the transformation code and why.  These counters are defined
+as part of the linux private MIB.  These counters can be viewed in
+/proc/net/xfrm_stat.</p>
+<div class="section" id="inbound-errors">
+<h3>Inbound errors<a class="headerlink" href="#inbound-errors" title="Permalink to this headline">¶</a></h3>
+<dl class="docutils">
+<dt>XfrmInError:</dt>
+<dd>All errors which is not matched others</dd>
+<dt>XfrmInBufferError:</dt>
+<dd>No buffer is left</dd>
+<dt>XfrmInHdrError:</dt>
+<dd>Header error</dd>
+<dt>XfrmInNoStates:</dt>
+<dd>No state is found
+i.e. Either inbound SPI, address, or IPsec protocol at SA is wrong</dd>
+<dt>XfrmInStateProtoError:</dt>
+<dd>Transformation protocol specific error
+e.g. SA key is wrong</dd>
+<dt>XfrmInStateModeError:</dt>
+<dd>Transformation mode specific error</dd>
+<dt>XfrmInStateSeqError:</dt>
+<dd>Sequence error
+i.e. Sequence number is out of window</dd>
+<dt>XfrmInStateExpired:</dt>
+<dd>State is expired</dd>
+<dt>XfrmInStateMismatch:</dt>
+<dd>State has mismatch option
+e.g. UDP encapsulation type is mismatch</dd>
+<dt>XfrmInStateInvalid:</dt>
+<dd>State is invalid</dd>
+<dt>XfrmInTmplMismatch:</dt>
+<dd>No matching template for states
+e.g. Inbound SAs are correct but SP rule is wrong</dd>
+<dt>XfrmInNoPols:</dt>
+<dd>No policy is found for states
+e.g. Inbound SAs are correct but no SP is found</dd>
+<dt>XfrmInPolBlock:</dt>
+<dd>Policy discards</dd>
+<dt>XfrmInPolError:</dt>
+<dd>Policy error</dd>
+<dt>XfrmAcquireError:</dt>
+<dd>State hasn’t been fully acquired before use</dd>
+<dt>XfrmFwdHdrError:</dt>
+<dd>Forward routing of a packet is not allowed</dd>
+</dl>
+</div>
+<div class="section" id="outbound-errors">
+<h3>Outbound errors<a class="headerlink" href="#outbound-errors" title="Permalink to this headline">¶</a></h3>
+<dl class="docutils">
+<dt>XfrmOutError:</dt>
+<dd>All errors which is not matched others</dd>
+<dt>XfrmOutBundleGenError:</dt>
+<dd>Bundle generation error</dd>
+<dt>XfrmOutBundleCheckError:</dt>
+<dd>Bundle check error</dd>
+<dt>XfrmOutNoStates:</dt>
+<dd>No state is found</dd>
+<dt>XfrmOutStateProtoError:</dt>
+<dd>Transformation protocol specific error</dd>
+<dt>XfrmOutStateModeError:</dt>
+<dd>Transformation mode specific error</dd>
+<dt>XfrmOutStateSeqError:</dt>
+<dd>Sequence error
+i.e. Sequence number overflow</dd>
+<dt>XfrmOutStateExpired:</dt>
+<dd>State is expired</dd>
+<dt>XfrmOutPolBlock:</dt>
+<dd>Policy discards</dd>
+<dt>XfrmOutPolDead:</dt>
+<dd>Policy is dead</dd>
+<dt>XfrmOutPolError:</dt>
+<dd>Policy error</dd>
+<dt>XfrmOutStateInvalid:</dt>
+<dd>State is invalid, perhaps expired</dd>
+</dl>
+</div>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright The kernel development community
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

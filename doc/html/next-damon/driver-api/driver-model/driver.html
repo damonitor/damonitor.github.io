@@ -68,7 +68,7 @@
             
             
               <div class="version">
-                5.7.0
+                5.8.0
               </div>
             
           
@@ -304,8 +304,23 @@ returns zero and the driver model code will finish its part of binding
 the driver to that device.</p>
 <p>A driver’s probe() may return a negative errno value to indicate that
 the driver did not bind to this device, in which case it should have
-released all resources it allocated:</p>
-<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>void (*sync_state)(struct device *dev);
+released all resources it allocated.</p>
+<p>Optionally, probe() may return -EPROBE_DEFER if the driver depends on
+resources that are not yet available (e.g., supplied by a driver that
+hasn’t initialized yet).  The driver core will put the device onto the
+deferred probe list and will try to call it again later. If a driver
+must defer, it should return -EPROBE_DEFER as early as possible to
+reduce the amount of time spent on setup work that will need to be
+unwound and reexecuted at a later time.</p>
+<div class="admonition warning">
+<p class="first admonition-title">Warning</p>
+<p class="last">-EPROBE_DEFER must not be returned if probe() has already created
+child devices, even if those child devices are removed again
+in a cleanup path. If -EPROBE_DEFER is returned after a child
+device has been registered, it may result in an infinite loop of
+.probe() calls to the same driver.</p>
+</div>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>void    (*sync_state)   (struct device *dev);
 </pre></div>
 </div>
 <p>sync_state is called only once for a device. It’s called when all the consumer
@@ -343,9 +358,11 @@ probed.</p>
 over management of devices from the bootloader, the usage of sync_state() is
 not restricted to that. Use it whenever it makes sense to take an action after
 all the consumers of a device have probed:</p>
-<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>int     (*remove)       (struct device *dev);
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>::
 </pre></div>
 </div>
+<blockquote>
+<div>int     (<a href="#id1"><span class="problematic" id="id2">*</span></a>remove)       (struct device <a href="#id3"><span class="problematic" id="id4">*</span></a>dev);</div></blockquote>
 <p>remove is called to unbind a driver from a device. This may be
 called if a device is physically removed from the system, if the
 driver module is being unloaded, during a reboot sequence, or
@@ -354,11 +371,11 @@ in other cases.</p>
 not. It should free any resources allocated specifically for the
 device; i.e. anything in the device’s driver_data field.</p>
 <p>If the device is still present, it should quiesce the device and place
-it into a supported low-power state:</p>
+it into a supported low-power state.</p>
 <div class="highlight-none notranslate"><div class="highlight"><pre><span></span>int     (*suspend)      (struct device *dev, pm_message_t state);
 </pre></div>
 </div>
-<p>suspend is called to put the device in a low power state:</p>
+<p>suspend is called to put the device in a low power state.</p>
 <div class="highlight-none notranslate"><div class="highlight"><pre><span></span>int     (*resume)       (struct device *dev);
 </pre></div>
 </div>

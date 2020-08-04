@@ -1,0 +1,252 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Devicetree (DT) ABI &mdash; The Linux Kernel  documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript">
+          var DOCUMENTATION_OPTIONS = {
+              URL_ROOT:'../../',
+              VERSION:'',
+              LANGUAGE:'None',
+              COLLAPSE_INDEX:false,
+              FILE_SUFFIX:'.html',
+              HAS_SOURCE:  true,
+              SOURCELINK_SUFFIX: '.txt'
+          };
+      </script>
+        <script type="text/javascript" src="../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../_static/doctools.js"></script>
+    
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/theme_overrides.css" type="text/css" />
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../index.html" class="icon icon-home"> The Linux Kernel
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                5.8.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../admin-guide/mm/damon/index.html">Monitoring Data Accesses</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../vm/damon/index.html">DAMON: Data Access MONitor</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">The Linux Kernel</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html">Docs</a> &raquo;</li>
+        
+      <li>Devicetree (DT) ABI</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../../_sources/devicetree/bindings/ABI.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="devicetree-dt-abi">
+<h1>Devicetree (DT) ABI<a class="headerlink" href="#devicetree-dt-abi" title="Permalink to this headline">¶</a></h1>
+<ol class="upperroman">
+<li><p class="first">Regarding stable bindings/ABI, we quote from the 2013 ARM mini-summit
+summary document:</p>
+<blockquote>
+<div><p>“That still leaves the question of, what does a stable binding look
+like?  Certainly a stable binding means that a newer kernel will not
+break on an older device tree, but that doesn’t mean the binding is
+frozen for all time. Grant said there are ways to change bindings that
+don’t result in breakage. For instance, if a new property is added,
+then default to the previous behaviour if it is missing. If a binding
+truly needs an incompatible change, then change the compatible string
+at the same time.  The driver can bind against both the old and the
+new. These guidelines aren’t new, but they desperately need to be
+documented.”</p>
+</div></blockquote>
+</li>
+<li><p class="first">General binding rules</p>
+</li>
+</ol>
+<blockquote>
+<div><ol class="arabic simple">
+<li>Maintainers, don’t let perfect be the enemy of good.  Don’t hold up a
+binding because it isn’t perfect.</li>
+<li>Use specific compatible strings so that if we need to add a feature (DMA)
+in the future, we can create a new compatible string.  See I.</li>
+<li>Bindings can be augmented, but the driver shouldn’t break when given
+the old binding. ie. add additional properties, but don’t change the
+meaning of an existing property. For drivers, default to the original
+behaviour when a newly added property is missing.</li>
+<li>Don’t submit bindings for staging or unstable.  That will be decided by
+the devicetree maintainers <em>after</em> discussion on the mailinglist.</li>
+</ol>
+</div></blockquote>
+<ol class="upperroman simple" start="3">
+<li>Notes</li>
+</ol>
+<blockquote>
+<div><ol class="arabic simple">
+<li>This document is intended as a general familiarization with the process as
+decided at the 2013 Kernel Summit.  When in doubt, the current word of the
+devicetree maintainers overrules this document.  In that situation, a patch
+updating this document would be appreciated.</li>
+</ol>
+</div></blockquote>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright The kernel development community
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

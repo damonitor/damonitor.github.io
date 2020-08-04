@@ -68,7 +68,7 @@
             
             
               <div class="version">
-                5.7.0
+                5.8.0
               </div>
             
           
@@ -185,15 +185,15 @@ KUnit defconfig), you can provide Kconfig options in the <code class="docutils l
 This file essentially contains the regular Kernel config, with the specific
 test targets as well. The <code class="docutils literal notranslate"><span class="pre">.kunitconfig</span></code> should also contain any other config
 options required by the tests.</p>
-<p>A good starting point for a <code class="docutils literal notranslate"><span class="pre">.kunitconfig</span></code> is the KUnit defconfig:
-.. code-block:: bash</p>
-<blockquote>
-<div>cd $PATH_TO_LINUX_REPO
-cp arch/um/configs/kunit_defconfig .kunitconfig</div></blockquote>
-<p>You can then add any other Kconfig options you wish, e.g.:
-.. code-block:: none</p>
-<blockquote>
-<div>CONFIG_LIST_KUNIT_TEST=y</div></blockquote>
+<p>A good starting point for a <code class="docutils literal notranslate"><span class="pre">.kunitconfig</span></code> is the KUnit defconfig:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">cd</span> <span class="nv">$PATH_TO_LINUX_REPO</span>
+cp arch/um/configs/kunit_defconfig .kunitconfig
+</pre></div>
+</div>
+<p>You can then add any other Kconfig options you wish, e.g.:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>CONFIG_LIST_KUNIT_TEST=y
+</pre></div>
+</div>
 <p><a class="reference internal" href="kunit-tool.html"><span class="doc">kunit_tool</span></a> will ensure that all config options set in
 <code class="docutils literal notranslate"><span class="pre">.kunitconfig</span></code> are set in the kernel <code class="docutils literal notranslate"><span class="pre">.config</span></code> before running the tests.
 It’ll warn you if you haven’t included the dependencies of the options you’re
@@ -206,8 +206,8 @@ rebuild of the <code class="docutils literal notranslate"><span class="pre">.con
 other tools (such as make menuconfig) to adjust other config options.</p>
 </div>
 </div>
-<div class="section" id="running-the-tests">
-<h3>Running the tests<a class="headerlink" href="#running-the-tests" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="running-the-tests-kunit-wrapper">
+<h3>Running the tests (KUnit Wrapper)<a class="headerlink" href="#running-the-tests-kunit-wrapper" title="Permalink to this headline">¶</a></h3>
 <p>To make sure that everything is set up correctly, simply invoke the Python
 wrapper from your kernel repo:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>./tools/testing/kunit/kunit.py run
@@ -250,8 +250,8 @@ have config options ending in <code class="docutils literal notranslate"><span c
 <p>KUnit and KUnit tests can be compiled as modules: in this case the tests in a
 module will be run when the module is loaded.</p>
 </div>
-<div class="section" id="id1">
-<h3>Running the tests<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="running-the-tests-w-o-kunit-wrapper">
+<h3>Running the tests (w/o KUnit Wrapper)<a class="headerlink" href="#running-the-tests-w-o-kunit-wrapper" title="Permalink to this headline">¶</a></h3>
 <p>Build and run your kernel as usual. Test output will be written to the kernel
 log in <a class="reference external" href="https://testanything.org/">TAP</a> format.</p>
 <div class="admonition note">

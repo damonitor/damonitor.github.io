@@ -68,7 +68,7 @@
             
             
               <div class="version">
-                5.7.0
+                5.8.0
               </div>
             
           
@@ -1149,7 +1149,7 @@ unsigned long long <code class="descname">simple_strtoull</code><span class="sig
 <dd>The number base to use</dd>
 </dl>
 <p><strong>Description</strong></p>
-<p>This function is obsolete. Please use kstrtoull instead.</p>
+<p>This function has caveats. Please use kstrtoull instead.</p>
 <dl class="function">
 <dt id="c.simple_strtoul">
 unsigned long <code class="descname">simple_strtoul</code><span class="sig-paren">(</span>const char *<em>&nbsp;cp</em>, char **<em>&nbsp;endp</em>, unsigned int<em>&nbsp;base</em><span class="sig-paren">)</span><a class="headerlink" href="#c.simple_strtoul" title="Permalink to this definition">¶</a></dt>
@@ -1166,7 +1166,7 @@ unsigned long <code class="descname">simple_strtoul</code><span class="sig-paren
 <dd>The number base to use</dd>
 </dl>
 <p><strong>Description</strong></p>
-<p>This function is obsolete. Please use kstrtoul instead.</p>
+<p>This function has caveats. Please use kstrtoul instead.</p>
 <dl class="function">
 <dt id="c.simple_strtol">
 long <code class="descname">simple_strtol</code><span class="sig-paren">(</span>const char *<em>&nbsp;cp</em>, char **<em>&nbsp;endp</em>, unsigned int<em>&nbsp;base</em><span class="sig-paren">)</span><a class="headerlink" href="#c.simple_strtol" title="Permalink to this definition">¶</a></dt>
@@ -1183,7 +1183,7 @@ long <code class="descname">simple_strtol</code><span class="sig-paren">(</span>
 <dd>The number base to use</dd>
 </dl>
 <p><strong>Description</strong></p>
-<p>This function is obsolete. Please use kstrtol instead.</p>
+<p>This function has caveats. Please use kstrtol instead.</p>
 <dl class="function">
 <dt id="c.simple_strtoll">
 long long <code class="descname">simple_strtoll</code><span class="sig-paren">(</span>const char *<em>&nbsp;cp</em>, char **<em>&nbsp;endp</em>, unsigned int<em>&nbsp;base</em><span class="sig-paren">)</span><a class="headerlink" href="#c.simple_strtoll" title="Permalink to this definition">¶</a></dt>
@@ -1200,7 +1200,7 @@ long long <code class="descname">simple_strtoll</code><span class="sig-paren">(<
 <dd>The number base to use</dd>
 </dl>
 <p><strong>Description</strong></p>
-<p>This function is obsolete. Please use kstrtoll instead.</p>
+<p>This function has caveats. Please use kstrtoll instead.</p>
 <dl class="function">
 <dt id="c.vsnprintf">
 int <code class="descname">vsnprintf</code><span class="sig-paren">(</span>char *<em>&nbsp;buf</em>, size_t<em>&nbsp;size</em>, const char *<em>&nbsp;fmt</em>, va_list<em>&nbsp;args</em><span class="sig-paren">)</span><a class="headerlink" href="#c.vsnprintf" title="Permalink to this definition">¶</a></dt>
@@ -2489,6 +2489,7 @@ void <code class="descname">memzero_explicit</code><span class="sig-paren">(</sp
 where clearing out _local_ data at the end of a scope is
 necessary, <a class="reference internal" href="#c.memzero_explicit" title="memzero_explicit"><code class="xref c c-func docutils literal notranslate"><span class="pre">memzero_explicit()</span></code></a> should be used instead in
 order to prevent the compiler from optimising away zeroing.</p>
+<p><strong>Description</strong></p>
 <p><a class="reference internal" href="#c.memzero_explicit" title="memzero_explicit"><code class="xref c c-func docutils literal notranslate"><span class="pre">memzero_explicit()</span></code></a> doesn’t need an arch-specific version as
 it just invokes the one of <a class="reference internal" href="#c.memset" title="memset"><code class="xref c c-func docutils literal notranslate"><span class="pre">memset()</span></code></a> implicitly.</p>
 <dl class="function">
@@ -3121,18 +3122,7 @@ void <code class="descname">bitmap_cut</code><span class="sig-paren">(</span>uns
 <dt><code class="docutils literal notranslate"><span class="pre">unsigned</span> <span class="pre">long</span> <span class="pre">*</span> <span class="pre">dst</span></code></dt>
 <dd>destination bitmap, might overlap with src</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">const</span> <span class="pre">unsigned</span> <span class="pre">long</span> <span class="pre">*</span> <span class="pre">src</span></code></dt>
-<dd><p class="first">31                                   63
-|                                    |
-10000000 11000001 11110010 00010101  10000000 11000001 01110010 00010101</p>
-<blockquote class="last">
-<div><blockquote>
-<div><div class="line-block">
-<div class="line">|              |                                    |</div>
-</div>
-</div></blockquote>
-<p>16  14             0                                   32</p>
-</div></blockquote>
-</dd>
+<dd>source bitmap</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">unsigned</span> <span class="pre">int</span> <span class="pre">first</span></code></dt>
 <dd>start bit of region to be removed</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">unsigned</span> <span class="pre">int</span> <span class="pre">cut</span></code></dt>
@@ -3145,19 +3135,23 @@ void <code class="descname">bitmap_cut</code><span class="sig-paren">(</span>uns
 n is less than <strong>first</strong>, or the m-th bit of <strong>src</strong> is set for any
 m such that <strong>first</strong> &lt;= n &lt; nbits, and m = n + <strong>cut</strong>.</p>
 <p>In pictures, example for a big-endian 32-bit architecture:</p>
-<p>if <strong>cut</strong> is 3, and <strong>first</strong> is 14, bits 14-16 in <strong>src</strong> are cut and <strong>dst</strong> is:</p>
-<p>31                                   63
+<p>The <strong>src</strong> bitmap is:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>31                                   63
 |                                    |
-10110000 00011000 00110010 00010101  00010000 00011000 00101110 01000010</p>
-<blockquote>
-<div><div class="line-block">
-<div class="line">|                                    |</div>
+10000000 11000001 11110010 00010101  10000000 11000001 01110010 00010101
+                |  |              |                                    |
+               16  14             0                                   32
+</pre></div>
 </div>
-<dl class="docutils">
-<dt>14 (bit 17     0                                   32</dt>
-<dd>from <strong>src</strong>)</dd>
-</dl>
-</div></blockquote>
+<p>if <strong>cut</strong> is 3, and <strong>first</strong> is 14, bits 14-16 in <strong>src</strong> are cut and <strong>dst</strong> is:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>31                                   63
+|                                    |
+10110000 00011000 00110010 00010101  00010000 00011000 00101110 01000010
+                   |              |                                    |
+                   14 (bit 17     0                                   32
+                       from @src)
+</pre></div>
+</div>
 <p>Note that <strong>dst</strong> and <strong>src</strong> might overlap partially or entirely.</p>
 <p>This is implemented in the obvious way, with a shift and carry
 step for each moved bit. Optimisation is left as an exercise
@@ -3850,18 +3844,16 @@ int <code class="descname">get_option</code><span class="sig-paren">(</span>char
 <dt><code class="docutils literal notranslate"><span class="pre">char</span> <span class="pre">**</span> <span class="pre">str</span></code></dt>
 <dd>option string</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">int</span> <span class="pre">*</span> <span class="pre">pint</span></code></dt>
-<dd>(output) integer value parsed from <strong>str</strong></dd>
-</dl>
-<p><strong>Description</strong></p>
-<blockquote>
-<div><p>Read an int from an option string; if available accept a subsequent
+<dd><p class="first">(output) integer value parsed from <strong>str</strong></p>
+<p>Read an int from an option string; if available accept a subsequent
 comma as well.</p>
-<p>Return values:
+<p class="last">Return values:
 0 - no int in string
 1 - int found, no subsequent comma
 2 - int found including a subsequent comma
 3 - hyphen found to denote a range</p>
-</div></blockquote>
+</dd>
+</dl>
 <dl class="function">
 <dt id="c.get_options">
 char * <code class="descname">get_options</code><span class="sig-paren">(</span>const char *<em>&nbsp;str</em>, int<em>&nbsp;nints</em>, int *<em>&nbsp;ints</em><span class="sig-paren">)</span><a class="headerlink" href="#c.get_options" title="Permalink to this definition">¶</a></dt>
@@ -3875,19 +3867,17 @@ char * <code class="descname">get_options</code><span class="sig-paren">(</span>
 <dt><code class="docutils literal notranslate"><span class="pre">int</span> <span class="pre">nints</span></code></dt>
 <dd>size of integer array</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">int</span> <span class="pre">*</span> <span class="pre">ints</span></code></dt>
-<dd>integer array</dd>
-</dl>
-<p><strong>Description</strong></p>
-<blockquote>
-<div><p>This function parses a string containing a comma-separated
+<dd><p class="first">integer array</p>
+<p>This function parses a string containing a comma-separated
 list of integers, a hyphen-separated range of _positive_ integers,
 or a combination of both.  The parse halts when the array is
 full, or when no more numbers can be retrieved from the
 string.</p>
-<p>Return value is the character in the string which caused
+<p class="last">Return value is the character in the string which caused
 the parse to end (typically a null terminator, if <strong>str</strong> is
 completely parseable).</p>
-</div></blockquote>
+</dd>
+</dl>
 <dl class="function">
 <dt id="c.memparse">
 unsigned long long <code class="descname">memparse</code><span class="sig-paren">(</span>const char *<em>&nbsp;ptr</em>, char **<em>&nbsp;retptr</em><span class="sig-paren">)</span><a class="headerlink" href="#c.memparse" title="Permalink to this definition">¶</a></dt>
@@ -3899,12 +3889,11 @@ unsigned long long <code class="descname">memparse</code><span class="sig-paren"
 <dt><code class="docutils literal notranslate"><span class="pre">const</span> <span class="pre">char</span> <span class="pre">*</span> <span class="pre">ptr</span></code></dt>
 <dd>Where parse begins</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">char</span> <span class="pre">**</span> <span class="pre">retptr</span></code></dt>
-<dd>(output) Optional pointer to next char after parse completes</dd>
+<dd><p class="first">(output) Optional pointer to next char after parse completes</p>
+<p class="last">Parses a string into a number.  The number stored at <strong>ptr</strong> is
+potentially suffixed with K, M, G, T, P, E.</p>
+</dd>
 </dl>
-<p><strong>Description</strong></p>
-<blockquote>
-<div>Parses a string into a number.  The number stored at <strong>ptr</strong> is
-potentially suffixed with K, M, G, T, P, E.</div></blockquote>
 </div>
 <div class="section" id="sorting">
 <h3>Sorting<a class="headerlink" href="#sorting" title="Permalink to this headline">¶</a></h3>
@@ -4181,14 +4170,14 @@ struct ts_config * <code class="descname">textsearch_prepare</code><span class="
 <p><strong>Description</strong></p>
 <p>Looks up the search algorithm module and creates a new textsearch
 configuration for the specified pattern.</p>
+<p>Returns a new textsearch configuration according to the specified
+parameters or a ERR_PTR(). If a zero length pattern is passed, this
+function returns EINVAL.</p>
 <p><strong>Note</strong></p>
 <dl class="docutils">
 <dt>The format of the pattern may not be compatible between</dt>
 <dd>the various search algorithms.</dd>
 </dl>
-<p>Returns a new textsearch configuration according to the specified
-parameters or a ERR_PTR(). If a zero length pattern is passed, this
-function returns EINVAL.</p>
 <dl class="function">
 <dt id="c.textsearch_destroy">
 void <code class="descname">textsearch_destroy</code><span class="sig-paren">(</span>struct ts_config *<em>&nbsp;conf</em><span class="sig-paren">)</span><a class="headerlink" href="#c.textsearch_destroy" title="Permalink to this definition">¶</a></dt>
@@ -4702,6 +4691,7 @@ u64 <code class="descname">div_u64_rem</code><span class="sig-paren">(</span>u64
 </dl>
 <p><strong>Return</strong></p>
 <p>sets <code class="docutils literal notranslate"><span class="pre">*remainder</span></code>, then returns dividend / divisor</p>
+<p><strong>Description</strong></p>
 <p>This is commonly provided by 32bit archs to provide an optimized 64bit
 divide.</p>
 <dl class="function">
@@ -5930,11 +5920,10 @@ int <code class="descname">relay_buf_full</code><span class="sig-paren">(</span>
 <p><strong>Parameters</strong></p>
 <dl class="docutils">
 <dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">rchan_buf</span> <span class="pre">*</span> <span class="pre">buf</span></code></dt>
-<dd>channel buffer</dd>
+<dd><p class="first">channel buffer</p>
+<p class="last">Returns 1 if the buffer is full, 0 otherwise.</p>
+</dd>
 </dl>
-<p><strong>Description</strong></p>
-<blockquote>
-<div>Returns 1 if the buffer is full, 0 otherwise.</div></blockquote>
 <dl class="function">
 <dt id="c.relay_reset">
 void <code class="descname">relay_reset</code><span class="sig-paren">(</span>struct rchan *<em>&nbsp;chan</em><span class="sig-paren">)</span><a class="headerlink" href="#c.relay_reset" title="Permalink to this definition">¶</a></dt>
@@ -5944,16 +5933,14 @@ void <code class="descname">relay_reset</code><span class="sig-paren">(</span>st
 <p><strong>Parameters</strong></p>
 <dl class="docutils">
 <dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">rchan</span> <span class="pre">*</span> <span class="pre">chan</span></code></dt>
-<dd>the channel</dd>
-</dl>
-<p><strong>Description</strong></p>
-<blockquote>
-<div><p>This has the effect of erasing all data from all channel buffers
+<dd><p class="first">the channel</p>
+<p>This has the effect of erasing all data from all channel buffers
 and restarting the channel in its initial state.  The buffers
 are not freed, so any mappings are still in effect.</p>
-<p>NOTE. Care should be taken that the channel isn’t actually
+<p class="last">NOTE. Care should be taken that the channel isn’t actually
 being used by anything when this call is made.</p>
-</div></blockquote>
+</dd>
+</dl>
 <dl class="function">
 <dt id="c.relay_open">
 struct rchan * <code class="descname">relay_open</code><span class="sig-paren">(</span>const char *<em>&nbsp;base_filename</em>, struct dentry *<em>&nbsp;parent</em>, size_t<em>&nbsp;subbuf_size</em>, size_t<em>&nbsp;n_subbufs</em>, struct rchan_callbacks *<em>&nbsp;cb</em>, void *<em>&nbsp;private_data</em><span class="sig-paren">)</span><a class="headerlink" href="#c.relay_open" title="Permalink to this definition">¶</a></dt>
@@ -5973,19 +5960,17 @@ struct rchan * <code class="descname">relay_open</code><span class="sig-paren">(
 <dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">rchan_callbacks</span> <span class="pre">*</span> <span class="pre">cb</span></code></dt>
 <dd>client callback functions</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">void</span> <span class="pre">*</span> <span class="pre">private_data</span></code></dt>
-<dd>user-defined data</dd>
-</dl>
-<p><strong>Description</strong></p>
-<blockquote>
-<div><p>Returns channel pointer if successful, <code class="docutils literal notranslate"><span class="pre">NULL</span></code> otherwise.</p>
+<dd><p class="first">user-defined data</p>
+<p>Returns channel pointer if successful, <code class="docutils literal notranslate"><span class="pre">NULL</span></code> otherwise.</p>
 <p>Creates a channel buffer for each cpu using the sizes and
 attributes specified.  The created channel buffer files
 will be named base_filename0…base_filenameN-1.  File
 permissions will be <code class="docutils literal notranslate"><span class="pre">S_IRUSR</span></code>.</p>
-<p>If opening a buffer (<strong>parent</strong> = NULL) that you later wish to register
+<p class="last">If opening a buffer (<strong>parent</strong> = NULL) that you later wish to register
 in a filesystem, call <a class="reference internal" href="#c.relay_late_setup_files" title="relay_late_setup_files"><code class="xref c c-func docutils literal notranslate"><span class="pre">relay_late_setup_files()</span></code></a> once the <strong>parent</strong> dentry
 is available.</p>
-</div></blockquote>
+</dd>
+</dl>
 <dl class="function">
 <dt id="c.relay_late_setup_files">
 int <code class="descname">relay_late_setup_files</code><span class="sig-paren">(</span>struct rchan *<em>&nbsp;chan</em>, const char *<em>&nbsp;base_filename</em>, struct dentry *<em>&nbsp;parent</em><span class="sig-paren">)</span><a class="headerlink" href="#c.relay_late_setup_files" title="Permalink to this definition">¶</a></dt>
@@ -5999,17 +5984,15 @@ int <code class="descname">relay_late_setup_files</code><span class="sig-paren">
 <dt><code class="docutils literal notranslate"><span class="pre">const</span> <span class="pre">char</span> <span class="pre">*</span> <span class="pre">base_filename</span></code></dt>
 <dd>base name of files to create</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">dentry</span> <span class="pre">*</span> <span class="pre">parent</span></code></dt>
-<dd>dentry of parent directory, <code class="docutils literal notranslate"><span class="pre">NULL</span></code> for root directory</dd>
-</dl>
-<p><strong>Description</strong></p>
-<blockquote>
-<div><p>Returns 0 if successful, non-zero otherwise.</p>
+<dd><p class="first">dentry of parent directory, <code class="docutils literal notranslate"><span class="pre">NULL</span></code> for root directory</p>
+<p>Returns 0 if successful, non-zero otherwise.</p>
 <p>Use to setup files for a previously buffer-only channel created
 by <a class="reference internal" href="#c.relay_open" title="relay_open"><code class="xref c c-func docutils literal notranslate"><span class="pre">relay_open()</span></code></a> with a NULL parent dentry.</p>
-<p>For example, this is useful for perfomring early tracing in kernel,
+<p class="last">For example, this is useful for perfomring early tracing in kernel,
 before VFS is up and then exposing the early results once the dentry
 is available.</p>
-</div></blockquote>
+</dd>
+</dl>
 <dl class="function">
 <dt id="c.relay_switch_subbuf">
 size_t <code class="descname">relay_switch_subbuf</code><span class="sig-paren">(</span>struct rchan_buf *<em>&nbsp;buf</em>, size_t<em>&nbsp;length</em><span class="sig-paren">)</span><a class="headerlink" href="#c.relay_switch_subbuf" title="Permalink to this definition">¶</a></dt>
@@ -6021,14 +6004,12 @@ size_t <code class="descname">relay_switch_subbuf</code><span class="sig-paren">
 <dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">rchan_buf</span> <span class="pre">*</span> <span class="pre">buf</span></code></dt>
 <dd>channel buffer</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">size_t</span> <span class="pre">length</span></code></dt>
-<dd>size of current event</dd>
-</dl>
-<p><strong>Description</strong></p>
-<blockquote>
-<div><p>Returns either the length passed in or 0 if full.</p>
-<p>Performs sub-buffer-switch tasks such as invoking callbacks,
+<dd><p class="first">size of current event</p>
+<p>Returns either the length passed in or 0 if full.</p>
+<p class="last">Performs sub-buffer-switch tasks such as invoking callbacks,
 updating padding counts, waking up readers, etc.</p>
-</div></blockquote>
+</dd>
+</dl>
 <dl class="function">
 <dt id="c.relay_subbufs_consumed">
 void <code class="descname">relay_subbufs_consumed</code><span class="sig-paren">(</span>struct rchan *<em>&nbsp;chan</em>, unsigned int<em>&nbsp;cpu</em>, size_t<em>&nbsp;subbufs_consumed</em><span class="sig-paren">)</span><a class="headerlink" href="#c.relay_subbufs_consumed" title="Permalink to this definition">¶</a></dt>
@@ -6042,16 +6023,14 @@ void <code class="descname">relay_subbufs_consumed</code><span class="sig-paren"
 <dt><code class="docutils literal notranslate"><span class="pre">unsigned</span> <span class="pre">int</span> <span class="pre">cpu</span></code></dt>
 <dd>the cpu associated with the channel buffer to update</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">size_t</span> <span class="pre">subbufs_consumed</span></code></dt>
-<dd>number of sub-buffers to add to current buf’s count</dd>
-</dl>
-<p><strong>Description</strong></p>
-<blockquote>
-<div><p>Adds to the channel buffer’s consumed sub-buffer count.
+<dd><p class="first">number of sub-buffers to add to current buf’s count</p>
+<p>Adds to the channel buffer’s consumed sub-buffer count.
 subbufs_consumed should be the number of sub-buffers newly consumed,
 not the total consumed.</p>
-<p>NOTE. Kernel clients don’t need to call this function if the channel
+<p class="last">NOTE. Kernel clients don’t need to call this function if the channel
 mode is ‘overwrite’.</p>
-</div></blockquote>
+</dd>
+</dl>
 <dl class="function">
 <dt id="c.relay_close">
 void <code class="descname">relay_close</code><span class="sig-paren">(</span>struct rchan *<em>&nbsp;chan</em><span class="sig-paren">)</span><a class="headerlink" href="#c.relay_close" title="Permalink to this definition">¶</a></dt>
@@ -6061,11 +6040,10 @@ void <code class="descname">relay_close</code><span class="sig-paren">(</span>st
 <p><strong>Parameters</strong></p>
 <dl class="docutils">
 <dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">rchan</span> <span class="pre">*</span> <span class="pre">chan</span></code></dt>
-<dd>the channel</dd>
+<dd><p class="first">the channel</p>
+<p class="last">Closes all channel buffers and frees the channel.</p>
+</dd>
 </dl>
-<p><strong>Description</strong></p>
-<blockquote>
-<div>Closes all channel buffers and frees the channel.</div></blockquote>
 <dl class="function">
 <dt id="c.relay_flush">
 void <code class="descname">relay_flush</code><span class="sig-paren">(</span>struct rchan *<em>&nbsp;chan</em><span class="sig-paren">)</span><a class="headerlink" href="#c.relay_flush" title="Permalink to this definition">¶</a></dt>
@@ -6075,11 +6053,10 @@ void <code class="descname">relay_flush</code><span class="sig-paren">(</span>st
 <p><strong>Parameters</strong></p>
 <dl class="docutils">
 <dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">rchan</span> <span class="pre">*</span> <span class="pre">chan</span></code></dt>
-<dd>the channel</dd>
+<dd><p class="first">the channel</p>
+<p class="last">Flushes all channel buffers, i.e. forces buffer switch.</p>
+</dd>
 </dl>
-<p><strong>Description</strong></p>
-<blockquote>
-<div>Flushes all channel buffers, i.e. forces buffer switch.</div></blockquote>
 <dl class="function">
 <dt id="c.relay_mmap_buf">
 int <code class="descname">relay_mmap_buf</code><span class="sig-paren">(</span>struct rchan_buf *<em>&nbsp;buf</em>, struct vm_area_struct *<em>&nbsp;vma</em><span class="sig-paren">)</span><a class="headerlink" href="#c.relay_mmap_buf" title="Permalink to this definition">¶</a></dt>
@@ -6091,13 +6068,11 @@ int <code class="descname">relay_mmap_buf</code><span class="sig-paren">(</span>
 <dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">rchan_buf</span> <span class="pre">*</span> <span class="pre">buf</span></code></dt>
 <dd>relay channel buffer</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">vm_area_struct</span> <span class="pre">*</span> <span class="pre">vma</span></code></dt>
-<dd>vm_area_struct describing memory to be mapped</dd>
+<dd><p class="first">vm_area_struct describing memory to be mapped</p>
+<p>Returns 0 if ok, negative on error</p>
+<p class="last">Caller should already have grabbed mmap_lock.</p>
+</dd>
 </dl>
-<p><strong>Description</strong></p>
-<blockquote>
-<div><p>Returns 0 if ok, negative on error</p>
-<p>Caller should already have grabbed mmap_sem.</p>
-</div></blockquote>
 <dl class="function">
 <dt id="c.relay_alloc_buf">
 void * <code class="descname">relay_alloc_buf</code><span class="sig-paren">(</span>struct rchan_buf *<em>&nbsp;buf</em>, size_t *<em>&nbsp;size</em><span class="sig-paren">)</span><a class="headerlink" href="#c.relay_alloc_buf" title="Permalink to this definition">¶</a></dt>
@@ -6109,12 +6084,11 @@ void * <code class="descname">relay_alloc_buf</code><span class="sig-paren">(</s
 <dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">rchan_buf</span> <span class="pre">*</span> <span class="pre">buf</span></code></dt>
 <dd>the buffer struct</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">size_t</span> <span class="pre">*</span> <span class="pre">size</span></code></dt>
-<dd>total size of the buffer</dd>
+<dd><p class="first">total size of the buffer</p>
+<p class="last">Returns a pointer to the resulting buffer, <code class="docutils literal notranslate"><span class="pre">NULL</span></code> if unsuccessful. The
+passed in size will get page aligned, if it isn’t already.</p>
+</dd>
 </dl>
-<p><strong>Description</strong></p>
-<blockquote>
-<div>Returns a pointer to the resulting buffer, <code class="docutils literal notranslate"><span class="pre">NULL</span></code> if unsuccessful. The
-passed in size will get page aligned, if it isn’t already.</div></blockquote>
 <dl class="function">
 <dt id="c.relay_create_buf">
 struct rchan_buf * <code class="descname">relay_create_buf</code><span class="sig-paren">(</span>struct rchan *<em>&nbsp;chan</em><span class="sig-paren">)</span><a class="headerlink" href="#c.relay_create_buf" title="Permalink to this definition">¶</a></dt>
@@ -6124,11 +6098,10 @@ struct rchan_buf * <code class="descname">relay_create_buf</code><span class="si
 <p><strong>Parameters</strong></p>
 <dl class="docutils">
 <dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">rchan</span> <span class="pre">*</span> <span class="pre">chan</span></code></dt>
-<dd>the relay channel</dd>
+<dd><p class="first">the relay channel</p>
+<p class="last">Returns channel buffer if successful, <code class="docutils literal notranslate"><span class="pre">NULL</span></code> otherwise.</p>
+</dd>
 </dl>
-<p><strong>Description</strong></p>
-<blockquote>
-<div>Returns channel buffer if successful, <code class="docutils literal notranslate"><span class="pre">NULL</span></code> otherwise.</div></blockquote>
 <dl class="function">
 <dt id="c.relay_destroy_channel">
 void <code class="descname">relay_destroy_channel</code><span class="sig-paren">(</span>struct kref *<em>&nbsp;kref</em><span class="sig-paren">)</span><a class="headerlink" href="#c.relay_destroy_channel" title="Permalink to this definition">¶</a></dt>
@@ -6138,11 +6111,10 @@ void <code class="descname">relay_destroy_channel</code><span class="sig-paren">
 <p><strong>Parameters</strong></p>
 <dl class="docutils">
 <dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">kref</span> <span class="pre">*</span> <span class="pre">kref</span></code></dt>
-<dd>target kernel reference that contains the relay channel</dd>
+<dd><p class="first">target kernel reference that contains the relay channel</p>
+<p class="last">Should only be called from kref_put().</p>
+</dd>
 </dl>
-<p><strong>Description</strong></p>
-<blockquote>
-<div>Should only be called from kref_put().</div></blockquote>
 <dl class="function">
 <dt id="c.relay_destroy_buf">
 void <code class="descname">relay_destroy_buf</code><span class="sig-paren">(</span>struct rchan_buf *<em>&nbsp;buf</em><span class="sig-paren">)</span><a class="headerlink" href="#c.relay_destroy_buf" title="Permalink to this definition">¶</a></dt>
@@ -6163,13 +6135,12 @@ void <code class="descname">relay_remove_buf</code><span class="sig-paren">(</sp
 <p><strong>Parameters</strong></p>
 <dl class="docutils">
 <dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">kref</span> <span class="pre">*</span> <span class="pre">kref</span></code></dt>
-<dd>target kernel reference that contains the relay buffer</dd>
-</dl>
-<p><strong>Description</strong></p>
-<blockquote>
-<div>Removes the file from the filesystem, which also frees the
+<dd><p class="first">target kernel reference that contains the relay buffer</p>
+<p class="last">Removes the file from the filesystem, which also frees the
 rchan_buf_struct and the channel buffer.  Should only be called from
-kref_put().</div></blockquote>
+kref_put().</p>
+</dd>
+</dl>
 <dl class="function">
 <dt id="c.relay_buf_empty">
 int <code class="descname">relay_buf_empty</code><span class="sig-paren">(</span>struct rchan_buf *<em>&nbsp;buf</em><span class="sig-paren">)</span><a class="headerlink" href="#c.relay_buf_empty" title="Permalink to this definition">¶</a></dt>
@@ -6179,11 +6150,10 @@ int <code class="descname">relay_buf_empty</code><span class="sig-paren">(</span
 <p><strong>Parameters</strong></p>
 <dl class="docutils">
 <dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">rchan_buf</span> <span class="pre">*</span> <span class="pre">buf</span></code></dt>
-<dd>channel buffer</dd>
+<dd><p class="first">channel buffer</p>
+<p class="last">Returns 1 if the buffer is empty, 0 otherwise.</p>
+</dd>
 </dl>
-<p><strong>Description</strong></p>
-<blockquote>
-<div>Returns 1 if the buffer is empty, 0 otherwise.</div></blockquote>
 <dl class="function">
 <dt id="c.wakeup_readers">
 void <code class="descname">wakeup_readers</code><span class="sig-paren">(</span>struct irq_work *<em>&nbsp;work</em><span class="sig-paren">)</span><a class="headerlink" href="#c.wakeup_readers" title="Permalink to this definition">¶</a></dt>
@@ -6193,11 +6163,10 @@ void <code class="descname">wakeup_readers</code><span class="sig-paren">(</span
 <p><strong>Parameters</strong></p>
 <dl class="docutils">
 <dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">irq_work</span> <span class="pre">*</span> <span class="pre">work</span></code></dt>
-<dd>contains the channel buffer</dd>
+<dd><p class="first">contains the channel buffer</p>
+<p class="last">This is the function used to defer reader waking</p>
+</dd>
 </dl>
-<p><strong>Description</strong></p>
-<blockquote>
-<div>This is the function used to defer reader waking</div></blockquote>
 <dl class="function">
 <dt id="c.__relay_reset">
 void <code class="descname">__relay_reset</code><span class="sig-paren">(</span>struct rchan_buf *<em>&nbsp;buf</em>, unsigned int<em>&nbsp;init</em><span class="sig-paren">)</span><a class="headerlink" href="#c.__relay_reset" title="Permalink to this definition">¶</a></dt>
@@ -6209,11 +6178,10 @@ void <code class="descname">__relay_reset</code><span class="sig-paren">(</span>
 <dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">rchan_buf</span> <span class="pre">*</span> <span class="pre">buf</span></code></dt>
 <dd>the channel buffer</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">unsigned</span> <span class="pre">int</span> <span class="pre">init</span></code></dt>
-<dd>1 if this is a first-time initialization</dd>
+<dd><p class="first">1 if this is a first-time initialization</p>
+<p class="last">See <a class="reference internal" href="#c.relay_reset" title="relay_reset"><code class="xref c c-func docutils literal notranslate"><span class="pre">relay_reset()</span></code></a> for description of effect.</p>
+</dd>
 </dl>
-<p><strong>Description</strong></p>
-<blockquote>
-<div>See <a class="reference internal" href="#c.relay_reset" title="relay_reset"><code class="xref c c-func docutils literal notranslate"><span class="pre">relay_reset()</span></code></a> for description of effect.</div></blockquote>
 <dl class="function">
 <dt id="c.relay_close_buf">
 void <code class="descname">relay_close_buf</code><span class="sig-paren">(</span>struct rchan_buf *<em>&nbsp;buf</em><span class="sig-paren">)</span><a class="headerlink" href="#c.relay_close_buf" title="Permalink to this definition">¶</a></dt>
@@ -6223,13 +6191,12 @@ void <code class="descname">relay_close_buf</code><span class="sig-paren">(</spa
 <p><strong>Parameters</strong></p>
 <dl class="docutils">
 <dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">rchan_buf</span> <span class="pre">*</span> <span class="pre">buf</span></code></dt>
-<dd>channel buffer</dd>
-</dl>
-<p><strong>Description</strong></p>
-<blockquote>
-<div>Marks the buffer finalized and restores the default callbacks.
+<dd><p class="first">channel buffer</p>
+<p class="last">Marks the buffer finalized and restores the default callbacks.
 The channel buffer and channel buffer data structure are then freed
-automatically when the last reference is given up.</div></blockquote>
+automatically when the last reference is given up.</p>
+</dd>
+</dl>
 <dl class="function">
 <dt id="c.relay_file_open">
 int <code class="descname">relay_file_open</code><span class="sig-paren">(</span>struct inode *<em>&nbsp;inode</em>, struct file *<em>&nbsp;filp</em><span class="sig-paren">)</span><a class="headerlink" href="#c.relay_file_open" title="Permalink to this definition">¶</a></dt>
@@ -6241,11 +6208,10 @@ int <code class="descname">relay_file_open</code><span class="sig-paren">(</span
 <dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">inode</span> <span class="pre">*</span> <span class="pre">inode</span></code></dt>
 <dd>the inode</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">file</span> <span class="pre">*</span> <span class="pre">filp</span></code></dt>
-<dd>the file</dd>
+<dd><p class="first">the file</p>
+<p class="last">Increments the channel buffer refcount.</p>
+</dd>
 </dl>
-<p><strong>Description</strong></p>
-<blockquote>
-<div>Increments the channel buffer refcount.</div></blockquote>
 <dl class="function">
 <dt id="c.relay_file_mmap">
 int <code class="descname">relay_file_mmap</code><span class="sig-paren">(</span>struct file *<em>&nbsp;filp</em>, struct vm_area_struct *<em>&nbsp;vma</em><span class="sig-paren">)</span><a class="headerlink" href="#c.relay_file_mmap" title="Permalink to this definition">¶</a></dt>
@@ -6257,11 +6223,10 @@ int <code class="descname">relay_file_mmap</code><span class="sig-paren">(</span
 <dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">file</span> <span class="pre">*</span> <span class="pre">filp</span></code></dt>
 <dd>the file</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">vm_area_struct</span> <span class="pre">*</span> <span class="pre">vma</span></code></dt>
-<dd>the vma describing what to map</dd>
+<dd><p class="first">the vma describing what to map</p>
+<p class="last">Calls upon <a class="reference internal" href="#c.relay_mmap_buf" title="relay_mmap_buf"><code class="xref c c-func docutils literal notranslate"><span class="pre">relay_mmap_buf()</span></code></a> to map the file into user space.</p>
+</dd>
 </dl>
-<p><strong>Description</strong></p>
-<blockquote>
-<div>Calls upon <a class="reference internal" href="#c.relay_mmap_buf" title="relay_mmap_buf"><code class="xref c c-func docutils literal notranslate"><span class="pre">relay_mmap_buf()</span></code></a> to map the file into user space.</div></blockquote>
 <dl class="function">
 <dt id="c.relay_file_poll">
 __poll_t <code class="descname">relay_file_poll</code><span class="sig-paren">(</span>struct file *<em>&nbsp;filp</em>, poll_table *<em>&nbsp;wait</em><span class="sig-paren">)</span><a class="headerlink" href="#c.relay_file_poll" title="Permalink to this definition">¶</a></dt>
@@ -6273,11 +6238,10 @@ __poll_t <code class="descname">relay_file_poll</code><span class="sig-paren">(<
 <dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">file</span> <span class="pre">*</span> <span class="pre">filp</span></code></dt>
 <dd>the file</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">poll_table</span> <span class="pre">*</span> <span class="pre">wait</span></code></dt>
-<dd>poll table</dd>
+<dd><p class="first">poll table</p>
+<p class="last">Poll implemention.</p>
+</dd>
 </dl>
-<p><strong>Description</strong></p>
-<blockquote>
-<div>Poll implemention.</div></blockquote>
 <dl class="function">
 <dt id="c.relay_file_release">
 int <code class="descname">relay_file_release</code><span class="sig-paren">(</span>struct inode *<em>&nbsp;inode</em>, struct file *<em>&nbsp;filp</em><span class="sig-paren">)</span><a class="headerlink" href="#c.relay_file_release" title="Permalink to this definition">¶</a></dt>
@@ -6289,12 +6253,11 @@ int <code class="descname">relay_file_release</code><span class="sig-paren">(</s
 <dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">inode</span> <span class="pre">*</span> <span class="pre">inode</span></code></dt>
 <dd>the inode</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">file</span> <span class="pre">*</span> <span class="pre">filp</span></code></dt>
-<dd>the file</dd>
+<dd><p class="first">the file</p>
+<p class="last">Decrements the channel refcount, as the filesystem is
+no longer using it.</p>
+</dd>
 </dl>
-<p><strong>Description</strong></p>
-<blockquote>
-<div>Decrements the channel refcount, as the filesystem is
-no longer using it.</div></blockquote>
 <dl class="function">
 <dt id="c.relay_file_read_subbuf_avail">
 size_t <code class="descname">relay_file_read_subbuf_avail</code><span class="sig-paren">(</span>size_t<em>&nbsp;read_pos</em>, struct rchan_buf *<em>&nbsp;buf</em><span class="sig-paren">)</span><a class="headerlink" href="#c.relay_file_read_subbuf_avail" title="Permalink to this definition">¶</a></dt>
@@ -6310,22 +6273,19 @@ size_t <code class="descname">relay_file_read_subbuf_avail</code><span class="si
 </dl>
 <dl class="function">
 <dt id="c.relay_file_read_start_pos">
-size_t <code class="descname">relay_file_read_start_pos</code><span class="sig-paren">(</span>size_t<em>&nbsp;read_pos</em>, struct rchan_buf *<em>&nbsp;buf</em><span class="sig-paren">)</span><a class="headerlink" href="#c.relay_file_read_start_pos" title="Permalink to this definition">¶</a></dt>
+size_t <code class="descname">relay_file_read_start_pos</code><span class="sig-paren">(</span>struct rchan_buf *<em>&nbsp;buf</em><span class="sig-paren">)</span><a class="headerlink" href="#c.relay_file_read_start_pos" title="Permalink to this definition">¶</a></dt>
 <dd><p>find the first available byte to read</p>
 </dd></dl>
 
 <p><strong>Parameters</strong></p>
 <dl class="docutils">
-<dt><code class="docutils literal notranslate"><span class="pre">size_t</span> <span class="pre">read_pos</span></code></dt>
-<dd>file read position</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">rchan_buf</span> <span class="pre">*</span> <span class="pre">buf</span></code></dt>
-<dd>relay channel buffer</dd>
-</dl>
-<p><strong>Description</strong></p>
-<blockquote>
-<div>If the <strong>read_pos</strong> is in the middle of padding, return the
+<dd><p class="first">relay channel buffer</p>
+<p class="last">If the read_pos is in the middle of padding, return the
 position of the first actually available byte, otherwise
-return the original value.</div></blockquote>
+return the original value.</p>
+</dd>
+</dl>
 <dl class="function">
 <dt id="c.relay_file_read_end_pos">
 size_t <code class="descname">relay_file_read_end_pos</code><span class="sig-paren">(</span>struct rchan_buf *<em>&nbsp;buf</em>, size_t<em>&nbsp;read_pos</em>, size_t<em>&nbsp;count</em><span class="sig-paren">)</span><a class="headerlink" href="#c.relay_file_read_end_pos" title="Permalink to this definition">¶</a></dt>
@@ -6390,18 +6350,16 @@ bool <code class="descname">synchronize_hardirq</code><span class="sig-paren">(<
 <p><strong>Parameters</strong></p>
 <dl class="docutils">
 <dt><code class="docutils literal notranslate"><span class="pre">unsigned</span> <span class="pre">int</span> <span class="pre">irq</span></code></dt>
-<dd>interrupt number to wait for</dd>
-</dl>
-<p><strong>Description</strong></p>
-<blockquote>
-<div><p>This function waits for any pending hard IRQ handlers for this
+<dd><p class="first">interrupt number to wait for</p>
+<p>This function waits for any pending hard IRQ handlers for this
 interrupt to complete before returning. If you use this
 function while holding a resource the IRQ handler may need you
 will deadlock. It does not take associated threaded handlers
 into account.</p>
-<p>Do not use this for shutdown scenarios where you must be sure
+<p class="last">Do not use this for shutdown scenarios where you must be sure
 that all parts (hardirq and threaded handler) have completed.</p>
-</div></blockquote>
+</dd>
+</dl>
 <p><strong>Return</strong></p>
 <p>false if a threaded handler is active.</p>
 <blockquote>
@@ -6420,19 +6378,17 @@ void <code class="descname">synchronize_irq</code><span class="sig-paren">(</spa
 <p><strong>Parameters</strong></p>
 <dl class="docutils">
 <dt><code class="docutils literal notranslate"><span class="pre">unsigned</span> <span class="pre">int</span> <span class="pre">irq</span></code></dt>
-<dd>interrupt number to wait for</dd>
-</dl>
-<p><strong>Description</strong></p>
-<blockquote>
-<div><p>This function waits for any pending IRQ handlers for this interrupt
+<dd><p class="first">interrupt number to wait for</p>
+<p>This function waits for any pending IRQ handlers for this interrupt
 to complete before returning. If you use this function while
 holding a resource the IRQ handler may need you will deadlock.</p>
 <p>Can only be called from preemptible code as it might sleep when
 an interrupt thread is associated to <strong>irq</strong>.</p>
-<p>It optionally makes sure (when the irq chip supports that method)
+<p class="last">It optionally makes sure (when the irq chip supports that method)
 that the interrupt is not pending in any CPU and waiting for
 service.</p>
-</div></blockquote>
+</dd>
+</dl>
 <dl class="function">
 <dt id="c.irq_set_affinity_notifier">
 int <code class="descname">irq_set_affinity_notifier</code><span class="sig-paren">(</span>unsigned int<em>&nbsp;irq</em>, struct <a class="reference internal" href="genericirq.html#c.irq_affinity_notify" title="irq_affinity_notify">irq_affinity_notify</a> *<em>&nbsp;notify</em><span class="sig-paren">)</span><a class="headerlink" href="#c.irq_set_affinity_notifier" title="Permalink to this definition">¶</a></dt>
@@ -6444,15 +6400,15 @@ int <code class="descname">irq_set_affinity_notifier</code><span class="sig-pare
 <dt><code class="docutils literal notranslate"><span class="pre">unsigned</span> <span class="pre">int</span> <span class="pre">irq</span></code></dt>
 <dd>Interrupt for which to enable/disable notification</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">irq_affinity_notify</span> <span class="pre">*</span> <span class="pre">notify</span></code></dt>
-<dd>Context for notification, or <code class="docutils literal notranslate"><span class="pre">NULL</span></code> to disable
+<dd><p class="first">Context for notification, or <code class="docutils literal notranslate"><span class="pre">NULL</span></code> to disable
 notification.  Function pointers must be initialised;
-the other fields will be initialised by this function.</dd>
-</dl>
-<p><strong>Description</strong></p>
-<blockquote>
+the other fields will be initialised by this function.</p>
+<blockquote class="last">
 <div>Must be called in process context.  Notification may only be enabled
 after the IRQ is allocated and must be disabled before the IRQ is
 freed using <a class="reference internal" href="#c.free_irq" title="free_irq"><code class="xref c c-func docutils literal notranslate"><span class="pre">free_irq()</span></code></a>.</div></blockquote>
+</dd>
+</dl>
 <dl class="function">
 <dt id="c.irq_set_vcpu_affinity">
 int <code class="descname">irq_set_vcpu_affinity</code><span class="sig-paren">(</span>unsigned int<em>&nbsp;irq</em>, void *<em>&nbsp;vcpu_info</em><span class="sig-paren">)</span><a class="headerlink" href="#c.irq_set_vcpu_affinity" title="Permalink to this definition">¶</a></dt>
@@ -6464,15 +6420,15 @@ int <code class="descname">irq_set_vcpu_affinity</code><span class="sig-paren">(
 <dt><code class="docutils literal notranslate"><span class="pre">unsigned</span> <span class="pre">int</span> <span class="pre">irq</span></code></dt>
 <dd>interrupt number to set affinity</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">void</span> <span class="pre">*</span> <span class="pre">vcpu_info</span></code></dt>
-<dd>vCPU specific data or pointer to a percpu array of vCPU
-specific data for percpu_devid interrupts</dd>
-</dl>
-<p><strong>Description</strong></p>
-<blockquote>
+<dd><p class="first">vCPU specific data or pointer to a percpu array of vCPU
+specific data for percpu_devid interrupts</p>
+<blockquote class="last">
 <div>This function uses the vCPU specific data to set the vCPU
 affinity for an irq. The vCPU specific data is passed from
 outside, such as KVM. One example code path is as below:
 KVM -&gt; IOMMU -&gt; <a class="reference internal" href="#c.irq_set_vcpu_affinity" title="irq_set_vcpu_affinity"><code class="xref c c-func docutils literal notranslate"><span class="pre">irq_set_vcpu_affinity()</span></code></a>.</div></blockquote>
+</dd>
+</dl>
 <dl class="function">
 <dt id="c.disable_irq_nosync">
 void <code class="descname">disable_irq_nosync</code><span class="sig-paren">(</span>unsigned int<em>&nbsp;irq</em><span class="sig-paren">)</span><a class="headerlink" href="#c.disable_irq_nosync" title="Permalink to this definition">¶</a></dt>
@@ -6482,16 +6438,14 @@ void <code class="descname">disable_irq_nosync</code><span class="sig-paren">(</
 <p><strong>Parameters</strong></p>
 <dl class="docutils">
 <dt><code class="docutils literal notranslate"><span class="pre">unsigned</span> <span class="pre">int</span> <span class="pre">irq</span></code></dt>
-<dd>Interrupt to disable</dd>
-</dl>
-<p><strong>Description</strong></p>
-<blockquote>
-<div><p>Disable the selected interrupt line.  Disables and Enables are
+<dd><p class="first">Interrupt to disable</p>
+<p>Disable the selected interrupt line.  Disables and Enables are
 nested.
 Unlike <a class="reference internal" href="#c.disable_irq" title="disable_irq"><code class="xref c c-func docutils literal notranslate"><span class="pre">disable_irq()</span></code></a>, this function does not ensure existing
 instances of the IRQ handler have completed before returning.</p>
-<p>This function may be called from IRQ context.</p>
-</div></blockquote>
+<p class="last">This function may be called from IRQ context.</p>
+</dd>
+</dl>
 <dl class="function">
 <dt id="c.disable_irq">
 void <code class="descname">disable_irq</code><span class="sig-paren">(</span>unsigned int<em>&nbsp;irq</em><span class="sig-paren">)</span><a class="headerlink" href="#c.disable_irq" title="Permalink to this definition">¶</a></dt>
@@ -6501,17 +6455,15 @@ void <code class="descname">disable_irq</code><span class="sig-paren">(</span>un
 <p><strong>Parameters</strong></p>
 <dl class="docutils">
 <dt><code class="docutils literal notranslate"><span class="pre">unsigned</span> <span class="pre">int</span> <span class="pre">irq</span></code></dt>
-<dd>Interrupt to disable</dd>
-</dl>
-<p><strong>Description</strong></p>
-<blockquote>
-<div><p>Disable the selected interrupt line.  Enables and Disables are
+<dd><p class="first">Interrupt to disable</p>
+<p>Disable the selected interrupt line.  Enables and Disables are
 nested.
 This function waits for any pending IRQ handlers for this interrupt
 to complete before returning. If you use this function while
 holding a resource the IRQ handler may need you will deadlock.</p>
-<p>This function may be called - with care - from IRQ context.</p>
-</div></blockquote>
+<p class="last">This function may be called - with care - from IRQ context.</p>
+</dd>
+</dl>
 <dl class="function">
 <dt id="c.disable_hardirq">
 bool <code class="descname">disable_hardirq</code><span class="sig-paren">(</span>unsigned int<em>&nbsp;irq</em><span class="sig-paren">)</span><a class="headerlink" href="#c.disable_hardirq" title="Permalink to this definition">¶</a></dt>
@@ -6521,18 +6473,16 @@ bool <code class="descname">disable_hardirq</code><span class="sig-paren">(</spa
 <p><strong>Parameters</strong></p>
 <dl class="docutils">
 <dt><code class="docutils literal notranslate"><span class="pre">unsigned</span> <span class="pre">int</span> <span class="pre">irq</span></code></dt>
-<dd>Interrupt to disable</dd>
-</dl>
-<p><strong>Description</strong></p>
-<blockquote>
-<div><p>Disable the selected interrupt line.  Enables and Disables are
+<dd><p class="first">Interrupt to disable</p>
+<p>Disable the selected interrupt line.  Enables and Disables are
 nested.
 This function waits for any pending hard IRQ handlers for this
 interrupt to complete before returning. If you use this function while
 holding a resource the hard IRQ handler may need you will deadlock.</p>
-<p>When used to optimistically disable an interrupt from atomic context
+<p class="last">When used to optimistically disable an interrupt from atomic context
 the return value must be checked.</p>
-</div></blockquote>
+</dd>
+</dl>
 <p><strong>Return</strong></p>
 <p>false if a threaded handler is active.</p>
 <blockquote>
@@ -6546,16 +6496,14 @@ void <code class="descname">enable_irq</code><span class="sig-paren">(</span>uns
 <p><strong>Parameters</strong></p>
 <dl class="docutils">
 <dt><code class="docutils literal notranslate"><span class="pre">unsigned</span> <span class="pre">int</span> <span class="pre">irq</span></code></dt>
-<dd>Interrupt to enable</dd>
-</dl>
-<p><strong>Description</strong></p>
-<blockquote>
-<div><p>Undoes the effect of one call to <a class="reference internal" href="#c.disable_irq" title="disable_irq"><code class="xref c c-func docutils literal notranslate"><span class="pre">disable_irq()</span></code></a>.  If this
+<dd><p class="first">Interrupt to enable</p>
+<p>Undoes the effect of one call to <a class="reference internal" href="#c.disable_irq" title="disable_irq"><code class="xref c c-func docutils literal notranslate"><span class="pre">disable_irq()</span></code></a>.  If this
 matches the last disable, processing of interrupts on this
 IRQ line is re-enabled.</p>
-<p>This function may be called from IRQ context only when
+<p class="last">This function may be called from IRQ context only when
 desc-&gt;irq_data.chip-&gt;bus_lock and desc-&gt;chip-&gt;bus_sync_unlock are NULL !</p>
-</div></blockquote>
+</dd>
+</dl>
 <dl class="function">
 <dt id="c.irq_set_irq_wake">
 int <code class="descname">irq_set_irq_wake</code><span class="sig-paren">(</span>unsigned int<em>&nbsp;irq</em>, unsigned int<em>&nbsp;on</em><span class="sig-paren">)</span><a class="headerlink" href="#c.irq_set_irq_wake" title="Permalink to this definition">¶</a></dt>
@@ -6567,16 +6515,14 @@ int <code class="descname">irq_set_irq_wake</code><span class="sig-paren">(</spa
 <dt><code class="docutils literal notranslate"><span class="pre">unsigned</span> <span class="pre">int</span> <span class="pre">irq</span></code></dt>
 <dd>interrupt to control</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">unsigned</span> <span class="pre">int</span> <span class="pre">on</span></code></dt>
-<dd>enable/disable power management wakeup</dd>
-</dl>
-<p><strong>Description</strong></p>
-<blockquote>
-<div><p>Enable/disable power management wakeup mode, which is
+<dd><p class="first">enable/disable power management wakeup</p>
+<p>Enable/disable power management wakeup mode, which is
 disabled by default.  Enables and disables must match,
 just as they match for non-wakeup mode support.</p>
-<p>Wakeup mode lets this IRQ wake the system from sleep
+<p class="last">Wakeup mode lets this IRQ wake the system from sleep
 states like “suspend to RAM”.</p>
-</div></blockquote>
+</dd>
+</dl>
 <p><strong>Note</strong></p>
 <dl class="docutils">
 <dt>irq enable/disable state is completely orthogonal</dt>
@@ -6610,19 +6556,17 @@ const void * <code class="descname">free_irq</code><span class="sig-paren">(</sp
 <dt><code class="docutils literal notranslate"><span class="pre">unsigned</span> <span class="pre">int</span> <span class="pre">irq</span></code></dt>
 <dd>Interrupt line to free</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">void</span> <span class="pre">*</span> <span class="pre">dev_id</span></code></dt>
-<dd>Device identity to free</dd>
-</dl>
-<p><strong>Description</strong></p>
-<blockquote>
-<div><p>Remove an interrupt handler. The handler is removed and if the
+<dd><p class="first">Device identity to free</p>
+<p>Remove an interrupt handler. The handler is removed and if the
 interrupt line is no longer in use by any driver it is disabled.
 On a shared IRQ the caller must ensure the interrupt is disabled
 on the card it drives before calling this function. The function
 does not return until any executing interrupts for this IRQ
 have completed.</p>
 <p>This function must not be called from interrupt context.</p>
-<p>Returns the devname argument passed to request_irq.</p>
-</div></blockquote>
+<p class="last">Returns the devname argument passed to request_irq.</p>
+</dd>
+</dl>
 <dl class="function">
 <dt id="c.request_threaded_irq">
 int <code class="descname">request_threaded_irq</code><span class="sig-paren">(</span>unsigned int<em>&nbsp;irq</em>, irq_handler_t<em>&nbsp;handler</em>, irq_handler_t<em>&nbsp;thread_fn</em>, unsigned long<em>&nbsp;irqflags</em>, const char *<em>&nbsp;devname</em>, void *<em>&nbsp;dev_id</em><span class="sig-paren">)</span><a class="headerlink" href="#c.request_threaded_irq" title="Permalink to this definition">¶</a></dt>
@@ -6646,11 +6590,8 @@ If NULL, no irq thread is created</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">const</span> <span class="pre">char</span> <span class="pre">*</span> <span class="pre">devname</span></code></dt>
 <dd>An ascii name for the claiming device</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">void</span> <span class="pre">*</span> <span class="pre">dev_id</span></code></dt>
-<dd>A cookie passed back to the handler function</dd>
-</dl>
-<p><strong>Description</strong></p>
-<blockquote>
-<div><p>This call allocates interrupt resources and enables the
+<dd><p class="first">A cookie passed back to the handler function</p>
+<p>This call allocates interrupt resources and enables the
 interrupt line and IRQ handling. From the point this
 call is made your handler function may be invoked. Since
 your handler function must clear any interrupt the board
@@ -6670,9 +6611,10 @@ receives this value it makes sense to use it.</p>
 <p>If your interrupt is shared you must pass a non NULL dev_id
 as this is required when freeing the interrupt.</p>
 <p>Flags:</p>
-<p>IRQF_SHARED             Interrupt is shared
+<p class="last">IRQF_SHARED             Interrupt is shared
 IRQF_TRIGGER_*          Specify active edge(s) or level</p>
-</div></blockquote>
+</dd>
+</dl>
 <dl class="function">
 <dt id="c.request_any_context_irq">
 int <code class="descname">request_any_context_irq</code><span class="sig-paren">(</span>unsigned int<em>&nbsp;irq</em>, irq_handler_t<em>&nbsp;handler</em>, unsigned long<em>&nbsp;flags</em>, const char *<em>&nbsp;name</em>, void *<em>&nbsp;dev_id</em><span class="sig-paren">)</span><a class="headerlink" href="#c.request_any_context_irq" title="Permalink to this definition">¶</a></dt>
@@ -6691,17 +6633,15 @@ Threaded handler for threaded interrupts.</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">const</span> <span class="pre">char</span> <span class="pre">*</span> <span class="pre">name</span></code></dt>
 <dd>An ascii name for the claiming device</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">void</span> <span class="pre">*</span> <span class="pre">dev_id</span></code></dt>
-<dd>A cookie passed back to the handler function</dd>
-</dl>
-<p><strong>Description</strong></p>
-<blockquote>
-<div><p>This call allocates interrupt resources and enables the
+<dd><p class="first">A cookie passed back to the handler function</p>
+<p>This call allocates interrupt resources and enables the
 interrupt line and IRQ handling. It selects either a
 hardirq or threaded handling method depending on the
 context.</p>
-<p>On failure, it returns a negative value. On success,
+<p class="last">On failure, it returns a negative value. On success,
 it returns either IRQC_IS_HARDIRQ or IRQC_IS_NESTED.</p>
-</div></blockquote>
+</dd>
+</dl>
 <dl class="function">
 <dt id="c.irq_percpu_is_enabled">
 bool <code class="descname">irq_percpu_is_enabled</code><span class="sig-paren">(</span>unsigned int<em>&nbsp;irq</em><span class="sig-paren">)</span><a class="headerlink" href="#c.irq_percpu_is_enabled" title="Permalink to this definition">¶</a></dt>
@@ -6727,16 +6667,14 @@ void <code class="descname">free_percpu_irq</code><span class="sig-paren">(</spa
 <dt><code class="docutils literal notranslate"><span class="pre">unsigned</span> <span class="pre">int</span> <span class="pre">irq</span></code></dt>
 <dd>Interrupt line to free</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">void</span> <span class="pre">__percpu</span> <span class="pre">*</span> <span class="pre">dev_id</span></code></dt>
-<dd>Device identity to free</dd>
-</dl>
-<p><strong>Description</strong></p>
-<blockquote>
-<div><p>Remove a percpu interrupt handler. The handler is removed, but
+<dd><p class="first">Device identity to free</p>
+<p>Remove a percpu interrupt handler. The handler is removed, but
 the interrupt line is not disabled. This must be done on each
 CPU before calling this function. The function does not return
 until any executing interrupts for this IRQ have completed.</p>
-<p>This function must not be called from interrupt context.</p>
-</div></blockquote>
+<p class="last">This function must not be called from interrupt context.</p>
+</dd>
+</dl>
 <dl class="function">
 <dt id="c.__request_percpu_irq">
 int <code class="descname">__request_percpu_irq</code><span class="sig-paren">(</span>unsigned int<em>&nbsp;irq</em>, irq_handler_t<em>&nbsp;handler</em>, unsigned long<em>&nbsp;flags</em>, const char *<em>&nbsp;devname</em>, void __percpu *<em>&nbsp;dev_id</em><span class="sig-paren">)</span><a class="headerlink" href="#c.__request_percpu_irq" title="Permalink to this definition">¶</a></dt>
@@ -6754,18 +6692,16 @@ int <code class="descname">__request_percpu_irq</code><span class="sig-paren">(<
 <dt><code class="docutils literal notranslate"><span class="pre">const</span> <span class="pre">char</span> <span class="pre">*</span> <span class="pre">devname</span></code></dt>
 <dd>An ascii name for the claiming device</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">void</span> <span class="pre">__percpu</span> <span class="pre">*</span> <span class="pre">dev_id</span></code></dt>
-<dd>A percpu cookie passed back to the handler function</dd>
-</dl>
-<p><strong>Description</strong></p>
-<blockquote>
-<div><p>This call allocates interrupt resources and enables the
+<dd><p class="first">A percpu cookie passed back to the handler function</p>
+<p>This call allocates interrupt resources and enables the
 interrupt on the local CPU. If the interrupt is supposed to be
 enabled on other CPUs, it has to be done on each CPU using
 enable_percpu_irq().</p>
-<p>Dev_id must be globally unique. It is a per-cpu variable, and
+<p class="last">Dev_id must be globally unique. It is a per-cpu variable, and
 the handler gets called with the interrupted CPU’s instance of
 that variable.</p>
-</div></blockquote>
+</dd>
+</dl>
 <dl class="function">
 <dt id="c.irq_get_irqchip_state">
 int <code class="descname">irq_get_irqchip_state</code><span class="sig-paren">(</span>unsigned int<em>&nbsp;irq</em>, enum irqchip_irq_state<em>&nbsp;which</em>, bool *<em>&nbsp;state</em><span class="sig-paren">)</span><a class="headerlink" href="#c.irq_get_irqchip_state" title="Permalink to this definition">¶</a></dt>
@@ -6779,16 +6715,14 @@ int <code class="descname">irq_get_irqchip_state</code><span class="sig-paren">(
 <dt><code class="docutils literal notranslate"><span class="pre">enum</span> <span class="pre">irqchip_irq_state</span> <span class="pre">which</span></code></dt>
 <dd>One of IRQCHIP_STATE_* the caller wants to know about</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">bool</span> <span class="pre">*</span> <span class="pre">state</span></code></dt>
-<dd>a pointer to a boolean where the state is to be storeed</dd>
-</dl>
-<p><strong>Description</strong></p>
-<blockquote>
-<div><p>This call snapshots the internal irqchip state of an
+<dd><p class="first">a pointer to a boolean where the state is to be storeed</p>
+<p>This call snapshots the internal irqchip state of an
 interrupt, returning into <strong>state</strong> the bit corresponding to
 stage <strong>which</strong></p>
-<p>This function should be called with preemption disabled if the
+<p class="last">This function should be called with preemption disabled if the
 interrupt controller has per-cpu registers.</p>
-</div></blockquote>
+</dd>
+</dl>
 <dl class="function">
 <dt id="c.irq_set_irqchip_state">
 int <code class="descname">irq_set_irqchip_state</code><span class="sig-paren">(</span>unsigned int<em>&nbsp;irq</em>, enum irqchip_irq_state<em>&nbsp;which</em>, bool<em>&nbsp;val</em><span class="sig-paren">)</span><a class="headerlink" href="#c.irq_set_irqchip_state" title="Permalink to this definition">¶</a></dt>
@@ -6802,15 +6736,13 @@ int <code class="descname">irq_set_irqchip_state</code><span class="sig-paren">(
 <dt><code class="docutils literal notranslate"><span class="pre">enum</span> <span class="pre">irqchip_irq_state</span> <span class="pre">which</span></code></dt>
 <dd>State to be restored (one of IRQCHIP_STATE_*)</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">bool</span> <span class="pre">val</span></code></dt>
-<dd>Value corresponding to <strong>which</strong></dd>
-</dl>
-<p><strong>Description</strong></p>
-<blockquote>
-<div><p>This call sets the internal irqchip state of an interrupt,
+<dd><p class="first">Value corresponding to <strong>which</strong></p>
+<p>This call sets the internal irqchip state of an interrupt,
 depending on the value of <strong>which</strong>.</p>
-<p>This function should be called with preemption disabled if the
+<p class="last">This function should be called with preemption disabled if the
 interrupt controller has per-cpu registers.</p>
-</div></blockquote>
+</dd>
+</dl>
 </div>
 <div class="section" id="dma-channels">
 <h3>DMA Channels<a class="headerlink" href="#dma-channels" title="Permalink to this headline">¶</a></h3>
@@ -8194,7 +8126,7 @@ struct request * <code class="descname">blk_get_request</code><span class="sig-p
 <dl class="function">
 <dt id="c.generic_make_request">
 blk_qc_t <code class="descname">generic_make_request</code><span class="sig-paren">(</span>struct bio *<em>&nbsp;bio</em><span class="sig-paren">)</span><a class="headerlink" href="#c.generic_make_request" title="Permalink to this definition">¶</a></dt>
-<dd><p>hand a buffer to its device driver for I/O</p>
+<dd><p>re-submit a bio to the block device layer for I/O</p>
 </dd></dl>
 
 <p><strong>Parameters</strong></p>
@@ -8203,22 +8135,10 @@ blk_qc_t <code class="descname">generic_make_request</code><span class="sig-pare
 <dd>The bio describing the location in memory and on the device.</dd>
 </dl>
 <p><strong>Description</strong></p>
-<p><a class="reference internal" href="#c.generic_make_request" title="generic_make_request"><code class="xref c c-func docutils literal notranslate"><span class="pre">generic_make_request()</span></code></a> is used to make I/O requests of block
-devices. It is passed a <code class="xref c c-type docutils literal notranslate"><span class="pre">struct</span> <span class="pre">bio</span></code>, which describes the I/O that needs
-to be done.</p>
-<p><a class="reference internal" href="#c.generic_make_request" title="generic_make_request"><code class="xref c c-func docutils literal notranslate"><span class="pre">generic_make_request()</span></code></a> does not return any status.  The
-success/failure status of the request, along with notification of
-completion, is delivered asynchronously through the bio-&gt;bi_end_io
-function described (one day) else where.</p>
-<p>The caller of generic_make_request must make sure that bi_io_vec
-are set to describe the memory buffer, and that bi_dev and bi_sector are
-set to describe the device address, and the
-bi_end_io and optionally bi_private are set to describe how
-completion notification should be signaled.</p>
-<p>generic_make_request and the drivers it calls may use bi_next if this
-bio happens to be merged with someone else, and may resubmit the bio to
-a lower device by calling into generic_make_request recursively, which
-means the bio should NOT be touched after the call to -&gt;make_request_fn.</p>
+<p>This is a version of <a class="reference internal" href="#c.submit_bio" title="submit_bio"><code class="xref c c-func docutils literal notranslate"><span class="pre">submit_bio()</span></code></a> that shall only be used for I/O that is
+resubmitted to lower level drivers by stacking block drivers.  All file
+systems and other upper level users of the block layer should use
+<a class="reference internal" href="#c.submit_bio" title="submit_bio"><code class="xref c c-func docutils literal notranslate"><span class="pre">submit_bio()</span></code></a> instead.</p>
 <dl class="function">
 <dt id="c.direct_make_request">
 blk_qc_t <code class="descname">direct_make_request</code><span class="sig-paren">(</span>struct bio *<em>&nbsp;bio</em><span class="sig-paren">)</span><a class="headerlink" href="#c.direct_make_request" title="Permalink to this definition">¶</a></dt>
@@ -8233,9 +8153,7 @@ blk_qc_t <code class="descname">direct_make_request</code><span class="sig-paren
 <p><strong>Description</strong></p>
 <p>This function behaves like <a class="reference internal" href="#c.generic_make_request" title="generic_make_request"><code class="xref c c-func docutils literal notranslate"><span class="pre">generic_make_request()</span></code></a>, but does not protect
 against recursion.  Must only be used if the called driver is known
-to not call generic_make_request (or direct_make_request) again from
-its make_request function.  (Calling direct_make_request again from
-a workqueue is perfectly fine as that doesn’t recurse).</p>
+to be blk-mq based.</p>
 <dl class="function">
 <dt id="c.submit_bio">
 blk_qc_t <code class="descname">submit_bio</code><span class="sig-paren">(</span>struct bio *<em>&nbsp;bio</em><span class="sig-paren">)</span><a class="headerlink" href="#c.submit_bio" title="Permalink to this definition">¶</a></dt>
@@ -8248,9 +8166,13 @@ blk_qc_t <code class="descname">submit_bio</code><span class="sig-paren">(</span
 <dd>The <code class="xref c c-type docutils literal notranslate"><span class="pre">struct</span> <span class="pre">bio</span></code> which describes the I/O</dd>
 </dl>
 <p><strong>Description</strong></p>
-<p><a class="reference internal" href="#c.submit_bio" title="submit_bio"><code class="xref c c-func docutils literal notranslate"><span class="pre">submit_bio()</span></code></a> is very similar in purpose to <a class="reference internal" href="#c.generic_make_request" title="generic_make_request"><code class="xref c c-func docutils literal notranslate"><span class="pre">generic_make_request()</span></code></a>, and
-uses that function to do most of the work. Both are fairly rough
-interfaces; <strong>bio</strong> must be presetup and ready for I/O.</p>
+<p><a class="reference internal" href="#c.submit_bio" title="submit_bio"><code class="xref c c-func docutils literal notranslate"><span class="pre">submit_bio()</span></code></a> is used to submit I/O requests to block devices.  It is passed a
+fully set up <code class="xref c c-type docutils literal notranslate"><span class="pre">struct</span> <span class="pre">bio</span></code> that describes the I/O that needs to be done.  The
+bio will be send to the device described by the bi_disk and bi_partno fields.</p>
+<p>The success/failure status of the request, along with notification of
+completion, is delivered asynchronously through the -&gt;bi_end_io() callback
+in <strong>bio</strong>.  The bio must NOT be touched by thecaller until -&gt;bi_end_io() has
+been called.</p>
 <dl class="function">
 <dt id="c.blk_insert_cloned_request">
 blk_status_t <code class="descname">blk_insert_cloned_request</code><span class="sig-paren">(</span>struct request_queue *<em>&nbsp;q</em>, struct request *<em>&nbsp;rq</em><span class="sig-paren">)</span><a class="headerlink" href="#c.blk_insert_cloned_request" title="Permalink to this definition">¶</a></dt>
@@ -8756,6 +8678,19 @@ void <code class="descname">blk_queue_max_write_zeroes_sectors</code><span class
 <dd>maximum number of sectors to write per command</dd>
 </dl>
 <dl class="function">
+<dt id="c.blk_queue_max_zone_append_sectors">
+void <code class="descname">blk_queue_max_zone_append_sectors</code><span class="sig-paren">(</span>struct request_queue *<em>&nbsp;q</em>, unsigned int<em>&nbsp;max_zone_append_sectors</em><span class="sig-paren">)</span><a class="headerlink" href="#c.blk_queue_max_zone_append_sectors" title="Permalink to this definition">¶</a></dt>
+<dd><p>set max sectors for a single zone append</p>
+</dd></dl>
+
+<p><strong>Parameters</strong></p>
+<dl class="docutils">
+<dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">request_queue</span> <span class="pre">*</span> <span class="pre">q</span></code></dt>
+<dd>the request queue for the device</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">unsigned</span> <span class="pre">int</span> <span class="pre">max_zone_append_sectors</span></code></dt>
+<dd>maximum number of sectors to write per command</dd>
+</dl>
+<dl class="function">
 <dt id="c.blk_queue_max_segments">
 void <code class="descname">blk_queue_max_segments</code><span class="sig-paren">(</span>struct request_queue *<em>&nbsp;q</em>, unsigned short<em>&nbsp;max_segments</em><span class="sig-paren">)</span><a class="headerlink" href="#c.blk_queue_max_segments" title="Permalink to this definition">¶</a></dt>
 <dd><p>set max hw segments for a request for this queue</p>
@@ -9044,37 +8979,6 @@ void <code class="descname">blk_queue_update_dma_pad</code><span class="sig-pare
 <p>Appending pad buffer to a request modifies the last entry of a
 scatter list such that it includes the pad buffer.</p>
 <dl class="function">
-<dt id="c.blk_queue_dma_drain">
-int <code class="descname">blk_queue_dma_drain</code><span class="sig-paren">(</span>struct request_queue *<em>&nbsp;q</em>, dma_drain_needed_fn *<em>&nbsp;dma_drain_needed</em>, void *<em>&nbsp;buf</em>, unsigned int<em>&nbsp;size</em><span class="sig-paren">)</span><a class="headerlink" href="#c.blk_queue_dma_drain" title="Permalink to this definition">¶</a></dt>
-<dd><p>Set up a drain buffer for excess dma.</p>
-</dd></dl>
-
-<p><strong>Parameters</strong></p>
-<dl class="docutils">
-<dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">request_queue</span> <span class="pre">*</span> <span class="pre">q</span></code></dt>
-<dd>the request queue for the device</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">dma_drain_needed_fn</span> <span class="pre">*</span> <span class="pre">dma_drain_needed</span></code></dt>
-<dd>fn which returns non-zero if drain is necessary</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">void</span> <span class="pre">*</span> <span class="pre">buf</span></code></dt>
-<dd>physically contiguous buffer</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">unsigned</span> <span class="pre">int</span> <span class="pre">size</span></code></dt>
-<dd>size of the buffer in bytes</dd>
-</dl>
-<p><strong>Description</strong></p>
-<p>Some devices have excess DMA problems and can’t simply discard (or
-zero fill) the unwanted piece of the transfer.  They have to have a
-real area of memory to transfer it into.  The use case for this is
-ATAPI devices in DMA mode.  If the packet command causes a transfer
-bigger than the transfer size some HBAs will lock up if there
-aren’t DMA elements to contain the excess transfer.  What this API
-does is adjust the queue so that the buf is always appended
-silently to the scatterlist.</p>
-<p><strong>Note</strong></p>
-<p>This routine adjusts max_hw_segments to make room for appending
-the drain buffer.  If you call <a class="reference internal" href="#c.blk_queue_max_segments" title="blk_queue_max_segments"><code class="xref c c-func docutils literal notranslate"><span class="pre">blk_queue_max_segments()</span></code></a> after calling
-this routine, you must set the limit to one fewer than your device
-can support otherwise there won’t be room for the drain buffer.</p>
-<dl class="function">
 <dt id="c.blk_queue_segment_boundary">
 void <code class="descname">blk_queue_segment_boundary</code><span class="sig-paren">(</span>struct request_queue *<em>&nbsp;q</em>, unsigned long<em>&nbsp;mask</em><span class="sig-paren">)</span><a class="headerlink" href="#c.blk_queue_segment_boundary" title="Permalink to this definition">¶</a></dt>
 <dd><p>set boundary rules for segment merging</p>
@@ -9249,7 +9153,7 @@ void <code class="descname">blk_execute_rq</code><span class="sig-paren">(</span
 for execution and wait for completion.</div></blockquote>
 <dl class="function">
 <dt id="c.blkdev_issue_flush">
-int <code class="descname">blkdev_issue_flush</code><span class="sig-paren">(</span>struct block_device *<em>&nbsp;bdev</em>, gfp_t<em>&nbsp;gfp_mask</em>, sector_t *<em>&nbsp;error_sector</em><span class="sig-paren">)</span><a class="headerlink" href="#c.blkdev_issue_flush" title="Permalink to this definition">¶</a></dt>
+int <code class="descname">blkdev_issue_flush</code><span class="sig-paren">(</span>struct block_device *<em>&nbsp;bdev</em>, gfp_t<em>&nbsp;gfp_mask</em><span class="sig-paren">)</span><a class="headerlink" href="#c.blkdev_issue_flush" title="Permalink to this definition">¶</a></dt>
 <dd><p>queue a flush</p>
 </dd></dl>
 
@@ -9259,14 +9163,10 @@ int <code class="descname">blkdev_issue_flush</code><span class="sig-paren">(</s
 <dd>blockdev to issue flush for</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">gfp_t</span> <span class="pre">gfp_mask</span></code></dt>
 <dd>memory allocation flags (for bio_alloc)</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">sector_t</span> <span class="pre">*</span> <span class="pre">error_sector</span></code></dt>
-<dd>error sector</dd>
 </dl>
 <p><strong>Description</strong></p>
 <blockquote>
-<div>Issue a flush for the block device in question. Caller can supply
-room for storing the error offset in case of a flush error, if they
-wish to.</div></blockquote>
+<div>Issue a flush for the block device in question.</div></blockquote>
 <dl class="function">
 <dt id="c.blkdev_issue_discard">
 int <code class="descname">blkdev_issue_discard</code><span class="sig-paren">(</span>struct block_device *<em>&nbsp;bdev</em>, sector_t<em>&nbsp;sector</em>, sector_t<em>&nbsp;nr_sects</em>, gfp_t<em>&nbsp;gfp_mask</em>, unsigned long<em>&nbsp;flags</em><span class="sig-paren">)</span><a class="headerlink" href="#c.blkdev_issue_discard" title="Permalink to this definition">¶</a></dt>
@@ -9603,10 +9503,12 @@ struct hd_struct * <code class="descname">disk_map_sector_rcu</code><span class=
 <p>Find out which partition <strong>sector</strong> maps to on <strong>disk</strong>.  This is
 primarily used for stats accounting.</p>
 <p><strong>Context</strong></p>
-<p>RCU read locked.  The returned partition pointer is valid only
-while preemption is disabled.</p>
+<p>RCU read locked.  The returned partition pointer is always valid
+because its refcount is grabbed except for part0, which lifetime
+is same with the disk.</p>
 <p><strong>Return</strong></p>
-<p>Found partition on success, part0 is returned if no partition matches</p>
+<p>Found partition on success, part0 is returned if no partition matches
+or the matched partition is being deleted.</p>
 <dl class="function">
 <dt id="c.blk_mangle_minor">
 int <code class="descname">blk_mangle_minor</code><span class="sig-paren">(</span>int<em>&nbsp;minor</em><span class="sig-paren">)</span><a class="headerlink" href="#c.blk_mangle_minor" title="Permalink to this definition">¶</a></dt>
@@ -10779,6 +10681,7 @@ void <code class="descname">clk_put</code><span class="sig-paren">(</span>struct
 <p>drivers must ensure that all clk_enable calls made on this
 clock source are balanced by clk_disable calls prior to calling
 this function.</p>
+<p><strong>Description</strong></p>
 <p>clk_put should not be called from within interrupt context.</p>
 <dl class="function">
 <dt id="c.clk_bulk_put">
@@ -10797,6 +10700,7 @@ void <code class="descname">clk_bulk_put</code><span class="sig-paren">(</span>i
 <p>drivers must ensure that all clk_bulk_enable calls made on this
 clock source are balanced by clk_bulk_disable calls prior to calling
 this function.</p>
+<p><strong>Description</strong></p>
 <p>clk_bulk_put should not be called from within interrupt context.</p>
 <dl class="function">
 <dt id="c.clk_bulk_put_all">
@@ -10815,6 +10719,7 @@ void <code class="descname">clk_bulk_put_all</code><span class="sig-paren">(</sp
 <p>drivers must ensure that all clk_bulk_enable calls made on this
 clock source are balanced by clk_bulk_disable calls prior to calling
 this function.</p>
+<p><strong>Description</strong></p>
 <p>clk_bulk_put_all should not be called from within interrupt context.</p>
 <dl class="function">
 <dt id="c.devm_clk_put">
@@ -10833,6 +10738,7 @@ void <code class="descname">devm_clk_put</code><span class="sig-paren">(</span>s
 <p>drivers must ensure that all clk_enable calls made on this
 clock source are balanced by clk_disable calls prior to calling
 this function.</p>
+<p><strong>Description</strong></p>
 <p>clk_put should not be called from within interrupt context.</p>
 <dl class="function">
 <dt id="c.clk_round_rate">
@@ -11198,7 +11104,7 @@ you should instead use <a class="reference internal" href="#c.rcu_dereference_pr
 <p>It is also permissible to use <a class="reference internal" href="#c.rcu_access_pointer" title="rcu_access_pointer"><code class="xref c c-func docutils literal notranslate"><span class="pre">rcu_access_pointer()</span></code></a> when read-side
 access to the pointer was removed at least one grace period ago, as
 is the case in the context of the RCU callback that is freeing up
-the data, or after a <a class="reference internal" href="#c.synchronize_rcu" title="synchronize_rcu"><code class="xref c c-func docutils literal notranslate"><span class="pre">synchronize_rcu()</span></code></a> returns.  This can be useful
+the data, or after a <a class="reference internal" href="../driver-api/basics.html#c.synchronize_rcu" title="synchronize_rcu"><code class="xref c c-func docutils literal notranslate"><span class="pre">synchronize_rcu()</span></code></a> returns.  This can be useful
 when tearing down multi-linked structures after a grace period
 has elapsed.</p>
 <dl class="function">
@@ -11373,21 +11279,21 @@ void <code class="descname">rcu_read_lock</code><span class="sig-paren">(</span>
 <dd>no arguments</dd>
 </dl>
 <p><strong>Description</strong></p>
-<p>When <a class="reference internal" href="#c.synchronize_rcu" title="synchronize_rcu"><code class="xref c c-func docutils literal notranslate"><span class="pre">synchronize_rcu()</span></code></a> is invoked on one CPU while other CPUs
+<p>When <a class="reference internal" href="../driver-api/basics.html#c.synchronize_rcu" title="synchronize_rcu"><code class="xref c c-func docutils literal notranslate"><span class="pre">synchronize_rcu()</span></code></a> is invoked on one CPU while other CPUs
 are within RCU read-side critical sections, then the
-<a class="reference internal" href="#c.synchronize_rcu" title="synchronize_rcu"><code class="xref c c-func docutils literal notranslate"><span class="pre">synchronize_rcu()</span></code></a> is guaranteed to block until after all the other
-CPUs exit their critical sections.  Similarly, if <a class="reference internal" href="#c.call_rcu" title="call_rcu"><code class="xref c c-func docutils literal notranslate"><span class="pre">call_rcu()</span></code></a> is invoked
+<a class="reference internal" href="../driver-api/basics.html#c.synchronize_rcu" title="synchronize_rcu"><code class="xref c c-func docutils literal notranslate"><span class="pre">synchronize_rcu()</span></code></a> is guaranteed to block until after all the other
+CPUs exit their critical sections.  Similarly, if <a class="reference internal" href="../driver-api/basics.html#c.call_rcu" title="call_rcu"><code class="xref c c-func docutils literal notranslate"><span class="pre">call_rcu()</span></code></a> is invoked
 on one CPU while other CPUs are within RCU read-side critical
 sections, invocation of the corresponding RCU callback is deferred
 until after the all the other CPUs exit their critical sections.</p>
 <p>Note, however, that RCU callbacks are permitted to run concurrently
 with new RCU read-side critical sections.  One way that this can happen
 is via the following sequence of events: (1) CPU 0 enters an RCU
-read-side critical section, (2) CPU 1 invokes <a class="reference internal" href="#c.call_rcu" title="call_rcu"><code class="xref c c-func docutils literal notranslate"><span class="pre">call_rcu()</span></code></a> to register
+read-side critical section, (2) CPU 1 invokes <a class="reference internal" href="../driver-api/basics.html#c.call_rcu" title="call_rcu"><code class="xref c c-func docutils literal notranslate"><span class="pre">call_rcu()</span></code></a> to register
 an RCU callback, (3) CPU 0 exits the RCU read-side critical section,
 (4) CPU 2 enters a RCU read-side critical section, (5) the RCU
 callback is invoked.  This is legal, because the RCU read-side critical
-section that was running concurrently with the <a class="reference internal" href="#c.call_rcu" title="call_rcu"><code class="xref c c-func docutils literal notranslate"><span class="pre">call_rcu()</span></code></a> (and which
+section that was running concurrently with the <a class="reference internal" href="../driver-api/basics.html#c.call_rcu" title="call_rcu"><code class="xref c c-func docutils literal notranslate"><span class="pre">call_rcu()</span></code></a> (and which
 therefore might be referencing something that the corresponding RCU
 callback would free up) has completed before the corresponding
 RCU callback is invoked.</p>
@@ -11558,7 +11464,7 @@ ordering guarantees for either the CPU or the compiler.</p>
 <p>Many rcu callbacks functions just call <a class="reference internal" href="mm-api.html#c.kfree" title="kfree"><code class="xref c c-func docutils literal notranslate"><span class="pre">kfree()</span></code></a> on the base structure.
 These functions are trivial, but their size adds up, and furthermore
 when they are used in a kernel module, that module must invoke the
-high-latency <a class="reference internal" href="#c.rcu_barrier" title="rcu_barrier"><code class="xref c c-func docutils literal notranslate"><span class="pre">rcu_barrier()</span></code></a> function at module-unload time.</p>
+high-latency <a class="reference internal" href="../driver-api/basics.html#c.rcu_barrier" title="rcu_barrier"><code class="xref c c-func docutils literal notranslate"><span class="pre">rcu_barrier()</span></code></a> function at module-unload time.</p>
 <p>The <a class="reference internal" href="#c.kfree_rcu" title="kfree_rcu"><code class="xref c c-func docutils literal notranslate"><span class="pre">kfree_rcu()</span></code></a> function handles this issue.  Rather than encoding a
 function address in the embedded rcu_head structure, <a class="reference internal" href="#c.kfree_rcu" title="kfree_rcu"><code class="xref c c-func docutils literal notranslate"><span class="pre">kfree_rcu()</span></code></a> instead
 encodes the offset of the rcu_head structure within the base structure.
@@ -11566,7 +11472,7 @@ Because the functions are not allowed in the low-order 4096 bytes of
 kernel virtual memory, offsets up to 4095 bytes can be accommodated.
 If the offset is larger than 4095 bytes, a compile-time error will
 be generated in __kfree_rcu().  If this error is triggered, you can
-either fall back to use of <a class="reference internal" href="#c.call_rcu" title="call_rcu"><code class="xref c c-func docutils literal notranslate"><span class="pre">call_rcu()</span></code></a> or rearrange the structure to
+either fall back to use of <a class="reference internal" href="../driver-api/basics.html#c.call_rcu" title="call_rcu"><code class="xref c c-func docutils literal notranslate"><span class="pre">call_rcu()</span></code></a> or rearrange the structure to
 position the rcu_head structure into the first 4096 bytes.</p>
 <p>Note that the allowable offset might decrease in the future, for example,
 to allow something like kmem_cache_free_rcu().</p>
@@ -11585,14 +11491,14 @@ void <code class="descname">rcu_head_init</code><span class="sig-paren">(</span>
 </dl>
 <p><strong>Description</strong></p>
 <p>If you intend to invoke <a class="reference internal" href="#c.rcu_head_after_call_rcu" title="rcu_head_after_call_rcu"><code class="xref c c-func docutils literal notranslate"><span class="pre">rcu_head_after_call_rcu()</span></code></a> to test whether a
-given rcu_head structure has already been passed to <a class="reference internal" href="#c.call_rcu" title="call_rcu"><code class="xref c c-func docutils literal notranslate"><span class="pre">call_rcu()</span></code></a>, then
+given rcu_head structure has already been passed to <a class="reference internal" href="../driver-api/basics.html#c.call_rcu" title="call_rcu"><code class="xref c c-func docutils literal notranslate"><span class="pre">call_rcu()</span></code></a>, then
 you must also invoke this <a class="reference internal" href="#c.rcu_head_init" title="rcu_head_init"><code class="xref c c-func docutils literal notranslate"><span class="pre">rcu_head_init()</span></code></a> function on it just after
 allocating that structure.  Calls to this function must not race with
-calls to <a class="reference internal" href="#c.call_rcu" title="call_rcu"><code class="xref c c-func docutils literal notranslate"><span class="pre">call_rcu()</span></code></a>, <a class="reference internal" href="#c.rcu_head_after_call_rcu" title="rcu_head_after_call_rcu"><code class="xref c c-func docutils literal notranslate"><span class="pre">rcu_head_after_call_rcu()</span></code></a>, or callback invocation.</p>
+calls to <a class="reference internal" href="../driver-api/basics.html#c.call_rcu" title="call_rcu"><code class="xref c c-func docutils literal notranslate"><span class="pre">call_rcu()</span></code></a>, <a class="reference internal" href="#c.rcu_head_after_call_rcu" title="rcu_head_after_call_rcu"><code class="xref c c-func docutils literal notranslate"><span class="pre">rcu_head_after_call_rcu()</span></code></a>, or callback invocation.</p>
 <dl class="function">
 <dt id="c.rcu_head_after_call_rcu">
 bool <code class="descname">rcu_head_after_call_rcu</code><span class="sig-paren">(</span>struct rcu_head *<em>&nbsp;rhp</em>, rcu_callback_t<em>&nbsp;f</em><span class="sig-paren">)</span><a class="headerlink" href="#c.rcu_head_after_call_rcu" title="Permalink to this definition">¶</a></dt>
-<dd><p>Has this rcu_head been passed to <a class="reference internal" href="#c.call_rcu" title="call_rcu"><code class="xref c c-func docutils literal notranslate"><span class="pre">call_rcu()</span></code></a>?</p>
+<dd><p>Has this rcu_head been passed to <a class="reference internal" href="../driver-api/basics.html#c.call_rcu" title="call_rcu"><code class="xref c c-func docutils literal notranslate"><span class="pre">call_rcu()</span></code></a>?</p>
 </dd></dl>
 
 <p><strong>Parameters</strong></p>
@@ -11600,10 +11506,10 @@ bool <code class="descname">rcu_head_after_call_rcu</code><span class="sig-paren
 <dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">rcu_head</span> <span class="pre">*</span> <span class="pre">rhp</span></code></dt>
 <dd>The rcu_head structure to test.</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">rcu_callback_t</span> <span class="pre">f</span></code></dt>
-<dd>The function passed to <a class="reference internal" href="#c.call_rcu" title="call_rcu"><code class="xref c c-func docutils literal notranslate"><span class="pre">call_rcu()</span></code></a> along with <strong>rhp</strong>.</dd>
+<dd>The function passed to <a class="reference internal" href="../driver-api/basics.html#c.call_rcu" title="call_rcu"><code class="xref c c-func docutils literal notranslate"><span class="pre">call_rcu()</span></code></a> along with <strong>rhp</strong>.</dd>
 </dl>
 <p><strong>Description</strong></p>
-<p>Returns <strong>true</strong> if the <strong>rhp</strong> has been passed to <a class="reference internal" href="#c.call_rcu" title="call_rcu"><code class="xref c c-func docutils literal notranslate"><span class="pre">call_rcu()</span></code></a> with <strong>func</strong>,
+<p>Returns <strong>true</strong> if the <strong>rhp</strong> has been passed to <a class="reference internal" href="../driver-api/basics.html#c.call_rcu" title="call_rcu"><code class="xref c c-func docutils literal notranslate"><span class="pre">call_rcu()</span></code></a> with <strong>func</strong>,
 and <strong>false</strong> otherwise.  Emits a warning in any other case, including
 the case where <strong>rhp</strong> has already been invoked after a grace period.
 Calls to this function must not race with callback invocation.  One way
@@ -11613,7 +11519,7 @@ of the pointer to the structure containing <strong>rhp</strong>.</p>
 <dl class="function">
 <dt id="c.rcu_is_cpu_rrupt_from_idle">
 int <code class="descname">rcu_is_cpu_rrupt_from_idle</code><span class="sig-paren">(</span>void<span class="sig-paren">)</span><a class="headerlink" href="#c.rcu_is_cpu_rrupt_from_idle" title="Permalink to this definition">¶</a></dt>
-<dd><p>see if interrupted from idle</p>
+<dd><p>see if ‘interrupted’ from idle</p>
 </dd></dl>
 
 <p><strong>Parameters</strong></p>
@@ -11623,8 +11529,8 @@ int <code class="descname">rcu_is_cpu_rrupt_from_idle</code><span class="sig-par
 </dl>
 <p><strong>Description</strong></p>
 <p>If the current CPU is idle and running at a first-level (not nested)
-interrupt from idle, return true.  The caller must have at least
-disabled preemption.</p>
+interrupt, or directly, from idle, return true.</p>
+<p>The caller must have at least disabled IRQs.</p>
 <dl class="function">
 <dt id="c.rcu_idle_enter">
 void <code class="descname">rcu_idle_enter</code><span class="sig-paren">(</span>void<span class="sig-paren">)</span><a class="headerlink" href="#c.rcu_idle_enter" title="Permalink to this definition">¶</a></dt>
@@ -11645,7 +11551,7 @@ handled by irq_enter() and irq_exit().)</p>
 CONFIG_RCU_EQS_DEBUG=y.</p>
 <dl class="function">
 <dt id="c.rcu_user_enter">
-void <code class="descname">rcu_user_enter</code><span class="sig-paren">(</span>void<span class="sig-paren">)</span><a class="headerlink" href="#c.rcu_user_enter" title="Permalink to this definition">¶</a></dt>
+noinstr void <code class="descname">rcu_user_enter</code><span class="sig-paren">(</span>void<span class="sig-paren">)</span><a class="headerlink" href="#c.rcu_user_enter" title="Permalink to this definition">¶</a></dt>
 <dd><p>inform RCU that we are resuming userspace.</p>
 </dd></dl>
 
@@ -11663,7 +11569,7 @@ when the CPU runs in userspace.</p>
 CONFIG_RCU_EQS_DEBUG=y.</p>
 <dl class="function">
 <dt id="c.rcu_nmi_exit">
-void <code class="descname">rcu_nmi_exit</code><span class="sig-paren">(</span>void<span class="sig-paren">)</span><a class="headerlink" href="#c.rcu_nmi_exit" title="Permalink to this definition">¶</a></dt>
+noinstr void <code class="descname">rcu_nmi_exit</code><span class="sig-paren">(</span>void<span class="sig-paren">)</span><a class="headerlink" href="#c.rcu_nmi_exit" title="Permalink to this definition">¶</a></dt>
 <dd><p>inform RCU of exit from NMI context</p>
 </dd></dl>
 
@@ -11673,11 +11579,15 @@ void <code class="descname">rcu_nmi_exit</code><span class="sig-paren">(</span>v
 <dd>no arguments</dd>
 </dl>
 <p><strong>Description</strong></p>
+<p>If we are returning from the outermost NMI handler that interrupted an
+RCU-idle period, update rdp-&gt;dynticks and rdp-&gt;dynticks_nmi_nesting
+to let the RCU grace-period handling know that the CPU is back to
+being RCU-idle.</p>
 <p>If you add or remove a call to <a class="reference internal" href="#c.rcu_nmi_exit" title="rcu_nmi_exit"><code class="xref c c-func docutils literal notranslate"><span class="pre">rcu_nmi_exit()</span></code></a>, be sure to test
 with CONFIG_RCU_EQS_DEBUG=y.</p>
 <dl class="function">
 <dt id="c.rcu_irq_exit">
-void <code class="descname">rcu_irq_exit</code><span class="sig-paren">(</span>void<span class="sig-paren">)</span><a class="headerlink" href="#c.rcu_irq_exit" title="Permalink to this definition">¶</a></dt>
+void noinstr <code class="descname">rcu_irq_exit</code><span class="sig-paren">(</span>void<span class="sig-paren">)</span><a class="headerlink" href="#c.rcu_irq_exit" title="Permalink to this definition">¶</a></dt>
 <dd><p>inform RCU that current CPU is exiting irq towards idle</p>
 </dd></dl>
 
@@ -11699,6 +11609,32 @@ you deserve, good and hard.  But very infrequently and irreproducibly.</p>
 <p>If you add or remove a call to <a class="reference internal" href="#c.rcu_irq_exit" title="rcu_irq_exit"><code class="xref c c-func docutils literal notranslate"><span class="pre">rcu_irq_exit()</span></code></a>, be sure to test with
 CONFIG_RCU_EQS_DEBUG=y.</p>
 <dl class="function">
+<dt id="c.rcu_irq_exit_preempt">
+void <code class="descname">rcu_irq_exit_preempt</code><span class="sig-paren">(</span>void<span class="sig-paren">)</span><a class="headerlink" href="#c.rcu_irq_exit_preempt" title="Permalink to this definition">¶</a></dt>
+<dd><p>Inform RCU that current CPU is exiting irq towards in kernel preemption</p>
+</dd></dl>
+
+<p><strong>Parameters</strong></p>
+<dl class="docutils">
+<dt><code class="docutils literal notranslate"><span class="pre">void</span></code></dt>
+<dd>no arguments</dd>
+</dl>
+<p><strong>Description</strong></p>
+<p>Same as <a class="reference internal" href="#c.rcu_irq_exit" title="rcu_irq_exit"><code class="xref c c-func docutils literal notranslate"><span class="pre">rcu_irq_exit()</span></code></a> but has a sanity check that scheduling is safe
+from RCU point of view. Invoked from return from interrupt before kernel
+preemption.</p>
+<dl class="function">
+<dt id="c.rcu_irq_exit_check_preempt">
+void <code class="descname">rcu_irq_exit_check_preempt</code><span class="sig-paren">(</span>void<span class="sig-paren">)</span><a class="headerlink" href="#c.rcu_irq_exit_check_preempt" title="Permalink to this definition">¶</a></dt>
+<dd><p>Validate that scheduling is possible</p>
+</dd></dl>
+
+<p><strong>Parameters</strong></p>
+<dl class="docutils">
+<dt><code class="docutils literal notranslate"><span class="pre">void</span></code></dt>
+<dd>no arguments</dd>
+</dl>
+<dl class="function">
 <dt id="c.rcu_idle_exit">
 void <code class="descname">rcu_idle_exit</code><span class="sig-paren">(</span>void<span class="sig-paren">)</span><a class="headerlink" href="#c.rcu_idle_exit" title="Permalink to this definition">¶</a></dt>
 <dd><p>inform RCU that current CPU is leaving idle</p>
@@ -11716,7 +11652,7 @@ read-side critical sections can occur.</p>
 CONFIG_RCU_EQS_DEBUG=y.</p>
 <dl class="function">
 <dt id="c.rcu_user_exit">
-void <code class="descname">rcu_user_exit</code><span class="sig-paren">(</span>void<span class="sig-paren">)</span><a class="headerlink" href="#c.rcu_user_exit" title="Permalink to this definition">¶</a></dt>
+void noinstr <code class="descname">rcu_user_exit</code><span class="sig-paren">(</span>void<span class="sig-paren">)</span><a class="headerlink" href="#c.rcu_user_exit" title="Permalink to this definition">¶</a></dt>
 <dd><p>inform RCU that we are exiting userspace.</p>
 </dd></dl>
 
@@ -11731,27 +11667,40 @@ run a RCU read side critical section anytime.</p>
 <p>If you add or remove a call to <a class="reference internal" href="#c.rcu_user_exit" title="rcu_user_exit"><code class="xref c c-func docutils literal notranslate"><span class="pre">rcu_user_exit()</span></code></a>, be sure to test with
 CONFIG_RCU_EQS_DEBUG=y.</p>
 <dl class="function">
-<dt id="c.rcu_nmi_enter_common">
-void <code class="descname">rcu_nmi_enter_common</code><span class="sig-paren">(</span>bool<em>&nbsp;irq</em><span class="sig-paren">)</span><a class="headerlink" href="#c.rcu_nmi_enter_common" title="Permalink to this definition">¶</a></dt>
-<dd><p>inform RCU of entry to NMI context</p>
+<dt id="c.__rcu_irq_enter_check_tick">
+void <code class="descname">__rcu_irq_enter_check_tick</code><span class="sig-paren">(</span>void<span class="sig-paren">)</span><a class="headerlink" href="#c.__rcu_irq_enter_check_tick" title="Permalink to this definition">¶</a></dt>
+<dd><p>Enable scheduler tick on CPU if RCU needs it.</p>
 </dd></dl>
 
 <p><strong>Parameters</strong></p>
 <dl class="docutils">
-<dt><code class="docutils literal notranslate"><span class="pre">bool</span> <span class="pre">irq</span></code></dt>
-<dd>Is this call from rcu_irq_enter?</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">void</span></code></dt>
+<dd>no arguments</dd>
 </dl>
 <p><strong>Description</strong></p>
-<p>If the CPU was idle from RCU’s viewpoint, update rdp-&gt;dynticks and
-rdp-&gt;dynticks_nmi_nesting to let the RCU grace-period handling know
-that the CPU is active.  This implementation permits nested NMIs, as
-long as the nesting level does not overflow an int.  (You will probably
-run out of stack space first.)</p>
-<p>If you add or remove a call to <a class="reference internal" href="#c.rcu_nmi_enter_common" title="rcu_nmi_enter_common"><code class="xref c c-func docutils literal notranslate"><span class="pre">rcu_nmi_enter_common()</span></code></a>, be sure to test
-with CONFIG_RCU_EQS_DEBUG=y.</p>
+<p>The scheduler tick is not normally enabled when CPUs enter the kernel
+from nohz_full userspace execution.  After all, nohz_full userspace
+execution is an RCU quiescent state and the time executing in the kernel
+is quite short.  Except of course when it isn’t.  And it is not hard to
+cause a large system to spend tens of seconds or even minutes looping
+in the kernel, which can cause a number of problems, include RCU CPU
+stall warnings.</p>
+<p>Therefore, if a nohz_full CPU fails to report a quiescent state
+in a timely manner, the RCU grace-period kthread sets that CPU’s
+-&gt;rcu_urgent_qs flag with the expectation that the next interrupt or
+exception will invoke this function, which will turn on the scheduler
+tick, which will enable RCU to detect that CPU’s quiescent states,
+for example, due to cond_resched() calls in CONFIG_PREEMPT=n kernels.
+The tick will be disabled once a quiescent state is reported for
+this CPU.</p>
+<p>Of course, in carefully tuned systems, there might never be an
+interrupt or exception.  In that case, the RCU grace-period kthread
+will eventually cause one to happen.  However, in less carefully
+controlled environments, this function allows RCU to get what it
+needs without creating otherwise useless interruptions.</p>
 <dl class="function">
 <dt id="c.rcu_nmi_enter">
-void <code class="descname">rcu_nmi_enter</code><span class="sig-paren">(</span>void<span class="sig-paren">)</span><a class="headerlink" href="#c.rcu_nmi_enter" title="Permalink to this definition">¶</a></dt>
+noinstr void <code class="descname">rcu_nmi_enter</code><span class="sig-paren">(</span>void<span class="sig-paren">)</span><a class="headerlink" href="#c.rcu_nmi_enter" title="Permalink to this definition">¶</a></dt>
 <dd><p>inform RCU of entry to NMI context</p>
 </dd></dl>
 
@@ -11760,9 +11709,17 @@ void <code class="descname">rcu_nmi_enter</code><span class="sig-paren">(</span>
 <dt><code class="docutils literal notranslate"><span class="pre">void</span></code></dt>
 <dd>no arguments</dd>
 </dl>
+<p><strong>Description</strong></p>
+<p>If the CPU was idle from RCU’s viewpoint, update rdp-&gt;dynticks and
+rdp-&gt;dynticks_nmi_nesting to let the RCU grace-period handling know
+that the CPU is active.  This implementation permits nested NMIs, as
+long as the nesting level does not overflow an int.  (You will probably
+run out of stack space first.)</p>
+<p>If you add or remove a call to <a class="reference internal" href="#c.rcu_nmi_enter" title="rcu_nmi_enter"><code class="xref c c-func docutils literal notranslate"><span class="pre">rcu_nmi_enter()</span></code></a>, be sure to test
+with CONFIG_RCU_EQS_DEBUG=y.</p>
 <dl class="function">
 <dt id="c.rcu_irq_enter">
-void <code class="descname">rcu_irq_enter</code><span class="sig-paren">(</span>void<span class="sig-paren">)</span><a class="headerlink" href="#c.rcu_irq_enter" title="Permalink to this definition">¶</a></dt>
+noinstr void <code class="descname">rcu_irq_enter</code><span class="sig-paren">(</span>void<span class="sig-paren">)</span><a class="headerlink" href="#c.rcu_irq_enter" title="Permalink to this definition">¶</a></dt>
 <dd><p>inform RCU that current CPU is entering irq away from idle</p>
 </dd></dl>
 
@@ -11788,7 +11745,7 @@ But very infrequently and irreproducibly.</p>
 CONFIG_RCU_EQS_DEBUG=y.</p>
 <dl class="function">
 <dt id="c.rcu_is_watching">
-bool notrace <code class="descname">rcu_is_watching</code><span class="sig-paren">(</span>void<span class="sig-paren">)</span><a class="headerlink" href="#c.rcu_is_watching" title="Permalink to this definition">¶</a></dt>
+bool <code class="descname">rcu_is_watching</code><span class="sig-paren">(</span>void<span class="sig-paren">)</span><a class="headerlink" href="#c.rcu_is_watching" title="Permalink to this definition">¶</a></dt>
 <dd><p>see if RCU thinks that the current CPU is not idle</p>
 </dd></dl>
 
@@ -11820,7 +11777,7 @@ void <code class="descname">call_rcu</code><span class="sig-paren">(</span>struc
 period elapses, in other words after all pre-existing RCU read-side
 critical sections have completed.  However, the callback function
 might well execute concurrently with RCU read-side critical sections
-that started after <a class="reference internal" href="#c.call_rcu" title="call_rcu"><code class="xref c c-func docutils literal notranslate"><span class="pre">call_rcu()</span></code></a> was invoked.  RCU read-side critical
+that started after <a class="reference internal" href="../driver-api/basics.html#c.call_rcu" title="call_rcu"><code class="xref c c-func docutils literal notranslate"><span class="pre">call_rcu()</span></code></a> was invoked.  RCU read-side critical
 sections are delimited by <a class="reference internal" href="#c.rcu_read_lock" title="rcu_read_lock"><code class="xref c c-func docutils literal notranslate"><span class="pre">rcu_read_lock()</span></code></a> and <a class="reference internal" href="#c.rcu_read_unlock" title="rcu_read_unlock"><code class="xref c c-func docutils literal notranslate"><span class="pre">rcu_read_unlock()</span></code></a>, and
 may be nested.  In addition, regions of code across which interrupts,
 preemption, or softirqs have been disabled also serve as RCU read-side
@@ -11831,16 +11788,16 @@ all pre-existing RCU read-side critical section.  On systems with more
 than one CPU, this means that when “func()” is invoked, each CPU is
 guaranteed to have executed a full memory barrier since the end of its
 last RCU read-side critical section whose beginning preceded the call
-to <a class="reference internal" href="#c.call_rcu" title="call_rcu"><code class="xref c c-func docutils literal notranslate"><span class="pre">call_rcu()</span></code></a>.  It also means that each CPU executing an RCU read-side
+to <a class="reference internal" href="../driver-api/basics.html#c.call_rcu" title="call_rcu"><code class="xref c c-func docutils literal notranslate"><span class="pre">call_rcu()</span></code></a>.  It also means that each CPU executing an RCU read-side
 critical section that continues beyond the start of “func()” must have
-executed a memory barrier after the <a class="reference internal" href="#c.call_rcu" title="call_rcu"><code class="xref c c-func docutils literal notranslate"><span class="pre">call_rcu()</span></code></a> but before the beginning
+executed a memory barrier after the <a class="reference internal" href="../driver-api/basics.html#c.call_rcu" title="call_rcu"><code class="xref c c-func docutils literal notranslate"><span class="pre">call_rcu()</span></code></a> but before the beginning
 of that RCU read-side critical section.  Note that these guarantees
 include CPUs that are offline, idle, or executing in user mode, as
 well as CPUs that are executing in the kernel.</p>
-<p>Furthermore, if CPU A invoked <a class="reference internal" href="#c.call_rcu" title="call_rcu"><code class="xref c c-func docutils literal notranslate"><span class="pre">call_rcu()</span></code></a> and CPU B invoked the
+<p>Furthermore, if CPU A invoked <a class="reference internal" href="../driver-api/basics.html#c.call_rcu" title="call_rcu"><code class="xref c c-func docutils literal notranslate"><span class="pre">call_rcu()</span></code></a> and CPU B invoked the
 resulting RCU callback function “func()”, then both CPU A and CPU B are
 guaranteed to execute a full memory barrier during the time interval
-between the call to <a class="reference internal" href="#c.call_rcu" title="call_rcu"><code class="xref c c-func docutils literal notranslate"><span class="pre">call_rcu()</span></code></a> and the invocation of “func()” – even
+between the call to <a class="reference internal" href="../driver-api/basics.html#c.call_rcu" title="call_rcu"><code class="xref c c-func docutils literal notranslate"><span class="pre">call_rcu()</span></code></a> and the invocation of “func()” – even
 if CPU A and CPU B are the same CPU (but again only if the system has
 more than one CPU).</p>
 <dl class="type">
@@ -11911,6 +11868,7 @@ struct <code class="descname">kfree_rcu_cpu</code><a class="headerlink" href="#c
   struct delayed_work monitor_work;
   bool monitor_todo;
   bool initialized;
+  int count;
 };
 </pre></div>
 </div>
@@ -11953,29 +11911,29 @@ void <code class="descname">synchronize_rcu</code><span class="sig-paren">(</spa
 <p>Control will return to the caller some time after a full grace
 period has elapsed, in other words after all currently executing RCU
 read-side critical sections have completed.  Note, however, that
-upon return from <a class="reference internal" href="#c.synchronize_rcu" title="synchronize_rcu"><code class="xref c c-func docutils literal notranslate"><span class="pre">synchronize_rcu()</span></code></a>, the caller might well be executing
+upon return from <a class="reference internal" href="../driver-api/basics.html#c.synchronize_rcu" title="synchronize_rcu"><code class="xref c c-func docutils literal notranslate"><span class="pre">synchronize_rcu()</span></code></a>, the caller might well be executing
 concurrently with new RCU read-side critical sections that began while
-<a class="reference internal" href="#c.synchronize_rcu" title="synchronize_rcu"><code class="xref c c-func docutils literal notranslate"><span class="pre">synchronize_rcu()</span></code></a> was waiting.  RCU read-side critical sections are
+<a class="reference internal" href="../driver-api/basics.html#c.synchronize_rcu" title="synchronize_rcu"><code class="xref c c-func docutils literal notranslate"><span class="pre">synchronize_rcu()</span></code></a> was waiting.  RCU read-side critical sections are
 delimited by <a class="reference internal" href="#c.rcu_read_lock" title="rcu_read_lock"><code class="xref c c-func docutils literal notranslate"><span class="pre">rcu_read_lock()</span></code></a> and <a class="reference internal" href="#c.rcu_read_unlock" title="rcu_read_unlock"><code class="xref c c-func docutils literal notranslate"><span class="pre">rcu_read_unlock()</span></code></a>, and may be nested.
 In addition, regions of code across which interrupts, preemption, or
 softirqs have been disabled also serve as RCU read-side critical
 sections.  This includes hardware interrupt handlers, softirq handlers,
 and NMI handlers.</p>
 <p>Note that this guarantee implies further memory-ordering guarantees.
-On systems with more than one CPU, when <a class="reference internal" href="#c.synchronize_rcu" title="synchronize_rcu"><code class="xref c c-func docutils literal notranslate"><span class="pre">synchronize_rcu()</span></code></a> returns,
+On systems with more than one CPU, when <a class="reference internal" href="../driver-api/basics.html#c.synchronize_rcu" title="synchronize_rcu"><code class="xref c c-func docutils literal notranslate"><span class="pre">synchronize_rcu()</span></code></a> returns,
 each CPU is guaranteed to have executed a full memory barrier since
 the end of its last RCU read-side critical section whose beginning
-preceded the call to <a class="reference internal" href="#c.synchronize_rcu" title="synchronize_rcu"><code class="xref c c-func docutils literal notranslate"><span class="pre">synchronize_rcu()</span></code></a>.  In addition, each CPU having
+preceded the call to <a class="reference internal" href="../driver-api/basics.html#c.synchronize_rcu" title="synchronize_rcu"><code class="xref c c-func docutils literal notranslate"><span class="pre">synchronize_rcu()</span></code></a>.  In addition, each CPU having
 an RCU read-side critical section that extends beyond the return from
-<a class="reference internal" href="#c.synchronize_rcu" title="synchronize_rcu"><code class="xref c c-func docutils literal notranslate"><span class="pre">synchronize_rcu()</span></code></a> is guaranteed to have executed a full memory barrier
-after the beginning of <a class="reference internal" href="#c.synchronize_rcu" title="synchronize_rcu"><code class="xref c c-func docutils literal notranslate"><span class="pre">synchronize_rcu()</span></code></a> and before the beginning of
+<a class="reference internal" href="../driver-api/basics.html#c.synchronize_rcu" title="synchronize_rcu"><code class="xref c c-func docutils literal notranslate"><span class="pre">synchronize_rcu()</span></code></a> is guaranteed to have executed a full memory barrier
+after the beginning of <a class="reference internal" href="../driver-api/basics.html#c.synchronize_rcu" title="synchronize_rcu"><code class="xref c c-func docutils literal notranslate"><span class="pre">synchronize_rcu()</span></code></a> and before the beginning of
 that RCU read-side critical section.  Note that these guarantees include
 CPUs that are offline, idle, or executing in user mode, as well as CPUs
 that are executing in the kernel.</p>
-<p>Furthermore, if CPU A invoked <a class="reference internal" href="#c.synchronize_rcu" title="synchronize_rcu"><code class="xref c c-func docutils literal notranslate"><span class="pre">synchronize_rcu()</span></code></a>, which returned
+<p>Furthermore, if CPU A invoked <a class="reference internal" href="../driver-api/basics.html#c.synchronize_rcu" title="synchronize_rcu"><code class="xref c c-func docutils literal notranslate"><span class="pre">synchronize_rcu()</span></code></a>, which returned
 to its caller on CPU B, then both CPU A and CPU B are guaranteed
 to have executed a full memory barrier during the execution of
-<a class="reference internal" href="#c.synchronize_rcu" title="synchronize_rcu"><code class="xref c c-func docutils literal notranslate"><span class="pre">synchronize_rcu()</span></code></a> – even if CPU A and CPU B are the same CPU (but
+<a class="reference internal" href="../driver-api/basics.html#c.synchronize_rcu" title="synchronize_rcu"><code class="xref c c-func docutils literal notranslate"><span class="pre">synchronize_rcu()</span></code></a> – even if CPU A and CPU B are the same CPU (but
 again only if the system has more than one CPU).</p>
 <dl class="function">
 <dt id="c.get_state_synchronize_rcu">
@@ -11989,7 +11947,7 @@ unsigned long <code class="descname">get_state_synchronize_rcu</code><span class
 <dd>no arguments</dd>
 </dl>
 <p><strong>Description</strong></p>
-<p>Returns a cookie that is used by a later call to <a class="reference internal" href="#c.cond_synchronize_rcu" title="cond_synchronize_rcu"><code class="xref c c-func docutils literal notranslate"><span class="pre">cond_synchronize_rcu()</span></code></a>
+<p>Returns a cookie that is used by a later call to <a class="reference internal" href="../driver-api/basics.html#c.cond_synchronize_rcu" title="cond_synchronize_rcu"><code class="xref c c-func docutils literal notranslate"><span class="pre">cond_synchronize_rcu()</span></code></a>
 to determine whether or not a full grace period has elapsed in the
 meantime.</p>
 <dl class="function">
@@ -12001,12 +11959,12 @@ void <code class="descname">cond_synchronize_rcu</code><span class="sig-paren">(
 <p><strong>Parameters</strong></p>
 <dl class="docutils">
 <dt><code class="docutils literal notranslate"><span class="pre">unsigned</span> <span class="pre">long</span> <span class="pre">oldstate</span></code></dt>
-<dd>return value from earlier call to <a class="reference internal" href="#c.get_state_synchronize_rcu" title="get_state_synchronize_rcu"><code class="xref c c-func docutils literal notranslate"><span class="pre">get_state_synchronize_rcu()</span></code></a></dd>
+<dd>return value from earlier call to <a class="reference internal" href="../driver-api/basics.html#c.get_state_synchronize_rcu" title="get_state_synchronize_rcu"><code class="xref c c-func docutils literal notranslate"><span class="pre">get_state_synchronize_rcu()</span></code></a></dd>
 </dl>
 <p><strong>Description</strong></p>
 <p>If a full RCU grace period has elapsed since the earlier call to
-<a class="reference internal" href="#c.get_state_synchronize_rcu" title="get_state_synchronize_rcu"><code class="xref c c-func docutils literal notranslate"><span class="pre">get_state_synchronize_rcu()</span></code></a>, just return.  Otherwise, invoke
-<a class="reference internal" href="#c.synchronize_rcu" title="synchronize_rcu"><code class="xref c c-func docutils literal notranslate"><span class="pre">synchronize_rcu()</span></code></a> to wait for a full grace period.</p>
+<a class="reference internal" href="../driver-api/basics.html#c.get_state_synchronize_rcu" title="get_state_synchronize_rcu"><code class="xref c c-func docutils literal notranslate"><span class="pre">get_state_synchronize_rcu()</span></code></a>, just return.  Otherwise, invoke
+<a class="reference internal" href="../driver-api/basics.html#c.synchronize_rcu" title="synchronize_rcu"><code class="xref c c-func docutils literal notranslate"><span class="pre">synchronize_rcu()</span></code></a> to wait for a full grace period.</p>
 <p>Yes, this function does not take counter wrap into account.  But
 counter wrap is harmless.  If the counter wraps, we have waited for
 more than 2 billion grace periods (and way more on a 64-bit system!),
@@ -12014,7 +11972,7 @@ so waiting for one additional grace period should be just fine.</p>
 <dl class="function">
 <dt id="c.rcu_barrier">
 void <code class="descname">rcu_barrier</code><span class="sig-paren">(</span>void<span class="sig-paren">)</span><a class="headerlink" href="#c.rcu_barrier" title="Permalink to this definition">¶</a></dt>
-<dd><p>Wait until all in-flight <a class="reference internal" href="#c.call_rcu" title="call_rcu"><code class="xref c c-func docutils literal notranslate"><span class="pre">call_rcu()</span></code></a> callbacks complete.</p>
+<dd><p>Wait until all in-flight <a class="reference internal" href="../driver-api/basics.html#c.call_rcu" title="call_rcu"><code class="xref c c-func docutils literal notranslate"><span class="pre">call_rcu()</span></code></a> callbacks complete.</p>
 </dd></dl>
 
 <p><strong>Parameters</strong></p>
@@ -12025,7 +11983,7 @@ void <code class="descname">rcu_barrier</code><span class="sig-paren">(</span>vo
 <p><strong>Description</strong></p>
 <p>Note that this primitive does not necessarily wait for an RCU grace period
 to complete.  For example, if there are no RCU callbacks queued anywhere
-in the system, then <a class="reference internal" href="#c.rcu_barrier" title="rcu_barrier"><code class="xref c c-func docutils literal notranslate"><span class="pre">rcu_barrier()</span></code></a> is within its rights to return
+in the system, then <a class="reference internal" href="../driver-api/basics.html#c.rcu_barrier" title="rcu_barrier"><code class="xref c c-func docutils literal notranslate"><span class="pre">rcu_barrier()</span></code></a> is within its rights to return
 immediately, without waiting for anything, much less an RCU grace period.</p>
 <dl class="function">
 <dt id="c.synchronize_rcu_expedited">
@@ -12050,9 +12008,9 @@ the IPI handler reports the quiescent state immediately.</p>
 implementations, it is still unfriendly to real-time workloads, so is
 thus not recommended for any sort of common-case code.  In fact, if
 you are using <a class="reference internal" href="#c.synchronize_rcu_expedited" title="synchronize_rcu_expedited"><code class="xref c c-func docutils literal notranslate"><span class="pre">synchronize_rcu_expedited()</span></code></a> in a loop, please restructure
-your code to batch your updates, and then use a single <a class="reference internal" href="#c.synchronize_rcu" title="synchronize_rcu"><code class="xref c c-func docutils literal notranslate"><span class="pre">synchronize_rcu()</span></code></a>
+your code to batch your updates, and then use a single <a class="reference internal" href="../driver-api/basics.html#c.synchronize_rcu" title="synchronize_rcu"><code class="xref c c-func docutils literal notranslate"><span class="pre">synchronize_rcu()</span></code></a>
 instead.</p>
-<p>This has the same semantics as (but is more brutal than) <a class="reference internal" href="#c.synchronize_rcu" title="synchronize_rcu"><code class="xref c c-func docutils literal notranslate"><span class="pre">synchronize_rcu()</span></code></a>.</p>
+<p>This has the same semantics as (but is more brutal than) <a class="reference internal" href="../driver-api/basics.html#c.synchronize_rcu" title="synchronize_rcu"><code class="xref c c-func docutils literal notranslate"><span class="pre">synchronize_rcu()</span></code></a>.</p>
 <dl class="function">
 <dt id="c.rcu_read_lock_held_common">
 bool <code class="descname">rcu_read_lock_held_common</code><span class="sig-paren">(</span>bool *<em>&nbsp;ret</em><span class="sig-paren">)</span><a class="headerlink" href="#c.rcu_read_lock_held_common" title="Permalink to this definition">¶</a></dt>
@@ -12065,11 +12023,11 @@ bool <code class="descname">rcu_read_lock_held_common</code><span class="sig-par
 <dd>Best guess answer if lockdep cannot be relied on</dd>
 </dl>
 <p><strong>Description</strong></p>
-<p>Returns true if lockdep must be ignored, in which case <a href="#id3"><span class="problematic" id="id4">*</span></a>ret contains
+<p>Returns true if lockdep must be ignored, in which case <code class="docutils literal notranslate"><span class="pre">*ret</span></code> contains
 the best guess described below.  Otherwise returns false, in which
-case <a href="#id5"><span class="problematic" id="id6">*</span></a>ret tells the caller nothing and the caller should instead
+case <code class="docutils literal notranslate"><span class="pre">*ret</span></code> tells the caller nothing and the caller should instead
 consult lockdep.</p>
-<p>If CONFIG_DEBUG_LOCK_ALLOC is selected, set <a href="#id7"><span class="problematic" id="id8">*</span></a>ret to nonzero iff in an
+<p>If CONFIG_DEBUG_LOCK_ALLOC is selected, set <code class="docutils literal notranslate"><span class="pre">*ret</span></code> to nonzero iff in an
 RCU-sched read-side critical section.  In absence of
 CONFIG_DEBUG_LOCK_ALLOC, this assumes we are in an RCU-sched read-side
 critical section unless it can prove otherwise.  Note that disabling
@@ -12081,7 +12039,7 @@ critical section.</p>
 and while lockdep is disabled.</p>
 <p>Note that if the CPU is in the idle loop from an RCU point of view (ie:
 that we are in the section between <a class="reference internal" href="#c.rcu_idle_enter" title="rcu_idle_enter"><code class="xref c c-func docutils literal notranslate"><span class="pre">rcu_idle_enter()</span></code></a> and <a class="reference internal" href="#c.rcu_idle_exit" title="rcu_idle_exit"><code class="xref c c-func docutils literal notranslate"><span class="pre">rcu_idle_exit()</span></code></a>)
-then <a class="reference internal" href="#c.rcu_read_lock_held" title="rcu_read_lock_held"><code class="xref c c-func docutils literal notranslate"><span class="pre">rcu_read_lock_held()</span></code></a> sets <a href="#id9"><span class="problematic" id="id10">*</span></a>ret to false even if the CPU did an
+then <a class="reference internal" href="../driver-api/basics.html#c.rcu_read_lock_held" title="rcu_read_lock_held"><code class="xref c c-func docutils literal notranslate"><span class="pre">rcu_read_lock_held()</span></code></a> sets <code class="docutils literal notranslate"><span class="pre">*ret</span></code> to false even if the CPU did an
 <a class="reference internal" href="#c.rcu_read_lock" title="rcu_read_lock"><code class="xref c c-func docutils literal notranslate"><span class="pre">rcu_read_lock()</span></code></a>.  The reason for this is that RCU ignores CPUs that are
 in such a section, considering these as in extended quiescent state,
 so such a CPU is effectively never in an RCU read-side critical section
@@ -12104,13 +12062,13 @@ void <code class="descname">rcu_expedite_gp</code><span class="sig-paren">(</spa
 <dd>no arguments</dd>
 </dl>
 <p><strong>Description</strong></p>
-<p>After a call to this function, future calls to <a class="reference internal" href="#c.synchronize_rcu" title="synchronize_rcu"><code class="xref c c-func docutils literal notranslate"><span class="pre">synchronize_rcu()</span></code></a> and
+<p>After a call to this function, future calls to <a class="reference internal" href="../driver-api/basics.html#c.synchronize_rcu" title="synchronize_rcu"><code class="xref c c-func docutils literal notranslate"><span class="pre">synchronize_rcu()</span></code></a> and
 friends act as the corresponding <a class="reference internal" href="#c.synchronize_rcu_expedited" title="synchronize_rcu_expedited"><code class="xref c c-func docutils literal notranslate"><span class="pre">synchronize_rcu_expedited()</span></code></a> function
 had instead been called.</p>
 <dl class="function">
 <dt id="c.rcu_unexpedite_gp">
 void <code class="descname">rcu_unexpedite_gp</code><span class="sig-paren">(</span>void<span class="sig-paren">)</span><a class="headerlink" href="#c.rcu_unexpedite_gp" title="Permalink to this definition">¶</a></dt>
-<dd><p>Cancel prior <a class="reference internal" href="#c.rcu_expedite_gp" title="rcu_expedite_gp"><code class="xref c c-func docutils literal notranslate"><span class="pre">rcu_expedite_gp()</span></code></a> invocation</p>
+<dd><p>Cancel prior <a class="reference internal" href="../driver-api/basics.html#c.rcu_expedite_gp" title="rcu_expedite_gp"><code class="xref c c-func docutils literal notranslate"><span class="pre">rcu_expedite_gp()</span></code></a> invocation</p>
 </dd></dl>
 
 <p><strong>Parameters</strong></p>
@@ -12119,10 +12077,10 @@ void <code class="descname">rcu_unexpedite_gp</code><span class="sig-paren">(</s
 <dd>no arguments</dd>
 </dl>
 <p><strong>Description</strong></p>
-<p>Undo a prior call to <a class="reference internal" href="#c.rcu_expedite_gp" title="rcu_expedite_gp"><code class="xref c c-func docutils literal notranslate"><span class="pre">rcu_expedite_gp()</span></code></a>.  If all prior calls to
-<a class="reference internal" href="#c.rcu_expedite_gp" title="rcu_expedite_gp"><code class="xref c c-func docutils literal notranslate"><span class="pre">rcu_expedite_gp()</span></code></a> are undone by a subsequent call to <a class="reference internal" href="#c.rcu_unexpedite_gp" title="rcu_unexpedite_gp"><code class="xref c c-func docutils literal notranslate"><span class="pre">rcu_unexpedite_gp()</span></code></a>,
+<p>Undo a prior call to <a class="reference internal" href="../driver-api/basics.html#c.rcu_expedite_gp" title="rcu_expedite_gp"><code class="xref c c-func docutils literal notranslate"><span class="pre">rcu_expedite_gp()</span></code></a>.  If all prior calls to
+<a class="reference internal" href="../driver-api/basics.html#c.rcu_expedite_gp" title="rcu_expedite_gp"><code class="xref c c-func docutils literal notranslate"><span class="pre">rcu_expedite_gp()</span></code></a> are undone by a subsequent call to <a class="reference internal" href="../driver-api/basics.html#c.rcu_unexpedite_gp" title="rcu_unexpedite_gp"><code class="xref c c-func docutils literal notranslate"><span class="pre">rcu_unexpedite_gp()</span></code></a>,
 and if the rcu_expedited sysfs/boot parameter is not set, then all
-subsequent calls to <a class="reference internal" href="#c.synchronize_rcu" title="synchronize_rcu"><code class="xref c c-func docutils literal notranslate"><span class="pre">synchronize_rcu()</span></code></a> and friends will return to
+subsequent calls to <a class="reference internal" href="../driver-api/basics.html#c.synchronize_rcu" title="synchronize_rcu"><code class="xref c c-func docutils literal notranslate"><span class="pre">synchronize_rcu()</span></code></a> and friends will return to
 their normal non-expedited behavior.</p>
 <dl class="function">
 <dt id="c.rcu_read_lock_held">
@@ -12213,88 +12171,11 @@ void <code class="descname">destroy_rcu_head_on_stack</code><span class="sig-par
 </dl>
 <p><strong>Description</strong></p>
 <p>This function informs debugobjects that an on-stack rcu_head structure
-is about to go out of scope.  As with <a class="reference internal" href="#c.init_rcu_head_on_stack" title="init_rcu_head_on_stack"><code class="xref c c-func docutils literal notranslate"><span class="pre">init_rcu_head_on_stack()</span></code></a>, this
+is about to go out of scope.  As with <a class="reference internal" href="../driver-api/basics.html#c.init_rcu_head_on_stack" title="init_rcu_head_on_stack"><code class="xref c c-func docutils literal notranslate"><span class="pre">init_rcu_head_on_stack()</span></code></a>, this
 function is not required for rcu_head structures that are statically
 defined or that are dynamically allocated on the heap.  Also as with
-<a class="reference internal" href="#c.init_rcu_head_on_stack" title="init_rcu_head_on_stack"><code class="xref c c-func docutils literal notranslate"><span class="pre">init_rcu_head_on_stack()</span></code></a>, this function has no effect for
+<a class="reference internal" href="../driver-api/basics.html#c.init_rcu_head_on_stack" title="init_rcu_head_on_stack"><code class="xref c c-func docutils literal notranslate"><span class="pre">init_rcu_head_on_stack()</span></code></a>, this function has no effect for
 !CONFIG_DEBUG_OBJECTS_RCU_HEAD kernel builds.</p>
-<dl class="function">
-<dt id="c.call_rcu_tasks">
-void <code class="descname">call_rcu_tasks</code><span class="sig-paren">(</span>struct rcu_head *<em>&nbsp;rhp</em>, rcu_callback_t<em>&nbsp;func</em><span class="sig-paren">)</span><a class="headerlink" href="#c.call_rcu_tasks" title="Permalink to this definition">¶</a></dt>
-<dd><p>Queue an RCU for invocation task-based grace period</p>
-</dd></dl>
-
-<p><strong>Parameters</strong></p>
-<dl class="docutils">
-<dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">rcu_head</span> <span class="pre">*</span> <span class="pre">rhp</span></code></dt>
-<dd>structure to be used for queueing the RCU updates.</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">rcu_callback_t</span> <span class="pre">func</span></code></dt>
-<dd>actual callback function to be invoked after the grace period</dd>
-</dl>
-<p><strong>Description</strong></p>
-<p>The callback function will be invoked some time after a full grace
-period elapses, in other words after all currently executing RCU
-read-side critical sections have completed. <a class="reference internal" href="#c.call_rcu_tasks" title="call_rcu_tasks"><code class="xref c c-func docutils literal notranslate"><span class="pre">call_rcu_tasks()</span></code></a> assumes
-that the read-side critical sections end at a voluntary context
-switch (not a preemption!), cond_resched_rcu_qs(), entry into idle,
-or transition to usermode execution.  As such, there are no read-side
-primitives analogous to <a class="reference internal" href="#c.rcu_read_lock" title="rcu_read_lock"><code class="xref c c-func docutils literal notranslate"><span class="pre">rcu_read_lock()</span></code></a> and <a class="reference internal" href="#c.rcu_read_unlock" title="rcu_read_unlock"><code class="xref c c-func docutils literal notranslate"><span class="pre">rcu_read_unlock()</span></code></a> because
-this primitive is intended to determine that all tasks have passed
-through a safe state, not so much for data-strcuture synchronization.</p>
-<p>See the description of <a class="reference internal" href="#c.call_rcu" title="call_rcu"><code class="xref c c-func docutils literal notranslate"><span class="pre">call_rcu()</span></code></a> for more detailed information on
-memory ordering guarantees.</p>
-<dl class="function">
-<dt id="c.synchronize_rcu_tasks">
-void <code class="descname">synchronize_rcu_tasks</code><span class="sig-paren">(</span>void<span class="sig-paren">)</span><a class="headerlink" href="#c.synchronize_rcu_tasks" title="Permalink to this definition">¶</a></dt>
-<dd><p>wait until an rcu-tasks grace period has elapsed.</p>
-</dd></dl>
-
-<p><strong>Parameters</strong></p>
-<dl class="docutils">
-<dt><code class="docutils literal notranslate"><span class="pre">void</span></code></dt>
-<dd>no arguments</dd>
-</dl>
-<p><strong>Description</strong></p>
-<p>Control will return to the caller some time after a full rcu-tasks
-grace period has elapsed, in other words after all currently
-executing rcu-tasks read-side critical sections have elapsed.  These
-read-side critical sections are delimited by calls to schedule(),
-<a class="reference internal" href="#c.cond_resched_tasks_rcu_qs" title="cond_resched_tasks_rcu_qs"><code class="xref c c-func docutils literal notranslate"><span class="pre">cond_resched_tasks_rcu_qs()</span></code></a>, idle execution, userspace execution, calls
-to <a class="reference internal" href="#c.synchronize_rcu_tasks" title="synchronize_rcu_tasks"><code class="xref c c-func docutils literal notranslate"><span class="pre">synchronize_rcu_tasks()</span></code></a>, and (in theory, anyway) cond_resched().</p>
-<p>This is a very specialized primitive, intended only for a few uses in
-tracing and other situations requiring manipulation of function
-preambles and profiling hooks.  The <a class="reference internal" href="#c.synchronize_rcu_tasks" title="synchronize_rcu_tasks"><code class="xref c c-func docutils literal notranslate"><span class="pre">synchronize_rcu_tasks()</span></code></a> function
-is not (yet) intended for heavy use from multiple CPUs.</p>
-<p>Note that this guarantee implies further memory-ordering guarantees.
-On systems with more than one CPU, when <a class="reference internal" href="#c.synchronize_rcu_tasks" title="synchronize_rcu_tasks"><code class="xref c c-func docutils literal notranslate"><span class="pre">synchronize_rcu_tasks()</span></code></a> returns,
-each CPU is guaranteed to have executed a full memory barrier since the
-end of its last RCU-tasks read-side critical section whose beginning
-preceded the call to <a class="reference internal" href="#c.synchronize_rcu_tasks" title="synchronize_rcu_tasks"><code class="xref c c-func docutils literal notranslate"><span class="pre">synchronize_rcu_tasks()</span></code></a>.  In addition, each CPU
-having an RCU-tasks read-side critical section that extends beyond
-the return from <a class="reference internal" href="#c.synchronize_rcu_tasks" title="synchronize_rcu_tasks"><code class="xref c c-func docutils literal notranslate"><span class="pre">synchronize_rcu_tasks()</span></code></a> is guaranteed to have executed
-a full memory barrier after the beginning of <a class="reference internal" href="#c.synchronize_rcu_tasks" title="synchronize_rcu_tasks"><code class="xref c c-func docutils literal notranslate"><span class="pre">synchronize_rcu_tasks()</span></code></a>
-and before the beginning of that RCU-tasks read-side critical section.
-Note that these guarantees include CPUs that are offline, idle, or
-executing in user mode, as well as CPUs that are executing in the kernel.</p>
-<p>Furthermore, if CPU A invoked <a class="reference internal" href="#c.synchronize_rcu_tasks" title="synchronize_rcu_tasks"><code class="xref c c-func docutils literal notranslate"><span class="pre">synchronize_rcu_tasks()</span></code></a>, which returned
-to its caller on CPU B, then both CPU A and CPU B are guaranteed
-to have executed a full memory barrier during the execution of
-<a class="reference internal" href="#c.synchronize_rcu_tasks" title="synchronize_rcu_tasks"><code class="xref c c-func docutils literal notranslate"><span class="pre">synchronize_rcu_tasks()</span></code></a> – even if CPU A and CPU B are the same CPU
-(but again only if the system has more than one CPU).</p>
-<dl class="function">
-<dt id="c.rcu_barrier_tasks">
-void <code class="descname">rcu_barrier_tasks</code><span class="sig-paren">(</span>void<span class="sig-paren">)</span><a class="headerlink" href="#c.rcu_barrier_tasks" title="Permalink to this definition">¶</a></dt>
-<dd><p>Wait for in-flight <a class="reference internal" href="#c.call_rcu_tasks" title="call_rcu_tasks"><code class="xref c c-func docutils literal notranslate"><span class="pre">call_rcu_tasks()</span></code></a> callbacks.</p>
-</dd></dl>
-
-<p><strong>Parameters</strong></p>
-<dl class="docutils">
-<dt><code class="docutils literal notranslate"><span class="pre">void</span></code></dt>
-<dd>no arguments</dd>
-</dl>
-<p><strong>Description</strong></p>
-<p>Although the current implementation is guaranteed to wait, it is not
-obligated to, for example, if there are no pending callbacks.</p>
 <dl class="function">
 <dt id="c.srcu_read_lock_held">
 int <code class="descname">srcu_read_lock_held</code><span class="sig-paren">(</span>const struct srcu_struct *<em>&nbsp;ssp</em><span class="sig-paren">)</span><a class="headerlink" href="#c.srcu_read_lock_held" title="Permalink to this definition">¶</a></dt>
@@ -12593,6 +12474,7 @@ void <code class="descname">hlist_bl_del_rcu</code><span class="sig-paren">(</sp
 <p>hlist_bl_unhashed() on entry does not return true after this,
 the entry is in an undefined state. It is useful for RCU based
 lockfree traversal.</p>
+<p><strong>Description</strong></p>
 <p>In particular, it means that we can not poison the forward
 pointers that may still be used for walking the hash list.</p>
 <p>The caller must take whatever precautions are necessary
@@ -12719,6 +12601,7 @@ void <code class="descname">list_del_rcu</code><span class="sig-paren">(</span>s
 <p><a class="reference internal" href="#c.list_empty" title="list_empty"><code class="xref c c-func docutils literal notranslate"><span class="pre">list_empty()</span></code></a> on entry does not return true after this,
 the entry is in an undefined state. It is useful for RCU based
 lockfree traversal.</p>
+<p><strong>Description</strong></p>
 <p>In particular, it means that we can not poison the forward
 pointers that may still be used for walking the list.</p>
 <p>The caller must take whatever precautions are necessary
@@ -12729,8 +12612,8 @@ However, it is perfectly legal to run concurrently with
 the _rcu list-traversal primitives, such as
 <a class="reference internal" href="#c.list_for_each_entry_rcu" title="list_for_each_entry_rcu"><code class="xref c c-func docutils literal notranslate"><span class="pre">list_for_each_entry_rcu()</span></code></a>.</p>
 <p>Note that the caller is not permitted to immediately free
-the newly deleted entry.  Instead, either <a class="reference internal" href="#c.synchronize_rcu" title="synchronize_rcu"><code class="xref c c-func docutils literal notranslate"><span class="pre">synchronize_rcu()</span></code></a>
-or <a class="reference internal" href="#c.call_rcu" title="call_rcu"><code class="xref c c-func docutils literal notranslate"><span class="pre">call_rcu()</span></code></a> must be used to defer freeing until an RCU
+the newly deleted entry.  Instead, either <a class="reference internal" href="../driver-api/basics.html#c.synchronize_rcu" title="synchronize_rcu"><code class="xref c c-func docutils literal notranslate"><span class="pre">synchronize_rcu()</span></code></a>
+or <a class="reference internal" href="../driver-api/basics.html#c.call_rcu" title="call_rcu"><code class="xref c c-func docutils literal notranslate"><span class="pre">call_rcu()</span></code></a> must be used to defer freeing until an RCU
 grace period has elapsed.</p>
 <dl class="function">
 <dt id="c.hlist_del_init_rcu">
@@ -12747,6 +12630,7 @@ void <code class="descname">hlist_del_init_rcu</code><span class="sig-paren">(</
 <p>list_unhashed() on the node return true after this. It is
 useful for RCU based read lockfree traversal if the writer side
 must know if the list entry is still hashed or already unhashed.</p>
+<p><strong>Description</strong></p>
 <p>In particular, it means that we can not poison the forward pointers
 that may still be used for walking the hash list and we can only
 zero the pprev pointer so list_unhashed() will return true after
@@ -12798,7 +12682,7 @@ concurrently with this function.</p>
 <p>Important note: the caller must take whatever action is necessary to prevent
 any other updates to the existing list.  In principle, it is possible to
 modify the list as soon as sync() begins execution. If this sort of thing
-becomes necessary, an alternative version based on <a class="reference internal" href="#c.call_rcu" title="call_rcu"><code class="xref c c-func docutils literal notranslate"><span class="pre">call_rcu()</span></code></a> could be
+becomes necessary, an alternative version based on <a class="reference internal" href="../driver-api/basics.html#c.call_rcu" title="call_rcu"><code class="xref c c-func docutils literal notranslate"><span class="pre">call_rcu()</span></code></a> could be
 created.  But only if -really- needed – there is no shortage of RCU API
 members.</p>
 <dl class="function">
@@ -13020,6 +12904,7 @@ void <code class="descname">hlist_del_rcu</code><span class="sig-paren">(</span>
 <p>list_unhashed() on entry does not return true after this,
 the entry is in an undefined state. It is useful for RCU based
 lockfree traversal.</p>
+<p><strong>Description</strong></p>
 <p>In particular, it means that we can not poison the forward
 pointers that may still be used for walking the hash list.</p>
 <p>The caller must take whatever precautions are necessary
@@ -13044,6 +12929,24 @@ void <code class="descname">hlist_replace_rcu</code><span class="sig-paren">(</s
 </dl>
 <p><strong>Description</strong></p>
 <p>The <strong>old</strong> entry will be replaced with the <strong>new</strong> entry atomically.</p>
+<dl class="function">
+<dt id="c.hlists_swap_heads_rcu">
+void <code class="descname">hlists_swap_heads_rcu</code><span class="sig-paren">(</span>struct hlist_head *<em>&nbsp;left</em>, struct hlist_head *<em>&nbsp;right</em><span class="sig-paren">)</span><a class="headerlink" href="#c.hlists_swap_heads_rcu" title="Permalink to this definition">¶</a></dt>
+<dd><p>swap the lists the hlist heads point to</p>
+</dd></dl>
+
+<p><strong>Parameters</strong></p>
+<dl class="docutils">
+<dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">hlist_head</span> <span class="pre">*</span> <span class="pre">left</span></code></dt>
+<dd>The hlist head on the left</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">hlist_head</span> <span class="pre">*</span> <span class="pre">right</span></code></dt>
+<dd>The hlist head on the right</dd>
+</dl>
+<p><strong>Description</strong></p>
+<p>The lists start out as [<strong>left</strong>  ][node1 … ] and
+The lists end up as    [<strong>left</strong>  ][node2 … ]</p>
+<blockquote>
+<div>[<strong>right</strong> ][node1 … ]</div></blockquote>
 <dl class="function">
 <dt id="c.hlist_add_head_rcu">
 void <code class="descname">hlist_add_head_rcu</code><span class="sig-paren">(</span>struct hlist_node *<em>&nbsp;n</em>, struct hlist_head *<em>&nbsp;h</em><span class="sig-paren">)</span><a class="headerlink" href="#c.hlist_add_head_rcu" title="Permalink to this definition">¶</a></dt>
@@ -13253,6 +13156,7 @@ void <code class="descname">hlist_nulls_del_init_rcu</code><span class="sig-pare
 <p>hlist_nulls_unhashed() on the node return true after this. It is
 useful for RCU based read lockfree traversal if the writer side
 must know if the list entry is still hashed or already unhashed.</p>
+<p><strong>Description</strong></p>
 <p>In particular, it means that we can not poison the forward pointers
 that may still be used for walking the hash list and we can only
 zero the pprev pointer so list_unhashed() will return true after
@@ -13300,6 +13204,7 @@ void <code class="descname">hlist_nulls_del_rcu</code><span class="sig-paren">(<
 <p>hlist_nulls_unhashed() on entry does not return true after this,
 the entry is in an undefined state. It is useful for RCU based
 lockfree traversal.</p>
+<p><strong>Description</strong></p>
 <p>In particular, it means that we can not poison the forward
 pointers that may still be used for walking the hash list.</p>
 <p>The caller must take whatever precautions are necessary
@@ -13448,7 +13353,7 @@ void <code class="descname">rcu_sync_func</code><span class="sig-paren">(</span>
 <dd>Pointer to rcu_head in rcu_sync structure to use for synchronization</dd>
 </dl>
 <p><strong>Description</strong></p>
-<p>This function is passed to <a class="reference internal" href="#c.call_rcu" title="call_rcu"><code class="xref c c-func docutils literal notranslate"><span class="pre">call_rcu()</span></code></a> function by <a class="reference internal" href="#c.rcu_sync_enter" title="rcu_sync_enter"><code class="xref c c-func docutils literal notranslate"><span class="pre">rcu_sync_enter()</span></code></a> and
+<p>This function is passed to <a class="reference internal" href="../driver-api/basics.html#c.call_rcu" title="call_rcu"><code class="xref c c-func docutils literal notranslate"><span class="pre">call_rcu()</span></code></a> function by <a class="reference internal" href="#c.rcu_sync_enter" title="rcu_sync_enter"><code class="xref c c-func docutils literal notranslate"><span class="pre">rcu_sync_enter()</span></code></a> and
 <a class="reference internal" href="#c.rcu_sync_exit" title="rcu_sync_exit"><code class="xref c c-func docutils literal notranslate"><span class="pre">rcu_sync_exit()</span></code></a>, so that it is invoked after a grace period following the
 that invocation of enter/exit.</p>
 <p>If it is called by <a class="reference internal" href="#c.rcu_sync_enter" title="rcu_sync_enter"><code class="xref c c-func docutils literal notranslate"><span class="pre">rcu_sync_enter()</span></code></a> it signals that all the readers were
@@ -13460,7 +13365,7 @@ and <a class="reference internal" href="#c.rcu_sync_exit" title="rcu_sync_exit">
 ended, reset state to allow the next <a class="reference internal" href="#c.rcu_sync_exit" title="rcu_sync_exit"><code class="xref c c-func docutils literal notranslate"><span class="pre">rcu_sync_exit()</span></code></a> to let the
 readers back onto their fastpaths (after a grace period).  If both
 another <a class="reference internal" href="#c.rcu_sync_enter" title="rcu_sync_enter"><code class="xref c c-func docutils literal notranslate"><span class="pre">rcu_sync_enter()</span></code></a> and its matching <a class="reference internal" href="#c.rcu_sync_exit" title="rcu_sync_exit"><code class="xref c c-func docutils literal notranslate"><span class="pre">rcu_sync_exit()</span></code></a> are invoked
-before the grace period ended, re-invoke <a class="reference internal" href="#c.call_rcu" title="call_rcu"><code class="xref c c-func docutils literal notranslate"><span class="pre">call_rcu()</span></code></a> on behalf of that
+before the grace period ended, re-invoke <a class="reference internal" href="../driver-api/basics.html#c.call_rcu" title="call_rcu"><code class="xref c c-func docutils literal notranslate"><span class="pre">call_rcu()</span></code></a> on behalf of that
 <a class="reference internal" href="#c.rcu_sync_exit" title="rcu_sync_exit"><code class="xref c c-func docutils literal notranslate"><span class="pre">rcu_sync_exit()</span></code></a>.  Otherwise, set all state back to idle so that readers
 can again use their fastpaths.</p>
 <dl class="function">

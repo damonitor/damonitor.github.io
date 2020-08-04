@@ -68,7 +68,7 @@
             
             
               <div class="version">
-                5.7.0
+                5.8.0
               </div>
             
           
@@ -1411,6 +1411,26 @@ void <code class="descname">ccw_device_get_schid</code><span class="sig-paren">(
 <dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">subchannel_id</span> <span class="pre">*</span> <span class="pre">schid</span></code></dt>
 <dd>where to fill in the values</dd>
 </dl>
+<dl class="function">
+<dt id="c.ccw_device_pnso">
+int <code class="descname">ccw_device_pnso</code><span class="sig-paren">(</span>struct <a class="reference internal" href="#c.ccw_device" title="ccw_device">ccw_device</a> *<em>&nbsp;cdev</em>, struct chsc_pnso_area *<em>&nbsp;pnso_area</em>, struct chsc_pnso_resume_token<em>&nbsp;resume_token</em>, int<em>&nbsp;cnc</em><span class="sig-paren">)</span><a class="headerlink" href="#c.ccw_device_pnso" title="Permalink to this definition">¶</a></dt>
+<dd><p>Perform Network-Subchannel Operation</p>
+</dd></dl>
+
+<p><strong>Parameters</strong></p>
+<dl class="docutils">
+<dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">ccw_device</span> <span class="pre">*</span> <span class="pre">cdev</span></code></dt>
+<dd>device on which PNSO is performed</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">chsc_pnso_area</span> <span class="pre">*</span> <span class="pre">pnso_area</span></code></dt>
+<dd>request and response block for the operation</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">chsc_pnso_resume_token</span> <span class="pre">resume_token</span></code></dt>
+<dd>resume token for multiblock response</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">int</span> <span class="pre">cnc</span></code></dt>
+<dd>Boolean change-notification control</dd>
+</dl>
+<p><strong>Description</strong></p>
+<p>pnso_area must be allocated by the caller with get_zeroed_page(GFP_KERNEL)</p>
+<p>Returns 0 on success.</p>
 </div>
 <div class="section" id="the-channel-measurement-facility">
 <h3>The channel-measurement facility<a class="headerlink" href="#the-channel-measurement-facility" title="Permalink to this headline">¶</a></h3>
@@ -1483,13 +1503,12 @@ int <code class="descname">enable_cmf</code><span class="sig-paren">(</span>stru
 <p><strong>Parameters</strong></p>
 <dl class="docutils">
 <dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">ccw_device</span> <span class="pre">*</span> <span class="pre">cdev</span></code></dt>
-<dd>The ccw device to be enabled</dd>
-</dl>
-<p><strong>Description</strong></p>
-<blockquote>
-<div>Enable channel measurements for <strong>cdev</strong>. If this is called on a device
+<dd><p class="first">The ccw device to be enabled</p>
+<p class="last">Enable channel measurements for <strong>cdev</strong>. If this is called on a device
 for which channel measurement is already enabled a reset of the
-measurement data is triggered.</div></blockquote>
+measurement data is triggered.</p>
+</dd>
+</dl>
 <p><strong>Return</strong></p>
 <p><code class="docutils literal notranslate"><span class="pre">0</span></code> for success or a negative error value.</p>
 <p><strong>Context</strong></p>
@@ -1600,11 +1619,6 @@ struct <code class="descname">ccwgroup_driver</code><a class="headerlink" href="
   int (*set_online) (struct ccwgroup_device *);
   int (*set_offline) (struct ccwgroup_device *);
   void (*shutdown)(struct ccwgroup_device *);
-  int (*prepare) (struct ccwgroup_device *);
-  void (*complete) (struct ccwgroup_device *);
-  int (*freeze)(struct ccwgroup_device *);
-  int (*thaw) (struct ccwgroup_device *);
-  int (*restore)(struct ccwgroup_device *);
   struct device_driver driver;
   struct ccw_driver *ccw_driver;
 };
@@ -1622,16 +1636,6 @@ struct <code class="descname">ccwgroup_driver</code><a class="headerlink" href="
 <dd>function called when device is set offline</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">shutdown</span></code></dt>
 <dd>function called when device is shut down</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">prepare</span></code></dt>
-<dd>prepare for pm state transition</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">complete</span></code></dt>
-<dd>undo work done in <strong>prepare</strong></dd>
-<dt><code class="docutils literal notranslate"><span class="pre">freeze</span></code></dt>
-<dd>callback for freezing during hibernation snapshotting</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">thaw</span></code></dt>
-<dd>undo work done in <strong>freeze</strong></dd>
-<dt><code class="docutils literal notranslate"><span class="pre">restore</span></code></dt>
-<dd>callback for restoring after hibernation</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">driver</span></code></dt>
 <dd>embedded driver structure</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">ccw_driver</span></code></dt>

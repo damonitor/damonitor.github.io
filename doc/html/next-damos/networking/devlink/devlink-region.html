@@ -68,7 +68,7 @@
             
             
               <div class="version">
-                5.7.0
+                5.8.0
               </div>
             
           
@@ -170,6 +170,9 @@ region can then be accessed via the devlink region interface.</p>
 <p>Region snapshots are collected by the driver, and can be accessed via read
 or dump commands. This allows future analysis on the created snapshots.
 Regions may optionally support triggering snapshots on demand.</p>
+<p>Snapshot identifiers are scoped to the devlink instance, not a region.
+All snapshots with the same snapshot id within a devlink instance
+correspond to the same event.</p>
 <p>The major benefit to creating a region is to provide access to internal
 address regions that are otherwise inaccessible to the user.</p>
 <p>Regions may also be used to provide an additional way to debug complex error
@@ -177,7 +180,9 @@ states, but see also <a class="reference internal" href="devlink-health.html"><s
 <p>Regions may optionally support capturing a snapshot on demand via the
 <code class="docutils literal notranslate"><span class="pre">DEVLINK_CMD_REGION_NEW</span></code> netlink message. A driver wishing to allow
 requested snapshots must implement the <code class="docutils literal notranslate"><span class="pre">.snapshot</span></code> callback for the region
-in its <code class="docutils literal notranslate"><span class="pre">devlink_region_ops</span></code> structure.</p>
+in its <code class="docutils literal notranslate"><span class="pre">devlink_region_ops</span></code> structure. If snapshot id is not set in
+the <code class="docutils literal notranslate"><span class="pre">DEVLINK_CMD_REGION_NEW</span></code> request kernel will allocate one and send
+the snapshot information to user space.</p>
 <div class="section" id="example-usage">
 <h2>example usage<a class="headerlink" href="#example-usage" title="Permalink to this headline">¶</a></h2>
 <div class="code shell highlight-none notranslate"><div class="highlight"><pre><span></span>$ devlink region help
@@ -195,7 +200,8 @@ pci/0000:00:05.0/fw-health: size 64 snapshot [1 2]
 $ devlink region del pci/0000:00:05.0/cr-space snapshot 1
 
 # Request an immediate snapshot, if supported by the region
-$ devlink region new pci/0000:00:05.0/cr-space snapshot 5
+$ devlink region new pci/0000:00:05.0/cr-space
+pci/0000:00:05.0/cr-space: snapshot 5
 
 # Dump a snapshot:
 $ devlink region dump pci/0000:00:05.0/fw-health snapshot 1

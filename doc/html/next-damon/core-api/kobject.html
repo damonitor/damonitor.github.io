@@ -68,7 +68,7 @@
             
             
               <div class="version">
-                5.7.0
+                5.8.0
               </div>
             
           
@@ -241,13 +241,13 @@ often have the opposite problem, however: given a struct kobject pointer,
 what is the pointer to the containing structure?  You must avoid tricks
 (such as assuming that the kobject is at the beginning of the structure)
 and, instead, use the <a class="reference internal" href="../driver-api/basics.html#c.container_of" title="container_of"><code class="xref c c-func docutils literal notranslate"><span class="pre">container_of()</span></code></a> macro, found in <code class="docutils literal notranslate"><span class="pre">&lt;linux/kernel.h&gt;</span></code>:</p>
-<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>container_of(pointer, type, member)
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>container_of(ptr, type, member)
 </pre></div>
 </div>
 <p>where:</p>
 <blockquote>
 <div><ul class="simple">
-<li><code class="docutils literal notranslate"><span class="pre">pointer</span></code> is the pointer to the embedded kobject,</li>
+<li><code class="docutils literal notranslate"><span class="pre">ptr</span></code> is the pointer to the embedded kobject,</li>
 <li><code class="docutils literal notranslate"><span class="pre">type</span></code> is the type of the containing structure, and</li>
 <li><code class="docutils literal notranslate"><span class="pre">member</span></code> is the name of the structure field to which <code class="docutils literal notranslate"><span class="pre">pointer</span></code> points.</li>
 </ul>
@@ -302,7 +302,7 @@ the name of the kobject, call <a class="reference internal" href="../driver-api/
 <div class="highlight-none notranslate"><div class="highlight"><pre><span></span>int kobject_rename(struct kobject *kobj, const char *new_name);
 </pre></div>
 </div>
-<p>kobject_rename does not perform any locking or have a solid notion of
+<p><a class="reference internal" href="../driver-api/basics.html#c.kobject_rename" title="kobject_rename"><code class="xref c c-func docutils literal notranslate"><span class="pre">kobject_rename()</span></code></a> does not perform any locking or have a solid notion of
 what names are valid so the caller must provide their own sanity checking
 and serialization.</p>
 <p>There is a function called <a class="reference internal" href="../driver-api/basics.html#c.kobject_set_name" title="kobject_set_name"><code class="xref c c-func docutils literal notranslate"><span class="pre">kobject_set_name()</span></code></a> but that is legacy cruft and
@@ -362,7 +362,7 @@ statically and will warn the developer of this improper usage.</p>
 <p>If all that you want to use a kobject for is to provide a reference counter
 for your structure, please use the struct kref instead; a kobject would be
 overkill.  For more information on how to use struct kref, please see the
-file Documentation/kref.txt in the Linux kernel source tree.</p>
+file Documentation/core-api/kref.rst in the Linux kernel source tree.</p>
 </div>
 <div class="section" id="creating-simple-kobjects">
 <h2>Creating “simple” kobjects<a class="headerlink" href="#creating-simple-kobjects" title="Permalink to this headline">¶</a></h2>
@@ -371,17 +371,17 @@ in the sysfs hierarchy, and not have to mess with the whole complication of
 ksets, show and store functions, and other details.  This is the one
 exception where a single kobject should be created.  To create such an
 entry, use the function:</p>
-<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>struct kobject *kobject_create_and_add(char *name, struct kobject *parent);
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>struct kobject *kobject_create_and_add(const char *name, struct kobject *parent);
 </pre></div>
 </div>
 <p>This function will create a kobject and place it in sysfs in the location
 underneath the specified parent kobject.  To create simple attributes
 associated with this kobject, use:</p>
-<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>int sysfs_create_file(struct kobject *kobj, struct attribute *attr);
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>int sysfs_create_file(struct kobject *kobj, const struct attribute *attr);
 </pre></div>
 </div>
 <p>or:</p>
-<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>int sysfs_create_group(struct kobject *kobj, struct attribute_group *grp);
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>int sysfs_create_group(struct kobject *kobj, const struct attribute_group *grp);
 </pre></div>
 </div>
 <p>Both types of attributes used here, with a kobject that has been created
@@ -439,8 +439,10 @@ kobj_type:</p>
         void (*release)(struct kobject *kobj);
         const struct sysfs_ops *sysfs_ops;
         struct attribute **default_attrs;
+        const struct attribute_group **default_groups;
         const struct kobj_ns_type_operations *(*child_ns_type)(struct kobject *kobj);
         const void *(*namespace)(struct kobject *kobj);
+        void (*get_ownership)(struct kobject *kobj, kuid_t *uid, kgid_t *gid);
 };
 </pre></div>
 </div>
@@ -484,12 +486,12 @@ kobject) in their parent.</p>
 created and never declared statically or on the stack.  To create a new
 kset use:</p>
 <div class="highlight-none notranslate"><div class="highlight"><pre><span></span>struct kset *kset_create_and_add(const char *name,
-                                 struct kset_uevent_ops *u,
-                                 struct kobject *parent);
+                                 const struct kset_uevent_ops *uevent_ops,
+                                 struct kobject *parent_kobj);
 </pre></div>
 </div>
 <p>When you are finished with the kset, call:</p>
-<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>void kset_unregister(struct kset *kset);
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>void kset_unregister(struct kset *k);
 </pre></div>
 </div>
 <p>to destroy it.  This removes the kset from sysfs and decrements its reference
@@ -501,9 +503,9 @@ after <a class="reference internal" href="../driver-api/basics.html#c.kset_unreg
 <p>If a kset wishes to control the uevent operations of the kobjects
 associated with it, it can use the struct kset_uevent_ops to handle it:</p>
 <div class="highlight-none notranslate"><div class="highlight"><pre><span></span>struct kset_uevent_ops {
-        int (*filter)(struct kset *kset, struct kobject *kobj);
-        const char *(*name)(struct kset *kset, struct kobject *kobj);
-        int (*uevent)(struct kset *kset, struct kobject *kobj,
+        int (* const filter)(struct kset *kset, struct kobject *kobj);
+        const char *(* const name)(struct kset *kset, struct kobject *kobj);
+        int (* const uevent)(struct kset *kset, struct kobject *kobj,
                       struct kobj_uevent_env *env);
 };
 </pre></div>

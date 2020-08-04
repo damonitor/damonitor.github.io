@@ -68,7 +68,7 @@
             
             
               <div class="version">
-                5.7.0
+                5.8.0
               </div>
             
           
@@ -428,6 +428,28 @@ don’t like this are to hack gdb to send the <kbd class="kbd docutils literal n
 on the initial connect, or to use a debugger proxy that allows an
 unmodified gdb to do the debugging.</p>
 </div>
+</div>
+</div>
+<div class="section" id="kernel-parameter-kgdboc-earlycon">
+<h3>Kernel parameter: <code class="docutils literal notranslate"><span class="pre">kgdboc_earlycon</span></code><a class="headerlink" href="#kernel-parameter-kgdboc-earlycon" title="Permalink to this headline">¶</a></h3>
+<p>If you specify the kernel parameter <code class="docutils literal notranslate"><span class="pre">kgdboc_earlycon</span></code> and your serial
+driver registers a boot console that supports polling (doesn’t need
+interrupts and implements a nonblocking read() function) kgdb will attempt
+to work using the boot console until it can transition to the regular
+tty driver specified by the <code class="docutils literal notranslate"><span class="pre">kgdboc</span></code> parameter.</p>
+<p>Normally there is only one boot console (especially that implements the
+read() function) so just adding <code class="docutils literal notranslate"><span class="pre">kgdboc_earlycon</span></code> on its own is
+sufficient to make this work. If you have more than one boot console you
+can add the boot console’s name to differentiate. Note that names that
+are registered through the boot console layer and the tty layer are not
+the same for the same port.</p>
+<p>For instance, on one board to be explicit you might do:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>kgdboc_earlycon=qcom_geni kgdboc=ttyMSM0
+</pre></div>
+</div>
+<p>If the only boot console on the device was “qcom_geni”, you could simplify:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>kgdboc_earlycon kgdboc=ttyMSM0
+</pre></div>
 </div>
 </div>
 <div class="section" id="kernel-parameter-kgdbwait">
@@ -971,13 +993,12 @@ int <code class="descname">kgdb_skipexception</code><span class="sig-paren">(</s
 <dt><code class="docutils literal notranslate"><span class="pre">int</span> <span class="pre">exception</span></code></dt>
 <dd>Exception vector number</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">pt_regs</span> <span class="pre">*</span> <span class="pre">regs</span></code></dt>
-<dd>Current <code class="xref c c-type docutils literal notranslate"><span class="pre">struct</span> <span class="pre">pt_regs</span></code>.</dd>
-</dl>
-<p><strong>Description</strong></p>
-<blockquote>
-<div>On some architectures it is required to skip a breakpoint
+<dd><p class="first">Current <code class="xref c c-type docutils literal notranslate"><span class="pre">struct</span> <span class="pre">pt_regs</span></code>.</p>
+<p class="last">On some architectures it is required to skip a breakpoint
 exception when it occurs after a breakpoint has been removed.
-This can be implemented in the architecture specific portion of kgdb.</div></blockquote>
+This can be implemented in the architecture specific portion of kgdb.</p>
+</dd>
+</dl>
 <dl class="function">
 <dt id="c.kgdb_breakpoint">
 void <code class="descname">kgdb_breakpoint</code><span class="sig-paren">(</span>void<span class="sig-paren">)</span><a class="headerlink" href="#c.kgdb_breakpoint" title="Permalink to this definition">¶</a></dt>
@@ -1035,12 +1056,11 @@ void <code class="descname">pt_regs_to_gdb_regs</code><span class="sig-paren">(<
 <dt><code class="docutils literal notranslate"><span class="pre">unsigned</span> <span class="pre">long</span> <span class="pre">*</span> <span class="pre">gdb_regs</span></code></dt>
 <dd>A pointer to hold the registers in the order GDB wants.</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">pt_regs</span> <span class="pre">*</span> <span class="pre">regs</span></code></dt>
-<dd>The <code class="xref c c-type docutils literal notranslate"><span class="pre">struct</span> <span class="pre">pt_regs</span></code> of the current process.</dd>
+<dd><p class="first">The <code class="xref c c-type docutils literal notranslate"><span class="pre">struct</span> <span class="pre">pt_regs</span></code> of the current process.</p>
+<p class="last">Convert the pt_regs in <strong>regs</strong> into the format for registers that
+GDB expects, stored in <strong>gdb_regs</strong>.</p>
+</dd>
 </dl>
-<p><strong>Description</strong></p>
-<blockquote>
-<div>Convert the pt_regs in <strong>regs</strong> into the format for registers that
-GDB expects, stored in <strong>gdb_regs</strong>.</div></blockquote>
 <dl class="function">
 <dt id="c.sleeping_thread_to_gdb_regs">
 void <code class="descname">sleeping_thread_to_gdb_regs</code><span class="sig-paren">(</span>unsigned long *<em>&nbsp;gdb_regs</em>, struct task_struct *<em>&nbsp;p</em><span class="sig-paren">)</span><a class="headerlink" href="#c.sleeping_thread_to_gdb_regs" title="Permalink to this definition">¶</a></dt>
@@ -1052,16 +1072,15 @@ void <code class="descname">sleeping_thread_to_gdb_regs</code><span class="sig-p
 <dt><code class="docutils literal notranslate"><span class="pre">unsigned</span> <span class="pre">long</span> <span class="pre">*</span> <span class="pre">gdb_regs</span></code></dt>
 <dd>A pointer to hold the registers in the order GDB wants.</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">task_struct</span> <span class="pre">*</span> <span class="pre">p</span></code></dt>
-<dd>The <code class="xref c c-type docutils literal notranslate"><span class="pre">struct</span> <span class="pre">task_struct</span></code> of the desired process.</dd>
-</dl>
-<p><strong>Description</strong></p>
-<blockquote>
-<div>Convert the register values of the sleeping process in <strong>p</strong> to
+<dd><p class="first">The <code class="xref c c-type docutils literal notranslate"><span class="pre">struct</span> <span class="pre">task_struct</span></code> of the desired process.</p>
+<p class="last">Convert the register values of the sleeping process in <strong>p</strong> to
 the format that GDB expects.
 This function is called when kgdb does not have access to the
 <code class="xref c c-type docutils literal notranslate"><span class="pre">struct</span> <span class="pre">pt_regs</span></code> and therefore it should fill the gdb registers
 <strong>gdb_regs</strong> with what has been saved in <code class="xref c c-type docutils literal notranslate"><span class="pre">struct</span> <span class="pre">thread_struct</span></code>
-thread field during switch_to.</div></blockquote>
+thread field during switch_to.</p>
+</dd>
+</dl>
 <dl class="function">
 <dt id="c.gdb_regs_to_pt_regs">
 void <code class="descname">gdb_regs_to_pt_regs</code><span class="sig-paren">(</span>unsigned long *<em>&nbsp;gdb_regs</em>, struct pt_regs *<em>&nbsp;regs</em><span class="sig-paren">)</span><a class="headerlink" href="#c.gdb_regs_to_pt_regs" title="Permalink to this definition">¶</a></dt>
@@ -1073,12 +1092,11 @@ void <code class="descname">gdb_regs_to_pt_regs</code><span class="sig-paren">(<
 <dt><code class="docutils literal notranslate"><span class="pre">unsigned</span> <span class="pre">long</span> <span class="pre">*</span> <span class="pre">gdb_regs</span></code></dt>
 <dd>A pointer to hold the registers we’ve received from GDB.</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">pt_regs</span> <span class="pre">*</span> <span class="pre">regs</span></code></dt>
-<dd>A pointer to a <code class="xref c c-type docutils literal notranslate"><span class="pre">struct</span> <span class="pre">pt_regs</span></code> to hold these values in.</dd>
+<dd><p class="first">A pointer to a <code class="xref c c-type docutils literal notranslate"><span class="pre">struct</span> <span class="pre">pt_regs</span></code> to hold these values in.</p>
+<p class="last">Convert the GDB regs in <strong>gdb_regs</strong> into the pt_regs, and store them
+in <strong>regs</strong>.</p>
+</dd>
 </dl>
-<p><strong>Description</strong></p>
-<blockquote>
-<div>Convert the GDB regs in <strong>gdb_regs</strong> into the pt_regs, and store them
-in <strong>regs</strong>.</div></blockquote>
 <dl class="function">
 <dt id="c.kgdb_arch_handle_exception">
 int <code class="descname">kgdb_arch_handle_exception</code><span class="sig-paren">(</span>int<em>&nbsp;vector</em>, int<em>&nbsp;signo</em>, int<em>&nbsp;err_code</em>, char *<em>&nbsp;remcom_in_buffer</em>, char *<em>&nbsp;remcom_out_buffer</em>, struct pt_regs *<em>&nbsp;regs</em><span class="sig-paren">)</span><a class="headerlink" href="#c.kgdb_arch_handle_exception" title="Permalink to this definition">¶</a></dt>
@@ -1098,16 +1116,28 @@ int <code class="descname">kgdb_arch_handle_exception</code><span class="sig-par
 <dt><code class="docutils literal notranslate"><span class="pre">char</span> <span class="pre">*</span> <span class="pre">remcom_out_buffer</span></code></dt>
 <dd>The buffer of <code class="docutils literal notranslate"><span class="pre">BUFMAX</span></code> bytes to write a packet into.</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">pt_regs</span> <span class="pre">*</span> <span class="pre">regs</span></code></dt>
-<dd>The <code class="xref c c-type docutils literal notranslate"><span class="pre">struct</span> <span class="pre">pt_regs</span></code> of the current process.</dd>
-</dl>
-<p><strong>Description</strong></p>
-<blockquote>
-<div>This function MUST handle the ‘c’ and ‘s’ command packets,
+<dd><p class="first">The <code class="xref c c-type docutils literal notranslate"><span class="pre">struct</span> <span class="pre">pt_regs</span></code> of the current process.</p>
+<p class="last">This function MUST handle the ‘c’ and ‘s’ command packets,
 as well packets to set / remove a hardware breakpoint, if used.
 If there are additional packets which the hardware needs to handle,
 they are handled here.  The code should return -1 if it wants to
 process more packets, and a <code class="docutils literal notranslate"><span class="pre">0</span></code> or <code class="docutils literal notranslate"><span class="pre">1</span></code> if it wants to exit from the
-kgdb callback.</div></blockquote>
+kgdb callback.</p>
+</dd>
+</dl>
+<dl class="function">
+<dt id="c.kgdb_arch_handle_qxfer_pkt">
+void <code class="descname">kgdb_arch_handle_qxfer_pkt</code><span class="sig-paren">(</span>char *<em>&nbsp;remcom_in_buffer</em>, char *<em>&nbsp;remcom_out_buffer</em><span class="sig-paren">)</span><a class="headerlink" href="#c.kgdb_arch_handle_qxfer_pkt" title="Permalink to this definition">¶</a></dt>
+<dd><p>Handle architecture specific GDB XML packets.</p>
+</dd></dl>
+
+<p><strong>Parameters</strong></p>
+<dl class="docutils">
+<dt><code class="docutils literal notranslate"><span class="pre">char</span> <span class="pre">*</span> <span class="pre">remcom_in_buffer</span></code></dt>
+<dd>The buffer of the packet we have read.</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">char</span> <span class="pre">*</span> <span class="pre">remcom_out_buffer</span></code></dt>
+<dd>The buffer of <code class="docutils literal notranslate"><span class="pre">BUFMAX</span></code> bytes to write a packet into.</dd>
+</dl>
 <dl class="function">
 <dt id="c.kgdb_call_nmi_hook">
 void <code class="descname">kgdb_call_nmi_hook</code><span class="sig-paren">(</span>void *<em>&nbsp;ignored</em><span class="sig-paren">)</span><a class="headerlink" href="#c.kgdb_call_nmi_hook" title="Permalink to this definition">¶</a></dt>
@@ -1117,13 +1147,12 @@ void <code class="descname">kgdb_call_nmi_hook</code><span class="sig-paren">(</
 <p><strong>Parameters</strong></p>
 <dl class="docutils">
 <dt><code class="docutils literal notranslate"><span class="pre">void</span> <span class="pre">*</span> <span class="pre">ignored</span></code></dt>
-<dd>This parameter is only here to match the prototype.</dd>
-</dl>
-<p><strong>Description</strong></p>
-<blockquote>
-<div>If you’re using the default implementation of <a class="reference internal" href="#c.kgdb_roundup_cpus" title="kgdb_roundup_cpus"><code class="xref c c-func docutils literal notranslate"><span class="pre">kgdb_roundup_cpus()</span></code></a>
+<dd><p class="first">This parameter is only here to match the prototype.</p>
+<p class="last">If you’re using the default implementation of <a class="reference internal" href="#c.kgdb_roundup_cpus" title="kgdb_roundup_cpus"><code class="xref c c-func docutils literal notranslate"><span class="pre">kgdb_roundup_cpus()</span></code></a>
 this function will be called per CPU.  If you don’t implement
-<a class="reference internal" href="#c.kgdb_call_nmi_hook" title="kgdb_call_nmi_hook"><code class="xref c c-func docutils literal notranslate"><span class="pre">kgdb_call_nmi_hook()</span></code></a> a default will be used.</div></blockquote>
+<a class="reference internal" href="#c.kgdb_call_nmi_hook" title="kgdb_call_nmi_hook"><code class="xref c c-func docutils literal notranslate"><span class="pre">kgdb_call_nmi_hook()</span></code></a> a default will be used.</p>
+</dd>
+</dl>
 <dl class="function">
 <dt id="c.kgdb_roundup_cpus">
 void <code class="descname">kgdb_roundup_cpus</code><span class="sig-paren">(</span>void<span class="sig-paren">)</span><a class="headerlink" href="#c.kgdb_roundup_cpus" title="Permalink to this definition">¶</a></dt>
@@ -1155,12 +1184,11 @@ void <code class="descname">kgdb_arch_set_pc</code><span class="sig-paren">(</sp
 <dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">pt_regs</span> <span class="pre">*</span> <span class="pre">regs</span></code></dt>
 <dd>Current <code class="xref c c-type docutils literal notranslate"><span class="pre">struct</span> <span class="pre">pt_regs</span></code>.</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">unsigned</span> <span class="pre">long</span> <span class="pre">pc</span></code></dt>
-<dd>The new value for the program counter</dd>
+<dd><p class="first">The new value for the program counter</p>
+<p class="last">This function handles updating the program counter and requires an
+architecture specific implementation.</p>
+</dd>
 </dl>
-<p><strong>Description</strong></p>
-<blockquote>
-<div>This function handles updating the program counter and requires an
-architecture specific implementation.</div></blockquote>
 <dl class="function">
 <dt id="c.kgdb_arch_late">
 void <code class="descname">kgdb_arch_late</code><span class="sig-paren">(</span>void<span class="sig-paren">)</span><a class="headerlink" href="#c.kgdb_arch_late" title="Permalink to this definition">¶</a></dt>
@@ -1242,9 +1270,10 @@ struct <code class="descname">kgdb_io</code><a class="headerlink" href="#c.kgdb_
   void (*write_char) (u8);
   void (*flush) (void);
   int (*init) (void);
+  void (*deinit) (void);
   void (*pre_exception) (void);
   void (*post_exception) (void);
-  int is_console;
+  struct console          *cons;
 };
 </pre></div>
 </div>
@@ -1260,15 +1289,18 @@ struct <code class="descname">kgdb_io</code><a class="headerlink" href="#c.kgdb_
 <dd>Pointer to a function that will flush any pending writes.</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">init</span></code></dt>
 <dd>Pointer to a function that will initialize the device.</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">deinit</span></code></dt>
+<dd>Pointer to a function that will deinit the device. Implies that
+this I/O driver is temporary and expects to be replaced. Called when
+an I/O driver is replaced or explicitly unregistered.</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">pre_exception</span></code></dt>
 <dd>Pointer to a function that will do any prep work for
 the I/O driver.</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">post_exception</span></code></dt>
 <dd>Pointer to a function that will do any cleanup work
 for the I/O driver.</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">is_console</span></code></dt>
-<dd>1 if the end device is a console 0 if the I/O device is
-not a console</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">cons</span></code></dt>
+<dd>valid if the I/O device is a console; else NULL.</dd>
 </dl>
 </div>
 <div class="section" id="kgdboc-internals">

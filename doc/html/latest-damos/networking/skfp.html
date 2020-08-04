@@ -1,0 +1,460 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>SysKonnect driver - SKFP &mdash; The Linux Kernel  documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript">
+          var DOCUMENTATION_OPTIONS = {
+              URL_ROOT:'../',
+              VERSION:'',
+              LANGUAGE:'None',
+              COLLAPSE_INDEX:false,
+              FILE_SUFFIX:'.html',
+              HAS_SOURCE:  true,
+              SOURCELINK_SUFFIX: '.txt'
+          };
+      </script>
+        <script type="text/javascript" src="../_static/jquery.js"></script>
+        <script type="text/javascript" src="../_static/underscore.js"></script>
+        <script type="text/javascript" src="../_static/doctools.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/theme_overrides.css" type="text/css" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> The Linux Kernel
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                5.8.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../admin-guide/mm/damon/index.html">Monitoring Data Accesses</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../vm/damon/index.html">DAMON: Data Access MONitor</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">The Linux Kernel</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+      <li>SysKonnect driver - SKFP</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/networking/skfp.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="syskonnect-driver-skfp">
+<h1>SysKonnect driver - SKFP<a class="headerlink" href="#syskonnect-driver-skfp" title="Permalink to this headline">¶</a></h1>
+<p>© Copyright 1998-2000 SysKonnect,</p>
+<p>skfp.txt created 11-May-2000</p>
+<p>Readme File for skfp.o v2.06</p>
+<div class="section" id="overview">
+<h2>1. Overview<a class="headerlink" href="#overview" title="Permalink to this headline">¶</a></h2>
+<p>This README explains how to use the driver ‘skfp’ for Linux with your
+network adapter.</p>
+<p>Chapter 2: Contains a list of all network adapters that are supported by
+this driver.</p>
+<dl class="docutils">
+<dt>Chapter 3:</dt>
+<dd>Gives some general information.</dd>
+</dl>
+<p>Chapter 4: Describes common problems and solutions.</p>
+<p>Chapter 5: Shows the changed functionality of the adapter LEDs.</p>
+<p>Chapter 6: History of development.</p>
+</div>
+<div class="section" id="supported-adapters">
+<h2>2. Supported adapters<a class="headerlink" href="#supported-adapters" title="Permalink to this headline">¶</a></h2>
+<p>The network driver ‘skfp’ supports the following network adapters:
+SysKonnect adapters:</p>
+<blockquote>
+<div><ul class="simple">
+<li>SK-5521 (SK-NET FDDI-UP)</li>
+<li>SK-5522 (SK-NET FDDI-UP DAS)</li>
+<li>SK-5541 (SK-NET FDDI-FP)</li>
+<li>SK-5543 (SK-NET FDDI-LP)</li>
+<li>SK-5544 (SK-NET FDDI-LP DAS)</li>
+<li>SK-5821 (SK-NET FDDI-UP64)</li>
+<li>SK-5822 (SK-NET FDDI-UP64 DAS)</li>
+<li>SK-5841 (SK-NET FDDI-FP64)</li>
+<li>SK-5843 (SK-NET FDDI-LP64)</li>
+<li>SK-5844 (SK-NET FDDI-LP64 DAS)</li>
+</ul>
+</div></blockquote>
+<p>Compaq adapters (not tested):</p>
+<blockquote>
+<div><ul class="simple">
+<li>Netelligent 100 FDDI DAS Fibre SC</li>
+<li>Netelligent 100 FDDI SAS Fibre SC</li>
+<li>Netelligent 100 FDDI DAS UTP</li>
+<li>Netelligent 100 FDDI SAS UTP</li>
+<li>Netelligent 100 FDDI SAS Fibre MIC</li>
+</ul>
+</div></blockquote>
+</div>
+<div class="section" id="general-information">
+<h2>3. General Information<a class="headerlink" href="#general-information" title="Permalink to this headline">¶</a></h2>
+<p>From v2.01 on, the driver is integrated in the linux kernel sources.
+Therefore, the installation is the same as for any other adapter
+supported by the kernel.</p>
+<p>Refer to the manual of your distribution about the installation
+of network adapters.</p>
+<p>Makes my life much easier :-)</p>
+</div>
+<div class="section" id="troubleshooting">
+<h2>4. Troubleshooting<a class="headerlink" href="#troubleshooting" title="Permalink to this headline">¶</a></h2>
+<p>If you run into problems during installation, check those items:</p>
+<dl class="docutils">
+<dt>Problem:</dt>
+<dd>The FDDI adapter cannot be found by the driver.</dd>
+<dt>Reason:</dt>
+<dd><p class="first">Look in /proc/pci for the following entry:</p>
+<blockquote>
+<div>‘FDDI network controller: SysKonnect SK-FDDI-PCI …’</div></blockquote>
+<p>If this entry exists, then the FDDI adapter has been
+found by the system and should be able to be used.</p>
+<p>If this entry does not exist or if the file ‘/proc/pci’
+is not there, then you may have a hardware problem or PCI
+support may not be enabled in your kernel.</p>
+<p>The adapter can be checked using the diagnostic program
+which is available from the SysKonnect web site:</p>
+<blockquote>
+<div>www.syskonnect.de</div></blockquote>
+<p class="last">Some COMPAQ machines have a problem with PCI under
+Linux. This is described in the ‘PCI howto’ document
+(included in some distributions or available from the
+www, e.g. at ‘www.linux.org’) and no workaround is available.</p>
+</dd>
+<dt>Problem:</dt>
+<dd>You want to use your computer as a router between
+multiple IP subnetworks (using multiple adapters), but
+you cannot reach computers in other subnetworks.</dd>
+<dt>Reason:</dt>
+<dd>Either the router’s kernel is not configured for IP
+forwarding or there is a problem with the routing table
+and gateway configuration in at least one of the
+computers.</dd>
+</dl>
+<p>If your problem is not listed here, please contact our
+technical support for help.</p>
+<p>You can send email to: <a class="reference external" href="mailto:linux&#37;&#52;&#48;syskonnect&#46;de">linux<span>&#64;</span>syskonnect<span>&#46;</span>de</a></p>
+<p>When contacting our technical support,
+please ensure that the following information is available:</p>
+<ul class="simple">
+<li>System Manufacturer and Model</li>
+<li>Boards in your system</li>
+<li>Distribution</li>
+<li>Kernel version</li>
+</ul>
+</div>
+<div class="section" id="function-of-the-adapter-leds">
+<h2>5. Function of the Adapter LEDs<a class="headerlink" href="#function-of-the-adapter-leds" title="Permalink to this headline">¶</a></h2>
+<blockquote>
+<div><p>The functionality of the LED’s on the FDDI network adapters was
+changed in SMT version v2.82. With this new SMT version, the yellow
+LED works as a ring operational indicator. An active yellow LED
+indicates that the ring is down. The green LED on the adapter now
+works as a link indicator where an active GREEN LED indicates that
+the respective port has a physical connection.</p>
+<p>With versions of SMT prior to v2.82 a ring up was indicated if the
+yellow LED was off while the green LED(s) showed the connection
+status of the adapter. During a ring down the green LED was off and
+the yellow LED was on.</p>
+<p>All implementations indicate that a driver is not loaded if
+all LEDs are off.</p>
+</div></blockquote>
+</div>
+<div class="section" id="history">
+<h2>6. History<a class="headerlink" href="#history" title="Permalink to this headline">¶</a></h2>
+<dl class="docutils">
+<dt>v2.06 (20000511) (In-Kernel version)</dt>
+<dd><p class="first">New features:</p>
+<blockquote class="last">
+<div><ul class="simple">
+<li>64 bit support</li>
+<li>new pci dma interface</li>
+<li>in kernel 2.3.99</li>
+</ul>
+</div></blockquote>
+</dd>
+<dt>v2.05 (20000217) (In-Kernel version)</dt>
+<dd><p class="first">New features:</p>
+<blockquote class="last">
+<div><ul class="simple">
+<li>Changes for 2.3.45 kernel</li>
+</ul>
+</div></blockquote>
+</dd>
+<dt>v2.04 (20000207) (Standalone version)</dt>
+<dd><p class="first">New features:</p>
+<blockquote class="last">
+<div><ul class="simple">
+<li>Added rx/tx byte counter</li>
+</ul>
+</div></blockquote>
+</dd>
+<dt>v2.03 (20000111) (Standalone version)</dt>
+<dd><p class="first">Problems fixed:</p>
+<blockquote class="last">
+<div><ul class="simple">
+<li>Fixed printk statements from v2.02</li>
+</ul>
+</div></blockquote>
+</dd>
+<dt>v2.02 (991215) (Standalone version)</dt>
+<dd><p class="first">Problems fixed:</p>
+<blockquote class="last">
+<div><ul class="simple">
+<li>Removed unnecessary output</li>
+<li>Fixed path for “printver.sh” in makefile</li>
+</ul>
+</div></blockquote>
+</dd>
+<dt>v2.01 (991122) (In-Kernel version)</dt>
+<dd><p class="first">New features:</p>
+<blockquote class="last">
+<div><ul class="simple">
+<li>Integration in Linux kernel sources</li>
+<li>Support for memory mapped I/O.</li>
+</ul>
+</div></blockquote>
+</dd>
+<dt>v2.00 (991112)</dt>
+<dd><p class="first">New features:</p>
+<blockquote class="last">
+<div><ul class="simple">
+<li>Full source released under GPL</li>
+</ul>
+</div></blockquote>
+</dd>
+<dt>v1.05 (991023)</dt>
+<dd><p class="first">Problems fixed:</p>
+<blockquote class="last">
+<div><ul class="simple">
+<li>Compilation with kernel version 2.2.13 failed</li>
+</ul>
+</div></blockquote>
+</dd>
+<dt>v1.04 (990427)</dt>
+<dd><p class="first">Changes:</p>
+<blockquote>
+<div><ul class="simple">
+<li>New SMT module included, changing LED functionality</li>
+</ul>
+</div></blockquote>
+<p>Problems fixed:</p>
+<blockquote class="last">
+<div><ul class="simple">
+<li>Synchronization on SMP machines was buggy</li>
+</ul>
+</div></blockquote>
+</dd>
+<dt>v1.03 (990325)</dt>
+<dd><p class="first">Problems fixed:</p>
+<blockquote class="last">
+<div><ul class="simple">
+<li>Interrupt routing on SMP machines could be incorrect</li>
+</ul>
+</div></blockquote>
+</dd>
+<dt>v1.02 (990310)</dt>
+<dd><p class="first">New features:</p>
+<blockquote class="last">
+<div><ul class="simple">
+<li>Support for kernel versions 2.2.x added</li>
+<li>Kernel patch instead of private duplicate of kernel functions</li>
+</ul>
+</div></blockquote>
+</dd>
+<dt>v1.01 (980812)</dt>
+<dd><p class="first">Problems fixed:</p>
+<blockquote class="last">
+<div>Connection hangup with telnet
+Slow telnet connection</div></blockquote>
+</dd>
+<dt>v1.00 beta 01 (980507)</dt>
+<dd><p class="first">New features:</p>
+<blockquote>
+<div>None.</div></blockquote>
+<p>Problems fixed:</p>
+<blockquote>
+<div>None.</div></blockquote>
+<p>Known limitations:</p>
+<blockquote class="last">
+<div><ul class="simple">
+<li>tar archive instead of standard package format (rpm).</li>
+<li>FDDI statistic is empty.</li>
+<li>not tested with 2.1.xx kernels</li>
+<li>integration in kernel not tested</li>
+<li>not tested simultaneously with FDDI adapters from other vendors.</li>
+<li>only X86 processors supported.</li>
+<li>SBA (Synchronous Bandwidth Allocator) parameters can
+not be configured.</li>
+<li>does not work on some COMPAQ machines. See the PCI howto
+document for details about this problem.</li>
+<li>data corruption with kernel versions below 2.0.33.</li>
+</ul>
+</div></blockquote>
+</dd>
+</dl>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright The kernel development community
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

@@ -68,7 +68,7 @@
             
             
               <div class="version">
-                5.7.0
+                5.8.0
               </div>
             
           
@@ -937,96 +937,7 @@ pages - 1 if true, 0 otherwise. It just shows the current status.</p>
 kernel flags associated with the particular virtual memory area in two letter
 encoded manner. The codes are the following:</p>
 <blockquote>
-<div><table border="1" class="docutils">
-<colgroup>
-<col width="5%" />
-<col width="95%" />
-</colgroup>
-<tbody valign="top">
-<tr class="row-odd"><td>rd</td>
-<td>readable</td>
-</tr>
-<tr class="row-even"><td>wr</td>
-<td>writeable</td>
-</tr>
-<tr class="row-odd"><td>ex</td>
-<td>executable</td>
-</tr>
-<tr class="row-even"><td>sh</td>
-<td>shared</td>
-</tr>
-<tr class="row-odd"><td>mr</td>
-<td>may read</td>
-</tr>
-<tr class="row-even"><td>mw</td>
-<td>may write</td>
-</tr>
-<tr class="row-odd"><td>me</td>
-<td>may execute</td>
-</tr>
-<tr class="row-even"><td>ms</td>
-<td>may share</td>
-</tr>
-<tr class="row-odd"><td>gd</td>
-<td>stack segment growns down</td>
-</tr>
-<tr class="row-even"><td>pf</td>
-<td>pure PFN range</td>
-</tr>
-<tr class="row-odd"><td>dw</td>
-<td>disabled write to the mapped file</td>
-</tr>
-<tr class="row-even"><td>lo</td>
-<td>pages are locked in memory</td>
-</tr>
-<tr class="row-odd"><td>io</td>
-<td>memory mapped I/O area</td>
-</tr>
-<tr class="row-even"><td>sr</td>
-<td>sequential read advise provided</td>
-</tr>
-<tr class="row-odd"><td>rr</td>
-<td>random read advise provided</td>
-</tr>
-<tr class="row-even"><td>dc</td>
-<td>do not copy area on fork</td>
-</tr>
-<tr class="row-odd"><td>de</td>
-<td>do not expand area on remapping</td>
-</tr>
-<tr class="row-even"><td>ac</td>
-<td>area is accountable</td>
-</tr>
-<tr class="row-odd"><td>nr</td>
-<td>swap space is not reserved for the area</td>
-</tr>
-<tr class="row-even"><td>ht</td>
-<td>area uses huge tlb pages</td>
-</tr>
-<tr class="row-odd"><td>ar</td>
-<td>architecture specific flag</td>
-</tr>
-<tr class="row-even"><td>dd</td>
-<td>do not include area into core dump</td>
-</tr>
-<tr class="row-odd"><td>sd</td>
-<td>soft dirty flag</td>
-</tr>
-<tr class="row-even"><td>mm</td>
-<td>mixed map area</td>
-</tr>
-<tr class="row-odd"><td>hg</td>
-<td>huge page advise flag</td>
-</tr>
-<tr class="row-even"><td>nh</td>
-<td>no huge page advise flag</td>
-</tr>
-<tr class="row-odd"><td>mg</td>
-<td>mergable advise flag</td>
-</tr>
-</tbody>
-</table>
-</div></blockquote>
+<div></div></blockquote>
 <p>Note that there is no guarantee that every flag and associated mnemonic will
 be present in all further kernel releases. Things get changed, the flags may
 be vanished or the reverse – new added. Interpretation of their meaning
@@ -1584,8 +1495,8 @@ direct allocations with a shrinker.</dd>
 <dd>amount of memory dedicated to the lowest level of page
 tables.</dd>
 <dt>NFS_Unstable</dt>
-<dd>NFS pages sent to the server, but not yet committed to stable
-storage</dd>
+<dd>Always zero. Previous counted pages which had been written to
+the server, but has not been committed to stable storage.</dd>
 <dt>Bounce</dt>
 <dd>Memory used for block device “bounce buffers”</dd>
 <dt>WritebackTmp</dt>
@@ -2563,7 +2474,7 @@ and not the “propagate_from:X” field.</td></tr>
 </table>
 <p>For more information on mount propagation see:</p>
 <blockquote>
-<div>Documentation/filesystems/sharedsubtree.txt</div></blockquote>
+<div>Documentation/filesystems/sharedsubtree.rst</div></blockquote>
 </div>
 <div class="section" id="proc-pid-comm-proc-pid-task-tid-comm">
 <h3>3.6     /proc/&lt;pid&gt;/comm  &amp; /proc/&lt;pid&gt;/task/&lt;tid&gt;/comm<a class="headerlink" href="#proc-pid-comm-proc-pid-task-tid-comm" title="Permalink to this headline">¶</a></h3>
@@ -2815,29 +2726,70 @@ scheduling scenario, it also could be a false negative mentioned above.</p>
 <tr class="row-even"><td>gid=</td>
 <td>Set the group authorized to learn processes information.</td>
 </tr>
+<tr class="row-odd"><td>subset=</td>
+<td>Show only the specified subset of procfs.</td>
+</tr>
 </tbody>
 </table>
 </div></blockquote>
-<p>hidepid=0 means classic mode - everybody may access all /proc/&lt;pid&gt;/ directories
-(default).</p>
-<p>hidepid=1 means users may not access any /proc/&lt;pid&gt;/ directories but their
-own.  Sensitive files like cmdline, sched*, status are now protected against
-other users.  This makes it impossible to learn whether any user runs
-specific program (given the program doesn’t reveal itself by its behaviour).
-As an additional bonus, as /proc/&lt;pid&gt;/cmdline is unaccessible for other users,
-poorly written programs passing sensitive information via program arguments are
-now protected against local eavesdroppers.</p>
-<p>hidepid=2 means hidepid=1 plus all /proc/&lt;pid&gt;/ will be fully invisible to other
-users.  It doesn’t mean that it hides a fact whether a process with a specific
-pid value exists (it can be learned by other means, e.g. by “kill -0 $PID”),
-but it hides process’ uid and gid, which may be learned by stat()’ing
-/proc/&lt;pid&gt;/ otherwise.  It greatly complicates an intruder’s task of gathering
-information about running processes, whether some daemon runs with elevated
-privileges, whether other user runs some sensitive program, whether other users
-run any program at all, etc.</p>
+<p>hidepid=off or hidepid=0 means classic mode - everybody may access all
+/proc/&lt;pid&gt;/ directories (default).</p>
+<p>hidepid=noaccess or hidepid=1 means users may not access any /proc/&lt;pid&gt;/
+directories but their own.  Sensitive files like cmdline, sched*, status are now
+protected against other users.  This makes it impossible to learn whether any
+user runs specific program (given the program doesn’t reveal itself by its
+behaviour).  As an additional bonus, as /proc/&lt;pid&gt;/cmdline is unaccessible for
+other users, poorly written programs passing sensitive information via program
+arguments are now protected against local eavesdroppers.</p>
+<p>hidepid=invisible or hidepid=2 means hidepid=1 plus all /proc/&lt;pid&gt;/ will be
+fully invisible to other users.  It doesn’t mean that it hides a fact whether a
+process with a specific pid value exists (it can be learned by other means, e.g.
+by “kill -0 $PID”), but it hides process’ uid and gid, which may be learned by
+stat()’ing /proc/&lt;pid&gt;/ otherwise.  It greatly complicates an intruder’s task of
+gathering information about running processes, whether some daemon runs with
+elevated privileges, whether other user runs some sensitive program, whether
+other users run any program at all, etc.</p>
+<p>hidepid=ptraceable or hidepid=4 means that procfs should only contain
+/proc/&lt;pid&gt;/ directories that the caller can ptrace.</p>
 <p>gid= defines a group authorized to learn processes information otherwise
 prohibited by hidepid=.  If you use some daemon like identd which needs to learn
 information about processes information, just add identd to this group.</p>
+<p>subset=pid hides all top level files and directories in the procfs that
+are not related to tasks.</p>
+</div>
+<div class="section" id="filesystem-behavior">
+<h3>5       Filesystem behavior<a class="headerlink" href="#filesystem-behavior" title="Permalink to this headline">¶</a></h3>
+<p>Originally, before the advent of pid namepsace, procfs was a global file
+system. It means that there was only one procfs instance in the system.</p>
+<p>When pid namespace was added, a separate procfs instance was mounted in
+each pid namespace. So, procfs mount options are global among all
+mountpoints within the same namespace.</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span># grep ^proc /proc/mounts
+</pre></div>
+</div>
+<p>proc /proc proc rw,relatime,hidepid=2 0 0</p>
+<p># strace -e mount mount -o hidepid=1 -t proc proc /tmp/proc
+mount(“proc”, “/tmp/proc”, “proc”, 0, “hidepid=1”) = 0
++++ exited with 0 +++</p>
+<p># grep ^proc /proc/mounts
+proc /proc proc rw,relatime,hidepid=2 0 0
+proc /tmp/proc proc rw,relatime,hidepid=2 0 0</p>
+<p>and only after remounting procfs mount options will change at all
+mountpoints.</p>
+<p># mount -o remount,hidepid=1 -t proc proc /tmp/proc</p>
+<p># grep ^proc /proc/mounts
+proc /proc proc rw,relatime,hidepid=1 0 0
+proc /tmp/proc proc rw,relatime,hidepid=1 0 0</p>
+<p>This behavior is different from the behavior of other filesystems.</p>
+<p>The new procfs behavior is more like other filesystems. Each procfs mount
+creates a new procfs instance. Mount options affect own procfs instance.
+It means that it became possible to have several procfs instances
+displaying tasks with different filtering options in one pid namespace.</p>
+<p># mount -o hidepid=invisible -t proc proc /proc
+# mount -o hidepid=noaccess -t proc proc /tmp/proc
+# grep ^proc /proc/mounts
+proc /proc proc rw,relatime,hidepid=invisible 0 0
+proc /tmp/proc proc rw,relatime,hidepid=noaccess 0 0</p>
 </div>
 </div>
 </div>

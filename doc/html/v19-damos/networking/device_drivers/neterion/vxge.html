@@ -1,0 +1,333 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Neterion’s (Formerly S2io) X3100 Series 10GbE PCIe Server Adapter Linux driver &mdash; The Linux Kernel  documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript">
+          var DOCUMENTATION_OPTIONS = {
+              URL_ROOT:'../../../',
+              VERSION:'',
+              LANGUAGE:'None',
+              COLLAPSE_INDEX:false,
+              FILE_SUFFIX:'.html',
+              HAS_SOURCE:  true,
+              SOURCELINK_SUFFIX: '.txt'
+          };
+      </script>
+        <script type="text/javascript" src="../../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/theme_overrides.css" type="text/css" />
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home"> The Linux Kernel
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                5.8.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../admin-guide/mm/damon/index.html">Monitoring Data Accesses</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../vm/damon/index.html">DAMON: Data Access MONitor</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">The Linux Kernel</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../index.html">Docs</a> &raquo;</li>
+        
+      <li>Neterion’s (Formerly S2io) X3100 Series 10GbE PCIe Server Adapter Linux driver</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../../../_sources/networking/device_drivers/neterion/vxge.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="neterion-s-formerly-s2io-x3100-series-10gbe-pcie-server-adapter-linux-driver">
+<h1>Neterion’s (Formerly S2io) X3100 Series 10GbE PCIe Server Adapter Linux driver<a class="headerlink" href="#neterion-s-formerly-s2io-x3100-series-10gbe-pcie-server-adapter-linux-driver" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="introduction">
+<h2>1. Introduction<a class="headerlink" href="#introduction" title="Permalink to this headline">¶</a></h2>
+<p>This Linux driver supports all Neterion’s X3100 series 10 GbE PCIe I/O
+Virtualized Server adapters.</p>
+<p>The X3100 series supports four modes of operation, configurable via
+firmware:</p>
+<blockquote>
+<div><ul class="simple">
+<li>Single function mode</li>
+<li>Multi function mode</li>
+<li>SRIOV mode</li>
+<li>MRIOV mode</li>
+</ul>
+</div></blockquote>
+<p>The functions share a 10GbE link and the pci-e bus, but hardly anything else
+inside the ASIC. Features like independent hw reset, statistics, bandwidth/
+priority allocation and guarantees, GRO, TSO, interrupt moderation etc are
+supported independently on each function.</p>
+<p>(See below for a complete list of features supported for both IPv4 and IPv6)</p>
+</div>
+<div class="section" id="features-supported">
+<h2>2. Features supported<a class="headerlink" href="#features-supported" title="Permalink to this headline">¶</a></h2>
+<ol class="lowerroman">
+<li><p class="first">Single function mode (up to 17 queues)</p>
+</li>
+<li><p class="first">Multi function mode (up to 17 functions)</p>
+</li>
+<li><p class="first">PCI-SIG’s I/O Virtualization</p>
+<blockquote>
+<div><ul class="simple">
+<li>Single Root mode: v1.0 (up to 17 functions)</li>
+<li>Multi-Root mode: v1.0 (up to 17 functions)</li>
+</ul>
+</div></blockquote>
+</li>
+<li><p class="first">Jumbo frames</p>
+<blockquote>
+<div><p>X3100 Series supports MTU up to 9600 bytes, modifiable using
+ip command.</p>
+</div></blockquote>
+</li>
+<li><p class="first">Offloads supported: (Enabled by default)</p>
+<blockquote>
+<div><ul class="simple">
+<li>Checksum offload (TCP/UDP/IP) on transmit and receive paths</li>
+<li>TCP Segmentation Offload (TSO) on transmit path</li>
+<li>Generic Receive Offload (GRO) on receive path</li>
+</ul>
+</div></blockquote>
+</li>
+<li><p class="first">MSI-X: (Enabled by default)</p>
+<blockquote>
+<div><p>Resulting in noticeable performance improvement (up to 7% on certain
+platforms).</p>
+</div></blockquote>
+</li>
+<li><p class="first">NAPI: (Enabled by default)</p>
+<blockquote>
+<div><p>For better Rx interrupt moderation.</p>
+</div></blockquote>
+</li>
+</ol>
+<p>viii)RTH (Receive Traffic Hash): (Enabled by default)</p>
+<blockquote>
+<div>Receive side steering for better scaling.</div></blockquote>
+<ol class="lowerroman" start="9">
+<li><p class="first">Statistics</p>
+<blockquote>
+<div><p>Comprehensive MAC-level and software statistics displayed using
+“ethtool -S” option.</p>
+</div></blockquote>
+</li>
+<li><p class="first">Multiple hardware queues: (Enabled by default)</p>
+<blockquote>
+<div><p>Up to 17 hardware based transmit and receive data channels, with
+multiple steering options (transmit multiqueue enabled by default).</p>
+</div></blockquote>
+</li>
+</ol>
+<div class="section" id="configurable-driver-parameters">
+<h3>3) Configurable driver parameters:<a class="headerlink" href="#configurable-driver-parameters" title="Permalink to this headline">¶</a></h3>
+<ol class="lowerroman">
+<li><dl class="first docutils">
+<dt>max_config_dev</dt>
+<dd><p class="first">Specifies maximum device functions to be enabled.</p>
+<p class="last">Valid range: 1-8</p>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt>max_config_port</dt>
+<dd><p class="first">Specifies number of ports to be enabled.</p>
+<p>Valid range: 1,2</p>
+<p class="last">Default: 1</p>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt>max_config_vpath</dt>
+<dd><p class="first">Specifies maximum VPATH(s) configured for each device function.</p>
+<p class="last">Valid range: 1-17</p>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt>vlan_tag_strip</dt>
+<dd><p class="first">Enables/disables vlan tag stripping from all received tagged frames that
+are not replicated at the internal L2 switch.</p>
+<p>Valid range: 0,1 (disabled, enabled respectively)</p>
+<p class="last">Default: 1</p>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt>addr_learn_en</dt>
+<dd><p class="first">Enable learning the mac address of the guest OS interface in
+virtualization environment.</p>
+<p>Valid range: 0,1 (disabled, enabled respectively)</p>
+<p class="last">Default: 0</p>
+</dd>
+</dl>
+</li>
+</ol>
+</div>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright The kernel development community
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

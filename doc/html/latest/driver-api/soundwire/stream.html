@@ -68,7 +68,7 @@
             
             
               <div class="version">
-                5.7.0
+                5.8.0
               </div>
             
           
@@ -230,7 +230,33 @@ Slaves are using single port.</p>
                                                    +---------------+
 </pre></div>
 </div>
-<p>Example 4: Stereo Stream with L and R channel is rendered by two different
+<p>Example 4: Stereo Stream with L and R channels is rendered by
+Master. Both of the L and R channels are received by two different
+Slaves. Master and both Slaves are using single port handling
+L+R. Each Slave device processes the L + R data locally, typically
+based on static configuration or dynamic orientation, and may drive
+one or more speakers.</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>+---------------+                    Clock Signal  +---------------+
+|    Master     +---------+------------------------+     Slave     |
+|   Interface   |         |                        |   Interface   |
+|               |         |                        |       1       |
+|               |         |           Data Signal  |               |
+|    L  +  R    +---+------------------------------+     L + R     |
+|     (Data)    |   |     |    Data Direction      |     (Data)    |
++---------------+   |     |   +-------------&gt;      +---------------+
+                    |     |
+                    |     |
+                    |     |                        +---------------+
+                    |     +----------------------&gt; |     Slave     |
+                    |                              |   Interface   |
+                    |                              |       2       |
+                    |                              |               |
+                    +----------------------------&gt; |     L + R     |
+                                                   |     (Data)    |
+                                                   +---------------+
+</pre></div>
+</div>
+<p>Example 5: Stereo Stream with L and R channel is rendered by two different
 Ports of the Master and is received by only single Port of the Slave
 interface.</p>
 <div class="highlight-none notranslate"><div class="highlight"><pre><span></span>+--------------------+
@@ -255,7 +281,7 @@ interface.</p>
                                                    +----------------+
 </pre></div>
 </div>
-<p>Example 5: Stereo Stream with L and R channel is rendered by 2 Masters, each
+<p>Example 6: Stereo Stream with L and R channel is rendered by 2 Masters, each
 rendering one channel, and is received by two different Slaves, each
 receiving one channel. Both Masters and both Slaves are using single port.</p>
 <div class="highlight-none notranslate"><div class="highlight"><pre><span></span>+---------------+                    Clock Signal  +---------------+
@@ -277,11 +303,67 @@ receiving one channel. Both Masters and both Slaves are using single port.</p>
 +---------------+  +-----------------------&gt;       +---------------+
 </pre></div>
 </div>
-<p>Note: In multi-link cases like above, to lock, one would acquire a global
+<p>Example 7: Stereo Stream with L and R channel is rendered by 2
+Masters, each rendering both channels. Each Slave receives L + R. This
+is the same application as Example 4 but with Slaves placed on
+separate links.</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>+---------------+                    Clock Signal  +---------------+
+|    Master     +----------------------------------+     Slave     |
+|   Interface   |                                  |   Interface   |
+|       1       |                                  |       1       |
+|               |                     Data Signal  |               |
+|     L + R     +----------------------------------+     L + R     |
+|     (Data)    |     Data Direction               |     (Data)    |
++---------------+  +-----------------------&gt;       +---------------+
+
++---------------+                    Clock Signal  +---------------+
+|    Master     +----------------------------------+     Slave     |
+|   Interface   |                                  |   Interface   |
+|       2       |                                  |       2       |
+|               |                     Data Signal  |               |
+|     L + R     +----------------------------------+     L + R     |
+|     (Data)    |     Data Direction               |     (Data)    |
++---------------+  +-----------------------&gt;       +---------------+
+</pre></div>
+</div>
+<p>Example 8: 4-channel Stream is rendered by 2 Masters, each rendering a
+2 channels. Each Slave receives 2 channels.</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>+---------------+                    Clock Signal  +---------------+
+|    Master     +----------------------------------+     Slave     |
+|   Interface   |                                  |   Interface   |
+|       1       |                                  |       1       |
+|               |                     Data Signal  |               |
+|    L1 + R1    +----------------------------------+    L1 + R1    |
+|     (Data)    |     Data Direction               |     (Data)    |
++---------------+  +-----------------------&gt;       +---------------+
+
++---------------+                    Clock Signal  +---------------+
+|    Master     +----------------------------------+     Slave     |
+|   Interface   |                                  |   Interface   |
+|       2       |                                  |       2       |
+|               |                     Data Signal  |               |
+|     L2 + R2   +----------------------------------+    L2 + R2    |
+|     (Data)    |     Data Direction               |     (Data)    |
++---------------+  +-----------------------&gt;       +---------------+
+</pre></div>
+</div>
+<p>Note1: In multi-link cases like above, to lock, one would acquire a global
 lock and then go on locking bus instances. But, in this case the caller
 framework(ASoC DPCM) guarantees that stream operations on a card are
 always serialized. So, there is no race condition and hence no need for
 global lock.</p>
+<p>Note2: A Slave device may be configured to receive all channels
+transmitted on a link for a given Stream (Example 4) or just a subset
+of the data (Example 3). The configuration of the Slave device is not
+handled by a SoundWire subsystem API, but instead by the
+snd_soc_dai_set_tdm_slot() API. The platform or machine driver will
+typically configure which of the slots are used. For Example 4, the
+same slots would be used by all Devices, while for Example 3 the Slave
+Device1 would use e.g. Slot 0 and Slave device2 slot 1.</p>
+<p>Note3: Multiple Sink ports can extract the same information for the
+same bitSlots in the SoundWire frame, however multiple Source ports
+shall be configured with different bitSlot configurations. This is the
+same limitation as with I2S/PCM TDM usages.</p>
 <div class="section" id="soundwire-stream-management-flow">
 <h2>SoundWire Stream Management flow<a class="headerlink" href="#soundwire-stream-management-flow" title="Permalink to this headline">¶</a></h2>
 <div class="section" id="stream-definitions">

@@ -68,7 +68,7 @@
             
             
               <div class="version">
-                5.7.0
+                5.8.0
               </div>
             
           
@@ -358,6 +358,12 @@ swap when collapsing a group of pages into a transparent huge page:</p>
 memory. A lower value can prevent THPs from being
 collapsed, resulting fewer pages being collapsed into
 THPs, and lower memory access performance.</p>
+<p><code class="docutils literal notranslate"><span class="pre">max_ptes_shared</span></code> specifies how many pages can be shared across multiple
+processes. Exceeding the number would block the collapse:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>/sys/kernel/mm/transparent_hugepage/khugepaged/max_ptes_shared
+</pre></div>
+</div>
+<p>A higher value may increase memory footprint for some workloads.</p>
 </div>
 </div>
 <div class="section" id="boot-parameter">
@@ -426,8 +432,7 @@ monitor how successfully the system is providing huge pages for use.</p>
 <dl class="docutils">
 <dt>thp_fault_alloc</dt>
 <dd>is incremented every time a huge page is successfully
-allocated to handle a page fault. This applies to both the
-first time a page is faulted and for COW faults.</dd>
+allocated to handle a page fault.</dd>
 <dt>thp_collapse_alloc</dt>
 <dd>is incremented by khugepaged when it has found
 a range of pages to collapse into one huge page and has

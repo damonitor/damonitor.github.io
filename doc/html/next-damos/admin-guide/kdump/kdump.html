@@ -68,7 +68,7 @@
             
             
               <div class="version">
-                5.7.0
+                5.8.0
               </div>
             
           
@@ -673,6 +673,13 @@ format. Crash is available on Dave Anderson’s site at the following URL:</p>
 will cause a kdump to occur at the <a class="reference internal" href="../../driver-api/basics.html#c.panic" title="panic"><code class="xref c c-func docutils literal notranslate"><span class="pre">panic()</span></code></a> call.  In cases where a user wants
 to specify this during runtime, /proc/sys/kernel/panic_on_warn can be set to 1
 to achieve the same behaviour.</p>
+</div>
+<div class="section" id="trigger-kdump-on-add-taint">
+<h2>Trigger Kdump on add_taint()<a class="headerlink" href="#trigger-kdump-on-add-taint" title="Permalink to this headline">¶</a></h2>
+<p>The kernel parameter panic_on_taint facilitates a conditional call to <a class="reference internal" href="../../driver-api/basics.html#c.panic" title="panic"><code class="xref c c-func docutils literal notranslate"><span class="pre">panic()</span></code></a>
+from within <a class="reference internal" href="../../driver-api/basics.html#c.add_taint" title="add_taint"><code class="xref c c-func docutils literal notranslate"><span class="pre">add_taint()</span></code></a> whenever the value set in this bitmask matches with the
+bit flag being set by <a class="reference internal" href="../../driver-api/basics.html#c.add_taint" title="add_taint"><code class="xref c c-func docutils literal notranslate"><span class="pre">add_taint()</span></code></a>.
+This will cause a kdump to occur at the <a class="reference internal" href="../../driver-api/basics.html#c.add_taint" title="add_taint"><code class="xref c c-func docutils literal notranslate"><span class="pre">add_taint()</span></code></a>-&gt;<a class="reference internal" href="../../driver-api/basics.html#c.panic" title="panic"><code class="xref c c-func docutils literal notranslate"><span class="pre">panic()</span></code></a> call.</p>
 </div>
 <div class="section" id="contact">
 <h2>Contact<a class="headerlink" href="#contact" title="Permalink to this headline">¶</a></h2>

@@ -68,7 +68,7 @@
             
             
               <div class="version">
-                5.7.0
+                5.8.0
               </div>
             
           
@@ -255,16 +255,15 @@ void <code class="descname">vga_set_legacy_decoding</code><span class="sig-paren
 <dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">pci_dev</span> <span class="pre">*</span> <span class="pre">pdev</span></code></dt>
 <dd>pci device of the VGA card</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">unsigned</span> <span class="pre">int</span> <span class="pre">decodes</span></code></dt>
-<dd>bit mask of what legacy regions the card decodes</dd>
-</dl>
-<p><strong>Description</strong></p>
-<blockquote>
-<div>Indicates to the arbiter if the card decodes legacy VGA IOs,
+<dd><p class="first">bit mask of what legacy regions the card decodes</p>
+<p class="last">Indicates to the arbiter if the card decodes legacy VGA IOs,
 legacy VGA Memory, both, or none. All cards default to both,
 the card driver (fbdev for example) should tell the arbiter
 if it has disabled legacy decoding, so the card can be left
 out of the arbitration process (and can be safe to take
-interrupts at any time.</div></blockquote>
+interrupts at any time.</p>
+</dd>
+</dl>
 <dl class="function">
 <dt id="c.vga_get_interruptible">
 int <code class="descname">vga_get_interruptible</code><span class="sig-paren">(</span>struct pci_dev *<em>&nbsp;pdev</em>, unsigned int<em>&nbsp;rsrc</em><span class="sig-paren">)</span><a class="headerlink" href="#c.vga_get_interruptible" title="Permalink to this definition">¶</a></dt>
@@ -372,8 +371,8 @@ interface) or not.</p>
 already owns the resources, the function succeeds.  Nested calls are
 supported (a per-resource counter is maintained)</p>
 <p>On success, release the VGA resource again with <a class="reference internal" href="#c.vga_put" title="vga_put"><code class="xref c c-func docutils literal notranslate"><span class="pre">vga_put()</span></code></a>.</p>
-<p><strong>Return</strong></p>
 <p>0 on success, negative error code on failure.</p>
+<p><strong>Return</strong></p>
 <dl class="function">
 <dt id="c.vga_tryget">
 int <code class="descname">vga_tryget</code><span class="sig-paren">(</span>struct pci_dev *<em>&nbsp;pdev</em>, unsigned int<em>&nbsp;rsrc</em><span class="sig-paren">)</span><a class="headerlink" href="#c.vga_tryget" title="Permalink to this definition">¶</a></dt>
@@ -392,8 +391,8 @@ int <code class="descname">vga_tryget</code><span class="sig-paren">(</span>stru
 error (-EBUSY) instead of blocking if the resources are already locked by
 another card. It can be called in any context</p>
 <p>On success, release the VGA resource again with <a class="reference internal" href="#c.vga_put" title="vga_put"><code class="xref c c-func docutils literal notranslate"><span class="pre">vga_put()</span></code></a>.</p>
-<p><strong>Return</strong></p>
 <p>0 on success, negative error code on failure.</p>
+<p><strong>Return</strong></p>
 <dl class="function">
 <dt id="c.vga_put">
 void <code class="descname">vga_put</code><span class="sig-paren">(</span>struct pci_dev *<em>&nbsp;pdev</em>, unsigned int<em>&nbsp;rsrc</em><span class="sig-paren">)</span><a class="headerlink" href="#c.vga_put" title="Permalink to this definition">¶</a></dt>

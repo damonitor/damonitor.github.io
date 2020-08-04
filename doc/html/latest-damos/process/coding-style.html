@@ -68,7 +68,7 @@
             
             
               <div class="version">
-                5.7.0
+                5.8.0
               </div>
             
           
@@ -230,7 +230,7 @@ available tools.</p>
 <p>Statements longer than 80 columns should be broken into sensible chunks,
 unless exceeding 80 columns significantly increases readability and does
 not hide information.</p>
-<p>Descendants are always substantially shorter than the parent and are
+<p>Descendants are always substantially shorter than the parent and
 are placed substantially to the right.  A very commonly used style
 is to align descendants to a function open parenthesis.</p>
 <p>These same rules are applied to function headers with a long argument list.</p>
@@ -414,6 +414,25 @@ variable that is used to hold a temporary value.</p>
 <p>If you are afraid to mix up your local variable names, you have another
 problem, which is called the function-growth-hormone-imbalance syndrome.
 See chapter 6 (Functions).</p>
+<p>For symbol names and documentation, avoid introducing new usage of
+‘master / slave’ (or ‘slave’ independent of ‘master’) and ‘blacklist /
+whitelist’.</p>
+<dl class="docutils">
+<dt>Recommended replacements for ‘master / slave’ are:</dt>
+<dd>‘{primary,main} / {secondary,replica,subordinate}’
+‘{initiator,requester} / {target,responder}’
+‘{controller,host} / {device,worker,proxy}’
+‘leader / follower’
+‘director / performer’</dd>
+<dt>Recommended replacements for ‘blacklist/whitelist’ are:</dt>
+<dd>‘denylist / allowlist’
+‘blocklist / passlist’</dd>
+</dl>
+<p>Exceptions for introducing new usage is to maintain a userspace ABI/API,
+or when updating code for an existing (as of 2020) hardware or protocol
+specification that mandates those terms. For new specifications
+translate specification usage of the terminology to the kernel coding
+standard where possible.</p>
 </div>
 <div class="section" id="typedefs">
 <h2>5) Typedefs<a class="headerlink" href="#typedefs" title="Permalink to this headline">¶</a></h2>
@@ -838,13 +857,13 @@ messages concise, clear, and unambiguous.</p>
 which you should use to make sure messages are matched to the right device
 and driver, and are tagged with the right level:  dev_err(), dev_warn(),
 dev_info(), and so forth.  For messages that aren’t associated with a
-particular device, &lt;linux/printk.h&gt; defines pr_notice(), pr_info(),
-pr_warn(), pr_err(), etc.</p>
+particular device, &lt;linux/printk.h&gt; defines <a class="reference internal" href="../core-api/printk-basics.html#c.pr_notice" title="pr_notice"><code class="xref c c-func docutils literal notranslate"><span class="pre">pr_notice()</span></code></a>, <a class="reference internal" href="../core-api/printk-basics.html#c.pr_info" title="pr_info"><code class="xref c c-func docutils literal notranslate"><span class="pre">pr_info()</span></code></a>,
+<a class="reference internal" href="../core-api/printk-basics.html#c.pr_warn" title="pr_warn"><code class="xref c c-func docutils literal notranslate"><span class="pre">pr_warn()</span></code></a>, <a class="reference internal" href="../core-api/printk-basics.html#c.pr_err" title="pr_err"><code class="xref c c-func docutils literal notranslate"><span class="pre">pr_err()</span></code></a>, etc.</p>
 <p>Coming up with good debugging messages can be quite a challenge; and once
 you have them, they can be a huge help for remote troubleshooting.  However
 debug message printing is handled differently than printing other non-debug
 messages.  While the other pr_XXX() functions print unconditionally,
-pr_debug() does not; it is compiled out by default, unless either DEBUG is
+<a class="reference internal" href="../core-api/printk-basics.html#c.pr_debug" title="pr_debug"><code class="xref c c-func docutils literal notranslate"><span class="pre">pr_debug()</span></code></a> does not; it is compiled out by default, unless either DEBUG is
 defined or CONFIG_DYNAMIC_DEBUG is set.  That is true for dev_dbg() also,
 and a related convention uses VERBOSE_DEBUG to add dev_vdbg() messages to
 the ones already enabled by DEBUG.</p>

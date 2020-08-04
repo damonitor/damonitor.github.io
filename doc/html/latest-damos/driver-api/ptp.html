@@ -68,7 +68,7 @@
             
             
               <div class="version">
-                5.7.0
+                5.8.0
               </div>
             
           
@@ -181,6 +181,7 @@ complete set of PTP hardware clock functionality.</p>
 <li>Ancillary clock features
 - Time stamp external events
 - Period output signals configurable from user space
+- Low Pass Filter (LPF) access from user space
 - Synchronization of the Linux system time via the PPS subsystem</li>
 </ul>
 </div></blockquote>
@@ -253,6 +254,23 @@ used as general inputs or outputs</li>
 <li>Intel IXP465<ul>
 <li>Auxiliary Slave/Master Mode Snapshot (optional interrupt)</li>
 <li>Target Time (optional interrupt)</li>
+</ul>
+</li>
+<li>Renesas (IDT) ClockMatrix™<ul>
+<li>Up to 4 independent PHC channels</li>
+<li>Integrated low pass filter (LPF), access via .adjPhase (compliant to ITU-T G.8273.2)</li>
+<li>Programmable output periodic signals</li>
+<li>Programmable inputs can time stamp external triggers</li>
+<li><dl class="first docutils">
+<dt>Driver and/or hardware configuration through firmware (idtcm.bin)</dt>
+<dd><ul class="first last">
+<li>LPF settings (bandwidth, phase limiting, automatic holdover, physical layer assist (per ITU-T G.8273.2))</li>
+<li>Programmable output PTP clocks, any frequency up to 1GHz (to other PHY/MAC time stampers, refclk to ASSPs/SoCs/FPGAs)</li>
+<li>Lock to GNSS input, automatic switching between GNSS and user-space PHC control (optional)</li>
+</ul>
+</dd>
+</dl>
+</li>
 </ul>
 </li>
 </ul>

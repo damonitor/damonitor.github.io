@@ -68,7 +68,7 @@
             
             
               <div class="version">
-                5.7.0
+                5.8.0
               </div>
             
           
@@ -211,14 +211,15 @@ Oops: 0002 [#1] PREEMPT SMP
 </div>
 <p>Despite being an <strong>Oops</strong> or some other sort of stack trace, the offended
 line is usually required to identify and handle the bug. Along this chapter,
-we’ll refer to “Oops” for all kinds of stack traces that need to be analized.</p>
-<div class="admonition note">
-<p class="first admonition-title">Note</p>
-<p class="last"><code class="docutils literal notranslate"><span class="pre">ksymoops</span></code> is useless on 2.6 or upper.  Please use the Oops in its original
-format (from <code class="docutils literal notranslate"><span class="pre">dmesg</span></code>, etc).  Ignore any references in this or other docs to
-“decoding the Oops” or “running it through ksymoops”.
-If you post an Oops from 2.6+ that has been run through <code class="docutils literal notranslate"><span class="pre">ksymoops</span></code>,
-people will just tell you to repost it.</p>
+we’ll refer to “Oops” for all kinds of stack traces that need to be analyzed.</p>
+<p>If the kernel is compiled with <code class="docutils literal notranslate"><span class="pre">CONFIG_DEBUG_INFO</span></code>, you can enhance the
+quality of the stack trace by using file:<cite>scripts/decode_stacktrace.sh</cite>.</p>
+<div class="section" id="modules-linked-in">
+<h2>Modules linked in<a class="headerlink" href="#modules-linked-in" title="Permalink to this headline">¶</a></h2>
+<p>Modules that are tainted or are being loaded or unloaded are marked with
+“(…)”, where the taint flags are described in
+file:<cite>Documentation/admin-guide/tainted-kernels.rst</cite>, “being loaded” is
+annotated with “+”, and “being unloaded” is annotated with “-“.</p>
 </div>
 <div class="section" id="where-is-the-oops-message-is-located">
 <h2>Where is the Oops message is located?<a class="headerlink" href="#where-is-the-oops-message-is-located" title="Permalink to this headline">¶</a></h2>
@@ -230,7 +231,7 @@ by running <code class="docutils literal notranslate"><span class="pre">journalc
 <p>Sometimes <code class="docutils literal notranslate"><span class="pre">klogd</span></code> dies, in which case you can run <code class="docutils literal notranslate"><span class="pre">dmesg</span> <span class="pre">&gt;</span> <span class="pre">file</span></code> to
 read the data from the kernel buffers and save it.  Or you can
 <code class="docutils literal notranslate"><span class="pre">cat</span> <span class="pre">/proc/kmsg</span> <span class="pre">&gt;</span> <span class="pre">file</span></code>, however you have to break in to stop the transfer,
-<code class="docutils literal notranslate"><span class="pre">kmsg</span></code> is a “never ending file”.</p>
+since <code class="docutils literal notranslate"><span class="pre">kmsg</span></code> is a “never ending file”.</p>
 <p>If the machine has crashed so badly that you cannot enter commands or
 the disk is not available then you have three options:</p>
 <ol class="arabic simple">
@@ -239,9 +240,9 @@ has restarted.  Messy but it is the only option if you have not
 planned for a crash. Alternatively, you can take a picture of
 the screen with a digital camera - not nice, but better than
 nothing.  If the messages scroll off the top of the console, you
-may find that booting with a higher resolution (eg, <code class="docutils literal notranslate"><span class="pre">vga=791</span></code>)
+may find that booting with a higher resolution (e.g., <code class="docutils literal notranslate"><span class="pre">vga=791</span></code>)
 will allow you to read more of the text. (Caveat: This needs <code class="docutils literal notranslate"><span class="pre">vesafb</span></code>,
-so won’t help for ‘early’ oopses)</li>
+so won’t help for ‘early’ oopses.)</li>
 <li>Boot with a serial console (see
 <a class="reference internal" href="serial-console.html#serial-console"><span class="std std-ref">Documentation/admin-guide/serial-console.rst</span></a>),
 run a null modem to a second machine and capture the output there
@@ -258,7 +259,7 @@ Kernel source file. There are two methods for doing that. Usually, using
 <code class="docutils literal notranslate"><span class="pre">gdb</span></code> is easier, but the Kernel should be pre-compiled with debug info.</p>
 <div class="section" id="gdb">
 <h3>gdb<a class="headerlink" href="#gdb" title="Permalink to this headline">¶</a></h3>
-<p>The GNU debug (<code class="docutils literal notranslate"><span class="pre">gdb</span></code>) is the best way to figure out the exact file and line
+<p>The GNU debugger (<code class="docutils literal notranslate"><span class="pre">gdb</span></code>) is the best way to figure out the exact file and line
 number of the OOPS from the <code class="docutils literal notranslate"><span class="pre">vmlinux</span></code> file.</p>
 <p>The usage of gdb works best on a kernel compiled with <code class="docutils literal notranslate"><span class="pre">CONFIG_DEBUG_INFO</span></code>.
 This can be set by running:</p>
@@ -318,7 +319,7 @@ $ gdb drivers/tty/vt/vt_ioctl.o
  ...
 </pre></div>
 </div>
-<p>this shows the problem likely in the :jbd: module. You can load that module
+<p>this shows the problem likely is in the :jbd: module. You can load that module
 in gdb and list the relevant code:</p>
 <div class="highlight-none notranslate"><div class="highlight"><pre><span></span>$ gdb fs/jbd/jbd.ko
 (gdb) l *log_wait_commit+0xa3
@@ -353,8 +354,9 @@ in the kernel hacking menu of the menu configuration.) For example:</p>
 <p class="last">You need to be at the top level of the kernel tree for this to pick up
 your C files.</p>
 </div>
-<p>If you don’t have access to the code you can also debug on some crash dumps
-e.g. crash dump output as shown by Dave Miller:</p>
+<p>If you don’t have access to the source code you can still debug some crash
+dumps using the following method (example crash dump output as shown by
+Dave Miller):</p>
 <div class="highlight-none notranslate"><div class="highlight"><pre><span></span>EIP is at  +0x14/0x4c0
  ...
 Code: 44 24 04 e8 6f 05 00 00 e9 e8 fe ff ff 8d 76 00 8d bc 27 00 00
@@ -384,6 +386,8 @@ ip_queue_xmit:
     mov        0x13c(%ebx), %eax       ! %eax = inet_sk(sk)-&gt;opt
 </pre></div>
 </div>
+<p>file:<cite>scripts/decodecode</cite> can be used to automate most of this, depending
+on what CPU architecture is being debugged.</p>
 </div>
 </div>
 <div class="section" id="reporting-the-bug">
@@ -394,7 +398,7 @@ you could either try to fix it yourself or report it upstream.</p>
 used for the development of the affected code. This can be done by using
 the <code class="docutils literal notranslate"><span class="pre">get_maintainer.pl</span></code> script.</p>
 <p>For example, if you find a bug at the gspca’s sonixj.c file, you can get
-their maintainers with:</p>
+its maintainers with:</p>
 <div class="highlight-none notranslate"><div class="highlight"><pre><span></span>$ ./scripts/get_maintainer.pl -f drivers/media/usb/gspca/sonixj.c
 Hans Verkuil &lt;hverkuil@xs4all.nl&gt; (odd fixer:GSPCA USB WEBCAM DRIVER,commit_signer:1/1=100%)
 Mauro Carvalho Chehab &lt;mchehab@kernel.org&gt; (maintainer:MEDIA INPUT INFRASTRUCTURE (V4L/DVB),commit_signer:1/1=100%)
@@ -406,16 +410,17 @@ linux-kernel@vger.kernel.org (open list)
 </div>
 <p>Please notice that it will point to:</p>
 <ul class="simple">
-<li>The last developers that touched on the source code. On the above example,
-Tejun and Bhaktipriya (in this specific case, none really envolved on the
-development of this file);</li>
+<li>The last developers that touched the source code (if this is done inside
+a git tree). On the above example, Tejun and Bhaktipriya (in this
+specific case, none really envolved on the development of this file);</li>
 <li>The driver maintainer (Hans Verkuil);</li>
 <li>The subsystem maintainer (Mauro Carvalho Chehab);</li>
 <li>The driver and/or subsystem mailing list (<a class="reference external" href="mailto:linux-media&#37;&#52;&#48;vger&#46;kernel&#46;org">linux-media<span>&#64;</span>vger<span>&#46;</span>kernel<span>&#46;</span>org</a>);</li>
 <li>the Linux Kernel mailing list (<a class="reference external" href="mailto:linux-kernel&#37;&#52;&#48;vger&#46;kernel&#46;org">linux-kernel<span>&#64;</span>vger<span>&#46;</span>kernel<span>&#46;</span>org</a>).</li>
 </ul>
 <p>Usually, the fastest way to have your bug fixed is to report it to mailing
-list used for the development of the code (linux-media ML) copying the driver maintainer (Hans).</p>
+list used for the development of the code (linux-media ML) copying the
+driver maintainer (Hans).</p>
 <p>If you are totally stumped as to whom to send the report, and
 <code class="docutils literal notranslate"><span class="pre">get_maintainer.pl</span></code> didn’t provide you anything useful, send it to
 <a class="reference external" href="mailto:linux-kernel&#37;&#52;&#48;vger&#46;kernel&#46;org">linux-kernel<span>&#64;</span>vger<span>&#46;</span>kernel<span>&#46;</span>org</a>.</p>
@@ -446,9 +451,9 @@ forwarded through whatever reporting mechanism <code class="docutils literal not
 protection fault message can be simply cut out of the message files
 and forwarded to the kernel developers.</p>
 <p>Two types of address resolution are performed by <code class="docutils literal notranslate"><span class="pre">klogd</span></code>.  The first is
-static translation and the second is dynamic translation.  Static
-translation uses the System.map file in much the same manner that
-ksymoops does.  In order to do static translation the <code class="docutils literal notranslate"><span class="pre">klogd</span></code> daemon
+static translation and the second is dynamic translation.
+Static translation uses the System.map file.
+In order to do static translation the <code class="docutils literal notranslate"><span class="pre">klogd</span></code> daemon
 must be able to find a system map file at daemon initialization time.
 See the klogd man page for information on how <code class="docutils literal notranslate"><span class="pre">klogd</span></code> searches for map
 files.</p>

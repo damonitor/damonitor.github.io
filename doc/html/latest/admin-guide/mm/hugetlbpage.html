@@ -68,7 +68,7 @@
             
             
               <div class="version">
-                5.7.0
+                5.8.0
               </div>
             
           
@@ -247,6 +247,49 @@ of a specific size, one must precede the huge pages boot command parameters
 with a huge page size selection parameter “hugepagesz=&lt;size&gt;”.  &lt;size&gt; must
 be specified in bytes with optional scale suffix [kKmMgG].  The default huge
 page size may be selected with the “default_hugepagesz=&lt;size&gt;” boot parameter.</p>
+<p>Hugetlb boot command line parameter semantics
+hugepagesz - Specify a huge page size.  Used in conjunction with hugepages</p>
+<blockquote>
+<div><p>parameter to preallocate a number of huge pages of the specified
+size.  Hence, hugepagesz and hugepages are typically specified in
+pairs such as:</p>
+<blockquote>
+<div>hugepagesz=2M hugepages=512</div></blockquote>
+<p>hugepagesz can only be specified once on the command line for a
+specific huge page size.  Valid huge page sizes are architecture
+dependent.</p>
+</div></blockquote>
+<dl class="docutils">
+<dt>hugepages - Specify the number of huge pages to preallocate.  This typically</dt>
+<dd><p class="first">follows a valid hugepagesz or default_hugepagesz parameter.  However,
+if hugepages is the first or only hugetlb command line parameter it
+implicitly specifies the number of huge pages of default size to
+allocate.  If the number of huge pages of default size is implicitly
+specified, it can not be overwritten by a hugepagesz,hugepages
+parameter pair for the default size.
+For example, on an architecture with 2M default huge page size:</p>
+<blockquote>
+<div>hugepages=256 hugepagesz=2M hugepages=512</div></blockquote>
+<p class="last">will result in 256 2M huge pages being allocated and a warning message
+indicating that the hugepages=512 parameter is ignored.  If a hugepages
+parameter is preceded by an invalid hugepagesz parameter, it will
+be ignored.</p>
+</dd>
+<dt>default_hugepagesz - Specify the default huge page size.  This parameter can</dt>
+<dd><p class="first">only be specified once on the command line.  default_hugepagesz can
+optionally be followed by the hugepages parameter to preallocate a
+specific number of huge pages of default size.  The number of default
+sized huge pages to preallocate can also be implicitly specified as
+mentioned in the hugepages section above.  Therefore, on an
+architecture with 2M default huge page size:</p>
+<blockquote>
+<div>hugepages=256
+default_hugepagesz=2M hugepages=256
+hugepages=256 default_hugepagesz=2M</div></blockquote>
+<p class="last">will all result in 256 2M huge pages being allocated.  Valid default
+huge page size is architecture dependent.</p>
+</dd>
+</dl>
 <p>When multiple huge page sizes are supported, <code class="docutils literal notranslate"><span class="pre">/proc/sys/vm/nr_hugepages</span></code>
 indicates the current number of pre-allocated huge pages of the default size.
 Thus, one can use the following command to dynamically allocate/deallocate

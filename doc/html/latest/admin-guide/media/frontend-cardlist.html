@@ -1,0 +1,753 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>5.5.14.2. Frontend drivers &mdash; The Linux Kernel  documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript">
+          var DOCUMENTATION_OPTIONS = {
+              URL_ROOT:'../../',
+              VERSION:'',
+              LANGUAGE:'None',
+              COLLAPSE_INDEX:false,
+              FILE_SUFFIX:'.html',
+              HAS_SOURCE:  true,
+              SOURCELINK_SUFFIX: '.txt'
+          };
+      </script>
+        <script type="text/javascript" src="../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../_static/doctools.js"></script>
+    
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/theme_overrides.css" type="text/css" />
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../index.html" class="icon icon-home"> The Linux Kernel
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                5.8.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../mm/damon/index.html">Monitoring Data Accesses</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../vm/damon/index.html">DAMON: Data Access MONitor</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">The Linux Kernel</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html">Docs</a> &raquo;</li>
+        
+      <li>5.5.14.2. Frontend drivers</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../../_sources/admin-guide/media/frontend-cardlist.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="frontend-drivers">
+<h1>5.5.14.2. Frontend drivers<a class="headerlink" href="#frontend-drivers" title="Permalink to this headline">¶</a></h1>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<ol class="last arabic simple">
+<li>There is no guarantee that every frontend driver works
+out of the box with every card, because of different wiring.</li>
+<li>The demodulator chips can be used with a variety of
+tuner/PLL chips, and not all combinations are supported. Often
+the demodulator and tuner/PLL chip are inside a metal box for
+shielding, and the whole metal box has its own part number.</li>
+</ol>
+</div>
+<div class="section" id="common-interface-en50221-controller-drivers">
+<h2>5.5.14.2.1. Common Interface (EN50221) controller drivers<a class="headerlink" href="#common-interface-en50221-controller-drivers" title="Permalink to this headline">¶</a></h2>
+<table border="1" class="docutils">
+<colgroup>
+<col width="20%" />
+<col width="80%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Driver</th>
+<th class="head">Name</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>cxd2099</td>
+<td>Sony CXD2099AR Common Interface driver</td>
+</tr>
+<tr class="row-odd"><td>sp2</td>
+<td>CIMaX SP2</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="atsc-north-american-korean-terrestrial-cable-dtv-frontends">
+<h2>5.5.14.2.2. ATSC (North American/Korean Terrestrial/Cable DTV) frontends<a class="headerlink" href="#atsc-north-american-korean-terrestrial-cable-dtv-frontends" title="Permalink to this headline">¶</a></h2>
+<table border="1" class="docutils">
+<colgroup>
+<col width="20%" />
+<col width="80%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Driver</th>
+<th class="head">Name</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>au8522_dig</td>
+<td>Auvitek AU8522 based DTV demod</td>
+</tr>
+<tr class="row-odd"><td>au8522_decoder</td>
+<td>Auvitek AU8522 based ATV demod</td>
+</tr>
+<tr class="row-even"><td>bcm3510</td>
+<td>Broadcom BCM3510</td>
+</tr>
+<tr class="row-odd"><td>lg2160</td>
+<td>LG Electronics LG216x based</td>
+</tr>
+<tr class="row-even"><td>lgdt3305</td>
+<td>LG Electronics LGDT3304 and LGDT3305 based</td>
+</tr>
+<tr class="row-odd"><td>lgdt3306a</td>
+<td>LG Electronics LGDT3306A based</td>
+</tr>
+<tr class="row-even"><td>lgdt330x</td>
+<td>LG Electronics LGDT3302/LGDT3303 based</td>
+</tr>
+<tr class="row-odd"><td>nxt200x</td>
+<td>NxtWave Communications NXT2002/NXT2004 based</td>
+</tr>
+<tr class="row-even"><td>or51132</td>
+<td>Oren OR51132 based</td>
+</tr>
+<tr class="row-odd"><td>or51211</td>
+<td>Oren OR51211 based</td>
+</tr>
+<tr class="row-even"><td>s5h1409</td>
+<td>Samsung S5H1409 based</td>
+</tr>
+<tr class="row-odd"><td>s5h1411</td>
+<td>Samsung S5H1411 based</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="dvb-c-cable-frontends">
+<h2>5.5.14.2.3. DVB-C (cable) frontends<a class="headerlink" href="#dvb-c-cable-frontends" title="Permalink to this headline">¶</a></h2>
+<table border="1" class="docutils">
+<colgroup>
+<col width="20%" />
+<col width="80%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Driver</th>
+<th class="head">Name</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>stv0297</td>
+<td>ST STV0297 based</td>
+</tr>
+<tr class="row-odd"><td>tda10021</td>
+<td>Philips TDA10021 based</td>
+</tr>
+<tr class="row-even"><td>tda10023</td>
+<td>Philips TDA10023 based</td>
+</tr>
+<tr class="row-odd"><td>ves1820</td>
+<td>VLSI VES1820 based</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="dvb-s-satellite-frontends">
+<h2>5.5.14.2.4. DVB-S (satellite) frontends<a class="headerlink" href="#dvb-s-satellite-frontends" title="Permalink to this headline">¶</a></h2>
+<table border="1" class="docutils">
+<colgroup>
+<col width="20%" />
+<col width="80%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Driver</th>
+<th class="head">Name</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>cx24110</td>
+<td>Conexant CX24110 based</td>
+</tr>
+<tr class="row-odd"><td>cx24116</td>
+<td>Conexant CX24116 based</td>
+</tr>
+<tr class="row-even"><td>cx24117</td>
+<td>Conexant CX24117 based</td>
+</tr>
+<tr class="row-odd"><td>cx24120</td>
+<td>Conexant CX24120 based</td>
+</tr>
+<tr class="row-even"><td>cx24123</td>
+<td>Conexant CX24123 based</td>
+</tr>
+<tr class="row-odd"><td>ds3000</td>
+<td>Montage Tehnology DS3000 based</td>
+</tr>
+<tr class="row-even"><td>mb86a16</td>
+<td>Fujitsu MB86A16 based</td>
+</tr>
+<tr class="row-odd"><td>mt312</td>
+<td>Zarlink VP310/MT312/ZL10313 based</td>
+</tr>
+<tr class="row-even"><td>s5h1420</td>
+<td>Samsung S5H1420 based</td>
+</tr>
+<tr class="row-odd"><td>si21xx</td>
+<td>Silicon Labs SI21XX based</td>
+</tr>
+<tr class="row-even"><td>stb6000</td>
+<td>ST STB6000 silicon tuner</td>
+</tr>
+<tr class="row-odd"><td>stv0288</td>
+<td>ST STV0288 based</td>
+</tr>
+<tr class="row-even"><td>stv0299</td>
+<td>ST STV0299 based</td>
+</tr>
+<tr class="row-odd"><td>stv0900</td>
+<td>ST STV0900 based</td>
+</tr>
+<tr class="row-even"><td>stv6110</td>
+<td>ST STV6110 silicon tuner</td>
+</tr>
+<tr class="row-odd"><td>tda10071</td>
+<td>NXP TDA10071</td>
+</tr>
+<tr class="row-even"><td>tda10086</td>
+<td>Philips TDA10086 based</td>
+</tr>
+<tr class="row-odd"><td>tda8083</td>
+<td>Philips TDA8083 based</td>
+</tr>
+<tr class="row-even"><td>tda8261</td>
+<td>Philips TDA8261 based</td>
+</tr>
+<tr class="row-odd"><td>tda826x</td>
+<td>Philips TDA826X silicon tuner</td>
+</tr>
+<tr class="row-even"><td>ts2020</td>
+<td>Montage Tehnology TS2020 based tuners</td>
+</tr>
+<tr class="row-odd"><td>tua6100</td>
+<td>Infineon TUA6100 PLL</td>
+</tr>
+<tr class="row-even"><td>cx24113</td>
+<td>Conexant CX24113/CX24128 tuner for DVB-S/DSS</td>
+</tr>
+<tr class="row-odd"><td>itd1000</td>
+<td>Integrant ITD1000 Zero IF tuner for DVB-S/DSS</td>
+</tr>
+<tr class="row-even"><td>ves1x93</td>
+<td>VLSI VES1893 or VES1993 based</td>
+</tr>
+<tr class="row-odd"><td>zl10036</td>
+<td>Zarlink ZL10036 silicon tuner</td>
+</tr>
+<tr class="row-even"><td>zl10039</td>
+<td>Zarlink ZL10039 silicon tuner</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="dvb-t-terrestrial-frontends">
+<h2>5.5.14.2.5. DVB-T (terrestrial) frontends<a class="headerlink" href="#dvb-t-terrestrial-frontends" title="Permalink to this headline">¶</a></h2>
+<table border="1" class="docutils">
+<colgroup>
+<col width="20%" />
+<col width="80%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Driver</th>
+<th class="head">Name</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>af9013</td>
+<td>Afatech AF9013 demodulator</td>
+</tr>
+<tr class="row-odd"><td>cx22700</td>
+<td>Conexant CX22700 based</td>
+</tr>
+<tr class="row-even"><td>cx22702</td>
+<td>Conexant cx22702 demodulator (OFDM)</td>
+</tr>
+<tr class="row-odd"><td>cxd2820r</td>
+<td>Sony CXD2820R</td>
+</tr>
+<tr class="row-even"><td>cxd2841er</td>
+<td>Sony CXD2841ER</td>
+</tr>
+<tr class="row-odd"><td>cxd2880</td>
+<td>Sony CXD2880 DVB-T2/T tuner + demodulator</td>
+</tr>
+<tr class="row-even"><td>dib3000mb</td>
+<td>DiBcom 3000M-B</td>
+</tr>
+<tr class="row-odd"><td>dib3000mc</td>
+<td>DiBcom 3000P/M-C</td>
+</tr>
+<tr class="row-even"><td>dib7000m</td>
+<td>DiBcom 7000MA/MB/PA/PB/MC</td>
+</tr>
+<tr class="row-odd"><td>dib7000p</td>
+<td>DiBcom 7000PC</td>
+</tr>
+<tr class="row-even"><td>dib9000</td>
+<td>DiBcom 9000</td>
+</tr>
+<tr class="row-odd"><td>drxd</td>
+<td>Micronas DRXD driver</td>
+</tr>
+<tr class="row-even"><td>ec100</td>
+<td>E3C EC100</td>
+</tr>
+<tr class="row-odd"><td>l64781</td>
+<td>LSI L64781</td>
+</tr>
+<tr class="row-even"><td>mt352</td>
+<td>Zarlink MT352 based</td>
+</tr>
+<tr class="row-odd"><td>nxt6000</td>
+<td>NxtWave Communications NXT6000 based</td>
+</tr>
+<tr class="row-even"><td>rtl2830</td>
+<td>Realtek RTL2830 DVB-T</td>
+</tr>
+<tr class="row-odd"><td>rtl2832</td>
+<td>Realtek RTL2832 DVB-T</td>
+</tr>
+<tr class="row-even"><td>rtl2832_sdr</td>
+<td>Realtek RTL2832 SDR</td>
+</tr>
+<tr class="row-odd"><td>s5h1432</td>
+<td>Samsung s5h1432 demodulator (OFDM)</td>
+</tr>
+<tr class="row-even"><td>si2168</td>
+<td>Silicon Labs Si2168</td>
+</tr>
+<tr class="row-odd"><td>sp8870</td>
+<td>Spase sp8870 based</td>
+</tr>
+<tr class="row-even"><td>sp887x</td>
+<td>Spase sp887x based</td>
+</tr>
+<tr class="row-odd"><td>stv0367</td>
+<td>ST STV0367 based</td>
+</tr>
+<tr class="row-even"><td>tda10048</td>
+<td>Philips TDA10048HN based</td>
+</tr>
+<tr class="row-odd"><td>tda1004x</td>
+<td>Philips TDA10045H/TDA10046H based</td>
+</tr>
+<tr class="row-even"><td>zd1301_demod</td>
+<td>ZyDAS ZD1301</td>
+</tr>
+<tr class="row-odd"><td>zl10353</td>
+<td>Zarlink ZL10353 based</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="digital-terrestrial-only-tuners-pll">
+<h2>5.5.14.2.6. Digital terrestrial only tuners/PLL<a class="headerlink" href="#digital-terrestrial-only-tuners-pll" title="Permalink to this headline">¶</a></h2>
+<table border="1" class="docutils">
+<colgroup>
+<col width="20%" />
+<col width="80%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Driver</th>
+<th class="head">Name</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>dvb-pll</td>
+<td>Generic I2C PLL based tuners</td>
+</tr>
+<tr class="row-odd"><td>dib0070</td>
+<td>DiBcom DiB0070 silicon base-band tuner</td>
+</tr>
+<tr class="row-even"><td>dib0090</td>
+<td>DiBcom DiB0090 silicon base-band tuner</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="isdb-s-satellite-isdb-t-terrestrial-frontends">
+<h2>5.5.14.2.7. ISDB-S (satellite) &amp; ISDB-T (terrestrial) frontends<a class="headerlink" href="#isdb-s-satellite-isdb-t-terrestrial-frontends" title="Permalink to this headline">¶</a></h2>
+<table border="1" class="docutils">
+<colgroup>
+<col width="20%" />
+<col width="80%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Driver</th>
+<th class="head">Name</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>mn88443x</td>
+<td>Socionext MN88443x</td>
+</tr>
+<tr class="row-odd"><td>tc90522</td>
+<td>Toshiba TC90522</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="isdb-t-terrestrial-frontends">
+<h2>5.5.14.2.8. ISDB-T (terrestrial) frontends<a class="headerlink" href="#isdb-t-terrestrial-frontends" title="Permalink to this headline">¶</a></h2>
+<table border="1" class="docutils">
+<colgroup>
+<col width="20%" />
+<col width="80%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Driver</th>
+<th class="head">Name</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>dib8000</td>
+<td>DiBcom 8000MB/MC</td>
+</tr>
+<tr class="row-odd"><td>mb86a20s</td>
+<td>Fujitsu mb86a20s</td>
+</tr>
+<tr class="row-even"><td>s921</td>
+<td>Sharp S921 frontend</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="multistandard-cable-terrestrial-frontends">
+<h2>5.5.14.2.9. Multistandard (cable + terrestrial) frontends<a class="headerlink" href="#multistandard-cable-terrestrial-frontends" title="Permalink to this headline">¶</a></h2>
+<table border="1" class="docutils">
+<colgroup>
+<col width="20%" />
+<col width="80%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Driver</th>
+<th class="head">Name</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>drxk</td>
+<td>Micronas DRXK based</td>
+</tr>
+<tr class="row-odd"><td>mn88472</td>
+<td>Panasonic MN88472</td>
+</tr>
+<tr class="row-even"><td>mn88473</td>
+<td>Panasonic MN88473</td>
+</tr>
+<tr class="row-odd"><td>si2165</td>
+<td>Silicon Labs si2165 based</td>
+</tr>
+<tr class="row-even"><td>tda18271c2dd</td>
+<td>NXP TDA18271C2 silicon tuner</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="multistandard-satellite-frontends">
+<h2>5.5.14.2.10. Multistandard (satellite) frontends<a class="headerlink" href="#multistandard-satellite-frontends" title="Permalink to this headline">¶</a></h2>
+<table border="1" class="docutils">
+<colgroup>
+<col width="20%" />
+<col width="80%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Driver</th>
+<th class="head">Name</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>m88ds3103</td>
+<td>Montage Technology M88DS3103</td>
+</tr>
+<tr class="row-odd"><td>mxl5xx</td>
+<td>MaxLinear MxL5xx based tuner-demodulators</td>
+</tr>
+<tr class="row-even"><td>stb0899</td>
+<td>STB0899 based</td>
+</tr>
+<tr class="row-odd"><td>stb6100</td>
+<td>STB6100 based tuners</td>
+</tr>
+<tr class="row-even"><td>stv090x</td>
+<td>STV0900/STV0903(A/B) based</td>
+</tr>
+<tr class="row-odd"><td>stv0910</td>
+<td>STV0910 based</td>
+</tr>
+<tr class="row-even"><td>stv6110x</td>
+<td>STV6110/(A) based tuners</td>
+</tr>
+<tr class="row-odd"><td>stv6111</td>
+<td>STV6111 based tuners</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="sec-control-devices-for-dvb-s">
+<h2>5.5.14.2.11. SEC control devices for DVB-S<a class="headerlink" href="#sec-control-devices-for-dvb-s" title="Permalink to this headline">¶</a></h2>
+<table border="1" class="docutils">
+<colgroup>
+<col width="20%" />
+<col width="80%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Driver</th>
+<th class="head">Name</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>a8293</td>
+<td>Allegro A8293</td>
+</tr>
+<tr class="row-odd"><td>af9033</td>
+<td>Afatech AF9033 DVB-T demodulator</td>
+</tr>
+<tr class="row-even"><td>ascot2e</td>
+<td>Sony Ascot2E tuner</td>
+</tr>
+<tr class="row-odd"><td>atbm8830</td>
+<td>AltoBeam ATBM8830/8831 DMB-TH demodulator</td>
+</tr>
+<tr class="row-even"><td>drx39xyj</td>
+<td>Micronas DRX-J demodulator</td>
+</tr>
+<tr class="row-odd"><td>helene</td>
+<td>Sony HELENE Sat/Ter tuner (CXD2858ER)</td>
+</tr>
+<tr class="row-even"><td>horus3a</td>
+<td>Sony Horus3A tuner</td>
+</tr>
+<tr class="row-odd"><td>isl6405</td>
+<td>ISL6405 SEC controller</td>
+</tr>
+<tr class="row-even"><td>isl6421</td>
+<td>ISL6421 SEC controller</td>
+</tr>
+<tr class="row-odd"><td>isl6423</td>
+<td>ISL6423 SEC controller</td>
+</tr>
+<tr class="row-even"><td>ix2505v</td>
+<td>Sharp IX2505V silicon tuner</td>
+</tr>
+<tr class="row-odd"><td>lgs8gl5</td>
+<td>Silicon Legend LGS-8GL5 demodulator (OFDM)</td>
+</tr>
+<tr class="row-even"><td>lgs8gxx</td>
+<td>Legend Silicon LGS8913/LGS8GL5/LGS8GXX DMB-TH demodulator</td>
+</tr>
+<tr class="row-odd"><td>lnbh25</td>
+<td>LNBH25 SEC controller</td>
+</tr>
+<tr class="row-even"><td>lnbh29</td>
+<td>LNBH29 SEC controller</td>
+</tr>
+<tr class="row-odd"><td>lnbp21</td>
+<td>LNBP21/LNBH24 SEC controllers</td>
+</tr>
+<tr class="row-even"><td>lnbp22</td>
+<td>LNBP22 SEC controllers</td>
+</tr>
+<tr class="row-odd"><td>m88rs2000</td>
+<td>M88RS2000 DVB-S demodulator and tuner</td>
+</tr>
+<tr class="row-even"><td>tda665x</td>
+<td>TDA665x tuner</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="tools-to-develop-new-frontends">
+<h2>5.5.14.2.12. Tools to develop new frontends<a class="headerlink" href="#tools-to-develop-new-frontends" title="Permalink to this headline">¶</a></h2>
+<table border="1" class="docutils">
+<colgroup>
+<col width="20%" />
+<col width="80%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Driver</th>
+<th class="head">Name</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>dvb_dummy_fe</td>
+<td>Dummy frontend driver</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright The kernel development community
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

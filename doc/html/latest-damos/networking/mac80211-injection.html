@@ -1,0 +1,333 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>How to use packet injection with mac80211 &mdash; The Linux Kernel  documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript">
+          var DOCUMENTATION_OPTIONS = {
+              URL_ROOT:'../',
+              VERSION:'',
+              LANGUAGE:'None',
+              COLLAPSE_INDEX:false,
+              FILE_SUFFIX:'.html',
+              HAS_SOURCE:  true,
+              SOURCELINK_SUFFIX: '.txt'
+          };
+      </script>
+        <script type="text/javascript" src="../_static/jquery.js"></script>
+        <script type="text/javascript" src="../_static/underscore.js"></script>
+        <script type="text/javascript" src="../_static/doctools.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/theme_overrides.css" type="text/css" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> The Linux Kernel
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                5.8.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../admin-guide/mm/damon/index.html">Monitoring Data Accesses</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../vm/damon/index.html">DAMON: Data Access MONitor</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">The Linux Kernel</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+      <li>How to use packet injection with mac80211</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/networking/mac80211-injection.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="how-to-use-packet-injection-with-mac80211">
+<h1>How to use packet injection with mac80211<a class="headerlink" href="#how-to-use-packet-injection-with-mac80211" title="Permalink to this headline">¶</a></h1>
+<p>mac80211 now allows arbitrary packets to be injected down any Monitor Mode
+interface from userland.  The packet you inject needs to be composed in the
+following format:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>[ radiotap header  ]
+[ ieee80211 header ]
+[ payload ]
+</pre></div>
+</div>
+<p>The radiotap format is discussed in
+./Documentation/networking/radiotap-headers.rst.</p>
+<p>Despite many radiotap parameters being currently defined, most only make sense
+to appear on received packets.  The following information is parsed from the
+radiotap headers and used to control injection:</p>
+<blockquote>
+<div><ul>
+<li><p class="first">IEEE80211_RADIOTAP_FLAGS</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="37%" />
+<col width="63%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td>IEEE80211_RADIOTAP_F_FCS</td>
+<td>FCS will be removed and recalculated</td>
+</tr>
+<tr class="row-even"><td>IEEE80211_RADIOTAP_F_WEP</td>
+<td>frame will be encrypted if key available</td>
+</tr>
+<tr class="row-odd"><td>IEEE80211_RADIOTAP_F_FRAG</td>
+<td>frame will be fragmented if longer than the
+current fragmentation threshold.</td>
+</tr>
+</tbody>
+</table>
+</li>
+<li><p class="first">IEEE80211_RADIOTAP_TX_FLAGS</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="42%" />
+<col width="58%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td>IEEE80211_RADIOTAP_F_TX_NOACK</td>
+<td>frame should be sent without waiting for
+an ACK even if it is a unicast frame</td>
+</tr>
+</tbody>
+</table>
+</li>
+<li><p class="first">IEEE80211_RADIOTAP_RATE</p>
+<p>legacy rate for the transmission (only for devices without own rate control)</p>
+</li>
+<li><p class="first">IEEE80211_RADIOTAP_MCS</p>
+<p>HT rate for the transmission (only for devices without own rate control).
+Also some flags are parsed</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="54%" />
+<col width="46%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td>IEEE80211_RADIOTAP_MCS_SGI</td>
+<td>use short guard interval</td>
+</tr>
+<tr class="row-even"><td>IEEE80211_RADIOTAP_MCS_BW_40</td>
+<td>send in HT40 mode</td>
+</tr>
+</tbody>
+</table>
+</li>
+<li><p class="first">IEEE80211_RADIOTAP_DATA_RETRIES</p>
+<p>number of retries when either IEEE80211_RADIOTAP_RATE or
+IEEE80211_RADIOTAP_MCS was used</p>
+</li>
+<li><p class="first">IEEE80211_RADIOTAP_VHT</p>
+<p>VHT mcs and number of streams used in the transmission (only for devices
+without own rate control). Also other fields are parsed</p>
+<dl class="docutils">
+<dt>flags field</dt>
+<dd><p class="first last">IEEE80211_RADIOTAP_VHT_FLAG_SGI: use short guard interval</p>
+</dd>
+<dt>bandwidth field</dt>
+<dd><ul class="first last simple">
+<li>1: send using 40MHz channel width</li>
+<li>4: send using 80MHz channel width</li>
+<li>11: send using 160MHz channel width</li>
+</ul>
+</dd>
+</dl>
+</li>
+</ul>
+</div></blockquote>
+<p>The injection code can also skip all other currently defined radiotap fields
+facilitating replay of captured radiotap headers directly.</p>
+<p>Here is an example valid radiotap header defining some parameters:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>0x00, 0x00, // &lt;-- radiotap version
+0x0b, 0x00, // &lt;- radiotap header length
+0x04, 0x0c, 0x00, 0x00, // &lt;-- bitmap
+0x6c, // &lt;-- rate
+0x0c, //&lt;-- tx power
+0x01 //&lt;-- antenna
+</pre></div>
+</div>
+<p>The ieee80211 header follows immediately afterwards, looking for example like
+this:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>0x08, 0x01, 0x00, 0x00,
+0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF,
+0x13, 0x22, 0x33, 0x44, 0x55, 0x66,
+0x13, 0x22, 0x33, 0x44, 0x55, 0x66,
+0x10, 0x86
+</pre></div>
+</div>
+<p>Then lastly there is the payload.</p>
+<p>After composing the packet contents, it is sent by send()-ing it to a logical
+mac80211 interface that is in Monitor mode.  Libpcap can also be used,
+(which is easier than doing the work to bind the socket to the right
+interface), along the following lines::</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>ppcap = pcap_open_live(szInterfaceName, 800, 1, 20, szErrbuf);
+...
+r = pcap_inject(ppcap, u8aSendBuffer, nLength);
+</pre></div>
+</div>
+<p>You can also find a link to a complete inject application here:</p>
+<p><a class="reference external" href="https://wireless.wiki.kernel.org/en/users/Documentation/packetspammer">https://wireless.wiki.kernel.org/en/users/Documentation/packetspammer</a></p>
+<p>Andy Green &lt;<a class="reference external" href="mailto:andy&#37;&#52;&#48;warmcat&#46;com">andy<span>&#64;</span>warmcat<span>&#46;</span>com</a>&gt;</p>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright The kernel development community
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

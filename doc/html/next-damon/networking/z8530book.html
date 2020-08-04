@@ -68,7 +68,7 @@
             
             
               <div class="version">
-                5.7.0
+                5.8.0
               </div>
             
           
@@ -391,19 +391,17 @@ irqreturn_t <code class="descname">z8530_interrupt</code><span class="sig-paren"
 <dt><code class="docutils literal notranslate"><span class="pre">int</span> <span class="pre">irq</span></code></dt>
 <dd>Interrupt number</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">void</span> <span class="pre">*</span> <span class="pre">dev_id</span></code></dt>
-<dd>The Z8530 device that is interrupting.</dd>
-</dl>
-<p><strong>Description</strong></p>
-<blockquote>
-<div><p>A Z85[2]30 device has stuck its hand in the air for attention.
+<dd><p class="first">The Z8530 device that is interrupting.</p>
+<p>A Z85[2]30 device has stuck its hand in the air for attention.
 We scan both the channels on the chip for events and then call
 the channel specific call backs for each channel that has events.
 We have to use callback functions because the two channels can be
 in different modes.</p>
-<p>Locking is done for the handlers. Note that locking is done
+<p class="last">Locking is done for the handlers. Note that locking is done
 at the chip level (the 5uS delay issue is per chip not per
 channel). c-&gt;lock for both channels points to dev-&gt;lock</p>
-</div></blockquote>
+</dd>
+</dl>
 <dl class="function">
 <dt id="c.z8530_sync_open">
 int <code class="descname">z8530_sync_open</code><span class="sig-paren">(</span>struct <a class="reference internal" href="kapi.html#c.net_device" title="net_device">net_device</a> *<em>&nbsp;dev</em>, struct z8530_channel *<em>&nbsp;c</em><span class="sig-paren">)</span><a class="headerlink" href="#c.z8530_sync_open" title="Permalink to this definition">¶</a></dt>
@@ -415,12 +413,11 @@ int <code class="descname">z8530_sync_open</code><span class="sig-paren">(</span
 <dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">net_device</span> <span class="pre">*</span> <span class="pre">dev</span></code></dt>
 <dd>The network interface we are using</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">z8530_channel</span> <span class="pre">*</span> <span class="pre">c</span></code></dt>
-<dd>The Z8530 channel to open in synchronous PIO mode</dd>
+<dd><p class="first">The Z8530 channel to open in synchronous PIO mode</p>
+<p class="last">Switch a Z8530 into synchronous mode without DMA assist. We
+raise the RTS/DTR and commence network operation.</p>
+</dd>
 </dl>
-<p><strong>Description</strong></p>
-<blockquote>
-<div>Switch a Z8530 into synchronous mode without DMA assist. We
-raise the RTS/DTR and commence network operation.</div></blockquote>
 <dl class="function">
 <dt id="c.z8530_sync_close">
 int <code class="descname">z8530_sync_close</code><span class="sig-paren">(</span>struct <a class="reference internal" href="kapi.html#c.net_device" title="net_device">net_device</a> *<em>&nbsp;dev</em>, struct z8530_channel *<em>&nbsp;c</em><span class="sig-paren">)</span><a class="headerlink" href="#c.z8530_sync_close" title="Permalink to this definition">¶</a></dt>
@@ -432,12 +429,11 @@ int <code class="descname">z8530_sync_close</code><span class="sig-paren">(</spa
 <dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">net_device</span> <span class="pre">*</span> <span class="pre">dev</span></code></dt>
 <dd>Network device to close</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">z8530_channel</span> <span class="pre">*</span> <span class="pre">c</span></code></dt>
-<dd>Z8530 channel to disassociate and move to idle</dd>
+<dd><p class="first">Z8530 channel to disassociate and move to idle</p>
+<p class="last">Close down a Z8530 interface and switch its interrupt handlers
+to discard future events.</p>
+</dd>
 </dl>
-<p><strong>Description</strong></p>
-<blockquote>
-<div>Close down a Z8530 interface and switch its interrupt handlers
-to discard future events.</div></blockquote>
 <dl class="function">
 <dt id="c.z8530_sync_dma_open">
 int <code class="descname">z8530_sync_dma_open</code><span class="sig-paren">(</span>struct <a class="reference internal" href="kapi.html#c.net_device" title="net_device">net_device</a> *<em>&nbsp;dev</em>, struct z8530_channel *<em>&nbsp;c</em><span class="sig-paren">)</span><a class="headerlink" href="#c.z8530_sync_dma_open" title="Permalink to this definition">¶</a></dt>
@@ -449,13 +445,12 @@ int <code class="descname">z8530_sync_dma_open</code><span class="sig-paren">(</
 <dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">net_device</span> <span class="pre">*</span> <span class="pre">dev</span></code></dt>
 <dd>The network device to attach</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">z8530_channel</span> <span class="pre">*</span> <span class="pre">c</span></code></dt>
-<dd>The Z8530 channel to configure in sync DMA mode.</dd>
-</dl>
-<p><strong>Description</strong></p>
-<blockquote>
-<div>Set up a Z85x30 device for synchronous DMA in both directions. Two
+<dd><p class="first">The Z8530 channel to configure in sync DMA mode.</p>
+<p class="last">Set up a Z85x30 device for synchronous DMA in both directions. Two
 ISA DMA channels must be available for this to work. We assume ISA
-DMA driven I/O and PC limits on access.</div></blockquote>
+DMA driven I/O and PC limits on access.</p>
+</dd>
+</dl>
 <dl class="function">
 <dt id="c.z8530_sync_dma_close">
 int <code class="descname">z8530_sync_dma_close</code><span class="sig-paren">(</span>struct <a class="reference internal" href="kapi.html#c.net_device" title="net_device">net_device</a> *<em>&nbsp;dev</em>, struct z8530_channel *<em>&nbsp;c</em><span class="sig-paren">)</span><a class="headerlink" href="#c.z8530_sync_dma_close" title="Permalink to this definition">¶</a></dt>
@@ -467,12 +462,11 @@ int <code class="descname">z8530_sync_dma_close</code><span class="sig-paren">(<
 <dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">net_device</span> <span class="pre">*</span> <span class="pre">dev</span></code></dt>
 <dd>Network device to detach</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">z8530_channel</span> <span class="pre">*</span> <span class="pre">c</span></code></dt>
-<dd>Z8530 channel to move into discard mode</dd>
+<dd><p class="first">Z8530 channel to move into discard mode</p>
+<p class="last">Shut down a DMA mode synchronous interface. Halt the DMA, and
+free the buffers.</p>
+</dd>
 </dl>
-<p><strong>Description</strong></p>
-<blockquote>
-<div>Shut down a DMA mode synchronous interface. Halt the DMA, and
-free the buffers.</div></blockquote>
 <dl class="function">
 <dt id="c.z8530_sync_txdma_open">
 int <code class="descname">z8530_sync_txdma_open</code><span class="sig-paren">(</span>struct <a class="reference internal" href="kapi.html#c.net_device" title="net_device">net_device</a> *<em>&nbsp;dev</em>, struct z8530_channel *<em>&nbsp;c</em><span class="sig-paren">)</span><a class="headerlink" href="#c.z8530_sync_txdma_open" title="Permalink to this definition">¶</a></dt>
@@ -484,13 +478,12 @@ int <code class="descname">z8530_sync_txdma_open</code><span class="sig-paren">(
 <dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">net_device</span> <span class="pre">*</span> <span class="pre">dev</span></code></dt>
 <dd>The network device to attach</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">z8530_channel</span> <span class="pre">*</span> <span class="pre">c</span></code></dt>
-<dd>The Z8530 channel to configure in sync DMA mode.</dd>
-</dl>
-<p><strong>Description</strong></p>
-<blockquote>
-<div>Set up a Z85x30 device for synchronous DMA transmission. One
+<dd><p class="first">The Z8530 channel to configure in sync DMA mode.</p>
+<p class="last">Set up a Z85x30 device for synchronous DMA transmission. One
 ISA DMA channel must be available for this to work. The receive
-side is run in PIO mode, but then it has the bigger FIFO.</div></blockquote>
+side is run in PIO mode, but then it has the bigger FIFO.</p>
+</dd>
+</dl>
 <dl class="function">
 <dt id="c.z8530_sync_txdma_close">
 int <code class="descname">z8530_sync_txdma_close</code><span class="sig-paren">(</span>struct <a class="reference internal" href="kapi.html#c.net_device" title="net_device">net_device</a> *<em>&nbsp;dev</em>, struct z8530_channel *<em>&nbsp;c</em><span class="sig-paren">)</span><a class="headerlink" href="#c.z8530_sync_txdma_close" title="Permalink to this definition">¶</a></dt>
@@ -502,12 +495,11 @@ int <code class="descname">z8530_sync_txdma_close</code><span class="sig-paren">
 <dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">net_device</span> <span class="pre">*</span> <span class="pre">dev</span></code></dt>
 <dd>Network device to detach</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">z8530_channel</span> <span class="pre">*</span> <span class="pre">c</span></code></dt>
-<dd>Z8530 channel to move into discard mode</dd>
+<dd><p class="first">Z8530 channel to move into discard mode</p>
+<p class="last">Shut down a DMA/PIO split mode synchronous interface. Halt the DMA,
+and  free the buffers.</p>
+</dd>
 </dl>
-<p><strong>Description</strong></p>
-<blockquote>
-<div>Shut down a DMA/PIO split mode synchronous interface. Halt the DMA,
-and  free the buffers.</div></blockquote>
 <dl class="function">
 <dt id="c.z8530_describe">
 void <code class="descname">z8530_describe</code><span class="sig-paren">(</span>struct z8530_dev *<em>&nbsp;dev</em>, char *<em>&nbsp;mapping</em>, unsigned long<em>&nbsp;io</em><span class="sig-paren">)</span><a class="headerlink" href="#c.z8530_describe" title="Permalink to this definition">¶</a></dt>
@@ -521,13 +513,12 @@ void <code class="descname">z8530_describe</code><span class="sig-paren">(</span
 <dt><code class="docutils literal notranslate"><span class="pre">char</span> <span class="pre">*</span> <span class="pre">mapping</span></code></dt>
 <dd>string holding mapping type (eg “I/O” or “Mem”)</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">unsigned</span> <span class="pre">long</span> <span class="pre">io</span></code></dt>
-<dd>the port value in question</dd>
-</dl>
-<p><strong>Description</strong></p>
-<blockquote>
-<div>Describe a Z8530 in a standard format. We must pass the I/O as
+<dd><p class="first">the port value in question</p>
+<p class="last">Describe a Z8530 in a standard format. We must pass the I/O as
 the port offset isn’t predictable. The main reason for this function
-is to try and get a common format of report.</div></blockquote>
+is to try and get a common format of report.</p>
+</dd>
+</dl>
 <dl class="function">
 <dt id="c.z8530_init">
 int <code class="descname">z8530_init</code><span class="sig-paren">(</span>struct z8530_dev *<em>&nbsp;dev</em><span class="sig-paren">)</span><a class="headerlink" href="#c.z8530_init" title="Permalink to this definition">¶</a></dt>
@@ -537,20 +528,18 @@ int <code class="descname">z8530_init</code><span class="sig-paren">(</span>stru
 <p><strong>Parameters</strong></p>
 <dl class="docutils">
 <dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">z8530_dev</span> <span class="pre">*</span> <span class="pre">dev</span></code></dt>
-<dd>Z8530 device to initialise.</dd>
-</dl>
-<p><strong>Description</strong></p>
-<blockquote>
-<div><p>Configure up a Z8530/Z85C30 or Z85230 chip. We check the device
+<dd><p class="first">Z8530 device to initialise.</p>
+<p>Configure up a Z8530/Z85C30 or Z85230 chip. We check the device
 is present, identify the type and then program it to hopefully
 keep quite and behave. This matters a lot, a Z8530 in the wrong
 state will sometimes get into stupid modes generating 10Khz
 interrupt streams and the like.</p>
 <p>We set the interrupt handler up to discard any events, in case
 we get them during reset or setp.</p>
-<p>Return 0 for success, or a negative value indicating the problem
+<p class="last">Return 0 for success, or a negative value indicating the problem
 in errno form.</p>
-</div></blockquote>
+</dd>
+</dl>
 <dl class="function">
 <dt id="c.z8530_shutdown">
 int <code class="descname">z8530_shutdown</code><span class="sig-paren">(</span>struct z8530_dev *<em>&nbsp;dev</em><span class="sig-paren">)</span><a class="headerlink" href="#c.z8530_shutdown" title="Permalink to this definition">¶</a></dt>
@@ -560,15 +549,13 @@ int <code class="descname">z8530_shutdown</code><span class="sig-paren">(</span>
 <p><strong>Parameters</strong></p>
 <dl class="docutils">
 <dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">z8530_dev</span> <span class="pre">*</span> <span class="pre">dev</span></code></dt>
-<dd>The Z8530 chip to shutdown</dd>
-</dl>
-<p><strong>Description</strong></p>
-<blockquote>
-<div><p>We set the interrupt handlers to silence any interrupts. We then
+<dd><p class="first">The Z8530 chip to shutdown</p>
+<p>We set the interrupt handlers to silence any interrupts. We then
 reset the chip and wait 100uS to be sure the reset completed. Just
 in case the caller then tries to do stuff.</p>
-<p>This is called without the lock held</p>
-</div></blockquote>
+<p class="last">This is called without the lock held</p>
+</dd>
+</dl>
 <dl class="function">
 <dt id="c.z8530_channel_load">
 int <code class="descname">z8530_channel_load</code><span class="sig-paren">(</span>struct z8530_channel *<em>&nbsp;c</em>, u8 *<em>&nbsp;rtable</em><span class="sig-paren">)</span><a class="headerlink" href="#c.z8530_channel_load" title="Permalink to this definition">¶</a></dt>
@@ -580,14 +567,13 @@ int <code class="descname">z8530_channel_load</code><span class="sig-paren">(</s
 <dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">z8530_channel</span> <span class="pre">*</span> <span class="pre">c</span></code></dt>
 <dd>Z8530 channel to configure</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">u8</span> <span class="pre">*</span> <span class="pre">rtable</span></code></dt>
-<dd>table of register, value pairs
-FIXME: ioctl to allow user uploaded tables</dd>
-</dl>
-<p><strong>Description</strong></p>
-<blockquote>
-<div>Load a Z8530 channel up from the system data. We use +16 to
+<dd><p class="first">table of register, value pairs
+FIXME: ioctl to allow user uploaded tables</p>
+<p class="last">Load a Z8530 channel up from the system data. We use +16 to
 indicate the “prime” registers. The value 255 terminates the
-table.</div></blockquote>
+table.</p>
+</dd>
+</dl>
 <dl class="function">
 <dt id="c.z8530_null_rx">
 void <code class="descname">z8530_null_rx</code><span class="sig-paren">(</span>struct z8530_channel *<em>&nbsp;c</em>, struct <a class="reference internal" href="kapi.html#c.sk_buff" title="sk_buff">sk_buff</a> *<em>&nbsp;skb</em><span class="sig-paren">)</span><a class="headerlink" href="#c.z8530_null_rx" title="Permalink to this definition">¶</a></dt>
@@ -599,12 +585,11 @@ void <code class="descname">z8530_null_rx</code><span class="sig-paren">(</span>
 <dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">z8530_channel</span> <span class="pre">*</span> <span class="pre">c</span></code></dt>
 <dd>The channel the packet arrived on</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">sk_buff</span> <span class="pre">*</span> <span class="pre">skb</span></code></dt>
-<dd>The buffer</dd>
+<dd><p class="first">The buffer</p>
+<p class="last">We point the receive handler at this function when idle. Instead
+of processing the frames we get to throw them away.</p>
+</dd>
 </dl>
-<p><strong>Description</strong></p>
-<blockquote>
-<div>We point the receive handler at this function when idle. Instead
-of processing the frames we get to throw them away.</div></blockquote>
 <dl class="function">
 <dt id="c.z8530_queue_xmit">
 netdev_tx_t <code class="descname">z8530_queue_xmit</code><span class="sig-paren">(</span>struct z8530_channel *<em>&nbsp;c</em>, struct <a class="reference internal" href="kapi.html#c.sk_buff" title="sk_buff">sk_buff</a> *<em>&nbsp;skb</em><span class="sig-paren">)</span><a class="headerlink" href="#c.z8530_queue_xmit" title="Permalink to this definition">¶</a></dt>
@@ -616,17 +601,15 @@ netdev_tx_t <code class="descname">z8530_queue_xmit</code><span class="sig-paren
 <dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">z8530_channel</span> <span class="pre">*</span> <span class="pre">c</span></code></dt>
 <dd>The channel to use</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">sk_buff</span> <span class="pre">*</span> <span class="pre">skb</span></code></dt>
-<dd>The packet to kick down the channel</dd>
-</dl>
-<p><strong>Description</strong></p>
-<blockquote>
-<div><p>Queue a packet for transmission. Because we have rather
+<dd><p class="first">The packet to kick down the channel</p>
+<p>Queue a packet for transmission. Because we have rather
 hard to hit interrupt latencies for the Z85230 per packet
 even in DMA mode we do the flip to DMA buffer if needed here
 not in the IRQ.</p>
-<p>Called from the network code. The lock is not held at this
+<p class="last">Called from the network code. The lock is not held at this
 point.</p>
-</div></blockquote>
+</dd>
+</dl>
 </div>
 <div class="section" id="internal-functions">
 <h2>Internal Functions<a class="headerlink" href="#internal-functions" title="Permalink to this headline">¶</a></h2>
@@ -639,19 +622,17 @@ int <code class="descname">z8530_read_port</code><span class="sig-paren">(</span
 <p><strong>Parameters</strong></p>
 <dl class="docutils">
 <dt><code class="docutils literal notranslate"><span class="pre">unsigned</span> <span class="pre">long</span> <span class="pre">p</span></code></dt>
-<dd>port to read</dd>
-</dl>
-<p><strong>Description</strong></p>
-<blockquote>
-<div><p>Provided port access methods. The Comtrol SV11 requires no delays
+<dd><p class="first">port to read</p>
+<p>Provided port access methods. The Comtrol SV11 requires no delays
 between accesses and uses PC I/O. Some drivers may need a 5uS delay</p>
 <p>In the longer term this should become an architecture specific
 section so that this can become a generic driver interface for all
 platforms. For now we only handle PC I/O ports with or without the
 dread 5uS sanity delay.</p>
-<p>The caller must hold sufficient locks to avoid violating the horrible
+<p class="last">The caller must hold sufficient locks to avoid violating the horrible
 5uS delay rule.</p>
-</div></blockquote>
+</dd>
+</dl>
 <dl class="function">
 <dt id="c.z8530_write_port">
 void <code class="descname">z8530_write_port</code><span class="sig-paren">(</span>unsigned long<em>&nbsp;p</em>, u8<em>&nbsp;d</em><span class="sig-paren">)</span><a class="headerlink" href="#c.z8530_write_port" title="Permalink to this definition">¶</a></dt>
@@ -663,18 +644,16 @@ void <code class="descname">z8530_write_port</code><span class="sig-paren">(</sp
 <dt><code class="docutils literal notranslate"><span class="pre">unsigned</span> <span class="pre">long</span> <span class="pre">p</span></code></dt>
 <dd>port to write</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">u8</span> <span class="pre">d</span></code></dt>
-<dd>value to write</dd>
-</dl>
-<p><strong>Description</strong></p>
-<blockquote>
-<div><p>Write a value to a port with delays if need be. Note that the
+<dd><p class="first">value to write</p>
+<p>Write a value to a port with delays if need be. Note that the
 caller must hold locks to avoid read/writes from other contexts
 violating the 5uS rule</p>
-<p>In the longer term this should become an architecture specific
+<p class="last">In the longer term this should become an architecture specific
 section so that this can become a generic driver interface for all
 platforms. For now we only handle PC I/O ports with or without the
 dread 5uS sanity delay.</p>
-</div></blockquote>
+</dd>
+</dl>
 <dl class="function">
 <dt id="c.read_zsreg">
 u8 <code class="descname">read_zsreg</code><span class="sig-paren">(</span>struct z8530_channel *<em>&nbsp;c</em>, u8<em>&nbsp;reg</em><span class="sig-paren">)</span><a class="headerlink" href="#c.read_zsreg" title="Permalink to this definition">¶</a></dt>
@@ -702,12 +681,11 @@ u8 <code class="descname">read_zsdata</code><span class="sig-paren">(</span>stru
 <p><strong>Parameters</strong></p>
 <dl class="docutils">
 <dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">z8530_channel</span> <span class="pre">*</span> <span class="pre">c</span></code></dt>
-<dd>The Z8530 channel to read the data port from</dd>
+<dd><p class="first">The Z8530 channel to read the data port from</p>
+<p class="last">The data port provides fast access to some things. We still
+have all the 5uS delays to worry about.</p>
+</dd>
 </dl>
-<p><strong>Description</strong></p>
-<blockquote>
-<div>The data port provides fast access to some things. We still
-have all the 5uS delays to worry about.</div></blockquote>
 <dl class="function">
 <dt id="c.write_zsreg">
 void <code class="descname">write_zsreg</code><span class="sig-paren">(</span>struct z8530_channel *<em>&nbsp;c</em>, u8<em>&nbsp;reg</em>, u8<em>&nbsp;val</em><span class="sig-paren">)</span><a class="headerlink" href="#c.write_zsreg" title="Permalink to this definition">¶</a></dt>
@@ -721,15 +699,13 @@ void <code class="descname">write_zsreg</code><span class="sig-paren">(</span>st
 <dt><code class="docutils literal notranslate"><span class="pre">u8</span> <span class="pre">reg</span></code></dt>
 <dd>Register number</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">u8</span> <span class="pre">val</span></code></dt>
-<dd>Value to write</dd>
-</dl>
-<p><strong>Description</strong></p>
-<blockquote>
-<div><p>Write a value to an indexed register. The caller must hold the lock
+<dd><p class="first">Value to write</p>
+<p>Write a value to an indexed register. The caller must hold the lock
 to honour the irritating delay rules. We know about register 0
 being fast to access.</p>
-<p>Assumes c-&gt;lock is held.</p>
-</div></blockquote>
+<p class="last">Assumes c-&gt;lock is held.</p>
+</dd>
+</dl>
 <dl class="function">
 <dt id="c.write_zsctrl">
 void <code class="descname">write_zsctrl</code><span class="sig-paren">(</span>struct z8530_channel *<em>&nbsp;c</em>, u8<em>&nbsp;val</em><span class="sig-paren">)</span><a class="headerlink" href="#c.write_zsctrl" title="Permalink to this definition">¶</a></dt>
@@ -741,11 +717,10 @@ void <code class="descname">write_zsctrl</code><span class="sig-paren">(</span>s
 <dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">z8530_channel</span> <span class="pre">*</span> <span class="pre">c</span></code></dt>
 <dd>The Z8530 channel</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">u8</span> <span class="pre">val</span></code></dt>
-<dd>Value to write</dd>
+<dd><p class="first">Value to write</p>
+<p class="last">Write directly to the control register on the Z8530</p>
+</dd>
 </dl>
-<p><strong>Description</strong></p>
-<blockquote>
-<div>Write directly to the control register on the Z8530</div></blockquote>
 <dl class="function">
 <dt id="c.write_zsdata">
 void <code class="descname">write_zsdata</code><span class="sig-paren">(</span>struct z8530_channel *<em>&nbsp;c</em>, u8<em>&nbsp;val</em><span class="sig-paren">)</span><a class="headerlink" href="#c.write_zsdata" title="Permalink to this definition">¶</a></dt>
@@ -757,11 +732,10 @@ void <code class="descname">write_zsdata</code><span class="sig-paren">(</span>s
 <dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">z8530_channel</span> <span class="pre">*</span> <span class="pre">c</span></code></dt>
 <dd>The Z8530 channel</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">u8</span> <span class="pre">val</span></code></dt>
-<dd>Value to write</dd>
+<dd><p class="first">Value to write</p>
+<p class="last">Write directly to the data register on the Z8530</p>
+</dd>
 </dl>
-<p><strong>Description</strong></p>
-<blockquote>
-<div>Write directly to the data register on the Z8530</div></blockquote>
 <dl class="function">
 <dt id="c.z8530_flush_fifo">
 void <code class="descname">z8530_flush_fifo</code><span class="sig-paren">(</span>struct z8530_channel *<em>&nbsp;c</em><span class="sig-paren">)</span><a class="headerlink" href="#c.z8530_flush_fifo" title="Permalink to this definition">¶</a></dt>
@@ -771,16 +745,14 @@ void <code class="descname">z8530_flush_fifo</code><span class="sig-paren">(</sp
 <p><strong>Parameters</strong></p>
 <dl class="docutils">
 <dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">z8530_channel</span> <span class="pre">*</span> <span class="pre">c</span></code></dt>
-<dd>Channel to flush</dd>
-</dl>
-<p><strong>Description</strong></p>
-<blockquote>
-<div><p>Flush the receive FIFO. There is no specific option for this, we
+<dd><p class="first">Channel to flush</p>
+<p>Flush the receive FIFO. There is no specific option for this, we
 blindly read bytes and discard them. Reading when there is no data
 is harmless. The 8530 has a 4 byte FIFO, the 85230 has 8 bytes.</p>
-<p>All locking is handled for the caller. On return data may still be
+<p class="last">All locking is handled for the caller. On return data may still be
 present if it arrived during the flush.</p>
-</div></blockquote>
+</dd>
+</dl>
 <dl class="function">
 <dt id="c.z8530_rtsdtr">
 void <code class="descname">z8530_rtsdtr</code><span class="sig-paren">(</span>struct z8530_channel *<em>&nbsp;c</em>, int<em>&nbsp;set</em><span class="sig-paren">)</span><a class="headerlink" href="#c.z8530_rtsdtr" title="Permalink to this definition">¶</a></dt>
@@ -792,14 +764,13 @@ void <code class="descname">z8530_rtsdtr</code><span class="sig-paren">(</span>s
 <dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">z8530_channel</span> <span class="pre">*</span> <span class="pre">c</span></code></dt>
 <dd>The Z8530 channel to control;</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">int</span> <span class="pre">set</span></code></dt>
-<dd>1 to set, 0 to clear</dd>
-</dl>
-<p><strong>Description</strong></p>
-<blockquote>
-<div>Sets or clears DTR/RTS on the requested line. All locking is handled
+<dd><p class="first">1 to set, 0 to clear</p>
+<p class="last">Sets or clears DTR/RTS on the requested line. All locking is handled
 by the caller. For now we assume all boards use the actual RTS/DTR
 on the chip. Apparently one or two don’t. We’ll scream about them
-later.</div></blockquote>
+later.</p>
+</dd>
+</dl>
 <dl class="function">
 <dt id="c.z8530_rx">
 void <code class="descname">z8530_rx</code><span class="sig-paren">(</span>struct z8530_channel *<em>&nbsp;c</em><span class="sig-paren">)</span><a class="headerlink" href="#c.z8530_rx" title="Permalink to this definition">¶</a></dt>
@@ -809,12 +780,11 @@ void <code class="descname">z8530_rx</code><span class="sig-paren">(</span>struc
 <p><strong>Parameters</strong></p>
 <dl class="docutils">
 <dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">z8530_channel</span> <span class="pre">*</span> <span class="pre">c</span></code></dt>
-<dd>Z8530 channel to process</dd>
+<dd><p class="first">Z8530 channel to process</p>
+<p class="last">Receive handler for receiving in PIO mode. This is much like the
+async one but not quite the same or as complex</p>
+</dd>
 </dl>
-<p><strong>Description</strong></p>
-<blockquote>
-<div>Receive handler for receiving in PIO mode. This is much like the
-async one but not quite the same or as complex</div></blockquote>
 <p><strong>Note</strong></p>
 <dl class="docutils">
 <dt>Its intended that this handler can easily be separated from</dt>
@@ -840,14 +810,13 @@ void <code class="descname">z8530_tx</code><span class="sig-paren">(</span>struc
 <p><strong>Parameters</strong></p>
 <dl class="docutils">
 <dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">z8530_channel</span> <span class="pre">*</span> <span class="pre">c</span></code></dt>
-<dd>Z8530 channel to process</dd>
-</dl>
-<p><strong>Description</strong></p>
-<blockquote>
-<div>Z8530 transmit interrupt handler for the PIO mode. The basic
+<dd><p class="first">Z8530 channel to process</p>
+<p class="last">Z8530 transmit interrupt handler for the PIO mode. The basic
 idea is to attempt to keep the FIFO fed. We fill as many bytes
 in as possible, its quite possible that we won’t keep up with the
-data rate otherwise.</div></blockquote>
+data rate otherwise.</p>
+</dd>
+</dl>
 <dl class="function">
 <dt id="c.z8530_status">
 void <code class="descname">z8530_status</code><span class="sig-paren">(</span>struct z8530_channel *<em>&nbsp;chan</em><span class="sig-paren">)</span><a class="headerlink" href="#c.z8530_status" title="Permalink to this definition">¶</a></dt>
@@ -857,14 +826,13 @@ void <code class="descname">z8530_status</code><span class="sig-paren">(</span>s
 <p><strong>Parameters</strong></p>
 <dl class="docutils">
 <dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">z8530_channel</span> <span class="pre">*</span> <span class="pre">chan</span></code></dt>
-<dd>Z8530 channel to process</dd>
-</dl>
-<p><strong>Description</strong></p>
-<blockquote>
-<div>A status event occurred in PIO synchronous mode. There are several
+<dd><p class="first">Z8530 channel to process</p>
+<p class="last">A status event occurred in PIO synchronous mode. There are several
 reasons the chip will bother us here. A transmit underrun means we
 failed to feed the chip fast enough and just broke a packet. A DCD
-change is a line up or down.</div></blockquote>
+change is a line up or down.</p>
+</dd>
+</dl>
 <dl class="function">
 <dt id="c.z8530_dma_rx">
 void <code class="descname">z8530_dma_rx</code><span class="sig-paren">(</span>struct z8530_channel *<em>&nbsp;chan</em><span class="sig-paren">)</span><a class="headerlink" href="#c.z8530_dma_rx" title="Permalink to this definition">¶</a></dt>
@@ -874,14 +842,13 @@ void <code class="descname">z8530_dma_rx</code><span class="sig-paren">(</span>s
 <p><strong>Parameters</strong></p>
 <dl class="docutils">
 <dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">z8530_channel</span> <span class="pre">*</span> <span class="pre">chan</span></code></dt>
-<dd>Channel to handle</dd>
-</dl>
-<p><strong>Description</strong></p>
-<blockquote>
-<div>Non bus mastering DMA interfaces for the Z8x30 devices. This
+<dd><p class="first">Channel to handle</p>
+<p class="last">Non bus mastering DMA interfaces for the Z8x30 devices. This
 is really pretty PC specific. The DMA mode means that most receive
 events are handled by the DMA hardware. We get a kick here only if
-a frame ended.</div></blockquote>
+a frame ended.</p>
+</dd>
+</dl>
 <dl class="function">
 <dt id="c.z8530_dma_tx">
 void <code class="descname">z8530_dma_tx</code><span class="sig-paren">(</span>struct z8530_channel *<em>&nbsp;chan</em><span class="sig-paren">)</span><a class="headerlink" href="#c.z8530_dma_tx" title="Permalink to this definition">¶</a></dt>
@@ -891,12 +858,11 @@ void <code class="descname">z8530_dma_tx</code><span class="sig-paren">(</span>s
 <p><strong>Parameters</strong></p>
 <dl class="docutils">
 <dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">z8530_channel</span> <span class="pre">*</span> <span class="pre">chan</span></code></dt>
-<dd>The Z8530 channel to handle</dd>
+<dd><p class="first">The Z8530 channel to handle</p>
+<p class="last">We have received an interrupt while doing DMA transmissions. It
+shouldn’t happen. Scream loudly if it does.</p>
+</dd>
 </dl>
-<p><strong>Description</strong></p>
-<blockquote>
-<div>We have received an interrupt while doing DMA transmissions. It
-shouldn’t happen. Scream loudly if it does.</div></blockquote>
 <dl class="function">
 <dt id="c.z8530_dma_status">
 void <code class="descname">z8530_dma_status</code><span class="sig-paren">(</span>struct z8530_channel *<em>&nbsp;chan</em><span class="sig-paren">)</span><a class="headerlink" href="#c.z8530_dma_status" title="Permalink to this definition">¶</a></dt>
@@ -921,13 +887,12 @@ void <code class="descname">z8530_rx_clear</code><span class="sig-paren">(</span
 <p><strong>Parameters</strong></p>
 <dl class="docutils">
 <dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">z8530_channel</span> <span class="pre">*</span> <span class="pre">c</span></code></dt>
-<dd>Z8530 channel to shut up</dd>
-</dl>
-<p><strong>Description</strong></p>
-<blockquote>
-<div>Receive interrupt vectors for a Z8530 that is in ‘parked’ mode.
+<dd><p class="first">Z8530 channel to shut up</p>
+<p class="last">Receive interrupt vectors for a Z8530 that is in ‘parked’ mode.
 For machines with PCI Z85x30 cards, or level triggered interrupts
-(eg the MacII) we must clear the interrupt cause or die.</div></blockquote>
+(eg the MacII) we must clear the interrupt cause or die.</p>
+</dd>
+</dl>
 <dl class="function">
 <dt id="c.z8530_tx_clear">
 void <code class="descname">z8530_tx_clear</code><span class="sig-paren">(</span>struct z8530_channel *<em>&nbsp;c</em><span class="sig-paren">)</span><a class="headerlink" href="#c.z8530_tx_clear" title="Permalink to this definition">¶</a></dt>
@@ -937,13 +902,12 @@ void <code class="descname">z8530_tx_clear</code><span class="sig-paren">(</span
 <p><strong>Parameters</strong></p>
 <dl class="docutils">
 <dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">z8530_channel</span> <span class="pre">*</span> <span class="pre">c</span></code></dt>
-<dd>Z8530 channel to shut up</dd>
-</dl>
-<p><strong>Description</strong></p>
-<blockquote>
-<div>Transmit interrupt vectors for a Z8530 that is in ‘parked’ mode.
+<dd><p class="first">Z8530 channel to shut up</p>
+<p class="last">Transmit interrupt vectors for a Z8530 that is in ‘parked’ mode.
 For machines with PCI Z85x30 cards, or level triggered interrupts
-(eg the MacII) we must clear the interrupt cause or die.</div></blockquote>
+(eg the MacII) we must clear the interrupt cause or die.</p>
+</dd>
+</dl>
 <dl class="function">
 <dt id="c.z8530_status_clear">
 void <code class="descname">z8530_status_clear</code><span class="sig-paren">(</span>struct z8530_channel *<em>&nbsp;chan</em><span class="sig-paren">)</span><a class="headerlink" href="#c.z8530_status_clear" title="Permalink to this definition">¶</a></dt>
@@ -953,13 +917,12 @@ void <code class="descname">z8530_status_clear</code><span class="sig-paren">(</
 <p><strong>Parameters</strong></p>
 <dl class="docutils">
 <dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">z8530_channel</span> <span class="pre">*</span> <span class="pre">chan</span></code></dt>
-<dd>Z8530 channel to shut up</dd>
-</dl>
-<p><strong>Description</strong></p>
-<blockquote>
-<div>Status interrupt vectors for a Z8530 that is in ‘parked’ mode.
+<dd><p class="first">Z8530 channel to shut up</p>
+<p class="last">Status interrupt vectors for a Z8530 that is in ‘parked’ mode.
 For machines with PCI Z85x30 cards, or level triggered interrupts
-(eg the MacII) we must clear the interrupt cause or die.</div></blockquote>
+(eg the MacII) we must clear the interrupt cause or die.</p>
+</dd>
+</dl>
 <dl class="function">
 <dt id="c.z8530_tx_begin">
 void <code class="descname">z8530_tx_begin</code><span class="sig-paren">(</span>struct z8530_channel *<em>&nbsp;c</em><span class="sig-paren">)</span><a class="headerlink" href="#c.z8530_tx_begin" title="Permalink to this definition">¶</a></dt>
@@ -969,13 +932,12 @@ void <code class="descname">z8530_tx_begin</code><span class="sig-paren">(</span
 <p><strong>Parameters</strong></p>
 <dl class="docutils">
 <dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">z8530_channel</span> <span class="pre">*</span> <span class="pre">c</span></code></dt>
-<dd>The Z8530 channel to kick</dd>
-</dl>
-<p><strong>Description</strong></p>
-<blockquote>
-<div>This is the speed sensitive side of transmission. If we are called
+<dd><p class="first">The Z8530 channel to kick</p>
+<p class="last">This is the speed sensitive side of transmission. If we are called
 and no buffer is being transmitted we commence the next buffer. If
-nothing is queued we idle the sync.</div></blockquote>
+nothing is queued we idle the sync.</p>
+</dd>
+</dl>
 <p><strong>Note</strong></p>
 <dl class="docutils">
 <dt>We are handling this code path in the interrupt path, keep it</dt>
@@ -992,15 +954,13 @@ void <code class="descname">z8530_tx_done</code><span class="sig-paren">(</span>
 <p><strong>Parameters</strong></p>
 <dl class="docutils">
 <dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">z8530_channel</span> <span class="pre">*</span> <span class="pre">c</span></code></dt>
-<dd>The channel that completed a transmit.</dd>
-</dl>
-<p><strong>Description</strong></p>
-<blockquote>
-<div><p>This is called when we complete a packet send. We wake the queue,
+<dd><p class="first">The channel that completed a transmit.</p>
+<p>This is called when we complete a packet send. We wake the queue,
 start the next packet going and then free the buffer of the existing
 packet. This code is fairly timing sensitive.</p>
-<p>Called with the register lock held.</p>
-</div></blockquote>
+<p class="last">Called with the register lock held.</p>
+</dd>
+</dl>
 <dl class="function">
 <dt id="c.z8530_rx_done">
 void <code class="descname">z8530_rx_done</code><span class="sig-paren">(</span>struct z8530_channel *<em>&nbsp;c</em><span class="sig-paren">)</span><a class="headerlink" href="#c.z8530_rx_done" title="Permalink to this definition">¶</a></dt>
@@ -1010,17 +970,15 @@ void <code class="descname">z8530_rx_done</code><span class="sig-paren">(</span>
 <p><strong>Parameters</strong></p>
 <dl class="docutils">
 <dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">z8530_channel</span> <span class="pre">*</span> <span class="pre">c</span></code></dt>
-<dd>The channel that completed a receive</dd>
-</dl>
-<p><strong>Description</strong></p>
-<blockquote>
-<div><p>A new packet is complete. Our goal here is to get back into receive
+<dd><p class="first">The channel that completed a receive</p>
+<p>A new packet is complete. Our goal here is to get back into receive
 mode as fast as possible. On the Z85230 we could change to using
 ESCC mode, but on the older chips we have no choice. We flip to the
 new buffer immediately in DMA mode so that the DMA of the next
 frame can occur while we are copying the previous buffer to an sk_buff</p>
-<p>Called with the lock held</p>
-</div></blockquote>
+<p class="last">Called with the lock held</p>
+</dd>
+</dl>
 <dl class="function">
 <dt id="c.spans_boundary">
 int <code class="descname">spans_boundary</code><span class="sig-paren">(</span>struct <a class="reference internal" href="kapi.html#c.sk_buff" title="sk_buff">sk_buff</a> *<em>&nbsp;skb</em><span class="sig-paren">)</span><a class="headerlink" href="#c.spans_boundary" title="Permalink to this definition">¶</a></dt>
@@ -1030,12 +988,11 @@ int <code class="descname">spans_boundary</code><span class="sig-paren">(</span>
 <p><strong>Parameters</strong></p>
 <dl class="docutils">
 <dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">sk_buff</span> <span class="pre">*</span> <span class="pre">skb</span></code></dt>
-<dd>The buffer to check</dd>
+<dd><p class="first">The buffer to check</p>
+<p class="last">Returns true if the buffer cross a DMA boundary on a PC. The poor
+thing can only DMA within a 64K block not across the edges of it.</p>
+</dd>
 </dl>
-<p><strong>Description</strong></p>
-<blockquote>
-<div>Returns true if the buffer cross a DMA boundary on a PC. The poor
-thing can only DMA within a 64K block not across the edges of it.</div></blockquote>
 </div>
 </div>
 

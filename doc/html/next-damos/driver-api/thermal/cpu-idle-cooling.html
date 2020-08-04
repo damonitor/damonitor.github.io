@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Situation: &mdash; The Linux Kernel  documentation</title>
+  <title>CPU Idle Cooling &mdash; The Linux Kernel  documentation</title>
   
 
   
@@ -68,7 +68,7 @@
             
             
               <div class="version">
-                5.7.0
+                5.8.0
               </div>
             
           
@@ -142,7 +142,7 @@
     
       <li><a href="../../index.html">Docs</a> &raquo;</li>
         
-      <li>Situation:</li>
+      <li>CPU Idle Cooling</li>
     
     
       <li class="wy-breadcrumbs-aside">
@@ -161,8 +161,10 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="situation">
-<h1>Situation:<a class="headerlink" href="#situation" title="Permalink to this headline">¶</a></h1>
+  <div class="section" id="cpu-idle-cooling">
+<h1>CPU Idle Cooling<a class="headerlink" href="#cpu-idle-cooling" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="situation">
+<h2>Situation:<a class="headerlink" href="#situation" title="Permalink to this headline">¶</a></h2>
 <p>Under certain circumstances a SoC can reach a critical temperature
 limit and is unable to stabilize the temperature around a temperature
 control. When the SoC has to stabilize the temperature, the kernel can
@@ -184,7 +186,7 @@ exceeds the power budget. An intermediate OPP could have been used if
 it were present.</p>
 </div>
 <div class="section" id="solutions">
-<h1>Solutions:<a class="headerlink" href="#solutions" title="Permalink to this headline">¶</a></h1>
+<h2>Solutions:<a class="headerlink" href="#solutions" title="Permalink to this headline">¶</a></h2>
 <p>If we can remove the static and the dynamic leakage for a specific
 duration in a controlled period, the SoC temperature will
 decrease. Acting on the idle state duration or the idle cycle
@@ -206,7 +208,7 @@ coefficient similar to:</p>
 <div>Power(IdleCycle) = Coef x Power(OPP)</div></blockquote>
 </div>
 <div class="section" id="idle-injection">
-<h1>Idle Injection:<a class="headerlink" href="#idle-injection" title="Permalink to this headline">¶</a></h1>
+<h2>Idle Injection:<a class="headerlink" href="#idle-injection" title="Permalink to this headline">¶</a></h2>
 <p>The base concept of the idle injection is to force the CPU to go to an
 idle state for a specified time each control cycle, it provides
 another way to control CPU power and heat in addition to
@@ -280,7 +282,7 @@ for thermal mitigation, otherwise we end up consuming more energy.</li>
 </ul>
 </div>
 <div class="section" id="power-considerations">
-<h1>Power considerations<a class="headerlink" href="#power-considerations" title="Permalink to this headline">¶</a></h1>
+<h2>Power considerations<a class="headerlink" href="#power-considerations" title="Permalink to this headline">¶</a></h2>
 <p>When we reach the thermal trip point, we have to sustain a specified
 power for a specific temperature but at this time we consume:</p>
 <blockquote>
@@ -339,6 +341,7 @@ potentially invert the mitigation effect</li>
 <dd>(((P(opp)dyn + P(opp)static ) - P(opp)target) / P(opp)target )</dd>
 </dl>
 </div></blockquote>
+</div>
 </div>
 
 

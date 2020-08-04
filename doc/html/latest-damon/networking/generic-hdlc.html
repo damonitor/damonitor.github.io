@@ -1,0 +1,391 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Generic HDLC layer &mdash; The Linux Kernel  documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript">
+          var DOCUMENTATION_OPTIONS = {
+              URL_ROOT:'../',
+              VERSION:'',
+              LANGUAGE:'None',
+              COLLAPSE_INDEX:false,
+              FILE_SUFFIX:'.html',
+              HAS_SOURCE:  true,
+              SOURCELINK_SUFFIX: '.txt'
+          };
+      </script>
+        <script type="text/javascript" src="../_static/jquery.js"></script>
+        <script type="text/javascript" src="../_static/underscore.js"></script>
+        <script type="text/javascript" src="../_static/doctools.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/theme_overrides.css" type="text/css" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> The Linux Kernel
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                5.8.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../admin-guide/mm/damon/index.html">Monitoring Data Accesses</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../vm/damon/index.html">DAMON: Data Access MONitor</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">The Linux Kernel</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+      <li>Generic HDLC layer</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/networking/generic-hdlc.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="generic-hdlc-layer">
+<h1>Generic HDLC layer<a class="headerlink" href="#generic-hdlc-layer" title="Permalink to this headline">¶</a></h1>
+<p>Krzysztof Halasa &lt;<a class="reference external" href="mailto:khc&#37;&#52;&#48;pm&#46;waw&#46;pl">khc<span>&#64;</span>pm<span>&#46;</span>waw<span>&#46;</span>pl</a>&gt;</p>
+<p>Generic HDLC layer currently supports:</p>
+<ol class="arabic simple">
+<li>Frame Relay (ANSI, CCITT, Cisco and no LMI)<ul>
+<li>Normal (routed) and Ethernet-bridged (Ethernet device emulation)
+interfaces can share a single PVC.</li>
+<li>ARP support (no InARP support in the kernel - there is an
+experimental InARP user-space daemon available on:
+<a class="reference external" href="http://www.kernel.org/pub/linux/utils/net/hdlc/">http://www.kernel.org/pub/linux/utils/net/hdlc/</a>).</li>
+</ul>
+</li>
+<li>raw HDLC - either IP (IPv4) interface or Ethernet device emulation</li>
+<li>Cisco HDLC</li>
+<li>PPP</li>
+<li>X.25 (uses X.25 routines).</li>
+</ol>
+<p>Generic HDLC is a protocol driver only - it needs a low-level driver
+for your particular hardware.</p>
+<p>Ethernet device emulation (using HDLC or Frame-Relay PVC) is compatible
+with IEEE 802.1Q (VLANs) and 802.1D (Ethernet bridging).</p>
+<p>Make sure the hdlc.o and the hardware driver are loaded. It should
+create a number of “hdlc” (hdlc0 etc) network devices, one for each
+WAN port. You’ll need the “sethdlc” utility, get it from:</p>
+<blockquote>
+<div><a class="reference external" href="http://www.kernel.org/pub/linux/utils/net/hdlc/">http://www.kernel.org/pub/linux/utils/net/hdlc/</a></div></blockquote>
+<p>Compile sethdlc.c utility:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>gcc -O2 -Wall -o sethdlc sethdlc.c
+</pre></div>
+</div>
+<p>Make sure you’re using a correct version of sethdlc for your kernel.</p>
+<p>Use sethdlc to set physical interface, clock rate, HDLC mode used,
+and add any required PVCs if using Frame Relay.
+Usually you want something like:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>sethdlc hdlc0 clock int rate 128000
+sethdlc hdlc0 cisco interval 10 timeout 25
+</pre></div>
+</div>
+<p>or:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>sethdlc hdlc0 rs232 clock ext
+sethdlc hdlc0 fr lmi ansi
+sethdlc hdlc0 create 99
+ifconfig hdlc0 up
+ifconfig pvc0 localIP pointopoint remoteIP
+</pre></div>
+</div>
+<p>In Frame Relay mode, ifconfig master hdlc device up (without assigning
+any IP address to it) before using pvc devices.</p>
+<p>Setting interface:</p>
+<ul class="simple">
+<li><dl class="first docutils">
+<dt>v35 | rs232 | x21 | t1 | e1</dt>
+<dd><ul class="first last">
+<li>sets physical interface for a given port
+if the card has software-selectable interfaces</li>
+</ul>
+</dd>
+<dt>loopback</dt>
+<dd><ul class="first last">
+<li>activate hardware loopback (for testing only)</li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt>clock ext</dt>
+<dd><ul class="first last">
+<li>both RX clock and TX clock external</li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt>clock int</dt>
+<dd><ul class="first last">
+<li>both RX clock and TX clock internal</li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt>clock txint</dt>
+<dd><ul class="first last">
+<li>RX clock external, TX clock internal</li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt>clock txfromrx</dt>
+<dd><ul class="first last">
+<li>RX clock external, TX clock derived from RX clock</li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt>rate</dt>
+<dd><ul class="first last">
+<li>sets clock rate in bps (for “int” or “txint” clock only)</li>
+</ul>
+</dd>
+</dl>
+</li>
+</ul>
+<p>Setting protocol:</p>
+<ul>
+<li><p class="first">hdlc - sets raw HDLC (IP-only) mode</p>
+<p>nrz / nrzi / fm-mark / fm-space / manchester - sets transmission code</p>
+<p>no-parity / crc16 / crc16-pr0 (CRC16 with preset zeros) / crc32-itu</p>
+<p>crc16-itu (CRC16 with ITU-T polynomial) / crc16-itu-pr0 - sets parity</p>
+</li>
+<li><p class="first">hdlc-eth - Ethernet device emulation using HDLC. Parity and encoding
+as above.</p>
+</li>
+<li><p class="first">cisco - sets Cisco HDLC mode (IP, IPv6 and IPX supported)</p>
+<p>interval - time in seconds between keepalive packets</p>
+<dl class="docutils">
+<dt>timeout - time in seconds after last received keepalive packet before</dt>
+<dd><p class="first last">we assume the link is down</p>
+</dd>
+</dl>
+</li>
+<li><p class="first">ppp - sets synchronous PPP mode</p>
+</li>
+<li><p class="first">x25 - sets X.25 mode</p>
+</li>
+<li><p class="first">fr - Frame Relay mode</p>
+<p>lmi ansi / ccitt / cisco / none - LMI (link management) type</p>
+<p>dce - Frame Relay DCE (network) side LMI instead of default DTE (user).</p>
+<p>It has nothing to do with clocks!</p>
+<ul class="simple">
+<li>t391 - link integrity verification polling timer (in seconds) - user</li>
+<li>t392 - polling verification timer (in seconds) - network</li>
+<li>n391 - full status polling counter - user</li>
+<li>n392 - error threshold - both user and network</li>
+<li>n393 - monitored events count - both user and network</li>
+</ul>
+</li>
+</ul>
+<p>Frame-Relay only:</p>
+<ul class="simple">
+<li>create n | delete n - adds / deletes PVC interface with DLCI #n.
+Newly created interface will be named pvc0, pvc1 etc.</li>
+<li>create ether n | delete ether n - adds a device for Ethernet-bridged
+frames. The device will be named pvceth0, pvceth1 etc.</li>
+</ul>
+<div class="section" id="board-specific-issues">
+<h2>Board-specific issues<a class="headerlink" href="#board-specific-issues" title="Permalink to this headline">¶</a></h2>
+<p>n2.o and c101.o need parameters to work:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>insmod n2 hw=io,irq,ram,ports[:io,irq,...]
+</pre></div>
+</div>
+<p>example:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>insmod n2 hw=0x300,10,0xD0000,01
+</pre></div>
+</div>
+<p>or:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>insmod c101 hw=irq,ram[:irq,...]
+</pre></div>
+</div>
+<p>example:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>insmod c101 hw=9,0xdc000
+</pre></div>
+</div>
+<p>If built into the kernel, these drivers need kernel (command line) parameters:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>n2.hw=io,irq,ram,ports:...
+</pre></div>
+</div>
+<p>or:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>c101.hw=irq,ram:...
+</pre></div>
+</div>
+<p>If you have a problem with N2, C101 or PLX200SYN card, you can issue the
+“private” command to see port’s packet descriptor rings (in kernel logs):</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>sethdlc hdlc0 private
+</pre></div>
+</div>
+<p>The hardware driver has to be build with #define DEBUG_RINGS.
+Attaching this info to bug reports would be helpful. Anyway, let me know
+if you have problems using this.</p>
+<p>For patches and other info look at:
+&lt;<a class="reference external" href="http://www.kernel.org/pub/linux/utils/net/hdlc/">http://www.kernel.org/pub/linux/utils/net/hdlc/</a>&gt;.</p>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright The kernel development community
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

@@ -1,0 +1,336 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>4.3. The High level CI API &mdash; The Linux Kernel  documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript">
+          var DOCUMENTATION_OPTIONS = {
+              URL_ROOT:'../../../',
+              VERSION:'',
+              LANGUAGE:'None',
+              COLLAPSE_INDEX:false,
+              FILE_SUFFIX:'.html',
+              HAS_SOURCE:  true,
+              SOURCELINK_SUFFIX: '.txt'
+          };
+      </script>
+        <script type="text/javascript" src="../../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/theme_overrides.css" type="text/css" />
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home"> The Linux Kernel
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                5.8.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../admin-guide/mm/damon/index.html">Monitoring Data Accesses</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../vm/damon/index.html">DAMON: Data Access MONitor</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">The Linux Kernel</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../index.html">Docs</a> &raquo;</li>
+        
+      <li>4.3. The High level CI API</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../../../_sources/userspace-api/media/dvb/ca_high_level.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="the-high-level-ci-api">
+<h1>4.3. The High level CI API<a class="headerlink" href="#the-high-level-ci-api" title="Permalink to this headline">¶</a></h1>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">This documentation is outdated.</p>
+</div>
+<p>This document describes the high level CI API as in accordance to the
+Linux DVB API.</p>
+<p>With the High Level CI approach any new card with almost any random
+architecture can be implemented with this style, the definitions
+inside the switch statement can be easily adapted for any card, thereby
+eliminating the need for any additional ioctls.</p>
+<p>The disadvantage is that the driver/hardware has to manage the rest. For
+the application programmer it would be as simple as sending/receiving an
+array to/from the CI ioctls as defined in the Linux DVB API. No changes
+have been made in the API to accommodate this feature.</p>
+<div class="section" id="why-the-need-for-another-ci-interface">
+<h2>4.3.1. Why the need for another CI interface?<a class="headerlink" href="#why-the-need-for-another-ci-interface" title="Permalink to this headline">¶</a></h2>
+<p>This is one of the most commonly asked question. Well a nice question.
+Strictly speaking this is not a new interface.</p>
+<p>The CI interface is defined in the DVB API in ca.h as:</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="k">typedef</span> <span class="k">struct</span> <span class="n">ca_slot_info</span> <span class="p">{</span>
+        <span class="kt">int</span> <span class="n">num</span><span class="p">;</span>               <span class="cm">/* slot number */</span>
+
+        <span class="kt">int</span> <span class="n">type</span><span class="p">;</span>              <span class="cm">/* CA interface this slot supports */</span>
+<span class="cp">#define CA_CI            1     </span><span class="cm">/* CI high level interface */</span><span class="cp"></span>
+<span class="cp">#define CA_CI_LINK       2     </span><span class="cm">/* CI link layer level interface */</span><span class="cp"></span>
+<span class="cp">#define CA_CI_PHYS       4     </span><span class="cm">/* CI physical layer level interface */</span><span class="cp"></span>
+<span class="cp">#define CA_DESCR         8     </span><span class="cm">/* built-in descrambler */</span><span class="cp"></span>
+<span class="cp">#define CA_SC          128     </span><span class="cm">/* simple smart card interface */</span><span class="cp"></span>
+
+        <span class="kt">unsigned</span> <span class="kt">int</span> <span class="n">flags</span><span class="p">;</span>
+<span class="cp">#define CA_CI_MODULE_PRESENT 1 </span><span class="cm">/* module (or card) inserted */</span><span class="cp"></span>
+<span class="cp">#define CA_CI_MODULE_READY   2</span>
+<span class="p">}</span> <span class="n">ca_slot_info_t</span><span class="p">;</span>
+</pre></div>
+</div>
+<p>This CI interface follows the CI high level interface, which is not
+implemented by most applications. Hence this area is revisited.</p>
+<p>This CI interface is quite different in the case that it tries to
+accommodate all other CI based devices, that fall into the other categories.</p>
+<p>This means that this CI interface handles the EN50221 style tags in the
+Application layer only and no session management is taken care of by the
+application. The driver/hardware will take care of all that.</p>
+<p>This interface is purely an EN50221 interface exchanging APDU’s. This
+means that no session management, link layer or a transport layer do
+exist in this case in the application to driver communication. It is
+as simple as that. The driver/hardware has to take care of that.</p>
+<p>With this High Level CI interface, the interface can be defined with the
+regular ioctls.</p>
+<p>All these ioctls are also valid for the High level CI interface</p>
+<p>#define CA_RESET          _IO(‘o’, 128)
+#define CA_GET_CAP        _IOR(‘o’, 129, ca_caps_t)
+#define CA_GET_SLOT_INFO  _IOR(‘o’, 130, ca_slot_info_t)
+#define CA_GET_DESCR_INFO _IOR(‘o’, 131, ca_descr_info_t)
+#define CA_GET_MSG        _IOR(‘o’, 132, ca_msg_t)
+#define CA_SEND_MSG       _IOW(‘o’, 133, ca_msg_t)
+#define CA_SET_DESCR      _IOW(‘o’, 134, ca_descr_t)</p>
+<p>On querying the device, the device yields information thus:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>CA_GET_SLOT_INFO
+----------------------------
+Command = [info]
+APP: Number=[1]
+APP: Type=[1]
+APP: flags=[1]
+APP: CI High level interface
+APP: CA/CI Module Present
+
+CA_GET_CAP
+----------------------------
+Command = [caps]
+APP: Slots=[1]
+APP: Type=[1]
+APP: Descrambler keys=[16]
+APP: Type=[1]
+
+CA_SEND_MSG
+----------------------------
+Descriptors(Program Level)=[ 09 06 06 04 05 50 ff f1]
+Found CA descriptor @ program level
+
+(20) ES type=[2] ES pid=[201]  ES length =[0 (0x0)]
+(25) ES type=[4] ES pid=[301]  ES length =[0 (0x0)]
+ca_message length is 25 (0x19) bytes
+EN50221 CA MSG=[ 9f 80 32 19 03 01 2d d1 f0 08 01 09 06 06 04 05 50 ff f1 02 e0 c9 00 00 04 e1 2d 00 00]
+</pre></div>
+</div>
+<p>Not all ioctl’s are implemented in the driver from the API, the other
+features of the hardware that cannot be implemented by the API are achieved
+using the CA_GET_MSG and CA_SEND_MSG ioctls. An EN50221 style wrapper is
+used to exchange the data to maintain compatibility with other hardware.</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="cm">/* a message to/from a CI-CAM */</span>
+<span class="k">typedef</span> <span class="k">struct</span> <span class="n">ca_msg</span> <span class="p">{</span>
+        <span class="kt">unsigned</span> <span class="kt">int</span> <span class="n">index</span><span class="p">;</span>
+        <span class="kt">unsigned</span> <span class="kt">int</span> <span class="n">type</span><span class="p">;</span>
+        <span class="kt">unsigned</span> <span class="kt">int</span> <span class="n">length</span><span class="p">;</span>
+        <span class="kt">unsigned</span> <span class="kt">char</span> <span class="n">msg</span><span class="p">[</span><span class="mi">256</span><span class="p">];</span>
+<span class="p">}</span> <span class="n">ca_msg_t</span><span class="p">;</span>
+</pre></div>
+</div>
+<p>The flow of data can be described thus,</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>     App (User)
+     -----
+     parse
+       |
+       |
+       v
+     en50221 APDU (package)
+--------------------------------------
+|      |                             | High Level CI driver
+|      |                             |
+|      v                             |
+|    en50221 APDU (unpackage)        |
+|      |                             |
+|      |                             |
+|      v                             |
+|    sanity checks                   |
+|      |                             |
+|      |                             |
+|      v                             |
+|    do (H/W dep)                    |
+--------------------------------------
+       |    Hardware
+       |
+       v
+</pre></div>
+</div>
+<p>The High Level CI interface uses the EN50221 DVB standard, following a
+standard ensures futureproofness.</p>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright The kernel development community
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

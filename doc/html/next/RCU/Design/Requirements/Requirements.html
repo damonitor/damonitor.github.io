@@ -68,7 +68,7 @@
             
             
               <div class="version">
-                5.7.0
+                5.8.0
               </div>
             
           
@@ -2102,52 +2102,25 @@ invoked from a CPU-hotplug notifier.</p>
 </div>
 <div class="section" id="scheduler-and-rcu">
 <h3>Scheduler and RCU<a class="headerlink" href="#scheduler-and-rcu" title="Permalink to this headline">¶</a></h3>
-<p>RCU depends on the scheduler, and the scheduler uses RCU to protect some
-of its data structures. The preemptible-RCU <code class="docutils literal notranslate"><span class="pre">rcu_read_unlock()</span></code>
-implementation must therefore be written carefully to avoid deadlocks
-involving the scheduler’s runqueue and priority-inheritance locks. In
-particular, <code class="docutils literal notranslate"><span class="pre">rcu_read_unlock()</span></code> must tolerate an interrupt where the
-interrupt handler invokes both <code class="docutils literal notranslate"><span class="pre">rcu_read_lock()</span></code> and
-<code class="docutils literal notranslate"><span class="pre">rcu_read_unlock()</span></code>. This possibility requires <code class="docutils literal notranslate"><span class="pre">rcu_read_unlock()</span></code>
-to use negative nesting levels to avoid destructive recursion via
-interrupt handler’s use of RCU.</p>
-<p>This scheduler-RCU requirement came as a <a class="reference external" href="https://lwn.net/Articles/453002/">complete
-surprise</a>.</p>
-<p>As noted above, RCU makes use of kthreads, and it is necessary to avoid
-excessive CPU-time accumulation by these kthreads. This requirement was
-no surprise, but RCU’s violation of it when running context-switch-heavy
-workloads when built with <code class="docutils literal notranslate"><span class="pre">CONFIG_NO_HZ_FULL=y</span></code> <a class="reference external" href="http://www.rdrop.com/users/paulmck/scalability/paper/BareMetal.2015.01.15b.pdf">did come as a
-surprise
+<p>RCU makes use of kthreads, and it is necessary to avoid excessive CPU-time
+accumulation by these kthreads. This requirement was no surprise, but
+RCU’s violation of it when running context-switch-heavy workloads when
+built with <code class="docutils literal notranslate"><span class="pre">CONFIG_NO_HZ_FULL=y</span></code> <a class="reference external" href="http://www.rdrop.com/users/paulmck/scalability/paper/BareMetal.2015.01.15b.pdf">did come as a surprise
 [PDF]</a>.
 RCU has made good progress towards meeting this requirement, even for
 context-switch-heavy <code class="docutils literal notranslate"><span class="pre">CONFIG_NO_HZ_FULL=y</span></code> workloads, but there is
 room for further improvement.</p>
-<p>It is forbidden to hold any of scheduler’s runqueue or
-priority-inheritance spinlocks across an <code class="docutils literal notranslate"><span class="pre">rcu_read_unlock()</span></code> unless
-interrupts have been disabled across the entire RCU read-side critical
-section, that is, up to and including the matching <code class="docutils literal notranslate"><span class="pre">rcu_read_lock()</span></code>.
-Violating this restriction can result in deadlocks involving these
-scheduler spinlocks. There was hope that this restriction might be
-lifted when interrupt-disabled calls to <code class="docutils literal notranslate"><span class="pre">rcu_read_unlock()</span></code> started
-deferring the reporting of the resulting RCU-preempt quiescent state
-until the end of the corresponding interrupts-disabled region.
-Unfortunately, timely reporting of the corresponding quiescent state to
-expedited grace periods requires a call to <code class="docutils literal notranslate"><span class="pre">raise_softirq()</span></code>, which
-can acquire these scheduler spinlocks. In addition, real-time systems
-using RCU priority boosting need this restriction to remain in effect
-because deferred quiescent-state reporting would also defer deboosting,
-which in turn would degrade real-time latencies.</p>
-<p>In theory, if a given RCU read-side critical section could be guaranteed
-to be less than one second in duration, holding a scheduler spinlock
-across that critical section’s <code class="docutils literal notranslate"><span class="pre">rcu_read_unlock()</span></code> would require only
-that preemption be disabled across the entire RCU read-side critical
-section, not interrupts. Unfortunately, given the possibility of vCPU
-preemption, long-running interrupts, and so on, it is not possible in
-practice to guarantee that a given RCU read-side critical section will
-complete in less than one second. Therefore, as noted above, if
-scheduler spinlocks are held across a given call to
-<code class="docutils literal notranslate"><span class="pre">rcu_read_unlock()</span></code>, interrupts must be disabled across the entire RCU
-read-side critical section.</p>
+<p>There is no longer any prohibition against holding any of
+scheduler’s runqueue or priority-inheritance spinlocks across an
+<code class="docutils literal notranslate"><span class="pre">rcu_read_unlock()</span></code>, even if interrupts and preemption were enabled
+somewhere within the corresponding RCU read-side critical section.
+Therefore, it is now perfectly legal to execute <code class="docutils literal notranslate"><span class="pre">rcu_read_lock()</span></code>
+with preemption enabled, acquire one of the scheduler locks, and hold
+that lock across the matching <code class="docutils literal notranslate"><span class="pre">rcu_read_unlock()</span></code>.</p>
+<p>Similarly, the RCU flavor consolidation has removed the need for negative
+nesting.  The fact that interrupt-disabled regions of code act as RCU
+read-side critical sections implicitly avoids earlier issues that used
+to result in destructive recursion via interrupt handler’s use of RCU.</p>
 </div>
 <div class="section" id="tracing-and-rcu">
 <h3>Tracing and RCU<a class="headerlink" href="#tracing-and-rcu" title="Permalink to this headline">¶</a></h3>

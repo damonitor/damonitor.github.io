@@ -68,7 +68,7 @@
             
             
               <div class="version">
-                5.7.0
+                5.8.0
               </div>
             
           
@@ -401,6 +401,88 @@ to the newer scheme, to give a confirmation that what you see on your
 system is not unexpected. One must use the “names” as they appear on
 the system under specified locations.</p>
 </div>
+<div class="section" id="topology-representation">
+<h2>Topology Representation<a class="headerlink" href="#topology-representation" title="Permalink to this headline">¶</a></h2>
+<p>Each CoreSight component has a <code class="docutils literal notranslate"><span class="pre">connections</span></code> directory which will contain
+links to other CoreSight components. This allows the user to explore the trace
+topology and for larger systems, determine the most appropriate sink for a
+given source. The connection information can also be used to establish
+which CTI devices are connected to a given component. This directory contains a
+<code class="docutils literal notranslate"><span class="pre">nr_links</span></code> attribute detailing the number of links in the directory.</p>
+<p>For an ETM source, in this case <code class="docutils literal notranslate"><span class="pre">etm0</span></code> on a Juno platform, a typical
+arrangement will be:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>linaro-developer:~# ls - l /sys/bus/coresight/devices/etm0/connections
+&lt;file details&gt;  cti_cpu0 -&gt; ../../../23020000.cti/cti_cpu0
+&lt;file details&gt;  nr_links
+&lt;file details&gt;  out:0 -&gt; ../../../230c0000.funnel/funnel2
+</pre></div>
+</div>
+<p>Following the out port to <code class="docutils literal notranslate"><span class="pre">funnel2</span></code>:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>linaro-developer:~# ls -l /sys/bus/coresight/devices/funnel2/connections
+&lt;file details&gt; in:0 -&gt; ../../../23040000.etm/etm0
+&lt;file details&gt; in:1 -&gt; ../../../23140000.etm/etm3
+&lt;file details&gt; in:2 -&gt; ../../../23240000.etm/etm4
+&lt;file details&gt; in:3 -&gt; ../../../23340000.etm/etm5
+&lt;file details&gt; nr_links
+&lt;file details&gt; out:0 -&gt; ../../../20040000.funnel/funnel0
+</pre></div>
+</div>
+<p>And again to <code class="docutils literal notranslate"><span class="pre">funnel0</span></code>:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>linaro-developer:~# ls -l /sys/bus/coresight/devices/funnel0/connections
+&lt;file details&gt; in:0 -&gt; ../../../220c0000.funnel/funnel1
+&lt;file details&gt; in:1 -&gt; ../../../230c0000.funnel/funnel2
+&lt;file details&gt; nr_links
+&lt;file details&gt; out:0 -&gt; ../../../20010000.etf/tmc_etf0
+</pre></div>
+</div>
+<p>Finding the first sink <code class="docutils literal notranslate"><span class="pre">tmc_etf0</span></code>. This can be used to collect data
+as a sink, or as a link to propagate further along the chain:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>linaro-developer:~# ls -l /sys/bus/coresight/devices/tmc_etf0/connections
+&lt;file details&gt; cti_sys0 -&gt; ../../../20020000.cti/cti_sys0
+&lt;file details&gt; in:0 -&gt; ../../../20040000.funnel/funnel0
+&lt;file details&gt; nr_links
+&lt;file details&gt; out:0 -&gt; ../../../20150000.funnel/funnel4
+</pre></div>
+</div>
+<p>via <code class="docutils literal notranslate"><span class="pre">funnel4</span></code>:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>linaro-developer:~# ls -l /sys/bus/coresight/devices/funnel4/connections
+&lt;file details&gt; in:0 -&gt; ../../../20010000.etf/tmc_etf0
+&lt;file details&gt; in:1 -&gt; ../../../20140000.etf/tmc_etf1
+&lt;file details&gt; nr_links
+&lt;file details&gt; out:0 -&gt; ../../../20120000.replicator/replicator0
+</pre></div>
+</div>
+<p>and a <code class="docutils literal notranslate"><span class="pre">replicator0</span></code>:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>linaro-developer:~# ls -l /sys/bus/coresight/devices/replicator0/connections
+&lt;file details&gt; in:0 -&gt; ../../../20150000.funnel/funnel4
+&lt;file details&gt; nr_links
+&lt;file details&gt; out:0 -&gt; ../../../20030000.tpiu/tpiu0
+&lt;file details&gt; out:1 -&gt; ../../../20070000.etr/tmc_etr0
+</pre></div>
+</div>
+<p>Arriving at the final sink in the chain, <code class="docutils literal notranslate"><span class="pre">tmc_etr0</span></code>:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>linaro-developer:~# ls -l /sys/bus/coresight/devices/tmc_etr0/connections
+&lt;file details&gt; cti_sys0 -&gt; ../../../20020000.cti/cti_sys0
+&lt;file details&gt; in:0 -&gt; ../../../20120000.replicator/replicator0
+&lt;file details&gt; nr_links
+</pre></div>
+</div>
+<p>As described below, when using sysfs it is sufficient to enable a sink and
+a source for successful trace. The framework will correctly enable all
+intermediate links as required.</p>
+<p>Note: <code class="docutils literal notranslate"><span class="pre">cti_sys0</span></code> appears in two of the connections lists above.
+CTIs can connect to multiple devices and are arranged in a star topology
+via the CTM. See (<a class="reference internal" href="coresight-ect.html"><span class="doc">CoreSight Embedded Cross Trigger (CTI &amp; CTM).</span></a>) <a class="footnote-reference" href="#fourth" id="id1">[4]</a> for further details.
+Looking at this device we see 4 connections:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>linaro-developer:~# ls -l /sys/bus/coresight/devices/cti_sys0/connections
+&lt;file details&gt; nr_links
+&lt;file details&gt; stm0 -&gt; ../../../20100000.stm/stm0
+&lt;file details&gt; tmc_etf0 -&gt; ../../../20010000.etf/tmc_etf0
+&lt;file details&gt; tmc_etr0 -&gt; ../../../20070000.etr/tmc_etr0
+&lt;file details&gt; tpiu0 -&gt; ../../../20030000.tpiu/tpiu0
+</pre></div>
+</div>
+</div>
 <div class="section" id="how-to-use-the-tracer-modules">
 <h2>How to use the tracer modules<a class="headerlink" href="#how-to-use-the-tracer-modules" title="Permalink to this headline">¶</a></h2>
 <p>There are two ways to use the Coresight framework:</p>
@@ -561,7 +643,7 @@ tells the parser that a sink is about to be specified and that this is the sink
 to use for the trace session.</p>
 <p>More information on the above and other example on how to use Coresight with
 the perf tools can be found in the “HOWTO.md” file of the openCSD gitHub
-repository <a class="footnote-reference" href="#third" id="id1">[3]</a>.</p>
+repository <a class="footnote-reference" href="#third" id="id2">[3]</a>.</p>
 <p>2.1) AutoFDO analysis using the perf tools:</p>
 <p>perf can be used to record and analyze trace of programs.</p>
 <p>Execution can be recorded using ‘perf record’ with the cs_etm event,
@@ -613,7 +695,7 @@ Bubble sorting array of 30000 elements
 difference is that clients are driving the trace capture rather
 than the program flow through the code.</p>
 <p>As with any other CoreSight component, specifics about the STM tracer can be
-found in sysfs with more information on each entry being found in <a class="footnote-reference" href="#first" id="id2">[1]</a>:</p>
+found in sysfs with more information on each entry being found in <a class="footnote-reference" href="#first" id="id3">[1]</a>:</p>
 <div class="highlight-none notranslate"><div class="highlight"><pre><span></span>root@genericarmv8:~# ls /sys/bus/coresight/devices/stm0
 enable_source   hwevent_select  port_enable     subsystem       uevent
 hwevent_enable  mgmt            port_select     traceid
@@ -633,7 +715,7 @@ crw-------    1 root     root       10,  61 Jan  3 18:11 /dev/stm0
 root@genericarmv8:~#
 </pre></div>
 </div>
-<p>Details on how to use the generic STM API can be found here:- <a class="reference internal" href="../stm.html"><span class="doc">System Trace Module</span></a> <a class="footnote-reference" href="#second" id="id3">[2]</a>.</p>
+<p>Details on how to use the generic STM API can be found here:- <a class="reference internal" href="../stm.html"><span class="doc">System Trace Module</span></a> <a class="footnote-reference" href="#second" id="id4">[2]</a>.</p>
 </div>
 <div class="section" id="the-cti-ctm-modules">
 <h2>The CTI &amp; CTM Modules<a class="headerlink" href="#the-cti-ctm-modules" title="Permalink to this headline">¶</a></h2>
@@ -641,29 +723,29 @@ root@genericarmv8:~#
 individual CTIs and components, and can propagate these between all CTIs via
 channels on the CTM (Cross Trigger Matrix).</p>
 <p>A separate documentation file is provided to explain the use of these devices.
-(<a class="reference internal" href="coresight-ect.html"><span class="doc">CoreSight Embedded Cross Trigger (CTI &amp; CTM).</span></a>) <a class="footnote-reference" href="#fourth" id="id4">[4]</a>.</p>
+(<a class="reference internal" href="coresight-ect.html"><span class="doc">CoreSight Embedded Cross Trigger (CTI &amp; CTM).</span></a>) <a class="footnote-reference" href="#fourth" id="id5">[4]</a>.</p>
 <table class="docutils footnote" frame="void" id="first" rules="none">
 <colgroup><col class="label" /><col /></colgroup>
 <tbody valign="top">
-<tr><td class="label"><a class="fn-backref" href="#id2">[1]</a></td><td>Documentation/ABI/testing/sysfs-bus-coresight-devices-stm</td></tr>
+<tr><td class="label"><a class="fn-backref" href="#id3">[1]</a></td><td>Documentation/ABI/testing/sysfs-bus-coresight-devices-stm</td></tr>
 </tbody>
 </table>
 <table class="docutils footnote" frame="void" id="second" rules="none">
 <colgroup><col class="label" /><col /></colgroup>
 <tbody valign="top">
-<tr><td class="label"><a class="fn-backref" href="#id3">[2]</a></td><td>Documentation/trace/stm.rst</td></tr>
+<tr><td class="label"><a class="fn-backref" href="#id4">[2]</a></td><td>Documentation/trace/stm.rst</td></tr>
 </tbody>
 </table>
 <table class="docutils footnote" frame="void" id="third" rules="none">
 <colgroup><col class="label" /><col /></colgroup>
 <tbody valign="top">
-<tr><td class="label"><a class="fn-backref" href="#id1">[3]</a></td><td><a class="reference external" href="https://github.com/Linaro/perf-opencsd">https://github.com/Linaro/perf-opencsd</a></td></tr>
+<tr><td class="label"><a class="fn-backref" href="#id2">[3]</a></td><td><a class="reference external" href="https://github.com/Linaro/perf-opencsd">https://github.com/Linaro/perf-opencsd</a></td></tr>
 </tbody>
 </table>
 <table class="docutils footnote" frame="void" id="fourth" rules="none">
 <colgroup><col class="label" /><col /></colgroup>
 <tbody valign="top">
-<tr><td class="label"><a class="fn-backref" href="#id4">[4]</a></td><td>Documentation/trace/coresight/coresight-ect.rst</td></tr>
+<tr><td class="label">[4]</td><td><em>(<a class="fn-backref" href="#id1">1</a>, <a class="fn-backref" href="#id5">2</a>)</em> Documentation/trace/coresight/coresight-ect.rst</td></tr>
 </tbody>
 </table>
 </div>

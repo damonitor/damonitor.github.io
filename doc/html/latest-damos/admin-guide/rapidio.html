@@ -68,7 +68,7 @@
             
             
               <div class="version">
-                5.7.0
+                5.8.0
               </div>
             
           
@@ -629,14 +629,13 @@ int <code class="descname">rio_register_driver</code><span class="sig-paren">(</
 <p><strong>Parameters</strong></p>
 <dl class="docutils">
 <dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">rio_driver</span> <span class="pre">*</span> <span class="pre">rdrv</span></code></dt>
-<dd>the RIO driver structure to register</dd>
-</dl>
-<p><strong>Description</strong></p>
-<blockquote>
-<div>Adds a <a class="reference internal" href="#c.rio_driver" title="rio_driver"><code class="xref c c-type docutils literal notranslate"><span class="pre">struct</span> <span class="pre">rio_driver</span></code></a> to the list of registered drivers.
+<dd><p class="first">the RIO driver structure to register</p>
+<p class="last">Adds a <a class="reference internal" href="#c.rio_driver" title="rio_driver"><code class="xref c c-type docutils literal notranslate"><span class="pre">struct</span> <span class="pre">rio_driver</span></code></a> to the list of registered drivers.
 Returns a negative value on error, otherwise 0. If no error
 occurred, the driver remains registered even if no device
-was claimed during registration.</div></blockquote>
+was claimed during registration.</p>
+</dd>
+</dl>
 <dl class="function">
 <dt id="c.rio_unregister_driver">
 void <code class="descname">rio_unregister_driver</code><span class="sig-paren">(</span>struct <a class="reference internal" href="#c.rio_driver" title="rio_driver">rio_driver</a> *<em>&nbsp;rdrv</em><span class="sig-paren">)</span><a class="headerlink" href="#c.rio_unregister_driver" title="Permalink to this definition">¶</a></dt>
@@ -646,14 +645,13 @@ void <code class="descname">rio_unregister_driver</code><span class="sig-paren">
 <p><strong>Parameters</strong></p>
 <dl class="docutils">
 <dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">rio_driver</span> <span class="pre">*</span> <span class="pre">rdrv</span></code></dt>
-<dd>the RIO driver structure to unregister</dd>
-</dl>
-<p><strong>Description</strong></p>
-<blockquote>
-<div>Deletes the <a class="reference internal" href="#c.rio_driver" title="rio_driver"><code class="xref c c-type docutils literal notranslate"><span class="pre">struct</span> <span class="pre">rio_driver</span></code></a> from the list of registered RIO
+<dd><p class="first">the RIO driver structure to unregister</p>
+<p class="last">Deletes the <a class="reference internal" href="#c.rio_driver" title="rio_driver"><code class="xref c c-type docutils literal notranslate"><span class="pre">struct</span> <span class="pre">rio_driver</span></code></a> from the list of registered RIO
 drivers, gives it a chance to clean up by calling its remove()
 function for each device it was responsible for, and marks those
-devices as driverless.</div></blockquote>
+devices as driverless.</p>
+</dd>
+</dl>
 <dl class="function">
 <dt id="c.rio_local_get_device_id">
 u16 <code class="descname">rio_local_get_device_id</code><span class="sig-paren">(</span>struct <a class="reference internal" href="#c.rio_mport" title="rio_mport">rio_mport</a> *<em>&nbsp;port</em><span class="sig-paren">)</span><a class="headerlink" href="#c.rio_local_get_device_id" title="Permalink to this definition">¶</a></dt>
@@ -983,6 +981,7 @@ int <code class="descname">rio_map_inb_region</code><span class="sig-paren">(</s
 </dl>
 <p><strong>Return</strong></p>
 <p>0 – Success.</p>
+<p><strong>Description</strong></p>
 <p>This function will create the mapping from RIO space to local memory.</p>
 <dl class="function">
 <dt id="c.rio_unmap_inb_region">
@@ -1024,6 +1023,7 @@ int <code class="descname">rio_map_outb_region</code><span class="sig-paren">(</
 </dl>
 <p><strong>Return</strong></p>
 <p>0 – Success.</p>
+<p><strong>Description</strong></p>
 <p>This function will create the mapping from RIO space to local memory.</p>
 <dl class="function">
 <dt id="c.rio_unmap_outb_region">
@@ -2725,13 +2725,12 @@ const struct <a class="reference internal" href="../driver-api/basics.html#c.rio
 <dt><code class="docutils literal notranslate"><span class="pre">const</span> <span class="pre">struct</span> <span class="pre">rio_device_id</span> <span class="pre">*</span> <span class="pre">id</span></code></dt>
 <dd>the RIO device id structure to match against</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">const</span> <span class="pre">struct</span> <span class="pre">rio_dev</span> <span class="pre">*</span> <span class="pre">rdev</span></code></dt>
-<dd>the RIO device structure to match against</dd>
-</dl>
-<p><strong>Description</strong></p>
-<blockquote>
-<div>Used from driver probe and bus matching to check whether a RIO device
+<dd><p class="first">the RIO device structure to match against</p>
+<p class="last">Used from driver probe and bus matching to check whether a RIO device
 matches a device id structure provided by a RIO driver. Returns the
-matching <a class="reference internal" href="../driver-api/basics.html#c.rio_device_id" title="rio_device_id"><code class="xref c c-type docutils literal notranslate"><span class="pre">struct</span> <span class="pre">rio_device_id</span></code></a> or <code class="docutils literal notranslate"><span class="pre">NULL</span></code> if there is no match.</div></blockquote>
+matching <a class="reference internal" href="../driver-api/basics.html#c.rio_device_id" title="rio_device_id"><code class="xref c c-type docutils literal notranslate"><span class="pre">struct</span> <span class="pre">rio_device_id</span></code></a> or <code class="docutils literal notranslate"><span class="pre">NULL</span></code> if there is no match.</p>
+</dd>
+</dl>
 <dl class="function">
 <dt id="c.rio_device_probe">
 int <code class="descname">rio_device_probe</code><span class="sig-paren">(</span>struct <a class="reference internal" href="../driver-api/infrastructure.html#c.device" title="device">device</a> *<em>&nbsp;dev</em><span class="sig-paren">)</span><a class="headerlink" href="#c.rio_device_probe" title="Permalink to this definition">¶</a></dt>
@@ -2771,14 +2770,13 @@ int <code class="descname">rio_match_bus</code><span class="sig-paren">(</span>s
 <dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">device</span> <span class="pre">*</span> <span class="pre">dev</span></code></dt>
 <dd>the standard device structure to match against</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">device_driver</span> <span class="pre">*</span> <span class="pre">drv</span></code></dt>
-<dd>the standard driver structure containing the ids to match against</dd>
-</dl>
-<p><strong>Description</strong></p>
-<blockquote>
-<div>Used by a driver to check whether a RIO device present in the
+<dd><p class="first">the standard driver structure containing the ids to match against</p>
+<p class="last">Used by a driver to check whether a RIO device present in the
 system is in its list of supported devices. Returns 1 if
 there is a matching <a class="reference internal" href="../driver-api/basics.html#c.rio_device_id" title="rio_device_id"><code class="xref c c-type docutils literal notranslate"><span class="pre">struct</span> <span class="pre">rio_device_id</span></code></a> or 0 if there is
-no match.</div></blockquote>
+no match.</p>
+</dd>
+</dl>
 <dl class="function">
 <dt id="c.rio_bus_init">
 int <code class="descname">rio_bus_init</code><span class="sig-paren">(</span>void<span class="sig-paren">)</span><a class="headerlink" href="#c.rio_bus_init" title="Permalink to this definition">¶</a></dt>

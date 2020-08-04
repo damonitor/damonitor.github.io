@@ -68,7 +68,7 @@
             
             
               <div class="version">
-                5.7.0
+                5.8.0
               </div>
             
           
@@ -304,7 +304,7 @@ update action to the range (mark range read only, or fully unmap, etc.). The
 device must complete the update before the driver callback returns.</p>
 <p>When the device driver wants to populate a range of virtual addresses, it can
 use:</p>
-<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>long hmm_range_fault(struct hmm_range *range);
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>int hmm_range_fault(struct hmm_range *range);
 </pre></div>
 </div>
 <p>It will trigger a page fault on missing or read-only entries if write access is
@@ -325,25 +325,22 @@ The usage pattern is:</p>
      range.notifier = &amp;interval_sub;
      range.start = ...;
      range.end = ...;
-     range.pfns = ...;
-     range.flags = ...;
-     range.values = ...;
-     range.pfn_shift = ...;
+     range.hmm_pfns = ...;
 
      if (!mmget_not_zero(interval_sub-&gt;notifier.mm))
          return -EFAULT;
 
 again:
      range.notifier_seq = mmu_interval_read_begin(&amp;interval_sub);
-     down_read(&amp;mm-&gt;mmap_sem);
+     mmap_read_lock(mm);
      ret = hmm_range_fault(&amp;range);
      if (ret) {
-         up_read(&amp;mm-&gt;mmap_sem);
+         mmap_read_unlock(mm);
          if (ret == -EBUSY)
                 goto again;
          return ret;
      }
-     up_read(&amp;mm-&gt;mmap_sem);
+     mmap_read_unlock(mm);
 
      take_lock(driver-&gt;update);
      if (mmu_interval_read_retry(&amp;ni, range.notifier_seq) {
@@ -369,14 +366,9 @@ update.</p>
 <p>The hmm_range struct has 2 fields, default_flags and pfn_flags_mask, that specify
 fault or snapshot policy for the whole range instead of having to set them
 for each entry in the pfns array.</p>
-<p>For instance, if the device flags for range.flags are:</p>
-<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>range.flags[HMM_PFN_VALID] = (1 &lt;&lt; 63);
-range.flags[HMM_PFN_WRITE] = (1 &lt;&lt; 62);
-</pre></div>
-</div>
-<p>and the device driver wants pages for a range with at least read permission,
-it sets:</p>
-<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>range-&gt;default_flags = (1 &lt;&lt; 63);
+<p>For instance if the device driver wants pages for a range with at least read
+permission, it sets:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>range-&gt;default_flags = HMM_PFN_REQ_FAULT;
 range-&gt;pfn_flags_mask = 0;
 </pre></div>
 </div>
@@ -384,18 +376,18 @@ range-&gt;pfn_flags_mask = 0;
 in the range with at least read permission.</p>
 <p>Now let’s say the driver wants to do the same except for one page in the range for
 which it wants to have write permission. Now driver set:</p>
-<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>range-&gt;default_flags = (1 &lt;&lt; 63);
-range-&gt;pfn_flags_mask = (1 &lt;&lt; 62);
-range-&gt;pfns[index_of_write] = (1 &lt;&lt; 62);
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>range-&gt;default_flags = HMM_PFN_REQ_FAULT;
+range-&gt;pfn_flags_mask = HMM_PFN_REQ_WRITE;
+range-&gt;pfns[index_of_write] = HMM_PFN_REQ_WRITE;
 </pre></div>
 </div>
 <p>With this, HMM will fault in all pages with at least read (i.e., valid) and for the
 address == range-&gt;start + (index_of_write &lt;&lt; PAGE_SHIFT) it will fault with
 write permission i.e., if the CPU pte does not have write permission set then HMM
 will call handle_mm_fault().</p>
-<p>Note that HMM will populate the pfns array with write permission for any page
-that is mapped with CPU write permission no matter what values are set
-in default_flags or pfn_flags_mask.</p>
+<p>After hmm_range_fault completes the flag bits are set to the current state of
+the page tables, ie HMM_PFN_VALID | HMM_PFN_WRITE will be set if the page is
+writable.</p>
 </div>
 <div class="section" id="represent-and-manage-device-memory-from-core-kernel-point-of-view">
 <h2><a class="toc-backref" href="#id6">Represent and manage device memory from core kernel point of view</a><a class="headerlink" href="#represent-and-manage-device-memory-from-core-kernel-point-of-view" title="Permalink to this headline">¶</a></h2>

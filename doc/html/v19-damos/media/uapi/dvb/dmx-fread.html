@@ -1,0 +1,279 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>3.2.3. Digital TV demux read() &mdash; The Linux Kernel  documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript">
+          var DOCUMENTATION_OPTIONS = {
+              URL_ROOT:'../../../',
+              VERSION:'',
+              LANGUAGE:'None',
+              COLLAPSE_INDEX:false,
+              FILE_SUFFIX:'.html',
+              HAS_SOURCE:  true,
+              SOURCELINK_SUFFIX: '.txt'
+          };
+      </script>
+        <script type="text/javascript" src="../../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/theme_overrides.css" type="text/css" />
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home"> The Linux Kernel
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                5.7.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../admin-guide/mm/damon/index.html">Monitoring Data Accesses</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../vm/damon/index.html">DAMON: Data Access MONitor</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">The Linux Kernel</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../index.html">Docs</a> &raquo;</li>
+        
+      <li>3.2.3. Digital TV demux read()</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../../../_sources/media/uapi/dvb/dmx-fread.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="digital-tv-demux-read">
+<span id="dmx-fread"></span><h1>3.2.3. Digital TV demux read()<a class="headerlink" href="#digital-tv-demux-read" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="name">
+<h2>3.2.3.1. Name<a class="headerlink" href="#name" title="Permalink to this headline">¶</a></h2>
+<p>Digital TV demux read()</p>
+</div>
+<div class="section" id="synopsis">
+<h2>3.2.3.2. Synopsis<a class="headerlink" href="#synopsis" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="c.dvb-dmx-read">
+size_t <code class="descname">read</code><span class="sig-paren">(</span>int<em>&nbsp;fd</em>, void<em>&nbsp;*buf</em>, size_t<em>&nbsp;count</em><span class="sig-paren">)</span><a class="headerlink" href="#c.dvb-dmx-read" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="arguments">
+<h2>3.2.3.3. Arguments<a class="headerlink" href="#arguments" title="Permalink to this headline">¶</a></h2>
+<dl class="docutils">
+<dt><code class="docutils literal notranslate"><span class="pre">fd</span></code></dt>
+<dd><blockquote class="first">
+<div>File descriptor returned by a previous call to <a class="reference internal" href="ca-fopen.html#c.dvb-ca-open" title="dvb-ca-open"><code class="xref c c-func docutils literal notranslate"><span class="pre">open()</span></code></a>.</div></blockquote>
+<dl class="last docutils">
+<dt><code class="docutils literal notranslate"><span class="pre">buf</span></code></dt>
+<dd>Buffer to be filled</dd>
+</dl>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">count</span></code></dt>
+<dd>Max number of bytes to read</dd>
+</dl>
+</div>
+<div class="section" id="description">
+<h2>3.2.3.4. Description<a class="headerlink" href="#description" title="Permalink to this headline">¶</a></h2>
+<p>This system call returns filtered data, which might be section or Packetized
+Elementary Stream (PES) data. The filtered data is transferred from
+the driver’s internal circular buffer to <code class="docutils literal notranslate"><span class="pre">buf</span></code>. The maximum amount of data
+to be transferred is implied by count.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">if a section filter created with
+<a class="reference internal" href="dmx_types.html#c.dmx_sct_filter_params" title="dmx_sct_filter_params"><code class="xref c c-type docutils literal notranslate"><span class="pre">DMX_CHECK_CRC</span></code></a> flag set,
+data that fails on CRC check will be silently ignored.</p>
+</div>
+</div>
+<div class="section" id="return-value">
+<h2>3.2.3.5. Return Value<a class="headerlink" href="#return-value" title="Permalink to this headline">¶</a></h2>
+<p>On success 0 is returned.</p>
+<p>On error -1 is returned, and the <code class="docutils literal notranslate"><span class="pre">errno</span></code> variable is set
+appropriately.</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="6%" />
+<col width="94%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><code class="docutils literal notranslate"><span class="pre">EWOULDBLOCK</span></code></td>
+<td>No data to return and <code class="docutils literal notranslate"><span class="pre">O_NONBLOCK</span></code> was specified.</td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal notranslate"><span class="pre">EOVERFLOW</span></code></td>
+<td>The filtered data was not read from the buffer in due time,
+resulting in non-read data being lost. The buffer is flushed.</td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal notranslate"><span class="pre">ETIMEDOUT</span></code></td>
+<td>The section was not loaded within the stated timeout period.
+See ioctl <a class="reference internal" href="dmx-set-filter.html#dmx-set-filter"><span class="std std-ref">DMX_SET_FILTER</span></a> for how to set a timeout.</td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal notranslate"><span class="pre">EFAULT</span></code></td>
+<td>The driver failed to write to the callers buffer due to an
+invalid *buf pointer.</td>
+</tr>
+</tbody>
+</table>
+<p>The generic error codes are described at the
+<a class="reference internal" href="../gen-errors.html#id1"><span class="std std-ref">Generic Error Codes</span></a> chapter.</p>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright The kernel development community
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

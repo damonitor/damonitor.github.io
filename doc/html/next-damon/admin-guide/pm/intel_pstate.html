@@ -68,7 +68,7 @@
             
             
               <div class="version">
-                5.7.0
+                5.8.0
               </div>
             
           
@@ -217,9 +217,10 @@ them will be in effect depends on what kernel command line options are used and
 on the capabilities of the processor.</p>
 <div class="section" id="active-mode">
 <h3>Active Mode<a class="headerlink" href="#active-mode" title="Permalink to this headline">¶</a></h3>
-<p>This is the default operation mode of <code class="docutils literal notranslate"><span class="pre">intel_pstate</span></code>.  If it works in this
-mode, the <code class="docutils literal notranslate"><span class="pre">scaling_driver</span></code> policy attribute in <code class="docutils literal notranslate"><span class="pre">sysfs</span></code> for all <code class="docutils literal notranslate"><span class="pre">CPUFreq</span></code>
-policies contains the string “intel_pstate”.</p>
+<p>This is the default operation mode of <code class="docutils literal notranslate"><span class="pre">intel_pstate</span></code> for processors with
+hardware-managed P-states (HWP) support.  If it works in this mode, the
+<code class="docutils literal notranslate"><span class="pre">scaling_driver</span></code> policy attribute in <code class="docutils literal notranslate"><span class="pre">sysfs</span></code> for all <code class="docutils literal notranslate"><span class="pre">CPUFreq</span></code> policies
+contains the string “intel_pstate”.</p>
 <p>In this mode the driver bypasses the scaling governors layer of <code class="docutils literal notranslate"><span class="pre">CPUFreq</span></code> and
 provides its own scaling algorithms for P-state selection.  Those algorithms
 can be applied to <code class="docutils literal notranslate"><span class="pre">CPUFreq</span></code> policies in the same way as generic scaling
@@ -280,12 +281,13 @@ internal P-state selection logic to be less performance-focused.</p>
 </div>
 <div class="section" id="active-mode-without-hwp">
 <h4>Active Mode Without HWP<a class="headerlink" href="#active-mode-without-hwp" title="Permalink to this headline">¶</a></h4>
-<p>This is the default operation mode for processors that do not support the HWP
-feature.  It also is used by default with the <code class="docutils literal notranslate"><span class="pre">intel_pstate=no_hwp</span></code> argument
-in the kernel command line.  However, in this mode <code class="docutils literal notranslate"><span class="pre">intel_pstate</span></code> may refuse
-to work with the given processor if it does not recognize it.  [Note that
-<code class="docutils literal notranslate"><span class="pre">intel_pstate</span></code> will never refuse to work with any processor with the HWP
-feature enabled.]</p>
+<p>This operation mode is optional for processors that do not support the HWP
+feature or when the <code class="docutils literal notranslate"><span class="pre">intel_pstate=no_hwp</span></code> argument is passed to the kernel in
+the command line.  The active mode is used in those cases if the
+<code class="docutils literal notranslate"><span class="pre">intel_pstate=active</span></code> argument is passed to the kernel in the command line.
+In this mode <code class="docutils literal notranslate"><span class="pre">intel_pstate</span></code> may refuse to work with processors that are not
+recognized by it.  [Note that <code class="docutils literal notranslate"><span class="pre">intel_pstate</span></code> will never refuse to work with
+any processor with the HWP feature enabled.]</p>
 <p>In this mode <code class="docutils literal notranslate"><span class="pre">intel_pstate</span></code> registers utilization update callbacks with the
 CPU scheduler in order to run a P-state selection algorithm, either
 <code class="docutils literal notranslate"><span class="pre">powersave</span></code> or <code class="docutils literal notranslate"><span class="pre">performance</span></code>, depending on the <code class="docutils literal notranslate"><span class="pre">scaling_governor</span></code> policy
@@ -323,10 +325,14 @@ is not set.</p>
 </div>
 <div class="section" id="passive-mode">
 <h3>Passive Mode<a class="headerlink" href="#passive-mode" title="Permalink to this headline">¶</a></h3>
-<p>This mode is used if the <code class="docutils literal notranslate"><span class="pre">intel_pstate=passive</span></code> argument is passed to the
-kernel in the command line (it implies the <code class="docutils literal notranslate"><span class="pre">intel_pstate=no_hwp</span></code> setting too).
-Like in the active mode without HWP support, in this mode <code class="docutils literal notranslate"><span class="pre">intel_pstate</span></code> may
-refuse to work with the given processor if it does not recognize it.</p>
+<p>This is the default operation mode of <code class="docutils literal notranslate"><span class="pre">intel_pstate</span></code> for processors without
+hardware-managed P-states (HWP) support.  It is always used if the
+<code class="docutils literal notranslate"><span class="pre">intel_pstate=passive</span></code> argument is passed to the kernel in the command line
+regardless of whether or not the given processor supports HWP.  [Note that the
+<code class="docutils literal notranslate"><span class="pre">intel_pstate=no_hwp</span></code> setting implies <code class="docutils literal notranslate"><span class="pre">intel_pstate=passive</span></code> if it is used
+without <code class="docutils literal notranslate"><span class="pre">intel_pstate=active</span></code>.]  Like in the active mode without HWP support,
+in this mode <code class="docutils literal notranslate"><span class="pre">intel_pstate</span></code> may refuse to work with processors that are not
+recognized by it.</p>
 <p>If the driver works in this mode, the <code class="docutils literal notranslate"><span class="pre">scaling_driver</span></code> policy attribute in
 <code class="docutils literal notranslate"><span class="pre">sysfs</span></code> for all <code class="docutils literal notranslate"><span class="pre">CPUFreq</span></code> policies contains the string “intel_cpufreq”.
 Then, the driver behaves like a regular <code class="docutils literal notranslate"><span class="pre">CPUFreq</span></code> scaling driver.  That is,

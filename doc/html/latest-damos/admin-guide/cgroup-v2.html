@@ -68,7 +68,7 @@
             
             
               <div class="version">
-                5.7.0
+                5.8.0
               </div>
             
           
@@ -718,9 +718,7 @@ may be specified in any order and not all pairs have to be specified.</p>
 <li><p class="first">Settings for a single feature should be contained in a single file.</p>
 </li>
 <li><p class="first">The root cgroup should be exempt from resource control and thus
-shouldn’t have resource control interface files.  Also,
-informational files on the root cgroup which end up showing global
-information available elsewhere shouldn’t exist.</p>
+shouldn’t have resource control interface files.</p>
 </li>
 <li><p class="first">The default time unit is microseconds.  If a different unit is ever
 used, an explicit unit suffix must be present.</p>
@@ -968,7 +966,7 @@ before the cpu controller can be enabled.</p>
 <blockquote>
 <div><dl class="docutils">
 <dt>cpu.stat</dt>
-<dd><p class="first">A read-only flat-keyed file which exists on non-root cgroups.
+<dd><p class="first">A read-only flat-keyed file.
 This file exists whether the controller is enabled or not.</p>
 <p>It always reports the following three stats:</p>
 <ul class="simple">
@@ -1129,6 +1127,11 @@ mechanism.  If a cgroup’s memory usage reaches this limit and
 can’t be reduced, the OOM killer is invoked in the cgroup.
 Under certain circumstances, the usage may go over the limit
 temporarily.</p>
+<p>In default configuration regular 0-order allocations always
+succeed unless OOM killer chooses current task as a victim.</p>
+<p>Some kinds of allocations don’t invoke the OOM killer.
+Caller could retry them differently, return into userspace
+as -ENOMEM or silently ignore in cases like disk readahead.</p>
 <p class="last">This is the ultimate protection mechanism.  As long as the
 high limit is used and monitored properly, this limit’s
 utility is limited to providing the final safety net.</p>
@@ -1178,15 +1181,9 @@ fails to bring it down, the cgroup goes to OOM state.</dd>
 <dt>oom</dt>
 <dd><p class="first">The number of time the cgroup’s memory usage was
 reached the limit and allocation was about to fail.</p>
-<p>Depending on context result could be invocation of OOM
-killer and retrying allocation or failing allocation.</p>
-<p>Failed allocation in its turn could be returned into
-userspace as -ENOMEM or silently ignored in cases like
-disk readahead.  For now OOM in memory cgroup kills
-tasks iff shortage has happened inside page fault.</p>
 <p class="last">This event is not raised if the OOM killer is not
 considered as an option, e.g. for failed high-order
-allocations.</p>
+allocations or if caller asked to not retry attempts.</p>
 </dd>
 <dt>oom_kill</dt>
 <dd>The number of processes belonging to this cgroup
@@ -1259,6 +1256,9 @@ pressure.</dd>
 <dd>Number of refaults of previously evicted pages</dd>
 <dt>workingset_activate</dt>
 <dd>Number of refaulted pages that were immediately activated</dd>
+<dt>workingset_restore</dt>
+<dd>Number of restored pages which have been detected as an active
+workingset before they got reclaimed.</dd>
 <dt>workingset_nodereclaim</dt>
 <dd>Number of times a shadow node has been reclaimed</dd>
 <dt>pgrefill</dt>
@@ -1277,8 +1277,8 @@ pressure.</dd>
 <dd>Amount of reclaimed lazyfree pages</dd>
 <dt>thp_fault_alloc</dt>
 <dd>Number of transparent hugepages which were allocated to satisfy
-a page fault, including COW faults. This counter is not present
-when CONFIG_TRANSPARENT_HUGEPAGE is not set.</dd>
+a page fault. This counter is not present when CONFIG_TRANSPARENT_HUGEPAGE
+is not set.</dd>
 <dt>thp_collapse_alloc</dt>
 <dd>Number of transparent hugepages which were allocated to allow
 collapsing an existing range of pages. This counter is not
@@ -1291,6 +1291,19 @@ present when CONFIG_TRANSPARENT_HUGEPAGE is not set.</dd>
 cgroups.</p>
 <p class="last">The total amount of swap currently being used by the cgroup
 and its descendants.</p>
+</dd>
+<dt>memory.swap.high</dt>
+<dd><p class="first">A read-write single value file which exists on non-root
+cgroups.  The default is “max”.</p>
+<p>Swap usage throttle limit.  If a cgroup’s swap usage exceeds
+this limit, all its further allocations will be throttled to
+allow userspace to implement custom out-of-memory procedures.</p>
+<p>This limit marks a point of no return for the cgroup. It is NOT
+designed to manage the amount of swapping a workload does
+during regular operation. Compare to memory.swap.max, which
+prohibits swapping past a set amount, but lets the cgroup
+continue unimpeded as long as other memory can be reclaimed.</p>
+<p class="last">Healthy workloads are not expected to reach this limit.</p>
 </dd>
 <dt>memory.swap.max</dt>
 <dd><p class="first">A read-write single value file which exists on non-root
@@ -1305,6 +1318,9 @@ otherwise, a value change in this file generates a file
 modified event.</p>
 <blockquote>
 <div><dl class="docutils">
+<dt>high</dt>
+<dd>The number of times the cgroup’s swap usage was over
+the high threshold.</dd>
 <dt>max</dt>
 <dd>The number of times the cgroup’s swap usage was about
 to go over the max boundary and swap allocation

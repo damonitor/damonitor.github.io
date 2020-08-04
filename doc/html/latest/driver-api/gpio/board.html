@@ -68,7 +68,7 @@
             
             
               <div class="version">
-                5.7.0
+                5.8.0
               </div>
             
           
@@ -266,15 +266,17 @@ files that desire to do so need to include the following header:</p>
 </div>
 <p>GPIOs are mapped by the means of tables of lookups, containing instances of the
 gpiod_lookup structure. Two macros are defined to help declaring such mappings:</p>
-<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>GPIO_LOOKUP(chip_label, chip_hwnum, con_id, flags)
-GPIO_LOOKUP_IDX(chip_label, chip_hwnum, con_id, idx, flags)
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>GPIO_LOOKUP(key, chip_hwnum, con_id, flags)
+GPIO_LOOKUP_IDX(key, chip_hwnum, con_id, idx, flags)
 </pre></div>
 </div>
 <p>where</p>
 <blockquote>
 <div><ul class="simple">
-<li>chip_label is the label of the gpiod_chip instance providing the GPIO</li>
-<li>chip_hwnum is the hardware number of the GPIO within the chip</li>
+<li>key is either the label of the gpiod_chip instance providing the GPIO, or
+the GPIO line name</li>
+<li>chip_hwnum is the hardware number of the GPIO within the chip, or U16_MAX
+to indicate that key is a GPIO line name</li>
 <li><dl class="first docutils">
 <dt>con_id is the name of the GPIO function from the device point of view. It</dt>
 <dd>can be NULL, in which case it will match any function.</dd>
@@ -305,7 +307,15 @@ GPIO_LOOKUP_IDX(chip_label, chip_hwnum, con_id, idx, flags)
 </ul>
 </div></blockquote>
 <p>In the future, these flags might be extended to support more properties.</p>
-<p>Note that GPIO_LOOKUP() is just a shortcut to GPIO_LOOKUP_IDX() where idx = 0.</p>
+<dl class="docutils">
+<dt>Note that:</dt>
+<dd><ol class="first last arabic simple">
+<li>GPIO line names are not guaranteed to be globally unique, so the first
+match found will be used.</li>
+<li>GPIO_LOOKUP() is just a shortcut to GPIO_LOOKUP_IDX() where idx = 0.</li>
+</ol>
+</dd>
+</dl>
 <p>A lookup table can then be defined as follows, with an empty entry defining its
 end. The ‘dev_id’ field of the table is the identifier of the device that will
 make use of these GPIOs. It can be NULL, in which case it will be matched for

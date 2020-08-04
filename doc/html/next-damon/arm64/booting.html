@@ -68,7 +68,7 @@
             
             
               <div class="version">
-                5.7.0
+                5.8.0
               </div>
             
           
@@ -335,9 +335,10 @@ The CPU must be in either EL2 (RECOMMENDED in order to have access to
 the virtualisation extensions) or non-secure EL1.</p>
 </li>
 <li><p class="first">Caches, MMUs</p>
-<p>The MMU must be off.
-Instruction cache may be on or off.
-The address range corresponding to the loaded kernel image must be
+<p>The MMU must be off.</p>
+<p>The instruction cache may be on or off, and must not hold any stale
+entries corresponding to the loaded kernel image.</p>
+<p>The address range corresponding to the loaded kernel image must be
 cleaned to the PoC. In the presence of a system cache or other
 coherent masters with caches enabled, this will typically require
 cache maintenance by VA rather than set/way operations.
@@ -407,37 +408,37 @@ compatibility (v2) mode:</p>
 <li><p class="first">The DT or ACPI tables must describe a GICv2 interrupt controller.</p>
 </li>
 </ul>
-<p>For CPUs with pointer authentication functionality:
-- If EL3 is present:</p>
-<blockquote>
-<div><ul class="simple">
+<p>For CPUs with pointer authentication functionality:</p>
+<ul class="simple">
+<li>If EL3 is present:<ul>
 <li>SCR_EL3.APK (bit 16) must be initialised to 0b1</li>
 <li>SCR_EL3.API (bit 17) must be initialised to 0b1</li>
 </ul>
-</div></blockquote>
-<ul class="simple">
+</li>
 <li>If the kernel is entered at EL1:<ul>
 <li>HCR_EL2.APK (bit 40) must be initialised to 0b1</li>
 <li>HCR_EL2.API (bit 41) must be initialised to 0b1</li>
 </ul>
 </li>
 </ul>
-<p>For CPUs with Activity Monitors Unit v1 (AMUv1) extension present:
-- If EL3 is present:</p>
-<blockquote>
-<div><p>CPTR_EL3.TAM (bit 30) must be initialised to 0b0
-CPTR_EL2.TAM (bit 30) must be initialised to 0b0
-AMCNTENSET0_EL0 must be initialised to 0b1111
-AMCNTENSET1_EL0 must be initialised to a platform specific value
-having 0b1 set for the corresponding bit for each of the auxiliary
-counters present.</p>
-</div></blockquote>
+<p>For CPUs with Activity Monitors Unit v1 (AMUv1) extension present:</p>
 <ul class="simple">
-<li>If the kernel is entered at EL1:
-AMCNTENSET0_EL0 must be initialised to 0b1111
-AMCNTENSET1_EL0 must be initialised to a platform specific value
+<li>If EL3 is present:<ul>
+<li>CPTR_EL3.TAM (bit 30) must be initialised to 0b0</li>
+<li>CPTR_EL2.TAM (bit 30) must be initialised to 0b0</li>
+<li>AMCNTENSET0_EL0 must be initialised to 0b1111</li>
+<li>AMCNTENSET1_EL0 must be initialised to a platform specific value
 having 0b1 set for the corresponding bit for each of the auxiliary
 counters present.</li>
+</ul>
+</li>
+<li>If the kernel is entered at EL1:<ul>
+<li>AMCNTENSET0_EL0 must be initialised to 0b1111</li>
+<li>AMCNTENSET1_EL0 must be initialised to a platform specific value
+having 0b1 set for the corresponding bit for each of the auxiliary
+counters present.</li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
@@ -478,11 +479,13 @@ processors”) to bring CPUs into the kernel.</p>
 <p>The device tree should contain a ‘psci’ node, as described in
 Documentation/devicetree/bindings/arm/psci.yaml.</p>
 </li>
-<li><p class="first">Secondary CPU general-purpose register settings
-x0 = 0 (reserved for future use)
-x1 = 0 (reserved for future use)
-x2 = 0 (reserved for future use)
-x3 = 0 (reserved for future use)</p>
+<li><p class="first">Secondary CPU general-purpose register settings</p>
+<ul class="simple">
+<li>x0 = 0 (reserved for future use)</li>
+<li>x1 = 0 (reserved for future use)</li>
+<li>x2 = 0 (reserved for future use)</li>
+<li>x3 = 0 (reserved for future use)</li>
+</ul>
 </li>
 </ul>
 </div>

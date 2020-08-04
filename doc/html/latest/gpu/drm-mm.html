@@ -68,7 +68,7 @@
             
             
               <div class="version">
-                5.7.0
+                5.8.0
               </div>
             
           
@@ -807,7 +807,7 @@ int <code class="descname">drm_gem_handle_create</code><span class="sig-paren">(
 <dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">drm_gem_object</span> <span class="pre">*</span> <span class="pre">obj</span></code></dt>
 <dd>object to register</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">u32</span> <span class="pre">*</span> <span class="pre">handlep</span></code></dt>
-<dd>pionter to return the created handle to the caller</dd>
+<dd>pointer to return the created handle to the caller</dd>
 </dl>
 <p><strong>Description</strong></p>
 <p>Create a handle for this object. This adds a handle reference to the object,
@@ -935,10 +935,10 @@ int <code class="descname">drm_gem_objects_lookup</code><span class="sig-paren">
 <p>Takes an array of userspace handles and returns a newly allocated array of
 GEM objects.</p>
 <p>For a single handle lookup, use <a class="reference internal" href="#c.drm_gem_object_lookup" title="drm_gem_object_lookup"><code class="xref c c-func docutils literal notranslate"><span class="pre">drm_gem_object_lookup()</span></code></a>.</p>
-<p><strong>Return</strong></p>
 <p><strong>objs</strong> filled in with GEM object pointers. Returned GEM objects need to be
 released with <a class="reference internal" href="#c.drm_gem_object_put" title="drm_gem_object_put"><code class="xref c c-func docutils literal notranslate"><span class="pre">drm_gem_object_put()</span></code></a>. -ENOENT is returned on a lookup
 failure. 0 is returned on success.</p>
+<p><strong>Return</strong></p>
 <dl class="function">
 <dt id="c.drm_gem_object_lookup">
 struct <a class="reference internal" href="#c.drm_gem_object" title="drm_gem_object">drm_gem_object</a> * <code class="descname">drm_gem_object_lookup</code><span class="sig-paren">(</span>struct <a class="reference internal" href="drm-internals.html#c.drm_file" title="drm_file">drm_file</a> *<em>&nbsp;filp</em>, u32<em>&nbsp;handle</em><span class="sig-paren">)</span><a class="headerlink" href="#c.drm_gem_object_lookup" title="Permalink to this definition">¶</a></dt>
@@ -953,6 +953,7 @@ struct <a class="reference internal" href="#c.drm_gem_object" title="drm_gem_obj
 <dd>userspace handle</dd>
 </dl>
 <p><strong>Return</strong></p>
+<p><strong>Description</strong></p>
 <p>A reference to the object named by the handle if such exists on <strong>filp</strong>, NULL
 otherwise.</p>
 <p>If looking up an array of handles, use <a class="reference internal" href="#c.drm_gem_objects_lookup" title="drm_gem_objects_lookup"><code class="xref c c-func docutils literal notranslate"><span class="pre">drm_gem_objects_lookup()</span></code></a>.</p>
@@ -974,6 +975,7 @@ long <code class="descname">drm_gem_dma_resv_wait</code><span class="sig-paren">
 <dd>timeout value in jiffies or zero to return immediately</dd>
 </dl>
 <p><strong>Return</strong></p>
+<p><strong>Description</strong></p>
 <p>Returns -ERESTARTSYS if interrupted, 0 if the wait timed out, or
 greater than 0 on success.</p>
 <dl class="function">
@@ -1531,13 +1533,15 @@ the necessary DRM driver operations.</p>
 <p>A pointer to a newly created GEM object or an ERR_PTR-encoded negative
 error code on failure.</p>
 </div>
-</div>
-<div class="section" id="vram-helper-function-reference">
-<h2>VRAM Helper Function Reference<a class="headerlink" href="#vram-helper-function-reference" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="gem-vram-helper-functions-reference">
+<h3>GEM VRAM Helper Functions Reference<a class="headerlink" href="#gem-vram-helper-functions-reference" title="Permalink to this headline">¶</a></h3>
 <p>This library provides <a class="reference internal" href="#c.drm_gem_vram_object" title="drm_gem_vram_object"><code class="xref c c-type docutils literal notranslate"><span class="pre">struct</span> <span class="pre">drm_gem_vram_object</span></code></a> (GEM VRAM), a GEM
-buffer object that is backed by video RAM. It can be used for
-framebuffer devices with dedicated memory. The video RAM is managed
-by <a class="reference internal" href="#c.drm_vram_mm" title="drm_vram_mm"><code class="xref c c-type docutils literal notranslate"><span class="pre">struct</span> <span class="pre">drm_vram_mm</span></code></a> (VRAM MM).</p>
+buffer object that is backed by video RAM (VRAM). It can be used for
+framebuffer devices with dedicated memory.</p>
+<p>The data structure <a class="reference internal" href="#c.drm_vram_mm" title="drm_vram_mm"><code class="xref c c-type docutils literal notranslate"><span class="pre">struct</span> <span class="pre">drm_vram_mm</span></code></a> and its helpers implement a memory
+manager for simple framebuffer devices with dedicated video memory. GEM
+VRAM buffer objects are either placed in the video memory or remain evicted
+to system memory.</p>
 <p>With the GEM interface userspace applications create, manage and destroy
 graphics buffers, such as an on-screen framebuffer. GEM does not provide
 an implementation of these interfaces. It’s up to the DRM driver to
@@ -1721,137 +1725,6 @@ available for public read access. Use the field
 <dl class="function">
 <dt id="c.drm_vram_mm_of_bdev">
 struct <a class="reference internal" href="#c.drm_vram_mm" title="drm_vram_mm">drm_vram_mm</a> * <code class="descname">drm_vram_mm_of_bdev</code><span class="sig-paren">(</span>struct ttm_bo_device *<em>&nbsp;bdev</em><span class="sig-paren">)</span><a class="headerlink" href="#c.drm_vram_mm_of_bdev" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns the container of type <code class="xref c c-type docutils literal notranslate"><span class="pre">struct</span> <span class="pre">ttm_bo_device</span></code> for field bdev.</p>
-</dd></dl>
-
-<p><strong>Parameters</strong></p>
-<dl class="docutils">
-<dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">ttm_bo_device</span> <span class="pre">*</span> <span class="pre">bdev</span></code></dt>
-<dd>the TTM BO device</dd>
-</dl>
-<p><strong>Return</strong></p>
-<p>The containing instance of <a class="reference internal" href="#c.drm_vram_mm" title="drm_vram_mm"><code class="xref c c-type docutils literal notranslate"><span class="pre">struct</span> <span class="pre">drm_vram_mm</span></code></a></p>
-<div class="section" id="gem-vram-helper-functions-reference">
-<h3>GEM VRAM Helper Functions Reference<a class="headerlink" href="#gem-vram-helper-functions-reference" title="Permalink to this headline">¶</a></h3>
-<p>This library provides a GEM buffer object that is backed by video RAM
-(VRAM). It can be used for framebuffer devices with dedicated memory.</p>
-<p>The data structure <a class="reference internal" href="#c.drm_vram_mm" title="drm_vram_mm"><code class="xref c c-type docutils literal notranslate"><span class="pre">struct</span> <span class="pre">drm_vram_mm</span></code></a> and its helpers implement a memory
-manager for simple framebuffer devices with dedicated video memory. Buffer
-objects are either placed in video RAM or evicted to system memory. The rsp.
-buffer object is provided by <a class="reference internal" href="#c.drm_gem_vram_object" title="drm_gem_vram_object"><code class="xref c c-type docutils literal notranslate"><span class="pre">struct</span> <span class="pre">drm_gem_vram_object</span></code></a>.</p>
-<dl class="type">
-<dt>
-struct <code class="descname">drm_gem_vram_object</code></dt>
-<dd><p>GEM object backed by VRAM</p>
-</dd></dl>
-
-<p><strong>Definition</strong></p>
-<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>struct drm_gem_vram_object {
-  struct ttm_buffer_object bo;
-  struct ttm_bo_kmap_obj kmap;
-  unsigned int kmap_use_count;
-  struct ttm_placement placement;
-  struct ttm_place placements[2];
-  int pin_count;
-};
-</pre></div>
-</div>
-<p><strong>Members</strong></p>
-<dl class="docutils">
-<dt><code class="docutils literal notranslate"><span class="pre">bo</span></code></dt>
-<dd>TTM buffer object</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">kmap</span></code></dt>
-<dd>Mapping information for <strong>bo</strong></dd>
-<dt><code class="docutils literal notranslate"><span class="pre">kmap_use_count</span></code></dt>
-<dd>Reference count on the virtual address.
-The address are un-mapped when the count reaches zero.</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">placement</span></code></dt>
-<dd>TTM placement information. Supported placements are     <code class="docutils literal notranslate"><span class="pre">TTM_PL_VRAM</span></code> and <code class="docutils literal notranslate"><span class="pre">TTM_PL_SYSTEM</span></code></dd>
-<dt><code class="docutils literal notranslate"><span class="pre">placements</span></code></dt>
-<dd>TTM placement information.</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">pin_count</span></code></dt>
-<dd>Pin counter</dd>
-</dl>
-<p><strong>Description</strong></p>
-<p>The type struct drm_gem_vram_object represents a GEM object that is
-backed by VRAM. It can be used for simple framebuffer devices with
-dedicated memory. The buffer object can be evicted to system memory if
-video memory becomes scarce.</p>
-<p>GEM VRAM objects perform reference counting for pin and mapping
-operations. So a buffer object that has been pinned N times with
-<a class="reference internal" href="#c.drm_gem_vram_pin" title="drm_gem_vram_pin"><code class="xref c c-func docutils literal notranslate"><span class="pre">drm_gem_vram_pin()</span></code></a> must be unpinned N times with
-<a class="reference internal" href="#c.drm_gem_vram_unpin" title="drm_gem_vram_unpin"><code class="xref c c-func docutils literal notranslate"><span class="pre">drm_gem_vram_unpin()</span></code></a>. The same applies to pairs of
-<a class="reference internal" href="#c.drm_gem_vram_kmap" title="drm_gem_vram_kmap"><code class="xref c c-func docutils literal notranslate"><span class="pre">drm_gem_vram_kmap()</span></code></a> and <a class="reference internal" href="#c.drm_gem_vram_kunmap" title="drm_gem_vram_kunmap"><code class="xref c c-func docutils literal notranslate"><span class="pre">drm_gem_vram_kunmap()</span></code></a>, as well as pairs of
-<a class="reference internal" href="#c.drm_gem_vram_vmap" title="drm_gem_vram_vmap"><code class="xref c c-func docutils literal notranslate"><span class="pre">drm_gem_vram_vmap()</span></code></a> and <a class="reference internal" href="#c.drm_gem_vram_vunmap" title="drm_gem_vram_vunmap"><code class="xref c c-func docutils literal notranslate"><span class="pre">drm_gem_vram_vunmap()</span></code></a>.</p>
-<dl class="function">
-<dt>
-struct <a class="reference internal" href="#c.drm_gem_vram_object" title="drm_gem_vram_object">drm_gem_vram_object</a> * <code class="descname">drm_gem_vram_of_bo</code><span class="sig-paren">(</span>struct ttm_buffer_object *<em>&nbsp;bo</em><span class="sig-paren">)</span></dt>
-<dd></dd></dl>
-
-<p><strong>Parameters</strong></p>
-<dl class="docutils">
-<dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">ttm_buffer_object</span> <span class="pre">*</span> <span class="pre">bo</span></code></dt>
-<dd>the VRAM buffer object</dd>
-</dl>
-<p><strong>Description</strong></p>
-<p>for field bo.</p>
-<p><strong>Return</strong></p>
-<p>The containing GEM VRAM object</p>
-<dl class="function">
-<dt>
-struct <a class="reference internal" href="#c.drm_gem_vram_object" title="drm_gem_vram_object">drm_gem_vram_object</a> * <code class="descname">drm_gem_vram_of_gem</code><span class="sig-paren">(</span>struct <a class="reference internal" href="#c.drm_gem_object" title="drm_gem_object">drm_gem_object</a> *<em>&nbsp;gem</em><span class="sig-paren">)</span></dt>
-<dd></dd></dl>
-
-<p><strong>Parameters</strong></p>
-<dl class="docutils">
-<dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">drm_gem_object</span> <span class="pre">*</span> <span class="pre">gem</span></code></dt>
-<dd>the GEM object</dd>
-</dl>
-<p><strong>Description</strong></p>
-<p>for field gem.</p>
-<p><strong>Return</strong></p>
-<p>The containing GEM VRAM object</p>
-<dl class="function">
-<dt>
-<code class="descname">DRM_GEM_VRAM_DRIVER</code><span class="sig-paren">(</span><span class="sig-paren">)</span></dt>
-<dd><p>default callback functions for <a class="reference internal" href="drm-internals.html#c.drm_driver" title="drm_driver"><code class="xref c c-type docutils literal notranslate"><span class="pre">struct</span> <span class="pre">drm_driver</span></code></a></p>
-</dd></dl>
-
-<p><strong>Parameters</strong></p>
-<p><strong>Description</strong></p>
-<p>Drivers that use VRAM MM and GEM VRAM can use this macro to initialize
-<a class="reference internal" href="drm-internals.html#c.drm_driver" title="drm_driver"><code class="xref c c-type docutils literal notranslate"><span class="pre">struct</span> <span class="pre">drm_driver</span></code></a> with default functions.</p>
-<dl class="type">
-<dt>
-struct <code class="descname">drm_vram_mm</code></dt>
-<dd><p>An instance of VRAM MM</p>
-</dd></dl>
-
-<p><strong>Definition</strong></p>
-<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>struct drm_vram_mm {
-  uint64_t vram_base;
-  size_t vram_size;
-  struct ttm_bo_device bdev;
-};
-</pre></div>
-</div>
-<p><strong>Members</strong></p>
-<dl class="docutils">
-<dt><code class="docutils literal notranslate"><span class="pre">vram_base</span></code></dt>
-<dd>Base address of the managed video memory</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">vram_size</span></code></dt>
-<dd>Size of the managed video memory in bytes</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">bdev</span></code></dt>
-<dd>The TTM BO device.</dd>
-</dl>
-<p><strong>Description</strong></p>
-<p>The fields <a class="reference internal" href="#c.drm_vram_mm" title="drm_vram_mm"><code class="xref c c-type docutils literal notranslate"><span class="pre">struct</span> <span class="pre">drm_vram_mm</span></code></a>.vram_base and
-<a class="reference internal" href="#c.drm_vram_mm" title="drm_vram_mm"><code class="xref c c-type docutils literal notranslate"><span class="pre">struct</span> <span class="pre">drm_vram_mm</span></code></a>.vrm_size are managed by VRAM MM, but are
-available for public read access. Use the field
-<a class="reference internal" href="#c.drm_vram_mm" title="drm_vram_mm"><code class="xref c c-type docutils literal notranslate"><span class="pre">struct</span> <span class="pre">drm_vram_mm</span></code></a>.bdev to access the TTM BO device.</p>
-<dl class="function">
-<dt>
-struct <a class="reference internal" href="#c.drm_vram_mm" title="drm_vram_mm">drm_vram_mm</a> * <code class="descname">drm_vram_mm_of_bdev</code><span class="sig-paren">(</span>struct ttm_bo_device *<em>&nbsp;bdev</em><span class="sig-paren">)</span></dt>
 <dd><p>Returns the container of type <code class="xref c c-type docutils literal notranslate"><span class="pre">struct</span> <span class="pre">ttm_bo_device</span></code> for field bdev.</p>
 </dd></dl>
 
@@ -2126,9 +1999,9 @@ int <code class="descname">drm_gem_vram_plane_helper_prepare_fb</code><span clas
 <dd>the plane’s new state</dd>
 </dl>
 <p><strong>Description</strong></p>
-<p>During plane updates, this function pins the GEM VRAM
-objects of the plane’s new framebuffer to VRAM. Call
-<a class="reference internal" href="#c.drm_gem_vram_plane_helper_cleanup_fb" title="drm_gem_vram_plane_helper_cleanup_fb"><code class="xref c c-func docutils literal notranslate"><span class="pre">drm_gem_vram_plane_helper_cleanup_fb()</span></code></a> to unpin them.</p>
+<p>During plane updates, this function sets the plane’s fence and
+pins the GEM VRAM objects of the plane’s new framebuffer to VRAM.
+Call <a class="reference internal" href="#c.drm_gem_vram_plane_helper_cleanup_fb" title="drm_gem_vram_plane_helper_cleanup_fb"><code class="xref c c-func docutils literal notranslate"><span class="pre">drm_gem_vram_plane_helper_cleanup_fb()</span></code></a> to unpin them.</p>
 <p><strong>Return</strong></p>
 <blockquote>
 <div>0 on success, or
@@ -2196,7 +2069,7 @@ objects of the plane’s old framebuffer from VRAM. Complements
 <a class="reference internal" href="#c.drm_gem_vram_simple_display_pipe_prepare_fb" title="drm_gem_vram_simple_display_pipe_prepare_fb"><code class="xref c c-func docutils literal notranslate"><span class="pre">drm_gem_vram_simple_display_pipe_prepare_fb()</span></code></a>.</p>
 <dl class="function">
 <dt id="c.drm_vram_mm_debugfs_init">
-int <code class="descname">drm_vram_mm_debugfs_init</code><span class="sig-paren">(</span>struct <a class="reference internal" href="drm-internals.html#c.drm_minor" title="drm_minor">drm_minor</a> *<em>&nbsp;minor</em><span class="sig-paren">)</span><a class="headerlink" href="#c.drm_vram_mm_debugfs_init" title="Permalink to this definition">¶</a></dt>
+void <code class="descname">drm_vram_mm_debugfs_init</code><span class="sig-paren">(</span>struct <a class="reference internal" href="drm-internals.html#c.drm_minor" title="drm_minor">drm_minor</a> *<em>&nbsp;minor</em><span class="sig-paren">)</span><a class="headerlink" href="#c.drm_vram_mm_debugfs_init" title="Permalink to this definition">¶</a></dt>
 <dd><p>Register VRAM MM debugfs file.</p>
 </dd></dl>
 
@@ -2205,9 +2078,6 @@ int <code class="descname">drm_vram_mm_debugfs_init</code><span class="sig-paren
 <dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">drm_minor</span> <span class="pre">*</span> <span class="pre">minor</span></code></dt>
 <dd>drm minor device.</dd>
 </dl>
-<p><strong>Return</strong></p>
-<p>0 on success, or
-a negative error code otherwise.</p>
 <dl class="function">
 <dt id="c.drm_vram_helper_alloc_mm">
 struct <a class="reference internal" href="#c.drm_vram_mm" title="drm_vram_mm">drm_vram_mm</a> * <code class="descname">drm_vram_helper_alloc_mm</code><span class="sig-paren">(</span>struct <a class="reference internal" href="drm-internals.html#c.drm_device" title="drm_device">drm_device</a> *<em>&nbsp;dev</em>, uint64_t<em>&nbsp;vram_base</em>, size_t<em>&nbsp;vram_size</em><span class="sig-paren">)</span><a class="headerlink" href="#c.drm_vram_helper_alloc_mm" title="Permalink to this definition">¶</a></dt>
@@ -2562,7 +2432,6 @@ whole requested area (given the size in number of pages as <strong>pages</strong
 <p>Note that before lookup the vma offset manager lookup lock must be acquired
 with <a class="reference internal" href="#c.drm_vma_offset_lock_lookup" title="drm_vma_offset_lock_lookup"><code class="xref c c-func docutils literal notranslate"><span class="pre">drm_vma_offset_lock_lookup()</span></code></a>. See there for an example. This can then be
 used to implement weakly referenced lookups using kref_get_unless_zero().</p>
-<p><strong>Example</strong></p>
 <div class="highlight-none notranslate"><div class="highlight"><pre><span></span>drm_vma_offset_lock_lookup(mgr);
 node = drm_vma_offset_lookup_locked(mgr);
 if (node)
@@ -2570,6 +2439,7 @@ if (node)
 drm_vma_offset_unlock_lookup(mgr);
 </pre></div>
 </div>
+<p><strong>Example</strong></p>
 <p><strong>Return</strong></p>
 <p>Returns NULL if no suitable node can be found. Otherwise, the best match
 is returned. It’s the caller’s responsibility to make sure the node doesn’t
@@ -4310,6 +4180,8 @@ Jobs from this entity can be scheduled on any scheduler
 on this list.</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">num_sched_list</span></code></dt>
 <dd>number of drm_gpu_schedulers in the sched_list.</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">priority</span></code></dt>
+<dd>priority of the entity</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">rq_lock</span></code></dt>
 <dd>lock to modify the runqueue to which this entity belongs.</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">job_queue</span></code></dt>

@@ -68,7 +68,7 @@
             
             
               <div class="version">
-                5.7.0
+                5.8.0
               </div>
             
           
@@ -341,14 +341,15 @@ systems with a broken CRAT table.</p>
 <p>Halt if HWS hang is detected. Default value, 0, disables the halt on hang.
 Setting 1 enables halt on hang.</p>
 <p><strong>hws_gws_support(bool)</strong></p>
-<p>Whether HWS support gws barriers. Default value: false (not supported)
-This will be replaced with a MEC firmware version check once firmware
-is ready</p>
+<p>Assume that HWS supports GWS barriers regardless of what firmware version
+check says. Default value: false (rely on MEC2 firmware version check).</p>
 <p><strong>queue_preemption_timeout_ms (int)</strong></p>
 <p>queue preemption timeout in ms (1 = Minimum, 9000 = default)</p>
 <p><strong>dcfeaturemask (uint)</strong></p>
 <p>Override display features enabled. See enum DC_FEATURE_MASK in drivers/gpu/drm/amd/include/amd_shared.h.
 The default is the current set of stable display features.</p>
+<p><strong>dcdebugmask (uint)</strong></p>
+<p>Override display features enabled. See enum DC_DEBUG_MASK in drivers/gpu/drm/amd/include/amd_shared.h.</p>
 <p><strong>abmlevel (uint)</strong></p>
 <p>Override the default ABM (Adaptive Backlight Management) level used for DC
 enabled hardware. Requires DMCU to be supported and loaded.
@@ -358,6 +359,10 @@ the ABM algorithm, with 1 being the least reduction and 4 being the most
 reduction.</p>
 <p>Defaults to 0, or disabled. Userspace can still override this level later
 after boot.</p>
+<p><strong>tmz (int)</strong></p>
+<p>Trusted Memory Zone (TMZ) is a method to protect data being written
+to or read from memory.</p>
+<p>The default value: 0 (off).  TODO: change to auto till it is completed.</p>
 </div>
 <div class="section" id="core-driver-infrastructure">
 <h2>Core Driver Infrastructure<a class="headerlink" href="#core-driver-infrastructure" title="Permalink to this headline">¶</a></h2>
@@ -1376,17 +1381,6 @@ struct <code class="descname">amdgpu_prt_cb</code><a class="headerlink" href="#c
 <dd>callback</dd>
 </dl>
 <dl class="function">
-<dt id="c.amdgpu_vm_eviction_lock">
-void <code class="descname">amdgpu_vm_eviction_lock</code><span class="sig-paren">(</span>struct amdgpu_vm *<em>&nbsp;vm</em><span class="sig-paren">)</span><a class="headerlink" href="#c.amdgpu_vm_eviction_lock" title="Permalink to this definition">¶</a></dt>
-<dd><p>FS happens while holding this lock anywhere to prevent deadlocks when an MMU notifier runs in reclaim-FS context.</p>
-</dd></dl>
-
-<p><strong>Parameters</strong></p>
-<dl class="docutils">
-<dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">amdgpu_vm</span> <span class="pre">*</span> <span class="pre">vm</span></code></dt>
-<dd><em>undescribed</em></dd>
-</dl>
-<dl class="function">
 <dt id="c.amdgpu_vm_level_shift">
 unsigned <code class="descname">amdgpu_vm_level_shift</code><span class="sig-paren">(</span>struct amdgpu_device *<em>&nbsp;adev</em>, unsigned<em>&nbsp;level</em><span class="sig-paren">)</span><a class="headerlink" href="#c.amdgpu_vm_level_shift" title="Permalink to this definition">¶</a></dt>
 <dd><p>return the addr shift for each level</p>
@@ -1792,7 +1786,7 @@ bool <code class="descname">amdgpu_vm_ready</code><span class="sig-paren">(</spa
 <p>True if eviction list is empty.</p>
 <dl class="function">
 <dt id="c.amdgpu_vm_clear_bo">
-int <code class="descname">amdgpu_vm_clear_bo</code><span class="sig-paren">(</span>struct amdgpu_device *<em>&nbsp;adev</em>, struct amdgpu_vm *<em>&nbsp;vm</em>, struct amdgpu_bo *<em>&nbsp;bo</em>, bool<em>&nbsp;direct</em><span class="sig-paren">)</span><a class="headerlink" href="#c.amdgpu_vm_clear_bo" title="Permalink to this definition">¶</a></dt>
+int <code class="descname">amdgpu_vm_clear_bo</code><span class="sig-paren">(</span>struct amdgpu_device *<em>&nbsp;adev</em>, struct amdgpu_vm *<em>&nbsp;vm</em>, struct amdgpu_bo *<em>&nbsp;bo</em>, bool<em>&nbsp;immediate</em><span class="sig-paren">)</span><a class="headerlink" href="#c.amdgpu_vm_clear_bo" title="Permalink to this definition">¶</a></dt>
 <dd><p>initially clear the PDs/PTs</p>
 </dd></dl>
 
@@ -1804,8 +1798,8 @@ int <code class="descname">amdgpu_vm_clear_bo</code><span class="sig-paren">(</s
 <dd>VM to clear BO from</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">amdgpu_bo</span> <span class="pre">*</span> <span class="pre">bo</span></code></dt>
 <dd>BO to clear</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">bool</span> <span class="pre">direct</span></code></dt>
-<dd>use a direct update</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">bool</span> <span class="pre">immediate</span></code></dt>
+<dd>use an immediate update</dd>
 </dl>
 <p><strong>Description</strong></p>
 <p>Root PD needs to be reserved when calling this.</p>
@@ -1813,7 +1807,7 @@ int <code class="descname">amdgpu_vm_clear_bo</code><span class="sig-paren">(</s
 <p>0 on success, errno otherwise.</p>
 <dl class="function">
 <dt id="c.amdgpu_vm_bo_param">
-void <code class="descname">amdgpu_vm_bo_param</code><span class="sig-paren">(</span>struct amdgpu_device *<em>&nbsp;adev</em>, struct amdgpu_vm *<em>&nbsp;vm</em>, int<em>&nbsp;level</em>, bool<em>&nbsp;direct</em>, struct amdgpu_bo_param *<em>&nbsp;bp</em><span class="sig-paren">)</span><a class="headerlink" href="#c.amdgpu_vm_bo_param" title="Permalink to this definition">¶</a></dt>
+void <code class="descname">amdgpu_vm_bo_param</code><span class="sig-paren">(</span>struct amdgpu_device *<em>&nbsp;adev</em>, struct amdgpu_vm *<em>&nbsp;vm</em>, int<em>&nbsp;level</em>, bool<em>&nbsp;immediate</em>, struct amdgpu_bo_param *<em>&nbsp;bp</em><span class="sig-paren">)</span><a class="headerlink" href="#c.amdgpu_vm_bo_param" title="Permalink to this definition">¶</a></dt>
 <dd><p>fill in parameters for PD/PT allocation</p>
 </dd></dl>
 
@@ -1825,14 +1819,14 @@ void <code class="descname">amdgpu_vm_bo_param</code><span class="sig-paren">(</
 <dd>requesting vm</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">int</span> <span class="pre">level</span></code></dt>
 <dd>the page table level</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">bool</span> <span class="pre">direct</span></code></dt>
-<dd>use a direct update</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">bool</span> <span class="pre">immediate</span></code></dt>
+<dd>use a immediate update</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">amdgpu_bo_param</span> <span class="pre">*</span> <span class="pre">bp</span></code></dt>
 <dd>resulting BO allocation parameters</dd>
 </dl>
 <dl class="function">
 <dt id="c.amdgpu_vm_alloc_pts">
-int <code class="descname">amdgpu_vm_alloc_pts</code><span class="sig-paren">(</span>struct amdgpu_device *<em>&nbsp;adev</em>, struct amdgpu_vm *<em>&nbsp;vm</em>, struct amdgpu_vm_pt_cursor *<em>&nbsp;cursor</em>, bool<em>&nbsp;direct</em><span class="sig-paren">)</span><a class="headerlink" href="#c.amdgpu_vm_alloc_pts" title="Permalink to this definition">¶</a></dt>
+int <code class="descname">amdgpu_vm_alloc_pts</code><span class="sig-paren">(</span>struct amdgpu_device *<em>&nbsp;adev</em>, struct amdgpu_vm *<em>&nbsp;vm</em>, struct amdgpu_vm_pt_cursor *<em>&nbsp;cursor</em>, bool<em>&nbsp;immediate</em><span class="sig-paren">)</span><a class="headerlink" href="#c.amdgpu_vm_alloc_pts" title="Permalink to this definition">¶</a></dt>
 <dd><p>Allocate a specific page table</p>
 </dd></dl>
 
@@ -1844,8 +1838,8 @@ int <code class="descname">amdgpu_vm_alloc_pts</code><span class="sig-paren">(</
 <dd>VM to allocate page tables for</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">amdgpu_vm_pt_cursor</span> <span class="pre">*</span> <span class="pre">cursor</span></code></dt>
 <dd>Which page table to allocate</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">bool</span> <span class="pre">direct</span></code></dt>
-<dd>use a direct update</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">bool</span> <span class="pre">immediate</span></code></dt>
+<dd>use an immediate update</dd>
 </dl>
 <p><strong>Description</strong></p>
 <p>Make sure a specific page table or directory is allocated.</p>
@@ -1997,7 +1991,7 @@ void <code class="descname">amdgpu_vm_invalidate_pds</code><span class="sig-pare
 <p>Mark all PD level as invalid after an error.</p>
 <dl class="function">
 <dt id="c.amdgpu_vm_update_pdes">
-int <code class="descname">amdgpu_vm_update_pdes</code><span class="sig-paren">(</span>struct amdgpu_device *<em>&nbsp;adev</em>, struct amdgpu_vm *<em>&nbsp;vm</em>, bool<em>&nbsp;direct</em><span class="sig-paren">)</span><a class="headerlink" href="#c.amdgpu_vm_update_pdes" title="Permalink to this definition">¶</a></dt>
+int <code class="descname">amdgpu_vm_update_pdes</code><span class="sig-paren">(</span>struct amdgpu_device *<em>&nbsp;adev</em>, struct amdgpu_vm *<em>&nbsp;vm</em>, bool<em>&nbsp;immediate</em><span class="sig-paren">)</span><a class="headerlink" href="#c.amdgpu_vm_update_pdes" title="Permalink to this definition">¶</a></dt>
 <dd><p>make sure that all directories are valid</p>
 </dd></dl>
 
@@ -2007,8 +2001,8 @@ int <code class="descname">amdgpu_vm_update_pdes</code><span class="sig-paren">(
 <dd>amdgpu_device pointer</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">amdgpu_vm</span> <span class="pre">*</span> <span class="pre">vm</span></code></dt>
 <dd>requested vm</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">bool</span> <span class="pre">direct</span></code></dt>
-<dd>submit directly to the paging queue</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">bool</span> <span class="pre">immediate</span></code></dt>
+<dd>submit immediately to the paging queue</dd>
 </dl>
 <p><strong>Description</strong></p>
 <p>Makes sure all directories are up to date.</p>
@@ -2062,7 +2056,7 @@ int <code class="descname">amdgpu_vm_update_ptes</code><span class="sig-paren">(
 <p>0 for success, -EINVAL for failure.</p>
 <dl class="function">
 <dt id="c.amdgpu_vm_bo_update_mapping">
-int <code class="descname">amdgpu_vm_bo_update_mapping</code><span class="sig-paren">(</span>struct amdgpu_device *<em>&nbsp;adev</em>, struct amdgpu_vm *<em>&nbsp;vm</em>, bool<em>&nbsp;direct</em>, struct <a class="reference internal" href="../driver-api/dma-buf.html#c.dma_resv" title="dma_resv">dma_resv</a> *<em>&nbsp;resv</em>, uint64_t<em>&nbsp;start</em>, uint64_t<em>&nbsp;last</em>, uint64_t<em>&nbsp;flags</em>, uint64_t<em>&nbsp;addr</em>, dma_addr_t *<em>&nbsp;pages_addr</em>, struct <a class="reference internal" href="../driver-api/dma-buf.html#c.dma_fence" title="dma_fence">dma_fence</a> **<em>&nbsp;fence</em><span class="sig-paren">)</span><a class="headerlink" href="#c.amdgpu_vm_bo_update_mapping" title="Permalink to this definition">¶</a></dt>
+int <code class="descname">amdgpu_vm_bo_update_mapping</code><span class="sig-paren">(</span>struct amdgpu_device *<em>&nbsp;adev</em>, struct amdgpu_vm *<em>&nbsp;vm</em>, bool<em>&nbsp;immediate</em>, bool<em>&nbsp;unlocked</em>, struct <a class="reference internal" href="../driver-api/dma-buf.html#c.dma_resv" title="dma_resv">dma_resv</a> *<em>&nbsp;resv</em>, uint64_t<em>&nbsp;start</em>, uint64_t<em>&nbsp;last</em>, uint64_t<em>&nbsp;flags</em>, uint64_t<em>&nbsp;addr</em>, dma_addr_t *<em>&nbsp;pages_addr</em>, struct <a class="reference internal" href="../driver-api/dma-buf.html#c.dma_fence" title="dma_fence">dma_fence</a> **<em>&nbsp;fence</em><span class="sig-paren">)</span><a class="headerlink" href="#c.amdgpu_vm_bo_update_mapping" title="Permalink to this definition">¶</a></dt>
 <dd><p>update a mapping in the vm page table</p>
 </dd></dl>
 
@@ -2072,8 +2066,10 @@ int <code class="descname">amdgpu_vm_bo_update_mapping</code><span class="sig-pa
 <dd>amdgpu_device pointer</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">amdgpu_vm</span> <span class="pre">*</span> <span class="pre">vm</span></code></dt>
 <dd>requested vm</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">bool</span> <span class="pre">direct</span></code></dt>
-<dd>direct submission in a page fault</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">bool</span> <span class="pre">immediate</span></code></dt>
+<dd>immediate submission in a page fault</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">bool</span> <span class="pre">unlocked</span></code></dt>
+<dd>unlocked invalidation during MM callback</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">dma_resv</span> <span class="pre">*</span> <span class="pre">resv</span></code></dt>
 <dd>fences we need to sync to</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">uint64_t</span> <span class="pre">start</span></code></dt>
@@ -2273,9 +2269,9 @@ int <code class="descname">amdgpu_vm_handle_moved</code><span class="sig-paren">
 </dl>
 <p><strong>Description</strong></p>
 <p>Make sure all BOs which are moved are updated in the PTs.</p>
+<p>PTs have to be reserved!</p>
 <p><strong>Return</strong></p>
 <p>0 for success.</p>
-<p>PTs have to be reserved!</p>
 <dl class="function">
 <dt id="c.amdgpu_vm_bo_add">
 struct amdgpu_bo_va * <code class="descname">amdgpu_vm_bo_add</code><span class="sig-paren">(</span>struct amdgpu_device *<em>&nbsp;adev</em>, struct amdgpu_vm *<em>&nbsp;vm</em>, struct amdgpu_bo *<em>&nbsp;bo</em><span class="sig-paren">)</span><a class="headerlink" href="#c.amdgpu_vm_bo_add" title="Permalink to this definition">¶</a></dt>
@@ -2294,9 +2290,9 @@ struct amdgpu_bo_va * <code class="descname">amdgpu_vm_bo_add</code><span class=
 <p><strong>Description</strong></p>
 <p>Add <strong>bo</strong> into the requested vm.
 Add <strong>bo</strong> to the list of bos associated with the vm</p>
+<p>Object has to be reserved!</p>
 <p><strong>Return</strong></p>
 <p>Newly added bo_va or NULL for failure</p>
-<p>Object has to be reserved!</p>
 <dl class="function">
 <dt id="c.amdgpu_vm_bo_insert_map">
 void <code class="descname">amdgpu_vm_bo_insert_map</code><span class="sig-paren">(</span>struct amdgpu_device *<em>&nbsp;adev</em>, struct amdgpu_bo_va *<em>&nbsp;bo_va</em>, struct amdgpu_bo_va_mapping *<em>&nbsp;mapping</em><span class="sig-paren">)</span><a class="headerlink" href="#c.amdgpu_vm_bo_insert_map" title="Permalink to this definition">¶</a></dt>
@@ -2337,9 +2333,9 @@ int <code class="descname">amdgpu_vm_bo_map</code><span class="sig-paren">(</spa
 </dl>
 <p><strong>Description</strong></p>
 <p>Add a mapping of the BO at the specefied addr into the VM.</p>
+<p>Object has to be reserved and unreserved outside!</p>
 <p><strong>Return</strong></p>
 <p>0 for success, error for failure.</p>
-<p>Object has to be reserved and unreserved outside!</p>
 <dl class="function">
 <dt id="c.amdgpu_vm_bo_replace_map">
 int <code class="descname">amdgpu_vm_bo_replace_map</code><span class="sig-paren">(</span>struct amdgpu_device *<em>&nbsp;adev</em>, struct amdgpu_bo_va *<em>&nbsp;bo_va</em>, uint64_t<em>&nbsp;saddr</em>, uint64_t<em>&nbsp;offset</em>, uint64_t<em>&nbsp;size</em>, uint64_t<em>&nbsp;flags</em><span class="sig-paren">)</span><a class="headerlink" href="#c.amdgpu_vm_bo_replace_map" title="Permalink to this definition">¶</a></dt>
@@ -2364,9 +2360,9 @@ int <code class="descname">amdgpu_vm_bo_replace_map</code><span class="sig-paren
 <p><strong>Description</strong></p>
 <p>Add a mapping of the BO at the specefied addr into the VM. Replace existing
 mappings as we do so.</p>
+<p>Object has to be reserved and unreserved outside!</p>
 <p><strong>Return</strong></p>
 <p>0 for success, error for failure.</p>
-<p>Object has to be reserved and unreserved outside!</p>
 <dl class="function">
 <dt id="c.amdgpu_vm_bo_unmap">
 int <code class="descname">amdgpu_vm_bo_unmap</code><span class="sig-paren">(</span>struct amdgpu_device *<em>&nbsp;adev</em>, struct amdgpu_bo_va *<em>&nbsp;bo_va</em>, uint64_t<em>&nbsp;saddr</em><span class="sig-paren">)</span><a class="headerlink" href="#c.amdgpu_vm_bo_unmap" title="Permalink to this definition">¶</a></dt>
@@ -2384,9 +2380,9 @@ int <code class="descname">amdgpu_vm_bo_unmap</code><span class="sig-paren">(</s
 </dl>
 <p><strong>Description</strong></p>
 <p>Remove a mapping of the BO at the specefied addr from the VM.</p>
+<p>Object has to be reserved and unreserved outside!</p>
 <p><strong>Return</strong></p>
 <p>0 for success, error for failure.</p>
-<p>Object has to be reserved and unreserved outside!</p>
 <dl class="function">
 <dt id="c.amdgpu_vm_bo_clear_mappings">
 int <code class="descname">amdgpu_vm_bo_clear_mappings</code><span class="sig-paren">(</span>struct amdgpu_device *<em>&nbsp;adev</em>, struct amdgpu_vm *<em>&nbsp;vm</em>, uint64_t<em>&nbsp;saddr</em>, uint64_t<em>&nbsp;size</em><span class="sig-paren">)</span><a class="headerlink" href="#c.amdgpu_vm_bo_clear_mappings" title="Permalink to this definition">¶</a></dt>
@@ -3362,7 +3358,7 @@ at 820 mV; “m 0 350 810” will update mclk level 0 to be 350 MHz at
 810 mV.  When you have edited all of the states as needed, write
 “c” (commit) to the file to commit your changes.  If you want to reset to the
 default power levels, write “r” (reset) to the file to reset them.</p>
-<p>&lt; For Vega20 &gt;</p>
+<p>&lt; For Vega20 and newer ASICs &gt;</p>
 <p>Reading the file will display:</p>
 <ul class="simple">
 <li>minimum and maximum engine clock labeled OD_SCLK</li>
@@ -3434,12 +3430,120 @@ for each heuristic parameter.  Due to differences across asic families
 the heuristic parameters vary from family to family.</p>
 </div>
 <div class="section" id="busy-percent">
-<h4>busy_percent<a class="headerlink" href="#busy-percent" title="Permalink to this headline">¶</a></h4>
+<h4><a href="#id1"><span class="problematic" id="id2">*</span></a>_busy_percent<a class="headerlink" href="#busy-percent" title="Permalink to this headline">¶</a></h4>
 <p>The amdgpu driver provides a sysfs API for reading how busy the GPU
 is as a percentage.  The file gpu_busy_percent is used for this.
 The SMU firmware computes a percentage of load based on the
 aggregate activity level in the IP cores.</p>
+<p>The amdgpu driver provides a sysfs API for reading how busy the VRAM
+is as a percentage.  The file mem_busy_percent is used for this.
+The SMU firmware computes a percentage of load based on the
+aggregate activity level in the IP cores.</p>
 </div>
+</div>
+</div>
+<div class="section" id="gpu-product-information">
+<h2>GPU Product Information<a class="headerlink" href="#gpu-product-information" title="Permalink to this headline">¶</a></h2>
+<p>Information about the GPU can be obtained on certain cards
+via sysfs</p>
+<div class="section" id="product-name">
+<h3>product_name<a class="headerlink" href="#product-name" title="Permalink to this headline">¶</a></h3>
+<p>The amdgpu driver provides a sysfs API for reporting the product name
+for the device
+The file serial_number is used for this and returns the product name
+as returned from the FRU.
+NOTE: This is only available for certain server cards</p>
+</div>
+<div class="section" id="product-number">
+<h3>product_number<a class="headerlink" href="#product-number" title="Permalink to this headline">¶</a></h3>
+<p>The amdgpu driver provides a sysfs API for reporting the product name
+for the device
+The file serial_number is used for this and returns the product name
+as returned from the FRU.
+NOTE: This is only available for certain server cards</p>
+</div>
+<div class="section" id="serial-number">
+<h3>serial_number<a class="headerlink" href="#serial-number" title="Permalink to this headline">¶</a></h3>
+<p>The amdgpu driver provides a sysfs API for reporting the serial number
+for the device
+The file serial_number is used for this and returns the serial number
+as returned from the FRU.
+NOTE: This is only available for certain server cards</p>
+</div>
+<div class="section" id="unique-id">
+<h3>unique_id<a class="headerlink" href="#unique-id" title="Permalink to this headline">¶</a></h3>
+<p>The amdgpu driver provides a sysfs API for providing a unique ID for the GPU
+The file unique_id is used for this.
+This will provide a Unique ID that will persist from machine to machine</p>
+<p>NOTE: This will only work for GFX9 and newer. This file will be absent
+on unsupported ASICs (GFX8 and older)</p>
+</div>
+</div>
+<div class="section" id="gpu-memory-usage-information">
+<h2>GPU Memory Usage Information<a class="headerlink" href="#gpu-memory-usage-information" title="Permalink to this headline">¶</a></h2>
+<p>Various memory accounting can be accessed via sysfs</p>
+<div class="section" id="mem-info-vram-total">
+<h3>mem_info_vram_total<a class="headerlink" href="#mem-info-vram-total" title="Permalink to this headline">¶</a></h3>
+<p>The amdgpu driver provides a sysfs API for reporting current total VRAM
+available on the device
+The file mem_info_vram_total is used for this and returns the total
+amount of VRAM in bytes</p>
+</div>
+<div class="section" id="mem-info-vram-used">
+<h3>mem_info_vram_used<a class="headerlink" href="#mem-info-vram-used" title="Permalink to this headline">¶</a></h3>
+<p>The amdgpu driver provides a sysfs API for reporting current total VRAM
+available on the device
+The file mem_info_vram_used is used for this and returns the total
+amount of currently used VRAM in bytes</p>
+</div>
+<div class="section" id="mem-info-vis-vram-total">
+<h3>mem_info_vis_vram_total<a class="headerlink" href="#mem-info-vis-vram-total" title="Permalink to this headline">¶</a></h3>
+<p>The amdgpu driver provides a sysfs API for reporting current total
+visible VRAM available on the device
+The file mem_info_vis_vram_total is used for this and returns the total
+amount of visible VRAM in bytes</p>
+</div>
+<div class="section" id="mem-info-vis-vram-used">
+<h3>mem_info_vis_vram_used<a class="headerlink" href="#mem-info-vis-vram-used" title="Permalink to this headline">¶</a></h3>
+<p>The amdgpu driver provides a sysfs API for reporting current total of
+used visible VRAM
+The file mem_info_vis_vram_used is used for this and returns the total
+amount of currently used visible VRAM in bytes</p>
+</div>
+<div class="section" id="mem-info-gtt-total">
+<h3>mem_info_gtt_total<a class="headerlink" href="#mem-info-gtt-total" title="Permalink to this headline">¶</a></h3>
+<p>The amdgpu driver provides a sysfs API for reporting current total size of
+the GTT.
+The file mem_info_gtt_total is used for this, and returns the total size of
+the GTT block, in bytes</p>
+</div>
+<div class="section" id="mem-info-gtt-used">
+<h3>mem_info_gtt_used<a class="headerlink" href="#mem-info-gtt-used" title="Permalink to this headline">¶</a></h3>
+<p>The amdgpu driver provides a sysfs API for reporting current total amount of
+used GTT.
+The file mem_info_gtt_used is used for this, and returns the current used
+size of the GTT block, in bytes</p>
+</div>
+</div>
+<div class="section" id="pcie-accounting-information">
+<h2>PCIe Accounting Information<a class="headerlink" href="#pcie-accounting-information" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="pcie-bw">
+<h3>pcie_bw<a class="headerlink" href="#pcie-bw" title="Permalink to this headline">¶</a></h3>
+<p>The amdgpu driver provides a sysfs API for estimating how much data
+has been received and sent by the GPU in the last second through PCIe.
+The file pcie_bw is used for this.
+The Perf counters count the number of received and sent messages and return
+those values, as well as the maximum payload size of a PCIe packet (mps).
+Note that it is not possible to easily and quickly obtain the size of each
+packet transmitted, so we output the max payload size (mps) to allow for
+quick estimation of the PCIe bandwidth usage</p>
+</div>
+<div class="section" id="pcie-replay-count">
+<h3>pcie_replay_count<a class="headerlink" href="#pcie-replay-count" title="Permalink to this headline">¶</a></h3>
+<p>The amdgpu driver provides a sysfs API for reporting the total number
+of PCIe replays (NAKs)
+The file pcie_replay_count is used for this and returns the total
+number of replays as a sum of the NAKs generated and NAKs received</p>
 </div>
 </div>
 </div>

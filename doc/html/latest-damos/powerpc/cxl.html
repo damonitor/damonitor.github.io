@@ -68,7 +68,7 @@
             
             
               <div class="version">
-                5.7.0
+                5.8.0
               </div>
             
           
@@ -280,8 +280,8 @@ and userspace can share control and status information.</div></blockquote>
 </div>
 <div class="section" id="user-api">
 <h2>User API<a class="headerlink" href="#user-api" title="Permalink to this headline">¶</a></h2>
-<ol class="arabic">
-<li><p class="first">AFU character devices</p>
+<div class="section" id="afu-character-devices">
+<h3>1. AFU character devices<a class="headerlink" href="#afu-character-devices" title="Permalink to this headline">¶</a></h3>
 <blockquote>
 <div><p>For AFUs operating in AFU directed mode, two character device
 files will be created. /dev/cxl/afu0.0m will correspond to a
@@ -298,14 +298,11 @@ that the AFU provides (like master contexts in AFU directed).</p>
 master devices.</p>
 <p>A userspace library libcxl is available here:</p>
 <blockquote>
-<div><p><a class="reference external" href="https://github.com/ibm-capi/libcxl">https://github.com/ibm-capi/libcxl</a></p>
-</div></blockquote>
+<div><a class="reference external" href="https://github.com/ibm-capi/libcxl">https://github.com/ibm-capi/libcxl</a></div></blockquote>
 <p>This provides a C interface to this kernel API.</p>
 </div></blockquote>
-</li>
-</ol>
 <div class="section" id="open">
-<h3>open<a class="headerlink" href="#open" title="Permalink to this headline">¶</a></h3>
+<h4>open<a class="headerlink" href="#open" title="Permalink to this headline">¶</a></h4>
 <blockquote>
 <div><p>Opens the device and allocates a file descriptor to be used with
 the rest of the API.</p>
@@ -328,7 +325,7 @@ then only 2037/4 = 509 contexts can be allocated.</dd>
 </div></blockquote>
 </div>
 <div class="section" id="ioctl">
-<h3>ioctl<a class="headerlink" href="#ioctl" title="Permalink to this headline">¶</a></h3>
+<h4>ioctl<a class="headerlink" href="#ioctl" title="Permalink to this headline">¶</a></h4>
 <blockquote>
 <div><dl class="docutils">
 <dt>CXL_IOCTL_START_WORK:</dt>
@@ -389,7 +386,7 @@ The value is returned from the kernel as a __u32.</dd>
 </div></blockquote>
 </div>
 <div class="section" id="mmap">
-<h3>mmap<a class="headerlink" href="#mmap" title="Permalink to this headline">¶</a></h3>
+<h4>mmap<a class="headerlink" href="#mmap" title="Permalink to this headline">¶</a></h4>
 <blockquote>
 <div><p>An AFU may have an MMIO space to facilitate communication with the
 AFU. If it does, the MMIO space can be accessed via mmap. The size
@@ -409,7 +406,7 @@ queues the WED may describe.</p>
 </div></blockquote>
 </div>
 <div class="section" id="read">
-<h3>read<a class="headerlink" href="#read" title="Permalink to this headline">¶</a></h3>
+<h4>read<a class="headerlink" href="#read" title="Permalink to this headline">¶</a></h4>
 <blockquote>
 <div><p>Reads events from the AFU. Blocks if no events are pending
 (unless O_NONBLOCK is supplied). Returns -EIO in the case of an
@@ -526,26 +523,24 @@ this struct. Currently all fields are Mandatory.</dd>
 </dl>
 </div></blockquote>
 </div></blockquote>
-<ol class="arabic" start="2">
-<li><p class="first">Card character device (powerVM guest only)</p>
+</div>
+</div>
+<div class="section" id="card-character-device-powervm-guest-only">
+<h3>2. Card character device (powerVM guest only)<a class="headerlink" href="#card-character-device-powervm-guest-only" title="Permalink to this headline">¶</a></h3>
 <blockquote>
-<div><p>In a powerVM guest, an extra character device is created for the
+<div>In a powerVM guest, an extra character device is created for the
 card. The device is only used to write (flash) a new image on the
 FPGA accelerator. Once the image is written and verified, the
 device tree is updated and the card is reset to reload the updated
-image.</p>
-</div></blockquote>
-</li>
-</ol>
-</div>
+image.</div></blockquote>
 <div class="section" id="id1">
-<h3>open<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h3>
+<h4>open<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h4>
 <blockquote>
 <div>Opens the device and allocates a file descriptor to be used with
 the rest of the API. The device can only be opened once.</div></blockquote>
 </div>
 <div class="section" id="id2">
-<h3>ioctl<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h3>
+<h4>ioctl<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h4>
 <dl class="docutils">
 <dt>CXL_IOCTL_DOWNLOAD_IMAGE / CXL_IOCTL_VALIDATE_IMAGE:</dt>
 <dd><p class="first">Starts and controls flashing a new FPGA image. Partial
@@ -580,6 +575,7 @@ card.</dd>
 </dl>
 </dd>
 </dl>
+</div>
 </div>
 </div>
 <div class="section" id="sysfs-class">

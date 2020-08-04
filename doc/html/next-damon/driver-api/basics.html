@@ -68,7 +68,7 @@
             
             
               <div class="version">
-                5.7.0
+                5.8.0
               </div>
             
           
@@ -723,9 +723,9 @@ int <code class="descname">wake_up_process</code><span class="sig-paren">(</span
 <p><strong>Description</strong></p>
 <p>Attempt to wake up the nominated process and move it to the set of runnable
 processes.</p>
+<p>This function executes a full memory barrier before accessing the task state.</p>
 <p><strong>Return</strong></p>
 <p>1 if the process was woken up, 0 if it was already running.</p>
-<p>This function executes a full memory barrier before accessing the task state.</p>
 <dl class="function">
 <dt id="c.preempt_notifier_register">
 void <code class="descname">preempt_notifier_register</code><span class="sig-paren">(</span>struct preempt_notifier *<em>&nbsp;notifier</em><span class="sig-paren">)</span><a class="headerlink" href="#c.preempt_notifier_register" title="Permalink to this definition">¶</a></dt>
@@ -788,6 +788,7 @@ int <code class="descname">sched_setscheduler</code><span class="sig-paren">(</s
 </dl>
 <p><strong>Return</strong></p>
 <p>0 on success. An error code otherwise.</p>
+<p><strong>Description</strong></p>
 <p>NOTE that the task may be already dead.</p>
 <dl class="function">
 <dt id="c.sched_setscheduler_nocheck">
@@ -1526,6 +1527,10 @@ interrupt contexts unless the timer is an irqsafe one. The caller must
 not hold locks which would prevent completion of the timer’s
 handler. The timer’s handler must not call <a class="reference internal" href="#c.add_timer_on" title="add_timer_on"><code class="xref c c-func docutils literal notranslate"><span class="pre">add_timer_on()</span></code></a>. Upon exit the
 timer is not queued and the handler is not running on any CPU.</p>
+<p>Now <a class="reference internal" href="#c.del_timer_sync" title="del_timer_sync"><code class="xref c c-func docutils literal notranslate"><span class="pre">del_timer_sync()</span></code></a> will never return and never release somelock.
+The interrupt on the other CPU is waiting to grab somelock but
+it has interrupted the softirq that CPU0 is waiting to finish.</p>
+<p>The function returns whether it has deactivated a pending timer or not.</p>
 <p><strong>Note</strong></p>
 <dl class="docutils">
 <dt>For !irqsafe timers, you must not hold locks that are held in</dt>
@@ -1545,10 +1550,6 @@ while (base-&gt;running_timer == mytimer);
 </div>
 </dd>
 </dl>
-<p>Now <a class="reference internal" href="#c.del_timer_sync" title="del_timer_sync"><code class="xref c c-func docutils literal notranslate"><span class="pre">del_timer_sync()</span></code></a> will never return and never release somelock.
-The interrupt on the other CPU is waiting to grab somelock but
-it has interrupted the softirq that CPU0 is waiting to finish.</p>
-<p>The function returns whether it has deactivated a pending timer or not.</p>
 <dl class="function">
 <dt id="c.schedule_timeout">
 signed long <code class="descname">schedule_timeout</code><span class="sig-paren">(</span>signed long<em>&nbsp;timeout</em><span class="sig-paren">)</span><a class="headerlink" href="#c.schedule_timeout" title="Permalink to this definition">¶</a></dt>
@@ -1640,9 +1641,6 @@ int <code class="descname">waitqueue_active</code><span class="sig-paren">(</spa
 </dl>
 <p><strong>Description</strong></p>
 <p>returns true if the wait list is not empty</p>
-<p><strong>NOTE</strong></p>
-<p>this function is lockless and requires care, incorrect usage _will_
-lead to sporadic and non-obvious failure.</p>
 <p>Use either while holding wait_queue_head::lock or when used for wakeups
 with an extra smp_mb() like:</p>
 <div class="highlight-none notranslate"><div class="highlight"><pre><span></span>CPU0 - waker                    CPU1 - waiter
@@ -1662,6 +1660,9 @@ if (waitqueue_active(wq_head))         if (@cond)
 observe an empty wait list while the waiter might not observe <strong>cond</strong>.</p>
 <p>Also note that this ‘optimization’ trades a spin_lock() for an smp_mb(),
 which (when the lock is uncontended) are of roughly equal cost.</p>
+<p><strong>NOTE</strong></p>
+<p>this function is lockless and requires care, incorrect usage _will_
+lead to sporadic and non-obvious failure.</p>
 <dl class="function">
 <dt id="c.wq_has_single_sleeper">
 bool <code class="descname">wq_has_single_sleeper</code><span class="sig-paren">(</span>struct wait_queue_head *<em>&nbsp;wq_head</em><span class="sig-paren">)</span><a class="headerlink" href="#c.wq_has_single_sleeper" title="Permalink to this definition">¶</a></dt>
@@ -2123,13 +2124,13 @@ signal and 0 if <strong>condition</strong> evaluated to true.</p>
 The <strong>condition</strong> is checked each time the waitqueue <strong>wq_head</strong> is woken up.</p>
 <p>wake_up() has to be called after changing any variable that could
 change the result of the wait condition.</p>
+<p>Only kill signals interrupt this process.</p>
 <p><strong>Return</strong></p>
 <p>0 if the <strong>condition</strong> evaluated to <code class="docutils literal notranslate"><span class="pre">false</span></code> after the <strong>timeout</strong> elapsed,
 1 if the <strong>condition</strong> evaluated to <code class="docutils literal notranslate"><span class="pre">true</span></code> after the <strong>timeout</strong> elapsed,
 the remaining jiffies (at least 1) if the <strong>condition</strong> evaluated
 to <code class="docutils literal notranslate"><span class="pre">true</span></code> before the <strong>timeout</strong> elapsed, or -<code class="docutils literal notranslate"><span class="pre">ERESTARTSYS</span></code> if it was
 interrupted by a kill signal.</p>
-<p>Only kill signals interrupt this process.</p>
 <dl class="function">
 <dt id="c.wait_event_lock_irq_cmd">
 <code class="descname">wait_event_lock_irq_cmd</code><span class="sig-paren">(</span><em>wq_head</em>, <em>condition</em>, <em>lock</em>, <em>cmd</em><span class="sig-paren">)</span><a class="headerlink" href="#c.wait_event_lock_irq_cmd" title="Permalink to this definition">¶</a></dt>
@@ -2655,6 +2656,7 @@ bool <code class="descname">hrtimer_is_queued</code><span class="sig-paren">(</s
 </dl>
 <p><strong>Return</strong></p>
 <p>True if the timer is queued, false otherwise</p>
+<p><strong>Description</strong></p>
 <p>The function can be used lockless, but it gives only a current snapshot.</p>
 <dl class="function">
 <dt id="c.hrtimer_forward_now">
@@ -2784,15 +2786,14 @@ void <code class="descname">hrtimer_init</code><span class="sig-paren">(</span>s
 <dt><code class="docutils literal notranslate"><span class="pre">clockid_t</span> <span class="pre">clock_id</span></code></dt>
 <dd>the clock to be used</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">enum</span> <span class="pre">hrtimer_mode</span> <span class="pre">mode</span></code></dt>
-<dd>The modes which are relevant for intitialization:
+<dd><p class="first">The modes which are relevant for intitialization:
 HRTIMER_MODE_ABS, HRTIMER_MODE_REL, HRTIMER_MODE_ABS_SOFT,
-HRTIMER_MODE_REL_SOFT</dd>
-</dl>
-<p><strong>Description</strong></p>
-<blockquote>
-<div>The PINNED variants of the above can be handed in,
+HRTIMER_MODE_REL_SOFT</p>
+<p class="last">The PINNED variants of the above can be handed in,
 but the PINNED bit is ignored as pinning happens
-when the hrtimer is started</div></blockquote>
+when the hrtimer is started</p>
+</dd>
+</dl>
 <dl class="function">
 <dt id="c.hrtimer_sleeper_start_expires">
 void <code class="descname">hrtimer_sleeper_start_expires</code><span class="sig-paren">(</span>struct <a class="reference internal" href="#c.hrtimer_sleeper" title="hrtimer_sleeper">hrtimer_sleeper</a> *<em>&nbsp;sl</em>, enum hrtimer_mode<em>&nbsp;mode</em><span class="sig-paren">)</span><a class="headerlink" href="#c.hrtimer_sleeper_start_expires" title="Permalink to this definition">¶</a></dt>
@@ -3235,11 +3236,11 @@ bool <code class="descname">mod_delayed_work_on</code><span class="sig-paren">(<
 modify <strong>dwork</strong>’s timer so that it expires after <strong>delay</strong>.  If <strong>delay</strong> is
 zero, <strong>work</strong> is guaranteed to be scheduled immediately regardless of its
 current state.</p>
+<p>This function is safe to call from any context including IRQ handler.
+See try_to_grab_pending() for details.</p>
 <p><strong>Return</strong></p>
 <p><code class="docutils literal notranslate"><span class="pre">false</span></code> if <strong>dwork</strong> was idle and queued, <code class="docutils literal notranslate"><span class="pre">true</span></code> if <strong>dwork</strong> was
 pending and its timer was modified.</p>
-<p>This function is safe to call from any context including IRQ handler.
-See try_to_grab_pending() for details.</p>
 <dl class="function">
 <dt id="c.queue_rcu_work">
 bool <code class="descname">queue_rcu_work</code><span class="sig-paren">(</span>struct workqueue_struct *<em>&nbsp;wq</em>, struct rcu_work *<em>&nbsp;rwork</em><span class="sig-paren">)</span><a class="headerlink" href="#c.queue_rcu_work" title="Permalink to this definition">¶</a></dt>
@@ -3374,6 +3375,7 @@ bool <code class="descname">cancel_delayed_work</code><span class="sig-paren">(<
 </dl>
 <p><strong>Description</strong></p>
 <p>Kill off a pending delayed_work.</p>
+<p>This function is safe to call from any context including IRQ handler.</p>
 <p><strong>Return</strong></p>
 <p><code class="docutils literal notranslate"><span class="pre">true</span></code> if <strong>dwork</strong> was pending and canceled; <code class="docutils literal notranslate"><span class="pre">false</span></code> if it wasn’t
 pending.</p>
@@ -3381,7 +3383,6 @@ pending.</p>
 <p>The work callback function may still be running on return, unless
 it returns <code class="docutils literal notranslate"><span class="pre">true</span></code> and the work doesn’t re-arm itself.  Explicitly flush or
 use <a class="reference internal" href="#c.cancel_delayed_work_sync" title="cancel_delayed_work_sync"><code class="xref c c-func docutils literal notranslate"><span class="pre">cancel_delayed_work_sync()</span></code></a> to wait on it.</p>
-<p>This function is safe to call from any context including IRQ handler.</p>
 <dl class="function">
 <dt id="c.cancel_delayed_work_sync">
 bool <code class="descname">cancel_delayed_work_sync</code><span class="sig-paren">(</span>struct delayed_work *<em>&nbsp;dwork</em><span class="sig-paren">)</span><a class="headerlink" href="#c.cancel_delayed_work_sync" title="Permalink to this definition">¶</a></dt>
@@ -3855,6 +3856,24 @@ long <code class="descname">sys_rt_sigpending</code><span class="sig-paren">(</s
 <dd>size of sigset_t type or larger</dd>
 </dl>
 <dl class="function">
+<dt id="c.copy_siginfo_to_external32">
+void <code class="descname">copy_siginfo_to_external32</code><span class="sig-paren">(</span>struct compat_siginfo *<em>&nbsp;to</em>, const struct kernel_siginfo *<em>&nbsp;from</em><span class="sig-paren">)</span><a class="headerlink" href="#c.copy_siginfo_to_external32" title="Permalink to this definition">¶</a></dt>
+<dd><p>copy a kernel siginfo into a compat user siginfo</p>
+</dd></dl>
+
+<p><strong>Parameters</strong></p>
+<dl class="docutils">
+<dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">compat_siginfo</span> <span class="pre">*</span> <span class="pre">to</span></code></dt>
+<dd>compat siginfo destination</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">const</span> <span class="pre">struct</span> <span class="pre">kernel_siginfo</span> <span class="pre">*</span> <span class="pre">from</span></code></dt>
+<dd>kernel siginfo source</dd>
+</dl>
+<p><strong>Note</strong></p>
+<p>This function does not work properly for the SIGCHLD on x32, but
+fortunately it doesn’t have to.  The only valid callers for this function are
+copy_siginfo_to_user32, which is overriden for x32 and the coredump code.
+The latter does not care because SIGCHLD will never cause a coredump.</p>
+<dl class="function">
 <dt id="c.do_sigtimedwait">
 int <code class="descname">do_sigtimedwait</code><span class="sig-paren">(</span>const sigset_t *<em>&nbsp;which</em>, kernel_siginfo_t *<em>&nbsp;info</em>, const struct timespec64 *<em>&nbsp;ts</em><span class="sig-paren">)</span><a class="headerlink" href="#c.do_sigtimedwait" title="Permalink to this definition">¶</a></dt>
 <dd><p>wait for queued signals specified in <strong>which</strong></p>
@@ -3940,13 +3959,12 @@ long <code class="descname">sys_tgkill</code><span class="sig-paren">(</span>pid
 <dt><code class="docutils literal notranslate"><span class="pre">pid_t</span> <span class="pre">pid</span></code></dt>
 <dd>the PID of the thread</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">int</span> <span class="pre">sig</span></code></dt>
-<dd>signal to be sent</dd>
-</dl>
-<p><strong>Description</strong></p>
-<blockquote>
-<div>This syscall also checks the <strong>tgid</strong> and returns -ESRCH even if the PID
+<dd><p class="first">signal to be sent</p>
+<p class="last">This syscall also checks the <strong>tgid</strong> and returns -ESRCH even if the PID
 exists but it’s not belonging to the target process anymore. This
-method solves the problem of threads exiting and PIDs getting reused.</div></blockquote>
+method solves the problem of threads exiting and PIDs getting reused.</p>
+</dd>
+</dl>
 <dl class="function">
 <dt id="c.sys_tkill">
 long <code class="descname">sys_tkill</code><span class="sig-paren">(</span>pid_t<em>&nbsp;pid</em>, int<em>&nbsp;sig</em><span class="sig-paren">)</span><a class="headerlink" href="#c.sys_tkill" title="Permalink to this definition">¶</a></dt>
@@ -3958,11 +3976,10 @@ long <code class="descname">sys_tkill</code><span class="sig-paren">(</span>pid_
 <dt><code class="docutils literal notranslate"><span class="pre">pid_t</span> <span class="pre">pid</span></code></dt>
 <dd>the PID of the task</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">int</span> <span class="pre">sig</span></code></dt>
-<dd>signal to be sent</dd>
+<dd><p class="first">signal to be sent</p>
+<p class="last">Send a signal to only one task, even if it’s a CLONE_THREAD task.</p>
+</dd>
 </dl>
-<p><strong>Description</strong></p>
-<blockquote>
-<div>Send a signal to only one task, even if it’s a CLONE_THREAD task.</div></blockquote>
 <dl class="function">
 <dt id="c.sys_rt_sigqueueinfo">
 long <code class="descname">sys_rt_sigqueueinfo</code><span class="sig-paren">(</span>pid_t<em>&nbsp;pid</em>, int<em>&nbsp;sig</em>, siginfo_t __user *<em>&nbsp;uinfo</em><span class="sig-paren">)</span><a class="headerlink" href="#c.sys_rt_sigqueueinfo" title="Permalink to this definition">¶</a></dt>
@@ -4127,6 +4144,34 @@ bool <code class="descname">kthread_freezable_should_stop</code><span class="sig
 refrigerator if necessary.  This function is safe from <a class="reference internal" href="#c.kthread_stop" title="kthread_stop"><code class="xref c c-func docutils literal notranslate"><span class="pre">kthread_stop()</span></code></a> /
 freezer deadlock and freezable kthreads should use this function instead
 of calling try_to_freeze() directly.</p>
+<dl class="function">
+<dt id="c.kthread_func">
+void * <code class="descname">kthread_func</code><span class="sig-paren">(</span>struct task_struct *<em>&nbsp;task</em><span class="sig-paren">)</span><a class="headerlink" href="#c.kthread_func" title="Permalink to this definition">¶</a></dt>
+<dd><p>return the function specified on kthread creation</p>
+</dd></dl>
+
+<p><strong>Parameters</strong></p>
+<dl class="docutils">
+<dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">task_struct</span> <span class="pre">*</span> <span class="pre">task</span></code></dt>
+<dd>kthread task in question</dd>
+</dl>
+<p><strong>Description</strong></p>
+<p>Returns NULL if the task is not a kthread.</p>
+<dl class="function">
+<dt id="c.kthread_data">
+void * <code class="descname">kthread_data</code><span class="sig-paren">(</span>struct task_struct *<em>&nbsp;task</em><span class="sig-paren">)</span><a class="headerlink" href="#c.kthread_data" title="Permalink to this definition">¶</a></dt>
+<dd><p>return data value specified on kthread creation</p>
+</dd></dl>
+
+<p><strong>Parameters</strong></p>
+<dl class="docutils">
+<dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">task_struct</span> <span class="pre">*</span> <span class="pre">task</span></code></dt>
+<dd>kthread task in question</dd>
+</dl>
+<p><strong>Description</strong></p>
+<p>Return the data value specified when kthread <strong>task</strong> was created.
+The caller is responsible for ensuring the validity of <strong>task</strong> when
+calling this function.</p>
 <dl class="function">
 <dt id="c.kthread_create_on_node">
 struct task_struct * <code class="descname">kthread_create_on_node</code><span class="sig-paren">(</span>int (<em>*threadfn</em>)(void *data), void *<em>&nbsp;data</em>, int<em>&nbsp;node</em>, const char<em>&nbsp;namefmt</em>, ...<span class="sig-paren">)</span><a class="headerlink" href="#c.kthread_create_on_node" title="Permalink to this definition">¶</a></dt>
@@ -4382,9 +4427,6 @@ bool <code class="descname">kthread_mod_delayed_work</code><span class="sig-pare
 <p>If <strong>dwork</strong> is idle, equivalent to <a class="reference internal" href="#c.kthread_queue_delayed_work" title="kthread_queue_delayed_work"><code class="xref c c-func docutils literal notranslate"><span class="pre">kthread_queue_delayed_work()</span></code></a>. Otherwise,
 modify <strong>dwork</strong>’s timer so that it expires after <strong>delay</strong>. If <strong>delay</strong> is zero,
 <strong>work</strong> is guaranteed to be queued immediately.</p>
-<p><strong>Return</strong></p>
-<p><code class="docutils literal notranslate"><span class="pre">true</span></code> if <strong>dwork</strong> was pending and its timer was modified,
-<code class="docutils literal notranslate"><span class="pre">false</span></code> otherwise.</p>
 <p>A special case is when the work is being canceled in parallel.
 It might be caused either by the real <a class="reference internal" href="#c.kthread_cancel_delayed_work_sync" title="kthread_cancel_delayed_work_sync"><code class="xref c c-func docutils literal notranslate"><span class="pre">kthread_cancel_delayed_work_sync()</span></code></a>
 or yet another <a class="reference internal" href="#c.kthread_mod_delayed_work" title="kthread_mod_delayed_work"><code class="xref c c-func docutils literal notranslate"><span class="pre">kthread_mod_delayed_work()</span></code></a> call. We let the other command
@@ -4393,6 +4435,9 @@ operations a reasonable way.</p>
 <p>This function is safe to call from any context including IRQ handler.
 See __kthread_cancel_work() and <a class="reference internal" href="#c.kthread_delayed_work_timer_fn" title="kthread_delayed_work_timer_fn"><code class="xref c c-func docutils literal notranslate"><span class="pre">kthread_delayed_work_timer_fn()</span></code></a>
 for details.</p>
+<p><strong>Return</strong></p>
+<p><code class="docutils literal notranslate"><span class="pre">true</span></code> if <strong>dwork</strong> was pending and its timer was modified,
+<code class="docutils literal notranslate"><span class="pre">false</span></code> otherwise.</p>
 <dl class="function">
 <dt id="c.kthread_cancel_work_sync">
 bool <code class="descname">kthread_cancel_work_sync</code><span class="sig-paren">(</span>struct kthread_work *<em>&nbsp;work</em><span class="sig-paren">)</span><a class="headerlink" href="#c.kthread_cancel_work_sync" title="Permalink to this definition">¶</a></dt>
@@ -4458,6 +4503,28 @@ void <code class="descname">kthread_destroy_worker</code><span class="sig-paren"
 <p>Flush and destroy <strong>worker</strong>.  The simple flush is enough because the kthread
 worker API is used only in trivial scenarios.  There are no multi-step state
 machines needed.</p>
+<dl class="function">
+<dt id="c.kthread_use_mm">
+void <code class="descname">kthread_use_mm</code><span class="sig-paren">(</span>struct mm_struct *<em>&nbsp;mm</em><span class="sig-paren">)</span><a class="headerlink" href="#c.kthread_use_mm" title="Permalink to this definition">¶</a></dt>
+<dd><p>make the calling kthread operate on an address space</p>
+</dd></dl>
+
+<p><strong>Parameters</strong></p>
+<dl class="docutils">
+<dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">mm_struct</span> <span class="pre">*</span> <span class="pre">mm</span></code></dt>
+<dd>address space to operate on</dd>
+</dl>
+<dl class="function">
+<dt id="c.kthread_unuse_mm">
+void <code class="descname">kthread_unuse_mm</code><span class="sig-paren">(</span>struct mm_struct *<em>&nbsp;mm</em><span class="sig-paren">)</span><a class="headerlink" href="#c.kthread_unuse_mm" title="Permalink to this definition">¶</a></dt>
+<dd><p>reverse the effect of <a class="reference internal" href="#c.kthread_use_mm" title="kthread_use_mm"><code class="xref c c-func docutils literal notranslate"><span class="pre">kthread_use_mm()</span></code></a></p>
+</dd></dl>
+
+<p><strong>Parameters</strong></p>
+<dl class="docutils">
+<dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">mm_struct</span> <span class="pre">*</span> <span class="pre">mm</span></code></dt>
+<dd>address space to operate on</dd>
+</dl>
 <dl class="function">
 <dt id="c.kthread_associate_blkcg">
 void <code class="descname">kthread_associate_blkcg</code><span class="sig-paren">(</span>struct cgroup_subsys_state *<em>&nbsp;css</em><span class="sig-paren">)</span><a class="headerlink" href="#c.kthread_associate_blkcg" title="Permalink to this definition">¶</a></dt>
@@ -5510,6 +5577,7 @@ Used as a replacement for the simple_strtoull. Return code must be checked.</p>
 <dt>__trace_printk is an internal function for trace_printk() and</dt>
 <dd>the <strong>ip</strong> is passed in via the <a class="reference internal" href="#c.trace_printk" title="trace_printk"><code class="xref c c-func docutils literal notranslate"><span class="pre">trace_printk()</span></code></a> macro.</dd>
 </dl>
+<p><strong>Description</strong></p>
 <p>This function allows a kernel developer to debug fast path sections
 that printk is not appropriate for. By scattering in various
 printk like tracing in the code, a developer can quickly see
@@ -5545,6 +5613,7 @@ let gcc optimize the rest.</p>
 <dt>__trace_bputs is an internal function for trace_puts and</dt>
 <dd>the <strong>ip</strong> is passed in via the trace_puts macro.</dd>
 </dl>
+<p><strong>Description</strong></p>
 <p>This is similar to <a class="reference internal" href="#c.trace_printk" title="trace_printk"><code class="xref c c-func docutils literal notranslate"><span class="pre">trace_printk()</span></code></a> but is made for those really fast
 paths that a developer wants the least amount of “Heisenbug” effects,
 where the processing of the print format is still too much.</p>
@@ -5957,7 +6026,7 @@ read.</p>
 <dl class="function">
 <dt id="c.kmsg_dump_rewind">
 void <code class="descname">kmsg_dump_rewind</code><span class="sig-paren">(</span>struct kmsg_dumper *<em>&nbsp;dumper</em><span class="sig-paren">)</span><a class="headerlink" href="#c.kmsg_dump_rewind" title="Permalink to this definition">¶</a></dt>
-<dd><p>reset the interator</p>
+<dd><p>reset the iterator</p>
 </dd></dl>
 
 <p><strong>Parameters</strong></p>
@@ -5978,15 +6047,13 @@ void <code class="descname">panic</code><span class="sig-paren">(</span>const ch
 <p><strong>Parameters</strong></p>
 <dl class="docutils">
 <dt><code class="docutils literal notranslate"><span class="pre">const</span> <span class="pre">char</span> <span class="pre">*</span> <span class="pre">fmt</span></code></dt>
-<dd>The text string to print</dd>
+<dd><p class="first">The text string to print</p>
+<p>Display a message, then perform cleanups.</p>
+<p class="last">This function never returns.</p>
+</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">...</span></code></dt>
 <dd>variable arguments</dd>
 </dl>
-<p><strong>Description</strong></p>
-<blockquote>
-<div><p>Display a message, then perform cleanups.</p>
-<p>This function never returns.</p>
-</div></blockquote>
 <dl class="function">
 <dt id="c.add_taint">
 void <code class="descname">add_taint</code><span class="sig-paren">(</span>unsigned<em>&nbsp;flag</em>, enum lockdep_ok<em>&nbsp;lockdep_ok</em><span class="sig-paren">)</span><a class="headerlink" href="#c.add_taint" title="Permalink to this definition">¶</a></dt>
@@ -6004,7 +6071,7 @@ void <code class="descname">add_taint</code><span class="sig-paren">(</span>unsi
 some notewortht-but-not-corrupting cases, it can be set to true.</p>
 <dl class="function">
 <dt id="c.rcu_is_watching">
-bool notrace <code class="descname">rcu_is_watching</code><span class="sig-paren">(</span>void<span class="sig-paren">)</span><a class="headerlink" href="#c.rcu_is_watching" title="Permalink to this definition">¶</a></dt>
+bool <code class="descname">rcu_is_watching</code><span class="sig-paren">(</span>void<span class="sig-paren">)</span><a class="headerlink" href="#c.rcu_is_watching" title="Permalink to this definition">¶</a></dt>
 <dd><p>see if RCU thinks that the current CPU is not idle</p>
 </dd></dl>
 
@@ -6275,83 +6342,6 @@ defined or that are dynamically allocated on the heap.  Also as with
 <a class="reference internal" href="#c.init_rcu_head_on_stack" title="init_rcu_head_on_stack"><code class="xref c c-func docutils literal notranslate"><span class="pre">init_rcu_head_on_stack()</span></code></a>, this function has no effect for
 !CONFIG_DEBUG_OBJECTS_RCU_HEAD kernel builds.</p>
 <dl class="function">
-<dt id="c.call_rcu_tasks">
-void <code class="descname">call_rcu_tasks</code><span class="sig-paren">(</span>struct rcu_head *<em>&nbsp;rhp</em>, rcu_callback_t<em>&nbsp;func</em><span class="sig-paren">)</span><a class="headerlink" href="#c.call_rcu_tasks" title="Permalink to this definition">¶</a></dt>
-<dd><p>Queue an RCU for invocation task-based grace period</p>
-</dd></dl>
-
-<p><strong>Parameters</strong></p>
-<dl class="docutils">
-<dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">rcu_head</span> <span class="pre">*</span> <span class="pre">rhp</span></code></dt>
-<dd>structure to be used for queueing the RCU updates.</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">rcu_callback_t</span> <span class="pre">func</span></code></dt>
-<dd>actual callback function to be invoked after the grace period</dd>
-</dl>
-<p><strong>Description</strong></p>
-<p>The callback function will be invoked some time after a full grace
-period elapses, in other words after all currently executing RCU
-read-side critical sections have completed. <a class="reference internal" href="#c.call_rcu_tasks" title="call_rcu_tasks"><code class="xref c c-func docutils literal notranslate"><span class="pre">call_rcu_tasks()</span></code></a> assumes
-that the read-side critical sections end at a voluntary context
-switch (not a preemption!), cond_resched_rcu_qs(), entry into idle,
-or transition to usermode execution.  As such, there are no read-side
-primitives analogous to <a class="reference internal" href="../core-api/kernel-api.html#c.rcu_read_lock" title="rcu_read_lock"><code class="xref c c-func docutils literal notranslate"><span class="pre">rcu_read_lock()</span></code></a> and <a class="reference internal" href="../core-api/kernel-api.html#c.rcu_read_unlock" title="rcu_read_unlock"><code class="xref c c-func docutils literal notranslate"><span class="pre">rcu_read_unlock()</span></code></a> because
-this primitive is intended to determine that all tasks have passed
-through a safe state, not so much for data-strcuture synchronization.</p>
-<p>See the description of <a class="reference internal" href="#c.call_rcu" title="call_rcu"><code class="xref c c-func docutils literal notranslate"><span class="pre">call_rcu()</span></code></a> for more detailed information on
-memory ordering guarantees.</p>
-<dl class="function">
-<dt id="c.synchronize_rcu_tasks">
-void <code class="descname">synchronize_rcu_tasks</code><span class="sig-paren">(</span>void<span class="sig-paren">)</span><a class="headerlink" href="#c.synchronize_rcu_tasks" title="Permalink to this definition">¶</a></dt>
-<dd><p>wait until an rcu-tasks grace period has elapsed.</p>
-</dd></dl>
-
-<p><strong>Parameters</strong></p>
-<dl class="docutils">
-<dt><code class="docutils literal notranslate"><span class="pre">void</span></code></dt>
-<dd>no arguments</dd>
-</dl>
-<p><strong>Description</strong></p>
-<p>Control will return to the caller some time after a full rcu-tasks
-grace period has elapsed, in other words after all currently
-executing rcu-tasks read-side critical sections have elapsed.  These
-read-side critical sections are delimited by calls to schedule(),
-<a class="reference internal" href="../core-api/kernel-api.html#c.cond_resched_tasks_rcu_qs" title="cond_resched_tasks_rcu_qs"><code class="xref c c-func docutils literal notranslate"><span class="pre">cond_resched_tasks_rcu_qs()</span></code></a>, idle execution, userspace execution, calls
-to <a class="reference internal" href="#c.synchronize_rcu_tasks" title="synchronize_rcu_tasks"><code class="xref c c-func docutils literal notranslate"><span class="pre">synchronize_rcu_tasks()</span></code></a>, and (in theory, anyway) cond_resched().</p>
-<p>This is a very specialized primitive, intended only for a few uses in
-tracing and other situations requiring manipulation of function
-preambles and profiling hooks.  The <a class="reference internal" href="#c.synchronize_rcu_tasks" title="synchronize_rcu_tasks"><code class="xref c c-func docutils literal notranslate"><span class="pre">synchronize_rcu_tasks()</span></code></a> function
-is not (yet) intended for heavy use from multiple CPUs.</p>
-<p>Note that this guarantee implies further memory-ordering guarantees.
-On systems with more than one CPU, when <a class="reference internal" href="#c.synchronize_rcu_tasks" title="synchronize_rcu_tasks"><code class="xref c c-func docutils literal notranslate"><span class="pre">synchronize_rcu_tasks()</span></code></a> returns,
-each CPU is guaranteed to have executed a full memory barrier since the
-end of its last RCU-tasks read-side critical section whose beginning
-preceded the call to <a class="reference internal" href="#c.synchronize_rcu_tasks" title="synchronize_rcu_tasks"><code class="xref c c-func docutils literal notranslate"><span class="pre">synchronize_rcu_tasks()</span></code></a>.  In addition, each CPU
-having an RCU-tasks read-side critical section that extends beyond
-the return from <a class="reference internal" href="#c.synchronize_rcu_tasks" title="synchronize_rcu_tasks"><code class="xref c c-func docutils literal notranslate"><span class="pre">synchronize_rcu_tasks()</span></code></a> is guaranteed to have executed
-a full memory barrier after the beginning of <a class="reference internal" href="#c.synchronize_rcu_tasks" title="synchronize_rcu_tasks"><code class="xref c c-func docutils literal notranslate"><span class="pre">synchronize_rcu_tasks()</span></code></a>
-and before the beginning of that RCU-tasks read-side critical section.
-Note that these guarantees include CPUs that are offline, idle, or
-executing in user mode, as well as CPUs that are executing in the kernel.</p>
-<p>Furthermore, if CPU A invoked <a class="reference internal" href="#c.synchronize_rcu_tasks" title="synchronize_rcu_tasks"><code class="xref c c-func docutils literal notranslate"><span class="pre">synchronize_rcu_tasks()</span></code></a>, which returned
-to its caller on CPU B, then both CPU A and CPU B are guaranteed
-to have executed a full memory barrier during the execution of
-<a class="reference internal" href="#c.synchronize_rcu_tasks" title="synchronize_rcu_tasks"><code class="xref c c-func docutils literal notranslate"><span class="pre">synchronize_rcu_tasks()</span></code></a> – even if CPU A and CPU B are the same CPU
-(but again only if the system has more than one CPU).</p>
-<dl class="function">
-<dt id="c.rcu_barrier_tasks">
-void <code class="descname">rcu_barrier_tasks</code><span class="sig-paren">(</span>void<span class="sig-paren">)</span><a class="headerlink" href="#c.rcu_barrier_tasks" title="Permalink to this definition">¶</a></dt>
-<dd><p>Wait for in-flight <a class="reference internal" href="#c.call_rcu_tasks" title="call_rcu_tasks"><code class="xref c c-func docutils literal notranslate"><span class="pre">call_rcu_tasks()</span></code></a> callbacks.</p>
-</dd></dl>
-
-<p><strong>Parameters</strong></p>
-<dl class="docutils">
-<dt><code class="docutils literal notranslate"><span class="pre">void</span></code></dt>
-<dd>no arguments</dd>
-</dl>
-<p><strong>Description</strong></p>
-<p>Although the current implementation is guaranteed to wait, it is not
-obligated to, for example, if there are no pending callbacks.</p>
-<dl class="function">
 <dt id="c.array_size">
 size_t <code class="descname">array_size</code><span class="sig-paren">(</span>size_t<em>&nbsp;a</em>, size_t<em>&nbsp;b</em><span class="sig-paren">)</span><a class="headerlink" href="#c.array_size" title="Permalink to this definition">¶</a></dt>
 <dd><p>Calculate size of 2-dimensional array.</p>
@@ -6391,7 +6381,7 @@ size_t <code class="descname">array3_size</code><span class="sig-paren">(</span>
 overflow.</p>
 <dl class="function">
 <dt id="c.struct_size">
-<code class="descname">struct_size</code><span class="sig-paren">(</span><em>p</em>, <em>member</em>, <em>n</em><span class="sig-paren">)</span><a class="headerlink" href="#c.struct_size" title="Permalink to this definition">¶</a></dt>
+<code class="descname">struct_size</code><span class="sig-paren">(</span><em>p</em>, <em>member</em>, <em>count</em><span class="sig-paren">)</span><a class="headerlink" href="#c.struct_size" title="Permalink to this definition">¶</a></dt>
 <dd><p>Calculate size of structure with trailing array.</p>
 </dd></dl>
 
@@ -6401,12 +6391,32 @@ overflow.</p>
 <dd>Pointer to the structure.</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">member</span></code></dt>
 <dd>Name of the array member.</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">n</span></code></dt>
+<dt><code class="docutils literal notranslate"><span class="pre">count</span></code></dt>
 <dd>Number of elements in the array.</dd>
 </dl>
 <p><strong>Description</strong></p>
 <p>Calculates size of memory needed for structure <strong>p</strong> followed by an
-array of <strong>n</strong> <strong>member</strong> elements.</p>
+array of <strong>count</strong> number of <strong>member</strong> elements.</p>
+<p><strong>Return</strong></p>
+<p>number of bytes needed or SIZE_MAX on overflow.</p>
+<dl class="function">
+<dt id="c.flex_array_size">
+<code class="descname">flex_array_size</code><span class="sig-paren">(</span><em>p</em>, <em>member</em>, <em>count</em><span class="sig-paren">)</span><a class="headerlink" href="#c.flex_array_size" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculate size of a flexible array member within an enclosing structure.</p>
+</dd></dl>
+
+<p><strong>Parameters</strong></p>
+<dl class="docutils">
+<dt><code class="docutils literal notranslate"><span class="pre">p</span></code></dt>
+<dd>Pointer to the structure.</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">member</span></code></dt>
+<dd>Name of the flexible array member.</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">count</span></code></dt>
+<dd>Number of elements in the array.</dd>
+</dl>
+<p><strong>Description</strong></p>
+<p>Calculates size of a flexible array of <strong>count</strong> number of <strong>member</strong>
+elements, at the end of structure <strong>p</strong>.</p>
 <p><strong>Return</strong></p>
 <p>number of bytes needed or SIZE_MAX on overflow.</p>
 </div>

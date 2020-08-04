@@ -68,7 +68,7 @@
             
             
               <div class="version">
-                5.7.0
+                5.8.0
               </div>
             
           
@@ -293,6 +293,27 @@ named “run_kselftest.sh” to run the tests.</p>
 note some tests will require root privileges:</p>
 <div class="highlight-none notranslate"><div class="highlight"><pre><span></span>$ cd kselftest
 $ ./run_kselftest.sh
+</pre></div>
+</div>
+</div>
+<div class="section" id="packaging-selftests">
+<h2>Packaging selftests<a class="headerlink" href="#packaging-selftests" title="Permalink to this headline">¶</a></h2>
+<p>In some cases packaging is desired, such as when tests need to run on a
+different system. To package selftests, run:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>$ make -C tools/testing/selftests gen_tar
+</pre></div>
+</div>
+<p>This generates a tarball in the <cite>INSTALL_PATH/kselftest-packages</cite> directory. By
+default, <cite>.gz</cite> format is used. The tar format can be overridden by specifying
+a <cite>FORMAT</cite> make variable. Any value recognized by <a class="reference external" href="https://www.gnu.org/software/tar/manual/html_node/gzip.html#auto_002dcompress">tar’s auto-compress</a> option
+is supported, such as:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>$ make -C tools/testing/selftests gen_tar FORMAT=.xz
+</pre></div>
+</div>
+<p><cite>make gen_tar</cite> invokes <cite>make install</cite> so you can use it to package a subset of
+tests by using variables specified in <a class="reference internal" href="#running-a-subset-of-selftests">Running a subset of selftests</a>
+section:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>$ make -C tools/testing/selftests gen_tar TARGETS=&quot;bpf&quot; FORMAT=.xz
 </pre></div>
 </div>
 </div>
@@ -603,6 +624,50 @@ of any dependent fixture tests.</p>
 datatype defined with <a class="reference internal" href="#c.FIXTURE_DATA" title="FIXTURE_DATA"><code class="xref c c-func docutils literal notranslate"><span class="pre">FIXTURE_DATA()</span></code></a> will be exposed as <em>self</em> for the
 implementation to clean up.</p>
 <p>A bare “return;” statement may be used to return early.</p>
+<dl class="function">
+<dt id="c.FIXTURE_VARIANT">
+<code class="descname">FIXTURE_VARIANT</code><span class="sig-paren">(</span><em>fixture_name</em><span class="sig-paren">)</span><a class="headerlink" href="#c.FIXTURE_VARIANT" title="Permalink to this definition">¶</a></dt>
+<dd><p>Optionally called once per fixture to declare fixture variant</p>
+</dd></dl>
+
+<p><strong>Parameters</strong></p>
+<dl class="docutils">
+<dt><code class="docutils literal notranslate"><span class="pre">fixture_name</span></code></dt>
+<dd>fixture name</dd>
+</dl>
+<p><strong>Description</strong></p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="n">FIXTURE_VARIANT</span><span class="p">(</span><span class="n">datatype</span> <span class="n">name</span><span class="p">)</span> <span class="p">{</span>
+  <span class="n">type</span> <span class="n">property1</span><span class="p">;</span>
+  <span class="p">...</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+<p>Defines type of constant parameters provided to <a class="reference internal" href="#c.FIXTURE_SETUP" title="FIXTURE_SETUP"><code class="xref c c-func docutils literal notranslate"><span class="pre">FIXTURE_SETUP()</span></code></a> and <a class="reference internal" href="#c.TEST_F" title="TEST_F"><code class="xref c c-func docutils literal notranslate"><span class="pre">TEST_F()</span></code></a>
+as <em>variant</em>. Variants allow the same tests to be run with different
+arguments.</p>
+<dl class="function">
+<dt id="c.FIXTURE_VARIANT_ADD">
+<code class="descname">FIXTURE_VARIANT_ADD</code><span class="sig-paren">(</span><em>fixture_name</em>, <em>variant_name</em><span class="sig-paren">)</span><a class="headerlink" href="#c.FIXTURE_VARIANT_ADD" title="Permalink to this definition">¶</a></dt>
+<dd><p>Called once per fixture variant to setup and register the data</p>
+</dd></dl>
+
+<p><strong>Parameters</strong></p>
+<dl class="docutils">
+<dt><code class="docutils literal notranslate"><span class="pre">fixture_name</span></code></dt>
+<dd>fixture name</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">variant_name</span></code></dt>
+<dd>name of the parameter set</dd>
+</dl>
+<p><strong>Description</strong></p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="n">FIXTURE_ADD</span><span class="p">(</span><span class="n">datatype</span> <span class="n">name</span><span class="p">)</span> <span class="p">{</span>
+  <span class="p">.</span><span class="n">property1</span> <span class="o">=</span> <span class="n">val1</span><span class="p">;</span>
+  <span class="p">...</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+<p>Defines a variant of the test fixture, provided to <a class="reference internal" href="#c.FIXTURE_SETUP" title="FIXTURE_SETUP"><code class="xref c c-func docutils literal notranslate"><span class="pre">FIXTURE_SETUP()</span></code></a> and
+<a class="reference internal" href="#c.TEST_F" title="TEST_F"><code class="xref c c-func docutils literal notranslate"><span class="pre">TEST_F()</span></code></a> as <em>variant</em>. Tests of each fixture will be run once for each
+variant.</p>
 <dl class="function">
 <dt id="c.TEST_F">
 <code class="descname">TEST_F</code><span class="sig-paren">(</span><em>fixture_name</em>, <em>test_name</em><span class="sig-paren">)</span><a class="headerlink" href="#c.TEST_F" title="Permalink to this definition">¶</a></dt>

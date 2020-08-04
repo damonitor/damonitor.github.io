@@ -1,0 +1,373 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Kernel driver bt1-pvt &mdash; The Linux Kernel  documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript">
+          var DOCUMENTATION_OPTIONS = {
+              URL_ROOT:'../',
+              VERSION:'',
+              LANGUAGE:'None',
+              COLLAPSE_INDEX:false,
+              FILE_SUFFIX:'.html',
+              HAS_SOURCE:  true,
+              SOURCELINK_SUFFIX: '.txt'
+          };
+      </script>
+        <script type="text/javascript" src="../_static/jquery.js"></script>
+        <script type="text/javascript" src="../_static/underscore.js"></script>
+        <script type="text/javascript" src="../_static/doctools.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/theme_overrides.css" type="text/css" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> The Linux Kernel
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                5.8.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../admin-guide/mm/damon/index.html">Monitoring Data Accesses</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../vm/damon/index.html">DAMON: Data Access MONitor</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">The Linux Kernel</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+      <li>Kernel driver bt1-pvt</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/hwmon/bt1-pvt.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="kernel-driver-bt1-pvt">
+<h1>Kernel driver bt1-pvt<a class="headerlink" href="#kernel-driver-bt1-pvt" title="Permalink to this headline">¶</a></h1>
+<p>Supported chips:</p>
+<blockquote>
+<div><ul>
+<li><p class="first">Baikal-T1 PVT sensor (in SoC)</p>
+<p>Prefix: ‘bt1-pvt’</p>
+<p>Addresses scanned: -</p>
+<p>Datasheet: Provided by BAIKAL ELECTRONICS upon request and under NDA</p>
+</li>
+</ul>
+</div></blockquote>
+<dl class="docutils">
+<dt>Authors:</dt>
+<dd>Maxim Kaurkin &lt;<a class="reference external" href="mailto:maxim&#46;kaurkin&#37;&#52;&#48;baikalelectronics&#46;ru">maxim<span>&#46;</span>kaurkin<span>&#64;</span>baikalelectronics<span>&#46;</span>ru</a>&gt;
+Serge Semin &lt;<a class="reference external" href="mailto:Sergey&#46;Semin&#37;&#52;&#48;baikalelectronics&#46;ru">Sergey<span>&#46;</span>Semin<span>&#64;</span>baikalelectronics<span>&#46;</span>ru</a>&gt;</dd>
+</dl>
+<div class="section" id="description">
+<h2>Description<a class="headerlink" href="#description" title="Permalink to this headline">¶</a></h2>
+<p>This driver implements support for the hardware monitoring capabilities of the
+embedded into Baikal-T1 process, voltage and temperature sensors. PVT IP-core
+consists of one temperature and four voltage sensors, which can be used to
+monitor the chip internal environment like heating, supply voltage and
+transistors performance. The driver can optionally provide the hwmon alarms
+for each sensor the PVT controller supports. The alarms functionality is made
+compile-time configurable due to the hardware interface implementation
+peculiarity, which is connected with an ability to convert data from only one
+sensor at a time. Additional limitation is that the controller performs the
+thresholds checking synchronously with the data conversion procedure. Due to
+these in order to have the hwmon alarms automatically detected the driver code
+must switch from one sensor to another, read converted data and manually check
+the threshold status bits. Depending on the measurements timeout settings
+(update_interval sysfs node value) this design may cause additional burden on
+the system performance. So in case if alarms are unnecessary in your system
+design it’s recommended to have them disabled to prevent the PVT IRQs being
+periodically raised to get the data cache/alarms status up to date. By default
+in alarm-less configuration the data conversion is performed by the driver
+on demand when read operation is requested via corresponding _input-file.</p>
+</div>
+<div class="section" id="temperature-monitoring">
+<h2>Temperature Monitoring<a class="headerlink" href="#temperature-monitoring" title="Permalink to this headline">¶</a></h2>
+<p>Temperature is measured with 10-bit resolution and reported in millidegree
+Celsius. The driver performs all the scaling by itself therefore reports true
+temperatures that don’t need any user-space adjustments. While the data
+translation formulae isn’t linear, which gives us non-linear discreteness,
+it’s close to one, but giving a bit better accuracy for higher temperatures.
+The temperature input is mapped as follows (the last column indicates the input
+ranges):</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>temp1: CPU embedded diode       -48.38C - +147.438C
+</pre></div>
+</div>
+<p>In case if the alarms kernel config is enabled in the driver the temperature input
+has associated min and max limits which trigger an alarm when crossed.</p>
+</div>
+<div class="section" id="voltage-monitoring">
+<h2>Voltage Monitoring<a class="headerlink" href="#voltage-monitoring" title="Permalink to this headline">¶</a></h2>
+<p>The voltage inputs are also sampled with 10-bit resolution and reported in
+millivolts. But in this case the data translation formulae is linear, which
+provides a constant measurements discreteness. The data scaling is also
+performed by the driver, so returning true millivolts. The voltage inputs are
+mapped as follows (the last column indicates the input ranges):</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>in0: VDD                (processor core)                0.62V - 1.168V
+in1: Low-Vt             (low voltage threshold)         0.62V - 1.168V
+in2: High-Vt            (high voltage threshold)        0.62V - 1.168V
+in3: Standard-Vt        (standard voltage threshold)    0.62V - 1.168V
+</pre></div>
+</div>
+<p>In case if the alarms config is enabled in the driver the voltage inputs
+have associated min and max limits which trigger an alarm when crossed.</p>
+</div>
+<div class="section" id="sysfs-attributes">
+<h2>Sysfs Attributes<a class="headerlink" href="#sysfs-attributes" title="Permalink to this headline">¶</a></h2>
+<p>Following is a list of all sysfs attributes that the driver provides, their
+permissions and a short description:</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="40%" />
+<col width="9%" />
+<col width="51%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Name</th>
+<th class="head">Perm</th>
+<th class="head">Description</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>update_interval</td>
+<td>RW</td>
+<td>Measurements update interval per
+sensor.</td>
+</tr>
+<tr class="row-odd"><td>temp1_type</td>
+<td>RO</td>
+<td>Sensor type (always 1 as CPU embedded
+diode).</td>
+</tr>
+<tr class="row-even"><td>temp1_label</td>
+<td>RO</td>
+<td>CPU Core Temperature sensor.</td>
+</tr>
+<tr class="row-odd"><td>temp1_input</td>
+<td>RO</td>
+<td>Measured temperature in millidegree
+Celsius.</td>
+</tr>
+<tr class="row-even"><td>temp1_min</td>
+<td>RW</td>
+<td>Low limit for temp input.</td>
+</tr>
+<tr class="row-odd"><td>temp1_max</td>
+<td>RW</td>
+<td>High limit for temp input.</td>
+</tr>
+<tr class="row-even"><td>temp1_min_alarm</td>
+<td>RO</td>
+<td>Temperature input alarm. Returns 1 if
+temperature input went below min limit,
+0 otherwise.</td>
+</tr>
+<tr class="row-odd"><td>temp1_max_alarm</td>
+<td>RO</td>
+<td>Temperature input alarm. Returns 1 if
+temperature input went above max limit,
+0 otherwise.</td>
+</tr>
+<tr class="row-even"><td>temp1_offset</td>
+<td>RW</td>
+<td>Temperature offset in millidegree
+Celsius which is added to the
+temperature reading by the chip. It can
+be used to manually adjust the
+temperature measurements within 7.130
+degrees Celsius.</td>
+</tr>
+<tr class="row-odd"><td>in[0-3]_label</td>
+<td>RO</td>
+<td>CPU Voltage sensor (either core or
+low/high/standard thresholds).</td>
+</tr>
+<tr class="row-even"><td>in[0-3]_input</td>
+<td>RO</td>
+<td>Measured voltage in millivolts.</td>
+</tr>
+<tr class="row-odd"><td>in[0-3]_min</td>
+<td>RW</td>
+<td>Low limit for voltage input.</td>
+</tr>
+<tr class="row-even"><td>in[0-3]_max</td>
+<td>RW</td>
+<td>High limit for voltage input.</td>
+</tr>
+<tr class="row-odd"><td>in[0-3]_min_alarm</td>
+<td>RO</td>
+<td>Voltage input alarm. Returns 1 if
+voltage input went below min limit,
+0 otherwise.</td>
+</tr>
+<tr class="row-even"><td>in[0-3]_max_alarm</td>
+<td>RO</td>
+<td>Voltage input alarm. Returns 1 if
+voltage input went above max limit,
+0 otherwise.</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright The kernel development community
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

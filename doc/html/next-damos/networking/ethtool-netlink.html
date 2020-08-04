@@ -68,7 +68,7 @@
             
             
               <div class="version">
-                5.7.0
+                5.8.0
               </div>
             
           
@@ -493,6 +493,12 @@ according to message purpose:</p>
 <tr class="row-odd"><td><code class="docutils literal notranslate"><span class="pre">ETHTOOL_MSG_TSINFO_GET</span></code></td>
 <td>get timestamping info</td>
 </tr>
+<tr class="row-even"><td><code class="docutils literal notranslate"><span class="pre">ETHTOOL_MSG_CABLE_TEST_ACT</span></code></td>
+<td>action start cable test</td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal notranslate"><span class="pre">ETHTOOL_MSG_CABLE_TEST_TDR_ACT</span></code></td>
+<td>action start raw TDR cable test</td>
+</tr>
 </tbody>
 </table>
 </div></blockquote>
@@ -581,6 +587,12 @@ according to message purpose:</p>
 </tr>
 <tr class="row-even"><td><code class="docutils literal notranslate"><span class="pre">ETHTOOL_MSG_TSINFO_GET_REPLY</span></code></td>
 <td>timestamping info</td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal notranslate"><span class="pre">ETHTOOL_MSG_CABLE_TEST_NTF</span></code></td>
+<td>Cable test results</td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal notranslate"><span class="pre">ETHTOOL_MSG_CABLE_TEST_TDR_NTF</span></code></td>
+<td>Cable test TDR results</td>
 </tr>
 </tbody>
 </table>
@@ -862,9 +874,9 @@ information (autonegotiation status, link speed and duplex) as provided by
 <blockquote>
 <div><table border="1" class="docutils">
 <colgroup>
-<col width="53%" />
-<col width="9%" />
-<col width="38%" />
+<col width="57%" />
+<col width="8%" />
+<col width="35%" />
 </colgroup>
 <tbody valign="top">
 <tr class="row-odd"><td><code class="docutils literal notranslate"><span class="pre">ETHTOOL_A_LINKMODES_HEADER</span></code></td>
@@ -891,6 +903,14 @@ information (autonegotiation status, link speed and duplex) as provided by
 <td>u8</td>
 <td>duplex mode</td>
 </tr>
+<tr class="row-odd"><td><code class="docutils literal notranslate"><span class="pre">ETHTOOL_A_LINKMODES_MASTER_SLAVE_CFG</span></code></td>
+<td>u8</td>
+<td>Master/slave port mode</td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal notranslate"><span class="pre">ETHTOOL_A_LINKMODES_MASTER_SLAVE_STATE</span></code></td>
+<td>u8</td>
+<td>Master/slave port state</td>
+</tr>
 </tbody>
 </table>
 </div></blockquote>
@@ -906,9 +926,9 @@ devices supporting the request).</p>
 <blockquote>
 <div><table border="1" class="docutils">
 <colgroup>
-<col width="53%" />
-<col width="9%" />
-<col width="38%" />
+<col width="57%" />
+<col width="8%" />
+<col width="35%" />
 </colgroup>
 <tbody valign="top">
 <tr class="row-odd"><td><code class="docutils literal notranslate"><span class="pre">ETHTOOL_A_LINKMODES_HEADER</span></code></td>
@@ -934,6 +954,10 @@ devices supporting the request).</p>
 <tr class="row-even"><td><code class="docutils literal notranslate"><span class="pre">ETHTOOL_A_LINKMODES_DUPLEX</span></code></td>
 <td>u8</td>
 <td>duplex mode</td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal notranslate"><span class="pre">ETHTOOL_A_LINKMODES_MASTER_SLAVE_CFG</span></code></td>
+<td>u8</td>
+<td>Master/slave port mode</td>
 </tr>
 </tbody>
 </table>
@@ -973,9 +997,9 @@ attributes.</p>
 <blockquote>
 <div><table border="1" class="docutils">
 <colgroup>
-<col width="53%" />
+<col width="51%" />
 <col width="9%" />
-<col width="38%" />
+<col width="40%" />
 </colgroup>
 <tbody valign="top">
 <tr class="row-odd"><td><code class="docutils literal notranslate"><span class="pre">ETHTOOL_A_LINKSTATE_HEADER</span></code></td>
@@ -985,6 +1009,14 @@ attributes.</p>
 <tr class="row-even"><td><code class="docutils literal notranslate"><span class="pre">ETHTOOL_A_LINKSTATE_LINK</span></code></td>
 <td>bool</td>
 <td>link state (up/down)</td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal notranslate"><span class="pre">ETHTOOL_A_LINKSTATE_SQI</span></code></td>
+<td>u32</td>
+<td>Current Signal Quality Index</td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal notranslate"><span class="pre">ETHTOOL_A_LINKSTATE_SQI_MAX</span></code></td>
+<td>u32</td>
+<td>Max support SQI value</td>
 </tr>
 </tbody>
 </table>
@@ -2042,11 +2074,303 @@ callback supports.</p>
 is no special value for this case). The bitset attributes are omitted if they
 would be empty (no bit set).</p>
 </div>
+<div class="section" id="cable-test">
+<h2>CABLE_TEST<a class="headerlink" href="#cable-test" title="Permalink to this headline">¶</a></h2>
+<p>Start a cable test.</p>
+<p>Request contents:</p>
+<blockquote>
+<div><table border="1" class="docutils">
+<colgroup>
+<col width="53%" />
+<col width="9%" />
+<col width="38%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><code class="docutils literal notranslate"><span class="pre">ETHTOOL_A_CABLE_TEST_HEADER</span></code></td>
+<td>nested</td>
+<td>request header</td>
+</tr>
+</tbody>
+</table>
+</div></blockquote>
+<p>Notification contents:</p>
+<p>An Ethernet cable typically contains 1, 2 or 4 pairs. The length of
+the pair can only be measured when there is a fault in the pair and
+hence a reflection. Information about the fault may not be available,
+depending on the specific hardware. Hence the contents of the notify
+message are mostly optional. The attributes can be repeated an
+arbitrary number of times, in an arbitrary order, for an arbitrary
+number of pairs.</p>
+<p>The example shows the notification sent when the test is completed for
+a T2 cable, i.e. two pairs. One pair is OK and hence has no length
+information. The second pair has a fault and does have length
+information.</p>
+<blockquote>
+<div><table border="1" class="docutils">
+<colgroup>
+<col width="1%" />
+<col width="1%" />
+<col width="57%" />
+<col width="11%" />
+<col width="29%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td colspan="3"><code class="docutils literal notranslate"><span class="pre">ETHTOOL_A_CABLE_TEST_HEADER</span></code></td>
+<td>nested</td>
+<td>reply header</td>
+</tr>
+<tr class="row-even"><td colspan="3"><code class="docutils literal notranslate"><span class="pre">ETHTOOL_A_CABLE_TEST_STATUS</span></code></td>
+<td>u8</td>
+<td>completed</td>
+</tr>
+<tr class="row-odd"><td colspan="3"><code class="docutils literal notranslate"><span class="pre">ETHTOOL_A_CABLE_TEST_NTF_NEST</span></code></td>
+<td>nested</td>
+<td>all the results</td>
+</tr>
+<tr class="row-even"><td>&#160;</td>
+<td colspan="2"><code class="docutils literal notranslate"><span class="pre">ETHTOOL_A_CABLE_NEST_RESULT</span></code></td>
+<td>nested</td>
+<td>cable test result</td>
+</tr>
+<tr class="row-odd"><td>&#160;</td>
+<td>&#160;</td>
+<td><code class="docutils literal notranslate"><span class="pre">ETHTOOL_A_CABLE_RESULTS_PAIR</span></code></td>
+<td>u8</td>
+<td>pair number</td>
+</tr>
+<tr class="row-even"><td>&#160;</td>
+<td>&#160;</td>
+<td><code class="docutils literal notranslate"><span class="pre">ETHTOOL_A_CABLE_RESULTS_CODE</span></code></td>
+<td>u8</td>
+<td>result code</td>
+</tr>
+<tr class="row-odd"><td>&#160;</td>
+<td colspan="2"><code class="docutils literal notranslate"><span class="pre">ETHTOOL_A_CABLE_NEST_RESULT</span></code></td>
+<td>nested</td>
+<td>cable test results</td>
+</tr>
+<tr class="row-even"><td>&#160;</td>
+<td>&#160;</td>
+<td><code class="docutils literal notranslate"><span class="pre">ETHTOOL_A_CABLE_RESULTS_PAIR</span></code></td>
+<td>u8</td>
+<td>pair number</td>
+</tr>
+<tr class="row-odd"><td>&#160;</td>
+<td>&#160;</td>
+<td><code class="docutils literal notranslate"><span class="pre">ETHTOOL_A_CABLE_RESULTS_CODE</span></code></td>
+<td>u8</td>
+<td>result code</td>
+</tr>
+<tr class="row-even"><td>&#160;</td>
+<td colspan="2"><code class="docutils literal notranslate"><span class="pre">ETHTOOL_A_CABLE_NEST_FAULT_LENGTH</span></code></td>
+<td>nested</td>
+<td>cable length</td>
+</tr>
+<tr class="row-odd"><td>&#160;</td>
+<td>&#160;</td>
+<td><code class="docutils literal notranslate"><span class="pre">ETHTOOL_A_CABLE_FAULT_LENGTH_PAIR</span></code></td>
+<td>u8</td>
+<td>pair number</td>
+</tr>
+<tr class="row-even"><td>&#160;</td>
+<td>&#160;</td>
+<td><code class="docutils literal notranslate"><span class="pre">ETHTOOL_A_CABLE_FAULT_LENGTH_CM</span></code></td>
+<td>u32</td>
+<td>length in cm</td>
+</tr>
+</tbody>
+</table>
+</div></blockquote>
+</div>
+<div class="section" id="cable-test-tdr">
+<h2>CABLE_TEST TDR<a class="headerlink" href="#cable-test-tdr" title="Permalink to this headline">¶</a></h2>
+<p>Start a cable test and report raw TDR data</p>
+<p>Request contents:</p>
+<blockquote>
+<div><table border="1" class="docutils">
+<colgroup>
+<col width="1%" />
+<col width="1%" />
+<col width="55%" />
+<col width="11%" />
+<col width="32%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td colspan="3"><code class="docutils literal notranslate"><span class="pre">ETHTOOL_A_CABLE_TEST_TDR_HEADER</span></code></td>
+<td>nested</td>
+<td>reply header</td>
+</tr>
+<tr class="row-even"><td colspan="3"><code class="docutils literal notranslate"><span class="pre">ETHTOOL_A_CABLE_TEST_TDR_CFG</span></code></td>
+<td>nested</td>
+<td>test configuration</td>
+</tr>
+<tr class="row-odd"><td>&#160;</td>
+<td colspan="2"><code class="docutils literal notranslate"><span class="pre">ETHTOOL_A_CABLE_STEP_FIRST_DISTANCE</span></code></td>
+<td>u32</td>
+<td>first data distance</td>
+</tr>
+<tr class="row-even"><td>&#160;</td>
+<td colspan="2"><code class="docutils literal notranslate"><span class="pre">ETHTOOL_A_CABLE_STEP_LAST_DISTANCE</span></code></td>
+<td>u32</td>
+<td>last data distance</td>
+</tr>
+<tr class="row-odd"><td>&#160;</td>
+<td colspan="2"><code class="docutils literal notranslate"><span class="pre">ETHTOOL_A_CABLE_STEP_STEP_DISTANCE</span></code></td>
+<td>u32</td>
+<td>distance of each step</td>
+</tr>
+<tr class="row-even"><td>&#160;</td>
+<td colspan="2"><code class="docutils literal notranslate"><span class="pre">ETHTOOL_A_CABLE_TEST_TDR_CFG_PAIR</span></code></td>
+<td>u8</td>
+<td>pair to test</td>
+</tr>
+</tbody>
+</table>
+</div></blockquote>
+<p>The ETHTOOL_A_CABLE_TEST_TDR_CFG is optional, as well as all members
+of the nest. All distances are expressed in centimeters. The PHY takes
+the distances as a guide, and rounds to the nearest distance it
+actually supports. If a pair is passed, only that one pair will be
+tested. Otherwise all pairs are tested.</p>
+<p>Notification contents:</p>
+<p>Raw TDR data is gathered by sending a pulse down the cable and
+recording the amplitude of the reflected pulse for a given distance.</p>
+<p>It can take a number of seconds to collect TDR data, especial if the
+full 100 meters is probed at 1 meter intervals. When the test is
+started a notification will be sent containing just
+ETHTOOL_A_CABLE_TEST_TDR_STATUS with the value
+ETHTOOL_A_CABLE_TEST_NTF_STATUS_STARTED.</p>
+<p>When the test has completed a second notification will be sent
+containing ETHTOOL_A_CABLE_TEST_TDR_STATUS with the value
+ETHTOOL_A_CABLE_TEST_NTF_STATUS_COMPLETED and the TDR data.</p>
+<p>The message may optionally contain the amplitude of the pulse send
+down the cable. This is measured in mV. A reflection should not be
+bigger than transmitted pulse.</p>
+<p>Before the raw TDR data should be an ETHTOOL_A_CABLE_TDR_NEST_STEP
+nest containing information about the distance along the cable for the
+first reading, the last reading, and the step between each
+reading. Distances are measured in centimeters. These should be the
+exact values the PHY used. These may be different to what the user
+requested, if the native measurement resolution is greater than 1 cm.</p>
+<p>For each step along the cable, a ETHTOOL_A_CABLE_TDR_NEST_AMPLITUDE is
+used to report the amplitude of the reflection for a given pair.</p>
+<blockquote>
+<div><table border="1" class="docutils">
+<colgroup>
+<col width="1%" />
+<col width="1%" />
+<col width="56%" />
+<col width="11%" />
+<col width="30%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td colspan="3"><code class="docutils literal notranslate"><span class="pre">ETHTOOL_A_CABLE_TEST_TDR_HEADER</span></code></td>
+<td>nested</td>
+<td>reply header</td>
+</tr>
+<tr class="row-even"><td colspan="3"><code class="docutils literal notranslate"><span class="pre">ETHTOOL_A_CABLE_TEST_TDR_STATUS</span></code></td>
+<td>u8</td>
+<td>completed</td>
+</tr>
+<tr class="row-odd"><td colspan="3"><code class="docutils literal notranslate"><span class="pre">ETHTOOL_A_CABLE_TEST_TDR_NTF_NEST</span></code></td>
+<td>nested</td>
+<td>all the results</td>
+</tr>
+<tr class="row-even"><td>&#160;</td>
+<td colspan="2"><code class="docutils literal notranslate"><span class="pre">ETHTOOL_A_CABLE_TDR_NEST_PULSE</span></code></td>
+<td>nested</td>
+<td>TX Pulse amplitude</td>
+</tr>
+<tr class="row-odd"><td>&#160;</td>
+<td>&#160;</td>
+<td><code class="docutils literal notranslate"><span class="pre">ETHTOOL_A_CABLE_PULSE_mV</span></code></td>
+<td>s16</td>
+<td>Pulse amplitude</td>
+</tr>
+<tr class="row-even"><td>&#160;</td>
+<td colspan="2"><code class="docutils literal notranslate"><span class="pre">ETHTOOL_A_CABLE_NEST_STEP</span></code></td>
+<td>nested</td>
+<td>TDR step info</td>
+</tr>
+<tr class="row-odd"><td>&#160;</td>
+<td>&#160;</td>
+<td><code class="docutils literal notranslate"><span class="pre">ETHTOOL_A_CABLE_STEP_FIRST_DISTANCE</span></code></td>
+<td>u32</td>
+<td>First data distance</td>
+</tr>
+<tr class="row-even"><td>&#160;</td>
+<td>&#160;</td>
+<td><code class="docutils literal notranslate"><span class="pre">ETHTOOL_A_CABLE_STEP_LAST_DISTANCE</span></code></td>
+<td>u32</td>
+<td>Last data distance</td>
+</tr>
+<tr class="row-odd"><td>&#160;</td>
+<td>&#160;</td>
+<td><code class="docutils literal notranslate"><span class="pre">ETHTOOL_A_CABLE_STEP_STEP_DISTANCE</span></code></td>
+<td>u32</td>
+<td>distance of each step</td>
+</tr>
+<tr class="row-even"><td>&#160;</td>
+<td colspan="2"><code class="docutils literal notranslate"><span class="pre">ETHTOOL_A_CABLE_TDR_NEST_AMPLITUDE</span></code></td>
+<td>nested</td>
+<td>Reflection amplitude</td>
+</tr>
+<tr class="row-odd"><td>&#160;</td>
+<td>&#160;</td>
+<td><code class="docutils literal notranslate"><span class="pre">ETHTOOL_A_CABLE_RESULTS_PAIR</span></code></td>
+<td>u8</td>
+<td>pair number</td>
+</tr>
+<tr class="row-even"><td>&#160;</td>
+<td>&#160;</td>
+<td><code class="docutils literal notranslate"><span class="pre">ETHTOOL_A_CABLE_AMPLITUDE_mV</span></code></td>
+<td>s16</td>
+<td>Reflection amplitude</td>
+</tr>
+<tr class="row-odd"><td>&#160;</td>
+<td colspan="2"><code class="docutils literal notranslate"><span class="pre">ETHTOOL_A_CABLE_TDR_NEST_AMPLITUDE</span></code></td>
+<td>nested</td>
+<td>Reflection amplitude</td>
+</tr>
+<tr class="row-even"><td>&#160;</td>
+<td>&#160;</td>
+<td><code class="docutils literal notranslate"><span class="pre">ETHTOOL_A_CABLE_RESULTS_PAIR</span></code></td>
+<td>u8</td>
+<td>pair number</td>
+</tr>
+<tr class="row-odd"><td>&#160;</td>
+<td>&#160;</td>
+<td><code class="docutils literal notranslate"><span class="pre">ETHTOOL_A_CABLE_AMPLITUDE_mV</span></code></td>
+<td>s16</td>
+<td>Reflection amplitude</td>
+</tr>
+<tr class="row-even"><td>&#160;</td>
+<td colspan="2"><code class="docutils literal notranslate"><span class="pre">ETHTOOL_A_CABLE_TDR_NEST_AMPLITUDE</span></code></td>
+<td>nested</td>
+<td>Reflection amplitude</td>
+</tr>
+<tr class="row-odd"><td>&#160;</td>
+<td>&#160;</td>
+<td><code class="docutils literal notranslate"><span class="pre">ETHTOOL_A_CABLE_RESULTS_PAIR</span></code></td>
+<td>u8</td>
+<td>pair number</td>
+</tr>
+<tr class="row-even"><td>&#160;</td>
+<td>&#160;</td>
+<td><code class="docutils literal notranslate"><span class="pre">ETHTOOL_A_CABLE_AMPLITUDE_mV</span></code></td>
+<td>s16</td>
+<td>Reflection amplitude</td>
+</tr>
+</tbody>
+</table>
+</div></blockquote>
+</div>
 <div class="section" id="request-translation">
 <h2>Request translation<a class="headerlink" href="#request-translation" title="Permalink to this headline">¶</a></h2>
 <p>The following table maps ioctl commands to netlink commands providing their
 functionality. Entries with “n/a” in right column are commands which do not
-have their netlink replacement yet.</p>
+have their netlink replacement yet. Entries which “n/a” in the left column
+are netlink only.</p>
 <blockquote>
 <div><table border="1" class="docutils">
 <colgroup>
@@ -2302,6 +2626,12 @@ have their netlink replacement yet.</p>
 </tr>
 <tr class="row-odd"><td><code class="docutils literal notranslate"><span class="pre">ETHTOOL_SFECPARAM</span></code></td>
 <td>n/a</td>
+</tr>
+<tr class="row-even"><td>n/a</td>
+<td>‘’ETHTOOL_MSG_CABLE_TEST_ACT’’</td>
+</tr>
+<tr class="row-odd"><td>n/a</td>
+<td>‘’ETHTOOL_MSG_CABLE_TEST_TDR_ACT’’</td>
 </tr>
 </tbody>
 </table>

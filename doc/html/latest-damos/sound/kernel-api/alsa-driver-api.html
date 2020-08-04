@@ -68,7 +68,7 @@
             
             
               <div class="version">
-                5.7.0
+                5.8.0
               </div>
             
           
@@ -199,15 +199,13 @@ int <code class="descname">snd_card_new</code><span class="sig-paren">(</span>st
 <dt><code class="docutils literal notranslate"><span class="pre">int</span> <span class="pre">extra_size</span></code></dt>
 <dd>allocate this extra size after the main soundcard structure</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">snd_card</span> <span class="pre">**</span> <span class="pre">card_ret</span></code></dt>
-<dd>the pointer to store the created card instance</dd>
-</dl>
-<p><strong>Description</strong></p>
-<blockquote>
-<div><p>Creates and initializes a soundcard structure.</p>
-<p>The function allocates snd_card instance via kzalloc with the given
+<dd><p class="first">the pointer to store the created card instance</p>
+<p>Creates and initializes a soundcard structure.</p>
+<p class="last">The function allocates snd_card instance via kzalloc with the given
 space for the driver to use freely.  The allocated struct is stored
 in the given card_ret pointer.</p>
-</div></blockquote>
+</dd>
+</dl>
 <p><strong>Return</strong></p>
 <p>Zero if successful or a negative error code.</p>
 <dl class="function">
@@ -233,11 +231,10 @@ int <code class="descname">snd_card_disconnect</code><span class="sig-paren">(</
 <p><strong>Parameters</strong></p>
 <dl class="docutils">
 <dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">snd_card</span> <span class="pre">*</span> <span class="pre">card</span></code></dt>
-<dd>soundcard structure</dd>
+<dd><p class="first">soundcard structure</p>
+<p class="last">Disconnects all APIs from the file-operations (user space).</p>
+</dd>
 </dl>
-<p><strong>Description</strong></p>
-<blockquote>
-<div>Disconnects all APIs from the file-operations (user space).</div></blockquote>
 <p><strong>Return</strong></p>
 <p>Zero, otherwise a negative error code.</p>
 <p><strong>Note</strong></p>
@@ -307,12 +304,11 @@ void <code class="descname">snd_card_set_id</code><span class="sig-paren">(</spa
 <dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">snd_card</span> <span class="pre">*</span> <span class="pre">card</span></code></dt>
 <dd>soundcard structure</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">const</span> <span class="pre">char</span> <span class="pre">*</span> <span class="pre">nid</span></code></dt>
-<dd>new identification string</dd>
+<dd><p class="first">new identification string</p>
+<p class="last">This function sets the card identification and checks for name
+collisions.</p>
+</dd>
 </dl>
-<p><strong>Description</strong></p>
-<blockquote>
-<div>This function sets the card identification and checks for name
-collisions.</div></blockquote>
 <dl class="function">
 <dt id="c.snd_card_add_dev_attr">
 int <code class="descname">snd_card_add_dev_attr</code><span class="sig-paren">(</span>struct snd_card *<em>&nbsp;card</em>, const struct attribute_group *<em>&nbsp;group</em><span class="sig-paren">)</span><a class="headerlink" href="#c.snd_card_add_dev_attr" title="Permalink to this definition">¶</a></dt>
@@ -335,14 +331,13 @@ int <code class="descname">snd_card_register</code><span class="sig-paren">(</sp
 <p><strong>Parameters</strong></p>
 <dl class="docutils">
 <dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">snd_card</span> <span class="pre">*</span> <span class="pre">card</span></code></dt>
-<dd>soundcard structure</dd>
-</dl>
-<p><strong>Description</strong></p>
-<blockquote>
-<div>This function registers all the devices assigned to the soundcard.
+<dd><p class="first">soundcard structure</p>
+<p class="last">This function registers all the devices assigned to the soundcard.
 Until calling this, the ALSA control interface is blocked from the
 external accesses.  Thus, you should call this function at the end
-of the initialization of the card.</div></blockquote>
+of the initialization of the card.</p>
+</dd>
+</dl>
 <p><strong>Return</strong></p>
 <p>Zero otherwise a negative error code if the registration failed.</p>
 <dl class="function">
@@ -356,12 +351,11 @@ int <code class="descname">snd_component_add</code><span class="sig-paren">(</sp
 <dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">snd_card</span> <span class="pre">*</span> <span class="pre">card</span></code></dt>
 <dd>soundcard structure</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">const</span> <span class="pre">char</span> <span class="pre">*</span> <span class="pre">component</span></code></dt>
-<dd>the component id string</dd>
+<dd><p class="first">the component id string</p>
+<p class="last">This function adds the component id string to the supported list.
+The component can be referred from the alsa-lib.</p>
+</dd>
 </dl>
-<p><strong>Description</strong></p>
-<blockquote>
-<div>This function adds the component id string to the supported list.
-The component can be referred from the alsa-lib.</div></blockquote>
 <p><strong>Return</strong></p>
 <p>Zero otherwise a negative error code.</p>
 <dl class="function">
@@ -375,13 +369,12 @@ int <code class="descname">snd_card_file_add</code><span class="sig-paren">(</sp
 <dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">snd_card</span> <span class="pre">*</span> <span class="pre">card</span></code></dt>
 <dd>soundcard structure</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">file</span> <span class="pre">*</span> <span class="pre">file</span></code></dt>
-<dd>file pointer</dd>
-</dl>
-<p><strong>Description</strong></p>
-<blockquote>
-<div>This function adds the file to the file linked-list of the card.
+<dd><p class="first">file pointer</p>
+<p class="last">This function adds the file to the file linked-list of the card.
 This linked-list is used to keep tracking the connection state,
-and to avoid the release of busy resources by hotplug.</div></blockquote>
+and to avoid the release of busy resources by hotplug.</p>
+</dd>
+</dl>
 <p><strong>Return</strong></p>
 <p>zero or a negative error code.</p>
 <dl class="function">
@@ -395,15 +388,14 @@ int <code class="descname">snd_card_file_remove</code><span class="sig-paren">(<
 <dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">snd_card</span> <span class="pre">*</span> <span class="pre">card</span></code></dt>
 <dd>soundcard structure</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">file</span> <span class="pre">*</span> <span class="pre">file</span></code></dt>
-<dd>file pointer</dd>
-</dl>
-<p><strong>Description</strong></p>
-<blockquote>
-<div>This function removes the file formerly added to the card via
+<dd><p class="first">file pointer</p>
+<p class="last">This function removes the file formerly added to the card via
 <a class="reference internal" href="#c.snd_card_file_add" title="snd_card_file_add"><code class="xref c c-func docutils literal notranslate"><span class="pre">snd_card_file_add()</span></code></a> function.
 If all files are removed and <a class="reference internal" href="#c.snd_card_free_when_closed" title="snd_card_free_when_closed"><code class="xref c c-func docutils literal notranslate"><span class="pre">snd_card_free_when_closed()</span></code></a> was
 called beforehand, it processes the pending release of
-resources.</div></blockquote>
+resources.</p>
+</dd>
+</dl>
 <p><strong>Return</strong></p>
 <p>Zero or a negative error code.</p>
 <dl class="function">
@@ -417,11 +409,10 @@ int <code class="descname">snd_power_wait</code><span class="sig-paren">(</span>
 <dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">snd_card</span> <span class="pre">*</span> <span class="pre">card</span></code></dt>
 <dd>soundcard structure</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">unsigned</span> <span class="pre">int</span> <span class="pre">power_state</span></code></dt>
-<dd>expected power state</dd>
+<dd><p class="first">expected power state</p>
+<p class="last">Waits until the power-state is changed.</p>
+</dd>
 </dl>
-<p><strong>Description</strong></p>
-<blockquote>
-<div>Waits until the power-state is changed.</div></blockquote>
 <p><strong>Return</strong></p>
 <p>Zero if successful, or a negative error code.</p>
 </div>
@@ -4166,7 +4157,7 @@ The all children entries are registered recursively.</p>
 <p>Zero if successful, or a negative error code on failure.</p>
 <dl class="function">
 <dt id="c.snd_card_rw_proc_new">
-int <code class="descname">snd_card_rw_proc_new</code><span class="sig-paren">(</span>struct snd_card *<em>&nbsp;card</em>, const char *<em>&nbsp;name</em>, void *<em>&nbsp;private_data</em>, void (<em>*read</em>)(struct snd_info_entry *, struct snd_info_buffer *), void (*<a class="reference internal" href="../../media/uapi/dvb/video-fwrite.html#c.write" title="write">write</a>) (struct snd_info_entry *entry, struct snd_info_buffer *buffer)<span class="sig-paren">)</span><a class="headerlink" href="#c.snd_card_rw_proc_new" title="Permalink to this definition">¶</a></dt>
+int <code class="descname">snd_card_rw_proc_new</code><span class="sig-paren">(</span>struct snd_card *<em>&nbsp;card</em>, const char *<em>&nbsp;name</em>, void *<em>&nbsp;private_data</em>, void (<em>*read</em>)(struct snd_info_entry *, struct snd_info_buffer *), void (*<a class="reference internal" href="../../userspace-api/media/dvb/video-fwrite.html#c.write" title="write">write</a>) (struct snd_info_entry *entry, struct snd_info_buffer *buffer)<span class="sig-paren">)</span><a class="headerlink" href="#c.snd_card_rw_proc_new" title="Permalink to this definition">¶</a></dt>
 <dd><p>Create a read/write text proc file entry for the card</p>
 </dd></dl>
 
@@ -4579,6 +4570,7 @@ struct <code class="descname">snd_compr_stream</code><a class="headerlink" href=
   enum snd_compr_direction direction;
   bool metadata_set;
   bool next_track;
+  bool partial_drain;
   void *private_data;
   struct snd_dma_buffer dma_buffer;
 };
@@ -4602,6 +4594,8 @@ struct <code class="descname">snd_compr_stream</code><a class="headerlink" href=
 <dd>metadata set flag, true when set</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">next_track</span></code></dt>
 <dd>has userspace signal next track transition, true when set</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">partial_drain</span></code></dt>
+<dd>undergoing partial_drain for stream, true when set</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">private_data</span></code></dt>
 <dd>pointer to DSP private data</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">dma_buffer</span></code></dt>
@@ -4910,10 +4904,10 @@ int <code class="descname">snd_soc_runtime_set_dai_fmt</code><span class="sig-pa
 <p><strong>Description</strong></p>
 <p>This function updates the DAI link format for all DAIs connected to the DAI
 link for the specified runtime.</p>
+<p>Returns 0 on success, otherwise a negative error code.</p>
 <p><strong>Note</strong></p>
 <p>For setups with a static format set the dai_fmt field in the
 corresponding snd_dai_link struct instead of using this function.</p>
-<p>Returns 0 on success, otherwise a negative error code.</p>
 <dl class="function">
 <dt id="c.snd_soc_set_dmi_name">
 int <code class="descname">snd_soc_set_dmi_name</code><span class="sig-paren">(</span>struct snd_soc_card *<em>&nbsp;card</em>, const char *<em>&nbsp;flavour</em><span class="sig-paren">)</span><a class="headerlink" href="#c.snd_soc_set_dmi_name" title="Permalink to this definition">¶</a></dt>
@@ -5123,6 +5117,19 @@ removes the regmap instance from the component.</p>
 <p>This function should only be used if <a class="reference internal" href="#c.snd_soc_component_init_regmap" title="snd_soc_component_init_regmap"><code class="xref c c-func docutils literal notranslate"><span class="pre">snd_soc_component_init_regmap()</span></code></a> was used
 to initialize the regmap instance.</p>
 <dl class="function">
+<dt id="c.snd_soc_unregister_component_by_driver">
+void <code class="descname">snd_soc_unregister_component_by_driver</code><span class="sig-paren">(</span>struct <a class="reference internal" href="../../driver-api/infrastructure.html#c.device" title="device">device</a> *<em>&nbsp;dev</em>, const struct snd_soc_component_driver *<em>&nbsp;component_driver</em><span class="sig-paren">)</span><a class="headerlink" href="#c.snd_soc_unregister_component_by_driver" title="Permalink to this definition">¶</a></dt>
+<dd><p>Unregister component using a given driver from the ASoC core</p>
+</dd></dl>
+
+<p><strong>Parameters</strong></p>
+<dl class="docutils">
+<dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">device</span> <span class="pre">*</span> <span class="pre">dev</span></code></dt>
+<dd>The device to unregister</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">const</span> <span class="pre">struct</span> <span class="pre">snd_soc_component_driver</span> <span class="pre">*</span> <span class="pre">component_driver</span></code></dt>
+<dd>The component driver to unregister</dd>
+</dl>
+<dl class="function">
 <dt id="c.snd_soc_unregister_component">
 void <code class="descname">snd_soc_unregister_component</code><span class="sig-paren">(</span>struct <a class="reference internal" href="../../driver-api/infrastructure.html#c.device" title="device">device</a> *<em>&nbsp;dev</em><span class="sig-paren">)</span><a class="headerlink" href="#c.snd_soc_unregister_component" title="Permalink to this definition">¶</a></dt>
 <dd><p>Unregister all related component from the ASoC core</p>
@@ -5132,6 +5139,24 @@ void <code class="descname">snd_soc_unregister_component</code><span class="sig-
 <dl class="docutils">
 <dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">device</span> <span class="pre">*</span> <span class="pre">dev</span></code></dt>
 <dd>The device to unregister</dd>
+</dl>
+<dl class="function">
+<dt id="c.devm_snd_soc_register_dai">
+struct snd_soc_dai * <code class="descname">devm_snd_soc_register_dai</code><span class="sig-paren">(</span>struct <a class="reference internal" href="../../driver-api/infrastructure.html#c.device" title="device">device</a> *<em>&nbsp;dev</em>, struct snd_soc_component *<em>&nbsp;component</em>, struct snd_soc_dai_driver *<em>&nbsp;dai_drv</em>, bool<em>&nbsp;legacy_dai_naming</em><span class="sig-paren">)</span><a class="headerlink" href="#c.devm_snd_soc_register_dai" title="Permalink to this definition">¶</a></dt>
+<dd><p>resource-managed dai registration</p>
+</dd></dl>
+
+<p><strong>Parameters</strong></p>
+<dl class="docutils">
+<dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">device</span> <span class="pre">*</span> <span class="pre">dev</span></code></dt>
+<dd>Device used to manage component</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">snd_soc_component</span> <span class="pre">*</span> <span class="pre">component</span></code></dt>
+<dd>The component the DAIs are registered for</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">snd_soc_dai_driver</span> <span class="pre">*</span> <span class="pre">dai_drv</span></code></dt>
+<dd>DAI driver to use for the DAI</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">bool</span> <span class="pre">legacy_dai_naming</span></code></dt>
+<dd>if <code class="docutils literal notranslate"><span class="pre">true</span></code>, use legacy single-name format;
+if <code class="docutils literal notranslate"><span class="pre">false</span></code>, use multiple-name format;</dd>
 </dl>
 <dl class="function">
 <dt id="c.devm_snd_soc_register_component">
@@ -5305,9 +5330,9 @@ different from the old value.</p>
 <p><strong>Return</strong></p>
 <p>1 for change, otherwise 0.</p>
 <dl class="function">
-<dt id="c.snd_soc_runtime_activate">
-void <code class="descname">snd_soc_runtime_activate</code><span class="sig-paren">(</span>struct snd_soc_pcm_runtime *<em>&nbsp;rtd</em>, int<em>&nbsp;stream</em><span class="sig-paren">)</span><a class="headerlink" href="#c.snd_soc_runtime_activate" title="Permalink to this definition">¶</a></dt>
-<dd><p>Increment active count for PCM runtime components</p>
+<dt id="c.snd_soc_runtime_action">
+void <code class="descname">snd_soc_runtime_action</code><span class="sig-paren">(</span>struct snd_soc_pcm_runtime *<em>&nbsp;rtd</em>, int<em>&nbsp;stream</em>, int<em>&nbsp;action</em><span class="sig-paren">)</span><a class="headerlink" href="#c.snd_soc_runtime_action" title="Permalink to this definition">¶</a></dt>
+<dd><p>Increment/Decrement active count for PCM runtime components</p>
 </dd></dl>
 
 <p><strong>Parameters</strong></p>
@@ -5316,27 +5341,13 @@ void <code class="descname">snd_soc_runtime_activate</code><span class="sig-pare
 <dd>ASoC PCM runtime that is activated</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">int</span> <span class="pre">stream</span></code></dt>
 <dd>Direction of the PCM stream</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">int</span> <span class="pre">action</span></code></dt>
+<dd><em>undescribed</em></dd>
 </dl>
 <p><strong>Description</strong></p>
-<p>Increments the active count for all the DAIs and components attached to a PCM
-runtime. Should typically be called when a stream is opened.</p>
-<p>Must be called with the rtd-&gt;card-&gt;pcm_mutex being held</p>
-<dl class="function">
-<dt id="c.snd_soc_runtime_deactivate">
-void <code class="descname">snd_soc_runtime_deactivate</code><span class="sig-paren">(</span>struct snd_soc_pcm_runtime *<em>&nbsp;rtd</em>, int<em>&nbsp;stream</em><span class="sig-paren">)</span><a class="headerlink" href="#c.snd_soc_runtime_deactivate" title="Permalink to this definition">¶</a></dt>
-<dd><p>Decrement active count for PCM runtime components</p>
-</dd></dl>
-
-<p><strong>Parameters</strong></p>
-<dl class="docutils">
-<dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">snd_soc_pcm_runtime</span> <span class="pre">*</span> <span class="pre">rtd</span></code></dt>
-<dd>ASoC PCM runtime that is deactivated</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">int</span> <span class="pre">stream</span></code></dt>
-<dd>Direction of the PCM stream</dd>
-</dl>
-<p><strong>Description</strong></p>
-<p>Decrements the active count for all the DAIs and components attached to a PCM
-runtime. Should typically be called when a stream is closed.</p>
+<p>Increments/Decrements the active count for all the DAIs and components
+attached to a PCM runtime.
+Should typically be called when a stream is opened.</p>
 <p>Must be called with the rtd-&gt;card-&gt;pcm_mutex being held</p>
 <dl class="function">
 <dt id="c.snd_soc_runtime_ignore_pmdown_time">
@@ -6541,32 +6552,6 @@ void <code class="descname">snd_jack_report</code><span class="sig-paren">(</spa
 <dt><code class="docutils literal notranslate"><span class="pre">int</span> <span class="pre">status</span></code></dt>
 <dd>The current status of the jack</dd>
 </dl>
-<dl class="function">
-<dt id="c.snd_soc_card_jack_new">
-int <code class="descname">snd_soc_card_jack_new</code><span class="sig-paren">(</span>struct snd_soc_card *<em>&nbsp;card</em>, const char *<em>&nbsp;id</em>, int<em>&nbsp;type</em>, struct snd_soc_jack *<em>&nbsp;jack</em>, struct <a class="reference internal" href="#c.snd_soc_jack_pin" title="snd_soc_jack_pin">snd_soc_jack_pin</a> *<em>&nbsp;pins</em>, unsigned int<em>&nbsp;num_pins</em><span class="sig-paren">)</span><a class="headerlink" href="#c.snd_soc_card_jack_new" title="Permalink to this definition">¶</a></dt>
-<dd><p>Create a new jack</p>
-</dd></dl>
-
-<p><strong>Parameters</strong></p>
-<dl class="docutils">
-<dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">snd_soc_card</span> <span class="pre">*</span> <span class="pre">card</span></code></dt>
-<dd>ASoC card</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">const</span> <span class="pre">char</span> <span class="pre">*</span> <span class="pre">id</span></code></dt>
-<dd>an identifying string for this jack</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">int</span> <span class="pre">type</span></code></dt>
-<dd>a bitmask of enum snd_jack_type values that can be detected by
-this jack</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">snd_soc_jack</span> <span class="pre">*</span> <span class="pre">jack</span></code></dt>
-<dd>structure to use for the jack</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">snd_soc_jack_pin</span> <span class="pre">*</span> <span class="pre">pins</span></code></dt>
-<dd>Array of jack pins to be added to the jack or NULL</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">unsigned</span> <span class="pre">int</span> <span class="pre">num_pins</span></code></dt>
-<dd>Number of elements in the <strong>pins</strong> array</dd>
-</dl>
-<p><strong>Description</strong></p>
-<p>Creates a new jack object.</p>
-<p>Returns zero if successful, or a negative error code on failure.
-On success jack will be initialised.</p>
 <dl class="function">
 <dt id="c.snd_soc_jack_report">
 void <code class="descname">snd_soc_jack_report</code><span class="sig-paren">(</span>struct snd_soc_jack *<em>&nbsp;jack</em>, int<em>&nbsp;status</em>, int<em>&nbsp;mask</em><span class="sig-paren">)</span><a class="headerlink" href="#c.snd_soc_jack_report" title="Permalink to this definition">¶</a></dt>

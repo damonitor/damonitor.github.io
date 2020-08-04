@@ -1,0 +1,486 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Linux and the 3Com EtherLink III Series Ethercards (driver v1.18c and higher) &mdash; The Linux Kernel  documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript">
+          var DOCUMENTATION_OPTIONS = {
+              URL_ROOT:'../../../',
+              VERSION:'',
+              LANGUAGE:'None',
+              COLLAPSE_INDEX:false,
+              FILE_SUFFIX:'.html',
+              HAS_SOURCE:  true,
+              SOURCELINK_SUFFIX: '.txt'
+          };
+      </script>
+        <script type="text/javascript" src="../../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/theme_overrides.css" type="text/css" />
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home"> The Linux Kernel
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                5.8.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../admin-guide/mm/damon/index.html">Monitoring Data Accesses</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../vm/damon/index.html">DAMON: Data Access MONitor</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">The Linux Kernel</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../index.html">Docs</a> &raquo;</li>
+        
+      <li>Linux and the 3Com EtherLink III Series Ethercards (driver v1.18c and higher)</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../../../_sources/networking/device_drivers/3com/3c509.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="linux-and-the-3com-etherlink-iii-series-ethercards-driver-v1-18c-and-higher">
+<h1>Linux and the 3Com EtherLink III Series Ethercards (driver v1.18c and higher)<a class="headerlink" href="#linux-and-the-3com-etherlink-iii-series-ethercards-driver-v1-18c-and-higher" title="Permalink to this headline">¶</a></h1>
+<p>This file contains the instructions and caveats for v1.18c and higher versions
+of the 3c509 driver. You should not use the driver without reading this file.</p>
+<p>release 1.0</p>
+<p>28 February 2002</p>
+<dl class="docutils">
+<dt>Current maintainer (corrections to):</dt>
+<dd>David Ruggiero &lt;<a class="reference external" href="mailto:jdr&#37;&#52;&#48;farfalle&#46;com">jdr<span>&#64;</span>farfalle<span>&#46;</span>com</a>&gt;</dd>
+</dl>
+<div class="section" id="introduction">
+<h2>Introduction<a class="headerlink" href="#introduction" title="Permalink to this headline">¶</a></h2>
+<p>The following are notes and information on using the 3Com EtherLink III series
+ethercards in Linux. These cards are commonly known by the most widely-used
+card’s 3Com model number, 3c509. They are all 10mb/s ISA-bus cards and shouldn’t
+be (but sometimes are) confused with the similarly-numbered PCI-bus “3c905”
+(aka “Vortex” or “Boomerang”) series.  Kernel support for the 3c509 family is
+provided by the module 3c509.c, which has code to support all of the following
+models:</p>
+<blockquote>
+<div><ul class="simple">
+<li>3c509 (original ISA card)</li>
+<li>3c509B (later revision of the ISA card; supports full-duplex)</li>
+<li>3c589 (PCMCIA)</li>
+<li>3c589B (later revision of the 3c589; supports full-duplex)</li>
+<li>3c579 (EISA)</li>
+</ul>
+</div></blockquote>
+<p>Large portions of this documentation were heavily borrowed from the guide
+written the original author of the 3c509 driver, Donald Becker. The master
+copy of that document, which contains notes on older versions of the driver,
+currently resides on Scyld web server: <a class="reference external" href="http://www.scyld.com/">http://www.scyld.com/</a>.</p>
+</div>
+<div class="section" id="special-driver-features">
+<h2>Special Driver Features<a class="headerlink" href="#special-driver-features" title="Permalink to this headline">¶</a></h2>
+<p>Overriding card settings</p>
+<p>The driver allows boot- or load-time overriding of the card’s detected IOADDR,
+IRQ, and transceiver settings, although this capability shouldn’t generally be
+needed except to enable full-duplex mode (see below). An example of the syntax
+for LILO parameters for doing this:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>ether=10,0x310,3,0x3c509,eth0
+</pre></div>
+</div>
+<p>This configures the first found 3c509 card for IRQ 10, base I/O 0x310, and
+transceiver type 3 (10base2). The flag “0x3c509” must be set to avoid conflicts
+with other card types when overriding the I/O address. When the driver is
+loaded as a module, only the IRQ may be overridden. For example,
+setting two cards to IRQ10 and IRQ11 is done by using the irq module
+option:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>options 3c509 irq=10,11
+</pre></div>
+</div>
+</div>
+<div class="section" id="full-duplex-mode">
+<h2>Full-duplex mode<a class="headerlink" href="#full-duplex-mode" title="Permalink to this headline">¶</a></h2>
+<p>The v1.18c driver added support for the 3c509B’s full-duplex capabilities.
+In order to enable and successfully use full-duplex mode, three conditions
+must be met:</p>
+<p>(a) You must have a Etherlink III card model whose hardware supports full-
+duplex operations. Currently, the only members of the 3c509 family that are
+positively known to support full-duplex are the 3c509B (ISA bus) and 3c589B
+(PCMCIA) cards. Cards without the “B” model designation do <em>not</em> support
+full-duplex mode; these include the original 3c509 (no “B”), the original
+3c589, the 3c529 (MCA bus), and the 3c579 (EISA bus).</p>
+<p>(b) You must be using your card’s 10baseT transceiver (i.e., the RJ-45
+connector), not its AUI (thick-net) or 10base2 (thin-net/coax) interfaces.
+AUI and 10base2 network cabling is physically incapable of full-duplex
+operation.</p>
+<p>(c) Most importantly, your 3c509B must be connected to a link partner that is
+itself full-duplex capable. This is almost certainly one of two things: a full-
+duplex-capable  Ethernet switch (<em>not</em> a hub), or a full-duplex-capable NIC on
+another system that’s connected directly to the 3c509B via a crossover cable.</p>
+<p>Full-duplex mode can be enabled using ‘ethtool’.</p>
+<div class="admonition warning">
+<p class="first admonition-title">Warning</p>
+<p>Extremely important caution concerning full-duplex mode</p>
+<p class="last">Understand that the 3c509B’s hardware’s full-duplex support is much more
+limited than that provide by more modern network interface cards. Although
+at the physical layer of the network it fully supports full-duplex operation,
+the card was designed before the current Ethernet auto-negotiation (N-way)
+spec was written. This means that the 3c509B family <strong>*cannot and will not
+auto-negotiate a full-duplex connection with its link partner under any
+circumstances, no matter how it is initialized*</strong>. If the full-duplex mode
+of the 3c509B is enabled, its link partner will very likely need to be
+independently _forced_ into full-duplex mode as well; otherwise various nasty
+failures will occur - at the very least, you’ll see massive numbers of packet
+collisions. This is one of very rare circumstances where disabling auto-
+negotiation and forcing the duplex mode of a network interface card or switch
+would ever be necessary or desirable.</p>
+</div>
+</div>
+<div class="section" id="available-transceiver-types">
+<h2>Available Transceiver Types<a class="headerlink" href="#available-transceiver-types" title="Permalink to this headline">¶</a></h2>
+<p>For versions of the driver v1.18c and above, the available transceiver types are:</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="3%" />
+<col width="97%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td>0</td>
+<td>transceiver type from EEPROM config (normally 10baseT); force half-duplex</td>
+</tr>
+<tr class="row-even"><td>1</td>
+<td>AUI (thick-net / DB15 connector)</td>
+</tr>
+<tr class="row-odd"><td>2</td>
+<td>(undefined)</td>
+</tr>
+<tr class="row-even"><td>3</td>
+<td>10base2 (thin-net == coax / BNC connector)</td>
+</tr>
+<tr class="row-odd"><td>4</td>
+<td>10baseT (RJ-45 connector); force half-duplex mode</td>
+</tr>
+<tr class="row-even"><td>8</td>
+<td>transceiver type and duplex mode taken from card’s EEPROM config settings</td>
+</tr>
+<tr class="row-odd"><td>12</td>
+<td>10baseT (RJ-45 connector); force full-duplex mode</td>
+</tr>
+</tbody>
+</table>
+<p>Prior to driver version 1.18c, only transceiver codes 0-4 were supported. Note
+that the new transceiver codes 8 and 12 are the <em>only</em> ones that will enable
+full-duplex mode, no matter what the card’s detected EEPROM settings might be.
+This insured that merely upgrading the driver from an earlier version would
+never automatically enable full-duplex mode in an existing installation;
+it must always be explicitly enabled via one of these code in order to be
+activated.</p>
+<p>The transceiver type can be changed using ‘ethtool’.</p>
+<div class="section" id="interpretation-of-error-messages-and-common-problems">
+<h3>Interpretation of error messages and common problems<a class="headerlink" href="#interpretation-of-error-messages-and-common-problems" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="error-messages">
+<h4>Error Messages<a class="headerlink" href="#error-messages" title="Permalink to this headline">¶</a></h4>
+<p>eth0: Infinite loop in interrupt, status 2011.
+These are “mostly harmless” message indicating that the driver had too much
+work during that interrupt cycle. With a status of 0x2011 you are receiving
+packets faster than they can be removed from the card. This should be rare
+or impossible in normal operation. Possible causes of this error report are:</p>
+<blockquote>
+<div><ul class="simple">
+<li>a “green” mode enabled that slows the processor down when there is no
+keyboard activity.</li>
+<li>some other device or device driver hogging the bus or disabling interrupts.
+Check /proc/interrupts for excessive interrupt counts. The timer tick
+interrupt should always be incrementing faster than the others.</li>
+</ul>
+</div></blockquote>
+</div>
+<div class="section" id="no-received-packets">
+<h4>No received packets<a class="headerlink" href="#no-received-packets" title="Permalink to this headline">¶</a></h4>
+<p>If a 3c509, 3c562 or 3c589 can successfully transmit packets, but never
+receives packets (as reported by /proc/net/dev or ‘ifconfig’) you likely
+have an interrupt line problem. Check /proc/interrupts to verify that the
+card is actually generating interrupts. If the interrupt count is not
+increasing you likely have a physical conflict with two devices trying to
+use the same ISA IRQ line. The common conflict is with a sound card on IRQ10
+or IRQ5, and the easiest solution is to move the 3c509 to a different
+interrupt line. If the device is receiving packets but ‘ping’ doesn’t work,
+you have a routing problem.</p>
+</div>
+<div class="section" id="tx-carrier-errors-reported-in-proc-net-dev">
+<h4>Tx Carrier Errors Reported in /proc/net/dev<a class="headerlink" href="#tx-carrier-errors-reported-in-proc-net-dev" title="Permalink to this headline">¶</a></h4>
+<p>If an EtherLink III appears to transmit packets, but the “Tx carrier errors”
+field in /proc/net/dev increments as quickly as the Tx packet count, you
+likely have an unterminated network or the incorrect media transceiver selected.</p>
+</div>
+<div class="section" id="c509b-card-is-not-detected-on-machines-with-an-isa-pnp-bios">
+<h4>3c509B card is not detected on machines with an ISA PnP BIOS.<a class="headerlink" href="#c509b-card-is-not-detected-on-machines-with-an-isa-pnp-bios" title="Permalink to this headline">¶</a></h4>
+<p>While the updated driver works with most PnP BIOS programs, it does not work
+with all. This can be fixed by disabling PnP support using the 3Com-supplied
+setup program.</p>
+</div>
+<div class="section" id="c509-card-is-not-detected-on-overclocked-machines">
+<h4>3c509 card is not detected on overclocked machines<a class="headerlink" href="#c509-card-is-not-detected-on-overclocked-machines" title="Permalink to this headline">¶</a></h4>
+<p>Increase the delay time in id_read_eeprom() from the current value, 500,
+to an absurdly high value, such as 5000.</p>
+</div>
+</div>
+<div class="section" id="decoding-status-and-error-messages">
+<h3>Decoding Status and Error Messages<a class="headerlink" href="#decoding-status-and-error-messages" title="Permalink to this headline">¶</a></h3>
+<p>The bits in the main status register are:</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="12%" />
+<col width="88%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">value</th>
+<th class="head">description</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>0x01</td>
+<td>Interrupt latch</td>
+</tr>
+<tr class="row-odd"><td>0x02</td>
+<td>Tx overrun, or Rx underrun</td>
+</tr>
+<tr class="row-even"><td>0x04</td>
+<td>Tx complete</td>
+</tr>
+<tr class="row-odd"><td>0x08</td>
+<td>Tx FIFO room available</td>
+</tr>
+<tr class="row-even"><td>0x10</td>
+<td>A complete Rx packet has arrived</td>
+</tr>
+<tr class="row-odd"><td>0x20</td>
+<td>A Rx packet has started to arrive</td>
+</tr>
+<tr class="row-even"><td>0x40</td>
+<td>The driver has requested an interrupt</td>
+</tr>
+<tr class="row-odd"><td>0x80</td>
+<td>Statistics counter nearly full</td>
+</tr>
+</tbody>
+</table>
+<p>The bits in the transmit (Tx) status word are:</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="10%" />
+<col width="90%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">value</th>
+<th class="head">description</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>0x02</td>
+<td>Out-of-window collision.</td>
+</tr>
+<tr class="row-odd"><td>0x04</td>
+<td>Status stack overflow (normally impossible).</td>
+</tr>
+<tr class="row-even"><td>0x08</td>
+<td>16 collisions.</td>
+</tr>
+<tr class="row-odd"><td>0x10</td>
+<td>Tx underrun (not enough PCI bus bandwidth).</td>
+</tr>
+<tr class="row-even"><td>0x20</td>
+<td>Tx jabber.</td>
+</tr>
+<tr class="row-odd"><td>0x40</td>
+<td>Tx interrupt requested.</td>
+</tr>
+<tr class="row-even"><td>0x80</td>
+<td>Status is valid (this should always be set).</td>
+</tr>
+</tbody>
+</table>
+<p>When a transmit error occurs the driver produces a status message such as:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>eth0: Transmit error, Tx status register 82
+</pre></div>
+</div>
+<p>The two values typically seen here are:</p>
+<div class="section" id="x82">
+<h4>0x82<a class="headerlink" href="#x82" title="Permalink to this headline">¶</a></h4>
+<p>Out of window collision. This typically occurs when some other Ethernet
+host is incorrectly set to full duplex on a half duplex network.</p>
+</div>
+<div class="section" id="x88">
+<h4>0x88<a class="headerlink" href="#x88" title="Permalink to this headline">¶</a></h4>
+<p>16 collisions. This typically occurs when the network is exceptionally busy
+or when another host doesn’t correctly back off after a collision. If this
+error is mixed with 0x82 errors it is the result of a host incorrectly set
+to full duplex (see above).</p>
+<p>Both of these errors are the result of network problems that should be
+corrected. They do not represent driver malfunction.</p>
+</div>
+</div>
+</div>
+<div class="section" id="revision-history-this-file">
+<h2>Revision history (this file)<a class="headerlink" href="#revision-history-this-file" title="Permalink to this headline">¶</a></h2>
+<p>28Feb02 v1.0  DR   New; major portions based on Becker original 3c509 docs</p>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright The kernel development community
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

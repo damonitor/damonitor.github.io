@@ -68,7 +68,7 @@
             
             
               <div class="version">
-                5.7.0
+                5.8.0
               </div>
             
           
@@ -979,11 +979,15 @@ applicable to the asymmetric key type.</p>
 <li><p class="first">Query an asymmetric key:</p>
 <div class="highlight-none notranslate"><div class="highlight"><pre><span></span>long keyctl(KEYCTL_PKEY_QUERY,
             key_serial_t key_id, unsigned long reserved,
+            const char *params,
             struct keyctl_pkey_query *info);
 </pre></div>
 </div>
-<p>Get information about an asymmetric key.  The information is returned in
-the keyctl_pkey_query struct:</p>
+<p>Get information about an asymmetric key.  Specific algorithms and
+encodings may be queried by using the <code class="docutils literal notranslate"><span class="pre">params</span></code> argument.  This is a
+string containing a space- or tab-separated string of key-value pairs.
+Currently supported keys include <code class="docutils literal notranslate"><span class="pre">enc</span></code> and <code class="docutils literal notranslate"><span class="pre">hash</span></code>.  The information
+is returned in the keyctl_pkey_query struct:</p>
 <div class="highlight-none notranslate"><div class="highlight"><pre><span></span>__u32   supported_ops;
 __u32   key_size;
 __u16   max_data_size;
@@ -1080,6 +1084,55 @@ intended, amongst other things, to allow the passing of passphrases
 required to unlock a key.</p>
 <p>If successful, encrypt, decrypt and sign all return the amount of data
 written into the output buffer.  Verification returns 0 on success.</p>
+</li>
+<li><p class="first">Watch a key or keyring for changes:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>long keyctl(KEYCTL_WATCH_KEY, key_serial_t key, int queue_fd,
+            const struct watch_notification_filter *filter);
+</pre></div>
+</div>
+<p>This will set or remove a watch for changes on the specified key or
+keyring.</p>
+<p>“key” is the ID of the key to be watched.</p>
+<p>“queue_fd” is a file descriptor referring to an open “/dev/watch_queue”
+which manages the buffer into which notifications will be delivered.</p>
+<p>“filter” is either NULL to remove a watch or a filter specification to
+indicate what events are required from the key.</p>
+<p>See Documentation/watch_queue.rst for more information.</p>
+<p>Note that only one watch may be emplaced for any particular { key,
+queue_fd } combination.</p>
+<p>Notification records look like:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>struct key_notification {
+        struct watch_notification watch;
+        __u32   key_id;
+        __u32   aux;
+};
+</pre></div>
+</div>
+<p>In this, watch::type will be “WATCH_TYPE_KEY_NOTIFY” and subtype will be
+one of:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>NOTIFY_KEY_INSTANTIATED
+NOTIFY_KEY_UPDATED
+NOTIFY_KEY_LINKED
+NOTIFY_KEY_UNLINKED
+NOTIFY_KEY_CLEARED
+NOTIFY_KEY_REVOKED
+NOTIFY_KEY_INVALIDATED
+NOTIFY_KEY_SETATTR
+</pre></div>
+</div>
+<p>Where these indicate a key being instantiated/rejected, updated, a link
+being made in a keyring, a link being removed from a keyring, a keyring
+being cleared, a key being revoked, a key being invalidated or a key
+having one of its attributes changed (user, group, perm, timeout,
+restriction).</p>
+<p>If a watched key is deleted, a basic watch_notification will be issued
+with “type” set to WATCH_TYPE_META and “subtype” set to
+watch_meta_removal_notification.  The watchpoint ID will be set in the
+“info” field.</p>
+<p>This needs to be configured by enabling:</p>
+<blockquote>
+<div><p>“Provide key/keyring change notifications” (KEY_NOTIFICATIONS)</p>
+</div></blockquote>
 </li>
 </ul>
 </div></blockquote>

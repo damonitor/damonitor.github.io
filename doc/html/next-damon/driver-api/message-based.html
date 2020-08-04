@@ -68,7 +68,7 @@
             
             
               <div class="version">
-                5.7.0
+                5.8.0
               </div>
             
           
@@ -178,14 +178,13 @@ u8 <code class="descname">mpt_register</code><span class="sig-paren">(</span>MPT
 <dt><code class="docutils literal notranslate"><span class="pre">MPT_DRIVER_CLASS</span> <span class="pre">dclass</span></code></dt>
 <dd>Protocol driver’s class (<code class="docutils literal notranslate"><span class="pre">MPT_DRIVER_CLASS</span></code> enum value)</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">char</span> <span class="pre">*</span> <span class="pre">func_name</span></code></dt>
-<dd>call function’s name</dd>
-</dl>
-<p><strong>Description</strong></p>
-<blockquote>
-<div>This routine is called by a protocol-specific driver (SCSI host,
+<dd><p class="first">call function’s name</p>
+<p class="last">This routine is called by a protocol-specific driver (SCSI host,
 LAN, SCSI target) to register its reply callback routine.  Each
 protocol-specific driver must do this before it will be able to
-use any IOC resources, such as obtaining request frames.</div></blockquote>
+use any IOC resources, such as obtaining request frames.</p>
+</dd>
+</dl>
 <p><strong>NOTES</strong></p>
 <dl class="docutils">
 <dt>The SCSI protocol driver currently calls this routine thrice</dt>
@@ -206,12 +205,11 @@ void <code class="descname">mpt_deregister</code><span class="sig-paren">(</span
 <p><strong>Parameters</strong></p>
 <dl class="docutils">
 <dt><code class="docutils literal notranslate"><span class="pre">u8</span> <span class="pre">cb_idx</span></code></dt>
-<dd>previously registered callback handle</dd>
+<dd><p class="first">previously registered callback handle</p>
+<p class="last">Each protocol-specific driver should call this routine when its
+module is unloaded.</p>
+</dd>
 </dl>
-<p><strong>Description</strong></p>
-<blockquote>
-<div>Each protocol-specific driver should call this routine when its
-module is unloaded.</div></blockquote>
 <dl class="function">
 <dt id="c.mpt_event_register">
 int <code class="descname">mpt_event_register</code><span class="sig-paren">(</span>u8<em>&nbsp;cb_idx</em>, MPT_EVHANDLER<em>&nbsp;ev_cbfunc</em><span class="sig-paren">)</span><a class="headerlink" href="#c.mpt_event_register" title="Permalink to this definition">¶</a></dt>
@@ -223,14 +221,12 @@ int <code class="descname">mpt_event_register</code><span class="sig-paren">(</s
 <dt><code class="docutils literal notranslate"><span class="pre">u8</span> <span class="pre">cb_idx</span></code></dt>
 <dd>previously registered (via mpt_register) callback handle</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">MPT_EVHANDLER</span> <span class="pre">ev_cbfunc</span></code></dt>
-<dd>callback function</dd>
-</dl>
-<p><strong>Description</strong></p>
-<blockquote>
-<div><p>This routine can be called by one or more protocol-specific drivers
+<dd><p class="first">callback function</p>
+<p>This routine can be called by one or more protocol-specific drivers
 if/when they choose to be notified of MPT events.</p>
-<p>Returns 0 for success.</p>
-</div></blockquote>
+<p class="last">Returns 0 for success.</p>
+</dd>
+</dl>
 <dl class="function">
 <dt id="c.mpt_event_deregister">
 void <code class="descname">mpt_event_deregister</code><span class="sig-paren">(</span>u8<em>&nbsp;cb_idx</em><span class="sig-paren">)</span><a class="headerlink" href="#c.mpt_event_deregister" title="Permalink to this definition">¶</a></dt>
@@ -240,13 +236,12 @@ void <code class="descname">mpt_event_deregister</code><span class="sig-paren">(
 <p><strong>Parameters</strong></p>
 <dl class="docutils">
 <dt><code class="docutils literal notranslate"><span class="pre">u8</span> <span class="pre">cb_idx</span></code></dt>
-<dd>previously registered callback handle</dd>
-</dl>
-<p><strong>Description</strong></p>
-<blockquote>
-<div>Each protocol-specific driver should call this routine
+<dd><p class="first">previously registered callback handle</p>
+<p class="last">Each protocol-specific driver should call this routine
 when it does not (or can no longer) handle events,
-or when its module is unloaded.</div></blockquote>
+or when its module is unloaded.</p>
+</dd>
+</dl>
 <dl class="function">
 <dt id="c.mpt_reset_register">
 int <code class="descname">mpt_reset_register</code><span class="sig-paren">(</span>u8<em>&nbsp;cb_idx</em>, MPT_RESETHANDLER<em>&nbsp;reset_func</em><span class="sig-paren">)</span><a class="headerlink" href="#c.mpt_reset_register" title="Permalink to this definition">¶</a></dt>
@@ -258,14 +253,12 @@ int <code class="descname">mpt_reset_register</code><span class="sig-paren">(</s
 <dt><code class="docutils literal notranslate"><span class="pre">u8</span> <span class="pre">cb_idx</span></code></dt>
 <dd>previously registered (via mpt_register) callback handle</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">MPT_RESETHANDLER</span> <span class="pre">reset_func</span></code></dt>
-<dd>reset function</dd>
-</dl>
-<p><strong>Description</strong></p>
-<blockquote>
-<div><p>This routine can be called by one or more protocol-specific drivers
+<dd><p class="first">reset function</p>
+<p>This routine can be called by one or more protocol-specific drivers
 if/when they choose to be notified of IOC resets.</p>
-<p>Returns 0 for success.</p>
-</div></blockquote>
+<p class="last">Returns 0 for success.</p>
+</dd>
+</dl>
 <dl class="function">
 <dt id="c.mpt_reset_deregister">
 void <code class="descname">mpt_reset_deregister</code><span class="sig-paren">(</span>u8<em>&nbsp;cb_idx</em><span class="sig-paren">)</span><a class="headerlink" href="#c.mpt_reset_deregister" title="Permalink to this definition">¶</a></dt>
@@ -275,13 +268,12 @@ void <code class="descname">mpt_reset_deregister</code><span class="sig-paren">(
 <p><strong>Parameters</strong></p>
 <dl class="docutils">
 <dt><code class="docutils literal notranslate"><span class="pre">u8</span> <span class="pre">cb_idx</span></code></dt>
-<dd>previously registered callback handle</dd>
-</dl>
-<p><strong>Description</strong></p>
-<blockquote>
-<div>Each protocol-specific driver should call this routine
+<dd><p class="first">previously registered callback handle</p>
+<p class="last">Each protocol-specific driver should call this routine
 when it does not (or can no longer) handle IOC reset handling,
-or when its module is unloaded.</div></blockquote>
+or when its module is unloaded.</p>
+</dd>
+</dl>
 <dl class="function">
 <dt id="c.mpt_device_driver_register">
 int <code class="descname">mpt_device_driver_register</code><span class="sig-paren">(</span>struct mpt_pci_driver *<em>&nbsp;dd_cbfunc</em>, u8<em>&nbsp;cb_idx</em><span class="sig-paren">)</span><a class="headerlink" href="#c.mpt_device_driver_register" title="Permalink to this definition">¶</a></dt>
@@ -317,15 +309,13 @@ MPT_FRAME_HDR* <code class="descname">mpt_get_msg_frame</code><span class="sig-p
 <dt><code class="docutils literal notranslate"><span class="pre">u8</span> <span class="pre">cb_idx</span></code></dt>
 <dd>Handle of registered MPT protocol driver</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">MPT_ADAPTER</span> <span class="pre">*</span> <span class="pre">ioc</span></code></dt>
-<dd>Pointer to MPT adapter structure</dd>
-</dl>
-<p><strong>Description</strong></p>
-<blockquote>
-<div><p>Obtain an MPT request frame from the pool (of 1024) that are
+<dd><p class="first">Pointer to MPT adapter structure</p>
+<p>Obtain an MPT request frame from the pool (of 1024) that are
 allocated per MPT adapter.</p>
-<p>Returns pointer to a MPT request frame or <code class="docutils literal notranslate"><span class="pre">NULL</span></code> if none are available
+<p class="last">Returns pointer to a MPT request frame or <code class="docutils literal notranslate"><span class="pre">NULL</span></code> if none are available
 or IOC is not active.</p>
-</div></blockquote>
+</dd>
+</dl>
 <dl class="function">
 <dt id="c.mpt_put_msg_frame">
 void <code class="descname">mpt_put_msg_frame</code><span class="sig-paren">(</span>u8<em>&nbsp;cb_idx</em>, MPT_ADAPTER *<em>&nbsp;ioc</em>, MPT_FRAME_HDR *<em>&nbsp;mf</em><span class="sig-paren">)</span><a class="headerlink" href="#c.mpt_put_msg_frame" title="Permalink to this definition">¶</a></dt>
@@ -339,12 +329,11 @@ void <code class="descname">mpt_put_msg_frame</code><span class="sig-paren">(</s
 <dt><code class="docutils literal notranslate"><span class="pre">MPT_ADAPTER</span> <span class="pre">*</span> <span class="pre">ioc</span></code></dt>
 <dd>Pointer to MPT adapter structure</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">MPT_FRAME_HDR</span> <span class="pre">*</span> <span class="pre">mf</span></code></dt>
-<dd>Pointer to MPT request frame</dd>
+<dd><p class="first">Pointer to MPT request frame</p>
+<p class="last">This routine posts an MPT request frame to the request post FIFO of a
+specific MPT adapter.</p>
+</dd>
 </dl>
-<p><strong>Description</strong></p>
-<blockquote>
-<div>This routine posts an MPT request frame to the request post FIFO of a
-specific MPT adapter.</div></blockquote>
 <dl class="function">
 <dt id="c.mpt_put_msg_frame_hi_pri">
 void <code class="descname">mpt_put_msg_frame_hi_pri</code><span class="sig-paren">(</span>u8<em>&nbsp;cb_idx</em>, MPT_ADAPTER *<em>&nbsp;ioc</em>, MPT_FRAME_HDR *<em>&nbsp;mf</em><span class="sig-paren">)</span><a class="headerlink" href="#c.mpt_put_msg_frame_hi_pri" title="Permalink to this definition">¶</a></dt>
@@ -358,15 +347,13 @@ void <code class="descname">mpt_put_msg_frame_hi_pri</code><span class="sig-pare
 <dt><code class="docutils literal notranslate"><span class="pre">MPT_ADAPTER</span> <span class="pre">*</span> <span class="pre">ioc</span></code></dt>
 <dd>Pointer to MPT adapter structure</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">MPT_FRAME_HDR</span> <span class="pre">*</span> <span class="pre">mf</span></code></dt>
-<dd>Pointer to MPT request frame</dd>
-</dl>
-<p><strong>Description</strong></p>
-<blockquote>
-<div><p>Send a protocol-specific MPT request frame to an IOC using
+<dd><p class="first">Pointer to MPT request frame</p>
+<p>Send a protocol-specific MPT request frame to an IOC using
 hi-priority request queue.</p>
-<p>This routine posts an MPT request frame to the request post FIFO of a
+<p class="last">This routine posts an MPT request frame to the request post FIFO of a
 specific MPT adapter.</p>
-</div></blockquote>
+</dd>
+</dl>
 <dl class="function">
 <dt id="c.mpt_free_msg_frame">
 void <code class="descname">mpt_free_msg_frame</code><span class="sig-paren">(</span>MPT_ADAPTER *<em>&nbsp;ioc</em>, MPT_FRAME_HDR *<em>&nbsp;mf</em><span class="sig-paren">)</span><a class="headerlink" href="#c.mpt_free_msg_frame" title="Permalink to this definition">¶</a></dt>
@@ -378,12 +365,11 @@ void <code class="descname">mpt_free_msg_frame</code><span class="sig-paren">(</
 <dt><code class="docutils literal notranslate"><span class="pre">MPT_ADAPTER</span> <span class="pre">*</span> <span class="pre">ioc</span></code></dt>
 <dd>Pointer to MPT adapter structure</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">MPT_FRAME_HDR</span> <span class="pre">*</span> <span class="pre">mf</span></code></dt>
-<dd>Pointer to MPT request frame</dd>
+<dd><p class="first">Pointer to MPT request frame</p>
+<p class="last">This routine places a MPT request frame back on the MPT adapter’s
+FreeQ.</p>
+</dd>
 </dl>
-<p><strong>Description</strong></p>
-<blockquote>
-<div>This routine places a MPT request frame back on the MPT adapter’s
-FreeQ.</div></blockquote>
 <dl class="function">
 <dt id="c.mpt_send_handshake_request">
 int <code class="descname">mpt_send_handshake_request</code><span class="sig-paren">(</span>u8<em>&nbsp;cb_idx</em>, MPT_ADAPTER *<em>&nbsp;ioc</em>, int<em>&nbsp;reqBytes</em>, u32 *<em>&nbsp;req</em>, int<em>&nbsp;sleepFlag</em><span class="sig-paren">)</span><a class="headerlink" href="#c.mpt_send_handshake_request" title="Permalink to this definition">¶</a></dt>
@@ -401,12 +387,11 @@ int <code class="descname">mpt_send_handshake_request</code><span class="sig-par
 <dt><code class="docutils literal notranslate"><span class="pre">u32</span> <span class="pre">*</span> <span class="pre">req</span></code></dt>
 <dd>Pointer to MPT request frame</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">int</span> <span class="pre">sleepFlag</span></code></dt>
-<dd>Use schedule if CAN_SLEEP else use udelay.</dd>
+<dd><p class="first">Use schedule if CAN_SLEEP else use udelay.</p>
+<p class="last">This routine is used exclusively to send MptScsiTaskMgmt
+requests since they are required to be sent via doorbell handshake.</p>
+</dd>
 </dl>
-<p><strong>Description</strong></p>
-<blockquote>
-<div>This routine is used exclusively to send MptScsiTaskMgmt
-requests since they are required to be sent via doorbell handshake.</div></blockquote>
 <p><strong>NOTE</strong></p>
 <dl class="docutils">
 <dt>It is the callers responsibility to byte-swap fields in the</dt>
@@ -425,15 +410,13 @@ int <code class="descname">mpt_verify_adapter</code><span class="sig-paren">(</s
 <dt><code class="docutils literal notranslate"><span class="pre">int</span> <span class="pre">iocid</span></code></dt>
 <dd>IOC unique identifier (integer)</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">MPT_ADAPTER</span> <span class="pre">**</span> <span class="pre">iocpp</span></code></dt>
-<dd>Pointer to pointer to IOC adapter</dd>
-</dl>
-<p><strong>Description</strong></p>
-<blockquote>
-<div><p>Given a unique IOC identifier, set pointer to the associated MPT
+<dd><p class="first">Pointer to pointer to IOC adapter</p>
+<p>Given a unique IOC identifier, set pointer to the associated MPT
 adapter structure.</p>
-<p>Returns iocid and sets iocpp if iocid is found.
+<p class="last">Returns iocid and sets iocpp if iocid is found.
 Returns -1 if iocid is not found.</p>
-</div></blockquote>
+</dd>
+</dl>
 <dl class="function">
 <dt id="c.mpt_attach">
 int <code class="descname">mpt_attach</code><span class="sig-paren">(</span>struct pci_dev *<em>&nbsp;pdev</em>, const struct <a class="reference internal" href="basics.html#c.pci_device_id" title="pci_device_id">pci_device_id</a> *<em>&nbsp;id</em><span class="sig-paren">)</span><a class="headerlink" href="#c.mpt_attach" title="Permalink to this definition">¶</a></dt>
@@ -445,19 +428,17 @@ int <code class="descname">mpt_attach</code><span class="sig-paren">(</span>stru
 <dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">pci_dev</span> <span class="pre">*</span> <span class="pre">pdev</span></code></dt>
 <dd>Pointer to pci_dev structure</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">const</span> <span class="pre">struct</span> <span class="pre">pci_device_id</span> <span class="pre">*</span> <span class="pre">id</span></code></dt>
-<dd>PCI device ID information</dd>
-</dl>
-<p><strong>Description</strong></p>
-<blockquote>
-<div><p>This routine performs all the steps necessary to bring the IOC of
+<dd><p class="first">PCI device ID information</p>
+<p>This routine performs all the steps necessary to bring the IOC of
 a MPT adapter to a OPERATIONAL state.  This includes registering
 memory regions, registering the interrupt, and allocating request
 and reply memory pools.</p>
 <p>This routine also pre-fetches the LAN MAC address of a Fibre Channel
 MPT adapter.</p>
 <p>Returns 0 for success, non-zero for failure.</p>
-<p>TODO: Add support for polled controllers</p>
-</div></blockquote>
+<p class="last">TODO: Add support for polled controllers</p>
+</dd>
+</dl>
 <dl class="function">
 <dt id="c.mpt_detach">
 void <code class="descname">mpt_detach</code><span class="sig-paren">(</span>struct pci_dev *<em>&nbsp;pdev</em><span class="sig-paren">)</span><a class="headerlink" href="#c.mpt_detach" title="Permalink to this definition">¶</a></dt>
@@ -504,12 +485,11 @@ u32 <code class="descname">mpt_GetIocState</code><span class="sig-paren">(</span
 <dt><code class="docutils literal notranslate"><span class="pre">MPT_ADAPTER</span> <span class="pre">*</span> <span class="pre">ioc</span></code></dt>
 <dd>Pointer to MPT_ADAPTER structure</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">int</span> <span class="pre">cooked</span></code></dt>
-<dd>Request raw or cooked IOC state</dd>
+<dd><p class="first">Request raw or cooked IOC state</p>
+<p class="last">Returns all IOC Doorbell register bits if cooked==0, else just the
+Doorbell bits in MPI_IOC_STATE_MASK.</p>
+</dd>
 </dl>
-<p><strong>Description</strong></p>
-<blockquote>
-<div>Returns all IOC Doorbell register bits if cooked==0, else just the
-Doorbell bits in MPI_IOC_STATE_MASK.</div></blockquote>
 <dl class="function">
 <dt id="c.mpt_alloc_fw_memory">
 int <code class="descname">mpt_alloc_fw_memory</code><span class="sig-paren">(</span>MPT_ADAPTER *<em>&nbsp;ioc</em>, int<em>&nbsp;size</em><span class="sig-paren">)</span><a class="headerlink" href="#c.mpt_alloc_fw_memory" title="Permalink to this definition">¶</a></dt>
@@ -521,14 +501,12 @@ int <code class="descname">mpt_alloc_fw_memory</code><span class="sig-paren">(</
 <dt><code class="docutils literal notranslate"><span class="pre">MPT_ADAPTER</span> <span class="pre">*</span> <span class="pre">ioc</span></code></dt>
 <dd>Pointer to MPT_ADAPTER structure</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">int</span> <span class="pre">size</span></code></dt>
-<dd>total FW bytes</dd>
-</dl>
-<p><strong>Description</strong></p>
-<blockquote>
-<div><p>If memory has already been allocated, the same (cached) value
+<dd><p class="first">total FW bytes</p>
+<p>If memory has already been allocated, the same (cached) value
 is returned.</p>
-<p>Return 0 if successful, or non-zero for failure</p>
-</div></blockquote>
+<p class="last">Return 0 if successful, or non-zero for failure</p>
+</dd>
+</dl>
 <dl class="function">
 <dt id="c.mpt_free_fw_memory">
 void <code class="descname">mpt_free_fw_memory</code><span class="sig-paren">(</span>MPT_ADAPTER *<em>&nbsp;ioc</em><span class="sig-paren">)</span><a class="headerlink" href="#c.mpt_free_fw_memory" title="Permalink to this definition">¶</a></dt>
@@ -538,12 +516,11 @@ void <code class="descname">mpt_free_fw_memory</code><span class="sig-paren">(</
 <p><strong>Parameters</strong></p>
 <dl class="docutils">
 <dt><code class="docutils literal notranslate"><span class="pre">MPT_ADAPTER</span> <span class="pre">*</span> <span class="pre">ioc</span></code></dt>
-<dd>Pointer to MPT_ADAPTER structure</dd>
+<dd><p class="first">Pointer to MPT_ADAPTER structure</p>
+<p class="last">If alt_img is NULL, delete from ioc structure.
+Else, delete a secondary image in same format.</p>
+</dd>
 </dl>
-<p><strong>Description</strong></p>
-<blockquote>
-<div>If alt_img is NULL, delete from ioc structure.
-Else, delete a secondary image in same format.</div></blockquote>
 <dl class="function">
 <dt id="c.mptbase_sas_persist_operation">
 int <code class="descname">mptbase_sas_persist_operation</code><span class="sig-paren">(</span>MPT_ADAPTER *<em>&nbsp;ioc</em>, u8<em>&nbsp;persist_opcode</em><span class="sig-paren">)</span><a class="headerlink" href="#c.mptbase_sas_persist_operation" title="Permalink to this definition">¶</a></dt>
@@ -555,16 +532,24 @@ int <code class="descname">mptbase_sas_persist_operation</code><span class="sig-
 <dt><code class="docutils literal notranslate"><span class="pre">MPT_ADAPTER</span> <span class="pre">*</span> <span class="pre">ioc</span></code></dt>
 <dd>Pointer to MPT_ADAPTER structure</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">u8</span> <span class="pre">persist_opcode</span></code></dt>
-<dd>see below</dd>
+<dd><p class="first">see below</p>
+<table border="1" class="last docutils">
+<colgroup>
+<col width="45%" />
+<col width="55%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td>MPI_SAS_OP_CLEAR_NOT_PRESENT</td>
+<td>Free all persist TargetID mappings for
+devices not currently present.</td>
+</tr>
+<tr class="row-even"><td>MPI_SAS_OP_CLEAR_ALL_PERSISTENT</td>
+<td>Clear al persist TargetID mappings</td>
+</tr>
+</tbody>
+</table>
+</dd>
 </dl>
-<p><strong>Description</strong></p>
-<blockquote>
-<div><dl class="docutils">
-<dt>MPI_SAS_OP_CLEAR_NOT_PRESENT - Free all persist TargetID mappings for</dt>
-<dd>devices not currently present.</dd>
-</dl>
-<p>MPI_SAS_OP_CLEAR_ALL_PERSISTENT - Clear al persist TargetID mappings</p>
-</div></blockquote>
 <p><strong>NOTE</strong></p>
 <p>Don’t use not this function during interrupt time.</p>
 <blockquote>
@@ -652,17 +637,17 @@ int <code class="descname">mpt_config</code><span class="sig-paren">(</span>MPT_
 <dt><code class="docutils literal notranslate"><span class="pre">MPT_ADAPTER</span> <span class="pre">*</span> <span class="pre">ioc</span></code></dt>
 <dd>Pointer to an adapter structure</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">CONFIGPARMS</span> <span class="pre">*</span> <span class="pre">pCfg</span></code></dt>
-<dd>Pointer to a configuration structure. Struct contains
+<dd><p class="first">Pointer to a configuration structure. Struct contains
 action, page address, direction, physical address
 and pointer to a configuration page header
-Page header is updated.</dd>
-</dl>
-<p><strong>Description</strong></p>
-<blockquote>
+Page header is updated.</p>
+<blockquote class="last">
 <div>Returns 0 for success
 -EPERM if not allowed due to ISR context
 -EAGAIN if no msg frames currently available
 -EFAULT for non-successful reply or no reply (timeout)</div></blockquote>
+</dd>
+</dl>
 <dl class="function">
 <dt id="c.mpt_print_ioc_summary">
 void <code class="descname">mpt_print_ioc_summary</code><span class="sig-paren">(</span>MPT_ADAPTER *<em>&nbsp;ioc</em>, char *<em>&nbsp;buffer</em>, int *<em>&nbsp;size</em>, int<em>&nbsp;len</em>, int<em>&nbsp;showlan</em><span class="sig-paren">)</span><a class="headerlink" href="#c.mpt_print_ioc_summary" title="Permalink to this definition">¶</a></dt>
@@ -680,12 +665,11 @@ void <code class="descname">mpt_print_ioc_summary</code><span class="sig-paren">
 <dt><code class="docutils literal notranslate"><span class="pre">int</span> <span class="pre">len</span></code></dt>
 <dd>Offset at which to start writing in buffer</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">int</span> <span class="pre">showlan</span></code></dt>
-<dd>Display LAN stuff?</dd>
+<dd><p class="first">Display LAN stuff?</p>
+<p class="last">This routine writes (english readable) ASCII text, which represents
+a summary of IOC information, to a buffer.</p>
+</dd>
 </dl>
-<p><strong>Description</strong></p>
-<blockquote>
-<div>This routine writes (english readable) ASCII text, which represents
-a summary of IOC information, to a buffer.</div></blockquote>
 <dl class="function">
 <dt id="c.mpt_set_taskmgmt_in_progress_flag">
 int <code class="descname">mpt_set_taskmgmt_in_progress_flag</code><span class="sig-paren">(</span>MPT_ADAPTER *<em>&nbsp;ioc</em><span class="sig-paren">)</span><a class="headerlink" href="#c.mpt_set_taskmgmt_in_progress_flag" title="Permalink to this definition">¶</a></dt>
@@ -695,13 +679,11 @@ int <code class="descname">mpt_set_taskmgmt_in_progress_flag</code><span class="
 <p><strong>Parameters</strong></p>
 <dl class="docutils">
 <dt><code class="docutils literal notranslate"><span class="pre">MPT_ADAPTER</span> <span class="pre">*</span> <span class="pre">ioc</span></code></dt>
-<dd>Pointer to MPT_ADAPTER structure</dd>
+<dd><p class="first">Pointer to MPT_ADAPTER structure</p>
+<p>Returns 0 for SUCCESS or -1 if FAILED.</p>
+<p class="last">If -1 is return, then it was not possible to set the flags</p>
+</dd>
 </dl>
-<p><strong>Description</strong></p>
-<blockquote>
-<div><p>Returns 0 for SUCCESS or -1 if FAILED.</p>
-<p>If -1 is return, then it was not possible to set the flags</p>
-</div></blockquote>
 <dl class="function">
 <dt id="c.mpt_clear_taskmgmt_in_progress_flag">
 void <code class="descname">mpt_clear_taskmgmt_in_progress_flag</code><span class="sig-paren">(</span>MPT_ADAPTER *<em>&nbsp;ioc</em><span class="sig-paren">)</span><a class="headerlink" href="#c.mpt_clear_taskmgmt_in_progress_flag" title="Permalink to this definition">¶</a></dt>
@@ -735,13 +717,12 @@ int <code class="descname">mpt_Soft_Hard_ResetHandler</code><span class="sig-par
 <dt><code class="docutils literal notranslate"><span class="pre">MPT_ADAPTER</span> <span class="pre">*</span> <span class="pre">ioc</span></code></dt>
 <dd>Pointer to MPT_ADAPTER structure</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">int</span> <span class="pre">sleepFlag</span></code></dt>
-<dd>Indicates if sleep or schedule must be called.</dd>
-</dl>
-<p><strong>Description</strong></p>
-<blockquote>
-<div>Returns 0 for SUCCESS or -1 if FAILED.
+<dd><p class="first">Indicates if sleep or schedule must be called.</p>
+<p class="last">Returns 0 for SUCCESS or -1 if FAILED.
 Try for softreset first, only if it fails go for expensive
-HardReset.</div></blockquote>
+HardReset.</p>
+</dd>
+</dl>
 <dl class="function">
 <dt id="c.mpt_HardResetHandler">
 int <code class="descname">mpt_HardResetHandler</code><span class="sig-paren">(</span>MPT_ADAPTER *<em>&nbsp;ioc</em>, int<em>&nbsp;sleepFlag</em><span class="sig-paren">)</span><a class="headerlink" href="#c.mpt_HardResetHandler" title="Permalink to this definition">¶</a></dt>
@@ -753,15 +734,13 @@ int <code class="descname">mpt_HardResetHandler</code><span class="sig-paren">(<
 <dt><code class="docutils literal notranslate"><span class="pre">MPT_ADAPTER</span> <span class="pre">*</span> <span class="pre">ioc</span></code></dt>
 <dd>Pointer to MPT_ADAPTER structure</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">int</span> <span class="pre">sleepFlag</span></code></dt>
-<dd>Indicates if sleep or schedule must be called.</dd>
-</dl>
-<p><strong>Description</strong></p>
-<blockquote>
-<div><p>Issues SCSI Task Management call based on input arg values.
+<dd><p class="first">Indicates if sleep or schedule must be called.</p>
+<p>Issues SCSI Task Management call based on input arg values.
 If TaskMgmt fails, returns associated SCSI request.</p>
-<p>Remark: _HardResetHandler can be invoked from an interrupt thread (timer)
+<p class="last">Remark: _HardResetHandler can be invoked from an interrupt thread (timer)
 or a non-interrupt thread.  In the former, must not call schedule().</p>
-</div></blockquote>
+</dd>
+</dl>
 <p><strong>Note</strong></p>
 <dl class="docutils">
 <dt>A return of -1 is a FATAL error case, as it means a</dt>
@@ -778,13 +757,11 @@ const char * <code class="descname">mptscsih_info</code><span class="sig-paren">
 <p><strong>Parameters</strong></p>
 <dl class="docutils">
 <dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">Scsi_Host</span> <span class="pre">*</span> <span class="pre">SChost</span></code></dt>
-<dd>Pointer to Scsi_Host structure</dd>
+<dd><p class="first">Pointer to Scsi_Host structure</p>
+<p>(linux scsi_host_template.info routine)</p>
+<p class="last">Returns pointer to buffer where information was written.</p>
+</dd>
 </dl>
-<p><strong>Description</strong></p>
-<blockquote>
-<div><p>(linux scsi_host_template.info routine)</p>
-<p>Returns pointer to buffer where information was written.</p>
-</div></blockquote>
 <dl class="function">
 <dt id="c.mptscsih_qcmd">
 int <code class="descname">mptscsih_qcmd</code><span class="sig-paren">(</span>struct scsi_cmnd *<em>&nbsp;SCpnt</em><span class="sig-paren">)</span><a class="headerlink" href="#c.mptscsih_qcmd" title="Permalink to this definition">¶</a></dt>
@@ -794,15 +771,13 @@ int <code class="descname">mptscsih_qcmd</code><span class="sig-paren">(</span>s
 <p><strong>Parameters</strong></p>
 <dl class="docutils">
 <dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">scsi_cmnd</span> <span class="pre">*</span> <span class="pre">SCpnt</span></code></dt>
-<dd>Pointer to scsi_cmnd structure</dd>
-</dl>
-<p><strong>Description</strong></p>
-<blockquote>
-<div><p>(linux scsi_host_template.queuecommand routine)
+<dd><p class="first">Pointer to scsi_cmnd structure</p>
+<p>(linux scsi_host_template.queuecommand routine)
 This is the primary SCSI IO start routine.  Create a MPI SCSIIORequest
 from a linux scsi_cmnd request and send it to the IOC.</p>
-<p>Returns 0. (rtn value discarded by linux scsi mid-layer)</p>
-</div></blockquote>
+<p class="last">Returns 0. (rtn value discarded by linux scsi mid-layer)</p>
+</dd>
+</dl>
 <dl class="function">
 <dt id="c.mptscsih_IssueTaskMgmt">
 int <code class="descname">mptscsih_IssueTaskMgmt</code><span class="sig-paren">(</span>MPT_SCSI_HOST *<em>&nbsp;hd</em>, u8<em>&nbsp;type</em>, u8<em>&nbsp;channel</em>, u8<em>&nbsp;id</em>, u64<em>&nbsp;lun</em>, int<em>&nbsp;ctx2abort</em>, ulong<em>&nbsp;timeout</em><span class="sig-paren">)</span><a class="headerlink" href="#c.mptscsih_IssueTaskMgmt" title="Permalink to this definition">¶</a></dt>
@@ -824,15 +799,13 @@ int <code class="descname">mptscsih_IssueTaskMgmt</code><span class="sig-paren">
 <dt><code class="docutils literal notranslate"><span class="pre">int</span> <span class="pre">ctx2abort</span></code></dt>
 <dd>Context for the task to be aborted (if appropriate)</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">ulong</span> <span class="pre">timeout</span></code></dt>
-<dd>timeout for task management control</dd>
-</dl>
-<p><strong>Description</strong></p>
-<blockquote>
-<div><p>Remark: _HardResetHandler can be invoked from an interrupt thread (timer)
+<dd><p class="first">timeout for task management control</p>
+<p>Remark: _HardResetHandler can be invoked from an interrupt thread (timer)
 or a non-interrupt thread.  In the former, must not call schedule().</p>
 <p>Not all fields are meaningfull for all task types.</p>
-<p>Returns 0 for SUCCESS, or FAILED.</p>
-</div></blockquote>
+<p class="last">Returns 0 for SUCCESS, or FAILED.</p>
+</dd>
+</dl>
 <dl class="function">
 <dt id="c.mptscsih_abort">
 int <code class="descname">mptscsih_abort</code><span class="sig-paren">(</span>struct scsi_cmnd *<em>&nbsp;SCpnt</em><span class="sig-paren">)</span><a class="headerlink" href="#c.mptscsih_abort" title="Permalink to this definition">¶</a></dt>
@@ -842,13 +815,11 @@ int <code class="descname">mptscsih_abort</code><span class="sig-paren">(</span>
 <p><strong>Parameters</strong></p>
 <dl class="docutils">
 <dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">scsi_cmnd</span> <span class="pre">*</span> <span class="pre">SCpnt</span></code></dt>
-<dd>Pointer to scsi_cmnd structure, IO to be aborted</dd>
+<dd><p class="first">Pointer to scsi_cmnd structure, IO to be aborted</p>
+<p>(linux scsi_host_template.eh_abort_handler routine)</p>
+<p class="last">Returns SUCCESS or FAILED.</p>
+</dd>
 </dl>
-<p><strong>Description</strong></p>
-<blockquote>
-<div><p>(linux scsi_host_template.eh_abort_handler routine)</p>
-<p>Returns SUCCESS or FAILED.</p>
-</div></blockquote>
 <dl class="function">
 <dt id="c.mptscsih_dev_reset">
 int <code class="descname">mptscsih_dev_reset</code><span class="sig-paren">(</span>struct scsi_cmnd *<em>&nbsp;SCpnt</em><span class="sig-paren">)</span><a class="headerlink" href="#c.mptscsih_dev_reset" title="Permalink to this definition">¶</a></dt>
@@ -858,13 +829,11 @@ int <code class="descname">mptscsih_dev_reset</code><span class="sig-paren">(</s
 <p><strong>Parameters</strong></p>
 <dl class="docutils">
 <dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">scsi_cmnd</span> <span class="pre">*</span> <span class="pre">SCpnt</span></code></dt>
-<dd>Pointer to scsi_cmnd structure, IO which reset is due to</dd>
+<dd><p class="first">Pointer to scsi_cmnd structure, IO which reset is due to</p>
+<p>(linux scsi_host_template.eh_dev_reset_handler routine)</p>
+<p class="last">Returns SUCCESS or FAILED.</p>
+</dd>
 </dl>
-<p><strong>Description</strong></p>
-<blockquote>
-<div><p>(linux scsi_host_template.eh_dev_reset_handler routine)</p>
-<p>Returns SUCCESS or FAILED.</p>
-</div></blockquote>
 <dl class="function">
 <dt id="c.mptscsih_bus_reset">
 int <code class="descname">mptscsih_bus_reset</code><span class="sig-paren">(</span>struct scsi_cmnd *<em>&nbsp;SCpnt</em><span class="sig-paren">)</span><a class="headerlink" href="#c.mptscsih_bus_reset" title="Permalink to this definition">¶</a></dt>
@@ -874,13 +843,11 @@ int <code class="descname">mptscsih_bus_reset</code><span class="sig-paren">(</s
 <p><strong>Parameters</strong></p>
 <dl class="docutils">
 <dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">scsi_cmnd</span> <span class="pre">*</span> <span class="pre">SCpnt</span></code></dt>
-<dd>Pointer to scsi_cmnd structure, IO which reset is due to</dd>
+<dd><p class="first">Pointer to scsi_cmnd structure, IO which reset is due to</p>
+<p>(linux scsi_host_template.eh_bus_reset_handler routine)</p>
+<p class="last">Returns SUCCESS or FAILED.</p>
+</dd>
 </dl>
-<p><strong>Description</strong></p>
-<blockquote>
-<div><p>(linux scsi_host_template.eh_bus_reset_handler routine)</p>
-<p>Returns SUCCESS or FAILED.</p>
-</div></blockquote>
 <dl class="function">
 <dt id="c.mptscsih_host_reset">
 int <code class="descname">mptscsih_host_reset</code><span class="sig-paren">(</span>struct scsi_cmnd *<em>&nbsp;SCpnt</em><span class="sig-paren">)</span><a class="headerlink" href="#c.mptscsih_host_reset" title="Permalink to this definition">¶</a></dt>
@@ -890,13 +857,11 @@ int <code class="descname">mptscsih_host_reset</code><span class="sig-paren">(</
 <p><strong>Parameters</strong></p>
 <dl class="docutils">
 <dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">scsi_cmnd</span> <span class="pre">*</span> <span class="pre">SCpnt</span></code></dt>
-<dd>Pointer to scsi_cmnd structure, IO which reset is due to</dd>
+<dd><p class="first">Pointer to scsi_cmnd structure, IO which reset is due to</p>
+<p>(linux scsi_host_template.eh_host_reset_handler routine)</p>
+<p class="last">Returns SUCCESS or FAILED.</p>
+</dd>
 </dl>
-<p><strong>Description</strong></p>
-<blockquote>
-<div><p>(linux scsi_host_template.eh_host_reset_handler routine)</p>
-<p>Returns SUCCESS or FAILED.</p>
-</div></blockquote>
 <dl class="function">
 <dt id="c.mptscsih_taskmgmt_complete">
 int <code class="descname">mptscsih_taskmgmt_complete</code><span class="sig-paren">(</span>MPT_ADAPTER *<em>&nbsp;ioc</em>, MPT_FRAME_HDR *<em>&nbsp;mf</em>, MPT_FRAME_HDR *<em>&nbsp;mr</em><span class="sig-paren">)</span><a class="headerlink" href="#c.mptscsih_taskmgmt_complete" title="Permalink to this definition">¶</a></dt>
@@ -910,16 +875,14 @@ int <code class="descname">mptscsih_taskmgmt_complete</code><span class="sig-par
 <dt><code class="docutils literal notranslate"><span class="pre">MPT_FRAME_HDR</span> <span class="pre">*</span> <span class="pre">mf</span></code></dt>
 <dd>Pointer to SCSI task mgmt request frame</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">MPT_FRAME_HDR</span> <span class="pre">*</span> <span class="pre">mr</span></code></dt>
-<dd>Pointer to SCSI task mgmt reply frame</dd>
-</dl>
-<p><strong>Description</strong></p>
-<blockquote>
-<div><p>This routine is called from mptbase.c::mpt_interrupt() at the completion
+<dd><p class="first">Pointer to SCSI task mgmt reply frame</p>
+<p>This routine is called from mptbase.c::mpt_interrupt() at the completion
 of any SCSI task management request.
 This routine is registered with the MPT (base) driver at driver
 load/init time via the <a class="reference internal" href="#c.mpt_register" title="mpt_register"><code class="xref c c-func docutils literal notranslate"><span class="pre">mpt_register()</span></code></a> API call.</p>
-<p>Returns 1 indicating alloc’d request frame ptr should be freed.</p>
-</div></blockquote>
+<p class="last">Returns 1 indicating alloc’d request frame ptr should be freed.</p>
+</dd>
+</dl>
 <dl class="function">
 <dt id="c.mptscsih_get_scsi_lookup">
 struct scsi_cmnd * <code class="descname">mptscsih_get_scsi_lookup</code><span class="sig-paren">(</span>MPT_ADAPTER *<em>&nbsp;ioc</em>, int<em>&nbsp;i</em><span class="sig-paren">)</span><a class="headerlink" href="#c.mptscsih_get_scsi_lookup" title="Permalink to this definition">¶</a></dt>

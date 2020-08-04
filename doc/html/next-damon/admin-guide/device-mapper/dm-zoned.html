@@ -68,7 +68,7 @@
             
             
               <div class="version">
-                5.7.0
+                5.8.0
               </div>
             
           
@@ -189,8 +189,12 @@ utility available at:</p>
 <p>dm-zoned implements an on-disk buffering scheme to handle non-sequential
 write accesses to the sequential zones of a zoned block device.
 Conventional zones are used for caching as well as for storing internal
-metadata.</p>
-<p>The zones of the device are separated into 2 types:</p>
+metadata. It can also use a regular block device together with the zoned
+block device; in that case the regular block device will be split logically
+in zones with the same size as the zoned block device. These zones will be
+placed in front of the zones from the zoned block device and will be handled
+just like conventional zones.</p>
+<p>The zones of the device(s) are separated into 2 types:</p>
 <p>1) Metadata zones: these are conventional zones used to store metadata.
 Metadata zones are not reported as useable capacity to the user.</p>
 <p>2) Data zones: all remaining zones, the vast majority of which will be
@@ -266,6 +270,12 @@ metadata blocks are staged and updated. Normal operation is then
 resumed. Flushing metadata thus only temporarily delays write and
 discard requests. Read requests can be processed concurrently while
 metadata flush is being executed.</p>
+<p>If a regular device is used in conjunction with the zoned block device,
+a third set of metadata (without the zone bitmaps) is written to the
+start of the zoned block device. This metadata has a generation counter of
+‘0’ and will never be updated during normal operation; it just serves for
+identification purposes. The first and second copy of the metadata
+are located at the start of the regular block device.</p>
 </div>
 <div class="section" id="usage">
 <h2>Usage<a class="headerlink" href="#usage" title="Permalink to this headline">¶</a></h2>
@@ -276,13 +286,40 @@ metadata sets on the device and initialize the metadata sets.</p>
 <div class="highlight-none notranslate"><div class="highlight"><pre><span></span>dmzadm --format /dev/sdxx
 </pre></div>
 </div>
-<p>For a formatted device, the target can be created normally with the
-dmsetup utility. The only parameter that dm-zoned requires is the
-underlying zoned block device name. Ex:</p>
-<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>echo &quot;0 `blockdev --getsize ${dev}` zoned ${dev}&quot; | \
-dmsetup create dmz-`basename ${dev}`
+<p>If two drives are to be used, both devices must be specified, with the
+regular block device as the first device.</p>
+<p>Ex:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>dmzadm --format /dev/sdxx /dev/sdyy
 </pre></div>
 </div>
+<p>Fomatted device(s) can be started with the dmzadm utility, too.:</p>
+<p>Ex:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>dmzadm --start /dev/sdxx /dev/sdyy
+</pre></div>
+</div>
+<p>Information about the internal layout and current usage of the zones can
+be obtained with the ‘status’ callback from dmsetup:</p>
+<p>Ex:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>dmsetup status /dev/dm-X
+</pre></div>
+</div>
+<p>will return a line</p>
+<blockquote>
+<div>0 &lt;size&gt; zoned &lt;nr_zones&gt; zones &lt;nr_unmap_rnd&gt;/&lt;nr_rnd&gt; random &lt;nr_unmap_seq&gt;/&lt;nr_seq&gt; sequential</div></blockquote>
+<p>where &lt;nr_zones&gt; is the total number of zones, &lt;nr_unmap_rnd&gt; is the number
+of unmapped (ie free) random zones, &lt;nr_rnd&gt; the total number of zones,
+&lt;nr_unmap_seq&gt; the number of unmapped sequential zones, and &lt;nr_seq&gt; the
+total number of sequential zones.</p>
+<p>Normally the reclaim process will be started once there are less than 50
+percent free random zones. In order to start the reclaim process manually
+even before reaching this threshold the ‘dmsetup message’ function can be
+used:</p>
+<p>Ex:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>dmsetup message /dev/dm-X 0 reclaim
+</pre></div>
+</div>
+<p>will start the reclaim process and random zones will be moved to sequential
+zones.</p>
 </div>
 </div>
 

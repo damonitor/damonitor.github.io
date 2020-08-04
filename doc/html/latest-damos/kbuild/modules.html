@@ -68,7 +68,7 @@
             
             
               <div class="version">
-                5.7.0
+                5.8.0
               </div>
             
           
@@ -303,7 +303,8 @@ module 8123.ko, which is built from the following files:</p>
 8123_bin.o_shipped      &lt;= Binary blob
 </pre></div>
 </div>
-<p>— 3.1 Shared Makefile</p>
+<div class="section" id="shared-makefile">
+<h3>3.1 Shared Makefile<a class="headerlink" href="#shared-makefile" title="Permalink to this headline">¶</a></h3>
 <blockquote>
 <div><p>An external module always includes a wrapper makefile that
 supports building the module using “make” with no arguments.
@@ -340,6 +341,7 @@ the first pass is by the “make” instance run on the command
 line; the second pass is by the kbuild system, which is
 initiated by the parameterized “make” in the default target.</p>
 </div></blockquote>
+</div>
 <div class="section" id="separate-kbuild-file-and-makefile">
 <h3>3.2 Separate Kbuild File and Makefile<a class="headerlink" href="#separate-kbuild-file-and-makefile" title="Permalink to this headline">¶</a></h3>
 <blockquote>
@@ -591,9 +593,10 @@ the kernel and compiled modules. For each symbol, the
 corresponding CRC value is also stored.</p>
 <p>The syntax of the Module.symvers file is:</p>
 <div class="highlight-none notranslate"><div class="highlight"><pre><span></span>&lt;CRC&gt;       &lt;Symbol&gt;         &lt;Module&gt;                         &lt;Export Type&gt;     &lt;Namespace&gt;
+
+0xe1cc2a05  usb_stor_suspend drivers/usb/storage/usb-storage  EXPORT_SYMBOL_GPL USB_STORAGE
 </pre></div>
 </div>
-<p>0xe1cc2a05  usb_stor_suspend drivers/usb/storage/usb-storage  EXPORT_SYMBOL_GPL USB_STORAGE</p>
 <p>The fields are separated by tabs and values may be empty (e.g.
 if no namespace is defined for an exported symbol).</p>
 <p>For a kernel build without CONFIG_MODVERSIONS enabled, the CRC
@@ -647,17 +650,6 @@ directory layout:</p>
 <p class="last">will then do the expected and compile both modules with
 full knowledge of symbols from either module.</p>
 </dd>
-<dt>Use an extra Module.symvers file</dt>
-<dd>When an external module is built, a Module.symvers file
-is generated containing all exported symbols which are
-not defined in the kernel. To get access to symbols
-from bar.ko, copy the Module.symvers file from the
-compilation of bar.ko to the directory where foo.ko is
-built. During the module build, kbuild will read the
-Module.symvers file in the directory of the external
-module, and when the build is finished, a new
-Module.symvers file is created containing the sum of
-all symbols defined and not part of the kernel.</dd>
 <dt>Use “make” variable KBUILD_EXTRA_SYMBOLS</dt>
 <dd>If it is impractical to add a top-level kbuild file,
 you can assign a space separated list

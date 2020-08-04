@@ -1,0 +1,660 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Overview &mdash; The Linux Kernel  documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript">
+          var DOCUMENTATION_OPTIONS = {
+              URL_ROOT:'../',
+              VERSION:'',
+              LANGUAGE:'None',
+              COLLAPSE_INDEX:false,
+              FILE_SUFFIX:'.html',
+              HAS_SOURCE:  true,
+              SOURCELINK_SUFFIX: '.txt'
+          };
+      </script>
+        <script type="text/javascript" src="../_static/jquery.js"></script>
+        <script type="text/javascript" src="../_static/underscore.js"></script>
+        <script type="text/javascript" src="../_static/doctools.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/theme_overrides.css" type="text/css" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> The Linux Kernel
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                5.8.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../admin-guide/mm/damon/index.html">Monitoring Data Accesses</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../vm/damon/index.html">DAMON: Data Access MONitor</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">The Linux Kernel</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+      <li>Overview</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/networking/rds.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <p>==
+RDS
+===</p>
+<div class="section" id="overview">
+<h1>Overview<a class="headerlink" href="#overview" title="Permalink to this headline">¶</a></h1>
+<p>This readme tries to provide some background on the hows and whys of RDS,
+and will hopefully help you find your way around the code.</p>
+<p>In addition, please see this email about RDS origins:
+<a class="reference external" href="http://oss.oracle.com/pipermail/rds-devel/2007-November/000228.html">http://oss.oracle.com/pipermail/rds-devel/2007-November/000228.html</a></p>
+</div>
+<div class="section" id="rds-architecture">
+<h1>RDS Architecture<a class="headerlink" href="#rds-architecture" title="Permalink to this headline">¶</a></h1>
+<p>RDS provides reliable, ordered datagram delivery by using a single
+reliable connection between any two nodes in the cluster. This allows
+applications to use a single socket to talk to any other process in the
+cluster - so in a cluster with N processes you need N sockets, in contrast
+to N*N if you use a connection-oriented socket transport like TCP.</p>
+<p>RDS is not Infiniband-specific; it was designed to support different
+transports.  The current implementation used to support RDS over TCP as well
+as IB.</p>
+<p>The high-level semantics of RDS from the application’s point of view are</p>
+<blockquote>
+<div><ul>
+<li><p class="first">Addressing</p>
+<p>RDS uses IPv4 addresses and 16bit port numbers to identify
+the end point of a connection. All socket operations that involve
+passing addresses between kernel and user space generally
+use a struct sockaddr_in.</p>
+<p>The fact that IPv4 addresses are used does not mean the underlying
+transport has to be IP-based. In fact, RDS over IB uses a
+reliable IB connection; the IP address is used exclusively to
+locate the remote node’s GID (by ARPing for the given IP).</p>
+<p>The port space is entirely independent of UDP, TCP or any other
+protocol.</p>
+</li>
+<li><p class="first">Socket interface</p>
+<p>RDS sockets work <em>mostly</em> as you would expect from a BSD
+socket. The next section will cover the details. At any rate,
+all I/O is performed through the standard BSD socket API.
+Some additions like zerocopy support are implemented through
+control messages, while other extensions use the getsockopt/
+setsockopt calls.</p>
+<p>Sockets must be bound before you can send or receive data.
+This is needed because binding also selects a transport and
+attaches it to the socket. Once bound, the transport assignment
+does not change. RDS will tolerate IPs moving around (eg in
+a active-active HA scenario), but only as long as the address
+doesn’t move to a different transport.</p>
+</li>
+<li><p class="first">sysctls</p>
+<p>RDS supports a number of sysctls in /proc/sys/net/rds</p>
+</li>
+</ul>
+</div></blockquote>
+</div>
+<div class="section" id="socket-interface">
+<h1>Socket Interface<a class="headerlink" href="#socket-interface" title="Permalink to this headline">¶</a></h1>
+<blockquote>
+<div><dl class="docutils">
+<dt>AF_RDS, PF_RDS, SOL_RDS</dt>
+<dd>AF_RDS and PF_RDS are the domain type to be used with socket(2)
+to create RDS sockets. SOL_RDS is the socket-level to be used
+with setsockopt(2) and getsockopt(2) for RDS specific socket
+options.</dd>
+<dt>fd = socket(PF_RDS, SOCK_SEQPACKET, 0);</dt>
+<dd>This creates a new, unbound RDS socket.</dd>
+<dt>setsockopt(SOL_SOCKET): send and receive buffer size</dt>
+<dd><p class="first">RDS honors the send and receive buffer size socket options.
+You are not allowed to queue more than SO_SNDSIZE bytes to
+a socket. A message is queued when sendmsg is called, and
+it leaves the queue when the remote system acknowledges
+its arrival.</p>
+<p class="last">The SO_RCVSIZE option controls the maximum receive queue length.
+This is a soft limit rather than a hard limit - RDS will
+continue to accept and queue incoming messages, even if that
+takes the queue length over the limit. However, it will also
+mark the port as “congested” and send a congestion update to
+the source node. The source node is supposed to throttle any
+processes sending to this congested port.</p>
+</dd>
+<dt>bind(fd, &amp;sockaddr_in, …)</dt>
+<dd>This binds the socket to a local IP address and port, and a
+transport, if one has not already been selected via the
+SO_RDS_TRANSPORT socket option</dd>
+<dt>sendmsg(fd, …)</dt>
+<dd><p class="first">Sends a message to the indicated recipient. The kernel will
+transparently establish the underlying reliable connection
+if it isn’t up yet.</p>
+<p>An attempt to send a message that exceeds SO_SNDSIZE will
+return with -EMSGSIZE</p>
+<p>An attempt to send a message that would take the total number
+of queued bytes over the SO_SNDSIZE threshold will return
+EAGAIN.</p>
+<p class="last">An attempt to send a message to a destination that is marked
+as “congested” will return ENOBUFS.</p>
+</dd>
+<dt>recvmsg(fd, …)</dt>
+<dd><p class="first">Receives a message that was queued to this socket. The sockets
+recv queue accounting is adjusted, and if the queue length
+drops below SO_SNDSIZE, the port is marked uncongested, and
+a congestion update is sent to all peers.</p>
+<p class="last">Applications can ask the RDS kernel module to receive
+notifications via control messages (for instance, there is a
+notification when a congestion update arrived, or when a RDMA
+operation completes). These notifications are received through
+the msg.msg_control buffer of struct msghdr. The format of the
+messages is described in manpages.</p>
+</dd>
+<dt>poll(fd)</dt>
+<dd><p class="first">RDS supports the poll interface to allow the application
+to implement async I/O.</p>
+<p>POLLIN handling is pretty straightforward. When there’s an
+incoming message queued to the socket, or a pending notification,
+we signal POLLIN.</p>
+<p>POLLOUT is a little harder. Since you can essentially send
+to any destination, RDS will always signal POLLOUT as long as
+there’s room on the send queue (ie the number of bytes queued
+is less than the sendbuf size).</p>
+<p class="last">However, the kernel will refuse to accept messages to
+a destination marked congested - in this case you will loop
+forever if you rely on poll to tell you what to do.
+This isn’t a trivial problem, but applications can deal with
+this - by using congestion notifications, and by checking for
+ENOBUFS errors returned by sendmsg.</p>
+</dd>
+<dt>setsockopt(SOL_RDS, RDS_CANCEL_SENT_TO, &amp;sockaddr_in)</dt>
+<dd><p class="first">This allows the application to discard all messages queued to a
+specific destination on this particular socket.</p>
+<p class="last">This allows the application to cancel outstanding messages if
+it detects a timeout. For instance, if it tried to send a message,
+and the remote host is unreachable, RDS will keep trying forever.
+The application may decide it’s not worth it, and cancel the
+operation. In this case, it would use RDS_CANCEL_SENT_TO to
+nuke any pending messages.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">setsockopt(fd,</span> <span class="pre">SOL_RDS,</span> <span class="pre">SO_RDS_TRANSPORT,</span> <span class="pre">(int</span> <span class="pre">*)&amp;transport</span> <span class="pre">..),</span> <span class="pre">getsockopt(fd,</span> <span class="pre">SOL_RDS,</span> <span class="pre">SO_RDS_TRANSPORT,</span> <span class="pre">(int</span> <span class="pre">*)&amp;transport</span> <span class="pre">..)</span></code></dt>
+<dd>Set or read an integer defining  the underlying
+encapsulating transport to be used for RDS packets on the
+socket. When setting the option, integer argument may be
+one of RDS_TRANS_TCP or RDS_TRANS_IB. When retrieving the
+value, RDS_TRANS_NONE will be returned on an unbound socket.
+This socket option may only be set exactly once on the socket,
+prior to binding it via the bind(2) system call. Attempts to
+set SO_RDS_TRANSPORT on a socket for which the transport has
+been previously attached explicitly (by SO_RDS_TRANSPORT) or
+implicitly (via bind(2)) will return an error of EOPNOTSUPP.
+An attempt to set SO_RDS_TRANSPORT to RDS_TRANS_NONE will
+always return EINVAL.</dd>
+</dl>
+</div></blockquote>
+</div>
+<div class="section" id="rdma-for-rds">
+<h1>RDMA for RDS<a class="headerlink" href="#rdma-for-rds" title="Permalink to this headline">¶</a></h1>
+<blockquote>
+<div>see rds-rdma(7) manpage (available in rds-tools)</div></blockquote>
+</div>
+<div class="section" id="congestion-notifications">
+<h1>Congestion Notifications<a class="headerlink" href="#congestion-notifications" title="Permalink to this headline">¶</a></h1>
+<blockquote>
+<div>see rds(7) manpage</div></blockquote>
+</div>
+<div class="section" id="rds-protocol">
+<h1>RDS Protocol<a class="headerlink" href="#rds-protocol" title="Permalink to this headline">¶</a></h1>
+<blockquote>
+<div><p>Message header</p>
+<blockquote>
+<div><p>The message header is a ‘struct rds_header’ (see rds.h):</p>
+<p>Fields:</p>
+<blockquote>
+<div><dl class="docutils">
+<dt>h_sequence:</dt>
+<dd>per-packet sequence number</dd>
+<dt>h_ack:</dt>
+<dd>piggybacked acknowledgment of last packet received</dd>
+<dt>h_len:</dt>
+<dd>length of data, not including header</dd>
+<dt>h_sport:</dt>
+<dd>source port</dd>
+<dt>h_dport:</dt>
+<dd>destination port</dd>
+<dt>h_flags:</dt>
+<dd><p class="first">Can be:</p>
+<table border="1" class="last docutils">
+<colgroup>
+<col width="28%" />
+<col width="72%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td>CONG_BITMAP</td>
+<td>this is a congestion update bitmap</td>
+</tr>
+<tr class="row-even"><td>ACK_REQUIRED</td>
+<td>receiver must ack this packet</td>
+</tr>
+<tr class="row-odd"><td>RETRANSMITTED</td>
+<td>packet has previously been sent</td>
+</tr>
+</tbody>
+</table>
+</dd>
+<dt>h_credit:</dt>
+<dd>indicate to other end of connection that
+it has more credits available (i.e. there is
+more send room)</dd>
+<dt>h_padding[4]:</dt>
+<dd>unused, for future use</dd>
+<dt>h_csum:</dt>
+<dd>header checksum</dd>
+<dt>h_exthdr:</dt>
+<dd>optional data can be passed here. This is currently used for
+passing RDMA-related information.</dd>
+</dl>
+</div></blockquote>
+</div></blockquote>
+<p>ACK and retransmit handling</p>
+<blockquote>
+<div><p>One might think that with reliable IB connections you wouldn’t need
+to ack messages that have been received.  The problem is that IB
+hardware generates an ack message before it has DMAed the message
+into memory.  This creates a potential message loss if the HCA is
+disabled for any reason between when it sends the ack and before
+the message is DMAed and processed.  This is only a potential issue
+if another HCA is available for fail-over.</p>
+<p>Sending an ack immediately would allow the sender to free the sent
+message from their send queue quickly, but could cause excessive
+traffic to be used for acks. RDS piggybacks acks on sent data
+packets.  Ack-only packets are reduced by only allowing one to be
+in flight at a time, and by the sender only asking for acks when
+its send buffers start to fill up. All retransmissions are also
+acked.</p>
+</div></blockquote>
+<p>Flow Control</p>
+<blockquote>
+<div>RDS’s IB transport uses a credit-based mechanism to verify that
+there is space in the peer’s receive buffers for more data. This
+eliminates the need for hardware retries on the connection.</div></blockquote>
+<p>Congestion</p>
+<blockquote>
+<div><p>Messages waiting in the receive queue on the receiving socket
+are accounted against the sockets SO_RCVBUF option value.  Only
+the payload bytes in the message are accounted for.  If the
+number of bytes queued equals or exceeds rcvbuf then the socket
+is congested.  All sends attempted to this socket’s address
+should return block or return -EWOULDBLOCK.</p>
+<p>Applications are expected to be reasonably tuned such that this
+situation very rarely occurs.  An application encountering this
+“back-pressure” is considered a bug.</p>
+<p>This is implemented by having each node maintain bitmaps which
+indicate which ports on bound addresses are congested.  As the
+bitmap changes it is sent through all the connections which
+terminate in the local address of the bitmap which changed.</p>
+<p>The bitmaps are allocated as connections are brought up.  This
+avoids allocation in the interrupt handling path which queues
+sages on sockets.  The dense bitmaps let transports send the
+entire bitmap on any bitmap change reasonably efficiently.  This
+is much easier to implement than some finer-grained
+communication of per-port congestion.  The sender does a very
+inexpensive bit test to test if the port it’s about to send to
+is congested or not.</p>
+</div></blockquote>
+</div></blockquote>
+</div>
+<div class="section" id="rds-transport-layer">
+<h1>RDS Transport Layer<a class="headerlink" href="#rds-transport-layer" title="Permalink to this headline">¶</a></h1>
+<blockquote>
+<div><p>As mentioned above, RDS is not IB-specific. Its code is divided
+into a general RDS layer and a transport layer.</p>
+<p>The general layer handles the socket API, congestion handling,
+loopback, stats, usermem pinning, and the connection state machine.</p>
+<p>The transport layer handles the details of the transport. The IB
+transport, for example, handles all the queue pairs, work requests,
+CM event handlers, and other Infiniband details.</p>
+</div></blockquote>
+</div>
+<div class="section" id="rds-kernel-structures">
+<h1>RDS Kernel Structures<a class="headerlink" href="#rds-kernel-structures" title="Permalink to this headline">¶</a></h1>
+<blockquote>
+<div><dl class="docutils">
+<dt>struct rds_message</dt>
+<dd>aka possibly “rds_outgoing”, the generic RDS layer copies data to
+be sent and sets header fields as needed, based on the socket API.
+This is then queued for the individual connection and sent by the
+connection’s transport.</dd>
+<dt>struct rds_incoming</dt>
+<dd>a generic struct referring to incoming data that can be handed from
+the transport to the general code and queued by the general code
+while the socket is awoken. It is then passed back to the transport
+code to handle the actual copy-to-user.</dd>
+<dt>struct rds_socket</dt>
+<dd>per-socket information</dd>
+<dt>struct rds_connection</dt>
+<dd>per-connection information</dd>
+<dt>struct rds_transport</dt>
+<dd>pointers to transport-specific functions</dd>
+<dt>struct rds_statistics</dt>
+<dd>non-transport-specific statistics</dd>
+<dt>struct rds_cong_map</dt>
+<dd>wraps the raw congestion bitmap, contains rbnode, waitq, etc.</dd>
+</dl>
+</div></blockquote>
+</div>
+<div class="section" id="connection-management">
+<h1>Connection management<a class="headerlink" href="#connection-management" title="Permalink to this headline">¶</a></h1>
+<blockquote>
+<div><p>Connections may be in UP, DOWN, CONNECTING, DISCONNECTING, and
+ERROR states.</p>
+<p>The first time an attempt is made by an RDS socket to send data to
+a node, a connection is allocated and connected. That connection is
+then maintained forever – if there are transport errors, the
+connection will be dropped and re-established.</p>
+<p>Dropping a connection while packets are queued will cause queued or
+partially-sent datagrams to be retransmitted when the connection is
+re-established.</p>
+</div></blockquote>
+</div>
+<div class="section" id="the-send-path">
+<h1>The send path<a class="headerlink" href="#the-send-path" title="Permalink to this headline">¶</a></h1>
+<blockquote>
+<div><dl class="docutils">
+<dt>rds_sendmsg()</dt>
+<dd><ul class="first last simple">
+<li>struct rds_message built from incoming data</li>
+<li>CMSGs parsed (e.g. RDMA ops)</li>
+<li>transport connection alloced and connected if not already</li>
+<li>rds_message placed on send queue</li>
+<li>send worker awoken</li>
+</ul>
+</dd>
+<dt>rds_send_worker()</dt>
+<dd><ul class="first last simple">
+<li>calls rds_send_xmit() until queue is empty</li>
+</ul>
+</dd>
+<dt>rds_send_xmit()</dt>
+<dd><ul class="first last simple">
+<li>transmits congestion map if one is pending</li>
+<li>may set ACK_REQUIRED</li>
+<li>calls transport to send either non-RDMA or RDMA message
+(RDMA ops never retransmitted)</li>
+</ul>
+</dd>
+<dt>rds_ib_xmit()</dt>
+<dd><ul class="first last simple">
+<li>allocs work requests from send ring</li>
+<li>adds any new send credits available to peer (h_credits)</li>
+<li>maps the rds_message’s sg list</li>
+<li>piggybacks ack</li>
+<li>populates work requests</li>
+<li>post send to connection’s queue pair</li>
+</ul>
+</dd>
+</dl>
+</div></blockquote>
+</div>
+<div class="section" id="the-recv-path">
+<h1>The recv path<a class="headerlink" href="#the-recv-path" title="Permalink to this headline">¶</a></h1>
+<blockquote>
+<div><dl class="docutils">
+<dt>rds_ib_recv_cq_comp_handler()</dt>
+<dd><ul class="first last simple">
+<li>looks at write completions</li>
+<li>unmaps recv buffer from device</li>
+<li>no errors, call rds_ib_process_recv()</li>
+<li>refill recv ring</li>
+</ul>
+</dd>
+<dt>rds_ib_process_recv()</dt>
+<dd><ul class="first last simple">
+<li>validate header checksum</li>
+<li>copy header to rds_ib_incoming struct if start of a new datagram</li>
+<li>add to ibinc’s fraglist</li>
+<li><dl class="first docutils">
+<dt>if competed datagram:</dt>
+<dd><ul class="first last">
+<li>update cong map if datagram was cong update</li>
+<li>call rds_recv_incoming() otherwise</li>
+<li>note if ack is required</li>
+</ul>
+</dd>
+</dl>
+</li>
+</ul>
+</dd>
+<dt>rds_recv_incoming()</dt>
+<dd><ul class="first last simple">
+<li>drop duplicate packets</li>
+<li>respond to pings</li>
+<li>find the sock associated with this datagram</li>
+<li>add to sock queue</li>
+<li>wake up sock</li>
+<li>do some congestion calculations</li>
+</ul>
+</dd>
+<dt>rds_recvmsg</dt>
+<dd><ul class="first last simple">
+<li>copy data into user iovec</li>
+<li>handle CMSGs</li>
+<li>return to application</li>
+</ul>
+</dd>
+</dl>
+</div></blockquote>
+</div>
+<div class="section" id="multipath-rds-mprds">
+<h1>Multipath RDS (mprds)<a class="headerlink" href="#multipath-rds-mprds" title="Permalink to this headline">¶</a></h1>
+<blockquote>
+<div><p>Mprds is multipathed-RDS, primarily intended for RDS-over-TCP
+(though the concept can be extended to other transports). The classical
+implementation of RDS-over-TCP is implemented by demultiplexing multiple
+PF_RDS sockets between any 2 endpoints (where endpoint == [IP address,
+port]) over a single TCP socket between the 2 IP addresses involved. This
+has the limitation that it ends up funneling multiple RDS flows over a
+single TCP flow, thus it is
+(a) upper-bounded to the single-flow bandwidth,
+(b) suffers from head-of-line blocking for all the RDS sockets.</p>
+<p>Better throughput (for a fixed small packet size, MTU) can be achieved
+by having multiple TCP/IP flows per rds/tcp connection, i.e., multipathed
+RDS (mprds).  Each such TCP/IP flow constitutes a path for the rds/tcp
+connection. RDS sockets will be attached to a path based on some hash
+(e.g., of local address and RDS port number) and packets for that RDS
+socket will be sent over the attached path using TCP to segment/reassemble
+RDS datagrams on that path.</p>
+<p>Multipathed RDS is implemented by splitting the struct rds_connection into
+a common (to all paths) part, and a per-path struct rds_conn_path. All
+I/O workqs and reconnect threads are driven from the rds_conn_path.
+Transports such as TCP that are multipath capable may then set up a
+TCP socket per rds_conn_path, and this is managed by the transport via
+the transport privatee cp_transport_data pointer.</p>
+<p>Transports announce themselves as multipath capable by setting the
+t_mp_capable bit during registration with the rds core module. When the
+transport is multipath-capable, rds_sendmsg() hashes outgoing traffic
+across multiple paths. The outgoing hash is computed based on the
+local address and port that the PF_RDS socket is bound to.</p>
+<p>Additionally, even if the transport is MP capable, we may be
+peering with some node that does not support mprds, or supports
+a different number of paths. As a result, the peering nodes need
+to agree on the number of paths to be used for the connection.
+This is done by sending out a control packet exchange before the
+first data packet. The control packet exchange must have completed
+prior to outgoing hash completion in rds_sendmsg() when the transport
+is mutlipath capable.</p>
+<p>The control packet is an RDS ping packet (i.e., packet to rds dest
+port 0) with the ping packet having a rds extension header option  of
+type RDS_EXTHDR_NPATHS, length 2 bytes, and the value is the
+number of paths supported by the sender. The “probe” ping packet will
+get sent from some reserved port, RDS_FLAG_PROBE_PORT (in &lt;linux/rds.h&gt;)
+The receiver of a ping from RDS_FLAG_PROBE_PORT will thus immediately
+be able to compute the min(sender_paths, rcvr_paths). The pong
+sent in response to a probe-ping should contain the rcvr’s npaths
+when the rcvr is mprds-capable.</p>
+<p>If the rcvr is not mprds-capable, the exthdr in the ping will be
+ignored.  In this case the pong will not have any exthdrs, so the sender
+of the probe-ping can default to single-path mprds.</p>
+</div></blockquote>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright The kernel development community
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

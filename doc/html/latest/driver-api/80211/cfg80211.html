@@ -68,7 +68,7 @@
             
             
               <div class="version">
-                5.7.0
+                5.8.0
               </div>
             
           
@@ -248,6 +248,7 @@ struct <code class="descname">ieee80211_channel</code><a class="headerlink" href
 <div class="highlight-none notranslate"><div class="highlight"><pre><span></span>struct ieee80211_channel {
   enum nl80211_band band;
   u32 center_freq;
+  u16 freq_offset;
   u16 hw_value;
   u32 flags;
   int max_antenna_gain;
@@ -268,6 +269,8 @@ struct <code class="descname">ieee80211_channel</code><a class="headerlink" href
 <dd>band this channel belongs to.</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">center_freq</span></code></dt>
 <dd>center frequency in MHz</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">freq_offset</span></code></dt>
+<dd>offset from <strong>center_freq</strong>, in KHz</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">hw_value</span></code></dt>
 <dd>hardware-specific value for the channel</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">flags</span></code></dt>
@@ -501,6 +504,8 @@ enum <code class="descname">wiphy_flags</code><a class="headerlink" href="#c.wip
 
 <p><strong>Constants</strong></p>
 <dl class="docutils">
+<dt><code class="docutils literal notranslate"><span class="pre">WIPHY_FLAG_SUPPORTS_EXT_KEK_KCK</span></code></dt>
+<dd>The device supports bigger kek and kck keys</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">WIPHY_FLAG_NETNS_OK</span></code></dt>
 <dd>if not set, do not allow changing the netns of this
 wiphy at all</dd>
@@ -650,7 +655,7 @@ struct <code class="descname">wiphy</code><a class="headerlink" href="#c.wiphy" 
     u8 max_retry;
   } tid_config_support;
   u8 max_data_retry_count;
-  char priv[0] ;
+  char priv[] ;
 };
 </pre></div>
 </div>
@@ -926,6 +931,7 @@ struct <code class="descname">wireless_dev</code><a class="headerlink" href="#c.
   u32 identifier;
   struct list_head mgmt_registrations;
   spinlock_t mgmt_registrations_lock;
+  u8 mgmt_registrations_need_update:1;
   struct mutex mtx;
   bool use_4addr, is_running;
   u8 address[ETH_ALEN] ;
@@ -971,6 +977,7 @@ struct <code class="descname">wireless_dev</code><a class="headerlink" href="#c.
   struct list_head pmsr_list;
   spinlock_t pmsr_lock;
   struct work_struct pmsr_free_wk;
+  unsigned long unprot_beacon_reported;
 };
 </pre></div>
 </div>
@@ -991,6 +998,9 @@ wireless device if it has no netdev</dd>
 <dd>list of registrations for management frames</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">mgmt_registrations_lock</span></code></dt>
 <dd>lock for the list</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">mgmt_registrations_need_update</span></code></dt>
+<dd>mgmt registrations were updated,
+need to propagate the update to the driver</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">mtx</span></code></dt>
 <dd>mutex used to lock data in this struct, may be used by drivers
 and some API functions require it held</dd>
@@ -1092,6 +1102,9 @@ registered for unexpected class 3 frames (AP mode)</dd>
 <dd>(private) peer measurements requests/results lock</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">pmsr_free_wk</span></code></dt>
 <dd>(private) peer measurements cleanup work</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">unprot_beacon_reported</span></code></dt>
+<dd>(private) timestamp of last
+unprotected beacon report</dd>
 </dl>
 <p><strong>Description</strong></p>
 <p>For netdevs, this structure must be allocated by the driver
@@ -1333,7 +1346,6 @@ combination must be greater or equal to this value.</dd>
 <p><strong>Description</strong></p>
 <p>With this structure the driver can describe which interface
 combinations it supports concurrently.</p>
-<p><strong>Examples</strong></p>
 <ol class="arabic">
 <li><p class="first">Allow #STA &lt;= 1, #AP &lt;= 1, matching BI, channels = 1, 2 total:</p>
 <div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="k">struct</span> <span class="n">ieee80211_iface_limit</span> <span class="n">limits1</span><span class="p">[]</span> <span class="o">=</span> <span class="p">{</span>
@@ -1380,6 +1392,7 @@ combinations it supports concurrently.</p>
 </div>
 </li>
 </ol>
+<p><strong>Examples</strong></p>
 <dl class="function">
 <dt id="c.cfg80211_check_combinations">
 int <code class="descname">cfg80211_check_combinations</code><span class="sig-paren">(</span>struct <a class="reference internal" href="#c.wiphy" title="wiphy">wiphy</a> *<em>&nbsp;wiphy</em>, struct iface_combination_params *<em>&nbsp;params</em><span class="sig-paren">)</span><a class="headerlink" href="#c.cfg80211_check_combinations" title="Permalink to this definition">¶</a></dt>
@@ -1487,7 +1500,7 @@ struct <code class="descname">cfg80211_ops</code><a class="headerlink" href="#c.
   int (*set_cqm_rssi_config)(struct wiphy *wiphy,struct net_device *dev, s32 rssi_thold, u32 rssi_hyst);
   int (*set_cqm_rssi_range_config)(struct wiphy *wiphy,struct net_device *dev, s32 rssi_low, s32 rssi_high);
   int (*set_cqm_txe_config)(struct wiphy *wiphy,struct net_device *dev, u32 rate, u32 pkts, u32 intvl);
-  void (*mgmt_frame_register)(struct wiphy *wiphy,struct wireless_dev *wdev, u16 frame_type, bool reg);
+  void (*update_mgmt_frame_registrations)(struct wiphy *wiphy,struct wireless_dev *wdev, struct mgmt_frame_regs *upd);
   int (*set_antenna)(struct wiphy *wiphy, u32 tx_ant, u32 rx_ant);
   int (*get_antenna)(struct wiphy *wiphy, u32 *tx_ant, u32 *rx_ant);
   int (*sched_scan_start)(struct wiphy *wiphy,struct net_device *dev, struct cfg80211_sched_scan_request *request);
@@ -1524,7 +1537,7 @@ struct <code class="descname">cfg80211_ops</code><a class="headerlink" href="#c.
   int (*set_pmk)(struct wiphy *wiphy, struct net_device *dev, const struct cfg80211_pmk_conf *conf);
   int (*del_pmk)(struct wiphy *wiphy, struct net_device *dev, const u8 *aa);
   int (*external_auth)(struct wiphy *wiphy, struct net_device *dev, struct cfg80211_external_auth_params *params);
-  int (*tx_control_port)(struct wiphy *wiphy,struct net_device *dev,const u8 *buf, size_t len,const u8 *dest, const __be16 proto, const bool noencrypt);
+  int (*tx_control_port)(struct wiphy *wiphy,struct net_device *dev,const u8 *buf, size_t len,const u8 *dest, const __be16 proto,const bool noencrypt, u64 *cookie);
   int (*get_ftm_responder_stats)(struct wiphy *wiphy,struct net_device *dev, struct cfg80211_ftm_responder_stats *ftm_stats);
   int (*start_pmsr)(struct wiphy *wiphy, struct wireless_dev *wdev, struct cfg80211_pmsr_request *request);
   void (*abort_pmsr)(struct wiphy *wiphy, struct wireless_dev *wdev, struct cfg80211_pmsr_request *request);
@@ -1779,9 +1792,9 @@ If it is provided then there’s no point providing <strong>set_cqm_rssi_config<
 <dt><code class="docutils literal notranslate"><span class="pre">set_cqm_txe_config</span></code></dt>
 <dd>Configure connection quality monitor TX error
 thresholds.</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">mgmt_frame_register</span></code></dt>
-<dd>Notify driver that a management frame type was
-registered. The callback is allowed to sleep.</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">update_mgmt_frame_registrations</span></code></dt>
+<dd>Notify the driver that management frame
+registrations were updated. The callback is allowed to sleep.</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">set_antenna</span></code></dt>
 <dd>Set antenna configuration (tx_ant, rx_ant) on the device.
 Parameters are bitmaps of allowed antennas to use for TX/RX. Drivers may
@@ -2194,7 +2207,7 @@ struct <code class="descname">cfg80211_ap_settings</code><a class="headerlink" h
   const struct ieee80211_vht_cap *vht_cap;
   const struct ieee80211_he_cap_elem *he_cap;
   const struct ieee80211_he_operation *he_oper;
-  bool ht_required, vht_required;
+  bool ht_required, vht_required, he_required;
   bool twt_responder;
   u32 flags;
   struct ieee80211_he_obss_pd he_obss_pd;
@@ -2253,6 +2266,8 @@ networks.</dd>
 <dd>stations must support HT</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">vht_required</span></code></dt>
 <dd>stations must support VHT</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">he_required</span></code></dt>
+<dd>stations must support HE</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">twt_responder</span></code></dt>
 <dd>Enable Target Wait Time</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">flags</span></code></dt>
@@ -2302,6 +2317,7 @@ struct <code class="descname">station_parameters</code><a class="headerlink" hre
   u8 he_capa_len;
   u16 airtime_weight;
   struct sta_txpwr txpwr;
+  const struct ieee80211_he_6ghz_capa *he_6ghz_capa;
 };
 </pre></div>
 </div>
@@ -2377,6 +2393,8 @@ to unknown)</dd>
 <dd>airtime scheduler weight for this station</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">txpwr</span></code></dt>
 <dd>transmit power for an associated station</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">he_6ghz_capa</span></code></dt>
+<dd>HE 6 GHz Band capabilities of station</dd>
 </dl>
 <p><strong>Description</strong></p>
 <p>Used to change and create a new station.</p>
@@ -3943,7 +3961,7 @@ struct <code class="descname">cfg80211_scan_request</code><a class="headerlink" 
   struct cfg80211_scan_info info;
   bool notified;
   bool no_cck;
-  struct ieee80211_channel *channels[0];
+  struct ieee80211_channel *channels[];
 };
 </pre></div>
 </div>
@@ -4032,7 +4050,7 @@ struct <code class="descname">cfg80211_bss</code><a class="headerlink" href="#c.
   s8 chain_signal[IEEE80211_MAX_CHAINS];
   u8 bssid_index;
   u8 max_bssid_indicator;
-  u8 priv[0] ;
+  u8 priv[] ;
 };
 </pre></div>
 </div>
@@ -4281,7 +4299,7 @@ int <code class="descname">ieee80211_frequency_to_channel</code><span class="sig
 <p><strong>Parameters</strong></p>
 <dl class="docutils">
 <dt><code class="docutils literal notranslate"><span class="pre">int</span> <span class="pre">freq</span></code></dt>
-<dd>center frequency</dd>
+<dd>center frequency in MHz</dd>
 </dl>
 <p><strong>Return</strong></p>
 <p>The corresponding channel, or 0 if the conversion failed.</p>
@@ -4296,7 +4314,7 @@ struct <a class="reference internal" href="#c.ieee80211_channel" title="ieee8021
 <dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">wiphy</span> <span class="pre">*</span> <span class="pre">wiphy</span></code></dt>
 <dd>the struct wiphy to get the channel for</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">int</span> <span class="pre">freq</span></code></dt>
-<dd>the center frequency of the channel</dd>
+<dd>the center frequency (in MHz) of the channel</dd>
 </dl>
 <p><strong>Return</strong></p>
 <p>The channel struct from <strong>wiphy</strong> at <strong>freq</strong>.</p>

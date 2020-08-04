@@ -68,7 +68,7 @@
             
             
               <div class="version">
-                5.7.0
+                5.8.0
               </div>
             
           
@@ -653,8 +653,9 @@ event counts (hitcount).</p>
 </li>
 </ul>
 </div>
+</div>
 <div class="section" id="in-kernel-trace-event-api">
-<h3>6.3 In-kernel trace event API<a class="headerlink" href="#in-kernel-trace-event-api" title="Permalink to this headline">¶</a></h3>
+<h2>7. In-kernel trace event API<a class="headerlink" href="#in-kernel-trace-event-api" title="Permalink to this headline">¶</a></h2>
 <p>In most cases, the command-line interface to trace events is more than
 sufficient.  Sometimes, however, applications might find the need for
 more complex relationships than can be expressed through a simple
@@ -683,9 +684,8 @@ following:</p>
 <li>the low-level “dynevent_cmd” API</li>
 </ul>
 </div></blockquote>
-</div>
 <div class="section" id="dyamically-creating-synthetic-event-definitions">
-<h3>6.3.1 Dyamically creating synthetic event definitions<a class="headerlink" href="#dyamically-creating-synthetic-event-definitions" title="Permalink to this headline">¶</a></h3>
+<h3>7.1 Dyamically creating synthetic event definitions<a class="headerlink" href="#dyamically-creating-synthetic-event-definitions" title="Permalink to this headline">¶</a></h3>
 <p>There are a couple ways to create a new synthetic event from a kernel
 module or other kernel code.</p>
 <p>The first creates the event in one step, using synth_event_create().
@@ -782,7 +782,7 @@ registered by calling the synth_event_gen_cmd_end() function:</p>
 events.</p>
 </div>
 <div class="section" id="tracing-synthetic-events-from-in-kernel-code">
-<h3>6.3.3 Tracing synthetic events from in-kernel code<a class="headerlink" href="#tracing-synthetic-events-from-in-kernel-code" title="Permalink to this headline">¶</a></h3>
+<h3>7.2 Tracing synthetic events from in-kernel code<a class="headerlink" href="#tracing-synthetic-events-from-in-kernel-code" title="Permalink to this headline">¶</a></h3>
 <p>To trace a synthetic event, there are several options.  The first
 option is to trace the event in one call, using synth_event_trace()
 with a variable number of values, or synth_event_trace_array() with an
@@ -793,7 +793,7 @@ synth_event_add_next_val() or synth_event_add_val() to add the values
 piecewise.</p>
 </div>
 <div class="section" id="tracing-a-synthetic-event-all-at-once">
-<h3>6.3.3.1 Tracing a synthetic event all at once<a class="headerlink" href="#tracing-a-synthetic-event-all-at-once" title="Permalink to this headline">¶</a></h3>
+<h3>7.2.1 Tracing a synthetic event all at once<a class="headerlink" href="#tracing-a-synthetic-event-all-at-once" title="Permalink to this headline">¶</a></h3>
 <p>To trace a synthetic event all at once, the synth_event_trace() or
 synth_event_trace_array() functions can be used.</p>
 <p>The synth_event_trace() function is passed the trace_event_file
@@ -887,7 +887,7 @@ remove the event:</p>
 </div>
 </div>
 <div class="section" id="tracing-a-synthetic-event-piecewise">
-<h3>6.3.3.1 Tracing a synthetic event piecewise<a class="headerlink" href="#tracing-a-synthetic-event-piecewise" title="Permalink to this headline">¶</a></h3>
+<h3>7.2.2 Tracing a synthetic event piecewise<a class="headerlink" href="#tracing-a-synthetic-event-piecewise" title="Permalink to this headline">¶</a></h3>
 <p>To trace a synthetic using the piecewise method described above, the
 synth_event_trace_start() function is used to ‘open’ the synthetic
 event trace:</p>
@@ -967,7 +967,7 @@ of whether any of the add calls failed (say due to a bad field name
 being passed in).</p>
 </div>
 <div class="section" id="dyamically-creating-kprobe-and-kretprobe-event-definitions">
-<h3>6.3.4 Dyamically creating kprobe and kretprobe event definitions<a class="headerlink" href="#dyamically-creating-kprobe-and-kretprobe-event-definitions" title="Permalink to this headline">¶</a></h3>
+<h3>7.3 Dyamically creating kprobe and kretprobe event definitions<a class="headerlink" href="#dyamically-creating-kprobe-and-kretprobe-event-definitions" title="Permalink to this headline">¶</a></h3>
 <p>To create a kprobe or kretprobe trace event from kernel code, the
 kprobe_event_gen_cmd_start() or kretprobe_event_gen_cmd_start()
 functions can be used.</p>
@@ -1041,7 +1041,7 @@ ret = kprobe_event_delete(&quot;gen_kprobe_test&quot;);
 </div>
 </div>
 <div class="section" id="the-dynevent-cmd-low-level-api">
-<h3>6.3.4 The “dynevent_cmd” low-level API<a class="headerlink" href="#the-dynevent-cmd-low-level-api" title="Permalink to this headline">¶</a></h3>
+<h3>7.4 The “dynevent_cmd” low-level API<a class="headerlink" href="#the-dynevent-cmd-low-level-api" title="Permalink to this headline">¶</a></h3>
 <p>Both the in-kernel synthetic event and kprobe interfaces are built on
 top of a lower-level “dynevent_cmd” interface.  This interface is
 meant to provide the basis for higher-level interfaces such as the

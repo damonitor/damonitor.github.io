@@ -68,7 +68,7 @@
             
             
               <div class="version">
-                5.7.0
+                5.8.0
               </div>
             
           
@@ -227,34 +227,13 @@ can be overridden by the wrapper script.</p>
 </td>
 </tr>
 <tr class="row-odd"><td>simpleImage.%:</td>
-<td><p class="first">Firmware independent compressed image that does not
+<td>Firmware independent compressed image that does not
 depend on any particular firmware interface and embeds
 a device tree blob.  This image is a flat binary that
 can be loaded to any location in RAM and jumped to.
 Firmware cannot pass any configuration data to the
 kernel with this image type and it depends entirely on
-the embedded device tree for all information.</p>
-<p>The simpleImage is useful for booting systems with
-an unknown firmware interface or for booting from
-a debugger when no firmware is present (such as on
-the Xilinx Virtex platform).  The only assumption that
-simpleImage makes is that RAM is correctly initialized
-and that the MMU is either off or has RAM mapped to
-base address 0.</p>
-<p class="last">simpleImage also supports inserting special platform
-specific initialization code to the start of the bootup
-sequence.  The virtex405 platform uses this feature to
-ensure that the cache is invalidated before caching
-is enabled.  Platform specific initialization code is
-added as part of the wrapper script and is keyed on
-the image target name.  For example, all
-simpleImage.virtex405-* targets will add the
-virtex405-head.S initialization code (This also means
-that the dts file for virtex405 targets should be
-named (virtex405-&lt;board&gt;.dts).  Search the wrapper
-script for ‘virtex405’ and see the file
-arch/powerpc/boot/virtex405-head.S for details.</p>
-</td>
+the embedded device tree for all information.</td>
 </tr>
 <tr class="row-even"><td>treeImage.%;</td>
 <td>Image format for used with OpenBIOS firmware found
@@ -285,10 +264,8 @@ hardware then you want this image format.</td>
 and cuImage) all generate the device tree blob from a file in the
 arch/powerpc/boot/dts/ directory.  The Makefile selects the correct device
 tree source based on the name of the target.  Therefore, if the kernel is
-built with ‘make treeImage.walnut simpleImage.virtex405-ml403’, then the
-build system will use arch/powerpc/boot/dts/walnut.dts to build
-treeImage.walnut and arch/powerpc/boot/dts/virtex405-ml403.dts to build
-the simpleImage.virtex405-ml403.</p>
+built with ‘make treeImage.walnut’, then the build system will use
+arch/powerpc/boot/dts/walnut.dts to build treeImage.walnut.</p>
 <p>Two special targets called ‘zImage’ and ‘zImage.initrd’ also exist.  These
 targets build all the default images as selected by the kernel configuration.
 Default images are selected by the boot wrapper Makefile

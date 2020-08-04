@@ -68,7 +68,7 @@
             
             
               <div class="version">
-                5.7.0
+                5.8.0
               </div>
             
           
@@ -243,34 +243,27 @@ only support for existing drivers not yet converted to the new scheme.</p>
 First unpublish the device instance with <a class="reference internal" href="#c.drm_dev_unregister" title="drm_dev_unregister"><code class="xref c c-func docutils literal notranslate"><span class="pre">drm_dev_unregister()</span></code></a>. Then clean up
 any other resources allocated at device initialization and drop the driver’s
 reference to <a class="reference internal" href="#c.drm_device" title="drm_device"><code class="xref c c-type docutils literal notranslate"><span class="pre">drm_device</span></code></a> using <a class="reference internal" href="#c.drm_dev_put" title="drm_dev_put"><code class="xref c c-func docutils literal notranslate"><span class="pre">drm_dev_put()</span></code></a>.</p>
-<p>Note that the lifetime rules for <a class="reference internal" href="#c.drm_device" title="drm_device"><code class="xref c c-type docutils literal notranslate"><span class="pre">drm_device</span></code></a> instance has still a lot of
-historical baggage. Hence use the reference counting provided by
-<a class="reference internal" href="#c.drm_dev_get" title="drm_dev_get"><code class="xref c c-func docutils literal notranslate"><span class="pre">drm_dev_get()</span></code></a> and <a class="reference internal" href="#c.drm_dev_put" title="drm_dev_put"><code class="xref c c-func docutils literal notranslate"><span class="pre">drm_dev_put()</span></code></a> only carefully.</p>
+<p>Note that any allocation or resource which is visible to userspace must be
+released only when the final <a class="reference internal" href="#c.drm_dev_put" title="drm_dev_put"><code class="xref c c-func docutils literal notranslate"><span class="pre">drm_dev_put()</span></code></a> is called, and not when the
+driver is unbound from the underlying physical struct <a class="reference internal" href="../driver-api/infrastructure.html#c.device" title="device"><code class="xref c c-type docutils literal notranslate"><span class="pre">device</span></code></a>. Best to use
+<a class="reference internal" href="#c.drm_device" title="drm_device"><code class="xref c c-type docutils literal notranslate"><span class="pre">drm_device</span></code></a> managed resources with <a class="reference internal" href="#c.drmm_add_action" title="drmm_add_action"><code class="xref c c-func docutils literal notranslate"><span class="pre">drmm_add_action()</span></code></a>, <a class="reference internal" href="#c.drmm_kmalloc" title="drmm_kmalloc"><code class="xref c c-func docutils literal notranslate"><span class="pre">drmm_kmalloc()</span></code></a> and
+related functions.</p>
+<p>devres managed resources like <a class="reference internal" href="../driver-api/basics.html#c.devm_kmalloc" title="devm_kmalloc"><code class="xref c c-func docutils literal notranslate"><span class="pre">devm_kmalloc()</span></code></a> can only be used for resources
+directly related to the underlying hardware device, and only used in code
+paths fully protected by <a class="reference internal" href="#c.drm_dev_enter" title="drm_dev_enter"><code class="xref c c-func docutils literal notranslate"><span class="pre">drm_dev_enter()</span></code></a> and <a class="reference internal" href="#c.drm_dev_exit" title="drm_dev_exit"><code class="xref c c-func docutils literal notranslate"><span class="pre">drm_dev_exit()</span></code></a>.</p>
 <div class="section" id="display-driver-example">
 <h4>Display driver example<a class="headerlink" href="#display-driver-example" title="Permalink to this headline">¶</a></h4>
 <p>The following example shows a typical structure of a DRM display driver.
 The example focus on the probe() function and the other functions that is
-almost always present and serves as a demonstration of <a class="reference internal" href="#c.devm_drm_dev_init" title="devm_drm_dev_init"><code class="xref c c-func docutils literal notranslate"><span class="pre">devm_drm_dev_init()</span></code></a>
-usage with its accompanying drm_driver-&gt;release callback.</p>
+almost always present and serves as a demonstration of <a class="reference internal" href="#c.devm_drm_dev_init" title="devm_drm_dev_init"><code class="xref c c-func docutils literal notranslate"><span class="pre">devm_drm_dev_init()</span></code></a>.</p>
 <div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="k">struct</span> <span class="n">driver_device</span> <span class="p">{</span>
         <span class="k">struct</span> <span class="n">drm_device</span> <span class="n">drm</span><span class="p">;</span>
         <span class="kt">void</span> <span class="o">*</span><span class="n">userspace_facing</span><span class="p">;</span>
         <span class="k">struct</span> <span class="n">clk</span> <span class="o">*</span><span class="n">pclk</span><span class="p">;</span>
 <span class="p">};</span>
 
-<span class="k">static</span> <span class="kt">void</span> <span class="nf">driver_drm_release</span><span class="p">(</span><span class="k">struct</span> <span class="n">drm_device</span> <span class="o">*</span><span class="n">drm</span><span class="p">)</span>
-<span class="p">{</span>
-        <span class="k">struct</span> <span class="n">driver_device</span> <span class="o">*</span><span class="n">priv</span> <span class="o">=</span> <span class="n">container_of</span><span class="p">(...);</span>
-
-        <span class="n">drm_mode_config_cleanup</span><span class="p">(</span><span class="n">drm</span><span class="p">);</span>
-        <span class="n">drm_dev_fini</span><span class="p">(</span><span class="n">drm</span><span class="p">);</span>
-        <span class="n">kfree</span><span class="p">(</span><span class="n">priv</span><span class="o">-&gt;</span><span class="n">userspace_facing</span><span class="p">);</span>
-        <span class="n">kfree</span><span class="p">(</span><span class="n">priv</span><span class="p">);</span>
-<span class="p">}</span>
-
 <span class="k">static</span> <span class="k">struct</span> <span class="n">drm_driver</span> <span class="n">driver_drm_driver</span> <span class="o">=</span> <span class="p">{</span>
         <span class="p">[...]</span>
-        <span class="p">.</span><span class="n">release</span> <span class="o">=</span> <span class="n">driver_drm_release</span><span class="p">,</span>
 <span class="p">};</span>
 
 <span class="k">static</span> <span class="kt">int</span> <span class="nf">driver_probe</span><span class="p">(</span><span class="k">struct</span> <span class="n">platform_device</span> <span class="o">*</span><span class="n">pdev</span><span class="p">)</span>
@@ -290,13 +283,16 @@ usage with its accompanying drm_driver-&gt;release callback.</p>
 
         <span class="n">ret</span> <span class="o">=</span> <span class="n">devm_drm_dev_init</span><span class="p">(</span><span class="o">&amp;</span><span class="n">pdev</span><span class="o">-&gt;</span><span class="n">dev</span><span class="p">,</span> <span class="n">drm</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">driver_drm_driver</span><span class="p">);</span>
         <span class="k">if</span> <span class="p">(</span><span class="n">ret</span><span class="p">)</span> <span class="p">{</span>
-                <span class="n">kfree</span><span class="p">(</span><span class="n">drm</span><span class="p">);</span>
+                <span class="n">kfree</span><span class="p">(</span><span class="n">priv</span><span class="p">);</span>
                 <span class="k">return</span> <span class="n">ret</span><span class="p">;</span>
         <span class="p">}</span>
+        <span class="n">drmm_add_final_kfree</span><span class="p">(</span><span class="n">drm</span><span class="p">,</span> <span class="n">priv</span><span class="p">);</span>
 
-        <span class="n">drm_mode_config_init</span><span class="p">(</span><span class="n">drm</span><span class="p">);</span>
+        <span class="n">ret</span> <span class="o">=</span> <span class="n">drmm_mode_config_init</span><span class="p">(</span><span class="n">drm</span><span class="p">);</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">ret</span><span class="p">)</span>
+                <span class="k">return</span> <span class="n">ret</span><span class="p">;</span>
 
-        <span class="n">priv</span><span class="o">-&gt;</span><span class="n">userspace_facing</span> <span class="o">=</span> <span class="n">kzalloc</span><span class="p">(...,</span> <span class="n">GFP_KERNEL</span><span class="p">);</span>
+        <span class="n">priv</span><span class="o">-&gt;</span><span class="n">userspace_facing</span> <span class="o">=</span> <span class="n">drmm_kzalloc</span><span class="p">(...,</span> <span class="n">GFP_KERNEL</span><span class="p">);</span>
         <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">priv</span><span class="o">-&gt;</span><span class="n">userspace_facing</span><span class="p">)</span>
                 <span class="k">return</span> <span class="o">-</span><span class="n">ENOMEM</span><span class="p">;</span>
 
@@ -402,6 +398,11 @@ struct <code class="descname">drm_device</code><a class="headerlink" href="#c.dr
   int if_version;
   struct kref ref;
   struct device *dev;
+  struct {
+    struct list_head resources;
+    void *final_kfree;
+    spinlock_t lock;
+  } managed;
   struct drm_driver *driver;
   void *dev_private;
   struct drm_minor *primary;
@@ -455,12 +456,18 @@ struct <code class="descname">drm_device</code><a class="headerlink" href="#c.dr
 <dd>Object ref-count</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">dev</span></code></dt>
 <dd>Device structure of bus-device</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">managed</span></code></dt>
+<dd>Managed resources linked to the lifetime of this <a class="reference internal" href="#c.drm_device" title="drm_device"><code class="xref c c-type docutils literal notranslate"><span class="pre">drm_device</span></code></a> as
+tracked by <strong>ref</strong>.</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">driver</span></code></dt>
 <dd>DRM driver managing the device</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">dev_private</span></code></dt>
-<dd>DRM driver private data. Instead of using this pointer it is
-recommended that drivers use <a class="reference internal" href="#c.drm_dev_init" title="drm_dev_init"><code class="xref c c-func docutils literal notranslate"><span class="pre">drm_dev_init()</span></code></a> and embed struct
-<a class="reference internal" href="#c.drm_device" title="drm_device"><code class="xref c c-type docutils literal notranslate"><span class="pre">drm_device</span></code></a> in their larger per-device structure.</dd>
+<dd><p class="first">DRM driver private data. This is deprecated and should be left set to
+NULL.</p>
+<p class="last">Instead of using this pointer it is recommended that drivers use
+<a class="reference internal" href="#c.drm_dev_init" title="drm_dev_init"><code class="xref c c-func docutils literal notranslate"><span class="pre">drm_dev_init()</span></code></a> and embed struct <a class="reference internal" href="#c.drm_device" title="drm_device"><code class="xref c c-type docutils literal notranslate"><span class="pre">drm_device</span></code></a> in their larger
+per-device structure.</p>
+</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">primary</span></code></dt>
 <dd>Primary node</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">render</span></code></dt>
@@ -655,7 +662,7 @@ struct <code class="descname">drm_driver</code><a class="headerlink" href="#c.dr
   void (*irq_uninstall) (struct drm_device *dev);
   int (*master_set)(struct drm_device *dev, struct drm_file *file_priv, bool from_open);
   void (*master_drop)(struct drm_device *dev, struct drm_file *file_priv);
-  int (*debugfs_init)(struct drm_minor *minor);
+  void (*debugfs_init)(struct drm_minor *minor);
   void (*gem_free_object) (struct drm_gem_object *obj);
   void (*gem_free_object_unlocked) (struct drm_gem_object *obj);
   int (*gem_open_object) (struct drm_gem_object *, struct drm_file *);
@@ -757,10 +764,12 @@ for the proper way to remove a <a class="reference internal" href="#c.drm_device
 the device.</p>
 </dd>
 <dt><code class="docutils literal notranslate"><span class="pre">release</span></code></dt>
-<dd>Optional callback for destroying device data after the final
-reference is released, i.e. the device is being destroyed. Drivers
-using this callback are responsible for calling <a class="reference internal" href="#c.drm_dev_fini" title="drm_dev_fini"><code class="xref c c-func docutils literal notranslate"><span class="pre">drm_dev_fini()</span></code></a>
-to finalize the device and then freeing the struct themselves.</dd>
+<dd><p class="first">Optional callback for destroying device data after the final
+reference is released, i.e. the device is being destroyed.</p>
+<p class="last">This is deprecated, clean up all memory allocations associated with a
+<a class="reference internal" href="#c.drm_device" title="drm_device"><code class="xref c c-type docutils literal notranslate"><span class="pre">drm_device</span></code></a> using <a class="reference internal" href="#c.drmm_add_action" title="drmm_add_action"><code class="xref c c-func docutils literal notranslate"><span class="pre">drmm_add_action()</span></code></a>, <a class="reference internal" href="#c.drmm_kmalloc" title="drmm_kmalloc"><code class="xref c c-func docutils literal notranslate"><span class="pre">drmm_kmalloc()</span></code></a> and related
+managed resources functions.</p>
+</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">irq_handler</span></code></dt>
 <dd>Interrupt handler called when using <a class="reference internal" href="#c.drm_irq_install" title="drm_irq_install"><code class="xref c c-func docutils literal notranslate"><span class="pre">drm_irq_install()</span></code></a>. Not used by
 drivers which implement their own interrupt handling.</dd>
@@ -928,6 +937,38 @@ one <a class="reference internal" href="#c.drm_device" title="drm_device"><code 
 of vfunc entries, and a pile of those probably should be moved to more
 appropriate places like <a class="reference internal" href="drm-kms.html#c.drm_mode_config_funcs" title="drm_mode_config_funcs"><code class="xref c c-type docutils literal notranslate"><span class="pre">drm_mode_config_funcs</span></code></a> or into a new operations
 structure for GEM drivers.</p>
+<dl class="function">
+<dt id="c.devm_drm_dev_alloc">
+<code class="descname">devm_drm_dev_alloc</code><span class="sig-paren">(</span><em>parent</em>, <em>driver</em>, <em>type</em>, <em>member</em><span class="sig-paren">)</span><a class="headerlink" href="#c.devm_drm_dev_alloc" title="Permalink to this definition">¶</a></dt>
+<dd><p>Resource managed allocation of a <a class="reference internal" href="#c.drm_device" title="drm_device"><code class="xref c c-type docutils literal notranslate"><span class="pre">drm_device</span></code></a> instance</p>
+</dd></dl>
+
+<p><strong>Parameters</strong></p>
+<dl class="docutils">
+<dt><code class="docutils literal notranslate"><span class="pre">parent</span></code></dt>
+<dd>Parent device object</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">driver</span></code></dt>
+<dd>DRM driver</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">type</span></code></dt>
+<dd>the type of the struct which contains struct <a class="reference internal" href="#c.drm_device" title="drm_device"><code class="xref c c-type docutils literal notranslate"><span class="pre">drm_device</span></code></a></dd>
+<dt><code class="docutils literal notranslate"><span class="pre">member</span></code></dt>
+<dd>the name of the <a class="reference internal" href="#c.drm_device" title="drm_device"><code class="xref c c-type docutils literal notranslate"><span class="pre">drm_device</span></code></a> within <strong>type</strong>.</dd>
+</dl>
+<p><strong>Description</strong></p>
+<p>This allocates and initialize a new DRM device. No device registration is done.
+Call <a class="reference internal" href="#c.drm_dev_register" title="drm_dev_register"><code class="xref c c-func docutils literal notranslate"><span class="pre">drm_dev_register()</span></code></a> to advertice the device to user space and register it
+with other core subsystems. This should be done last in the device
+initialization sequence to make sure userspace can’t access an inconsistent
+state.</p>
+<p>The initial ref-count of the object is 1. Use <a class="reference internal" href="#c.drm_dev_get" title="drm_dev_get"><code class="xref c c-func docutils literal notranslate"><span class="pre">drm_dev_get()</span></code></a> and
+<a class="reference internal" href="#c.drm_dev_put" title="drm_dev_put"><code class="xref c c-func docutils literal notranslate"><span class="pre">drm_dev_put()</span></code></a> to take and drop further ref-counts.</p>
+<p>It is recommended that drivers embed <a class="reference internal" href="#c.drm_device" title="drm_device"><code class="xref c c-type docutils literal notranslate"><span class="pre">struct</span> <span class="pre">drm_device</span></code></a> into their own device
+structure.</p>
+<p>Note that this manages the lifetime of the resulting <a class="reference internal" href="#c.drm_device" title="drm_device"><code class="xref c c-type docutils literal notranslate"><span class="pre">drm_device</span></code></a>
+automatically using devres. The DRM device initialized with this function is
+automatically put on driver detach using <a class="reference internal" href="#c.drm_dev_put" title="drm_dev_put"><code class="xref c c-func docutils literal notranslate"><span class="pre">drm_dev_put()</span></code></a>.</p>
+<p><strong>Return</strong></p>
+<p>Pointer to new DRM device, or ERR_PTR on failure.</p>
 <dl class="function">
 <dt id="c.drm_dev_is_unplugged">
 bool <code class="descname">drm_dev_is_unplugged</code><span class="sig-paren">(</span>struct <a class="reference internal" href="#c.drm_device" title="drm_device">drm_device</a> *<em>&nbsp;dev</em><span class="sig-paren">)</span><a class="headerlink" href="#c.drm_dev_is_unplugged" title="Permalink to this definition">¶</a></dt>
@@ -1100,6 +1141,8 @@ when the final reference is released. To override this behaviour, and so
 allow embedding of the drm_device inside the driver’s device struct at an
 arbitrary offset, you must supply a <a class="reference internal" href="#c.drm_driver" title="drm_driver"><code class="xref c c-type docutils literal notranslate"><span class="pre">drm_driver.release</span></code></a> callback and control
 the finalization explicitly.</p>
+<p>Note that drivers must call <a class="reference internal" href="#c.drmm_add_final_kfree" title="drmm_add_final_kfree"><code class="xref c c-func docutils literal notranslate"><span class="pre">drmm_add_final_kfree()</span></code></a> after this function has
+completed successfully.</p>
 <p><strong>Return</strong></p>
 <p>0 on success, or error code on failure.</p>
 <dl class="function">
@@ -1119,28 +1162,11 @@ int <code class="descname">devm_drm_dev_init</code><span class="sig-paren">(</sp
 </dl>
 <p><strong>Description</strong></p>
 <p>Managed <a class="reference internal" href="#c.drm_dev_init" title="drm_dev_init"><code class="xref c c-func docutils literal notranslate"><span class="pre">drm_dev_init()</span></code></a>. The DRM device initialized with this function is
-automatically put on driver detach using <a class="reference internal" href="#c.drm_dev_put" title="drm_dev_put"><code class="xref c c-func docutils literal notranslate"><span class="pre">drm_dev_put()</span></code></a>. You must supply a
-<a class="reference internal" href="#c.drm_driver" title="drm_driver"><code class="xref c c-type docutils literal notranslate"><span class="pre">drm_driver.release</span></code></a> callback to control the finalization explicitly.</p>
+automatically put on driver detach using <a class="reference internal" href="#c.drm_dev_put" title="drm_dev_put"><code class="xref c c-func docutils literal notranslate"><span class="pre">drm_dev_put()</span></code></a>.</p>
+<p>Note that drivers must call <a class="reference internal" href="#c.drmm_add_final_kfree" title="drmm_add_final_kfree"><code class="xref c c-func docutils literal notranslate"><span class="pre">drmm_add_final_kfree()</span></code></a> after this function has
+completed successfully.</p>
 <p><strong>Return</strong></p>
 <p>0 on success, or error code on failure.</p>
-<dl class="function">
-<dt id="c.drm_dev_fini">
-void <code class="descname">drm_dev_fini</code><span class="sig-paren">(</span>struct <a class="reference internal" href="#c.drm_device" title="drm_device">drm_device</a> *<em>&nbsp;dev</em><span class="sig-paren">)</span><a class="headerlink" href="#c.drm_dev_fini" title="Permalink to this definition">¶</a></dt>
-<dd><p>Finalize a dead DRM device</p>
-</dd></dl>
-
-<p><strong>Parameters</strong></p>
-<dl class="docutils">
-<dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">drm_device</span> <span class="pre">*</span> <span class="pre">dev</span></code></dt>
-<dd>DRM device</dd>
-</dl>
-<p><strong>Description</strong></p>
-<p>Finalize a dead DRM device. This is the converse to <a class="reference internal" href="#c.drm_dev_init" title="drm_dev_init"><code class="xref c c-func docutils literal notranslate"><span class="pre">drm_dev_init()</span></code></a> and
-frees up all data allocated by it. All driver private data should be
-finalized first. Note that this function does not free the <strong>dev</strong>, that is
-left to the caller.</p>
-<p>The ref-count of <strong>dev</strong> must be zero, and <a class="reference internal" href="#c.drm_dev_fini" title="drm_dev_fini"><code class="xref c c-func docutils literal notranslate"><span class="pre">drm_dev_fini()</span></code></a> should only be called
-from a <a class="reference internal" href="#c.drm_driver" title="drm_driver"><code class="xref c c-type docutils literal notranslate"><span class="pre">drm_driver.release</span></code></a> callback.</p>
 <dl class="function">
 <dt id="c.drm_dev_alloc">
 struct <a class="reference internal" href="#c.drm_device" title="drm_device">drm_device</a> * <code class="descname">drm_dev_alloc</code><span class="sig-paren">(</span>struct <a class="reference internal" href="#c.drm_driver" title="drm_driver">drm_driver</a> *<em>&nbsp;driver</em>, struct <a class="reference internal" href="../driver-api/infrastructure.html#c.device" title="device">device</a> *<em>&nbsp;parent</em><span class="sig-paren">)</span><a class="headerlink" href="#c.drm_dev_alloc" title="Permalink to this definition">¶</a></dt>
@@ -1372,6 +1398,194 @@ other BARs, so leaving it mapped could cause undesired behaviour like
 hangs or memory corruption.</p>
 </div>
 </div>
+<div class="section" id="managed-resources">
+<h3>Managed Resources<a class="headerlink" href="#managed-resources" title="Permalink to this headline">¶</a></h3>
+<p>Inspired by struct <a class="reference internal" href="../driver-api/infrastructure.html#c.device" title="device"><code class="xref c c-type docutils literal notranslate"><span class="pre">device</span></code></a> managed resources, but tied to the lifetime of
+struct <a class="reference internal" href="#c.drm_device" title="drm_device"><code class="xref c c-type docutils literal notranslate"><span class="pre">drm_device</span></code></a>, which can outlive the underlying physical device, usually
+when userspace has some open files and other handles to resources still open.</p>
+<p>Release actions can be added with <a class="reference internal" href="#c.drmm_add_action" title="drmm_add_action"><code class="xref c c-func docutils literal notranslate"><span class="pre">drmm_add_action()</span></code></a>, memory allocations can
+be done directly with <a class="reference internal" href="#c.drmm_kmalloc" title="drmm_kmalloc"><code class="xref c c-func docutils literal notranslate"><span class="pre">drmm_kmalloc()</span></code></a> and the related functions. Everything
+will be released on the final <a class="reference internal" href="#c.drm_dev_put" title="drm_dev_put"><code class="xref c c-func docutils literal notranslate"><span class="pre">drm_dev_put()</span></code></a> in reverse order of how the
+release actions have been added and memory has been allocated since driver
+loading started with <a class="reference internal" href="#c.drm_dev_init" title="drm_dev_init"><code class="xref c c-func docutils literal notranslate"><span class="pre">drm_dev_init()</span></code></a>.</p>
+<p>Note that release actions and managed memory can also be added and removed
+during the lifetime of the driver, all the functions are fully concurrent
+safe. But it is recommended to use managed resources only for resources that
+change rarely, if ever, during the lifetime of the <a class="reference internal" href="#c.drm_device" title="drm_device"><code class="xref c c-type docutils literal notranslate"><span class="pre">drm_device</span></code></a> instance.</p>
+<dl class="function">
+<dt id="c.drmm_add_final_kfree">
+void <code class="descname">drmm_add_final_kfree</code><span class="sig-paren">(</span>struct <a class="reference internal" href="#c.drm_device" title="drm_device">drm_device</a> *<em>&nbsp;dev</em>, void *<em>&nbsp;container</em><span class="sig-paren">)</span><a class="headerlink" href="#c.drmm_add_final_kfree" title="Permalink to this definition">¶</a></dt>
+<dd><p>add release action for the final <a class="reference internal" href="../core-api/mm-api.html#c.kfree" title="kfree"><code class="xref c c-func docutils literal notranslate"><span class="pre">kfree()</span></code></a></p>
+</dd></dl>
+
+<p><strong>Parameters</strong></p>
+<dl class="docutils">
+<dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">drm_device</span> <span class="pre">*</span> <span class="pre">dev</span></code></dt>
+<dd>DRM device</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">void</span> <span class="pre">*</span> <span class="pre">container</span></code></dt>
+<dd>pointer to the kmalloc allocation containing <strong>dev</strong></dd>
+</dl>
+<p><strong>Description</strong></p>
+<p>Since the allocation containing the struct <a class="reference internal" href="#c.drm_device" title="drm_device"><code class="xref c c-type docutils literal notranslate"><span class="pre">drm_device</span></code></a> must be allocated
+before it can be initialized with <a class="reference internal" href="#c.drm_dev_init" title="drm_dev_init"><code class="xref c c-func docutils literal notranslate"><span class="pre">drm_dev_init()</span></code></a> there’s no way to allocate
+that memory with <a class="reference internal" href="#c.drmm_kmalloc" title="drmm_kmalloc"><code class="xref c c-func docutils literal notranslate"><span class="pre">drmm_kmalloc()</span></code></a>. To side-step this chicken-egg problem the
+pointer for this final <a class="reference internal" href="../core-api/mm-api.html#c.kfree" title="kfree"><code class="xref c c-func docutils literal notranslate"><span class="pre">kfree()</span></code></a> must be specified by calling this function. It
+will be released in the final <a class="reference internal" href="#c.drm_dev_put" title="drm_dev_put"><code class="xref c c-func docutils literal notranslate"><span class="pre">drm_dev_put()</span></code></a> for <strong>dev</strong>, after all other release
+actions installed through <a class="reference internal" href="#c.drmm_add_action" title="drmm_add_action"><code class="xref c c-func docutils literal notranslate"><span class="pre">drmm_add_action()</span></code></a> have been processed.</p>
+<dl class="function">
+<dt id="c.drmm_kmalloc">
+void * <code class="descname">drmm_kmalloc</code><span class="sig-paren">(</span>struct <a class="reference internal" href="#c.drm_device" title="drm_device">drm_device</a> *<em>&nbsp;dev</em>, size_t<em>&nbsp;size</em>, gfp_t<em>&nbsp;gfp</em><span class="sig-paren">)</span><a class="headerlink" href="#c.drmm_kmalloc" title="Permalink to this definition">¶</a></dt>
+<dd><p><a class="reference internal" href="#c.drm_device" title="drm_device"><code class="xref c c-type docutils literal notranslate"><span class="pre">drm_device</span></code></a> managed <a class="reference internal" href="../core-api/mm-api.html#c.kmalloc" title="kmalloc"><code class="xref c c-func docutils literal notranslate"><span class="pre">kmalloc()</span></code></a></p>
+</dd></dl>
+
+<p><strong>Parameters</strong></p>
+<dl class="docutils">
+<dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">drm_device</span> <span class="pre">*</span> <span class="pre">dev</span></code></dt>
+<dd>DRM device</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">size_t</span> <span class="pre">size</span></code></dt>
+<dd>size of the memory allocation</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">gfp_t</span> <span class="pre">gfp</span></code></dt>
+<dd>GFP allocation flags</dd>
+</dl>
+<p><strong>Description</strong></p>
+<p>This is a <a class="reference internal" href="#c.drm_device" title="drm_device"><code class="xref c c-type docutils literal notranslate"><span class="pre">drm_device</span></code></a> managed version of <a class="reference internal" href="../core-api/mm-api.html#c.kmalloc" title="kmalloc"><code class="xref c c-func docutils literal notranslate"><span class="pre">kmalloc()</span></code></a>. The allocated memory is
+automatically freed on the final <a class="reference internal" href="#c.drm_dev_put" title="drm_dev_put"><code class="xref c c-func docutils literal notranslate"><span class="pre">drm_dev_put()</span></code></a>. Memory can also be freed
+before the final <a class="reference internal" href="#c.drm_dev_put" title="drm_dev_put"><code class="xref c c-func docutils literal notranslate"><span class="pre">drm_dev_put()</span></code></a> by calling <a class="reference internal" href="#c.drmm_kfree" title="drmm_kfree"><code class="xref c c-func docutils literal notranslate"><span class="pre">drmm_kfree()</span></code></a>.</p>
+<dl class="function">
+<dt id="c.drmm_kstrdup">
+char * <code class="descname">drmm_kstrdup</code><span class="sig-paren">(</span>struct <a class="reference internal" href="#c.drm_device" title="drm_device">drm_device</a> *<em>&nbsp;dev</em>, const char *<em>&nbsp;s</em>, gfp_t<em>&nbsp;gfp</em><span class="sig-paren">)</span><a class="headerlink" href="#c.drmm_kstrdup" title="Permalink to this definition">¶</a></dt>
+<dd><p><a class="reference internal" href="#c.drm_device" title="drm_device"><code class="xref c c-type docutils literal notranslate"><span class="pre">drm_device</span></code></a> managed <a class="reference internal" href="../core-api/kernel-api.html#c.kstrdup" title="kstrdup"><code class="xref c c-func docutils literal notranslate"><span class="pre">kstrdup()</span></code></a></p>
+</dd></dl>
+
+<p><strong>Parameters</strong></p>
+<dl class="docutils">
+<dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">drm_device</span> <span class="pre">*</span> <span class="pre">dev</span></code></dt>
+<dd>DRM device</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">const</span> <span class="pre">char</span> <span class="pre">*</span> <span class="pre">s</span></code></dt>
+<dd>0-terminated string to be duplicated</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">gfp_t</span> <span class="pre">gfp</span></code></dt>
+<dd>GFP allocation flags</dd>
+</dl>
+<p><strong>Description</strong></p>
+<p>This is a <a class="reference internal" href="#c.drm_device" title="drm_device"><code class="xref c c-type docutils literal notranslate"><span class="pre">drm_device</span></code></a> managed version of <a class="reference internal" href="../core-api/kernel-api.html#c.kstrdup" title="kstrdup"><code class="xref c c-func docutils literal notranslate"><span class="pre">kstrdup()</span></code></a>. The allocated memory is
+automatically freed on the final <a class="reference internal" href="#c.drm_dev_put" title="drm_dev_put"><code class="xref c c-func docutils literal notranslate"><span class="pre">drm_dev_put()</span></code></a> and works exactly like a
+memory allocation obtained by <a class="reference internal" href="#c.drmm_kmalloc" title="drmm_kmalloc"><code class="xref c c-func docutils literal notranslate"><span class="pre">drmm_kmalloc()</span></code></a>.</p>
+<dl class="function">
+<dt id="c.drmm_kfree">
+void <code class="descname">drmm_kfree</code><span class="sig-paren">(</span>struct <a class="reference internal" href="#c.drm_device" title="drm_device">drm_device</a> *<em>&nbsp;dev</em>, void *<em>&nbsp;data</em><span class="sig-paren">)</span><a class="headerlink" href="#c.drmm_kfree" title="Permalink to this definition">¶</a></dt>
+<dd><p><a class="reference internal" href="#c.drm_device" title="drm_device"><code class="xref c c-type docutils literal notranslate"><span class="pre">drm_device</span></code></a> managed <a class="reference internal" href="../core-api/mm-api.html#c.kfree" title="kfree"><code class="xref c c-func docutils literal notranslate"><span class="pre">kfree()</span></code></a></p>
+</dd></dl>
+
+<p><strong>Parameters</strong></p>
+<dl class="docutils">
+<dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">drm_device</span> <span class="pre">*</span> <span class="pre">dev</span></code></dt>
+<dd>DRM device</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">void</span> <span class="pre">*</span> <span class="pre">data</span></code></dt>
+<dd>memory allocation to be freed</dd>
+</dl>
+<p><strong>Description</strong></p>
+<p>This is a <a class="reference internal" href="#c.drm_device" title="drm_device"><code class="xref c c-type docutils literal notranslate"><span class="pre">drm_device</span></code></a> managed version of <a class="reference internal" href="../core-api/mm-api.html#c.kfree" title="kfree"><code class="xref c c-func docutils literal notranslate"><span class="pre">kfree()</span></code></a> which can be used to
+release memory allocated through <a class="reference internal" href="#c.drmm_kmalloc" title="drmm_kmalloc"><code class="xref c c-func docutils literal notranslate"><span class="pre">drmm_kmalloc()</span></code></a> or any of its related
+functions before the final <a class="reference internal" href="#c.drm_dev_put" title="drm_dev_put"><code class="xref c c-func docutils literal notranslate"><span class="pre">drm_dev_put()</span></code></a> of <strong>dev</strong>.</p>
+<dl class="function">
+<dt id="c.drmm_add_action">
+<code class="descname">drmm_add_action</code><span class="sig-paren">(</span><em>dev</em>, <em>action</em>, <em>data</em><span class="sig-paren">)</span><a class="headerlink" href="#c.drmm_add_action" title="Permalink to this definition">¶</a></dt>
+<dd><p>add a managed release action to a <a class="reference internal" href="#c.drm_device" title="drm_device"><code class="xref c c-type docutils literal notranslate"><span class="pre">drm_device</span></code></a></p>
+</dd></dl>
+
+<p><strong>Parameters</strong></p>
+<dl class="docutils">
+<dt><code class="docutils literal notranslate"><span class="pre">dev</span></code></dt>
+<dd>DRM device</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">action</span></code></dt>
+<dd>function which should be called when <strong>dev</strong> is released</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">data</span></code></dt>
+<dd>opaque pointer, passed to <strong>action</strong></dd>
+</dl>
+<p><strong>Description</strong></p>
+<p>This function adds the <strong>release</strong> action with optional parameter <strong>data</strong> to the
+list of cleanup actions for <strong>dev</strong>. The cleanup actions will be run in reverse
+order in the final <a class="reference internal" href="#c.drm_dev_put" title="drm_dev_put"><code class="xref c c-func docutils literal notranslate"><span class="pre">drm_dev_put()</span></code></a> call for <strong>dev</strong>.</p>
+<dl class="function">
+<dt id="c.drmm_add_action_or_reset">
+<code class="descname">drmm_add_action_or_reset</code><span class="sig-paren">(</span><em>dev</em>, <em>action</em>, <em>data</em><span class="sig-paren">)</span><a class="headerlink" href="#c.drmm_add_action_or_reset" title="Permalink to this definition">¶</a></dt>
+<dd><p>add a managed release action to a <a class="reference internal" href="#c.drm_device" title="drm_device"><code class="xref c c-type docutils literal notranslate"><span class="pre">drm_device</span></code></a></p>
+</dd></dl>
+
+<p><strong>Parameters</strong></p>
+<dl class="docutils">
+<dt><code class="docutils literal notranslate"><span class="pre">dev</span></code></dt>
+<dd>DRM device</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">action</span></code></dt>
+<dd>function which should be called when <strong>dev</strong> is released</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">data</span></code></dt>
+<dd>opaque pointer, passed to <strong>action</strong></dd>
+</dl>
+<p><strong>Description</strong></p>
+<p>Similar to <a class="reference internal" href="#c.drmm_add_action" title="drmm_add_action"><code class="xref c c-func docutils literal notranslate"><span class="pre">drmm_add_action()</span></code></a>, with the only difference that upon failure
+<strong>action</strong> is directly called for any cleanup work necessary on failures.</p>
+<dl class="function">
+<dt id="c.drmm_kzalloc">
+void * <code class="descname">drmm_kzalloc</code><span class="sig-paren">(</span>struct <a class="reference internal" href="#c.drm_device" title="drm_device">drm_device</a> *<em>&nbsp;dev</em>, size_t<em>&nbsp;size</em>, gfp_t<em>&nbsp;gfp</em><span class="sig-paren">)</span><a class="headerlink" href="#c.drmm_kzalloc" title="Permalink to this definition">¶</a></dt>
+<dd><p><a class="reference internal" href="#c.drm_device" title="drm_device"><code class="xref c c-type docutils literal notranslate"><span class="pre">drm_device</span></code></a> managed <a class="reference internal" href="../core-api/mm-api.html#c.kzalloc" title="kzalloc"><code class="xref c c-func docutils literal notranslate"><span class="pre">kzalloc()</span></code></a></p>
+</dd></dl>
+
+<p><strong>Parameters</strong></p>
+<dl class="docutils">
+<dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">drm_device</span> <span class="pre">*</span> <span class="pre">dev</span></code></dt>
+<dd>DRM device</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">size_t</span> <span class="pre">size</span></code></dt>
+<dd>size of the memory allocation</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">gfp_t</span> <span class="pre">gfp</span></code></dt>
+<dd>GFP allocation flags</dd>
+</dl>
+<p><strong>Description</strong></p>
+<p>This is a <a class="reference internal" href="#c.drm_device" title="drm_device"><code class="xref c c-type docutils literal notranslate"><span class="pre">drm_device</span></code></a> managed version of <a class="reference internal" href="../core-api/mm-api.html#c.kzalloc" title="kzalloc"><code class="xref c c-func docutils literal notranslate"><span class="pre">kzalloc()</span></code></a>. The allocated memory is
+automatically freed on the final <a class="reference internal" href="#c.drm_dev_put" title="drm_dev_put"><code class="xref c c-func docutils literal notranslate"><span class="pre">drm_dev_put()</span></code></a>. Memory can also be freed
+before the final <a class="reference internal" href="#c.drm_dev_put" title="drm_dev_put"><code class="xref c c-func docutils literal notranslate"><span class="pre">drm_dev_put()</span></code></a> by calling <a class="reference internal" href="#c.drmm_kfree" title="drmm_kfree"><code class="xref c c-func docutils literal notranslate"><span class="pre">drmm_kfree()</span></code></a>.</p>
+<dl class="function">
+<dt id="c.drmm_kmalloc_array">
+void * <code class="descname">drmm_kmalloc_array</code><span class="sig-paren">(</span>struct <a class="reference internal" href="#c.drm_device" title="drm_device">drm_device</a> *<em>&nbsp;dev</em>, size_t<em>&nbsp;n</em>, size_t<em>&nbsp;size</em>, gfp_t<em>&nbsp;flags</em><span class="sig-paren">)</span><a class="headerlink" href="#c.drmm_kmalloc_array" title="Permalink to this definition">¶</a></dt>
+<dd><p><a class="reference internal" href="#c.drm_device" title="drm_device"><code class="xref c c-type docutils literal notranslate"><span class="pre">drm_device</span></code></a> managed <a class="reference internal" href="../core-api/mm-api.html#c.kmalloc_array" title="kmalloc_array"><code class="xref c c-func docutils literal notranslate"><span class="pre">kmalloc_array()</span></code></a></p>
+</dd></dl>
+
+<p><strong>Parameters</strong></p>
+<dl class="docutils">
+<dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">drm_device</span> <span class="pre">*</span> <span class="pre">dev</span></code></dt>
+<dd>DRM device</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">size_t</span> <span class="pre">n</span></code></dt>
+<dd>number of array elements to allocate</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">size_t</span> <span class="pre">size</span></code></dt>
+<dd>size of array member</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">gfp_t</span> <span class="pre">flags</span></code></dt>
+<dd>GFP allocation flags</dd>
+</dl>
+<p><strong>Description</strong></p>
+<p>This is a <a class="reference internal" href="#c.drm_device" title="drm_device"><code class="xref c c-type docutils literal notranslate"><span class="pre">drm_device</span></code></a> managed version of <a class="reference internal" href="../core-api/mm-api.html#c.kmalloc_array" title="kmalloc_array"><code class="xref c c-func docutils literal notranslate"><span class="pre">kmalloc_array()</span></code></a>. The allocated
+memory is automatically freed on the final <a class="reference internal" href="#c.drm_dev_put" title="drm_dev_put"><code class="xref c c-func docutils literal notranslate"><span class="pre">drm_dev_put()</span></code></a> and works exactly
+like a memory allocation obtained by <a class="reference internal" href="#c.drmm_kmalloc" title="drmm_kmalloc"><code class="xref c c-func docutils literal notranslate"><span class="pre">drmm_kmalloc()</span></code></a>.</p>
+<dl class="function">
+<dt id="c.drmm_kcalloc">
+void * <code class="descname">drmm_kcalloc</code><span class="sig-paren">(</span>struct <a class="reference internal" href="#c.drm_device" title="drm_device">drm_device</a> *<em>&nbsp;dev</em>, size_t<em>&nbsp;n</em>, size_t<em>&nbsp;size</em>, gfp_t<em>&nbsp;flags</em><span class="sig-paren">)</span><a class="headerlink" href="#c.drmm_kcalloc" title="Permalink to this definition">¶</a></dt>
+<dd><p><a class="reference internal" href="#c.drm_device" title="drm_device"><code class="xref c c-type docutils literal notranslate"><span class="pre">drm_device</span></code></a> managed <a class="reference internal" href="../core-api/mm-api.html#c.kcalloc" title="kcalloc"><code class="xref c c-func docutils literal notranslate"><span class="pre">kcalloc()</span></code></a></p>
+</dd></dl>
+
+<p><strong>Parameters</strong></p>
+<dl class="docutils">
+<dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">drm_device</span> <span class="pre">*</span> <span class="pre">dev</span></code></dt>
+<dd>DRM device</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">size_t</span> <span class="pre">n</span></code></dt>
+<dd>number of array elements to allocate</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">size_t</span> <span class="pre">size</span></code></dt>
+<dd>size of array member</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">gfp_t</span> <span class="pre">flags</span></code></dt>
+<dd>GFP allocation flags</dd>
+</dl>
+<p><strong>Description</strong></p>
+<p>This is a <a class="reference internal" href="#c.drm_device" title="drm_device"><code class="xref c c-type docutils literal notranslate"><span class="pre">drm_device</span></code></a> managed version of <a class="reference internal" href="../core-api/mm-api.html#c.kcalloc" title="kcalloc"><code class="xref c c-func docutils literal notranslate"><span class="pre">kcalloc()</span></code></a>. The allocated memory is
+automatically freed on the final <a class="reference internal" href="#c.drm_dev_put" title="drm_dev_put"><code class="xref c c-func docutils literal notranslate"><span class="pre">drm_dev_put()</span></code></a> and works exactly like a
+memory allocation obtained by <a class="reference internal" href="#c.drmm_kmalloc" title="drmm_kmalloc"><code class="xref c c-func docutils literal notranslate"><span class="pre">drmm_kmalloc()</span></code></a>.</p>
+</div>
 <div class="section" id="bus-specific-device-registration-and-pci-support">
 <h3>Bus-specific Device Registration and PCI Support<a class="headerlink" href="#bus-specific-device-registration-and-pci-support" title="Permalink to this headline">¶</a></h3>
 <p>A number of functions are provided to help with device registration. The
@@ -1582,6 +1796,7 @@ struct <code class="descname">drm_file</code><a class="headerlink" href="#c.drm_
   bool atomic;
   bool aspect_ratio_allowed;
   bool writeback_connectors;
+  bool was_master;
   bool is_master;
   struct drm_master *master;
   struct pid *pid;
@@ -1625,6 +1840,12 @@ in the plane list. Automatically set when <strong>atomic</strong> is set.</dd>
 to pass this information along with the mode.</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">writeback_connectors</span></code></dt>
 <dd>True if client understands writeback connectors</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">was_master</span></code></dt>
+<dd><p class="first">This client has or had, master capability. Protected by struct
+<a class="reference internal" href="#c.drm_device" title="drm_device"><code class="xref c c-type docutils literal notranslate"><span class="pre">drm_device.master_mutex</span></code></a>.</p>
+<p class="last">This is used to ensure that CAP_SYS_ADMIN is not enforced, if the
+client is or was master in the past.</p>
+</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">is_master</span></code></dt>
 <dd><p class="first">This client is the creator of <strong>master</strong>. Protected by struct
 <a class="reference internal" href="#c.drm_device" title="drm_device"><code class="xref c c-type docutils literal notranslate"><span class="pre">drm_device.master_mutex</span></code></a>.</p>
@@ -1744,8 +1965,8 @@ int <code class="descname">drm_open</code><span class="sig-paren">(</span>struct
 <p>This function must be used by drivers as their <code class="xref c c-type docutils literal notranslate"><span class="pre">file_operations.open</span></code> method.
 It looks up the correct DRM device and instantiates all the per-file
 resources for it. It also calls the <a class="reference internal" href="#c.drm_driver" title="drm_driver"><code class="xref c c-type docutils literal notranslate"><span class="pre">drm_driver.open</span></code></a> driver callback.</p>
-<p><strong>Return</strong></p>
 <p>0 on success or negative errno value on falure.</p>
+<p><strong>Return</strong></p>
 <dl class="function">
 <dt id="c.drm_release">
 int <code class="descname">drm_release</code><span class="sig-paren">(</span>struct inode *<em>&nbsp;inode</em>, struct file *<em>&nbsp;filp</em><span class="sig-paren">)</span><a class="headerlink" href="#c.drm_release" title="Permalink to this definition">¶</a></dt>
@@ -1764,8 +1985,8 @@ int <code class="descname">drm_release</code><span class="sig-paren">(</span>str
 method. It frees any resources associated with the open file, and calls the
 <a class="reference internal" href="#c.drm_driver" title="drm_driver"><code class="xref c c-type docutils literal notranslate"><span class="pre">drm_driver.postclose</span></code></a> driver callback. If this is the last open file for the
 DRM device also proceeds to call the <a class="reference internal" href="#c.drm_driver" title="drm_driver"><code class="xref c c-type docutils literal notranslate"><span class="pre">drm_driver.lastclose</span></code></a> driver callback.</p>
-<p><strong>Return</strong></p>
 <p>Always succeeds and returns 0.</p>
+<p><strong>Return</strong></p>
 <dl class="function">
 <dt id="c.drm_release_noglobal">
 int <code class="descname">drm_release_noglobal</code><span class="sig-paren">(</span>struct inode *<em>&nbsp;inode</em>, struct file *<em>&nbsp;filp</em><span class="sig-paren">)</span><a class="headerlink" href="#c.drm_release_noglobal" title="Permalink to this definition">¶</a></dt>
@@ -1785,8 +2006,8 @@ method. It frees any resources associated with the open file prior to taking
 the drm_global_mutex, which then calls the <a class="reference internal" href="#c.drm_driver" title="drm_driver"><code class="xref c c-type docutils literal notranslate"><span class="pre">drm_driver.postclose</span></code></a> driver
 callback. If this is the last open file for the DRM device also proceeds to
 call the <a class="reference internal" href="#c.drm_driver" title="drm_driver"><code class="xref c c-type docutils literal notranslate"><span class="pre">drm_driver.lastclose</span></code></a> driver callback.</p>
-<p><strong>Return</strong></p>
 <p>Always succeeds and returns 0.</p>
+<p><strong>Return</strong></p>
 <dl class="function">
 <dt id="c.drm_read">
 ssize_t <code class="descname">drm_read</code><span class="sig-paren">(</span>struct file *<em>&nbsp;filp</em>, char __user *<em>&nbsp;buffer</em>, size_t<em>&nbsp;count</em>, loff_t *<em>&nbsp;offset</em><span class="sig-paren">)</span><a class="headerlink" href="#c.drm_read" title="Permalink to this definition">¶</a></dt>
@@ -1816,9 +2037,9 @@ provided by <a class="reference internal" href="#c.drm_poll" title="drm_poll"><c
 supply a big enough buffer to fit any event to ensure forward progress. Since
 the maximum event space is currently 4K it’s recommended to just use that for
 safety.</p>
-<p><strong>Return</strong></p>
 <p>Number of bytes read (always aligned to full events, and can be 0) or a
 negative error code on failure.</p>
+<p><strong>Return</strong></p>
 <dl class="function">
 <dt id="c.drm_poll">
 __poll_t <code class="descname">drm_poll</code><span class="sig-paren">(</span>struct file *<em>&nbsp;filp</em>, struct poll_table_struct *<em>&nbsp;wait</em><span class="sig-paren">)</span><a class="headerlink" href="#c.drm_poll" title="Permalink to this definition">¶</a></dt>
@@ -1838,8 +2059,8 @@ iff they use DRM events for asynchronous signalling to userspace.  Since
 events are used by the KMS API for vblank and page flip completion this means
 all modern display drivers must use it.</p>
 <p>See also <a class="reference internal" href="#c.drm_read" title="drm_read"><code class="xref c c-func docutils literal notranslate"><span class="pre">drm_read()</span></code></a>.</p>
-<p><strong>Return</strong></p>
 <p>Mask of POLL flags indicating the current status of the file.</p>
+<p><strong>Return</strong></p>
 <dl class="function">
 <dt id="c.drm_event_reserve_init_locked">
 int <code class="descname">drm_event_reserve_init_locked</code><span class="sig-paren">(</span>struct <a class="reference internal" href="#c.drm_device" title="drm_device">drm_device</a> *<em>&nbsp;dev</em>, struct <a class="reference internal" href="#c.drm_file" title="drm_file">drm_file</a> *<em>&nbsp;file_priv</em>, struct <a class="reference internal" href="#c.drm_pending_event" title="drm_pending_event">drm_pending_event</a> *<em>&nbsp;p</em>, struct drm_event *<em>&nbsp;e</em><span class="sig-paren">)</span><a class="headerlink" href="#c.drm_event_reserve_init_locked" title="Permalink to this definition">¶</a></dt>
@@ -1868,8 +2089,8 @@ asynchronous event to userspace.</p>
 kmalloc and <strong>p</strong> must be the first member element.</p>
 <p>This is the locked version of <a class="reference internal" href="#c.drm_event_reserve_init" title="drm_event_reserve_init"><code class="xref c c-func docutils literal notranslate"><span class="pre">drm_event_reserve_init()</span></code></a> for callers which
 already hold <a class="reference internal" href="#c.drm_device" title="drm_device"><code class="xref c c-type docutils literal notranslate"><span class="pre">drm_device.event_lock</span></code></a>.</p>
-<p><strong>Return</strong></p>
 <p>0 on success or a negative error code on failure.</p>
+<p><strong>Return</strong></p>
 <dl class="function">
 <dt id="c.drm_event_reserve_init">
 int <code class="descname">drm_event_reserve_init</code><span class="sig-paren">(</span>struct <a class="reference internal" href="#c.drm_device" title="drm_device">drm_device</a> *<em>&nbsp;dev</em>, struct <a class="reference internal" href="#c.drm_file" title="drm_file">drm_file</a> *<em>&nbsp;file_priv</em>, struct <a class="reference internal" href="#c.drm_pending_event" title="drm_pending_event">drm_pending_event</a> *<em>&nbsp;p</em>, struct drm_event *<em>&nbsp;e</em><span class="sig-paren">)</span><a class="headerlink" href="#c.drm_event_reserve_init" title="Permalink to this definition">¶</a></dt>
@@ -1898,8 +2119,8 @@ asynchronous event to userspace.</p>
 kmalloc and <strong>p</strong> must be the first member element.</p>
 <p>Callers which already hold <a class="reference internal" href="#c.drm_device" title="drm_device"><code class="xref c c-type docutils literal notranslate"><span class="pre">drm_device.event_lock</span></code></a> should use
 <a class="reference internal" href="#c.drm_event_reserve_init_locked" title="drm_event_reserve_init_locked"><code class="xref c c-func docutils literal notranslate"><span class="pre">drm_event_reserve_init_locked()</span></code></a> instead.</p>
-<p><strong>Return</strong></p>
 <p>0 on success or a negative error code on failure.</p>
+<p><strong>Return</strong></p>
 <dl class="function">
 <dt id="c.drm_event_cancel_free">
 void <code class="descname">drm_event_cancel_free</code><span class="sig-paren">(</span>struct <a class="reference internal" href="#c.drm_device" title="drm_device">drm_device</a> *<em>&nbsp;dev</em>, struct <a class="reference internal" href="#c.drm_pending_event" title="drm_pending_event">drm_pending_event</a> *<em>&nbsp;p</em><span class="sig-paren">)</span><a class="headerlink" href="#c.drm_event_cancel_free" title="Permalink to this definition">¶</a></dt>
@@ -2163,7 +2384,7 @@ struct <a class="reference internal" href="#c.drm_printer" title="drm_printer">d
 <dl class="function">
 <dt id="c.drm_debug_printer">
 struct <a class="reference internal" href="#c.drm_printer" title="drm_printer">drm_printer</a> <code class="descname">drm_debug_printer</code><span class="sig-paren">(</span>const char *<em>&nbsp;prefix</em><span class="sig-paren">)</span><a class="headerlink" href="#c.drm_debug_printer" title="Permalink to this definition">¶</a></dt>
-<dd><p>construct a <a class="reference internal" href="#c.drm_printer" title="drm_printer"><code class="xref c c-type docutils literal notranslate"><span class="pre">drm_printer</span></code></a> that outputs to pr_debug()</p>
+<dd><p>construct a <a class="reference internal" href="#c.drm_printer" title="drm_printer"><code class="xref c c-type docutils literal notranslate"><span class="pre">drm_printer</span></code></a> that outputs to <a class="reference internal" href="../core-api/printk-basics.html#c.pr_debug" title="pr_debug"><code class="xref c c-func docutils literal notranslate"><span class="pre">pr_debug()</span></code></a></p>
 </dd></dl>
 
 <p><strong>Parameters</strong></p>
@@ -2176,7 +2397,7 @@ struct <a class="reference internal" href="#c.drm_printer" title="drm_printer">d
 <dl class="function">
 <dt id="c.drm_err_printer">
 struct <a class="reference internal" href="#c.drm_printer" title="drm_printer">drm_printer</a> <code class="descname">drm_err_printer</code><span class="sig-paren">(</span>const char *<em>&nbsp;prefix</em><span class="sig-paren">)</span><a class="headerlink" href="#c.drm_err_printer" title="Permalink to this definition">¶</a></dt>
-<dd><p>construct a <a class="reference internal" href="#c.drm_printer" title="drm_printer"><code class="xref c c-type docutils literal notranslate"><span class="pre">drm_printer</span></code></a> that outputs to pr_err()</p>
+<dd><p>construct a <a class="reference internal" href="#c.drm_printer" title="drm_printer"><code class="xref c c-type docutils literal notranslate"><span class="pre">drm_printer</span></code></a> that outputs to <a class="reference internal" href="../core-api/printk-basics.html#c.pr_err" title="pr_err"><code class="xref c c-func docutils literal notranslate"><span class="pre">pr_err()</span></code></a></p>
 </dd></dl>
 
 <p><strong>Parameters</strong></p>
@@ -2214,6 +2435,8 @@ radeon, … macro.</dd>
 <dd>Used in the lease code.</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">DRM_UT_DP</span></code></dt>
 <dd>Used in the DP code.</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">DRM_UT_DRMRES</span></code></dt>
+<dd>Used in the drm managed resources code.</dd>
 </dl>
 <p><strong>Description</strong></p>
 <p>Each of the DRM debug logging macros use a specific category, and the logging

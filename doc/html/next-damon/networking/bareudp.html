@@ -68,7 +68,7 @@
             
             
               <div class="version">
-                5.7.0
+                5.8.0
               </div>
             
           
@@ -166,9 +166,8 @@
 <p>There are various L3 encapsulation standards using UDP being discussed to
 leverage the UDP based load balancing capability of different networks.
 MPLSoUDP (__ <a class="reference external" href="https://tools.ietf.org/html/rfc7510">https://tools.ietf.org/html/rfc7510</a>) is one among them.</p>
-<p>The Bareudp tunnel module provides a generic L3 encapsulation tunnelling
-support for tunnelling different L3 protocols like MPLS, IP, NSH etc. inside
-a UDP tunnel.</p>
+<p>The Bareudp tunnel module provides a generic L3 encapsulation support for
+tunnelling different L3 protocols like MPLS, IP, NSH etc. inside a UDP tunnel.</p>
 <div class="section" id="special-handling">
 <h2>Special Handling<a class="headerlink" href="#special-handling" title="Permalink to this headline">¶</a></h2>
 <p>The bareudp device supports special handling for MPLS &amp; IP as they can have
@@ -184,7 +183,7 @@ with a flag called multiproto mode.</p>
 <li><p class="first">Device creation &amp; deletion</p>
 <blockquote>
 <div><ol class="loweralpha">
-<li><p class="first">ip link add dev bareudp0 type bareudp dstport 6635 ethertype 0x8847.</p>
+<li><p class="first">ip link add dev bareudp0 type bareudp dstport 6635 ethertype mpls_uc</p>
 <p>This creates a bareudp tunnel device which tunnels L3 traffic with ethertype
 0x8847 (MPLS traffic). The destination port of the UDP header will be set to
 6635.The device will listen on UDP port 6635 to receive traffic.</p>
@@ -194,15 +193,22 @@ with a flag called multiproto mode.</p>
 </ol>
 </div></blockquote>
 </li>
-<li><p class="first">Device creation with multiple proto mode enabled</p>
+<li><p class="first">Device creation with multiproto mode enabled</p>
 </li>
 </ol>
-<p>There are two ways to create a bareudp device for MPLS &amp; IP with multiproto mode
-enabled.</p>
+<p>The multiproto mode allows bareudp tunnels to handle several protocols of the
+same family. It is currently only available for IP and MPLS. This mode has to
+be enabled explicitly with the “multiproto” flag.</p>
 <blockquote>
-<div><ol class="loweralpha simple">
-<li>ip link add dev  bareudp0 type bareudp dstport 6635 ethertype 0x8847 multiproto</li>
-<li>ip link add dev  bareudp0 type bareudp dstport 6635 ethertype mpls</li>
+<div><ol class="loweralpha">
+<li><p class="first">ip link add dev bareudp0 type bareudp dstport 6635 ethertype ipv4 multiproto</p>
+<p>For an IPv4 tunnel the multiproto mode allows the tunnel to also handle
+IPv6.</p>
+</li>
+<li><p class="first">ip link add dev bareudp0 type bareudp dstport 6635 ethertype mpls_uc multiproto</p>
+<p>For MPLS, the multiproto mode allows the tunnel to handle both unicast
+and multicast MPLS packets.</p>
+</li>
 </ol>
 </div></blockquote>
 <ol class="arabic simple" start="3">

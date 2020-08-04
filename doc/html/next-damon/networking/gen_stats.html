@@ -1,0 +1,350 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Generic networking statistics for netlink users &mdash; The Linux Kernel  documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript">
+          var DOCUMENTATION_OPTIONS = {
+              URL_ROOT:'../',
+              VERSION:'',
+              LANGUAGE:'None',
+              COLLAPSE_INDEX:false,
+              FILE_SUFFIX:'.html',
+              HAS_SOURCE:  true,
+              SOURCELINK_SUFFIX: '.txt'
+          };
+      </script>
+        <script type="text/javascript" src="../_static/jquery.js"></script>
+        <script type="text/javascript" src="../_static/underscore.js"></script>
+        <script type="text/javascript" src="../_static/doctools.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/theme_overrides.css" type="text/css" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> The Linux Kernel
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                5.8.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../admin-guide/mm/damon/index.html">Monitoring Data Accesses</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../vm/damon/index.html">DAMON: Data Access MONitor</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">The Linux Kernel</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+      <li>Generic networking statistics for netlink users</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/networking/gen_stats.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="generic-networking-statistics-for-netlink-users">
+<h1>Generic networking statistics for netlink users<a class="headerlink" href="#generic-networking-statistics-for-netlink-users" title="Permalink to this headline">¶</a></h1>
+<p>Statistic counters are grouped into structs:</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="32%" />
+<col width="34%" />
+<col width="34%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Struct</th>
+<th class="head">TLV type</th>
+<th class="head">Description</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>gnet_stats_basic</td>
+<td>TCA_STATS_BASIC</td>
+<td>Basic statistics</td>
+</tr>
+<tr class="row-odd"><td>gnet_stats_rate_est</td>
+<td>TCA_STATS_RATE_EST</td>
+<td>Rate estimator</td>
+</tr>
+<tr class="row-even"><td>gnet_stats_queue</td>
+<td>TCA_STATS_QUEUE</td>
+<td>Queue statistics</td>
+</tr>
+<tr class="row-odd"><td>none</td>
+<td>TCA_STATS_APP</td>
+<td>Application specific</td>
+</tr>
+</tbody>
+</table>
+<div class="section" id="collecting">
+<h2>Collecting:<a class="headerlink" href="#collecting" title="Permalink to this headline">¶</a></h2>
+<p>Declare the statistic structs you need:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>struct mystruct {
+        struct gnet_stats_basic bstats;
+        struct gnet_stats_queue qstats;
+        ...
+};
+</pre></div>
+</div>
+<p>Update statistics, in dequeue() methods only, (while owning qdisc-&gt;running):</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>mystruct-&gt;tstats.packet++;
+mystruct-&gt;qstats.backlog += skb-&gt;pkt_len;
+</pre></div>
+</div>
+</div>
+<div class="section" id="export-to-userspace-dump">
+<h2>Export to userspace (Dump):<a class="headerlink" href="#export-to-userspace-dump" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>my_dumping_routine(struct sk_buff *skb, ...)
+{
+        struct gnet_dump dump;
+
+        if (gnet_stats_start_copy(skb, TCA_STATS2, &amp;mystruct-&gt;lock, &amp;dump,
+                                TCA_PAD) &lt; 0)
+                goto rtattr_failure;
+
+        if (gnet_stats_copy_basic(&amp;dump, &amp;mystruct-&gt;bstats) &lt; 0 ||
+            gnet_stats_copy_queue(&amp;dump, &amp;mystruct-&gt;qstats) &lt; 0 ||
+                gnet_stats_copy_app(&amp;dump, &amp;xstats, sizeof(xstats)) &lt; 0)
+                goto rtattr_failure;
+
+        if (gnet_stats_finish_copy(&amp;dump) &lt; 0)
+                goto rtattr_failure;
+        ...
+}
+</pre></div>
+</div>
+</div>
+<div class="section" id="tca-stats-tca-xstats-backward-compatibility">
+<h2>TCA_STATS/TCA_XSTATS backward compatibility:<a class="headerlink" href="#tca-stats-tca-xstats-backward-compatibility" title="Permalink to this headline">¶</a></h2>
+<p>Prior users of struct tc_stats and xstats can maintain backward
+compatibility by calling the compat wrappers to keep providing the
+existing TLV types:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>my_dumping_routine(struct sk_buff *skb, ...)
+{
+    if (gnet_stats_start_copy_compat(skb, TCA_STATS2, TCA_STATS,
+                                    TCA_XSTATS, &amp;mystruct-&gt;lock, &amp;dump,
+                                    TCA_PAD) &lt; 0)
+                goto rtattr_failure;
+        ...
+}
+</pre></div>
+</div>
+<p>A struct tc_stats will be filled out during gnet_stats_copy_* calls
+and appended to the skb. TCA_XSTATS is provided if gnet_stats_copy_app
+was called.</p>
+</div>
+<div class="section" id="locking">
+<h2>Locking:<a class="headerlink" href="#locking" title="Permalink to this headline">¶</a></h2>
+<p>Locks are taken before writing and released once all statistics have
+been written. Locks are always released in case of an error. You
+are responsible for making sure that the lock is initialized.</p>
+</div>
+<div class="section" id="rate-estimator">
+<h2>Rate Estimator:<a class="headerlink" href="#rate-estimator" title="Permalink to this headline">¶</a></h2>
+<ol class="arabic simple" start="0">
+<li>Prepare an estimator attribute. Most likely this would be in user
+space. The value of this TLV should contain a tc_estimator structure.
+As usual, such a TLV needs to be 32 bit aligned and therefore the
+length needs to be appropriately set, etc. The estimator interval
+and ewma log need to be converted to the appropriate values.
+tc_estimator.c::tc_setup_estimator() is advisable to be used as the
+conversion routine. It does a few clever things. It takes a time
+interval in microsecs, a time constant also in microsecs and a struct
+tc_estimator to  be populated. The returned tc_estimator can be
+transported to the kernel.  Transfer such a structure in a TLV of type
+TCA_RATE to your code in the kernel.</li>
+</ol>
+<p>In the kernel when setting up:</p>
+<ol class="arabic">
+<li><p class="first">make sure you have basic stats and rate stats setup first.</p>
+</li>
+<li><p class="first">make sure you have initialized stats lock that is used to setup such
+stats.</p>
+</li>
+<li><p class="first">Now initialize a new estimator:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>int ret = gen_new_estimator(my_basicstats,my_rate_est_stats,
+    mystats_lock, attr_with_tcestimator_struct);
+
+if ret == 0
+    success
+else
+    failed
+</pre></div>
+</div>
+</li>
+</ol>
+<p>From now on, every time you dump my_rate_est_stats it will contain
+up-to-date info.</p>
+<p>Once you are done, call gen_kill_estimator(my_basicstats,
+my_rate_est_stats) Make sure that my_basicstats and my_rate_est_stats
+are still valid (i.e still exist) at the time of making this call.</p>
+</div>
+<div class="section" id="authors">
+<h2>Authors:<a class="headerlink" href="#authors" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li>Thomas Graf &lt;<a class="reference external" href="mailto:tgraf&#37;&#52;&#48;suug&#46;ch">tgraf<span>&#64;</span>suug<span>&#46;</span>ch</a>&gt;</li>
+<li>Jamal Hadi Salim &lt;<a class="reference external" href="mailto:hadi&#37;&#52;&#48;cyberus&#46;ca">hadi<span>&#64;</span>cyberus<span>&#46;</span>ca</a>&gt;</li>
+</ul>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright The kernel development community
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

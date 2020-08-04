@@ -68,7 +68,7 @@
             
             
               <div class="version">
-                5.7.0
+                5.8.0
               </div>
             
           
@@ -171,6 +171,10 @@ kernel code to obtain additional kernel information.  Currently, if
 <code class="docutils literal notranslate"><span class="pre">CONFIG_DYNAMIC_DEBUG</span></code> is set, then all <code class="docutils literal notranslate"><span class="pre">pr_debug()</span></code>/<code class="docutils literal notranslate"><span class="pre">dev_dbg()</span></code> and
 <code class="docutils literal notranslate"><span class="pre">print_hex_dump_debug()</span></code>/<code class="docutils literal notranslate"><span class="pre">print_hex_dump_bytes()</span></code> calls can be dynamically
 enabled per-callsite.</p>
+<p>If you do not want to enable dynamic debug globally (i.e. in some embedded
+system), you may set <code class="docutils literal notranslate"><span class="pre">CONFIG_DYNAMIC_DEBUG_CORE</span></code> as basic support of dynamic
+debug and add <code class="docutils literal notranslate"><span class="pre">ccflags</span> <span class="pre">:=</span> <span class="pre">-DDYNAMIC_DEBUG_MODULE</span></code> into the Makefile of any
+modules which you’d like to dynamically debug later.</p>
 <p>If <code class="docutils literal notranslate"><span class="pre">CONFIG_DYNAMIC_DEBUG</span></code> is not set, <code class="docutils literal notranslate"><span class="pre">print_hex_dump_debug()</span></code> is just
 shortcut for <code class="docutils literal notranslate"><span class="pre">print_hex_dump(KERN_DEBUG)</span></code>.</p>
 <p>For <code class="docutils literal notranslate"><span class="pre">print_hex_dump_debug()</span></code>/<code class="docutils literal notranslate"><span class="pre">print_hex_dump_bytes()</span></code>, format string is
@@ -280,7 +284,7 @@ specifications, followed by a flags change specification:</p>
 <div class="highlight-none notranslate"><div class="highlight"><pre><span></span>command ::= match-spec* flags-spec
 </pre></div>
 </div>
-<p>The match-spec’s are used to choose a subset of the known pr_debug()
+<p>The match-spec’s are used to choose a subset of the known <a class="reference internal" href="../core-api/printk-basics.html#c.pr_debug" title="pr_debug"><code class="xref c c-func docutils literal notranslate"><span class="pre">pr_debug()</span></code></a>
 callsites to which to apply the flags-spec.  Think of them as a query
 with implicit ANDs between each pair.  Note that an empty list of
 match-specs will select all debug statement callsites.</p>

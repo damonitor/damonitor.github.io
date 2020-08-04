@@ -1,0 +1,310 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Network Devices, the Kernel, and You! &mdash; The Linux Kernel  documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript">
+          var DOCUMENTATION_OPTIONS = {
+              URL_ROOT:'../',
+              VERSION:'',
+              LANGUAGE:'None',
+              COLLAPSE_INDEX:false,
+              FILE_SUFFIX:'.html',
+              HAS_SOURCE:  true,
+              SOURCELINK_SUFFIX: '.txt'
+          };
+      </script>
+        <script type="text/javascript" src="../_static/jquery.js"></script>
+        <script type="text/javascript" src="../_static/underscore.js"></script>
+        <script type="text/javascript" src="../_static/doctools.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/theme_overrides.css" type="text/css" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> The Linux Kernel
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                5.8.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../admin-guide/mm/damon/index.html">Monitoring Data Accesses</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../vm/damon/index.html">DAMON: Data Access MONitor</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">The Linux Kernel</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+      <li>Network Devices, the Kernel, and You!</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/networking/netdevices.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="network-devices-the-kernel-and-you">
+<h1>Network Devices, the Kernel, and You!<a class="headerlink" href="#network-devices-the-kernel-and-you" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="introduction">
+<h2>Introduction<a class="headerlink" href="#introduction" title="Permalink to this headline">¶</a></h2>
+<p>The following is a random collection of documentation regarding
+network devices.</p>
+</div>
+<div class="section" id="struct-net-device-allocation-rules">
+<h2>struct net_device allocation rules<a class="headerlink" href="#struct-net-device-allocation-rules" title="Permalink to this headline">¶</a></h2>
+<p>Network device structures need to persist even after module is unloaded and
+must be allocated with <a class="reference internal" href="kapi.html#c.alloc_netdev_mqs" title="alloc_netdev_mqs"><code class="xref c c-func docutils literal notranslate"><span class="pre">alloc_netdev_mqs()</span></code></a> and friends.
+If device has registered successfully, it will be freed on last use
+by <a class="reference internal" href="kapi.html#c.free_netdev" title="free_netdev"><code class="xref c c-func docutils literal notranslate"><span class="pre">free_netdev()</span></code></a>. This is required to handle the pathologic case cleanly
+(example: rmmod mydriver &lt;/sys/class/net/myeth/mtu )</p>
+<p><a class="reference internal" href="kapi.html#c.alloc_netdev_mqs" title="alloc_netdev_mqs"><code class="xref c c-func docutils literal notranslate"><span class="pre">alloc_netdev_mqs()</span></code></a>/alloc_netdev() reserve extra space for driver
+private data which gets freed when the network device is freed. If
+separately allocated data is attached to the network device
+(netdev_priv(dev)) then it is up to the module exit handler to free that.</p>
+</div>
+<div class="section" id="mtu">
+<h2>MTU<a class="headerlink" href="#mtu" title="Permalink to this headline">¶</a></h2>
+<p>Each network device has a Maximum Transfer Unit. The MTU does not
+include any link layer protocol overhead. Upper layer protocols must
+not pass a socket buffer (skb) to a device to transmit with more data
+than the mtu. The MTU does not include link layer header overhead, so
+for example on Ethernet if the standard MTU is 1500 bytes used, the
+actual skb will contain up to 1514 bytes because of the Ethernet
+header. Devices should allow for the 4 byte VLAN header as well.</p>
+<p>Segmentation Offload (GSO, TSO) is an exception to this rule.  The
+upper layer protocol may pass a large socket buffer to the device
+transmit routine, and the device will break that up into separate
+packets based on the current MTU.</p>
+<p>MTU is symmetrical and applies both to receive and transmit. A device
+must be able to receive at least the maximum size packet allowed by
+the MTU. A network device may use the MTU as mechanism to size receive
+buffers, but the device should allow packets with VLAN header. With
+standard Ethernet mtu of 1500 bytes, the device should allow up to
+1518 byte packets (1500 + 14 header + 4 tag).  The device may either:
+drop, truncate, or pass up oversize packets, but dropping oversize
+packets is preferred.</p>
+</div>
+<div class="section" id="struct-net-device-synchronization-rules">
+<h2>struct net_device synchronization rules<a class="headerlink" href="#struct-net-device-synchronization-rules" title="Permalink to this headline">¶</a></h2>
+<dl class="docutils">
+<dt>ndo_open:</dt>
+<dd>Synchronization: rtnl_lock() semaphore.
+Context: process</dd>
+<dt>ndo_stop:</dt>
+<dd>Synchronization: rtnl_lock() semaphore.
+Context: process
+Note: <a class="reference internal" href="kapi.html#c.netif_running" title="netif_running"><code class="xref c c-func docutils literal notranslate"><span class="pre">netif_running()</span></code></a> is guaranteed false</dd>
+<dt>ndo_do_ioctl:</dt>
+<dd>Synchronization: rtnl_lock() semaphore.
+Context: process</dd>
+<dt>ndo_get_stats:</dt>
+<dd>Synchronization: dev_base_lock rwlock.
+Context: nominally process, but don’t sleep inside an rwlock</dd>
+<dt>ndo_start_xmit:</dt>
+<dd><p class="first">Synchronization: __netif_tx_lock spinlock.</p>
+<p>When the driver sets NETIF_F_LLTX in dev-&gt;features this will be
+called without holding netif_tx_lock. In this case the driver
+has to lock by itself when needed.
+The locking there should also properly protect against
+set_rx_mode. WARNING: use of NETIF_F_LLTX is deprecated.
+Don’t use it for new drivers.</p>
+<dl class="docutils">
+<dt>Context: Process with BHs disabled or BH (timer),</dt>
+<dd>will be called with interrupts disabled by netconsole.</dd>
+</dl>
+<p>Return codes:</p>
+<ul class="last simple">
+<li>NETDEV_TX_OK everything ok.</li>
+<li>NETDEV_TX_BUSY Cannot transmit packet, try later
+Usually a bug, means queue start/stop flow control is broken in
+the driver. Note: the driver must NOT put the skb in its DMA ring.</li>
+</ul>
+</dd>
+<dt>ndo_tx_timeout:</dt>
+<dd>Synchronization: netif_tx_lock spinlock; all TX queues frozen.
+Context: BHs disabled
+Notes: <a class="reference internal" href="kapi.html#c.netif_queue_stopped" title="netif_queue_stopped"><code class="xref c c-func docutils literal notranslate"><span class="pre">netif_queue_stopped()</span></code></a> is guaranteed true</dd>
+<dt>ndo_set_rx_mode:</dt>
+<dd>Synchronization: netif_addr_lock spinlock.
+Context: BHs disabled</dd>
+</dl>
+</div>
+<div class="section" id="struct-napi-struct-synchronization-rules">
+<h2>struct napi_struct synchronization rules<a class="headerlink" href="#struct-napi-struct-synchronization-rules" title="Permalink to this headline">¶</a></h2>
+<dl class="docutils">
+<dt>napi-&gt;poll:</dt>
+<dd><dl class="first last docutils">
+<dt>Synchronization:</dt>
+<dd>NAPI_STATE_SCHED bit in napi-&gt;state.  Device
+driver’s ndo_stop method will invoke <a class="reference internal" href="kapi.html#c.napi_disable" title="napi_disable"><code class="xref c c-func docutils literal notranslate"><span class="pre">napi_disable()</span></code></a> on
+all NAPI instances which will do a sleeping poll on the
+NAPI_STATE_SCHED napi-&gt;state bit, waiting for all pending
+NAPI activity to cease.</dd>
+<dt>Context:</dt>
+<dd>softirq
+will be called with interrupts disabled by netconsole.</dd>
+</dl>
+</dd>
+</dl>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright The kernel development community
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

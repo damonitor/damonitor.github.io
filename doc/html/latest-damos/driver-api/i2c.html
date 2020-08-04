@@ -68,7 +68,7 @@
             
             
               <div class="version">
-                5.7.0
+                5.8.0
               </div>
             
           
@@ -481,7 +481,7 @@ that, such as chip type, configuration, associated IRQ, and so on.</p>
 that are present.  This information is used to grow the driver model tree.
 For mainboards this is done statically using <a class="reference internal" href="#c.i2c_register_board_info" title="i2c_register_board_info"><code class="xref c c-func docutils literal notranslate"><span class="pre">i2c_register_board_info()</span></code></a>;
 bus numbers identify adapters that aren’t yet available.  For add-on boards,
-<a class="reference internal" href="#c.i2c_new_device" title="i2c_new_device"><code class="xref c c-func docutils literal notranslate"><span class="pre">i2c_new_device()</span></code></a> does this dynamically with the adapter already known.</p>
+<a class="reference internal" href="#c.i2c_new_client_device" title="i2c_new_client_device"><code class="xref c c-func docutils literal notranslate"><span class="pre">i2c_new_client_device()</span></code></a> does this dynamically with the adapter already known.</p>
 <dl class="function">
 <dt id="c.I2C_BOARD_INFO">
 <code class="descname">I2C_BOARD_INFO</code><span class="sig-paren">(</span><em>dev_type</em>, <em>dev_addr</em><span class="sig-paren">)</span><a class="headerlink" href="#c.I2C_BOARD_INFO" title="Permalink to this definition">¶</a></dt>
@@ -906,28 +906,6 @@ before any i2c_adapter could exist.</p>
 <p>This returns the new i2c client, which may be saved for later use with
 <a class="reference internal" href="#c.i2c_unregister_device" title="i2c_unregister_device"><code class="xref c c-func docutils literal notranslate"><span class="pre">i2c_unregister_device()</span></code></a>; or an ERR_PTR to describe the error.</p>
 <dl class="function">
-<dt id="c.i2c_new_device">
-struct <a class="reference internal" href="#c.i2c_client" title="i2c_client">i2c_client</a> * <code class="descname">i2c_new_device</code><span class="sig-paren">(</span>struct i2c_adapter *<em>&nbsp;adap</em>, struct <a class="reference internal" href="#c.i2c_board_info" title="i2c_board_info">i2c_board_info</a> const *<em>&nbsp;info</em><span class="sig-paren">)</span><a class="headerlink" href="#c.i2c_new_device" title="Permalink to this definition">¶</a></dt>
-<dd><p>instantiate an i2c device</p>
-</dd></dl>
-
-<p><strong>Parameters</strong></p>
-<dl class="docutils">
-<dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">i2c_adapter</span> <span class="pre">*</span> <span class="pre">adap</span></code></dt>
-<dd>the adapter managing the device</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">i2c_board_info</span> <span class="pre">const</span> <span class="pre">*</span> <span class="pre">info</span></code></dt>
-<dd>describes one I2C device; bus_num is ignored</dd>
-</dl>
-<p><strong>Context</strong></p>
-<p>can sleep</p>
-<p><strong>Description</strong></p>
-<p>This deprecated function has the same functionality as
-<strong>i2c_new_client_device</strong>, it just returns NULL instead of an ERR_PTR in case of
-an error for compatibility with current I2C API. It will be removed once all
-users are converted.</p>
-<p>This returns the new i2c client, which may be saved for later use with
-<a class="reference internal" href="#c.i2c_unregister_device" title="i2c_unregister_device"><code class="xref c c-func docutils literal notranslate"><span class="pre">i2c_unregister_device()</span></code></a>; or NULL to indicate an error.</p>
-<dl class="function">
 <dt id="c.i2c_unregister_device">
 void <code class="descname">i2c_unregister_device</code><span class="sig-paren">(</span>struct <a class="reference internal" href="#c.i2c_client" title="i2c_client">i2c_client</a> *<em>&nbsp;client</em><span class="sig-paren">)</span><a class="headerlink" href="#c.i2c_unregister_device" title="Permalink to this definition">¶</a></dt>
 <dd><p>reverse effect of i2c_new_*_device()</p>
@@ -1244,6 +1222,7 @@ Should at least be 1.</dd>
 <dd>Or a valid pointer to be used with DMA. After use, release it by
 calling <a class="reference internal" href="#c.i2c_put_dma_safe_msg_buf" title="i2c_put_dma_safe_msg_buf"><code class="xref c c-func docutils literal notranslate"><span class="pre">i2c_put_dma_safe_msg_buf()</span></code></a>.</dd>
 </dl>
+<p><strong>Description</strong></p>
 <p>This function must only be called from process context!</p>
 <dl class="function">
 <dt id="c.i2c_put_dma_safe_msg_buf">

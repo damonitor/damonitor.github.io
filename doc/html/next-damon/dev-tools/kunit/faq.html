@@ -68,7 +68,7 @@
             
             
               <div class="version">
-                5.7.0
+                5.8.0
               </div>
             
           
@@ -215,6 +215,45 @@ kernel by installing a production configuration of the kernel on production
 hardware with a production userspace and then trying to exercise some behavior
 that depends on interactions between the hardware, the kernel, and userspace.</li>
 </ul>
+</div>
+<div class="section" id="kunit-isn-t-working-what-should-i-do">
+<h2>KUnit isn’t working, what should I do?<a class="headerlink" href="#kunit-isn-t-working-what-should-i-do" title="Permalink to this headline">¶</a></h2>
+<p>Unfortunately, there are a number of things which can break, but here are some
+things to try.</p>
+<ol class="arabic simple">
+<li>Try running <code class="docutils literal notranslate"><span class="pre">./tools/testing/kunit/kunit.py</span> <span class="pre">run</span></code> with the <code class="docutils literal notranslate"><span class="pre">--raw_output</span></code>
+parameter. This might show details or error messages hidden by the kunit_tool
+parser.</li>
+<li>Instead of running <code class="docutils literal notranslate"><span class="pre">kunit.py</span> <span class="pre">run</span></code>, try running <code class="docutils literal notranslate"><span class="pre">kunit.py</span> <span class="pre">config</span></code>,
+<code class="docutils literal notranslate"><span class="pre">kunit.py</span> <span class="pre">build</span></code>, and <code class="docutils literal notranslate"><span class="pre">kunit.py</span> <span class="pre">exec</span></code> independently. This can help track
+down where an issue is occurring. (If you think the parser is at fault, you
+can run it manually against stdin or a file with <code class="docutils literal notranslate"><span class="pre">kunit.py</span> <span class="pre">parse</span></code>.)</li>
+<li>Running the UML kernel directly can often reveal issues or error messages
+kunit_tool ignores. This should be as simple as running <code class="docutils literal notranslate"><span class="pre">./vmlinux</span></code> after
+building the UML kernel (e.g., by using <code class="docutils literal notranslate"><span class="pre">kunit.py</span> <span class="pre">build</span></code>). Note that UML
+has some unusual requirements (such as the host having a tmpfs filesystem
+mounted), and has had issues in the past when built statically and the host
+has KASLR enabled. (On older host kernels, you may need to run <code class="docutils literal notranslate"><span class="pre">setarch</span>
+<span class="pre">`uname</span> <span class="pre">-m`</span> <span class="pre">-R</span> <span class="pre">./vmlinux</span></code> to disable KASLR.)</li>
+<li>Make sure the kernel .config has <code class="docutils literal notranslate"><span class="pre">CONFIG_KUNIT=y</span></code> and at least one test
+(e.g. <code class="docutils literal notranslate"><span class="pre">CONFIG_KUNIT_EXAMPLE_TEST=y</span></code>). kunit_tool will keep its .config
+around, so you can see what config was used after running <code class="docutils literal notranslate"><span class="pre">kunit.py</span> <span class="pre">run</span></code>.
+It also preserves any config changes you might make, so you can
+enable/disable things with <code class="docutils literal notranslate"><span class="pre">make</span> <span class="pre">ARCH=um</span> <span class="pre">menuconfig</span></code> or similar, and then
+re-run kunit_tool.</li>
+<li>Try to run <code class="docutils literal notranslate"><span class="pre">make</span> <span class="pre">ARCH=um</span> <span class="pre">defconfig</span></code> before running <code class="docutils literal notranslate"><span class="pre">kunit.py</span> <span class="pre">run</span></code>. This
+may help clean up any residual config items which could be causing problems.</li>
+<li>Finally, try running KUnit outside UML. KUnit and KUnit tests can run be
+built into any kernel, or can be built as a module and loaded at runtime.
+Doing so should allow you to determine if UML is causing the issue you’re
+seeing. When tests are built-in, they will execute when the kernel boots, and
+modules will automatically execute associated tests when loaded. Test results
+can be collected from <code class="docutils literal notranslate"><span class="pre">/sys/kernel/debug/kunit/&lt;test</span> <span class="pre">suite&gt;/results</span></code>, and
+can be parsed with <code class="docutils literal notranslate"><span class="pre">kunit.py</span> <span class="pre">parse</span></code>. For more details, see “KUnit on
+non-UML architectures” in <a class="reference internal" href="usage.html"><span class="doc">Using KUnit</span></a>.</li>
+</ol>
+<p>If none of the above tricks help, you are always welcome to email any issues to
+<a class="reference external" href="mailto:kunit-dev&#37;&#52;&#48;googlegroups&#46;com">kunit-dev<span>&#64;</span>googlegroups<span>&#46;</span>com</a>.</p>
 </div>
 </div>
 

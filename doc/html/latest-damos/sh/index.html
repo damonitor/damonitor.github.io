@@ -68,7 +68,7 @@
             
             
               <div class="version">
-                5.7.0
+                5.8.0
               </div>
             
           
@@ -229,124 +229,6 @@ void <code class="descname">sq_unmap</code><span class="sig-paren">(</span>unsig
 <p>Unmaps the store queue allocation <strong>map</strong> that was previously created by
 <a class="reference internal" href="#c.sq_remap" title="sq_remap"><code class="xref c c-func docutils literal notranslate"><span class="pre">sq_remap()</span></code></a>. Also frees up the pte that was previously inserted into
 the kernel page table and discards the UTLB translation.</p>
-</div>
-</div>
-<div class="section" id="sh-5">
-<h3>SH-5<a class="headerlink" href="#sh-5" title="Permalink to this headline">¶</a></h3>
-<div class="section" id="tlb-interfaces">
-<h4>TLB Interfaces<a class="headerlink" href="#tlb-interfaces" title="Permalink to this headline">¶</a></h4>
-<dl class="function">
-<dt id="c.sh64_tlb_init">
-int <code class="descname">sh64_tlb_init</code><span class="sig-paren">(</span>void<span class="sig-paren">)</span><a class="headerlink" href="#c.sh64_tlb_init" title="Permalink to this definition">¶</a></dt>
-<dd><p>Perform initial setup for the DTLB and ITLB.</p>
-</dd></dl>
-
-<p><strong>Parameters</strong></p>
-<dl class="docutils">
-<dt><code class="docutils literal notranslate"><span class="pre">void</span></code></dt>
-<dd>no arguments</dd>
-</dl>
-<dl class="function">
-<dt id="c.sh64_next_free_dtlb_entry">
-unsigned long long <code class="descname">sh64_next_free_dtlb_entry</code><span class="sig-paren">(</span>void<span class="sig-paren">)</span><a class="headerlink" href="#c.sh64_next_free_dtlb_entry" title="Permalink to this definition">¶</a></dt>
-<dd><p>Find the next available DTLB entry</p>
-</dd></dl>
-
-<p><strong>Parameters</strong></p>
-<dl class="docutils">
-<dt><code class="docutils literal notranslate"><span class="pre">void</span></code></dt>
-<dd>no arguments</dd>
-</dl>
-<dl class="function">
-<dt id="c.sh64_get_wired_dtlb_entry">
-unsigned long long <code class="descname">sh64_get_wired_dtlb_entry</code><span class="sig-paren">(</span>void<span class="sig-paren">)</span><a class="headerlink" href="#c.sh64_get_wired_dtlb_entry" title="Permalink to this definition">¶</a></dt>
-<dd><p>Allocate a wired (locked-in) entry in the DTLB</p>
-</dd></dl>
-
-<p><strong>Parameters</strong></p>
-<dl class="docutils">
-<dt><code class="docutils literal notranslate"><span class="pre">void</span></code></dt>
-<dd>no arguments</dd>
-</dl>
-<dl class="function">
-<dt id="c.sh64_put_wired_dtlb_entry">
-int <code class="descname">sh64_put_wired_dtlb_entry</code><span class="sig-paren">(</span>unsigned long long<em>&nbsp;entry</em><span class="sig-paren">)</span><a class="headerlink" href="#c.sh64_put_wired_dtlb_entry" title="Permalink to this definition">¶</a></dt>
-<dd><p>Free a wired (locked-in) entry in the DTLB.</p>
-</dd></dl>
-
-<p><strong>Parameters</strong></p>
-<dl class="docutils">
-<dt><code class="docutils literal notranslate"><span class="pre">unsigned</span> <span class="pre">long</span> <span class="pre">long</span> <span class="pre">entry</span></code></dt>
-<dd>Address of TLB slot.</dd>
-</dl>
-<p><strong>Description</strong></p>
-<p>Works like a stack, last one to allocate must be first one to free.</p>
-<dl class="function">
-<dt id="c.sh64_setup_tlb_slot">
-void <code class="descname">sh64_setup_tlb_slot</code><span class="sig-paren">(</span>unsigned long long<em>&nbsp;config_addr</em>, unsigned long<em>&nbsp;eaddr</em>, unsigned long<em>&nbsp;asid</em>, unsigned long<em>&nbsp;paddr</em><span class="sig-paren">)</span><a class="headerlink" href="#c.sh64_setup_tlb_slot" title="Permalink to this definition">¶</a></dt>
-<dd><p>Load up a translation in a wired slot.</p>
-</dd></dl>
-
-<p><strong>Parameters</strong></p>
-<dl class="docutils">
-<dt><code class="docutils literal notranslate"><span class="pre">unsigned</span> <span class="pre">long</span> <span class="pre">long</span> <span class="pre">config_addr</span></code></dt>
-<dd>Address of TLB slot.</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">unsigned</span> <span class="pre">long</span> <span class="pre">eaddr</span></code></dt>
-<dd>Virtual address.</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">unsigned</span> <span class="pre">long</span> <span class="pre">asid</span></code></dt>
-<dd>Address Space Identifier.</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">unsigned</span> <span class="pre">long</span> <span class="pre">paddr</span></code></dt>
-<dd>Physical address.</dd>
-</dl>
-<p><strong>Description</strong></p>
-<p>Load up a virtual&lt;-&gt;physical translation for <strong>eaddr**&lt;-&gt;**paddr</strong> in the
-pre-allocated TLB slot <strong>config_addr</strong> (see sh64_get_wired_dtlb_entry).</p>
-<dl class="function">
-<dt id="c.sh64_teardown_tlb_slot">
-void <code class="descname">sh64_teardown_tlb_slot</code><span class="sig-paren">(</span>unsigned long long<em>&nbsp;config_addr</em><span class="sig-paren">)</span><a class="headerlink" href="#c.sh64_teardown_tlb_slot" title="Permalink to this definition">¶</a></dt>
-<dd><p>Teardown a translation.</p>
-</dd></dl>
-
-<p><strong>Parameters</strong></p>
-<dl class="docutils">
-<dt><code class="docutils literal notranslate"><span class="pre">unsigned</span> <span class="pre">long</span> <span class="pre">long</span> <span class="pre">config_addr</span></code></dt>
-<dd>Address of TLB slot.</dd>
-</dl>
-<p><strong>Description</strong></p>
-<p>Teardown any existing mapping in the TLB slot <strong>config_addr</strong>.</p>
-<dl class="function">
-<dt id="c.for_each_dtlb_entry">
-<code class="descname">for_each_dtlb_entry</code><span class="sig-paren">(</span><em>tlb</em><span class="sig-paren">)</span><a class="headerlink" href="#c.for_each_dtlb_entry" title="Permalink to this definition">¶</a></dt>
-<dd><p>Iterate over free (non-wired) DTLB entries</p>
-</dd></dl>
-
-<p><strong>Parameters</strong></p>
-<dl class="docutils">
-<dt><code class="docutils literal notranslate"><span class="pre">tlb</span></code></dt>
-<dd>TLB entry</dd>
-</dl>
-<dl class="function">
-<dt id="c.for_each_itlb_entry">
-<code class="descname">for_each_itlb_entry</code><span class="sig-paren">(</span><em>tlb</em><span class="sig-paren">)</span><a class="headerlink" href="#c.for_each_itlb_entry" title="Permalink to this definition">¶</a></dt>
-<dd><p>Iterate over free (non-wired) ITLB entries</p>
-</dd></dl>
-
-<p><strong>Parameters</strong></p>
-<dl class="docutils">
-<dt><code class="docutils literal notranslate"><span class="pre">tlb</span></code></dt>
-<dd>TLB entry</dd>
-</dl>
-<dl class="function">
-<dt id="c.__flush_tlb_slot">
-void <code class="descname">__flush_tlb_slot</code><span class="sig-paren">(</span>unsigned long long<em>&nbsp;slot</em><span class="sig-paren">)</span><a class="headerlink" href="#c.__flush_tlb_slot" title="Permalink to this definition">¶</a></dt>
-<dd><p>Flushes TLB slot <strong>slot</strong>.</p>
-</dd></dl>
-
-<p><strong>Parameters</strong></p>
-<dl class="docutils">
-<dt><code class="docutils literal notranslate"><span class="pre">unsigned</span> <span class="pre">long</span> <span class="pre">long</span> <span class="pre">slot</span></code></dt>
-<dd>Address of TLB slot.</dd>
-</dl>
 </div>
 </div>
 </div>

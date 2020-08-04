@@ -68,7 +68,7 @@
             
             
               <div class="version">
-                5.7.0
+                5.8.0
               </div>
             
           
@@ -415,8 +415,20 @@ key and a single filenames encryption key.  To still encrypt different
 files’ data differently, inode numbers are included in the IVs.
 Consequently, shrinking the filesystem may not be allowed.</p>
 <p>This format is optimized for use with inline encryption hardware
-compliant with the UFS or eMMC standards, which support only 64 IV
-bits per I/O request and may have only a small number of keyslots.</p>
+compliant with the UFS standard, which supports only 64 IV bits per
+I/O request and may have only a small number of keyslots.</p>
+</div>
+<div class="section" id="iv-ino-lblk-32-policies">
+<h3>IV_INO_LBLK_32 policies<a class="headerlink" href="#iv-ino-lblk-32-policies" title="Permalink to this headline">¶</a></h3>
+<p>IV_INO_LBLK_32 policies work like IV_INO_LBLK_64, except that for
+IV_INO_LBLK_32, the inode number is hashed with SipHash-2-4 (where the
+SipHash key is derived from the master key) and added to the file
+logical block number mod 2^32 to produce a 32-bit IV.</p>
+<p>This format is optimized for use with inline encryption hardware
+compliant with the eMMC v5.2 standard, which supports only 32 IV bits
+per I/O request and may have only a small number of keyslots.  This
+format results in some level of IV reuse, so it should only be used
+when necessary due to hardware limitations.</p>
 </div>
 <div class="section" id="key-identifiers">
 <h3>Key identifiers<a class="headerlink" href="#key-identifiers" title="Permalink to this headline">¶</a></h3>
@@ -481,6 +493,9 @@ Currently this is only allowed with the Adiantum encryption mode.</li>
 <li>With <a class="reference internal" href="#iv-ino-lblk-64-policies">IV_INO_LBLK_64 policies</a>, the logical block number is limited
 to 32 bits and is placed in bits 0-31 of the IV.  The inode number
 (which is also limited to 32 bits) is placed in bits 32-63.</li>
+<li>With <a class="reference internal" href="#iv-ino-lblk-32-policies">IV_INO_LBLK_32 policies</a>, the logical block number is limited
+to 32 bits and is placed in bits 0-31 of the IV.  The inode number
+is then hashed and added mod 2^32.</li>
 </ul>
 <p>Note that because file logical block numbers are included in the IVs,
 filesystems must enforce that blocks are never shifted around within
@@ -571,9 +586,14 @@ encrypting filenames.  If unsure, use FSCRYPT_POLICY_FLAGS_PAD_32
 (0x3).</li>
 <li>FSCRYPT_POLICY_FLAG_DIRECT_KEY: See <a class="reference internal" href="#direct-key-policies">DIRECT_KEY policies</a>.</li>
 <li>FSCRYPT_POLICY_FLAG_IV_INO_LBLK_64: See <a class="reference internal" href="#iv-ino-lblk-64-policies">IV_INO_LBLK_64
-policies</a>.  This is mutually exclusive with DIRECT_KEY and is not
-supported on v1 policies.</li>
+policies</a>.</li>
+<li>FSCRYPT_POLICY_FLAG_IV_INO_LBLK_32: See <a class="reference internal" href="#iv-ino-lblk-32-policies">IV_INO_LBLK_32
+policies</a>.</li>
 </ul>
+<p>v1 encryption policies only support the PAD_* and DIRECT_KEY flags.
+The other flags are only supported by v2 encryption policies.</p>
+<p>The DIRECT_KEY, IV_INO_LBLK_64, and IV_INO_LBLK_32 flags are
+mutually exclusive.</p>
 </li>
 <li><p class="first">For v2 encryption policies, <code class="docutils literal notranslate"><span class="pre">__reserved</span></code> must be zeroed.</p>
 </li>

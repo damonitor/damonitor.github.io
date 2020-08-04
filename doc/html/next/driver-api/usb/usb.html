@@ -68,7 +68,7 @@
             
             
               <div class="version">
-                5.7.0
+                5.8.0
               </div>
             
           
@@ -796,12 +796,12 @@ to keep track of the number of functions that require USB 3.0 Link Power
 Management to be disabled for this usb_device.  This count should only
 be manipulated by those functions, with the bandwidth_mutex is held.</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">hub_delay</span></code></dt>
-<dd>cached value consisting of:
-parent-&gt;hub_delay + wHubDelay + tTPTransmissionDelay (40ns)</dd>
-</dl>
-<p><strong>Description</strong></p>
-<blockquote>
+<dd><p class="first">cached value consisting of:
+parent-&gt;hub_delay + wHubDelay + tTPTransmissionDelay (40ns)</p>
+<blockquote class="last">
 <div>Will be used as wValue for SetIsochDelay requests.</div></blockquote>
+</dd>
+</dl>
 <p><strong>Notes</strong></p>
 <p>Usbcore drivers should not set usbdev-&gt;state directly.  Instead use
 <a class="reference internal" href="#c.usb_set_device_state" title="usb_set_device_state"><code class="xref c c-func docutils literal notranslate"><span class="pre">usb_set_device_state()</span></code></a>.</p>
@@ -864,6 +864,7 @@ controllers.  Adding and removing devices, including virtual root hubs
 in host controller driver modules, does not change these path identifiers;
 neither does rebooting or re-enumerating.  These are more useful identifiers
 than changeable (“unstable”) ones like bus numbers or device addresses.</p>
+<p><strong>Description</strong></p>
 <p>With a partial exception for devices connected to USB 2.0 root hubs, these
 identifiers are also predictable.  So long as the device tree isn’t changed,
 plugging any USB device into a given hub port always gives it the same path.
@@ -1848,8 +1849,6 @@ often used (in non-interrupt context) instead of this call.
 That is often used through convenience wrappers, for the requests
 that are standardized in the USB 2.0 specification.  For bulk
 endpoints, a synchronous <a class="reference internal" href="#c.usb_bulk_msg" title="usb_bulk_msg"><code class="xref c c-func docutils literal notranslate"><span class="pre">usb_bulk_msg()</span></code></a> call is available.</p>
-<p><strong>Return</strong></p>
-<p>0 on successful submissions. A negative error number otherwise.</p>
 <p>Request Queuing:</p>
 <p>URBs may be submitted to endpoints before previous ones complete, to
 minimize the impact of interrupt latencies and system overhead on data
@@ -1919,6 +1918,8 @@ GFP_NOIO, unless b) or c) apply</li>
 </ol>
 </dd>
 </dl>
+<p><strong>Return</strong></p>
+<p>0 on successful submissions. A negative error number otherwise.</p>
 <dl class="function">
 <dt id="c.usb_unlink_urb">
 int <code class="descname">usb_unlink_urb</code><span class="sig-paren">(</span>struct <a class="reference internal" href="#c.urb" title="urb">urb</a> *<em>&nbsp;urb</em><span class="sig-paren">)</span><a class="headerlink" href="#c.usb_unlink_urb" title="Permalink to this definition">¶</a></dt>
@@ -1957,9 +1958,6 @@ finished with it), even if the completion handler has not yet run.</p>
 <p>The URB must not be deallocated while this routine is running.  In
 particular, when a driver calls this routine, it must insure that the
 completion handler cannot deallocate the URB.</p>
-<p><strong>Return</strong></p>
-<p>-EINPROGRESS on success. See description for other values on
-failure.</p>
 <p>Unlinking and Endpoint Queues:</p>
 <p>[The behaviors and guarantees described below do not apply to virtual
 root hubs but only to endpoint queues for physical USB devices.]</p>
@@ -1990,6 +1988,9 @@ unlinking all pending URBs at the first fault.</p>
 <p>When a control URB terminates with an error other than -EREMOTEIO, it
 is quite likely that the status stage of the transfer will not take
 place.</p>
+<p><strong>Return</strong></p>
+<p>-EINPROGRESS on success. See description for other values on
+failure.</p>
 <dl class="function">
 <dt id="c.usb_kill_urb">
 void <code class="descname">usb_kill_urb</code><span class="sig-paren">(</span>struct <a class="reference internal" href="#c.urb" title="urb">urb</a> *<em>&nbsp;urb</em><span class="sig-paren">)</span><a class="headerlink" href="#c.usb_kill_urb" title="Permalink to this definition">¶</a></dt>
@@ -2817,8 +2818,6 @@ Most USB device drivers will use this indirectly, through the usb core,
 but some layered driver frameworks use it directly.
 These device tables are exported with MODULE_DEVICE_TABLE, through
 modutils, to support the driver loading functionality of USB hotplugging.</p>
-<p><strong>Return</strong></p>
-<p>The first matching usb_device_id, or <code class="docutils literal notranslate"><span class="pre">NULL</span></code>.</p>
 <p>What Matches:</p>
 <p>The “match_flags” element in a usb_device_id controls which
 members are used.  If the corresponding bit is set, the
@@ -2867,6 +2866,8 @@ standard macro for creating records like this.)</p>
 meaningful.  For example, don’t give a product version range
 without vendor and product IDs; or specify a protocol without
 its associated class and subclass.</p>
+<p><strong>Return</strong></p>
+<p>The first matching usb_device_id, or <code class="docutils literal notranslate"><span class="pre">NULL</span></code>.</p>
 <dl class="function">
 <dt id="c.usb_register_device_driver">
 int <code class="descname">usb_register_device_driver</code><span class="sig-paren">(</span>struct <a class="reference internal" href="#c.usb_device_driver" title="usb_device_driver">usb_device_driver</a> *<em>&nbsp;new_udriver</em>, struct module *<em>&nbsp;owner</em><span class="sig-paren">)</span><a class="headerlink" href="#c.usb_register_device_driver" title="Permalink to this definition">¶</a></dt>
@@ -3419,6 +3420,7 @@ platforms, depending on details of how DMA will work to this device.
 Using these buffers also eliminates cacheline sharing problems on
 architectures where CPU caches are not DMA-coherent.  On systems without
 bus-snooping caches, these buffers are uncached.</p>
+<p><strong>Description</strong></p>
 <p>When the buffer is no longer used, free it with <a class="reference internal" href="#c.usb_free_coherent" title="usb_free_coherent"><code class="xref c c-func docutils literal notranslate"><span class="pre">usb_free_coherent()</span></code></a>.</p>
 <dl class="function">
 <dt id="c.usb_free_coherent">
@@ -3521,6 +3523,10 @@ int <code class="descname">usb_reset_device</code><span class="sig-paren">(</spa
 <p>Warns all drivers bound to registered interfaces (using their pre_reset
 method), performs the port reset, and then lets the drivers know that
 the reset is over (using their post_reset method).</p>
+<p>If an interface is currently being probed or disconnected, we assume
+its driver knows how to handle resets.  For all other interfaces,
+if the driver doesn’t have pre_reset and post_reset methods then
+we attempt to unbind it and rebind afterward.</p>
 <p><strong>Return</strong></p>
 <p>The same as for usb_reset_and_verify_device().</p>
 <p><strong>Note</strong></p>
@@ -3528,10 +3534,6 @@ the reset is over (using their post_reset method).</p>
 this from a driver probe() routine after downloading new firmware.
 For calls that might not occur during probe(), drivers should lock
 the device using <a class="reference internal" href="#c.usb_lock_device_for_reset" title="usb_lock_device_for_reset"><code class="xref c c-func docutils literal notranslate"><span class="pre">usb_lock_device_for_reset()</span></code></a>.</p>
-<p>If an interface is currently being probed or disconnected, we assume
-its driver knows how to handle resets.  For all other interfaces,
-if the driver doesn’t have pre_reset and post_reset methods then
-we attempt to unbind it and rebind afterward.</p>
 <dl class="function">
 <dt id="c.usb_queue_reset_device">
 void <code class="descname">usb_queue_reset_device</code><span class="sig-paren">(</span>struct <a class="reference internal" href="#c.usb_interface" title="usb_interface">usb_interface</a> *<em>&nbsp;iface</em><span class="sig-paren">)</span><a class="headerlink" href="#c.usb_queue_reset_device" title="Permalink to this definition">¶</a></dt>
@@ -3934,7 +3936,7 @@ void <code class="descname">usb_remove_hcd</code><span class="sig-paren">(</span
 invoking the HCD’s stop() method.</p>
 <dl class="function">
 <dt id="c.usb_hcd_pci_probe">
-int <code class="descname">usb_hcd_pci_probe</code><span class="sig-paren">(</span>struct pci_dev *<em>&nbsp;dev</em>, const struct <a class="reference internal" href="../basics.html#c.pci_device_id" title="pci_device_id">pci_device_id</a> *<em>&nbsp;id</em><span class="sig-paren">)</span><a class="headerlink" href="#c.usb_hcd_pci_probe" title="Permalink to this definition">¶</a></dt>
+int <code class="descname">usb_hcd_pci_probe</code><span class="sig-paren">(</span>struct pci_dev *<em>&nbsp;dev</em>, const struct <a class="reference internal" href="../basics.html#c.pci_device_id" title="pci_device_id">pci_device_id</a> *<em>&nbsp;id</em>, const struct hc_driver *<em>&nbsp;driver</em><span class="sig-paren">)</span><a class="headerlink" href="#c.usb_hcd_pci_probe" title="Permalink to this definition">¶</a></dt>
 <dd><p>initialize PCI-based HCDs</p>
 </dd></dl>
 
@@ -3944,6 +3946,8 @@ int <code class="descname">usb_hcd_pci_probe</code><span class="sig-paren">(</sp
 <dd>USB Host Controller being probed</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">const</span> <span class="pre">struct</span> <span class="pre">pci_device_id</span> <span class="pre">*</span> <span class="pre">id</span></code></dt>
 <dd>pci hotplug id connecting controller to HCD framework</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">const</span> <span class="pre">struct</span> <span class="pre">hc_driver</span> <span class="pre">*</span> <span class="pre">driver</span></code></dt>
+<dd>USB HC driver handle</dd>
 </dl>
 <p><strong>Context</strong></p>
 <p>!in_interrupt()</p>

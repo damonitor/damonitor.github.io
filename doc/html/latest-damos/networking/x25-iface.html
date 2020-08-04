@@ -1,0 +1,305 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Packet Layer to Device Driver &mdash; The Linux Kernel  documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript">
+          var DOCUMENTATION_OPTIONS = {
+              URL_ROOT:'../',
+              VERSION:'',
+              LANGUAGE:'None',
+              COLLAPSE_INDEX:false,
+              FILE_SUFFIX:'.html',
+              HAS_SOURCE:  true,
+              SOURCELINK_SUFFIX: '.txt'
+          };
+      </script>
+        <script type="text/javascript" src="../_static/jquery.js"></script>
+        <script type="text/javascript" src="../_static/underscore.js"></script>
+        <script type="text/javascript" src="../_static/doctools.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/theme_overrides.css" type="text/css" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> The Linux Kernel
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                5.8.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../admin-guide/mm/damon/index.html">Monitoring Data Accesses</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../vm/damon/index.html">DAMON: Data Access MONitor</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">The Linux Kernel</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+      <li>Packet Layer to Device Driver</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/networking/x25-iface.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <p>============================-
+X.25 Device Driver Interface
+============================-</p>
+<p>Version 1.1</p>
+<blockquote>
+<div>Jonathan Naylor 26.12.96</div></blockquote>
+<p>This is a description of the messages to be passed between the X.25 Packet
+Layer and the X.25 device driver. They are designed to allow for the easy
+setting of the LAPB mode from within the Packet Layer.</p>
+<p>The X.25 device driver will be coded normally as per the Linux device driver
+standards. Most X.25 device drivers will be moderately similar to the
+already existing Ethernet device drivers. However unlike those drivers, the
+X.25 device driver has a state associated with it, and this information
+needs to be passed to and from the Packet Layer for proper operation.</p>
+<p>All messages are held in sk_buff’s just like real data to be transmitted
+over the LAPB link. The first byte of the skbuff indicates the meaning of
+the rest of the skbuff, if any more information does exist.</p>
+<div class="section" id="packet-layer-to-device-driver">
+<h1>Packet Layer to Device Driver<a class="headerlink" href="#packet-layer-to-device-driver" title="Permalink to this headline">¶</a></h1>
+<p>First Byte = 0x00 (X25_IFACE_DATA)</p>
+<p>This indicates that the rest of the skbuff contains data to be transmitted
+over the LAPB link. The LAPB link should already exist before any data is
+passed down.</p>
+<p>First Byte = 0x01 (X25_IFACE_CONNECT)</p>
+<p>Establish the LAPB link. If the link is already established then the connect
+confirmation message should be returned as soon as possible.</p>
+<p>First Byte = 0x02 (X25_IFACE_DISCONNECT)</p>
+<p>Terminate the LAPB link. If it is already disconnected then the disconnect
+confirmation message should be returned as soon as possible.</p>
+<p>First Byte = 0x03 (X25_IFACE_PARAMS)</p>
+<p>LAPB parameters. To be defined.</p>
+</div>
+<div class="section" id="device-driver-to-packet-layer">
+<h1>Device Driver to Packet Layer<a class="headerlink" href="#device-driver-to-packet-layer" title="Permalink to this headline">¶</a></h1>
+<p>First Byte = 0x00 (X25_IFACE_DATA)</p>
+<p>This indicates that the rest of the skbuff contains data that has been
+received over the LAPB link.</p>
+<p>First Byte = 0x01 (X25_IFACE_CONNECT)</p>
+<p>LAPB link has been established. The same message is used for both a LAPB
+link connect_confirmation and a connect_indication.</p>
+<p>First Byte = 0x02 (X25_IFACE_DISCONNECT)</p>
+<p>LAPB link has been terminated. This same message is used for both a LAPB
+link disconnect_confirmation and a disconnect_indication.</p>
+<p>First Byte = 0x03 (X25_IFACE_PARAMS)</p>
+<p>LAPB parameters. To be defined.</p>
+<div class="section" id="possible-problems">
+<h2>Possible Problems<a class="headerlink" href="#possible-problems" title="Permalink to this headline">¶</a></h2>
+<p>(Henner Eisen, 2000-10-28)</p>
+<p>The X.25 packet layer protocol depends on a reliable datalink service.
+The LAPB protocol provides such reliable service. But this reliability
+is not preserved by the Linux network device driver interface:</p>
+<ul class="simple">
+<li>With Linux 2.4.x (and above) SMP kernels, packet ordering is not
+preserved. Even if a device driver calls netif_rx(skb1) and later
+netif_rx(skb2), skb2 might be delivered to the network layer
+earlier that skb1.</li>
+<li>Data passed upstream by means of <a class="reference internal" href="kapi.html#c.netif_rx" title="netif_rx"><code class="xref c c-func docutils literal notranslate"><span class="pre">netif_rx()</span></code></a> might be dropped by the
+kernel if the backlog queue is congested.</li>
+</ul>
+<p>The X.25 packet layer protocol will detect this and reset the virtual
+call in question. But many upper layer protocols are not designed to
+handle such N-Reset events gracefully. And frequent N-Reset events
+will always degrade performance.</p>
+<p>Thus, driver authors should make <a class="reference internal" href="kapi.html#c.netif_rx" title="netif_rx"><code class="xref c c-func docutils literal notranslate"><span class="pre">netif_rx()</span></code></a> as reliable as possible:</p>
+<p>SMP re-ordering will not occur if the driver’s interrupt handler is
+always executed on the same CPU. Thus,</p>
+<ul class="simple">
+<li>Driver authors should use irq affinity for the interrupt handler.</li>
+</ul>
+<p>The probability of packet loss due to backlog congestion can be
+reduced by the following measures or a combination thereof:</p>
+<ol class="arabic simple">
+<li>Drivers for kernel versions 2.4.x and above should always check the
+return value of <a class="reference internal" href="kapi.html#c.netif_rx" title="netif_rx"><code class="xref c c-func docutils literal notranslate"><span class="pre">netif_rx()</span></code></a>. If it returns NET_RX_DROP, the
+driver’s LAPB protocol must not confirm reception of the frame
+to the peer.
+This will reliably suppress packet loss. The LAPB protocol will
+automatically cause the peer to re-transmit the dropped packet
+later.
+The lapb module interface was modified to support this. Its
+data_indication() method should now transparently pass the
+<a class="reference internal" href="kapi.html#c.netif_rx" title="netif_rx"><code class="xref c c-func docutils literal notranslate"><span class="pre">netif_rx()</span></code></a> return value to the (lapb module) caller.</li>
+<li>Drivers for kernel versions 2.2.x should always check the global
+variable netdev_dropping when a new frame is received. The driver
+should only call <a class="reference internal" href="kapi.html#c.netif_rx" title="netif_rx"><code class="xref c c-func docutils literal notranslate"><span class="pre">netif_rx()</span></code></a> if netdev_dropping is zero. Otherwise
+the driver should not confirm delivery of the frame and drop it.
+Alternatively, the driver can queue the frame internally and call
+<a class="reference internal" href="kapi.html#c.netif_rx" title="netif_rx"><code class="xref c c-func docutils literal notranslate"><span class="pre">netif_rx()</span></code></a> later when netif_dropping is 0 again. In that case, delivery
+confirmation should also be deferred such that the internal queue
+cannot grow to much.
+This will not reliably avoid packet loss, but the probability
+of packet loss in <a class="reference internal" href="kapi.html#c.netif_rx" title="netif_rx"><code class="xref c c-func docutils literal notranslate"><span class="pre">netif_rx()</span></code></a> path will be significantly reduced.</li>
+<li>Additionally, driver authors might consider to support
+CONFIG_NET_HW_FLOWCONTROL. This allows the driver to be woken up
+when a previously congested backlog queue becomes empty again.
+The driver could uses this for flow-controlling the peer by means
+of the LAPB protocol’s flow-control service.</li>
+</ol>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright The kernel development community
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

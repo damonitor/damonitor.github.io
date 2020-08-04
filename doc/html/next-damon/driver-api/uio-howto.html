@@ -68,7 +68,7 @@
             
             
               <div class="version">
-                5.7.0
+                5.8.0
               </div>
             
           
@@ -258,7 +258,7 @@ need it, however, a write to <code class="docutils literal notranslate"><span cl
 <code class="xref c c-func docutils literal notranslate"><span class="pre">irqcontrol()</span></code> function implemented by the driver. You have
 to write a 32-bit value that is usually either 0 or 1 to disable or
 enable interrupts. If a driver does not implement
-<code class="xref c c-func docutils literal notranslate"><span class="pre">irqcontrol()</span></code>, <a class="reference internal" href="../media/uapi/dvb/video-fwrite.html#c.write" title="write"><code class="xref c c-func docutils literal notranslate"><span class="pre">write()</span></code></a> will return with
+<code class="xref c c-func docutils literal notranslate"><span class="pre">irqcontrol()</span></code>, <a class="reference internal" href="../userspace-api/media/dvb/video-fwrite.html#c.write" title="write"><code class="xref c c-func docutils literal notranslate"><span class="pre">write()</span></code></a> will return with
 <code class="docutils literal notranslate"><span class="pre">-ENOSYS</span></code>.</p>
 <p>To handle interrupts properly, your custom kernel module can provide its
 own interrupt handler. It will automatically be called by the built-in
@@ -378,10 +378,10 @@ Optional. If you need a special <code class="xref c c-func docutils literal notr
 function, you can set it here. If this pointer is not NULL, your
 <code class="xref c c-func docutils literal notranslate"><span class="pre">mmap()</span></code> will be called instead of the built-in one.</li>
 <li><code class="docutils literal notranslate"><span class="pre">int</span> <span class="pre">(*open)(struct</span> <span class="pre">uio_info</span> <span class="pre">*info,</span> <span class="pre">struct</span> <span class="pre">inode</span> <span class="pre">*inode)</span></code>:
-Optional. You might want to have your own <a class="reference internal" href="../media/uapi/dvb/video-fopen.html#c.open" title="open"><code class="xref c c-func docutils literal notranslate"><span class="pre">open()</span></code></a>,
+Optional. You might want to have your own <a class="reference internal" href="../userspace-api/media/dvb/video-fopen.html#c.open" title="open"><code class="xref c c-func docutils literal notranslate"><span class="pre">open()</span></code></a>,
 e.g. to enable interrupts only when your device is actually used.</li>
 <li><code class="docutils literal notranslate"><span class="pre">int</span> <span class="pre">(*release)(struct</span> <span class="pre">uio_info</span> <span class="pre">*info,</span> <span class="pre">struct</span> <span class="pre">inode</span> <span class="pre">*inode)</span></code>:
-Optional. If you define your own <a class="reference internal" href="../media/uapi/dvb/video-fopen.html#c.open" title="open"><code class="xref c c-func docutils literal notranslate"><span class="pre">open()</span></code></a>, you will
+Optional. If you define your own <a class="reference internal" href="../userspace-api/media/dvb/video-fopen.html#c.open" title="open"><code class="xref c c-func docutils literal notranslate"><span class="pre">open()</span></code></a>, you will
 probably also want a custom <code class="xref c c-func docutils literal notranslate"><span class="pre">release()</span></code> function.</li>
 <li><code class="docutils literal notranslate"><span class="pre">int</span> <span class="pre">(*irqcontrol)(struct</span> <span class="pre">uio_info</span> <span class="pre">*info,</span> <span class="pre">s32</span> <span class="pre">irq_on)</span></code>:
 Optional. If you need to be able to enable or disable interrupts

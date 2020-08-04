@@ -68,7 +68,7 @@
             
             
               <div class="version">
-                5.7.0
+                5.8.0
               </div>
             
           
@@ -750,6 +750,7 @@ cache in your filesystem.  The following members are defined:</p>
         <span class="kt">int</span> <span class="p">(</span><span class="o">*</span><span class="n">readpage</span><span class="p">)(</span><span class="k">struct</span> <span class="n">file</span> <span class="o">*</span><span class="p">,</span> <span class="k">struct</span> <span class="n">page</span> <span class="o">*</span><span class="p">);</span>
         <span class="kt">int</span> <span class="p">(</span><span class="o">*</span><span class="n">writepages</span><span class="p">)(</span><span class="k">struct</span> <span class="n">address_space</span> <span class="o">*</span><span class="p">,</span> <span class="k">struct</span> <span class="n">writeback_control</span> <span class="o">*</span><span class="p">);</span>
         <span class="kt">int</span> <span class="p">(</span><span class="o">*</span><span class="n">set_page_dirty</span><span class="p">)(</span><span class="k">struct</span> <span class="n">page</span> <span class="o">*</span><span class="n">page</span><span class="p">);</span>
+        <span class="kt">void</span> <span class="p">(</span><span class="o">*</span><span class="n">readahead</span><span class="p">)(</span><span class="k">struct</span> <span class="n">readahead_control</span> <span class="o">*</span><span class="p">);</span>
         <span class="kt">int</span> <span class="p">(</span><span class="o">*</span><span class="n">readpages</span><span class="p">)(</span><span class="k">struct</span> <span class="n">file</span> <span class="o">*</span><span class="n">filp</span><span class="p">,</span> <span class="k">struct</span> <span class="n">address_space</span> <span class="o">*</span><span class="n">mapping</span><span class="p">,</span>
                          <span class="k">struct</span> <span class="n">list_head</span> <span class="o">*</span><span class="n">pages</span><span class="p">,</span> <span class="kt">unsigned</span> <span class="n">nr_pages</span><span class="p">);</span>
         <span class="kt">int</span> <span class="p">(</span><span class="o">*</span><span class="n">write_begin</span><span class="p">)(</span><span class="k">struct</span> <span class="n">file</span> <span class="o">*</span><span class="p">,</span> <span class="k">struct</span> <span class="n">address_space</span> <span class="o">*</span><span class="n">mapping</span><span class="p">,</span>
@@ -822,12 +823,25 @@ that data needs to be updated when a page is dirtied.  This is
 called, for example, when a memory mapped page gets modified.
 If defined, it should set the PageDirty flag, and the
 PAGECACHE_TAG_DIRTY tag in the radix tree.</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">readahead</span></code></dt>
+<dd>Called by the VM to read pages associated with the address_space
+object.  The pages are consecutive in the page cache and are
+locked.  The implementation should decrement the page refcount
+after starting I/O on each page.  Usually the page will be
+unlocked by the I/O completion handler.  If the filesystem decides
+to stop attempting I/O before reaching the end of the readahead
+window, it can simply return.  The caller will decrement the page
+refcount and unlock the remaining pages for you.  Set PageUptodate
+if the I/O completes successfully.  Setting PageError on any page
+will be ignored; simply unlock the page if an I/O error occurs.</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">readpages</span></code></dt>
 <dd>called by the VM to read pages associated with the address_space
 object.  This is essentially just a vector version of readpage.
 Instead of just one page, several pages are requested.
 readpages is only used for read-ahead, so read errors are
-ignored.  If anything goes wrong, feel free to give up.</dd>
+ignored.  If anything goes wrong, feel free to give up.
+This interface is deprecated and will be removed by the end of
+2020; implement readahead instead.</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">write_begin</span></code></dt>
 <dd><p class="first">Called by the generic buffered write code to ask the filesystem
 to prepare to write len bytes at the given offset in the file.

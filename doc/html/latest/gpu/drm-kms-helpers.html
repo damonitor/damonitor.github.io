@@ -68,7 +68,7 @@
             
             
               <div class="version">
-                5.7.0
+                5.8.0
               </div>
             
           
@@ -974,6 +974,25 @@ The writeback_job to commit is available in
 <p>This hook is optional.</p>
 <p class="last">This callback is used by the atomic modeset helpers.</p>
 </dd>
+<dt><code class="docutils literal notranslate"><span class="pre">prepare_writeback_job</span></code></dt>
+<dd><p class="first">As writeback jobs contain a framebuffer, drivers may need to
+prepare and clean them up the same way they can prepare and
+clean up framebuffers for planes. This optional connector operation
+is used to support the preparation of writeback jobs. The job
+prepare operation is called from <a class="reference internal" href="#c.drm_atomic_helper_prepare_planes" title="drm_atomic_helper_prepare_planes"><code class="xref c c-func docutils literal notranslate"><span class="pre">drm_atomic_helper_prepare_planes()</span></code></a>
+for struct <a class="reference internal" href="drm-kms.html#c.drm_writeback_connector" title="drm_writeback_connector"><code class="xref c c-type docutils literal notranslate"><span class="pre">drm_writeback_connector</span></code></a> connectors only.</p>
+<p>This operation is optional.</p>
+<p class="last">This callback is used by the atomic modeset helpers.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">cleanup_writeback_job</span></code></dt>
+<dd><p class="first">This optional connector operation is used to support the
+cleanup of writeback jobs. The job cleanup operation is called
+from the existing drm_writeback_cleanup_job() function, invoked
+both when destroying the job as part of an aborted commit, or when
+the job completes.</p>
+<p>This operation is optional.</p>
+<p class="last">This callback is used by the atomic modeset helpers.</p>
+</dd>
 </dl>
 <p><strong>Description</strong></p>
 <p>These functions are used by the atomic and legacy modeset helpers and by the
@@ -1768,9 +1787,9 @@ using the core structure <a class="reference internal" href="drm-kms.html#c.drm_
 <p>By default there’s no need to clean up resources allocated by this function
 explicitly: <a class="reference internal" href="drm-kms.html#c.drm_atomic_state_default_clear" title="drm_atomic_state_default_clear"><code class="xref c c-func docutils literal notranslate"><span class="pre">drm_atomic_state_default_clear()</span></code></a> will take care of that
 automatically.</p>
-<p><strong>Return</strong></p>
 <p>0 on success. -EBUSY when userspace schedules nonblocking commits too fast,
 -ENOMEM on allocation failures and -EINTR when a signal is pending.</p>
+<p><strong>Return</strong></p>
 <dl class="function">
 <dt id="c.drm_atomic_helper_wait_for_dependencies">
 void <code class="descname">drm_atomic_helper_wait_for_dependencies</code><span class="sig-paren">(</span>struct <a class="reference internal" href="drm-kms.html#c.drm_atomic_state" title="drm_atomic_state">drm_atomic_state</a> *<em>&nbsp;old_state</em><span class="sig-paren">)</span><a class="headerlink" href="#c.drm_atomic_helper_wait_for_dependencies" title="Permalink to this definition">¶</a></dt>
@@ -2009,9 +2028,9 @@ contains the old state. Also do any other cleanup required with that state.</p>
 the <a class="reference internal" href="drm-kms.html#c.drm_plane" title="drm_plane"><code class="xref c c-type docutils literal notranslate"><span class="pre">drm_plane.state</span></code></a>, <a class="reference internal" href="drm-kms.html#c.drm_crtc" title="drm_crtc"><code class="xref c c-type docutils literal notranslate"><span class="pre">drm_crtc.state</span></code></a> or <a class="reference internal" href="drm-kms.html#c.drm_connector" title="drm_connector"><code class="xref c c-type docutils literal notranslate"><span class="pre">drm_connector.state</span></code></a> pointer. With
 the current atomic helpers this is almost always the case, since the helpers
 don’t pass the right state structures to the callbacks.</p>
-<p><strong>Return</strong></p>
 <p>Returns 0 on success. Can return -ERESTARTSYS when <strong>stall</strong> is true and the
 waiting for the previous commits has been interrupted.</p>
+<p><strong>Return</strong></p>
 <dl class="function">
 <dt id="c.drm_atomic_helper_update_plane">
 int <code class="descname">drm_atomic_helper_update_plane</code><span class="sig-paren">(</span>struct <a class="reference internal" href="drm-kms.html#c.drm_plane" title="drm_plane">drm_plane</a> *<em>&nbsp;plane</em>, struct <a class="reference internal" href="drm-kms.html#c.drm_crtc" title="drm_crtc">drm_crtc</a> *<em>&nbsp;crtc</em>, struct <a class="reference internal" href="drm-kms.html#c.drm_framebuffer" title="drm_framebuffer">drm_framebuffer</a> *<em>&nbsp;fb</em>, int<em>&nbsp;crtc_x</em>, int<em>&nbsp;crtc_y</em>, unsigned int<em>&nbsp;crtc_w</em>, unsigned int<em>&nbsp;crtc_h</em>, uint32_t<em>&nbsp;src_x</em>, uint32_t<em>&nbsp;src_y</em>, uint32_t<em>&nbsp;src_w</em>, uint32_t<em>&nbsp;src_h</em>, struct <a class="reference internal" href="drm-kms.html#c.drm_modeset_acquire_ctx" title="drm_modeset_acquire_ctx">drm_modeset_acquire_ctx</a> *<em>&nbsp;ctx</em><span class="sig-paren">)</span><a class="headerlink" href="#c.drm_atomic_helper_update_plane" title="Permalink to this definition">¶</a></dt>
@@ -2111,11 +2130,11 @@ functions when suspending. If you just want to shut down everything at e.g.
 driver unload, look at <a class="reference internal" href="#c.drm_atomic_helper_shutdown" title="drm_atomic_helper_shutdown"><code class="xref c c-func docutils literal notranslate"><span class="pre">drm_atomic_helper_shutdown()</span></code></a>.</p>
 <p>Note that if callers haven’t already acquired all modeset locks this might
 return -EDEADLK, which must be handled by calling <a class="reference internal" href="drm-kms.html#c.drm_modeset_backoff" title="drm_modeset_backoff"><code class="xref c c-func docutils literal notranslate"><span class="pre">drm_modeset_backoff()</span></code></a>.</p>
-<p><strong>Return</strong></p>
-<p>0 on success or a negative error code on failure.</p>
 <p>See also:
 <a class="reference internal" href="#c.drm_atomic_helper_suspend" title="drm_atomic_helper_suspend"><code class="xref c c-func docutils literal notranslate"><span class="pre">drm_atomic_helper_suspend()</span></code></a>, <a class="reference internal" href="#c.drm_atomic_helper_resume" title="drm_atomic_helper_resume"><code class="xref c c-func docutils literal notranslate"><span class="pre">drm_atomic_helper_resume()</span></code></a> and
 <a class="reference internal" href="#c.drm_atomic_helper_shutdown" title="drm_atomic_helper_shutdown"><code class="xref c c-func docutils literal notranslate"><span class="pre">drm_atomic_helper_shutdown()</span></code></a>.</p>
+<p><strong>Return</strong></p>
+<p>0 on success or a negative error code on failure.</p>
 <dl class="function">
 <dt id="c.drm_atomic_helper_shutdown">
 void <code class="descname">drm_atomic_helper_shutdown</code><span class="sig-paren">(</span>struct <a class="reference internal" href="drm-internals.html#c.drm_device" title="drm_device">drm_device</a> *<em>&nbsp;dev</em><span class="sig-paren">)</span><a class="headerlink" href="#c.drm_atomic_helper_shutdown" title="Permalink to this definition">¶</a></dt>
@@ -2156,11 +2175,11 @@ Drivers must make sure that this is possible and won’t result in confusion
 or erroneous behaviour.</p>
 <p>Note that if callers haven’t already acquired all modeset locks this might
 return -EDEADLK, which must be handled by calling <a class="reference internal" href="drm-kms.html#c.drm_modeset_backoff" title="drm_modeset_backoff"><code class="xref c c-func docutils literal notranslate"><span class="pre">drm_modeset_backoff()</span></code></a>.</p>
+<p>See also:
+<a class="reference internal" href="#c.drm_atomic_helper_suspend" title="drm_atomic_helper_suspend"><code class="xref c c-func docutils literal notranslate"><span class="pre">drm_atomic_helper_suspend()</span></code></a>, <a class="reference internal" href="#c.drm_atomic_helper_resume" title="drm_atomic_helper_resume"><code class="xref c c-func docutils literal notranslate"><span class="pre">drm_atomic_helper_resume()</span></code></a></p>
 <p><strong>Return</strong></p>
 <p>A pointer to the copy of the atomic state object on success or an
 ERR_PTR()-encoded error code on failure.</p>
-<p>See also:
-<a class="reference internal" href="#c.drm_atomic_helper_suspend" title="drm_atomic_helper_suspend"><code class="xref c c-func docutils literal notranslate"><span class="pre">drm_atomic_helper_suspend()</span></code></a>, <a class="reference internal" href="#c.drm_atomic_helper_resume" title="drm_atomic_helper_resume"><code class="xref c c-func docutils literal notranslate"><span class="pre">drm_atomic_helper_resume()</span></code></a></p>
 <dl class="function">
 <dt id="c.drm_atomic_helper_suspend">
 struct <a class="reference internal" href="drm-kms.html#c.drm_atomic_state" title="drm_atomic_state">drm_atomic_state</a> * <code class="descname">drm_atomic_helper_suspend</code><span class="sig-paren">(</span>struct <a class="reference internal" href="drm-internals.html#c.drm_device" title="drm_device">drm_device</a> *<em>&nbsp;dev</em><span class="sig-paren">)</span><a class="headerlink" href="#c.drm_atomic_helper_suspend" title="Permalink to this definition">¶</a></dt>
@@ -2182,14 +2201,14 @@ entered suspend.</p>
 returned by this function is assumed to be persistent. Drivers must ensure
 that this holds true. Before calling this function, drivers must make sure
 to suspend fbdev emulation so that nothing can be using the device.</p>
+<p>See also:
+<a class="reference internal" href="#c.drm_atomic_helper_duplicate_state" title="drm_atomic_helper_duplicate_state"><code class="xref c c-func docutils literal notranslate"><span class="pre">drm_atomic_helper_duplicate_state()</span></code></a>, <a class="reference internal" href="#c.drm_atomic_helper_disable_all" title="drm_atomic_helper_disable_all"><code class="xref c c-func docutils literal notranslate"><span class="pre">drm_atomic_helper_disable_all()</span></code></a>,
+<a class="reference internal" href="#c.drm_atomic_helper_resume" title="drm_atomic_helper_resume"><code class="xref c c-func docutils literal notranslate"><span class="pre">drm_atomic_helper_resume()</span></code></a>, <a class="reference internal" href="#c.drm_atomic_helper_commit_duplicated_state" title="drm_atomic_helper_commit_duplicated_state"><code class="xref c c-func docutils literal notranslate"><span class="pre">drm_atomic_helper_commit_duplicated_state()</span></code></a></p>
 <p><strong>Return</strong></p>
 <p>A pointer to a copy of the state before suspend on success or an ERR_PTR()-
 encoded error code on failure. Drivers should store the returned atomic
 state object and pass it to the <a class="reference internal" href="#c.drm_atomic_helper_resume" title="drm_atomic_helper_resume"><code class="xref c c-func docutils literal notranslate"><span class="pre">drm_atomic_helper_resume()</span></code></a> helper upon
 resume.</p>
-<p>See also:
-<a class="reference internal" href="#c.drm_atomic_helper_duplicate_state" title="drm_atomic_helper_duplicate_state"><code class="xref c c-func docutils literal notranslate"><span class="pre">drm_atomic_helper_duplicate_state()</span></code></a>, <a class="reference internal" href="#c.drm_atomic_helper_disable_all" title="drm_atomic_helper_disable_all"><code class="xref c c-func docutils literal notranslate"><span class="pre">drm_atomic_helper_disable_all()</span></code></a>,
-<a class="reference internal" href="#c.drm_atomic_helper_resume" title="drm_atomic_helper_resume"><code class="xref c c-func docutils literal notranslate"><span class="pre">drm_atomic_helper_resume()</span></code></a>, <a class="reference internal" href="#c.drm_atomic_helper_commit_duplicated_state" title="drm_atomic_helper_commit_duplicated_state"><code class="xref c c-func docutils literal notranslate"><span class="pre">drm_atomic_helper_commit_duplicated_state()</span></code></a></p>
 <dl class="function">
 <dt id="c.drm_atomic_helper_commit_duplicated_state">
 int <code class="descname">drm_atomic_helper_commit_duplicated_state</code><span class="sig-paren">(</span>struct <a class="reference internal" href="drm-kms.html#c.drm_atomic_state" title="drm_atomic_state">drm_atomic_state</a> *<em>&nbsp;state</em>, struct <a class="reference internal" href="drm-kms.html#c.drm_modeset_acquire_ctx" title="drm_modeset_acquire_ctx">drm_modeset_acquire_ctx</a> *<em>&nbsp;ctx</em><span class="sig-paren">)</span><a class="headerlink" href="#c.drm_atomic_helper_commit_duplicated_state" title="Permalink to this definition">¶</a></dt>
@@ -2207,10 +2226,10 @@ int <code class="descname">drm_atomic_helper_commit_duplicated_state</code><span
 <p>The state returned by <a class="reference internal" href="#c.drm_atomic_helper_duplicate_state" title="drm_atomic_helper_duplicate_state"><code class="xref c c-func docutils literal notranslate"><span class="pre">drm_atomic_helper_duplicate_state()</span></code></a> and
 <a class="reference internal" href="#c.drm_atomic_helper_suspend" title="drm_atomic_helper_suspend"><code class="xref c c-func docutils literal notranslate"><span class="pre">drm_atomic_helper_suspend()</span></code></a> is partially invalid, and needs to
 be fixed up before commit.</p>
-<p><strong>Return</strong></p>
-<p>0 on success or a negative error code on failure.</p>
 <p>See also:
 <a class="reference internal" href="#c.drm_atomic_helper_suspend" title="drm_atomic_helper_suspend"><code class="xref c c-func docutils literal notranslate"><span class="pre">drm_atomic_helper_suspend()</span></code></a></p>
+<p><strong>Return</strong></p>
+<p>0 on success or a negative error code on failure.</p>
 <dl class="function">
 <dt id="c.drm_atomic_helper_resume">
 int <code class="descname">drm_atomic_helper_resume</code><span class="sig-paren">(</span>struct <a class="reference internal" href="drm-internals.html#c.drm_device" title="drm_device">drm_device</a> *<em>&nbsp;dev</em>, struct <a class="reference internal" href="drm-kms.html#c.drm_atomic_state" title="drm_atomic_state">drm_atomic_state</a> *<em>&nbsp;state</em><span class="sig-paren">)</span><a class="headerlink" href="#c.drm_atomic_helper_resume" title="Permalink to this definition">¶</a></dt>
@@ -2229,10 +2248,10 @@ int <code class="descname">drm_atomic_helper_resume</code><span class="sig-paren
 grabs all modeset locks and commits the atomic state object. This can be
 used in conjunction with the <a class="reference internal" href="#c.drm_atomic_helper_suspend" title="drm_atomic_helper_suspend"><code class="xref c c-func docutils literal notranslate"><span class="pre">drm_atomic_helper_suspend()</span></code></a> helper to
 implement suspend/resume for drivers that support atomic mode-setting.</p>
-<p><strong>Return</strong></p>
-<p>0 on success or a negative error code on failure.</p>
 <p>See also:
 <a class="reference internal" href="#c.drm_atomic_helper_suspend" title="drm_atomic_helper_suspend"><code class="xref c c-func docutils literal notranslate"><span class="pre">drm_atomic_helper_suspend()</span></code></a></p>
+<p><strong>Return</strong></p>
+<p>0 on success or a negative error code on failure.</p>
 <dl class="function">
 <dt id="c.drm_atomic_helper_page_flip">
 int <code class="descname">drm_atomic_helper_page_flip</code><span class="sig-paren">(</span>struct <a class="reference internal" href="drm-kms.html#c.drm_crtc" title="drm_crtc">drm_crtc</a> *<em>&nbsp;crtc</em>, struct <a class="reference internal" href="drm-kms.html#c.drm_framebuffer" title="drm_framebuffer">drm_framebuffer</a> *<em>&nbsp;fb</em>, struct <a class="reference internal" href="drm-kms.html#c.drm_pending_vblank_event" title="drm_pending_vblank_event">drm_pending_vblank_event</a> *<em>&nbsp;event</em>, uint32_t<em>&nbsp;flags</em>, struct <a class="reference internal" href="drm-kms.html#c.drm_modeset_acquire_ctx" title="drm_modeset_acquire_ctx">drm_modeset_acquire_ctx</a> *<em>&nbsp;ctx</em><span class="sig-paren">)</span><a class="headerlink" href="#c.drm_atomic_helper_page_flip" title="Permalink to this definition">¶</a></dt>
@@ -2255,10 +2274,10 @@ int <code class="descname">drm_atomic_helper_page_flip</code><span class="sig-pa
 <p><strong>Description</strong></p>
 <p>Provides a default <a class="reference internal" href="drm-kms.html#c.drm_crtc_funcs" title="drm_crtc_funcs"><code class="xref c c-type docutils literal notranslate"><span class="pre">drm_crtc_funcs.page_flip</span></code></a> implementation
 using the atomic driver interface.</p>
-<p><strong>Return</strong></p>
-<p>Returns 0 on success, negative errno numbers on failure.</p>
 <p>See also:
 <a class="reference internal" href="#c.drm_atomic_helper_page_flip_target" title="drm_atomic_helper_page_flip_target"><code class="xref c c-func docutils literal notranslate"><span class="pre">drm_atomic_helper_page_flip_target()</span></code></a></p>
+<p><strong>Return</strong></p>
+<p>Returns 0 on success, negative errno numbers on failure.</p>
 <dl class="function">
 <dt id="c.drm_atomic_helper_page_flip_target">
 int <code class="descname">drm_atomic_helper_page_flip_target</code><span class="sig-paren">(</span>struct <a class="reference internal" href="drm-kms.html#c.drm_crtc" title="drm_crtc">drm_crtc</a> *<em>&nbsp;crtc</em>, struct <a class="reference internal" href="drm-kms.html#c.drm_framebuffer" title="drm_framebuffer">drm_framebuffer</a> *<em>&nbsp;fb</em>, struct <a class="reference internal" href="drm-kms.html#c.drm_pending_vblank_event" title="drm_pending_vblank_event">drm_pending_vblank_event</a> *<em>&nbsp;event</em>, uint32_t<em>&nbsp;flags</em>, uint32_t<em>&nbsp;target</em>, struct <a class="reference internal" href="drm-kms.html#c.drm_modeset_acquire_ctx" title="drm_modeset_acquire_ctx">drm_modeset_acquire_ctx</a> *<em>&nbsp;ctx</em><span class="sig-paren">)</span><a class="headerlink" href="#c.drm_atomic_helper_page_flip_target" title="Permalink to this definition">¶</a></dt>
@@ -3785,7 +3804,7 @@ void <code class="descname">drm_fb_helper_output_poll_changed</code><span class=
 need to call <a class="reference internal" href="#c.drm_fb_helper_hotplug_event" title="drm_fb_helper_hotplug_event"><code class="xref c c-func docutils literal notranslate"><span class="pre">drm_fb_helper_hotplug_event()</span></code></a>.</p>
 <dl class="function">
 <dt id="c.drm_fbdev_generic_setup">
-int <code class="descname">drm_fbdev_generic_setup</code><span class="sig-paren">(</span>struct <a class="reference internal" href="drm-internals.html#c.drm_device" title="drm_device">drm_device</a> *<em>&nbsp;dev</em>, unsigned int<em>&nbsp;preferred_bpp</em><span class="sig-paren">)</span><a class="headerlink" href="#c.drm_fbdev_generic_setup" title="Permalink to this definition">¶</a></dt>
+void <code class="descname">drm_fbdev_generic_setup</code><span class="sig-paren">(</span>struct <a class="reference internal" href="drm-internals.html#c.drm_device" title="drm_device">drm_device</a> *<em>&nbsp;dev</em>, unsigned int<em>&nbsp;preferred_bpp</em><span class="sig-paren">)</span><a class="headerlink" href="#c.drm_fbdev_generic_setup" title="Permalink to this definition">¶</a></dt>
 <dd><p>Setup generic fbdev emulation</p>
 </dd></dl>
 
@@ -3799,7 +3818,9 @@ int <code class="descname">drm_fbdev_generic_setup</code><span class="sig-paren"
 </dl>
 <p><strong>Description</strong></p>
 <p>This function sets up generic fbdev emulation for drivers that supports
-dumb buffers with a virtual address and that can be mmap’ed.</p>
+dumb buffers with a virtual address and that can be mmap’ed.
+<a class="reference internal" href="#c.drm_fbdev_generic_setup" title="drm_fbdev_generic_setup"><code class="xref c c-func docutils literal notranslate"><span class="pre">drm_fbdev_generic_setup()</span></code></a> shall be called after the DRM driver registered
+the new DRM device with <a class="reference internal" href="drm-internals.html#c.drm_dev_register" title="drm_dev_register"><code class="xref c c-func docutils literal notranslate"><span class="pre">drm_dev_register()</span></code></a>.</p>
 <p>Restore, hotplug events and teardown are all taken care of. Drivers that do
 suspend/resume need to call <a class="reference internal" href="#c.drm_fb_helper_set_suspend_unlocked" title="drm_fb_helper_set_suspend_unlocked"><code class="xref c c-func docutils literal notranslate"><span class="pre">drm_fb_helper_set_suspend_unlocked()</span></code></a> themselves.
 Simple drivers might use <a class="reference internal" href="#c.drm_mode_config_helper_suspend" title="drm_mode_config_helper_suspend"><code class="xref c c-func docutils literal notranslate"><span class="pre">drm_mode_config_helper_suspend()</span></code></a>.</p>
@@ -3812,8 +3833,6 @@ required to use generic fbdev emulation with SHMEM helpers.</p>
 <p>This function is safe to call even when there are no connectors present.
 Setup will be retried on the next hotplug event.</p>
 <p>The fbdev is destroyed by <a class="reference internal" href="drm-internals.html#c.drm_dev_unregister" title="drm_dev_unregister"><code class="xref c c-func docutils literal notranslate"><span class="pre">drm_dev_unregister()</span></code></a>.</p>
-<p><strong>Return</strong></p>
-<p>Zero on success or negative error code on failure.</p>
 </div>
 <div class="section" id="format-helper-functions-reference">
 <h2>format Helper Functions Reference<a class="headerlink" href="#format-helper-functions-reference" title="Permalink to this headline">¶</a></h2>
@@ -4077,6 +4096,34 @@ callback. The GETFB IOCTL calls into this callback.</p>
 <p><strong>Return</strong></p>
 <p>0 on success or a negative error code on failure.</p>
 <dl class="function">
+<dt id="c.drm_gem_fb_init_with_funcs">
+int <code class="descname">drm_gem_fb_init_with_funcs</code><span class="sig-paren">(</span>struct <a class="reference internal" href="drm-internals.html#c.drm_device" title="drm_device">drm_device</a> *<em>&nbsp;dev</em>, struct <a class="reference internal" href="drm-kms.html#c.drm_framebuffer" title="drm_framebuffer">drm_framebuffer</a> *<em>&nbsp;fb</em>, struct <a class="reference internal" href="drm-internals.html#c.drm_file" title="drm_file">drm_file</a> *<em>&nbsp;file</em>, const struct drm_mode_fb_cmd2 *<em>&nbsp;mode_cmd</em>, const struct <a class="reference internal" href="drm-kms.html#c.drm_framebuffer_funcs" title="drm_framebuffer_funcs">drm_framebuffer_funcs</a> *<em>&nbsp;funcs</em><span class="sig-paren">)</span><a class="headerlink" href="#c.drm_gem_fb_init_with_funcs" title="Permalink to this definition">¶</a></dt>
+<dd><p>Helper function for implementing <a class="reference internal" href="drm-kms.html#c.drm_mode_config_funcs" title="drm_mode_config_funcs"><code class="xref c c-type docutils literal notranslate"><span class="pre">drm_mode_config_funcs.fb_create</span></code></a> callback in cases when the driver allocates a subclass of struct drm_framebuffer</p>
+</dd></dl>
+
+<p><strong>Parameters</strong></p>
+<dl class="docutils">
+<dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">drm_device</span> <span class="pre">*</span> <span class="pre">dev</span></code></dt>
+<dd>DRM device</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">drm_framebuffer</span> <span class="pre">*</span> <span class="pre">fb</span></code></dt>
+<dd>framebuffer object</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">drm_file</span> <span class="pre">*</span> <span class="pre">file</span></code></dt>
+<dd>DRM file that holds the GEM handle(s) backing the framebuffer</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">const</span> <span class="pre">struct</span> <span class="pre">drm_mode_fb_cmd2</span> <span class="pre">*</span> <span class="pre">mode_cmd</span></code></dt>
+<dd>Metadata from the userspace framebuffer creation request</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">const</span> <span class="pre">struct</span> <span class="pre">drm_framebuffer_funcs</span> <span class="pre">*</span> <span class="pre">funcs</span></code></dt>
+<dd>vtable to be used for the new framebuffer object</dd>
+</dl>
+<p><strong>Description</strong></p>
+<p>This function can be used to set <a class="reference internal" href="drm-kms.html#c.drm_framebuffer_funcs" title="drm_framebuffer_funcs"><code class="xref c c-type docutils literal notranslate"><span class="pre">drm_framebuffer_funcs</span></code></a> for drivers that need
+custom framebuffer callbacks. Use <a class="reference internal" href="#c.drm_gem_fb_create" title="drm_gem_fb_create"><code class="xref c c-func docutils literal notranslate"><span class="pre">drm_gem_fb_create()</span></code></a> if you don’t need to
+change <a class="reference internal" href="drm-kms.html#c.drm_framebuffer_funcs" title="drm_framebuffer_funcs"><code class="xref c c-type docutils literal notranslate"><span class="pre">drm_framebuffer_funcs</span></code></a>. The function does buffer size validation.
+The buffer size validation is for a general case, though, so users should
+pay attention to the checks being appropriate for them or, at least,
+non-conflicting.</p>
+<p><strong>Return</strong></p>
+<p>Zero or a negative error code.</p>
+<dl class="function">
 <dt id="c.drm_gem_fb_create_with_funcs">
 struct <a class="reference internal" href="drm-kms.html#c.drm_framebuffer" title="drm_framebuffer">drm_framebuffer</a> * <code class="descname">drm_gem_fb_create_with_funcs</code><span class="sig-paren">(</span>struct <a class="reference internal" href="drm-internals.html#c.drm_device" title="drm_device">drm_device</a> *<em>&nbsp;dev</em>, struct <a class="reference internal" href="drm-internals.html#c.drm_file" title="drm_file">drm_file</a> *<em>&nbsp;file</em>, const struct drm_mode_fb_cmd2 *<em>&nbsp;mode_cmd</em>, const struct <a class="reference internal" href="drm-kms.html#c.drm_framebuffer_funcs" title="drm_framebuffer_funcs">drm_framebuffer_funcs</a> *<em>&nbsp;funcs</em><span class="sig-paren">)</span><a class="headerlink" href="#c.drm_gem_fb_create_with_funcs" title="Permalink to this definition">¶</a></dt>
 <dd><p>Helper function for the <a class="reference internal" href="drm-kms.html#c.drm_mode_config_funcs" title="drm_mode_config_funcs"><code class="xref c c-type docutils literal notranslate"><span class="pre">drm_mode_config_funcs.fb_create</span></code></a> callback</p>
@@ -4154,6 +4201,29 @@ to enable userspace to use damage clips also with the ATOMIC IOCTL.</p>
 The ADDFB2 IOCTL calls into this callback.</p>
 <p><strong>Return</strong></p>
 <p>Pointer to a <a class="reference internal" href="drm-kms.html#c.drm_framebuffer" title="drm_framebuffer"><code class="xref c c-type docutils literal notranslate"><span class="pre">drm_framebuffer</span></code></a> on success or an error pointer on failure.</p>
+<dl class="function">
+<dt id="c.drm_gem_fb_afbc_init">
+int <code class="descname">drm_gem_fb_afbc_init</code><span class="sig-paren">(</span>struct <a class="reference internal" href="drm-internals.html#c.drm_device" title="drm_device">drm_device</a> *<em>&nbsp;dev</em>, const struct drm_mode_fb_cmd2 *<em>&nbsp;mode_cmd</em>, struct <a class="reference internal" href="drm-kms.html#c.drm_afbc_framebuffer" title="drm_afbc_framebuffer">drm_afbc_framebuffer</a> *<em>&nbsp;afbc_fb</em><span class="sig-paren">)</span><a class="headerlink" href="#c.drm_gem_fb_afbc_init" title="Permalink to this definition">¶</a></dt>
+<dd><p>Helper function for drivers using afbc to fill and validate all the afbc-specific struct drm_afbc_framebuffer members</p>
+</dd></dl>
+
+<p><strong>Parameters</strong></p>
+<dl class="docutils">
+<dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">drm_device</span> <span class="pre">*</span> <span class="pre">dev</span></code></dt>
+<dd>DRM device</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">const</span> <span class="pre">struct</span> <span class="pre">drm_mode_fb_cmd2</span> <span class="pre">*</span> <span class="pre">mode_cmd</span></code></dt>
+<dd>Metadata from the userspace framebuffer creation request</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">drm_afbc_framebuffer</span> <span class="pre">*</span> <span class="pre">afbc_fb</span></code></dt>
+<dd>afbc framebuffer</dd>
+</dl>
+<p><strong>Description</strong></p>
+<p>This function can be used by drivers which support afbc to complete
+the preparation of struct drm_afbc_framebuffer. It must be called after
+allocating the said struct and calling <a class="reference internal" href="#c.drm_gem_fb_init_with_funcs" title="drm_gem_fb_init_with_funcs"><code class="xref c c-func docutils literal notranslate"><span class="pre">drm_gem_fb_init_with_funcs()</span></code></a>.
+It is caller’s responsibility to put afbc_fb-&gt;base.obj objects in case
+the call is unsuccessful.</p>
+<p><strong>Return</strong></p>
+<p>Zero on success or a negative error value on failure.</p>
 <dl class="function">
 <dt id="c.drm_gem_fb_prepare_fb">
 int <code class="descname">drm_gem_fb_prepare_fb</code><span class="sig-paren">(</span>struct <a class="reference internal" href="drm-kms.html#c.drm_plane" title="drm_plane">drm_plane</a> *<em>&nbsp;plane</em>, struct <a class="reference internal" href="drm-kms.html#c.drm_plane_state" title="drm_plane_state">drm_plane_state</a> *<em>&nbsp;state</em><span class="sig-paren">)</span><a class="headerlink" href="#c.drm_gem_fb_prepare_fb" title="Permalink to this definition">¶</a></dt>
@@ -5471,7 +5541,7 @@ with connector creation.  When done with the bridge (after
 <a class="reference internal" href="#c.drm_panel_bridge_remove" title="drm_panel_bridge_remove"><code class="xref c c-func docutils literal notranslate"><span class="pre">drm_panel_bridge_remove()</span></code></a> to free it.</p>
 <p>The connector type is set to <strong>panel-&gt;connector_type</strong>, which must be set to a
 known type. Calling this function with a panel whose connector type is
-DRM_MODE_CONNECTOR_Unknown will return NULL.</p>
+DRM_MODE_CONNECTOR_Unknown will return ERR_PTR(-EINVAL).</p>
 <p>See <a class="reference internal" href="#c.devm_drm_panel_bridge_add" title="devm_drm_panel_bridge_add"><code class="xref c c-func docutils literal notranslate"><span class="pre">devm_drm_panel_bridge_add()</span></code></a> for an automatically managed version of this
 function.</p>
 <dl class="function">
@@ -5550,7 +5620,7 @@ struct <a class="reference internal" href="drm-kms.html#c.drm_connector" title="
 <p><strong>Parameters</strong></p>
 <dl class="docutils">
 <dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">drm_bridge</span> <span class="pre">*</span> <span class="pre">bridge</span></code></dt>
-<dd><em>undescribed</em></dd>
+<dd>The drm_bridge.</dd>
 </dl>
 <p><strong>Description</strong></p>
 <p>drm_panel_bridge creates the connector.
@@ -5859,15 +5929,15 @@ struct <a class="reference internal" href="#c.drm_panel" title="drm_panel">drm_p
 <p><strong>Description</strong></p>
 <p>Searches the set of registered panels for one that matches the given device
 tree node. If a matching panel is found, return a pointer to it.</p>
-<p><strong>Return</strong></p>
-<p>A pointer to the panel registered for the specified device tree
-node or an ERR_PTR() if no panel matching the device tree node can be found.</p>
 <p>Possible error codes returned by this function:</p>
 <ul class="simple">
 <li>EPROBE_DEFER: the panel device has not been probed yet, and the caller
 should retry later</li>
 <li>ENODEV: the device is not available (status != “okay” or “ok”)</li>
 </ul>
+<p><strong>Return</strong></p>
+<p>A pointer to the panel registered for the specified device tree
+node or an ERR_PTR() if no panel matching the device tree node can be found.</p>
 <dl class="function">
 <dt id="c.drm_panel_of_backlight">
 int <code class="descname">drm_panel_of_backlight</code><span class="sig-paren">(</span>struct <a class="reference internal" href="#c.drm_panel" title="drm_panel">drm_panel</a> *<em>&nbsp;panel</em><span class="sig-paren">)</span><a class="headerlink" href="#c.drm_panel_of_backlight" title="Permalink to this definition">¶</a></dt>
@@ -6165,6 +6235,159 @@ db[18]: Content Type
 db[19] - db[31]: Reserved</dd>
 </dl>
 <dl class="type">
+<dt id="c.dp_pixelformat">
+enum <code class="descname">dp_pixelformat</code><a class="headerlink" href="#c.dp_pixelformat" title="Permalink to this definition">¶</a></dt>
+<dd><p>drm DP Pixel encoding formats</p>
+</dd></dl>
+
+<p><strong>Constants</strong></p>
+<dl class="docutils">
+<dt><code class="docutils literal notranslate"><span class="pre">DP_PIXELFORMAT_RGB</span></code></dt>
+<dd>RGB pixel encoding format</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">DP_PIXELFORMAT_YUV444</span></code></dt>
+<dd>YCbCr 4:4:4 pixel encoding format</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">DP_PIXELFORMAT_YUV422</span></code></dt>
+<dd>YCbCr 4:2:2 pixel encoding format</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">DP_PIXELFORMAT_YUV420</span></code></dt>
+<dd>YCbCr 4:2:0 pixel encoding format</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">DP_PIXELFORMAT_Y_ONLY</span></code></dt>
+<dd>Y Only pixel encoding format</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">DP_PIXELFORMAT_RAW</span></code></dt>
+<dd>RAW pixel encoding format</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">DP_PIXELFORMAT_RESERVED</span></code></dt>
+<dd>Reserved pixel encoding format</dd>
+</dl>
+<p><strong>Description</strong></p>
+<p>This enum is used to indicate DP VSC SDP Pixel encoding formats.
+It is based on DP 1.4 spec [Table 2-117: VSC SDP Payload for DB16 through
+DB18]</p>
+<dl class="type">
+<dt id="c.dp_colorimetry">
+enum <code class="descname">dp_colorimetry</code><a class="headerlink" href="#c.dp_colorimetry" title="Permalink to this definition">¶</a></dt>
+<dd><p>drm DP Colorimetry formats</p>
+</dd></dl>
+
+<p><strong>Constants</strong></p>
+<dl class="docutils">
+<dt><code class="docutils literal notranslate"><span class="pre">DP_COLORIMETRY_DEFAULT</span></code></dt>
+<dd>sRGB (IEC 61966-2-1) or
+ITU-R BT.601 colorimetry format</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">DP_COLORIMETRY_RGB_WIDE_FIXED</span></code></dt>
+<dd>RGB wide gamut fixed point colorimetry format</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">DP_COLORIMETRY_BT709_YCC</span></code></dt>
+<dd>ITU-R BT.709 colorimetry format</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">DP_COLORIMETRY_RGB_WIDE_FLOAT</span></code></dt>
+<dd>RGB wide gamut floating point
+(scRGB (IEC 61966-2-2)) colorimetry format</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">DP_COLORIMETRY_XVYCC_601</span></code></dt>
+<dd>xvYCC601 colorimetry format</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">DP_COLORIMETRY_OPRGB</span></code></dt>
+<dd>OpRGB colorimetry format</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">DP_COLORIMETRY_XVYCC_709</span></code></dt>
+<dd>xvYCC709 colorimetry format</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">DP_COLORIMETRY_DCI_P3_RGB</span></code></dt>
+<dd>DCI-P3 (SMPTE RP 431-2) colorimetry format</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">DP_COLORIMETRY_SYCC_601</span></code></dt>
+<dd>sYCC601 colorimetry format</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">DP_COLORIMETRY_RGB_CUSTOM</span></code></dt>
+<dd>RGB Custom Color Profile colorimetry format</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">DP_COLORIMETRY_OPYCC_601</span></code></dt>
+<dd>opYCC601 colorimetry format</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">DP_COLORIMETRY_BT2020_RGB</span></code></dt>
+<dd>ITU-R BT.2020 R’ G’ B’ colorimetry format</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">DP_COLORIMETRY_BT2020_CYCC</span></code></dt>
+<dd>ITU-R BT.2020 Y’c C’bc C’rc colorimetry format</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">DP_COLORIMETRY_BT2020_YCC</span></code></dt>
+<dd>ITU-R BT.2020 Y’ C’b C’r colorimetry format</dd>
+</dl>
+<p><strong>Description</strong></p>
+<p>This enum is used to indicate DP VSC SDP Colorimetry formats.
+It is based on DP 1.4 spec [Table 2-117: VSC SDP Payload for DB16 through
+DB18] and a name of enum member follows DRM_MODE_COLORIMETRY definition.</p>
+<dl class="type">
+<dt id="c.dp_dynamic_range">
+enum <code class="descname">dp_dynamic_range</code><a class="headerlink" href="#c.dp_dynamic_range" title="Permalink to this definition">¶</a></dt>
+<dd><p>drm DP Dynamic Range</p>
+</dd></dl>
+
+<p><strong>Constants</strong></p>
+<dl class="docutils">
+<dt><code class="docutils literal notranslate"><span class="pre">DP_DYNAMIC_RANGE_VESA</span></code></dt>
+<dd>VESA range</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">DP_DYNAMIC_RANGE_CTA</span></code></dt>
+<dd>CTA range</dd>
+</dl>
+<p><strong>Description</strong></p>
+<p>This enum is used to indicate DP VSC SDP Dynamic Range.
+It is based on DP 1.4 spec [Table 2-117: VSC SDP Payload for DB16 through
+DB18]</p>
+<dl class="type">
+<dt id="c.dp_content_type">
+enum <code class="descname">dp_content_type</code><a class="headerlink" href="#c.dp_content_type" title="Permalink to this definition">¶</a></dt>
+<dd><p>drm DP Content Type</p>
+</dd></dl>
+
+<p><strong>Constants</strong></p>
+<dl class="docutils">
+<dt><code class="docutils literal notranslate"><span class="pre">DP_CONTENT_TYPE_NOT_DEFINED</span></code></dt>
+<dd>Not defined type</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">DP_CONTENT_TYPE_GRAPHICS</span></code></dt>
+<dd>Graphics type</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">DP_CONTENT_TYPE_PHOTO</span></code></dt>
+<dd>Photo type</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">DP_CONTENT_TYPE_VIDEO</span></code></dt>
+<dd>Video type</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">DP_CONTENT_TYPE_GAME</span></code></dt>
+<dd>Game type</dd>
+</dl>
+<p><strong>Description</strong></p>
+<p>This enum is used to indicate DP VSC SDP Content Types.
+It is based on DP 1.4 spec [Table 2-117: VSC SDP Payload for DB16 through
+DB18]
+CTA-861-G defines content types and expected processing by a sink device</p>
+<dl class="type">
+<dt id="c.drm_dp_vsc_sdp">
+struct <code class="descname">drm_dp_vsc_sdp</code><a class="headerlink" href="#c.drm_dp_vsc_sdp" title="Permalink to this definition">¶</a></dt>
+<dd><p>drm DP VSC SDP</p>
+</dd></dl>
+
+<p><strong>Definition</strong></p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>struct drm_dp_vsc_sdp {
+  unsigned char sdp_type;
+  unsigned char revision;
+  unsigned char length;
+  enum dp_pixelformat pixelformat;
+  enum dp_colorimetry colorimetry;
+  int bpc;
+  enum dp_dynamic_range dynamic_range;
+  enum dp_content_type content_type;
+};
+</pre></div>
+</div>
+<p><strong>Members</strong></p>
+<dl class="docutils">
+<dt><code class="docutils literal notranslate"><span class="pre">sdp_type</span></code></dt>
+<dd>secondary-data packet type</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">revision</span></code></dt>
+<dd>revision number</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">length</span></code></dt>
+<dd>number of valid data bytes</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">pixelformat</span></code></dt>
+<dd>pixel encoding format</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">colorimetry</span></code></dt>
+<dd>colorimetry format</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">bpc</span></code></dt>
+<dd>bit per color</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">dynamic_range</span></code></dt>
+<dd>dynamic range information</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">content_type</span></code></dt>
+<dd>CTA-861-G defines content types and expected processing by a sink device</dd>
+</dl>
+<p><strong>Description</strong></p>
+<p>This structure represents a DP VSC SDP of drm
+It is based on DP 1.4 spec [Table 2-116: VSC SDP Header Bytes] and
+[Table 2-117: VSC SDP Payload for DB16 through DB18]</p>
+<dl class="type">
 <dt id="c.drm_dp_aux_msg">
 struct <code class="descname">drm_dp_aux_msg</code><a class="headerlink" href="#c.drm_dp_aux_msg" title="Permalink to this definition">¶</a></dt>
 <dd><p>DisplayPort AUX channel transaction</p>
@@ -6376,6 +6599,9 @@ backlight controls, even if the system’s firmware disagrees. This
 quirk should be checked against both the ident and panel EDID.
 When present, the driver should honor the DPCD backlight
 capabilities advertised.</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">DP_DPCD_QUIRK_CAN_DO_MAX_LINK_RATE_3_24_GBPS</span></code></dt>
+<dd>The device supports a link rate of 3.24 Gbps (multiplier 0xc) despite
+the DP_MAX_LINK_RATE register reporting a lower max multiplier.</dd>
 </dl>
 <p><strong>Description</strong></p>
 <p>Display Port sink and branch devices in the wild have a variety of bugs, try
@@ -6400,6 +6626,36 @@ bool <code class="descname">drm_dp_has_quirk</code><span class="sig-paren">(</sp
 </dl>
 <p><strong>Description</strong></p>
 <p>Return true if DP device identified by <strong>desc</strong> has <strong>quirk</strong>.</p>
+<dl class="type">
+<dt id="c.drm_dp_phy_test_params">
+struct <code class="descname">drm_dp_phy_test_params</code><a class="headerlink" href="#c.drm_dp_phy_test_params" title="Permalink to this definition">¶</a></dt>
+<dd><p>DP Phy Compliance parameters</p>
+</dd></dl>
+
+<p><strong>Definition</strong></p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>struct drm_dp_phy_test_params {
+  int link_rate;
+  u8 num_lanes;
+  u8 phy_pattern;
+  u8 hbr2_reset[2];
+  u8 custom80[10];
+  bool enhanced_frame_cap;
+};
+</pre></div>
+</div>
+<p><strong>Members</strong></p>
+<dl class="docutils">
+<dt><code class="docutils literal notranslate"><span class="pre">link_rate</span></code></dt>
+<dd>Requested Link rate from DPCD 0x219</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">num_lanes</span></code></dt>
+<dd>Number of lanes requested by sing through DPCD 0x220</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">phy_pattern</span></code></dt>
+<dd>DP Phy test pattern from DPCD 0x248</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">custom80</span></code></dt>
+<dd>DP Test_80BIT_CUSTOM_PATTERN from DPCDs 0x250 through 0x259</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">enhanced_frame_cap</span></code></dt>
+<dd>flag for enhanced frame capability.</dd>
+</dl>
 <dl class="function">
 <dt id="c.drm_dp_dpcd_read">
 ssize_t <code class="descname">drm_dp_dpcd_read</code><span class="sig-paren">(</span>struct <a class="reference internal" href="#c.drm_dp_aux" title="drm_dp_aux">drm_dp_aux</a> *<em>&nbsp;aux</em>, unsigned int<em>&nbsp;offset</em>, void *<em>&nbsp;buffer</em>, size_t<em>&nbsp;size</em><span class="sig-paren">)</span><a class="headerlink" href="#c.drm_dp_dpcd_read" title="Permalink to this definition">¶</a></dt>
@@ -6751,6 +7007,38 @@ Driver creates an infoframe using these parameters to populate
 infoframe using the helper function drm_dsc_pps_infoframe_pack()</p>
 <p><strong>Return</strong></p>
 <p>Number of input BPC values parsed from the DPCD</p>
+<dl class="function">
+<dt id="c.drm_dp_get_phy_test_pattern">
+int <code class="descname">drm_dp_get_phy_test_pattern</code><span class="sig-paren">(</span>struct <a class="reference internal" href="#c.drm_dp_aux" title="drm_dp_aux">drm_dp_aux</a> *<em>&nbsp;aux</em>, struct <a class="reference internal" href="#c.drm_dp_phy_test_params" title="drm_dp_phy_test_params">drm_dp_phy_test_params</a> *<em>&nbsp;data</em><span class="sig-paren">)</span><a class="headerlink" href="#c.drm_dp_get_phy_test_pattern" title="Permalink to this definition">¶</a></dt>
+<dd><p>get the requested pattern from the sink.</p>
+</dd></dl>
+
+<p><strong>Parameters</strong></p>
+<dl class="docutils">
+<dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">drm_dp_aux</span> <span class="pre">*</span> <span class="pre">aux</span></code></dt>
+<dd>DisplayPort AUX channel</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">drm_dp_phy_test_params</span> <span class="pre">*</span> <span class="pre">data</span></code></dt>
+<dd>DP phy compliance test parameters.</dd>
+</dl>
+<p><strong>Description</strong></p>
+<p>Returns 0 on success or a negative error code on failure.</p>
+<dl class="function">
+<dt id="c.drm_dp_set_phy_test_pattern">
+int <code class="descname">drm_dp_set_phy_test_pattern</code><span class="sig-paren">(</span>struct <a class="reference internal" href="#c.drm_dp_aux" title="drm_dp_aux">drm_dp_aux</a> *<em>&nbsp;aux</em>, struct <a class="reference internal" href="#c.drm_dp_phy_test_params" title="drm_dp_phy_test_params">drm_dp_phy_test_params</a> *<em>&nbsp;data</em>, u8<em>&nbsp;dp_rev</em><span class="sig-paren">)</span><a class="headerlink" href="#c.drm_dp_set_phy_test_pattern" title="Permalink to this definition">¶</a></dt>
+<dd><p>set the pattern to the sink.</p>
+</dd></dl>
+
+<p><strong>Parameters</strong></p>
+<dl class="docutils">
+<dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">drm_dp_aux</span> <span class="pre">*</span> <span class="pre">aux</span></code></dt>
+<dd>DisplayPort AUX channel</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">drm_dp_phy_test_params</span> <span class="pre">*</span> <span class="pre">data</span></code></dt>
+<dd>DP phy compliance test parameters.</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">u8</span> <span class="pre">dp_rev</span></code></dt>
+<dd><em>undescribed</em></dd>
+</dl>
+<p><strong>Description</strong></p>
+<p>Returns 0 on success or a negative error code on failure.</p>
 </div>
 <div class="section" id="display-port-cec-helper-functions-reference">
 <h2>Display Port CEC Helper Functions Reference<a class="headerlink" href="#display-port-cec-helper-functions-reference" title="Permalink to this headline">¶</a></h2>
@@ -7242,6 +7530,9 @@ that the EDID for all connectors is read immediately.</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">has_audio</span></code></dt>
 <dd>Tracks whether the sink connector to this port is
 audio-capable.</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">fec_capable</span></code></dt>
+<dd>bool indicating if FEC can be supported up to that
+point in the MST topology.</dd>
 </dl>
 <p><strong>Description</strong></p>
 <p>This structure represents an MST port endpoint on a device somewhere
@@ -7263,12 +7554,9 @@ struct <code class="descname">drm_dp_mst_branch</code><a class="headerlink" href
   u8 rad[8];
   u8 lct;
   int num_ports;
-  int msg_slots;
   struct list_head ports;
   struct drm_dp_mst_port *port_parent;
   struct drm_dp_mst_topology_mgr *mgr;
-  struct drm_dp_sideband_msg_tx *tx_slots[2];
-  int last_seqno;
   bool link_address_sent;
   u8 guid[16];
 };
@@ -7295,8 +7583,6 @@ drm_dp_delayed_destroy_work()</dd>
 <dd>Link count total to talk to this branch device.</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">num_ports</span></code></dt>
 <dd>number of ports on the branch.</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">msg_slots</span></code></dt>
-<dd>one bit per transmitted msg slot.</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">ports</span></code></dt>
 <dd>the list of ports on this branch device. This should be
 considered protected for reading by <a class="reference internal" href="#c.drm_dp_mst_topology_mgr" title="drm_dp_mst_topology_mgr"><code class="xref c c-type docutils literal notranslate"><span class="pre">drm_dp_mst_topology_mgr.lock</span></code></a>.
@@ -7310,10 +7596,6 @@ concurrently by <strong>drm_dp_mst_topology_mgr.probe_lock</strong></dd>
 <dd>pointer to the port parent, NULL if toplevel.</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">mgr</span></code></dt>
 <dd>topology manager for this branch device.</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">tx_slots</span></code></dt>
-<dd>transmission slots for this device.</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">last_seqno</span></code></dt>
-<dd>last sequence number used to talk to this.</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">link_address_sent</span></code></dt>
 <dd>if a link address message has been sent to this device yet.</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">guid</span></code></dt>
@@ -7339,13 +7621,12 @@ struct <code class="descname">drm_dp_mst_topology_mgr</code><a class="headerlink
   struct drm_dp_aux *aux;
   int max_payloads;
   int conn_base_id;
-  struct drm_dp_sideband_msg_rx down_rep_recv;
   struct drm_dp_sideband_msg_rx up_req_recv;
+  struct drm_dp_sideband_msg_rx down_rep_recv;
   struct mutex lock;
   struct mutex probe_lock;
   bool mst_state : 1;
   bool payload_id_table_cleared : 1;
-  bool is_waiting_for_dwn_reply : 1;
   struct drm_dp_mst_branch *mst_primary;
   u8 dpcd[DP_RECEIVER_CAP_SIZE];
   u8 sink_count;
@@ -7393,10 +7674,11 @@ controlling.</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">conn_base_id</span></code></dt>
 <dd>DRM connector ID this mgr is connected to. Only used
 to build the MST connector path value.</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">down_rep_recv</span></code></dt>
-<dd>Message receiver state for down replies.</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">up_req_recv</span></code></dt>
 <dd>Message receiver state for up requests.</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">down_rep_recv</span></code></dt>
+<dd>Message receiver state for replies to down
+requests.</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">lock</span></code></dt>
 <dd>protects <strong>mst_state</strong>, <strong>mst_primary</strong>, <strong>dpcd</strong>, and
 <strong>payload_id_table_cleared</strong>.</dd>
@@ -7410,8 +7692,6 @@ if no MST sink/branch devices is connected.</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">payload_id_table_cleared</span></code></dt>
 <dd>Whether or not we’ve cleared the payload
 ID table for <strong>mst_primary</strong>. Protected by <strong>lock</strong>.</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">is_waiting_for_dwn_reply</span></code></dt>
-<dd>whether we’re waiting for a down reply.</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">mst_primary</span></code></dt>
 <dd>Pointer to the primary/first branch device.</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">dpcd</span></code></dt>
@@ -7423,10 +7703,9 @@ ID table for <strong>mst_primary</strong>. Protected by <strong>lock</strong>.</
 <dt><code class="docutils literal notranslate"><span class="pre">funcs</span></code></dt>
 <dd>Atomic helper callbacks</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">qlock</span></code></dt>
-<dd>protects <strong>tx_msg_downq</strong>, the <a class="reference internal" href="#c.drm_dp_mst_branch" title="drm_dp_mst_branch"><code class="xref c c-type docutils literal notranslate"><span class="pre">drm_dp_mst_branch.txslost</span></code></a> and
-<code class="xref c c-type docutils literal notranslate"><span class="pre">drm_dp_sideband_msg_tx.state</span></code> once they are queued</dd>
+<dd>protects <strong>tx_msg_downq</strong> and <code class="xref c c-type docutils literal notranslate"><span class="pre">drm_dp_sideband_msg_tx.state</span></code></dd>
 <dt><code class="docutils literal notranslate"><span class="pre">tx_msg_downq</span></code></dt>
-<dd>List of pending down replies.</dd>
+<dd>List of pending down requests</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">payload_lock</span></code></dt>
 <dd>Protect payload information.</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">proposed_vcpis</span></code></dt>
@@ -7781,21 +8060,6 @@ int <code class="descname">drm_dp_mst_detect_port</code><span class="sig-paren">
 <p><strong>Description</strong></p>
 <p>This returns the current connection state for a port.</p>
 <dl class="function">
-<dt id="c.drm_dp_mst_port_has_audio">
-bool <code class="descname">drm_dp_mst_port_has_audio</code><span class="sig-paren">(</span>struct <a class="reference internal" href="#c.drm_dp_mst_topology_mgr" title="drm_dp_mst_topology_mgr">drm_dp_mst_topology_mgr</a> *<em>&nbsp;mgr</em>, struct <a class="reference internal" href="#c.drm_dp_mst_port" title="drm_dp_mst_port">drm_dp_mst_port</a> *<em>&nbsp;port</em><span class="sig-paren">)</span><a class="headerlink" href="#c.drm_dp_mst_port_has_audio" title="Permalink to this definition">¶</a></dt>
-<dd><p>Check whether port has audio capability or not</p>
-</dd></dl>
-
-<p><strong>Parameters</strong></p>
-<dl class="docutils">
-<dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">drm_dp_mst_topology_mgr</span> <span class="pre">*</span> <span class="pre">mgr</span></code></dt>
-<dd>manager for this port</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">drm_dp_mst_port</span> <span class="pre">*</span> <span class="pre">port</span></code></dt>
-<dd>unverified pointer to a port.</dd>
-</dl>
-<p><strong>Description</strong></p>
-<p>This returns whether the port supports audio or not.</p>
-<dl class="function">
 <dt id="c.drm_dp_mst_get_edid">
 struct edid * <code class="descname">drm_dp_mst_get_edid</code><span class="sig-paren">(</span>struct <a class="reference internal" href="drm-kms.html#c.drm_connector" title="drm_connector">drm_connector</a> *<em>&nbsp;connector</em>, struct <a class="reference internal" href="#c.drm_dp_mst_topology_mgr" title="drm_dp_mst_topology_mgr">drm_dp_mst_topology_mgr</a> *<em>&nbsp;mgr</em>, struct <a class="reference internal" href="#c.drm_dp_mst_port" title="drm_dp_mst_port">drm_dp_mst_port</a> *<em>&nbsp;port</em><span class="sig-paren">)</span><a class="headerlink" href="#c.drm_dp_mst_get_edid" title="Permalink to this definition">¶</a></dt>
 <dd><p>get EDID for an MST port</p>
@@ -7954,7 +8218,7 @@ void <code class="descname">drm_dp_mst_deallocate_vcpi</code><span class="sig-pa
 <dl class="function">
 <dt id="c.drm_dp_check_act_status">
 int <code class="descname">drm_dp_check_act_status</code><span class="sig-paren">(</span>struct <a class="reference internal" href="#c.drm_dp_mst_topology_mgr" title="drm_dp_mst_topology_mgr">drm_dp_mst_topology_mgr</a> *<em>&nbsp;mgr</em><span class="sig-paren">)</span><a class="headerlink" href="#c.drm_dp_check_act_status" title="Permalink to this definition">¶</a></dt>
-<dd><p>Check ACT handled status.</p>
+<dd><p>Polls for ACT handled status.</p>
 </dd></dl>
 
 <p><strong>Parameters</strong></p>
@@ -7963,7 +8227,11 @@ int <code class="descname">drm_dp_check_act_status</code><span class="sig-paren"
 <dd>manager to use</dd>
 </dl>
 <p><strong>Description</strong></p>
-<p>Check the payload status bits in the DPCD for ACT handled completion.</p>
+<p>Tries waiting for the MST hub to finish updating it’s payload table by
+polling for the ACT handled bit for up to 3 seconds (yes-some hubs really
+take that long).</p>
+<p><strong>Return</strong></p>
+<p>0 if the ACT was handled in time, negative error code on failure.</p>
 <dl class="function">
 <dt id="c.drm_dp_calc_pbn_mode">
 int <code class="descname">drm_dp_calc_pbn_mode</code><span class="sig-paren">(</span>int<em>&nbsp;clock</em>, int<em>&nbsp;bpp</em>, bool<em>&nbsp;dsc</em><span class="sig-paren">)</span><a class="headerlink" href="#c.drm_dp_calc_pbn_mode" title="Permalink to this definition">¶</a></dt>
@@ -8059,8 +8327,8 @@ checking the rest of their state in their
 <p>See also:
 <a class="reference internal" href="#c.drm_dp_atomic_find_vcpi_slots" title="drm_dp_atomic_find_vcpi_slots"><code class="xref c c-func docutils literal notranslate"><span class="pre">drm_dp_atomic_find_vcpi_slots()</span></code></a>
 <a class="reference internal" href="#c.drm_dp_atomic_release_vcpi_slots" title="drm_dp_atomic_release_vcpi_slots"><code class="xref c c-func docutils literal notranslate"><span class="pre">drm_dp_atomic_release_vcpi_slots()</span></code></a></p>
-<p><strong>Return</strong></p>
 <p>0 if the new state is valid, negative error code otherwise.</p>
+<p><strong>Return</strong></p>
 <dl class="function">
 <dt id="c.drm_atomic_get_mst_topology_state">
 struct drm_dp_mst_topology_state * <code class="descname">drm_atomic_get_mst_topology_state</code><span class="sig-paren">(</span>struct <a class="reference internal" href="drm-kms.html#c.drm_atomic_state" title="drm_atomic_state">drm_atomic_state</a> *<em>&nbsp;state</em>, struct <a class="reference internal" href="#c.drm_dp_mst_topology_mgr" title="drm_dp_mst_topology_mgr">drm_dp_mst_topology_mgr</a> *<em>&nbsp;mgr</em><span class="sig-paren">)</span><a class="headerlink" href="#c.drm_atomic_get_mst_topology_state" title="Permalink to this definition">¶</a></dt>
@@ -8078,8 +8346,8 @@ struct drm_dp_mst_topology_state * <code class="descname">drm_atomic_get_mst_top
 state vtable so that the private object state returned is that of a MST
 topology object. Also, <a class="reference internal" href="drm-kms.html#c.drm_atomic_get_private_obj_state" title="drm_atomic_get_private_obj_state"><code class="xref c c-func docutils literal notranslate"><span class="pre">drm_atomic_get_private_obj_state()</span></code></a> expects the caller
 to care of the locking, so warn if don’t hold the connection_mutex.</p>
-<p><strong>Return</strong></p>
 <p>The MST topology state or error pointer.</p>
+<p><strong>Return</strong></p>
 <dl class="function">
 <dt id="c.drm_dp_mst_topology_mgr_init">
 int <code class="descname">drm_dp_mst_topology_mgr_init</code><span class="sig-paren">(</span>struct <a class="reference internal" href="#c.drm_dp_mst_topology_mgr" title="drm_dp_mst_topology_mgr">drm_dp_mst_topology_mgr</a> *<em>&nbsp;mgr</em>, struct <a class="reference internal" href="drm-internals.html#c.drm_device" title="drm_device">drm_device</a> *<em>&nbsp;dev</em>, struct <a class="reference internal" href="#c.drm_dp_aux" title="drm_dp_aux">drm_dp_aux</a> *<em>&nbsp;aux</em>, int<em>&nbsp;max_dpcd_transaction_bytes</em>, int<em>&nbsp;max_payloads</em>, int<em>&nbsp;conn_base_id</em><span class="sig-paren">)</span><a class="headerlink" href="#c.drm_dp_mst_topology_mgr_init" title="Permalink to this definition">¶</a></dt>
@@ -8614,20 +8882,6 @@ Additionally <a class="reference internal" href="#c.mipi_dbi" title="mipi_dbi"><
 <p><strong>Return</strong></p>
 <p>Zero on success, negative error code on failure.</p>
 <dl class="function">
-<dt id="c.mipi_dbi_release">
-void <code class="descname">mipi_dbi_release</code><span class="sig-paren">(</span>struct <a class="reference internal" href="drm-internals.html#c.drm_device" title="drm_device">drm_device</a> *<em>&nbsp;drm</em><span class="sig-paren">)</span><a class="headerlink" href="#c.mipi_dbi_release" title="Permalink to this definition">¶</a></dt>
-<dd><p>DRM driver release helper</p>
-</dd></dl>
-
-<p><strong>Parameters</strong></p>
-<dl class="docutils">
-<dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">drm_device</span> <span class="pre">*</span> <span class="pre">drm</span></code></dt>
-<dd>DRM device</dd>
-</dl>
-<p><strong>Description</strong></p>
-<p>This function finalizes and frees <a class="reference internal" href="#c.mipi_dbi" title="mipi_dbi"><code class="xref c c-type docutils literal notranslate"><span class="pre">mipi_dbi</span></code></a>.</p>
-<p>Drivers can use this as their <a class="reference internal" href="drm-internals.html#c.drm_driver" title="drm_driver"><code class="xref c c-type docutils literal notranslate"><span class="pre">drm_driver-&gt;release</span></code></a> callback.</p>
-<dl class="function">
 <dt id="c.mipi_dbi_hw_reset">
 void <code class="descname">mipi_dbi_hw_reset</code><span class="sig-paren">(</span>struct <a class="reference internal" href="#c.mipi_dbi" title="mipi_dbi">mipi_dbi</a> *<em>&nbsp;dbi</em><span class="sig-paren">)</span><a class="headerlink" href="#c.mipi_dbi_hw_reset" title="Permalink to this definition">¶</a></dt>
 <dd><p>Hardware reset of controller</p>
@@ -8764,7 +9018,7 @@ the SPI controller driver can handle.</p>
 <p>Zero on success, negative error code on failure.</p>
 <dl class="function">
 <dt id="c.mipi_dbi_debugfs_init">
-int <code class="descname">mipi_dbi_debugfs_init</code><span class="sig-paren">(</span>struct <a class="reference internal" href="drm-internals.html#c.drm_minor" title="drm_minor">drm_minor</a> *<em>&nbsp;minor</em><span class="sig-paren">)</span><a class="headerlink" href="#c.mipi_dbi_debugfs_init" title="Permalink to this definition">¶</a></dt>
+void <code class="descname">mipi_dbi_debugfs_init</code><span class="sig-paren">(</span>struct <a class="reference internal" href="drm-internals.html#c.drm_minor" title="drm_minor">drm_minor</a> *<em>&nbsp;minor</em><span class="sig-paren">)</span><a class="headerlink" href="#c.mipi_dbi_debugfs_init" title="Permalink to this definition">¶</a></dt>
 <dd><p>Create debugfs entries</p>
 </dd></dl>
 
@@ -8777,8 +9031,6 @@ int <code class="descname">mipi_dbi_debugfs_init</code><span class="sig-paren">(
 <p>This function creates a ‘command’ debugfs file for sending commands to the
 controller or getting the read command values.
 Drivers can use this as their <a class="reference internal" href="drm-internals.html#c.drm_driver" title="drm_driver"><code class="xref c c-type docutils literal notranslate"><span class="pre">drm_driver-&gt;debugfs_init</span></code></a> callback.</p>
-<p><strong>Return</strong></p>
-<p>Zero on success, negative error code on failure.</p>
 </div>
 <div class="section" id="mipi-dsi-helper-functions-reference">
 <h2>MIPI DSI Helper Functions Reference<a class="headerlink" href="#mipi-dsi-helper-functions-reference" title="Permalink to this headline">¶</a></h2>
@@ -10990,11 +11242,8 @@ bool <code class="descname">drm_scdc_set_high_tmds_clock_ratio</code><span class
 <dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">i2c_adapter</span> <span class="pre">*</span> <span class="pre">adapter</span></code></dt>
 <dd>I2C adapter for DDC channel</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">bool</span> <span class="pre">set</span></code></dt>
-<dd>ret or reset the high clock ratio</dd>
-</dl>
-<p><strong>Description</strong></p>
-<blockquote>
-<div><dl class="docutils">
+<dd><p class="first">ret or reset the high clock ratio</p>
+<dl class="last docutils">
 <dt>TMDS clock ratio calculations go like this:</dt>
 <dd><p class="first">TMDS character = 10 bit TMDS encoded value</p>
 <p>TMDS character rate = The rate at which TMDS characters are
@@ -11012,7 +11261,8 @@ rate = 1/40 pixel clock rate</p>
 <p class="last">sets TMDS clock ratio to 1/10 when set = 0</p>
 </dd>
 </dl>
-</div></blockquote>
+</dd>
+</dl>
 <p><strong>Return</strong></p>
 <p>True if write is successful, false otherwise.</p>
 </div>
@@ -11532,6 +11782,26 @@ void <code class="descname">hdmi_infoframe_log</code><span class="sig-paren">(</
 <dd>HDMI infoframe</dd>
 </dl>
 <dl class="function">
+<dt id="c.hdmi_drm_infoframe_unpack_only">
+int <code class="descname">hdmi_drm_infoframe_unpack_only</code><span class="sig-paren">(</span>struct hdmi_drm_infoframe *<em>&nbsp;frame</em>, const void *<em>&nbsp;buffer</em>, size_t<em>&nbsp;size</em><span class="sig-paren">)</span><a class="headerlink" href="#c.hdmi_drm_infoframe_unpack_only" title="Permalink to this definition">¶</a></dt>
+<dd><p>unpack binary buffer of CTA-861-G DRM infoframe DataBytes to a HDMI DRM infoframe</p>
+</dd></dl>
+
+<p><strong>Parameters</strong></p>
+<dl class="docutils">
+<dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">hdmi_drm_infoframe</span> <span class="pre">*</span> <span class="pre">frame</span></code></dt>
+<dd>HDMI DRM infoframe</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">const</span> <span class="pre">void</span> <span class="pre">*</span> <span class="pre">buffer</span></code></dt>
+<dd>source buffer</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">size_t</span> <span class="pre">size</span></code></dt>
+<dd>size of buffer</dd>
+</dl>
+<p><strong>Description</strong></p>
+<p>Unpacks CTA-861-G DRM infoframe DataBytes contained in the binary <strong>buffer</strong>
+into a structured <strong>frame</strong> of the HDMI Dynamic Range and Mastering (DRM)
+infoframe.</p>
+<p>Returns 0 on success or a negative error code on failure.</p>
+<dl class="function">
 <dt id="c.hdmi_infoframe_unpack">
 int <code class="descname">hdmi_infoframe_unpack</code><span class="sig-paren">(</span>union <a class="reference internal" href="#c.hdmi_infoframe" title="hdmi_infoframe">hdmi_infoframe</a> *<em>&nbsp;frame</em>, const void *<em>&nbsp;buffer</em>, size_t<em>&nbsp;size</em><span class="sig-paren">)</span><a class="headerlink" href="#c.hdmi_infoframe_unpack" title="Permalink to this definition">¶</a></dt>
 <dd><p>unpack binary buffer to a HDMI infoframe</p>
@@ -11803,9 +12073,9 @@ bool <code class="descname">drm_rect_clip_scaled</code><span class="sig-paren">(
 <p>Clip rectangle <strong>dst</strong> by rectangle <strong>clip</strong>. Clip rectangle <strong>src</strong> by the
 the corresponding amounts, retaining the vertical and horizontal scaling
 factors from <strong>src</strong> to <strong>dst</strong>.</p>
-<p><strong>Return</strong></p>
 <p><code class="docutils literal notranslate"><span class="pre">true</span></code> if rectangle <strong>dst</strong> is still visible after being clipped,
 <code class="docutils literal notranslate"><span class="pre">false</span></code> otherwise.</p>
+<p><strong>Return</strong></p>
 <dl class="function">
 <dt id="c.drm_rect_calc_hscale">
 int <code class="descname">drm_rect_calc_hscale</code><span class="sig-paren">(</span>const struct <a class="reference internal" href="#c.drm_rect" title="drm_rect">drm_rect</a> *<em>&nbsp;src</em>, const struct <a class="reference internal" href="#c.drm_rect" title="drm_rect">drm_rect</a> *<em>&nbsp;dst</em>, int<em>&nbsp;min_hscale</em>, int<em>&nbsp;max_hscale</em><span class="sig-paren">)</span><a class="headerlink" href="#c.drm_rect_calc_hscale" title="Permalink to this definition">¶</a></dt>
@@ -12172,10 +12442,10 @@ int <code class="descname">drm_mode_config_helper_suspend</code><span class="sig
 output polling if initialized, suspends fbdev if used and finally calls
 <a class="reference internal" href="#c.drm_atomic_helper_suspend" title="drm_atomic_helper_suspend"><code class="xref c c-func docutils literal notranslate"><span class="pre">drm_atomic_helper_suspend()</span></code></a>.
 If suspending fails, fbdev and polling is re-enabled.</p>
-<p><strong>Return</strong></p>
-<p>Zero on success, negative error code on error.</p>
 <p>See also:
 <a class="reference internal" href="#c.drm_kms_helper_poll_disable" title="drm_kms_helper_poll_disable"><code class="xref c c-func docutils literal notranslate"><span class="pre">drm_kms_helper_poll_disable()</span></code></a> and <a class="reference internal" href="#c.drm_fb_helper_set_suspend_unlocked" title="drm_fb_helper_set_suspend_unlocked"><code class="xref c c-func docutils literal notranslate"><span class="pre">drm_fb_helper_set_suspend_unlocked()</span></code></a>.</p>
+<p><strong>Return</strong></p>
+<p>Zero on success, negative error code on error.</p>
 <dl class="function">
 <dt id="c.drm_mode_config_helper_resume">
 int <code class="descname">drm_mode_config_helper_resume</code><span class="sig-paren">(</span>struct <a class="reference internal" href="drm-internals.html#c.drm_device" title="drm_device">drm_device</a> *<em>&nbsp;dev</em><span class="sig-paren">)</span><a class="headerlink" href="#c.drm_mode_config_helper_resume" title="Permalink to this definition">¶</a></dt>
@@ -12191,10 +12461,10 @@ int <code class="descname">drm_mode_config_helper_resume</code><span class="sig-
 <p>This helper function takes care of resuming the modeset side. It calls
 <a class="reference internal" href="#c.drm_atomic_helper_resume" title="drm_atomic_helper_resume"><code class="xref c c-func docutils literal notranslate"><span class="pre">drm_atomic_helper_resume()</span></code></a>, resumes fbdev if used and enables output polling
 if initiaized.</p>
-<p><strong>Return</strong></p>
-<p>Zero on success, negative error code on error.</p>
 <p>See also:
 <a class="reference internal" href="#c.drm_fb_helper_set_suspend_unlocked" title="drm_fb_helper_set_suspend_unlocked"><code class="xref c c-func docutils literal notranslate"><span class="pre">drm_fb_helper_set_suspend_unlocked()</span></code></a> and <a class="reference internal" href="#c.drm_kms_helper_poll_enable" title="drm_kms_helper_poll_enable"><code class="xref c c-func docutils literal notranslate"><span class="pre">drm_kms_helper_poll_enable()</span></code></a>.</p>
+<p><strong>Return</strong></p>
+<p>Zero on success, negative error code on error.</p>
 </div>
 <div class="section" id="of-dt-helpers">
 <h2>OF/DT Helpers<a class="headerlink" href="#of-dt-helpers" title="Permalink to this headline">¶</a></h2>
@@ -12444,13 +12714,13 @@ will remove any CRTC links of unused encoders and encoder links of
 disconnected connectors. Then it will disable all unused encoders and CRTCs
 either by calling their disable callback if available or by calling their
 dpms callback with DRM_MODE_DPMS_OFF.</p>
-<p><strong>NOTE</strong></p>
 <p>This function is part of the legacy modeset helper library and will cause
 major confusion with atomic drivers. This is because atomic helpers guarantee
 to never call -&gt;disable() hooks on a disabled function, or -&gt;enable() hooks
 on an enabled functions. <a class="reference internal" href="#c.drm_helper_disable_unused_functions" title="drm_helper_disable_unused_functions"><code class="xref c c-func docutils literal notranslate"><span class="pre">drm_helper_disable_unused_functions()</span></code></a> on the other
 hand throws such guarantees into the wind and calls disable hooks
 unconditionally on unused functions.</p>
+<p><strong>NOTE</strong></p>
 <dl class="function">
 <dt id="c.drm_crtc_helper_set_mode">
 bool <code class="descname">drm_crtc_helper_set_mode</code><span class="sig-paren">(</span>struct <a class="reference internal" href="drm-kms.html#c.drm_crtc" title="drm_crtc">drm_crtc</a> *<em>&nbsp;crtc</em>, struct <a class="reference internal" href="drm-kms.html#c.drm_display_mode" title="drm_display_mode">drm_display_mode</a> *<em>&nbsp;mode</em>, int<em>&nbsp;x</em>, int<em>&nbsp;y</em>, struct <a class="reference internal" href="drm-kms.html#c.drm_framebuffer" title="drm_framebuffer">drm_framebuffer</a> *<em>&nbsp;old_fb</em><span class="sig-paren">)</span><a class="headerlink" href="#c.drm_crtc_helper_set_mode" title="Permalink to this definition">¶</a></dt>

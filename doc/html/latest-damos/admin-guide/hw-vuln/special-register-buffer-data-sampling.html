@@ -1,0 +1,420 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>SRBDS - Special Register Buffer Data Sampling &mdash; The Linux Kernel  documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript">
+          var DOCUMENTATION_OPTIONS = {
+              URL_ROOT:'../../',
+              VERSION:'',
+              LANGUAGE:'None',
+              COLLAPSE_INDEX:false,
+              FILE_SUFFIX:'.html',
+              HAS_SOURCE:  true,
+              SOURCELINK_SUFFIX: '.txt'
+          };
+      </script>
+        <script type="text/javascript" src="../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../_static/doctools.js"></script>
+    
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/theme_overrides.css" type="text/css" />
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../index.html" class="icon icon-home"> The Linux Kernel
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                5.8.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../mm/damon/index.html">Monitoring Data Accesses</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../vm/damon/index.html">DAMON: Data Access MONitor</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">The Linux Kernel</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html">Docs</a> &raquo;</li>
+        
+      <li>SRBDS - Special Register Buffer Data Sampling</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../../_sources/admin-guide/hw-vuln/special-register-buffer-data-sampling.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="srbds-special-register-buffer-data-sampling">
+<h1>SRBDS - Special Register Buffer Data Sampling<a class="headerlink" href="#srbds-special-register-buffer-data-sampling" title="Permalink to this headline">¶</a></h1>
+<p>SRBDS is a hardware vulnerability that allows MDS <a class="reference internal" href="mds.html"><span class="doc">MDS - Microarchitectural Data Sampling</span></a> techniques to
+infer values returned from special register accesses.  Special register
+accesses are accesses to off core registers.  According to Intel’s evaluation,
+the special register reads that have a security expectation of privacy are
+RDRAND, RDSEED and SGX EGETKEY.</p>
+<p>When RDRAND, RDSEED and EGETKEY instructions are used, the data is moved
+to the core through the special register mechanism that is susceptible
+to MDS attacks.</p>
+<div class="section" id="affected-processors">
+<h2>Affected processors<a class="headerlink" href="#affected-processors" title="Permalink to this headline">¶</a></h2>
+<p>Core models (desktop, mobile, Xeon-E3) that implement RDRAND and/or RDSEED may
+be affected.</p>
+<p>A processor is affected by SRBDS if its Family_Model and stepping is
+in the following list, with the exception of the listed processors
+exporting MDS_NO while Intel TSX is available yet not enabled. The
+latter class of processors are only affected when Intel TSX is enabled
+by software using TSX_CTRL_MSR otherwise they are not affected.</p>
+<blockquote>
+<div><table border="1" class="docutils">
+<colgroup>
+<col width="39%" />
+<col width="36%" />
+<col width="24%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">common name</th>
+<th class="head">Family_Model</th>
+<th class="head">Stepping</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>IvyBridge</td>
+<td>06_3AH</td>
+<td>All</td>
+</tr>
+<tr class="row-odd"><td>Haswell</td>
+<td>06_3CH</td>
+<td>All</td>
+</tr>
+<tr class="row-even"><td>Haswell_L</td>
+<td>06_45H</td>
+<td>All</td>
+</tr>
+<tr class="row-odd"><td>Haswell_G</td>
+<td>06_46H</td>
+<td>All</td>
+</tr>
+<tr class="row-even"><td>Broadwell_G</td>
+<td>06_47H</td>
+<td>All</td>
+</tr>
+<tr class="row-odd"><td>Broadwell</td>
+<td>06_3DH</td>
+<td>All</td>
+</tr>
+<tr class="row-even"><td>Skylake_L</td>
+<td>06_4EH</td>
+<td>All</td>
+</tr>
+<tr class="row-odd"><td>Skylake</td>
+<td>06_5EH</td>
+<td>All</td>
+</tr>
+<tr class="row-even"><td>Kabylake_L</td>
+<td>06_8EH</td>
+<td>&lt;= 0xC</td>
+</tr>
+<tr class="row-odd"><td>Kabylake</td>
+<td>06_9EH</td>
+<td>&lt;= 0xD</td>
+</tr>
+</tbody>
+</table>
+</div></blockquote>
+</div>
+<div class="section" id="related-cves">
+<h2>Related CVEs<a class="headerlink" href="#related-cves" title="Permalink to this headline">¶</a></h2>
+<p>The following CVE entry is related to this SRBDS issue:</p>
+<blockquote>
+<div><table border="1" class="docutils">
+<colgroup>
+<col width="25%" />
+<col width="9%" />
+<col width="66%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td>CVE-2020-0543</td>
+<td>SRBDS</td>
+<td>Special Register Buffer Data Sampling</td>
+</tr>
+</tbody>
+</table>
+</div></blockquote>
+</div>
+<div class="section" id="attack-scenarios">
+<h2>Attack scenarios<a class="headerlink" href="#attack-scenarios" title="Permalink to this headline">¶</a></h2>
+<p>An unprivileged user can extract values returned from RDRAND and RDSEED
+executed on another core or sibling thread using MDS techniques.</p>
+</div>
+<div class="section" id="mitigation-mechanism">
+<h2>Mitigation mechanism<a class="headerlink" href="#mitigation-mechanism" title="Permalink to this headline">¶</a></h2>
+<p>Intel will release microcode updates that modify the RDRAND, RDSEED, and
+EGETKEY instructions to overwrite secret special register data in the shared
+staging buffer before the secret data can be accessed by another logical
+processor.</p>
+<p>During execution of the RDRAND, RDSEED, or EGETKEY instructions, off-core
+accesses from other logical processors will be delayed until the special
+register read is complete and the secret data in the shared staging buffer is
+overwritten.</p>
+<p>This has three effects on performance:</p>
+<ol class="arabic simple">
+<li>RDRAND, RDSEED, or EGETKEY instructions have higher latency.</li>
+<li>Executing RDRAND at the same time on multiple logical processors will be
+serialized, resulting in an overall reduction in the maximum RDRAND
+bandwidth.</li>
+<li>Executing RDRAND, RDSEED or EGETKEY will delay memory accesses from other
+logical processors that miss their core caches, with an impact similar to
+legacy locked cache-line-split accesses.</li>
+</ol>
+<p>The microcode updates provide an opt-out mechanism (RNGDS_MITG_DIS) to disable
+the mitigation for RDRAND and RDSEED instructions executed outside of Intel
+Software Guard Extensions (Intel SGX) enclaves. On logical processors that
+disable the mitigation using this opt-out mechanism, RDRAND and RDSEED do not
+take longer to execute and do not impact performance of sibling logical
+processors memory accesses. The opt-out mechanism does not affect Intel SGX
+enclaves (including execution of RDRAND or RDSEED inside an enclave, as well
+as EGETKEY execution).</p>
+</div>
+<div class="section" id="ia32-mcu-opt-ctrl-msr-definition">
+<h2>IA32_MCU_OPT_CTRL MSR Definition<a class="headerlink" href="#ia32-mcu-opt-ctrl-msr-definition" title="Permalink to this headline">¶</a></h2>
+<p>Along with the mitigation for this issue, Intel added a new thread-scope
+IA32_MCU_OPT_CTRL MSR, (address 0x123). The presence of this MSR and
+RNGDS_MITG_DIS (bit 0) is enumerated by CPUID.(EAX=07H,ECX=0).EDX[SRBDS_CTRL =
+9]==1. This MSR is introduced through the microcode update.</p>
+<p>Setting IA32_MCU_OPT_CTRL[0] (RNGDS_MITG_DIS) to 1 for a logical processor
+disables the mitigation for RDRAND and RDSEED executed outside of an Intel SGX
+enclave on that logical processor. Opting out of the mitigation for a
+particular logical processor does not affect the RDRAND and RDSEED mitigations
+for other logical processors.</p>
+<p>Note that inside of an Intel SGX enclave, the mitigation is applied regardless
+of the value of RNGDS_MITG_DS.</p>
+</div>
+<div class="section" id="mitigation-control-on-the-kernel-command-line">
+<h2>Mitigation control on the kernel command line<a class="headerlink" href="#mitigation-control-on-the-kernel-command-line" title="Permalink to this headline">¶</a></h2>
+<p>The kernel command line allows control over the SRBDS mitigation at boot time
+with the option “srbds=”.  The option for this is:</p>
+<blockquote>
+<div><table border="1" class="docutils">
+<colgroup>
+<col width="17%" />
+<col width="83%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td>off</td>
+<td>This option disables SRBDS mitigation for RDRAND and RDSEED on
+affected platforms.</td>
+</tr>
+</tbody>
+</table>
+</div></blockquote>
+</div>
+<div class="section" id="srbds-system-information">
+<h2>SRBDS System Information<a class="headerlink" href="#srbds-system-information" title="Permalink to this headline">¶</a></h2>
+<p>The Linux kernel provides vulnerability status information through sysfs.  For
+SRBDS this can be accessed by the following sysfs file:
+/sys/devices/system/cpu/vulnerabilities/srbds</p>
+<p>The possible values contained in this file are:</p>
+<blockquote>
+<div><table border="1" class="docutils">
+<colgroup>
+<col width="40%" />
+<col width="60%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td>Not affected</td>
+<td>Processor not vulnerable</td>
+</tr>
+<tr class="row-even"><td>Vulnerable</td>
+<td>Processor vulnerable and mitigation disabled</td>
+</tr>
+<tr class="row-odd"><td>Vulnerable: No microcode</td>
+<td>Processor vulnerable and microcode is missing
+mitigation</td>
+</tr>
+<tr class="row-even"><td>Mitigation: Microcode</td>
+<td>Processor is vulnerable and mitigation is in
+effect.</td>
+</tr>
+<tr class="row-odd"><td>Mitigation: TSX disabled</td>
+<td>Processor is only vulnerable when TSX is
+enabled while this system was booted with TSX
+disabled.</td>
+</tr>
+<tr class="row-even"><td>Unknown: Dependent on</td>
+<td>&#160;</td>
+</tr>
+<tr class="row-odd"><td>hypervisor status</td>
+<td>Running on virtual guest processor that is
+affected but with no way to know if host
+processor is mitigated or vulnerable.</td>
+</tr>
+</tbody>
+</table>
+</div></blockquote>
+</div>
+<div class="section" id="srbds-default-mitigation">
+<h2>SRBDS Default mitigation<a class="headerlink" href="#srbds-default-mitigation" title="Permalink to this headline">¶</a></h2>
+<p>This new microcode serializes processor access during execution of RDRAND,
+RDSEED ensures that the shared buffer is overwritten before it is released for
+reuse.  Use the “srbds=off” kernel command line to disable the mitigation for
+RDRAND and RDSEED.</p>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright The kernel development community
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

@@ -68,7 +68,7 @@
             
             
               <div class="version">
-                5.7.0
+                5.8.0
               </div>
             
           
@@ -352,10 +352,10 @@ faults preventing freezing. If the file system is already frozen, the
 function waits until the file system is thawed.</p>
 <p>Since page fault freeze protection behaves as a lock, users have to preserve
 ordering of freeze protection and other filesystem locks. It is advised to
-put <a class="reference internal" href="#c.sb_start_pagefault" title="sb_start_pagefault"><code class="xref c c-func docutils literal notranslate"><span class="pre">sb_start_pagefault()</span></code></a> close to mmap_sem in lock ordering. Page fault
+put <a class="reference internal" href="#c.sb_start_pagefault" title="sb_start_pagefault"><code class="xref c c-func docutils literal notranslate"><span class="pre">sb_start_pagefault()</span></code></a> close to mmap_lock in lock ordering. Page fault
 handling code implies lock dependency:</p>
 <dl class="docutils">
-<dt>mmap_sem</dt>
+<dt>mmap_lock</dt>
 <dd>-&gt; sb_start_pagefault</dd>
 </dl>
 <dl class="function">
@@ -410,6 +410,20 @@ errseq_t <code class="descname">filemap_sample_wb_err</code><span class="sig-par
 <p><strong>Description</strong></p>
 <p>Writeback errors are always reported relative to a particular sample point
 in the past. This function provides those sample points.</p>
+<dl class="function">
+<dt id="c.file_sample_sb_err">
+errseq_t <code class="descname">file_sample_sb_err</code><span class="sig-paren">(</span>struct file *<em>&nbsp;file</em><span class="sig-paren">)</span><a class="headerlink" href="#c.file_sample_sb_err" title="Permalink to this definition">¶</a></dt>
+<dd><p>sample the current errseq_t to test for later errors</p>
+</dd></dl>
+
+<p><strong>Parameters</strong></p>
+<dl class="docutils">
+<dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">file</span> <span class="pre">*</span> <span class="pre">file</span></code></dt>
+<dd><em>undescribed</em></dd>
+</dl>
+<p><strong>Description</strong></p>
+<p>Grab the most current superblock-level errseq_t value for the given
+struct file.</p>
 </div>
 <div class="section" id="the-directory-cache">
 <h3>The Directory Cache<a class="headerlink" href="#the-directory-cache" title="Permalink to this headline">¶</a></h3>
@@ -597,6 +611,7 @@ struct dentry * <code class="descname">d_lookup</code><span class="sig-paren">(<
 </dl>
 <p><strong>Return</strong></p>
 <p>dentry, or NULL</p>
+<p><strong>Description</strong></p>
 <p>d_lookup searches the children of the parent dentry for the name in
 question. If the dentry is found its reference count is incremented and the
 dentry is returned. The caller must use dput to free the entry when it has
@@ -730,13 +745,12 @@ struct dentry * <code class="descname">dget_dlock</code><span class="sig-paren">
 <p><strong>Parameters</strong></p>
 <dl class="docutils">
 <dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">dentry</span> <span class="pre">*</span> <span class="pre">dentry</span></code></dt>
-<dd>dentry to get a reference to</dd>
-</dl>
-<p><strong>Description</strong></p>
-<blockquote>
-<div>Given a dentry or <code class="docutils literal notranslate"><span class="pre">NULL</span></code> pointer increment the reference count
+<dd><p class="first">dentry to get a reference to</p>
+<p class="last">Given a dentry or <code class="docutils literal notranslate"><span class="pre">NULL</span></code> pointer increment the reference count
 if appropriate and return the dentry. A dentry will not be
-destroyed when it has references.</div></blockquote>
+destroyed when it has references.</p>
+</dd>
+</dl>
 <dl class="function">
 <dt id="c.d_unhashed">
 int <code class="descname">d_unhashed</code><span class="sig-paren">(</span>const struct dentry *<em>&nbsp;dentry</em><span class="sig-paren">)</span><a class="headerlink" href="#c.d_unhashed" title="Permalink to this definition">¶</a></dt>
@@ -746,11 +760,10 @@ int <code class="descname">d_unhashed</code><span class="sig-paren">(</span>cons
 <p><strong>Parameters</strong></p>
 <dl class="docutils">
 <dt><code class="docutils literal notranslate"><span class="pre">const</span> <span class="pre">struct</span> <span class="pre">dentry</span> <span class="pre">*</span> <span class="pre">dentry</span></code></dt>
-<dd>entry to check</dd>
+<dd><p class="first">entry to check</p>
+<p class="last">Returns true if the dentry passed is not currently hashed.</p>
+</dd>
 </dl>
-<p><strong>Description</strong></p>
-<blockquote>
-<div>Returns true if the dentry passed is not currently hashed.</div></blockquote>
 <dl class="function">
 <dt id="c.d_really_is_negative">
 bool <code class="descname">d_really_is_negative</code><span class="sig-paren">(</span>const struct dentry *<em>&nbsp;dentry</em><span class="sig-paren">)</span><a class="headerlink" href="#c.d_really_is_negative" title="Permalink to this definition">¶</a></dt>
@@ -987,12 +1000,12 @@ void <code class="descname">__insert_inode_hash</code><span class="sig-paren">(<
 <dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">inode</span> <span class="pre">*</span> <span class="pre">inode</span></code></dt>
 <dd>unhashed inode</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">unsigned</span> <span class="pre">long</span> <span class="pre">hashval</span></code></dt>
-<dd>unsigned long value used to locate this object in the
-inode_hashtable.</dd>
-</dl>
-<p><strong>Description</strong></p>
-<blockquote>
+<dd><p class="first">unsigned long value used to locate this object in the
+inode_hashtable.</p>
+<blockquote class="last">
 <div>Add an inode to the inode hash for this superblock.</div></blockquote>
+</dd>
+</dl>
 <dl class="function">
 <dt id="c.__remove_inode_hash">
 void <code class="descname">__remove_inode_hash</code><span class="sig-paren">(</span>struct inode *<em>&nbsp;inode</em><span class="sig-paren">)</span><a class="headerlink" href="#c.__remove_inode_hash" title="Permalink to this definition">¶</a></dt>
@@ -1002,11 +1015,10 @@ void <code class="descname">__remove_inode_hash</code><span class="sig-paren">(<
 <p><strong>Parameters</strong></p>
 <dl class="docutils">
 <dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">inode</span> <span class="pre">*</span> <span class="pre">inode</span></code></dt>
-<dd>inode to unhash</dd>
+<dd><p class="first">inode to unhash</p>
+<p class="last">Remove an inode from the superblock.</p>
+</dd>
 </dl>
-<p><strong>Description</strong></p>
-<blockquote>
-<div>Remove an inode from the superblock.</div></blockquote>
 <dl class="function">
 <dt id="c.evict_inodes">
 void <code class="descname">evict_inodes</code><span class="sig-paren">(</span>struct super_block *<em>&nbsp;sb</em><span class="sig-paren">)</span><a class="headerlink" href="#c.evict_inodes" title="Permalink to this definition">¶</a></dt>
@@ -1032,16 +1044,15 @@ struct inode * <code class="descname">new_inode</code><span class="sig-paren">(<
 <p><strong>Parameters</strong></p>
 <dl class="docutils">
 <dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">super_block</span> <span class="pre">*</span> <span class="pre">sb</span></code></dt>
-<dd>superblock</dd>
-</dl>
-<p><strong>Description</strong></p>
-<blockquote>
-<div>Allocates a new inode for given superblock. The default gfp_mask
+<dd><p class="first">superblock</p>
+<p class="last">Allocates a new inode for given superblock. The default gfp_mask
 for allocations related to inode-&gt;i_mapping is GFP_HIGHUSER_MOVABLE.
 If HIGHMEM pages are unsuitable or it is known that pages allocated
 for the page cache are not reclaimable or migratable,
 mapping_set_gfp_mask() must be called with suitable flags on the
-newly created inode’s mapping</div></blockquote>
+newly created inode’s mapping</p>
+</dd>
+</dl>
 <dl class="function">
 <dt id="c.unlock_new_inode">
 void <code class="descname">unlock_new_inode</code><span class="sig-paren">(</span>struct inode *<em>&nbsp;inode</em><span class="sig-paren">)</span><a class="headerlink" href="#c.unlock_new_inode" title="Permalink to this definition">¶</a></dt>
@@ -1174,18 +1185,16 @@ ino_t <code class="descname">iunique</code><span class="sig-paren">(</span>struc
 <dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">super_block</span> <span class="pre">*</span> <span class="pre">sb</span></code></dt>
 <dd>superblock</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">ino_t</span> <span class="pre">max_reserved</span></code></dt>
-<dd>highest reserved inode number</dd>
-</dl>
-<p><strong>Description</strong></p>
-<blockquote>
-<div><p>Obtain an inode number that is unique on the system for a given
+<dd><p class="first">highest reserved inode number</p>
+<p>Obtain an inode number that is unique on the system for a given
 superblock. This is used by file systems that have no natural
 permanent inode numbering system. An inode number is returned that
 is higher than the reserved limit but unique.</p>
-<p>BUGS:
+<p class="last">BUGS:
 With a large number of inodes live on the file system this function
 currently becomes quite slow.</p>
-</div></blockquote>
+</dd>
+</dl>
 <dl class="function">
 <dt id="c.ilookup5_nowait">
 struct inode * <code class="descname">ilookup5_nowait</code><span class="sig-paren">(</span>struct super_block *<em>&nbsp;sb</em>, unsigned long<em>&nbsp;hashval</em>, int (<em>*test</em>)(struct inode *, void *), void *<em>&nbsp;data</em><span class="sig-paren">)</span><a class="headerlink" href="#c.ilookup5_nowait" title="Permalink to this definition">¶</a></dt>
@@ -1207,10 +1216,10 @@ struct inode * <code class="descname">ilookup5_nowait</code><span class="sig-par
 <p>Search for the inode specified by <strong>hashval</strong> and <strong>data</strong> in the inode cache.
 If the inode is in the cache, the inode is returned with an incremented
 reference count.</p>
+<p>Note2: <strong>test</strong> is called with the inode_hash_lock held, so can’t sleep.</p>
 <p><strong>Note</strong></p>
 <p>I_NEW is not waited upon so you have to be very careful what you do
 with the returned inode.  You probably should be using <a class="reference internal" href="#c.ilookup5" title="ilookup5"><code class="xref c c-func docutils literal notranslate"><span class="pre">ilookup5()</span></code></a> instead.</p>
-<p>Note2: <strong>test</strong> is called with the inode_hash_lock held, so can’t sleep.</p>
 <dl class="function">
 <dt id="c.ilookup5">
 struct inode * <code class="descname">ilookup5</code><span class="sig-paren">(</span>struct super_block *<em>&nbsp;sb</em>, unsigned long<em>&nbsp;hashval</em>, int (<em>*test</em>)(struct inode *, void *), void *<em>&nbsp;data</em><span class="sig-paren">)</span><a class="headerlink" href="#c.ilookup5" title="Permalink to this definition">¶</a></dt>
@@ -1286,6 +1295,58 @@ the reference count because the resulting <a class="reference internal" href="#c
 inode eviction.  The tradeoff is that the <strong>match</strong> funtion must be
 very carefully implemented.</p>
 <dl class="function">
+<dt id="c.find_inode_rcu">
+struct inode * <code class="descname">find_inode_rcu</code><span class="sig-paren">(</span>struct super_block *<em>&nbsp;sb</em>, unsigned long<em>&nbsp;hashval</em>, int (<em>*test</em>)(struct inode *, void *), void *<em>&nbsp;data</em><span class="sig-paren">)</span><a class="headerlink" href="#c.find_inode_rcu" title="Permalink to this definition">¶</a></dt>
+<dd><p>find an inode in the inode cache</p>
+</dd></dl>
+
+<p><strong>Parameters</strong></p>
+<dl class="docutils">
+<dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">super_block</span> <span class="pre">*</span> <span class="pre">sb</span></code></dt>
+<dd>Super block of file system to search</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">unsigned</span> <span class="pre">long</span> <span class="pre">hashval</span></code></dt>
+<dd>Key to hash</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">int</span> <span class="pre">(*)(struct</span> <span class="pre">inode</span> <span class="pre">*,</span> <span class="pre">void</span> <span class="pre">*)</span> <span class="pre">test</span></code></dt>
+<dd>Function to test match on an inode</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">void</span> <span class="pre">*</span> <span class="pre">data</span></code></dt>
+<dd>Data for test function</dd>
+</dl>
+<p><strong>Description</strong></p>
+<p>Search for the inode specified by <strong>hashval</strong> and <strong>data</strong> in the inode cache,
+where the helper function <strong>test</strong> will return 0 if the inode does not match
+and 1 if it does.  The <strong>test</strong> function must be responsible for taking the
+i_lock spin_lock and checking i_state for an inode being freed or being
+initialized.</p>
+<p>If successful, this will return the inode for which the <strong>test</strong> function
+returned 1 and NULL otherwise.</p>
+<p>The <strong>test</strong> function is not permitted to take a ref on any inode presented.
+It is also not permitted to sleep.</p>
+<p>The caller must hold the RCU read lock.</p>
+<dl class="function">
+<dt id="c.find_inode_by_ino_rcu">
+struct inode * <code class="descname">find_inode_by_ino_rcu</code><span class="sig-paren">(</span>struct super_block *<em>&nbsp;sb</em>, unsigned long<em>&nbsp;ino</em><span class="sig-paren">)</span><a class="headerlink" href="#c.find_inode_by_ino_rcu" title="Permalink to this definition">¶</a></dt>
+<dd><p>Find an inode in the inode cache</p>
+</dd></dl>
+
+<p><strong>Parameters</strong></p>
+<dl class="docutils">
+<dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">super_block</span> <span class="pre">*</span> <span class="pre">sb</span></code></dt>
+<dd>Super block of file system to search</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">unsigned</span> <span class="pre">long</span> <span class="pre">ino</span></code></dt>
+<dd>The inode number to match</dd>
+</dl>
+<p><strong>Description</strong></p>
+<p>Search for the inode specified by <strong>hashval</strong> and <strong>data</strong> in the inode cache,
+where the helper function <strong>test</strong> will return 0 if the inode does not match
+and 1 if it does.  The <strong>test</strong> function must be responsible for taking the
+i_lock spin_lock and checking i_state for an inode being freed or being
+initialized.</p>
+<p>If successful, this will return the inode for which the <strong>test</strong> function
+returned 1 and NULL otherwise.</p>
+<p>The <strong>test</strong> function is not permitted to take a ref on any inode presented.
+It is also not permitted to sleep.</p>
+<p>The caller must hold the RCU read lock.</p>
+<dl class="function">
 <dt id="c.iput">
 void <code class="descname">iput</code><span class="sig-paren">(</span>struct inode *<em>&nbsp;inode</em><span class="sig-paren">)</span><a class="headerlink" href="#c.iput" title="Permalink to this definition">¶</a></dt>
 <dd><p>put an inode</p>
@@ -1294,14 +1355,12 @@ void <code class="descname">iput</code><span class="sig-paren">(</span>struct in
 <p><strong>Parameters</strong></p>
 <dl class="docutils">
 <dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">inode</span> <span class="pre">*</span> <span class="pre">inode</span></code></dt>
-<dd>inode to put</dd>
-</dl>
-<p><strong>Description</strong></p>
-<blockquote>
-<div><p>Puts an inode, dropping its usage count. If the inode use count hits
+<dd><p class="first">inode to put</p>
+<p>Puts an inode, dropping its usage count. If the inode use count hits
 zero, the inode is then freed and may also be destroyed.</p>
-<p>Consequently, <a class="reference internal" href="#c.iput" title="iput"><code class="xref c c-func docutils literal notranslate"><span class="pre">iput()</span></code></a> can sleep.</p>
-</div></blockquote>
+<p class="last">Consequently, <a class="reference internal" href="#c.iput" title="iput"><code class="xref c c-func docutils literal notranslate"><span class="pre">iput()</span></code></a> can sleep.</p>
+</dd>
+</dl>
 <dl class="function">
 <dt id="c.bmap">
 int <code class="descname">bmap</code><span class="sig-paren">(</span>struct inode *<em>&nbsp;inode</em>, sector_t *<em>&nbsp;block</em><span class="sig-paren">)</span><a class="headerlink" href="#c.bmap" title="Permalink to this definition">¶</a></dt>
@@ -1313,18 +1372,16 @@ int <code class="descname">bmap</code><span class="sig-paren">(</span>struct ino
 <dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">inode</span> <span class="pre">*</span> <span class="pre">inode</span></code></dt>
 <dd>inode owning the block number being requested</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">sector_t</span> <span class="pre">*</span> <span class="pre">block</span></code></dt>
-<dd>pointer containing the block to find</dd>
-</dl>
-<p><strong>Description</strong></p>
-<blockquote>
-<div><p>Replaces the value in <a href="#id1"><span class="problematic" id="id2">*</span></a>block with the block number on the device holding
+<dd><p class="first">pointer containing the block to find</p>
+<p>Replaces the value in <code class="docutils literal notranslate"><span class="pre">*block</span></code> with the block number on the device holding
 corresponding to the requested block number in the file.
 That is, asked for block 4 of inode 1 the function will replace the
-4 in <a href="#id3"><span class="problematic" id="id4">*</span></a>block, with disk block relative to the disk start that holds that
+4 in <code class="docutils literal notranslate"><span class="pre">*block</span></code>, with disk block relative to the disk start that holds that
 block of the file.</p>
-<p>Returns -EINVAL in case of error, 0 otherwise. If mapping falls into a
-hole, returns 0 and <a href="#id5"><span class="problematic" id="id6">*</span></a>block is also set to 0.</p>
-</div></blockquote>
+<p class="last">Returns -EINVAL in case of error, 0 otherwise. If mapping falls into a
+hole, returns 0 and <code class="docutils literal notranslate"><span class="pre">*block</span></code> is also set to 0.</p>
+</dd>
+</dl>
 <dl class="function">
 <dt id="c.file_update_time">
 int <code class="descname">file_update_time</code><span class="sig-paren">(</span>struct file *<em>&nbsp;file</em><span class="sig-paren">)</span><a class="headerlink" href="#c.file_update_time" title="Permalink to this definition">¶</a></dt>
@@ -1334,17 +1391,16 @@ int <code class="descname">file_update_time</code><span class="sig-paren">(</spa
 <p><strong>Parameters</strong></p>
 <dl class="docutils">
 <dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">file</span> <span class="pre">*</span> <span class="pre">file</span></code></dt>
-<dd>file accessed</dd>
-</dl>
-<p><strong>Description</strong></p>
-<blockquote>
-<div>Update the mtime and ctime members of an inode and mark the inode
+<dd><p class="first">file accessed</p>
+<p class="last">Update the mtime and ctime members of an inode and mark the inode
 for writeback.  Note that this function is meant exclusively for
 usage in the file write path of filesystems, and filesystems may
 choose to explicitly ignore update via this function with the
 S_NOCMTIME inode flag, e.g. for network filesystem where these
 timestamps are handled by the server.  This can return an error for
-file systems who need to allocate space in order to update an inode.</div></blockquote>
+file systems who need to allocate space in order to update an inode.</p>
+</dd>
+</dl>
 <dl class="function">
 <dt id="c.inode_init_owner">
 void <code class="descname">inode_init_owner</code><span class="sig-paren">(</span>struct inode *<em>&nbsp;inode</em>, const struct inode *<em>&nbsp;dir</em>, umode_t<em>&nbsp;mode</em><span class="sig-paren">)</span><a class="headerlink" href="#c.inode_init_owner" title="Permalink to this definition">¶</a></dt>
@@ -1432,13 +1488,12 @@ void <code class="descname">make_bad_inode</code><span class="sig-paren">(</span
 <p><strong>Parameters</strong></p>
 <dl class="docutils">
 <dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">inode</span> <span class="pre">*</span> <span class="pre">inode</span></code></dt>
-<dd>Inode to mark bad</dd>
-</dl>
-<p><strong>Description</strong></p>
-<blockquote>
-<div>When an inode cannot be read due to a media or remote network
+<dd><p class="first">Inode to mark bad</p>
+<p class="last">When an inode cannot be read due to a media or remote network
 failure this function makes the inode “bad” and causes I/O operations
-on it to fail from this point on.</div></blockquote>
+on it to fail from this point on.</p>
+</dd>
+</dl>
 <dl class="function">
 <dt id="c.is_bad_inode">
 bool <code class="descname">is_bad_inode</code><span class="sig-paren">(</span>struct inode *<em>&nbsp;inode</em><span class="sig-paren">)</span><a class="headerlink" href="#c.is_bad_inode" title="Permalink to this definition">¶</a></dt>
@@ -1448,11 +1503,10 @@ bool <code class="descname">is_bad_inode</code><span class="sig-paren">(</span>s
 <p><strong>Parameters</strong></p>
 <dl class="docutils">
 <dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">inode</span> <span class="pre">*</span> <span class="pre">inode</span></code></dt>
-<dd>inode to test</dd>
+<dd><p class="first">inode to test</p>
+<p class="last">Returns true if the inode in question has been marked as bad.</p>
+</dd>
 </dl>
-<p><strong>Description</strong></p>
-<blockquote>
-<div>Returns true if the inode in question has been marked as bad.</div></blockquote>
 <dl class="function">
 <dt id="c.iget_failed">
 void <code class="descname">iget_failed</code><span class="sig-paren">(</span>struct inode *<em>&nbsp;inode</em><span class="sig-paren">)</span><a class="headerlink" href="#c.iget_failed" title="Permalink to this definition">¶</a></dt>
@@ -1478,16 +1532,14 @@ void <code class="descname">deactivate_locked_super</code><span class="sig-paren
 <p><strong>Parameters</strong></p>
 <dl class="docutils">
 <dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">super_block</span> <span class="pre">*</span> <span class="pre">s</span></code></dt>
-<dd>superblock to deactivate</dd>
-</dl>
-<p><strong>Description</strong></p>
-<blockquote>
-<div><p>Drops an active reference to superblock, converting it into a temporary
+<dd><p class="first">superblock to deactivate</p>
+<p>Drops an active reference to superblock, converting it into a temporary
 one if there is no other active references left.  In that case we
 tell fs driver to shut it down and drop the temporary reference we
 had just acquired.</p>
-<p>Caller holds exclusive lock on superblock; that lock is released.</p>
-</div></blockquote>
+<p class="last">Caller holds exclusive lock on superblock; that lock is released.</p>
+</dd>
+</dl>
 <dl class="function">
 <dt id="c.deactivate_super">
 void <code class="descname">deactivate_super</code><span class="sig-paren">(</span>struct super_block *<em>&nbsp;s</em><span class="sig-paren">)</span><a class="headerlink" href="#c.deactivate_super" title="Permalink to this definition">¶</a></dt>
@@ -1497,13 +1549,12 @@ void <code class="descname">deactivate_super</code><span class="sig-paren">(</sp
 <p><strong>Parameters</strong></p>
 <dl class="docutils">
 <dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">super_block</span> <span class="pre">*</span> <span class="pre">s</span></code></dt>
-<dd>superblock to deactivate</dd>
-</dl>
-<p><strong>Description</strong></p>
-<blockquote>
-<div>Variant of <a class="reference internal" href="#c.deactivate_locked_super" title="deactivate_locked_super"><code class="xref c c-func docutils literal notranslate"><span class="pre">deactivate_locked_super()</span></code></a>, except that superblock is <em>not</em>
+<dd><p class="first">superblock to deactivate</p>
+<p class="last">Variant of <a class="reference internal" href="#c.deactivate_locked_super" title="deactivate_locked_super"><code class="xref c c-func docutils literal notranslate"><span class="pre">deactivate_locked_super()</span></code></a>, except that superblock is <em>not</em>
 locked by caller.  If we are going to drop the final active reference,
-lock will be acquired prior to that.</div></blockquote>
+lock will be acquired prior to that.</p>
+</dd>
+</dl>
 <dl class="function">
 <dt id="c.generic_shutdown_super">
 void <code class="descname">generic_shutdown_super</code><span class="sig-paren">(</span>struct super_block *<em>&nbsp;sb</em><span class="sig-paren">)</span><a class="headerlink" href="#c.generic_shutdown_super" title="Permalink to this definition">¶</a></dt>
@@ -1513,19 +1564,17 @@ void <code class="descname">generic_shutdown_super</code><span class="sig-paren"
 <p><strong>Parameters</strong></p>
 <dl class="docutils">
 <dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">super_block</span> <span class="pre">*</span> <span class="pre">sb</span></code></dt>
-<dd>superblock to kill</dd>
-</dl>
-<p><strong>Description</strong></p>
-<blockquote>
-<div><p><a class="reference internal" href="#c.generic_shutdown_super" title="generic_shutdown_super"><code class="xref c c-func docutils literal notranslate"><span class="pre">generic_shutdown_super()</span></code></a> does all fs-independent work on superblock
+<dd><p class="first">superblock to kill</p>
+<p><a class="reference internal" href="#c.generic_shutdown_super" title="generic_shutdown_super"><code class="xref c c-func docutils literal notranslate"><span class="pre">generic_shutdown_super()</span></code></a> does all fs-independent work on superblock
 shutdown.  Typical -&gt;kill_sb() should pick all fs-specific objects
 that need destruction out of superblock, call <a class="reference internal" href="#c.generic_shutdown_super" title="generic_shutdown_super"><code class="xref c c-func docutils literal notranslate"><span class="pre">generic_shutdown_super()</span></code></a>
 and release aforementioned objects.  Note: dentries and inodes _are_
 taken care of and do not need specific handling.</p>
-<p>Upon calling this function, the filesystem may no longer alter or
+<p class="last">Upon calling this function, the filesystem may no longer alter or
 rearrange the set of dentries belonging to this super_block, nor may it
 change the attachments of dentries to inodes.</p>
-</div></blockquote>
+</dd>
+</dl>
 <dl class="function">
 <dt id="c.sget_fc">
 struct super_block * <code class="descname">sget_fc</code><span class="sig-paren">(</span>struct fs_context *<em>&nbsp;fc</em>, int (<em>*test</em>)(struct super_block *, struct fs_context *), int (*set) (struct super_block *, struct fs_context *)<span class="sig-paren">)</span><a class="headerlink" href="#c.sget_fc" title="Permalink to this definition">¶</a></dt>
@@ -1583,12 +1632,11 @@ void <code class="descname">iterate_supers_type</code><span class="sig-paren">(<
 <dt><code class="docutils literal notranslate"><span class="pre">void</span> <span class="pre">(*)(struct</span> <span class="pre">super_block</span> <span class="pre">*,</span> <span class="pre">void</span> <span class="pre">*)</span> <span class="pre">f</span></code></dt>
 <dd>function to call</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">void</span> <span class="pre">*</span> <span class="pre">arg</span></code></dt>
-<dd>argument to pass to it</dd>
+<dd><p class="first">argument to pass to it</p>
+<p class="last">Scans the superblock list and calls given function, passing it
+locked superblock and given argument.</p>
+</dd>
 </dl>
-<p><strong>Description</strong></p>
-<blockquote>
-<div>Scans the superblock list and calls given function, passing it
-locked superblock and given argument.</div></blockquote>
 <dl class="function">
 <dt id="c.get_super">
 struct super_block * <code class="descname">get_super</code><span class="sig-paren">(</span>struct block_device *<em>&nbsp;bdev</em><span class="sig-paren">)</span><a class="headerlink" href="#c.get_super" title="Permalink to this definition">¶</a></dt>
@@ -1598,12 +1646,11 @@ struct super_block * <code class="descname">get_super</code><span class="sig-par
 <p><strong>Parameters</strong></p>
 <dl class="docutils">
 <dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">block_device</span> <span class="pre">*</span> <span class="pre">bdev</span></code></dt>
-<dd>device to get the superblock for</dd>
+<dd><p class="first">device to get the superblock for</p>
+<p class="last">Scans the superblock list and finds the superblock of the file system
+mounted on the device given. <code class="docutils literal notranslate"><span class="pre">NULL</span></code> is returned if no match is found.</p>
+</dd>
 </dl>
-<p><strong>Description</strong></p>
-<blockquote>
-<div>Scans the superblock list and finds the superblock of the file system
-mounted on the device given. <code class="docutils literal notranslate"><span class="pre">NULL</span></code> is returned if no match is found.</div></blockquote>
 <dl class="function">
 <dt id="c.get_super_thawed">
 struct super_block * <code class="descname">get_super_thawed</code><span class="sig-paren">(</span>struct block_device *<em>&nbsp;bdev</em><span class="sig-paren">)</span><a class="headerlink" href="#c.get_super_thawed" title="Permalink to this definition">¶</a></dt>
@@ -1613,14 +1660,13 @@ struct super_block * <code class="descname">get_super_thawed</code><span class="
 <p><strong>Parameters</strong></p>
 <dl class="docutils">
 <dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">block_device</span> <span class="pre">*</span> <span class="pre">bdev</span></code></dt>
-<dd>device to get the superblock for</dd>
-</dl>
-<p><strong>Description</strong></p>
-<blockquote>
-<div>Scans the superblock list and finds the superblock of the file system
+<dd><p class="first">device to get the superblock for</p>
+<p class="last">Scans the superblock list and finds the superblock of the file system
 mounted on the device. The superblock is returned once it is thawed
 (or immediately if it was not frozen). <code class="docutils literal notranslate"><span class="pre">NULL</span></code> is returned if no match
-is found.</div></blockquote>
+is found.</p>
+</dd>
+</dl>
 <dl class="function">
 <dt id="c.get_super_exclusive_thawed">
 struct super_block * <code class="descname">get_super_exclusive_thawed</code><span class="sig-paren">(</span>struct block_device *<em>&nbsp;bdev</em><span class="sig-paren">)</span><a class="headerlink" href="#c.get_super_exclusive_thawed" title="Permalink to this definition">¶</a></dt>
@@ -1630,14 +1676,13 @@ struct super_block * <code class="descname">get_super_exclusive_thawed</code><sp
 <p><strong>Parameters</strong></p>
 <dl class="docutils">
 <dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">block_device</span> <span class="pre">*</span> <span class="pre">bdev</span></code></dt>
-<dd>device to get the superblock for</dd>
-</dl>
-<p><strong>Description</strong></p>
-<blockquote>
-<div>Scans the superblock list and finds the superblock of the file system
+<dd><p class="first">device to get the superblock for</p>
+<p class="last">Scans the superblock list and finds the superblock of the file system
 mounted on the device. The superblock is returned once it is thawed
 (or immediately if it was not frozen) and s_umount semaphore is held
-in exclusive mode. <code class="docutils literal notranslate"><span class="pre">NULL</span></code> is returned if no match is found.</div></blockquote>
+in exclusive mode. <code class="docutils literal notranslate"><span class="pre">NULL</span></code> is returned if no match is found.</p>
+</dd>
+</dl>
 <dl class="function">
 <dt id="c.get_anon_bdev">
 int <code class="descname">get_anon_bdev</code><span class="sig-paren">(</span>dev_t *<em>&nbsp;p</em><span class="sig-paren">)</span><a class="headerlink" href="#c.get_anon_bdev" title="Permalink to this definition">¶</a></dt>
@@ -1762,11 +1807,10 @@ int <code class="descname">locks_delete_block</code><span class="sig-paren">(</s
 <p><strong>Parameters</strong></p>
 <dl class="docutils">
 <dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">file_lock</span> <span class="pre">*</span> <span class="pre">waiter</span></code></dt>
-<dd>the lock which was waiting</dd>
+<dd><p class="first">the lock which was waiting</p>
+<p class="last">lockd/nfsd need to disconnect the lock while working on it.</p>
+</dd>
 </dl>
-<p><strong>Description</strong></p>
-<blockquote>
-<div>lockd/nfsd need to disconnect the lock while working on it.</div></blockquote>
 <dl class="function">
 <dt id="c.posix_lock_file">
 int <code class="descname">posix_lock_file</code><span class="sig-paren">(</span>struct file *<em>&nbsp;filp</em>, struct file_lock *<em>&nbsp;fl</em>, struct file_lock *<em>&nbsp;conflock</em><span class="sig-paren">)</span><a class="headerlink" href="#c.posix_lock_file" title="Permalink to this definition">¶</a></dt>
@@ -1824,15 +1868,15 @@ int <code class="descname">__break_lease</code><span class="sig-paren">(</span>s
 <dd>O_RDONLY: break only write leases; O_WRONLY or O_RDWR:
 break all leases</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">unsigned</span> <span class="pre">int</span> <span class="pre">type</span></code></dt>
-<dd>FL_LEASE: break leases and delegations; FL_DELEG: break
-only delegations</dd>
-</dl>
-<p><strong>Description</strong></p>
-<blockquote>
+<dd><p class="first">FL_LEASE: break leases and delegations; FL_DELEG: break
+only delegations</p>
+<blockquote class="last">
 <div>break_lease (inlined for speed) has checked there already is at least
 some kind of lock (maybe a lease) on this file.  Leases are broken on
 a call to open() or truncate().  This function can sleep unless you
 specified <code class="docutils literal notranslate"><span class="pre">O_NONBLOCK</span></code> to your open().</div></blockquote>
+</dd>
+</dl>
 <dl class="function">
 <dt id="c.lease_get_mtime">
 void <code class="descname">lease_get_mtime</code><span class="sig-paren">(</span>struct inode *<em>&nbsp;inode</em>, struct timespec64 *<em>&nbsp;time</em><span class="sig-paren">)</span><a class="headerlink" href="#c.lease_get_mtime" title="Permalink to this definition">¶</a></dt>
@@ -1865,13 +1909,13 @@ int <code class="descname">generic_setlease</code><span class="sig-paren">(</spa
 <dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">file_lock</span> <span class="pre">**</span> <span class="pre">flp</span></code></dt>
 <dd>input - file_lock to use, output - file_lock inserted</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">void</span> <span class="pre">**</span> <span class="pre">priv</span></code></dt>
-<dd>private data for lm_setup (may be NULL if lm_setup
-doesn’t require it)</dd>
-</dl>
-<p><strong>Description</strong></p>
-<blockquote>
+<dd><p class="first">private data for lm_setup (may be NULL if lm_setup
+doesn’t require it)</p>
+<blockquote class="last">
 <div>The (input) flp-&gt;fl_lmops-&gt;lm_break function is required
 by break_lease().</div></blockquote>
+</dd>
+</dl>
 <dl class="function">
 <dt id="c.vfs_setlease">
 int <code class="descname">vfs_setlease</code><span class="sig-paren">(</span>struct file *<em>&nbsp;filp</em>, long<em>&nbsp;arg</em>, struct file_lock **<em>&nbsp;lease</em>, void **<em>&nbsp;priv</em><span class="sig-paren">)</span><a class="headerlink" href="#c.vfs_setlease" title="Permalink to this definition">¶</a></dt>
@@ -2023,11 +2067,8 @@ int <code class="descname">fcntl_getlease</code><span class="sig-paren">(</span>
 <p><strong>Parameters</strong></p>
 <dl class="docutils">
 <dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">file</span> <span class="pre">*</span> <span class="pre">filp</span></code></dt>
-<dd>the file</dd>
-</dl>
-<p><strong>Description</strong></p>
-<blockquote>
-<div><p>The value returned by this function will be one of
+<dd><p class="first">the file</p>
+<p>The value returned by this function will be one of
 (if no lease break is pending):</p>
 <p><code class="docutils literal notranslate"><span class="pre">F_RDLCK</span></code> to indicate a shared lease is held.</p>
 <p><code class="docutils literal notranslate"><span class="pre">F_WRLCK</span></code> to indicate an exclusive lease is held.</p>
@@ -2038,9 +2079,10 @@ int <code class="descname">fcntl_getlease</code><span class="sig-paren">(</span>
 <dd>changed to a shared lease (or removed).</dd>
 </dl>
 <p><code class="docutils literal notranslate"><span class="pre">F_UNLCK</span></code> to indicate the lease needs to be removed.</p>
-<p>XXX: sfr &amp; willy disagree over whether F_INPROGRESS
+<p class="last">XXX: sfr &amp; willy disagree over whether F_INPROGRESS
 should be returned to userspace.</p>
-</div></blockquote>
+</dd>
+</dl>
 <dl class="function">
 <dt id="c.check_conflicting_open">
 int <code class="descname">check_conflicting_open</code><span class="sig-paren">(</span>struct file *<em>&nbsp;filp</em>, const long<em>&nbsp;arg</em>, int<em>&nbsp;flags</em><span class="sig-paren">)</span><a class="headerlink" href="#c.check_conflicting_open" title="Permalink to this definition">¶</a></dt>
@@ -2072,13 +2114,12 @@ int <code class="descname">fcntl_setlease</code><span class="sig-paren">(</span>
 <dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">file</span> <span class="pre">*</span> <span class="pre">filp</span></code></dt>
 <dd>file pointer</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">long</span> <span class="pre">arg</span></code></dt>
-<dd>type of lease to obtain</dd>
-</dl>
-<p><strong>Description</strong></p>
-<blockquote>
-<div>Call this fcntl to establish a lease on the file.
+<dd><p class="first">type of lease to obtain</p>
+<p class="last">Call this fcntl to establish a lease on the file.
 Note that you also need to call <code class="docutils literal notranslate"><span class="pre">F_SETSIG</span></code> to
-receive a signal when the lease is broken.</div></blockquote>
+receive a signal when the lease is broken.</p>
+</dd>
+</dl>
 <dl class="function">
 <dt id="c.flock_lock_inode_wait">
 int <code class="descname">flock_lock_inode_wait</code><span class="sig-paren">(</span>struct inode *<em>&nbsp;inode</em>, struct file_lock *<em>&nbsp;fl</em><span class="sig-paren">)</span><a class="headerlink" href="#c.flock_lock_inode_wait" title="Permalink to this definition">¶</a></dt>
@@ -2105,11 +2146,8 @@ long <code class="descname">sys_flock</code><span class="sig-paren">(</span>unsi
 <dt><code class="docutils literal notranslate"><span class="pre">unsigned</span> <span class="pre">int</span> <span class="pre">fd</span></code></dt>
 <dd>the file descriptor to lock.</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">unsigned</span> <span class="pre">int</span> <span class="pre">cmd</span></code></dt>
-<dd>the type of lock to apply.</dd>
-</dl>
-<p><strong>Description</strong></p>
-<blockquote>
-<div><p>Apply a <code class="docutils literal notranslate"><span class="pre">FL_FLOCK</span></code> style lock to an open file descriptor.
+<dd><p class="first">the type of lock to apply.</p>
+<p>Apply a <code class="docutils literal notranslate"><span class="pre">FL_FLOCK</span></code> style lock to an open file descriptor.
 The <strong>cmd</strong> can be one of:</p>
 <ul class="simple">
 <li><code class="docutils literal notranslate"><span class="pre">LOCK_SH</span></code> – a shared lock.</li>
@@ -2118,9 +2156,10 @@ The <strong>cmd</strong> can be one of:</p>
 <li><code class="docutils literal notranslate"><span class="pre">LOCK_MAND</span></code> – a ‘mandatory’ flock.
 This exists to emulate Windows Share Modes.</li>
 </ul>
-<p><code class="docutils literal notranslate"><span class="pre">LOCK_MAND</span></code> can be combined with <code class="docutils literal notranslate"><span class="pre">LOCK_READ</span></code> or <code class="docutils literal notranslate"><span class="pre">LOCK_WRITE</span></code> to allow other
+<p class="last"><code class="docutils literal notranslate"><span class="pre">LOCK_MAND</span></code> can be combined with <code class="docutils literal notranslate"><span class="pre">LOCK_READ</span></code> or <code class="docutils literal notranslate"><span class="pre">LOCK_WRITE</span></code> to allow other
 processes read and write access respectively.</p>
-</div></blockquote>
+</dd>
+</dl>
 <dl class="function">
 <dt id="c.locks_translate_pid">
 pid_t <code class="descname">locks_translate_pid</code><span class="sig-paren">(</span>struct file_lock *<em>&nbsp;fl</em>, struct pid_namespace *<em>&nbsp;ns</em><span class="sig-paren">)</span><a class="headerlink" href="#c.locks_translate_pid" title="Permalink to this definition">¶</a></dt>
@@ -2140,22 +2179,15 @@ pid_t <code class="descname">locks_translate_pid</code><span class="sig-paren">(
 <div class="section" id="other-functions">
 <h3>Other Functions<a class="headerlink" href="#other-functions" title="Permalink to this headline">¶</a></h3>
 <dl class="function">
-<dt id="c.mpage_readpages">
-int <code class="descname">mpage_readpages</code><span class="sig-paren">(</span>struct <a class="reference internal" href="#c.address_space" title="address_space">address_space</a> *<em>&nbsp;mapping</em>, struct list_head *<em>&nbsp;pages</em>, unsigned<em>&nbsp;nr_pages</em>, get_block_t<em>&nbsp;get_block</em><span class="sig-paren">)</span><a class="headerlink" href="#c.mpage_readpages" title="Permalink to this definition">¶</a></dt>
-<dd><p>populate an address space with some pages &amp; start reads against them</p>
+<dt id="c.mpage_readahead">
+void <code class="descname">mpage_readahead</code><span class="sig-paren">(</span>struct <a class="reference internal" href="../core-api/mm-api.html#c.readahead_control" title="readahead_control">readahead_control</a> *<em>&nbsp;rac</em>, get_block_t<em>&nbsp;get_block</em><span class="sig-paren">)</span><a class="headerlink" href="#c.mpage_readahead" title="Permalink to this definition">¶</a></dt>
+<dd><p>start reads against pages</p>
 </dd></dl>
 
 <p><strong>Parameters</strong></p>
 <dl class="docutils">
-<dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">address_space</span> <span class="pre">*</span> <span class="pre">mapping</span></code></dt>
-<dd>the address_space</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">list_head</span> <span class="pre">*</span> <span class="pre">pages</span></code></dt>
-<dd>The address of a list_head which contains the target pages.  These
-pages have their -&gt;index populated and are otherwise uninitialised.
-The page at <strong>pages-&gt;prev</strong> has the lowest file offset, and reads should be
-issued in <strong>pages-&gt;prev</strong> to <strong>pages-&gt;next</strong> order.</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">unsigned</span> <span class="pre">nr_pages</span></code></dt>
-<dd>The number of pages at <strong>*pages</strong></dd>
+<dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">readahead_control</span> <span class="pre">*</span> <span class="pre">rac</span></code></dt>
+<dd>Describes which pages to read.</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">get_block_t</span> <span class="pre">get_block</span></code></dt>
 <dd>The filesystem’s block mapper function.</dd>
 </dl>
@@ -2224,7 +2256,8 @@ int <code class="descname">generic_permission</code><span class="sig-paren">(</s
 <dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">inode</span> <span class="pre">*</span> <span class="pre">inode</span></code></dt>
 <dd>inode to check access rights for</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">int</span> <span class="pre">mask</span></code></dt>
-<dd>right to check for (<code class="docutils literal notranslate"><span class="pre">MAY_READ</span></code>, <code class="docutils literal notranslate"><span class="pre">MAY_WRITE</span></code>, <code class="docutils literal notranslate"><span class="pre">MAY_EXEC</span></code>, …)</dd>
+<dd>right to check for (<code class="docutils literal notranslate"><span class="pre">MAY_READ</span></code>, <code class="docutils literal notranslate"><span class="pre">MAY_WRITE</span></code>, <code class="docutils literal notranslate"><span class="pre">MAY_EXEC</span></code>,
+<code class="docutils literal notranslate"><span class="pre">MAY_NOT_BLOCK</span></code> …)</dd>
 </dl>
 <p><strong>Description</strong></p>
 <p>Used to check for read/write/execute permissions on a file.
@@ -2556,14 +2589,13 @@ struct buffer_head * <code class="descname">__bread_gfp</code><span class="sig-p
 <dt><code class="docutils literal notranslate"><span class="pre">unsigned</span> <span class="pre">size</span></code></dt>
 <dd>size (in bytes) to read</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">gfp_t</span> <span class="pre">gfp</span></code></dt>
-<dd>page allocation flag</dd>
-</dl>
-<p><strong>Description</strong></p>
-<blockquote>
-<div>Reads a specified block, and returns buffer head that contains it.
+<dd><p class="first">page allocation flag</p>
+<p class="last">Reads a specified block, and returns buffer head that contains it.
 The page cache can be allocated from non-movable area
 not to prevent page migration if you set gfp to zero.
-It returns NULL if the block was unreadable.</div></blockquote>
+It returns NULL if the block was unreadable.</p>
+</dd>
+</dl>
 <dl class="function">
 <dt id="c.block_invalidatepage">
 void <code class="descname">block_invalidatepage</code><span class="sig-paren">(</span>struct page *<em>&nbsp;page</em>, unsigned int<em>&nbsp;offset</em>, unsigned int<em>&nbsp;length</em><span class="sig-paren">)</span><a class="headerlink" href="#c.block_invalidatepage" title="Permalink to this definition">¶</a></dt>
@@ -2776,15 +2808,13 @@ void <code class="descname">__bio_clone_fast</code><span class="sig-paren">(</sp
 <dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">bio</span> <span class="pre">*</span> <span class="pre">bio</span></code></dt>
 <dd>destination bio</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">bio</span> <span class="pre">*</span> <span class="pre">bio_src</span></code></dt>
-<dd>bio to clone</dd>
-</dl>
-<p><strong>Description</strong></p>
-<blockquote>
-<div><p>Clone a <code class="xref c c-type docutils literal notranslate"><span class="pre">bio</span></code>. Caller will own the returned bio, but not
+<dd><p class="first">bio to clone</p>
+<p>Clone a <code class="xref c c-type docutils literal notranslate"><span class="pre">bio</span></code>. Caller will own the returned bio, but not
 the actual data it points to. Reference count of returned
 bio will be one.</p>
-<p>Caller must ensure that <strong>bio_src</strong> is not freed before <strong>bio</strong>.</p>
-</div></blockquote>
+<p class="last">Caller must ensure that <strong>bio_src</strong> is not freed before <strong>bio</strong>.</p>
+</dd>
+</dl>
 <dl class="function">
 <dt id="c.bio_clone_fast">
 struct bio * <code class="descname">bio_clone_fast</code><span class="sig-paren">(</span>struct bio *<em>&nbsp;bio</em>, gfp_t<em>&nbsp;gfp_mask</em>, struct bio_set *<em>&nbsp;bs</em><span class="sig-paren">)</span><a class="headerlink" href="#c.bio_clone_fast" title="Permalink to this definition">¶</a></dt>
@@ -2798,11 +2828,35 @@ struct bio * <code class="descname">bio_clone_fast</code><span class="sig-paren"
 <dt><code class="docutils literal notranslate"><span class="pre">gfp_t</span> <span class="pre">gfp_mask</span></code></dt>
 <dd>allocation priority</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">bio_set</span> <span class="pre">*</span> <span class="pre">bs</span></code></dt>
-<dd>bio_set to allocate from</dd>
+<dd><p class="first">bio_set to allocate from</p>
+<p class="last">Like __bio_clone_fast, only also allocates the returned bio</p>
+</dd>
+</dl>
+<dl class="function">
+<dt id="c.bio_add_pc_page">
+int <code class="descname">bio_add_pc_page</code><span class="sig-paren">(</span>struct request_queue *<em>&nbsp;q</em>, struct bio *<em>&nbsp;bio</em>, struct page *<em>&nbsp;page</em>, unsigned int<em>&nbsp;len</em>, unsigned int<em>&nbsp;offset</em><span class="sig-paren">)</span><a class="headerlink" href="#c.bio_add_pc_page" title="Permalink to this definition">¶</a></dt>
+<dd><p>attempt to add page to passthrough bio</p>
+</dd></dl>
+
+<p><strong>Parameters</strong></p>
+<dl class="docutils">
+<dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">request_queue</span> <span class="pre">*</span> <span class="pre">q</span></code></dt>
+<dd>the target queue</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">bio</span> <span class="pre">*</span> <span class="pre">bio</span></code></dt>
+<dd>destination bio</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">page</span> <span class="pre">*</span> <span class="pre">page</span></code></dt>
+<dd>page to add</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">unsigned</span> <span class="pre">int</span> <span class="pre">len</span></code></dt>
+<dd>vec entry length</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">unsigned</span> <span class="pre">int</span> <span class="pre">offset</span></code></dt>
+<dd>vec entry offset</dd>
 </dl>
 <p><strong>Description</strong></p>
-<blockquote>
-<div>Like __bio_clone_fast, only also allocates the returned bio</div></blockquote>
+<p>Attempt to add a page to the bio_vec maplist. This can fail for a
+number of reasons, such as the bio being full or target block device
+limitations. The target block device must allow bio’s up to PAGE_SIZE,
+so it is always possible to add a single page to an empty bio.</p>
+<p>This should only be used by passthrough bios.</p>
 <dl class="function">
 <dt id="c.__bio_try_merge_page">
 bool <code class="descname">__bio_try_merge_page</code><span class="sig-paren">(</span>struct bio *<em>&nbsp;bio</em>, struct page *<em>&nbsp;page</em>, unsigned int<em>&nbsp;len</em>, unsigned int<em>&nbsp;off</em>, bool *<em>&nbsp;same_page</em><span class="sig-paren">)</span><a class="headerlink" href="#c.__bio_try_merge_page" title="Permalink to this definition">¶</a></dt>
@@ -2863,12 +2917,38 @@ int <code class="descname">bio_add_page</code><span class="sig-paren">(</span>st
 <dt><code class="docutils literal notranslate"><span class="pre">unsigned</span> <span class="pre">int</span> <span class="pre">len</span></code></dt>
 <dd>vec entry length, may cross pages</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">unsigned</span> <span class="pre">int</span> <span class="pre">offset</span></code></dt>
-<dd>vec entry offset relative to <strong>page</strong>, may cross pages</dd>
+<dd><p class="first">vec entry offset relative to <strong>page</strong>, may cross pages</p>
+<p class="last">Attempt to add page(s) to the bio_vec maplist. This will only fail
+if either bio-&gt;bi_vcnt == bio-&gt;bi_max_vecs or it’s a cloned bio.</p>
+</dd>
+</dl>
+<dl class="function">
+<dt id="c.bio_iov_iter_get_pages">
+int <code class="descname">bio_iov_iter_get_pages</code><span class="sig-paren">(</span>struct bio *<em>&nbsp;bio</em>, struct iov_iter *<em>&nbsp;iter</em><span class="sig-paren">)</span><a class="headerlink" href="#c.bio_iov_iter_get_pages" title="Permalink to this definition">¶</a></dt>
+<dd><p>add user or kernel pages to a bio</p>
+</dd></dl>
+
+<p><strong>Parameters</strong></p>
+<dl class="docutils">
+<dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">bio</span> <span class="pre">*</span> <span class="pre">bio</span></code></dt>
+<dd>bio to add pages to</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">iov_iter</span> <span class="pre">*</span> <span class="pre">iter</span></code></dt>
+<dd>iov iterator describing the region to be added</dd>
 </dl>
 <p><strong>Description</strong></p>
-<blockquote>
-<div>Attempt to add page(s) to the bio_vec maplist. This will only fail
-if either bio-&gt;bi_vcnt == bio-&gt;bi_max_vecs or it’s a cloned bio.</div></blockquote>
+<p>This takes either an iterator pointing to user memory, or one pointing to
+kernel pages (BVEC iterator). If we’re adding user pages, we pin them and
+map them into the kernel. On IO completion, the caller should put those
+pages. If we’re adding kernel pages, and the caller told us it’s safe to
+do so, we just have to add the pages to the bio directly. We don’t grab an
+extra reference to those pages (the user should already have that), and we
+don’t put the page on IO completion. The caller needs to check if the bio is
+flagged BIO_NO_PAGE_REF on IO completion. If it isn’t, then pages should be
+released.</p>
+<p>The function tries, but does not guarantee, to pin as many pages as
+fit into the bio, or are requested in <a href="#id1"><span class="problematic" id="id2">*</span></a>iter, whatever is smaller. If
+MM encounters an error pinning the requested pages, it stops. Error
+is returned only if 0 pages could be pinned.</p>
 <dl class="function">
 <dt id="c.submit_bio_wait">
 int <code class="descname">submit_bio_wait</code><span class="sig-paren">(</span>struct bio *<em>&nbsp;bio</em><span class="sig-paren">)</span><a class="headerlink" href="#c.submit_bio_wait" title="Permalink to this definition">¶</a></dt>
@@ -3096,18 +3176,17 @@ int <code class="descname">seq_open</code><span class="sig-paren">(</span>struct
 <dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">file</span> <span class="pre">*</span> <span class="pre">file</span></code></dt>
 <dd>file we initialize</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">const</span> <span class="pre">struct</span> <span class="pre">seq_operations</span> <span class="pre">*</span> <span class="pre">op</span></code></dt>
-<dd>method table describing the sequence</dd>
-</dl>
-<p><strong>Description</strong></p>
-<blockquote>
-<div><a class="reference internal" href="#c.seq_open" title="seq_open"><code class="xref c c-func docutils literal notranslate"><span class="pre">seq_open()</span></code></a> sets <strong>file</strong>, associating it with a sequence described
-by <strong>op</strong>.  <a href="#id7"><span class="problematic" id="id8">**</span></a>op-&gt;start**() sets the iterator up and returns the first
-element of sequence. <a href="#id9"><span class="problematic" id="id10">**</span></a>op-&gt;stop**() shuts it down.  <a href="#id11"><span class="problematic" id="id12">**</span></a>op-&gt;next**()
-returns the next element of sequence.  <a href="#id13"><span class="problematic" id="id14">**</span></a>op-&gt;show**() prints element
+<dd><p class="first">method table describing the sequence</p>
+<p class="last"><a class="reference internal" href="#c.seq_open" title="seq_open"><code class="xref c c-func docutils literal notranslate"><span class="pre">seq_open()</span></code></a> sets <strong>file</strong>, associating it with a sequence described
+by <strong>op</strong>.  <strong>op-&gt;start()</strong> sets the iterator up and returns the first
+element of sequence. <strong>op-&gt;stop()</strong> shuts it down.  <strong>op-&gt;next()</strong>
+returns the next element of sequence.  <strong>op-&gt;show()</strong> prints element
 into the buffer.  In case of error -&gt;start() and -&gt;next() return
 ERR_PTR(error).  In the end of sequence they return <code class="docutils literal notranslate"><span class="pre">NULL</span></code>. -&gt;show()
 returns 0 in case of success and negative number in case of error.
-Returning SEQ_SKIP means “discard this element and move on”.</div></blockquote>
+Returning SEQ_SKIP means “discard this element and move on”.</p>
+</dd>
+</dl>
 <p><strong>Note</strong></p>
 <dl class="docutils">
 <dt>seq_open() will allocate a struct seq_file and store its</dt>
@@ -3128,11 +3207,10 @@ ssize_t <code class="descname">seq_read</code><span class="sig-paren">(</span>st
 <dt><code class="docutils literal notranslate"><span class="pre">size_t</span> <span class="pre">size</span></code></dt>
 <dd>the maximum number of bytes to read</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">loff_t</span> <span class="pre">*</span> <span class="pre">ppos</span></code></dt>
-<dd>the current position in the file</dd>
+<dd><p class="first">the current position in the file</p>
+<p class="last">Ready-made -&gt;f_op-&gt;read()</p>
+</dd>
 </dl>
-<p><strong>Description</strong></p>
-<blockquote>
-<div>Ready-made -&gt;f_op-&gt;read()</div></blockquote>
 <dl class="function">
 <dt id="c.seq_lseek">
 loff_t <code class="descname">seq_lseek</code><span class="sig-paren">(</span>struct file *<em>&nbsp;file</em>, loff_t<em>&nbsp;offset</em>, int<em>&nbsp;whence</em><span class="sig-paren">)</span><a class="headerlink" href="#c.seq_lseek" title="Permalink to this definition">¶</a></dt>
@@ -3146,11 +3224,10 @@ loff_t <code class="descname">seq_lseek</code><span class="sig-paren">(</span>st
 <dt><code class="docutils literal notranslate"><span class="pre">loff_t</span> <span class="pre">offset</span></code></dt>
 <dd>new position</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">int</span> <span class="pre">whence</span></code></dt>
-<dd>0 for absolute, 1 for relative position</dd>
+<dd><p class="first">0 for absolute, 1 for relative position</p>
+<p class="last">Ready-made -&gt;f_op-&gt;llseek()</p>
+</dd>
 </dl>
-<p><strong>Description</strong></p>
-<blockquote>
-<div>Ready-made -&gt;f_op-&gt;llseek()</div></blockquote>
 <dl class="function">
 <dt id="c.seq_release">
 int <code class="descname">seq_release</code><span class="sig-paren">(</span>struct inode *<em>&nbsp;inode</em>, struct file *<em>&nbsp;file</em><span class="sig-paren">)</span><a class="headerlink" href="#c.seq_release" title="Permalink to this definition">¶</a></dt>
@@ -3160,14 +3237,13 @@ int <code class="descname">seq_release</code><span class="sig-paren">(</span>str
 <p><strong>Parameters</strong></p>
 <dl class="docutils">
 <dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">inode</span> <span class="pre">*</span> <span class="pre">inode</span></code></dt>
-<dd>its inode</dd>
+<dd><p class="first">its inode</p>
+<p class="last">Frees the structures associated with sequential file; can be used
+as -&gt;f_op-&gt;release() if you don’t have private data to destroy.</p>
+</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">file</span> <span class="pre">*</span> <span class="pre">file</span></code></dt>
 <dd>file in question</dd>
 </dl>
-<p><strong>Description</strong></p>
-<blockquote>
-<div>Frees the structures associated with sequential file; can be used
-as -&gt;f_op-&gt;release() if you don’t have private data to destroy.</div></blockquote>
 <dl class="function">
 <dt id="c.seq_escape">
 void <code class="descname">seq_escape</code><span class="sig-paren">(</span>struct seq_file *<em>&nbsp;m</em>, const char *<em>&nbsp;s</em>, const char *<em>&nbsp;esc</em><span class="sig-paren">)</span><a class="headerlink" href="#c.seq_escape" title="Permalink to this definition">¶</a></dt>
@@ -3181,13 +3257,12 @@ void <code class="descname">seq_escape</code><span class="sig-paren">(</span>str
 <dt><code class="docutils literal notranslate"><span class="pre">const</span> <span class="pre">char</span> <span class="pre">*</span> <span class="pre">s</span></code></dt>
 <dd>string</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">const</span> <span class="pre">char</span> <span class="pre">*</span> <span class="pre">esc</span></code></dt>
-<dd>set of characters that need escaping</dd>
-</dl>
-<p><strong>Description</strong></p>
-<blockquote>
-<div>Puts string into buffer, replacing each occurrence of character from
+<dd><p class="first">set of characters that need escaping</p>
+<p class="last">Puts string into buffer, replacing each occurrence of character from
 <strong>esc</strong> with usual octal escape.
-Use seq_has_overflowed() to check for errors.</div></blockquote>
+Use seq_has_overflowed() to check for errors.</p>
+</dd>
+</dl>
 <dl class="function">
 <dt id="c.mangle_path">
 char * <code class="descname">mangle_path</code><span class="sig-paren">(</span>char *<em>&nbsp;s</em>, const char *<em>&nbsp;p</em>, const char *<em>&nbsp;esc</em><span class="sig-paren">)</span><a class="headerlink" href="#c.mangle_path" title="Permalink to this definition">¶</a></dt>
@@ -3201,14 +3276,13 @@ char * <code class="descname">mangle_path</code><span class="sig-paren">(</span>
 <dt><code class="docutils literal notranslate"><span class="pre">const</span> <span class="pre">char</span> <span class="pre">*</span> <span class="pre">p</span></code></dt>
 <dd>beginning of path in above buffer</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">const</span> <span class="pre">char</span> <span class="pre">*</span> <span class="pre">esc</span></code></dt>
-<dd>set of characters that need escaping</dd>
-</dl>
-<p><strong>Description</strong></p>
-<blockquote>
-<div>Copy the path from <strong>p</strong> to <strong>s</strong>, replacing each occurrence of character from
+<dd><p class="first">set of characters that need escaping</p>
+<p class="last">Copy the path from <strong>p</strong> to <strong>s</strong>, replacing each occurrence of character from
 <strong>esc</strong> with usual octal escape.
 Returns pointer past last written character in <strong>s</strong>, or NULL in case of
-failure.</div></blockquote>
+failure.</p>
+</dd>
+</dl>
 <dl class="function">
 <dt id="c.seq_path">
 int <code class="descname">seq_path</code><span class="sig-paren">(</span>struct seq_file *<em>&nbsp;m</em>, const struct path *<em>&nbsp;path</em>, const char *<em>&nbsp;esc</em><span class="sig-paren">)</span><a class="headerlink" href="#c.seq_path" title="Permalink to this definition">¶</a></dt>
@@ -3424,17 +3498,15 @@ int <code class="descname">register_filesystem</code><span class="sig-paren">(</
 <p><strong>Parameters</strong></p>
 <dl class="docutils">
 <dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">file_system_type</span> <span class="pre">*</span> <span class="pre">fs</span></code></dt>
-<dd>the file system structure</dd>
-</dl>
-<p><strong>Description</strong></p>
-<blockquote>
-<div><p>Adds the file system passed to the list of file systems the kernel
+<dd><p class="first">the file system structure</p>
+<p>Adds the file system passed to the list of file systems the kernel
 is aware of for mount and other syscalls. Returns 0 on success,
 or a negative errno code on an error.</p>
-<p>The <code class="xref c c-type docutils literal notranslate"><span class="pre">struct</span> <span class="pre">file_system_type</span></code> that is passed is linked into the kernel
+<p class="last">The <code class="xref c c-type docutils literal notranslate"><span class="pre">struct</span> <span class="pre">file_system_type</span></code> that is passed is linked into the kernel
 structures and must not be freed until the file system has been
 unregistered.</p>
-</div></blockquote>
+</dd>
+</dl>
 <dl class="function">
 <dt id="c.unregister_filesystem">
 int <code class="descname">unregister_filesystem</code><span class="sig-paren">(</span>struct file_system_type *<em>&nbsp;fs</em><span class="sig-paren">)</span><a class="headerlink" href="#c.unregister_filesystem" title="Permalink to this definition">¶</a></dt>
@@ -3444,16 +3516,14 @@ int <code class="descname">unregister_filesystem</code><span class="sig-paren">(
 <p><strong>Parameters</strong></p>
 <dl class="docutils">
 <dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">file_system_type</span> <span class="pre">*</span> <span class="pre">fs</span></code></dt>
-<dd>filesystem to unregister</dd>
-</dl>
-<p><strong>Description</strong></p>
-<blockquote>
-<div><p>Remove a file system that was previously successfully registered
+<dd><p class="first">filesystem to unregister</p>
+<p>Remove a file system that was previously successfully registered
 with the kernel. An error is returned if the file system is not found.
 Zero is returned on a success.</p>
-<p>Once this function has returned the <code class="xref c c-type docutils literal notranslate"><span class="pre">struct</span> <span class="pre">file_system_type</span></code> structure
+<p class="last">Once this function has returned the <code class="xref c c-type docutils literal notranslate"><span class="pre">struct</span> <span class="pre">file_system_type</span></code> structure
 may be freed or reused.</p>
-</div></blockquote>
+</dd>
+</dl>
 <dl class="function">
 <dt id="c.wbc_attach_and_unlock_inode">
 void <code class="descname">wbc_attach_and_unlock_inode</code><span class="sig-paren">(</span>struct writeback_control *<em>&nbsp;wbc</em>, struct inode *<em>&nbsp;inode</em><span class="sig-paren">)</span><a class="headerlink" href="#c.wbc_attach_and_unlock_inode" title="Permalink to this definition">¶</a></dt>
@@ -3737,58 +3807,6 @@ int <code class="descname">thaw_bdev</code><span class="sig-paren">(</span>struc
 </dl>
 <p><strong>Description</strong></p>
 <p>Unlocks the filesystem and marks it writeable again after <a class="reference internal" href="#c.freeze_bdev" title="freeze_bdev"><code class="xref c c-func docutils literal notranslate"><span class="pre">freeze_bdev()</span></code></a>.</p>
-<dl class="function">
-<dt id="c.bdev_read_page">
-int <code class="descname">bdev_read_page</code><span class="sig-paren">(</span>struct block_device *<em>&nbsp;bdev</em>, sector_t<em>&nbsp;sector</em>, struct page *<em>&nbsp;page</em><span class="sig-paren">)</span><a class="headerlink" href="#c.bdev_read_page" title="Permalink to this definition">¶</a></dt>
-<dd><p>Start reading a page from a block device</p>
-</dd></dl>
-
-<p><strong>Parameters</strong></p>
-<dl class="docutils">
-<dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">block_device</span> <span class="pre">*</span> <span class="pre">bdev</span></code></dt>
-<dd>The device to read the page from</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">sector_t</span> <span class="pre">sector</span></code></dt>
-<dd>The offset on the device to read the page to (need not be aligned)</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">page</span> <span class="pre">*</span> <span class="pre">page</span></code></dt>
-<dd>The page to read</dd>
-</dl>
-<p><strong>Description</strong></p>
-<p>On entry, the page should be locked.  It will be unlocked when the page
-has been read.  If the block driver implements rw_page synchronously,
-that will be true on exit from this function, but it need not be.</p>
-<p>Errors returned by this function are usually “soft”, eg out of memory, or
-queue full; callers should try a different route to read this page rather
-than propagate an error back up the stack.</p>
-<p><strong>Return</strong></p>
-<p>negative errno if an error occurs, 0 if submission was successful.</p>
-<dl class="function">
-<dt id="c.bdev_write_page">
-int <code class="descname">bdev_write_page</code><span class="sig-paren">(</span>struct block_device *<em>&nbsp;bdev</em>, sector_t<em>&nbsp;sector</em>, struct page *<em>&nbsp;page</em>, struct writeback_control *<em>&nbsp;wbc</em><span class="sig-paren">)</span><a class="headerlink" href="#c.bdev_write_page" title="Permalink to this definition">¶</a></dt>
-<dd><p>Start writing a page to a block device</p>
-</dd></dl>
-
-<p><strong>Parameters</strong></p>
-<dl class="docutils">
-<dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">block_device</span> <span class="pre">*</span> <span class="pre">bdev</span></code></dt>
-<dd>The device to write the page to</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">sector_t</span> <span class="pre">sector</span></code></dt>
-<dd>The offset on the device to write the page to (need not be aligned)</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">page</span> <span class="pre">*</span> <span class="pre">page</span></code></dt>
-<dd>The page to write</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">writeback_control</span> <span class="pre">*</span> <span class="pre">wbc</span></code></dt>
-<dd>The writeback_control for the write</dd>
-</dl>
-<p><strong>Description</strong></p>
-<p>On entry, the page should be locked and not currently under writeback.
-On exit, if the write started successfully, the page will be unlocked and
-under writeback.  If the write failed already (eg the driver failed to
-queue the page to the device), the page will still be locked.  If the
-caller is a -&gt;writepage implementation, it will need to unlock the page.</p>
-<p>Errors returned by this function are usually “soft”, eg out of memory, or
-queue full; callers should try a different route to write this page rather
-than propagate an error back up the stack.</p>
-<p><strong>Return</strong></p>
-<p>negative errno if an error occurs, 0 if submission was successful.</p>
 <dl class="function">
 <dt id="c.bdgrab">
 struct block_device * <code class="descname">bdgrab</code><span class="sig-paren">(</span>struct block_device *<em>&nbsp;bdev</em><span class="sig-paren">)</span><a class="headerlink" href="#c.bdgrab" title="Permalink to this definition">¶</a></dt>
@@ -4328,13 +4346,13 @@ int <code class="descname">simple_write_end</code><span class="sig-paren">(</spa
 done. It has the same API signature as the .write_end of
 address_space_operations vector. So it can just be set onto .write_end for
 FSes that don’t need any other processing. i_mutex is assumed to be held.
-Block based filesystems should use generic_write_end().</p>
+Block based filesystems should use generic_write_end().
+Use <em>ONLY</em> with simple_readpage()</p>
 <p><strong>NOTE</strong></p>
 <p>Even though i_size might get updated by this function, mark_inode_dirty
 is not called, so a filesystem that actually does store data in .write_inode
 should extend on what’s done here with a call to mark_inode_dirty() in the
 case that i_size has changed.</p>
-<p>Use <em>ONLY</em> with simple_readpage()</p>
 <dl class="function">
 <dt id="c.simple_read_from_buffer">
 ssize_t <code class="descname">simple_read_from_buffer</code><span class="sig-paren">(</span>void __user *<em>&nbsp;to</em>, size_t<em>&nbsp;count</em>, loff_t *<em>&nbsp;ppos</em>, const void *<em>&nbsp;from</em>, size_t<em>&nbsp;available</em><span class="sig-paren">)</span><a class="headerlink" href="#c.simple_read_from_buffer" title="Permalink to this definition">¶</a></dt>
@@ -4726,7 +4744,7 @@ semantics.</p>
 <h3>sysctl interface<a class="headerlink" href="#sysctl-interface" title="Permalink to this headline">¶</a></h3>
 <dl class="function">
 <dt id="c.proc_dostring">
-int <code class="descname">proc_dostring</code><span class="sig-paren">(</span>struct ctl_table *<em>&nbsp;table</em>, int<em>&nbsp;write</em>, void __user *<em>&nbsp;buffer</em>, size_t *<em>&nbsp;lenp</em>, loff_t *<em>&nbsp;ppos</em><span class="sig-paren">)</span><a class="headerlink" href="#c.proc_dostring" title="Permalink to this definition">¶</a></dt>
+int <code class="descname">proc_dostring</code><span class="sig-paren">(</span>struct ctl_table *<em>&nbsp;table</em>, int<em>&nbsp;write</em>, void *<em>&nbsp;buffer</em>, size_t *<em>&nbsp;lenp</em>, loff_t *<em>&nbsp;ppos</em><span class="sig-paren">)</span><a class="headerlink" href="#c.proc_dostring" title="Permalink to this definition">¶</a></dt>
 <dd><p>read a string sysctl</p>
 </dd></dl>
 
@@ -4736,7 +4754,7 @@ int <code class="descname">proc_dostring</code><span class="sig-paren">(</span>s
 <dd>the sysctl table</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">int</span> <span class="pre">write</span></code></dt>
 <dd><code class="docutils literal notranslate"><span class="pre">TRUE</span></code> if this is a write to the sysctl file</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">void</span> <span class="pre">__user</span> <span class="pre">*</span> <span class="pre">buffer</span></code></dt>
+<dt><code class="docutils literal notranslate"><span class="pre">void</span> <span class="pre">*</span> <span class="pre">buffer</span></code></dt>
 <dd>the user buffer</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">size_t</span> <span class="pre">*</span> <span class="pre">lenp</span></code></dt>
 <dd>the size of the user buffer</dd>
@@ -4753,7 +4771,7 @@ not large enough.</p>
 <p>Returns 0 on success.</p>
 <dl class="function">
 <dt id="c.proc_dointvec">
-int <code class="descname">proc_dointvec</code><span class="sig-paren">(</span>struct ctl_table *<em>&nbsp;table</em>, int<em>&nbsp;write</em>, void __user *<em>&nbsp;buffer</em>, size_t *<em>&nbsp;lenp</em>, loff_t *<em>&nbsp;ppos</em><span class="sig-paren">)</span><a class="headerlink" href="#c.proc_dointvec" title="Permalink to this definition">¶</a></dt>
+int <code class="descname">proc_dointvec</code><span class="sig-paren">(</span>struct ctl_table *<em>&nbsp;table</em>, int<em>&nbsp;write</em>, void *<em>&nbsp;buffer</em>, size_t *<em>&nbsp;lenp</em>, loff_t *<em>&nbsp;ppos</em><span class="sig-paren">)</span><a class="headerlink" href="#c.proc_dointvec" title="Permalink to this definition">¶</a></dt>
 <dd><p>read a vector of integers</p>
 </dd></dl>
 
@@ -4763,7 +4781,7 @@ int <code class="descname">proc_dointvec</code><span class="sig-paren">(</span>s
 <dd>the sysctl table</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">int</span> <span class="pre">write</span></code></dt>
 <dd><code class="docutils literal notranslate"><span class="pre">TRUE</span></code> if this is a write to the sysctl file</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">void</span> <span class="pre">__user</span> <span class="pre">*</span> <span class="pre">buffer</span></code></dt>
+<dt><code class="docutils literal notranslate"><span class="pre">void</span> <span class="pre">*</span> <span class="pre">buffer</span></code></dt>
 <dd>the user buffer</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">size_t</span> <span class="pre">*</span> <span class="pre">lenp</span></code></dt>
 <dd>the size of the user buffer</dd>
@@ -4776,7 +4794,7 @@ values from/to the user buffer, treated as an ASCII string.</p>
 <p>Returns 0 on success.</p>
 <dl class="function">
 <dt id="c.proc_douintvec">
-int <code class="descname">proc_douintvec</code><span class="sig-paren">(</span>struct ctl_table *<em>&nbsp;table</em>, int<em>&nbsp;write</em>, void __user *<em>&nbsp;buffer</em>, size_t *<em>&nbsp;lenp</em>, loff_t *<em>&nbsp;ppos</em><span class="sig-paren">)</span><a class="headerlink" href="#c.proc_douintvec" title="Permalink to this definition">¶</a></dt>
+int <code class="descname">proc_douintvec</code><span class="sig-paren">(</span>struct ctl_table *<em>&nbsp;table</em>, int<em>&nbsp;write</em>, void *<em>&nbsp;buffer</em>, size_t *<em>&nbsp;lenp</em>, loff_t *<em>&nbsp;ppos</em><span class="sig-paren">)</span><a class="headerlink" href="#c.proc_douintvec" title="Permalink to this definition">¶</a></dt>
 <dd><p>read a vector of unsigned integers</p>
 </dd></dl>
 
@@ -4786,7 +4804,7 @@ int <code class="descname">proc_douintvec</code><span class="sig-paren">(</span>
 <dd>the sysctl table</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">int</span> <span class="pre">write</span></code></dt>
 <dd><code class="docutils literal notranslate"><span class="pre">TRUE</span></code> if this is a write to the sysctl file</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">void</span> <span class="pre">__user</span> <span class="pre">*</span> <span class="pre">buffer</span></code></dt>
+<dt><code class="docutils literal notranslate"><span class="pre">void</span> <span class="pre">*</span> <span class="pre">buffer</span></code></dt>
 <dd>the user buffer</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">size_t</span> <span class="pre">*</span> <span class="pre">lenp</span></code></dt>
 <dd>the size of the user buffer</dd>
@@ -4799,7 +4817,7 @@ values from/to the user buffer, treated as an ASCII string.</p>
 <p>Returns 0 on success.</p>
 <dl class="function">
 <dt id="c.proc_dointvec_minmax">
-int <code class="descname">proc_dointvec_minmax</code><span class="sig-paren">(</span>struct ctl_table *<em>&nbsp;table</em>, int<em>&nbsp;write</em>, void __user *<em>&nbsp;buffer</em>, size_t *<em>&nbsp;lenp</em>, loff_t *<em>&nbsp;ppos</em><span class="sig-paren">)</span><a class="headerlink" href="#c.proc_dointvec_minmax" title="Permalink to this definition">¶</a></dt>
+int <code class="descname">proc_dointvec_minmax</code><span class="sig-paren">(</span>struct ctl_table *<em>&nbsp;table</em>, int<em>&nbsp;write</em>, void *<em>&nbsp;buffer</em>, size_t *<em>&nbsp;lenp</em>, loff_t *<em>&nbsp;ppos</em><span class="sig-paren">)</span><a class="headerlink" href="#c.proc_dointvec_minmax" title="Permalink to this definition">¶</a></dt>
 <dd><p>read a vector of integers with min/max values</p>
 </dd></dl>
 
@@ -4809,7 +4827,7 @@ int <code class="descname">proc_dointvec_minmax</code><span class="sig-paren">(<
 <dd>the sysctl table</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">int</span> <span class="pre">write</span></code></dt>
 <dd><code class="docutils literal notranslate"><span class="pre">TRUE</span></code> if this is a write to the sysctl file</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">void</span> <span class="pre">__user</span> <span class="pre">*</span> <span class="pre">buffer</span></code></dt>
+<dt><code class="docutils literal notranslate"><span class="pre">void</span> <span class="pre">*</span> <span class="pre">buffer</span></code></dt>
 <dd>the user buffer</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">size_t</span> <span class="pre">*</span> <span class="pre">lenp</span></code></dt>
 <dd>the size of the user buffer</dd>
@@ -4824,7 +4842,7 @@ table-&gt;extra1 (min) and table-&gt;extra2 (max).</p>
 <p>Returns 0 on success or -EINVAL on write when the range check fails.</p>
 <dl class="function">
 <dt id="c.proc_douintvec_minmax">
-int <code class="descname">proc_douintvec_minmax</code><span class="sig-paren">(</span>struct ctl_table *<em>&nbsp;table</em>, int<em>&nbsp;write</em>, void __user *<em>&nbsp;buffer</em>, size_t *<em>&nbsp;lenp</em>, loff_t *<em>&nbsp;ppos</em><span class="sig-paren">)</span><a class="headerlink" href="#c.proc_douintvec_minmax" title="Permalink to this definition">¶</a></dt>
+int <code class="descname">proc_douintvec_minmax</code><span class="sig-paren">(</span>struct ctl_table *<em>&nbsp;table</em>, int<em>&nbsp;write</em>, void *<em>&nbsp;buffer</em>, size_t *<em>&nbsp;lenp</em>, loff_t *<em>&nbsp;ppos</em><span class="sig-paren">)</span><a class="headerlink" href="#c.proc_douintvec_minmax" title="Permalink to this definition">¶</a></dt>
 <dd><p>read a vector of unsigned ints with min/max values</p>
 </dd></dl>
 
@@ -4834,7 +4852,7 @@ int <code class="descname">proc_douintvec_minmax</code><span class="sig-paren">(
 <dd>the sysctl table</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">int</span> <span class="pre">write</span></code></dt>
 <dd><code class="docutils literal notranslate"><span class="pre">TRUE</span></code> if this is a write to the sysctl file</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">void</span> <span class="pre">__user</span> <span class="pre">*</span> <span class="pre">buffer</span></code></dt>
+<dt><code class="docutils literal notranslate"><span class="pre">void</span> <span class="pre">*</span> <span class="pre">buffer</span></code></dt>
 <dd>the user buffer</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">size_t</span> <span class="pre">*</span> <span class="pre">lenp</span></code></dt>
 <dd>the size of the user buffer</dd>
@@ -4852,7 +4870,7 @@ userspace.</p>
 <p>Returns 0 on success or -ERANGE on write when the range check fails.</p>
 <dl class="function">
 <dt id="c.proc_doulongvec_minmax">
-int <code class="descname">proc_doulongvec_minmax</code><span class="sig-paren">(</span>struct ctl_table *<em>&nbsp;table</em>, int<em>&nbsp;write</em>, void __user *<em>&nbsp;buffer</em>, size_t *<em>&nbsp;lenp</em>, loff_t *<em>&nbsp;ppos</em><span class="sig-paren">)</span><a class="headerlink" href="#c.proc_doulongvec_minmax" title="Permalink to this definition">¶</a></dt>
+int <code class="descname">proc_doulongvec_minmax</code><span class="sig-paren">(</span>struct ctl_table *<em>&nbsp;table</em>, int<em>&nbsp;write</em>, void *<em>&nbsp;buffer</em>, size_t *<em>&nbsp;lenp</em>, loff_t *<em>&nbsp;ppos</em><span class="sig-paren">)</span><a class="headerlink" href="#c.proc_doulongvec_minmax" title="Permalink to this definition">¶</a></dt>
 <dd><p>read a vector of long integers with min/max values</p>
 </dd></dl>
 
@@ -4862,7 +4880,7 @@ int <code class="descname">proc_doulongvec_minmax</code><span class="sig-paren">
 <dd>the sysctl table</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">int</span> <span class="pre">write</span></code></dt>
 <dd><code class="docutils literal notranslate"><span class="pre">TRUE</span></code> if this is a write to the sysctl file</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">void</span> <span class="pre">__user</span> <span class="pre">*</span> <span class="pre">buffer</span></code></dt>
+<dt><code class="docutils literal notranslate"><span class="pre">void</span> <span class="pre">*</span> <span class="pre">buffer</span></code></dt>
 <dd>the user buffer</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">size_t</span> <span class="pre">*</span> <span class="pre">lenp</span></code></dt>
 <dd>the size of the user buffer</dd>
@@ -4877,7 +4895,7 @@ table-&gt;extra1 (min) and table-&gt;extra2 (max).</p>
 <p>Returns 0 on success.</p>
 <dl class="function">
 <dt id="c.proc_doulongvec_ms_jiffies_minmax">
-int <code class="descname">proc_doulongvec_ms_jiffies_minmax</code><span class="sig-paren">(</span>struct ctl_table *<em>&nbsp;table</em>, int<em>&nbsp;write</em>, void __user *<em>&nbsp;buffer</em>, size_t *<em>&nbsp;lenp</em>, loff_t *<em>&nbsp;ppos</em><span class="sig-paren">)</span><a class="headerlink" href="#c.proc_doulongvec_ms_jiffies_minmax" title="Permalink to this definition">¶</a></dt>
+int <code class="descname">proc_doulongvec_ms_jiffies_minmax</code><span class="sig-paren">(</span>struct ctl_table *<em>&nbsp;table</em>, int<em>&nbsp;write</em>, void *<em>&nbsp;buffer</em>, size_t *<em>&nbsp;lenp</em>, loff_t *<em>&nbsp;ppos</em><span class="sig-paren">)</span><a class="headerlink" href="#c.proc_doulongvec_ms_jiffies_minmax" title="Permalink to this definition">¶</a></dt>
 <dd><p>read a vector of millisecond values with min/max values</p>
 </dd></dl>
 
@@ -4887,7 +4905,7 @@ int <code class="descname">proc_doulongvec_ms_jiffies_minmax</code><span class="
 <dd>the sysctl table</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">int</span> <span class="pre">write</span></code></dt>
 <dd><code class="docutils literal notranslate"><span class="pre">TRUE</span></code> if this is a write to the sysctl file</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">void</span> <span class="pre">__user</span> <span class="pre">*</span> <span class="pre">buffer</span></code></dt>
+<dt><code class="docutils literal notranslate"><span class="pre">void</span> <span class="pre">*</span> <span class="pre">buffer</span></code></dt>
 <dd>the user buffer</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">size_t</span> <span class="pre">*</span> <span class="pre">lenp</span></code></dt>
 <dd>the size of the user buffer</dd>
@@ -4903,7 +4921,7 @@ table-&gt;extra1 (min) and table-&gt;extra2 (max).</p>
 <p>Returns 0 on success.</p>
 <dl class="function">
 <dt id="c.proc_dointvec_jiffies">
-int <code class="descname">proc_dointvec_jiffies</code><span class="sig-paren">(</span>struct ctl_table *<em>&nbsp;table</em>, int<em>&nbsp;write</em>, void __user *<em>&nbsp;buffer</em>, size_t *<em>&nbsp;lenp</em>, loff_t *<em>&nbsp;ppos</em><span class="sig-paren">)</span><a class="headerlink" href="#c.proc_dointvec_jiffies" title="Permalink to this definition">¶</a></dt>
+int <code class="descname">proc_dointvec_jiffies</code><span class="sig-paren">(</span>struct ctl_table *<em>&nbsp;table</em>, int<em>&nbsp;write</em>, void *<em>&nbsp;buffer</em>, size_t *<em>&nbsp;lenp</em>, loff_t *<em>&nbsp;ppos</em><span class="sig-paren">)</span><a class="headerlink" href="#c.proc_dointvec_jiffies" title="Permalink to this definition">¶</a></dt>
 <dd><p>read a vector of integers as seconds</p>
 </dd></dl>
 
@@ -4913,7 +4931,7 @@ int <code class="descname">proc_dointvec_jiffies</code><span class="sig-paren">(
 <dd>the sysctl table</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">int</span> <span class="pre">write</span></code></dt>
 <dd><code class="docutils literal notranslate"><span class="pre">TRUE</span></code> if this is a write to the sysctl file</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">void</span> <span class="pre">__user</span> <span class="pre">*</span> <span class="pre">buffer</span></code></dt>
+<dt><code class="docutils literal notranslate"><span class="pre">void</span> <span class="pre">*</span> <span class="pre">buffer</span></code></dt>
 <dd>the user buffer</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">size_t</span> <span class="pre">*</span> <span class="pre">lenp</span></code></dt>
 <dd>the size of the user buffer</dd>
@@ -4928,7 +4946,7 @@ jiffies.</p>
 <p>Returns 0 on success.</p>
 <dl class="function">
 <dt id="c.proc_dointvec_userhz_jiffies">
-int <code class="descname">proc_dointvec_userhz_jiffies</code><span class="sig-paren">(</span>struct ctl_table *<em>&nbsp;table</em>, int<em>&nbsp;write</em>, void __user *<em>&nbsp;buffer</em>, size_t *<em>&nbsp;lenp</em>, loff_t *<em>&nbsp;ppos</em><span class="sig-paren">)</span><a class="headerlink" href="#c.proc_dointvec_userhz_jiffies" title="Permalink to this definition">¶</a></dt>
+int <code class="descname">proc_dointvec_userhz_jiffies</code><span class="sig-paren">(</span>struct ctl_table *<em>&nbsp;table</em>, int<em>&nbsp;write</em>, void *<em>&nbsp;buffer</em>, size_t *<em>&nbsp;lenp</em>, loff_t *<em>&nbsp;ppos</em><span class="sig-paren">)</span><a class="headerlink" href="#c.proc_dointvec_userhz_jiffies" title="Permalink to this definition">¶</a></dt>
 <dd><p>read a vector of integers as 1/USER_HZ seconds</p>
 </dd></dl>
 
@@ -4938,7 +4956,7 @@ int <code class="descname">proc_dointvec_userhz_jiffies</code><span class="sig-p
 <dd>the sysctl table</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">int</span> <span class="pre">write</span></code></dt>
 <dd><code class="docutils literal notranslate"><span class="pre">TRUE</span></code> if this is a write to the sysctl file</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">void</span> <span class="pre">__user</span> <span class="pre">*</span> <span class="pre">buffer</span></code></dt>
+<dt><code class="docutils literal notranslate"><span class="pre">void</span> <span class="pre">*</span> <span class="pre">buffer</span></code></dt>
 <dd>the user buffer</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">size_t</span> <span class="pre">*</span> <span class="pre">lenp</span></code></dt>
 <dd>the size of the user buffer</dd>
@@ -4953,7 +4971,7 @@ are converted into jiffies.</p>
 <p>Returns 0 on success.</p>
 <dl class="function">
 <dt id="c.proc_dointvec_ms_jiffies">
-int <code class="descname">proc_dointvec_ms_jiffies</code><span class="sig-paren">(</span>struct ctl_table *<em>&nbsp;table</em>, int<em>&nbsp;write</em>, void __user *<em>&nbsp;buffer</em>, size_t *<em>&nbsp;lenp</em>, loff_t *<em>&nbsp;ppos</em><span class="sig-paren">)</span><a class="headerlink" href="#c.proc_dointvec_ms_jiffies" title="Permalink to this definition">¶</a></dt>
+int <code class="descname">proc_dointvec_ms_jiffies</code><span class="sig-paren">(</span>struct ctl_table *<em>&nbsp;table</em>, int<em>&nbsp;write</em>, void *<em>&nbsp;buffer</em>, size_t *<em>&nbsp;lenp</em>, loff_t *<em>&nbsp;ppos</em><span class="sig-paren">)</span><a class="headerlink" href="#c.proc_dointvec_ms_jiffies" title="Permalink to this definition">¶</a></dt>
 <dd><p>read a vector of integers as 1 milliseconds</p>
 </dd></dl>
 
@@ -4963,7 +4981,7 @@ int <code class="descname">proc_dointvec_ms_jiffies</code><span class="sig-paren
 <dd>the sysctl table</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">int</span> <span class="pre">write</span></code></dt>
 <dd><code class="docutils literal notranslate"><span class="pre">TRUE</span></code> if this is a write to the sysctl file</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">void</span> <span class="pre">__user</span> <span class="pre">*</span> <span class="pre">buffer</span></code></dt>
+<dt><code class="docutils literal notranslate"><span class="pre">void</span> <span class="pre">*</span> <span class="pre">buffer</span></code></dt>
 <dd>the user buffer</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">size_t</span> <span class="pre">*</span> <span class="pre">lenp</span></code></dt>
 <dd>the size of the user buffer</dd>
@@ -4978,7 +4996,7 @@ are converted into jiffies.</p>
 <p>Returns 0 on success.</p>
 <dl class="function">
 <dt id="c.proc_do_large_bitmap">
-int <code class="descname">proc_do_large_bitmap</code><span class="sig-paren">(</span>struct ctl_table *<em>&nbsp;table</em>, int<em>&nbsp;write</em>, void __user *<em>&nbsp;buffer</em>, size_t *<em>&nbsp;lenp</em>, loff_t *<em>&nbsp;ppos</em><span class="sig-paren">)</span><a class="headerlink" href="#c.proc_do_large_bitmap" title="Permalink to this definition">¶</a></dt>
+int <code class="descname">proc_do_large_bitmap</code><span class="sig-paren">(</span>struct ctl_table *<em>&nbsp;table</em>, int<em>&nbsp;write</em>, void *<em>&nbsp;buffer</em>, size_t *<em>&nbsp;lenp</em>, loff_t *<em>&nbsp;ppos</em><span class="sig-paren">)</span><a class="headerlink" href="#c.proc_do_large_bitmap" title="Permalink to this definition">¶</a></dt>
 <dd><p>read/write from/to a large bitmap</p>
 </dd></dl>
 
@@ -4988,7 +5006,7 @@ int <code class="descname">proc_do_large_bitmap</code><span class="sig-paren">(<
 <dd>the sysctl table</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">int</span> <span class="pre">write</span></code></dt>
 <dd><code class="docutils literal notranslate"><span class="pre">TRUE</span></code> if this is a write to the sysctl file</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">void</span> <span class="pre">__user</span> <span class="pre">*</span> <span class="pre">buffer</span></code></dt>
+<dt><code class="docutils literal notranslate"><span class="pre">void</span> <span class="pre">*</span> <span class="pre">buffer</span></code></dt>
 <dd>the user buffer</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">size_t</span> <span class="pre">*</span> <span class="pre">lenp</span></code></dt>
 <dd>the size of the user buffer</dd>
@@ -5264,6 +5282,21 @@ void <code class="descname">sysfs_remove_file_ns</code><span class="sig-paren">(
 <p><strong>Description</strong></p>
 <p>Hash the attribute name and namespace tag and kill the victim.</p>
 <dl class="function">
+<dt id="c.sysfs_remove_file_self">
+bool <code class="descname">sysfs_remove_file_self</code><span class="sig-paren">(</span>struct kobject *<em>&nbsp;kobj</em>, const struct attribute *<em>&nbsp;attr</em><span class="sig-paren">)</span><a class="headerlink" href="#c.sysfs_remove_file_self" title="Permalink to this definition">¶</a></dt>
+<dd><p>remove an object attribute from its own method</p>
+</dd></dl>
+
+<p><strong>Parameters</strong></p>
+<dl class="docutils">
+<dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">kobject</span> <span class="pre">*</span> <span class="pre">kobj</span></code></dt>
+<dd>object we’re acting for</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">const</span> <span class="pre">struct</span> <span class="pre">attribute</span> <span class="pre">*</span> <span class="pre">attr</span></code></dt>
+<dd>attribute descriptor</dd>
+</dl>
+<p><strong>Description</strong></p>
+<p>See kernfs_remove_self() for details.</p>
+<dl class="function">
 <dt id="c.sysfs_remove_file_from_group">
 void <code class="descname">sysfs_remove_file_from_group</code><span class="sig-paren">(</span>struct kobject *<em>&nbsp;kobj</em>, const struct attribute *<em>&nbsp;attr</em>, const char *<em>&nbsp;group</em><span class="sig-paren">)</span><a class="headerlink" href="#c.sysfs_remove_file_from_group" title="Permalink to this definition">¶</a></dt>
 <dd><p>remove an attribute file from a group.</p>
@@ -5379,12 +5412,11 @@ int <code class="descname">sysfs_create_link_nowarn</code><span class="sig-paren
 <dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">kobject</span> <span class="pre">*</span> <span class="pre">target</span></code></dt>
 <dd>object we’re pointing to.</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">const</span> <span class="pre">char</span> <span class="pre">*</span> <span class="pre">name</span></code></dt>
-<dd>name of the symlink.</dd>
+<dd><p class="first">name of the symlink.</p>
+<p class="last">This function does the same as <a class="reference internal" href="#c.sysfs_create_link" title="sysfs_create_link"><code class="xref c c-func docutils literal notranslate"><span class="pre">sysfs_create_link()</span></code></a>, but it
+doesn’t warn if the link already exists.</p>
+</dd>
 </dl>
-<p><strong>Description</strong></p>
-<blockquote>
-<div>This function does the same as <a class="reference internal" href="#c.sysfs_create_link" title="sysfs_create_link"><code class="xref c c-func docutils literal notranslate"><span class="pre">sysfs_create_link()</span></code></a>, but it
-doesn’t warn if the link already exists.</div></blockquote>
 <dl class="function">
 <dt id="c.sysfs_remove_link">
 void <code class="descname">sysfs_remove_link</code><span class="sig-paren">(</span>struct kobject *<em>&nbsp;kobj</em>, const char *<em>&nbsp;name</em><span class="sig-paren">)</span><a class="headerlink" href="#c.sysfs_remove_link" title="Permalink to this definition">¶</a></dt>
@@ -5415,11 +5447,10 @@ int <code class="descname">sysfs_rename_link_ns</code><span class="sig-paren">(<
 <dt><code class="docutils literal notranslate"><span class="pre">const</span> <span class="pre">char</span> <span class="pre">*</span> <span class="pre">new</span></code></dt>
 <dd>new name of the symlink.</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">const</span> <span class="pre">void</span> <span class="pre">*</span> <span class="pre">new_ns</span></code></dt>
-<dd>new namespace of the symlink.</dd>
+<dd><p class="first">new namespace of the symlink.</p>
+<p class="last">A helper function for the common rename symlink idiom.</p>
+</dd>
 </dl>
-<p><strong>Description</strong></p>
-<blockquote>
-<div>A helper function for the common rename symlink idiom.</div></blockquote>
 </div>
 <div class="section" id="the-debugfs-filesystem">
 <h2>The debugfs filesystem<a class="headerlink" href="#the-debugfs-filesystem" title="Permalink to this headline">¶</a></h2>

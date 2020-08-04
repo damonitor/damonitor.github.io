@@ -68,7 +68,7 @@
             
             
               <div class="version">
-                5.7.0
+                5.8.0
               </div>
             
           
@@ -1744,12 +1744,12 @@ int <code class="descname">mutex_trylock</code><span class="sig-paren">(</span>s
 <p><strong>Description</strong></p>
 <p>Try to acquire the mutex atomically. Returns 1 if the mutex
 has been acquired successfully, and 0 on contention.</p>
+<p>This function must not be used in interrupt context. The
+mutex must be released by the same task that acquired it.</p>
 <p><strong>NOTE</strong></p>
 <p>this function follows the spin_trylock() convention, so
 it is negated from the down_trylock() return values! Be careful
 about this when converting semaphore users to mutexes.</p>
-<p>This function must not be used in interrupt context. The
-mutex must be released by the same task that acquired it.</p>
 <dl class="function">
 <dt id="c.atomic_dec_and_mutex_lock">
 int <code class="descname">atomic_dec_and_mutex_lock</code><span class="sig-paren">(</span>atomic_t *<em>&nbsp;cnt</em>, struct mutex *<em>&nbsp;lock</em><span class="sig-paren">)</span><a class="headerlink" href="#c.atomic_dec_and_mutex_lock" title="Permalink to this definition">¶</a></dt>
@@ -1886,16 +1886,15 @@ FUTEX_WRITE)</dd>
 </dl>
 <p><strong>Return</strong></p>
 <p>a negative error code or 0</p>
+<p><strong>Description</strong></p>
 <p>The key words are stored in <strong>key</strong> on success.</p>
-<dl class="docutils">
-<dt>For shared mappings (when <strong>fshared</strong>), the key is:</dt>
-<dd>( inode-&gt;i_sequence, page-&gt;index, offset_within_page )</dd>
-</dl>
+<p>For shared mappings (when <strong>fshared</strong>), the key is:</p>
+<blockquote>
+<div>( inode-&gt;i_sequence, page-&gt;index, offset_within_page )</div></blockquote>
 <p>[ also see get_inode_sequence_number() ]</p>
-<dl class="docutils">
-<dt>For private mappings (or when !**fshared**), the key is:</dt>
-<dd>( current-&gt;mm, address, 0 )</dd>
-</dl>
+<p>For private mappings (or when <strong>!fshared</strong>), the key is:</p>
+<blockquote>
+<div>( current-&gt;mm, address, 0 )</div></blockquote>
 <p>This allows (cross process, where applicable) identification of the futex
 without keeping the page pinned for the duration of the FUTEX_WAIT.</p>
 <p>lock_page() might sleep, the caller should not hold a spinlock.</p>
@@ -1981,6 +1980,7 @@ which is in the middle of exiting</dd>
 <li>&lt;0 - error</li>
 </ul>
 </div></blockquote>
+<p><strong>Description</strong></p>
 <p>The hb-&gt;lock and futex_key refs shall be held by the caller.</p>
 <p><strong>exiting</strong> is only set when the return value is -EBUSY. If so, this holds
 a refcount on the exiting task on return and the caller needs to drop it

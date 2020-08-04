@@ -68,7 +68,7 @@
             
             
               <div class="version">
-                5.7.0
+                5.8.0
               </div>
             
           
@@ -203,7 +203,7 @@ is not depicted here.]</p>
                                       |
                                       |
                                       v
-                            disable_nonboot_cpus()
+                            freeze_secondary_cpus()
                                  /* start */
                                       |
                                       v
@@ -238,7 +238,7 @@ Common    |               before taking down the CPU             |
                           Release cpu_add_remove_lock
                                       |
                                       v
-                     /* disable_nonboot_cpus() complete */
+                     /* freeze_secondary_cpus() complete */
                                       |
                                       v
                                  Do suspend
@@ -247,7 +247,7 @@ Common    |               before taking down the CPU             |
 <p>Resuming back is likewise, with the counterparts being (in the order of
 execution during resume):</p>
 <ul>
-<li><p class="first">enable_nonboot_cpus() which involves:</p>
+<li><p class="first">thaw_secondary_cpus() which involves:</p>
 <div class="highlight-none notranslate"><div class="highlight"><pre><span></span>|  Acquire cpu_add_remove_lock
 |  Decrease cpu_hotplug_disabled, thereby enabling regular cpu hotplug
 |  Call _cpu_up() [for all those cpus in the frozen_cpus mask, in a loop]
@@ -323,7 +323,7 @@ with the ‘tasks_frozen’ argument set to 1.
 <p>There are some interesting situations involving CPU hotplug and microcode
 update on the CPUs, as discussed below:</p>
 <p>[Please bear in mind that the kernel requests the microcode images from
-userspace, using the <a class="reference internal" href="../driver-api/firmware/request_firmware.html#c.request_firmware" title="request_firmware"><code class="xref c c-func docutils literal notranslate"><span class="pre">request_firmware()</span></code></a> function defined in
+userspace, using the <a class="reference internal" href="../driver-api/infrastructure.html#c.request_firmware" title="request_firmware"><code class="xref c c-func docutils literal notranslate"><span class="pre">request_firmware()</span></code></a> function defined in
 drivers/base/firmware_loader/main.c]</p>
 <ol class="loweralpha">
 <li><p class="first">When all the CPUs are identical:</p>

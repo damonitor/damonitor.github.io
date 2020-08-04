@@ -68,7 +68,7 @@
             
             
               <div class="version">
-                5.7.0
+                5.8.0
               </div>
             
           
@@ -237,6 +237,20 @@ to the input arguments (<code class="docutils literal notranslate"><span class="
 then the next program in the chain (A) will see those changes,
 <em>not</em> the original input <code class="docutils literal notranslate"><span class="pre">setsockopt</span></code> arguments. The potentially
 modified values will be then passed down to the kernel.</p>
+</div>
+<div class="section" id="large-optval">
+<h2>Large optval<a class="headerlink" href="#large-optval" title="Permalink to this headline">¶</a></h2>
+<p>When the <code class="docutils literal notranslate"><span class="pre">optval</span></code> is greater than the <code class="docutils literal notranslate"><span class="pre">PAGE_SIZE</span></code>, the BPF program
+can access only the first <code class="docutils literal notranslate"><span class="pre">PAGE_SIZE</span></code> of that data. So it has to options:</p>
+<ul class="simple">
+<li>Set <code class="docutils literal notranslate"><span class="pre">optlen</span></code> to zero, which indicates that the kernel should
+use the original buffer from the userspace. Any modifications
+done by the BPF program to the <code class="docutils literal notranslate"><span class="pre">optval</span></code> are ignored.</li>
+<li>Set <code class="docutils literal notranslate"><span class="pre">optlen</span></code> to the value less than <code class="docutils literal notranslate"><span class="pre">PAGE_SIZE</span></code>, which
+indicates that the kernel should use BPF’s trimmed <code class="docutils literal notranslate"><span class="pre">optval</span></code>.</li>
+</ul>
+<p>When the BPF program returns with the <code class="docutils literal notranslate"><span class="pre">optlen</span></code> greater than
+<code class="docutils literal notranslate"><span class="pre">PAGE_SIZE</span></code>, the userspace will receive <code class="docutils literal notranslate"><span class="pre">EFAULT</span></code> errno.</p>
 </div>
 <div class="section" id="example">
 <h2>Example<a class="headerlink" href="#example" title="Permalink to this headline">¶</a></h2>

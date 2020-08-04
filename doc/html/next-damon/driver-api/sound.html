@@ -68,7 +68,7 @@
             
             
               <div class="version">
-                5.7.0
+                5.8.0
               </div>
             
           
@@ -268,12 +268,11 @@ int <code class="descname">register_sound_special_device</code><span class="sig-
 <dt><code class="docutils literal notranslate"><span class="pre">int</span> <span class="pre">unit</span></code></dt>
 <dd>Unit number to allocate</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">device</span> <span class="pre">*</span> <span class="pre">dev</span></code></dt>
-<dd>device pointer</dd>
+<dd><p class="first">device pointer</p>
+<p class="last">Allocate a special sound device by minor number from the sound
+subsystem.</p>
+</dd>
 </dl>
-<p><strong>Description</strong></p>
-<blockquote>
-<div>Allocate a special sound device by minor number from the sound
-subsystem.</div></blockquote>
 <p><strong>Return</strong></p>
 <dl class="docutils">
 <dt>The allocated number is returned on success. On failure,</dt>
@@ -290,12 +289,11 @@ int <code class="descname">register_sound_mixer</code><span class="sig-paren">(<
 <dt><code class="docutils literal notranslate"><span class="pre">const</span> <span class="pre">struct</span> <span class="pre">file_operations</span> <span class="pre">*</span> <span class="pre">fops</span></code></dt>
 <dd>File operations for the driver</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">int</span> <span class="pre">dev</span></code></dt>
-<dd>Unit number to allocate</dd>
+<dd><p class="first">Unit number to allocate</p>
+<p class="last">Allocate a mixer device. Unit is the number of the mixer requested.
+Pass -1 to request the next free mixer unit.</p>
+</dd>
 </dl>
-<p><strong>Description</strong></p>
-<blockquote>
-<div>Allocate a mixer device. Unit is the number of the mixer requested.
-Pass -1 to request the next free mixer unit.</div></blockquote>
 <p><strong>Return</strong></p>
 <dl class="docutils">
 <dt>On success, the allocated number is returned. On failure,</dt>
@@ -312,15 +310,13 @@ int <code class="descname">register_sound_dsp</code><span class="sig-paren">(</s
 <dt><code class="docutils literal notranslate"><span class="pre">const</span> <span class="pre">struct</span> <span class="pre">file_operations</span> <span class="pre">*</span> <span class="pre">fops</span></code></dt>
 <dd>File operations for the driver</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">int</span> <span class="pre">dev</span></code></dt>
-<dd>Unit number to allocate</dd>
-</dl>
-<p><strong>Description</strong></p>
-<blockquote>
-<div><p>Allocate a DSP device. Unit is the number of the DSP requested.
+<dd><p class="first">Unit number to allocate</p>
+<p>Allocate a DSP device. Unit is the number of the DSP requested.
 Pass -1 to request the next free DSP unit.</p>
-<p>This function allocates both the audio and dsp device entries together
+<p class="last">This function allocates both the audio and dsp device entries together
 and will always allocate them as a matching pair - eg dsp3/audio3</p>
-</div></blockquote>
+</dd>
+</dl>
 <p><strong>Return</strong></p>
 <dl class="docutils">
 <dt>On success, the allocated number is returned. On failure,</dt>
@@ -335,13 +331,12 @@ void <code class="descname">unregister_sound_special</code><span class="sig-pare
 <p><strong>Parameters</strong></p>
 <dl class="docutils">
 <dt><code class="docutils literal notranslate"><span class="pre">int</span> <span class="pre">unit</span></code></dt>
-<dd>unit number to allocate</dd>
-</dl>
-<p><strong>Description</strong></p>
-<blockquote>
-<div>Release a sound device that was allocated with
+<dd><p class="first">unit number to allocate</p>
+<p class="last">Release a sound device that was allocated with
 register_sound_special(). The unit passed is the return value from
-the register function.</div></blockquote>
+the register function.</p>
+</dd>
+</dl>
 <dl class="function">
 <dt id="c.unregister_sound_mixer">
 void <code class="descname">unregister_sound_mixer</code><span class="sig-paren">(</span>int<em>&nbsp;unit</em><span class="sig-paren">)</span><a class="headerlink" href="#c.unregister_sound_mixer" title="Permalink to this definition">¶</a></dt>
@@ -351,12 +346,11 @@ void <code class="descname">unregister_sound_mixer</code><span class="sig-paren"
 <p><strong>Parameters</strong></p>
 <dl class="docutils">
 <dt><code class="docutils literal notranslate"><span class="pre">int</span> <span class="pre">unit</span></code></dt>
-<dd>unit number to allocate</dd>
+<dd><p class="first">unit number to allocate</p>
+<p class="last">Release a sound device that was allocated with <a class="reference internal" href="#c.register_sound_mixer" title="register_sound_mixer"><code class="xref c c-func docutils literal notranslate"><span class="pre">register_sound_mixer()</span></code></a>.
+The unit passed is the return value from the register function.</p>
+</dd>
 </dl>
-<p><strong>Description</strong></p>
-<blockquote>
-<div>Release a sound device that was allocated with <a class="reference internal" href="#c.register_sound_mixer" title="register_sound_mixer"><code class="xref c c-func docutils literal notranslate"><span class="pre">register_sound_mixer()</span></code></a>.
-The unit passed is the return value from the register function.</div></blockquote>
 <dl class="function">
 <dt id="c.unregister_sound_dsp">
 void <code class="descname">unregister_sound_dsp</code><span class="sig-paren">(</span>int<em>&nbsp;unit</em><span class="sig-paren">)</span><a class="headerlink" href="#c.unregister_sound_dsp" title="Permalink to this definition">¶</a></dt>
@@ -366,14 +360,12 @@ void <code class="descname">unregister_sound_dsp</code><span class="sig-paren">(
 <p><strong>Parameters</strong></p>
 <dl class="docutils">
 <dt><code class="docutils literal notranslate"><span class="pre">int</span> <span class="pre">unit</span></code></dt>
-<dd>unit number to allocate</dd>
-</dl>
-<p><strong>Description</strong></p>
-<blockquote>
-<div><p>Release a sound device that was allocated with <a class="reference internal" href="#c.register_sound_dsp" title="register_sound_dsp"><code class="xref c c-func docutils literal notranslate"><span class="pre">register_sound_dsp()</span></code></a>.
+<dd><p class="first">unit number to allocate</p>
+<p>Release a sound device that was allocated with <a class="reference internal" href="#c.register_sound_dsp" title="register_sound_dsp"><code class="xref c c-func docutils literal notranslate"><span class="pre">register_sound_dsp()</span></code></a>.
 The unit passed is the return value from the register function.</p>
-<p>Both of the allocated units are released together automatically.</p>
-</div></blockquote>
+<p class="last">Both of the allocated units are released together automatically.</p>
+</dd>
+</dl>
 <dl class="function">
 <dt id="c.snd_pcm_stream_linked">
 int <code class="descname">snd_pcm_stream_linked</code><span class="sig-paren">(</span>struct snd_pcm_substream *<em>&nbsp;substream</em><span class="sig-paren">)</span><a class="headerlink" href="#c.snd_pcm_stream_linked" title="Permalink to this definition">¶</a></dt>
@@ -1279,7 +1271,7 @@ The all children entries are registered recursively.</p>
 <p>Zero if successful, or a negative error code on failure.</p>
 <dl class="function">
 <dt id="c.snd_card_rw_proc_new">
-int <code class="descname">snd_card_rw_proc_new</code><span class="sig-paren">(</span>struct snd_card *<em>&nbsp;card</em>, const char *<em>&nbsp;name</em>, void *<em>&nbsp;private_data</em>, void (<em>*read</em>)(struct snd_info_entry *, struct snd_info_buffer *), void (*<a class="reference internal" href="../media/uapi/dvb/video-fwrite.html#c.write" title="write">write</a>) (struct snd_info_entry *entry, struct snd_info_buffer *buffer)<span class="sig-paren">)</span><a class="headerlink" href="#c.snd_card_rw_proc_new" title="Permalink to this definition">¶</a></dt>
+int <code class="descname">snd_card_rw_proc_new</code><span class="sig-paren">(</span>struct snd_card *<em>&nbsp;card</em>, const char *<em>&nbsp;name</em>, void *<em>&nbsp;private_data</em>, void (<em>*read</em>)(struct snd_info_entry *, struct snd_info_buffer *), void (*<a class="reference internal" href="../userspace-api/media/dvb/video-fwrite.html#c.write" title="write">write</a>) (struct snd_info_entry *entry, struct snd_info_buffer *buffer)<span class="sig-paren">)</span><a class="headerlink" href="#c.snd_card_rw_proc_new" title="Permalink to this definition">¶</a></dt>
 <dd><p>Create a read/write text proc file entry for the card</p>
 </dd></dl>
 
@@ -1800,15 +1792,13 @@ int <code class="descname">snd_card_new</code><span class="sig-paren">(</span>st
 <dt><code class="docutils literal notranslate"><span class="pre">int</span> <span class="pre">extra_size</span></code></dt>
 <dd>allocate this extra size after the main soundcard structure</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">snd_card</span> <span class="pre">**</span> <span class="pre">card_ret</span></code></dt>
-<dd>the pointer to store the created card instance</dd>
-</dl>
-<p><strong>Description</strong></p>
-<blockquote>
-<div><p>Creates and initializes a soundcard structure.</p>
-<p>The function allocates snd_card instance via kzalloc with the given
+<dd><p class="first">the pointer to store the created card instance</p>
+<p>Creates and initializes a soundcard structure.</p>
+<p class="last">The function allocates snd_card instance via kzalloc with the given
 space for the driver to use freely.  The allocated struct is stored
 in the given card_ret pointer.</p>
-</div></blockquote>
+</dd>
+</dl>
 <p><strong>Return</strong></p>
 <p>Zero if successful or a negative error code.</p>
 <dl class="function">
@@ -1834,11 +1824,10 @@ int <code class="descname">snd_card_disconnect</code><span class="sig-paren">(</
 <p><strong>Parameters</strong></p>
 <dl class="docutils">
 <dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">snd_card</span> <span class="pre">*</span> <span class="pre">card</span></code></dt>
-<dd>soundcard structure</dd>
+<dd><p class="first">soundcard structure</p>
+<p class="last">Disconnects all APIs from the file-operations (user space).</p>
+</dd>
 </dl>
-<p><strong>Description</strong></p>
-<blockquote>
-<div>Disconnects all APIs from the file-operations (user space).</div></blockquote>
 <p><strong>Return</strong></p>
 <p>Zero, otherwise a negative error code.</p>
 <p><strong>Note</strong></p>
@@ -1908,12 +1897,11 @@ void <code class="descname">snd_card_set_id</code><span class="sig-paren">(</spa
 <dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">snd_card</span> <span class="pre">*</span> <span class="pre">card</span></code></dt>
 <dd>soundcard structure</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">const</span> <span class="pre">char</span> <span class="pre">*</span> <span class="pre">nid</span></code></dt>
-<dd>new identification string</dd>
+<dd><p class="first">new identification string</p>
+<p class="last">This function sets the card identification and checks for name
+collisions.</p>
+</dd>
 </dl>
-<p><strong>Description</strong></p>
-<blockquote>
-<div>This function sets the card identification and checks for name
-collisions.</div></blockquote>
 <dl class="function">
 <dt id="c.snd_card_add_dev_attr">
 int <code class="descname">snd_card_add_dev_attr</code><span class="sig-paren">(</span>struct snd_card *<em>&nbsp;card</em>, const struct attribute_group *<em>&nbsp;group</em><span class="sig-paren">)</span><a class="headerlink" href="#c.snd_card_add_dev_attr" title="Permalink to this definition">¶</a></dt>
@@ -1936,14 +1924,13 @@ int <code class="descname">snd_card_register</code><span class="sig-paren">(</sp
 <p><strong>Parameters</strong></p>
 <dl class="docutils">
 <dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">snd_card</span> <span class="pre">*</span> <span class="pre">card</span></code></dt>
-<dd>soundcard structure</dd>
-</dl>
-<p><strong>Description</strong></p>
-<blockquote>
-<div>This function registers all the devices assigned to the soundcard.
+<dd><p class="first">soundcard structure</p>
+<p class="last">This function registers all the devices assigned to the soundcard.
 Until calling this, the ALSA control interface is blocked from the
 external accesses.  Thus, you should call this function at the end
-of the initialization of the card.</div></blockquote>
+of the initialization of the card.</p>
+</dd>
+</dl>
 <p><strong>Return</strong></p>
 <p>Zero otherwise a negative error code if the registration failed.</p>
 <dl class="function">
@@ -1957,12 +1944,11 @@ int <code class="descname">snd_component_add</code><span class="sig-paren">(</sp
 <dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">snd_card</span> <span class="pre">*</span> <span class="pre">card</span></code></dt>
 <dd>soundcard structure</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">const</span> <span class="pre">char</span> <span class="pre">*</span> <span class="pre">component</span></code></dt>
-<dd>the component id string</dd>
+<dd><p class="first">the component id string</p>
+<p class="last">This function adds the component id string to the supported list.
+The component can be referred from the alsa-lib.</p>
+</dd>
 </dl>
-<p><strong>Description</strong></p>
-<blockquote>
-<div>This function adds the component id string to the supported list.
-The component can be referred from the alsa-lib.</div></blockquote>
 <p><strong>Return</strong></p>
 <p>Zero otherwise a negative error code.</p>
 <dl class="function">
@@ -1976,13 +1962,12 @@ int <code class="descname">snd_card_file_add</code><span class="sig-paren">(</sp
 <dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">snd_card</span> <span class="pre">*</span> <span class="pre">card</span></code></dt>
 <dd>soundcard structure</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">file</span> <span class="pre">*</span> <span class="pre">file</span></code></dt>
-<dd>file pointer</dd>
-</dl>
-<p><strong>Description</strong></p>
-<blockquote>
-<div>This function adds the file to the file linked-list of the card.
+<dd><p class="first">file pointer</p>
+<p class="last">This function adds the file to the file linked-list of the card.
 This linked-list is used to keep tracking the connection state,
-and to avoid the release of busy resources by hotplug.</div></blockquote>
+and to avoid the release of busy resources by hotplug.</p>
+</dd>
+</dl>
 <p><strong>Return</strong></p>
 <p>zero or a negative error code.</p>
 <dl class="function">
@@ -1996,15 +1981,14 @@ int <code class="descname">snd_card_file_remove</code><span class="sig-paren">(<
 <dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">snd_card</span> <span class="pre">*</span> <span class="pre">card</span></code></dt>
 <dd>soundcard structure</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">file</span> <span class="pre">*</span> <span class="pre">file</span></code></dt>
-<dd>file pointer</dd>
-</dl>
-<p><strong>Description</strong></p>
-<blockquote>
-<div>This function removes the file formerly added to the card via
+<dd><p class="first">file pointer</p>
+<p class="last">This function removes the file formerly added to the card via
 <a class="reference internal" href="../sound/kernel-api/alsa-driver-api.html#c.snd_card_file_add" title="snd_card_file_add"><code class="xref c c-func docutils literal notranslate"><span class="pre">snd_card_file_add()</span></code></a> function.
 If all files are removed and <a class="reference internal" href="../sound/kernel-api/alsa-driver-api.html#c.snd_card_free_when_closed" title="snd_card_free_when_closed"><code class="xref c c-func docutils literal notranslate"><span class="pre">snd_card_free_when_closed()</span></code></a> was
 called beforehand, it processes the pending release of
-resources.</div></blockquote>
+resources.</p>
+</dd>
+</dl>
 <p><strong>Return</strong></p>
 <p>Zero or a negative error code.</p>
 <dl class="function">
@@ -2018,11 +2002,10 @@ int <code class="descname">snd_power_wait</code><span class="sig-paren">(</span>
 <dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">snd_card</span> <span class="pre">*</span> <span class="pre">card</span></code></dt>
 <dd>soundcard structure</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">unsigned</span> <span class="pre">int</span> <span class="pre">power_state</span></code></dt>
-<dd>expected power state</dd>
+<dd><p class="first">expected power state</p>
+<p class="last">Waits until the power-state is changed.</p>
+</dd>
 </dl>
-<p><strong>Description</strong></p>
-<blockquote>
-<div>Waits until the power-state is changed.</div></blockquote>
 <p><strong>Return</strong></p>
 <p>Zero if successful, or a negative error code.</p>
 <dl class="function">

@@ -68,7 +68,7 @@
             
             
               <div class="version">
-                5.7.0
+                5.8.0
               </div>
             
           
@@ -320,7 +320,7 @@ arg == vl | flags.  Other threads of the calling process are unaffected.</p>
 <p>vl is the desired vector length, where sve_vl_valid(vl) must be true.</p>
 <p>flags:</p>
 <blockquote>
-<div><p>PR_SVE_SET_VL_INHERIT</p>
+<div><p>PR_SVE_VL_INHERIT</p>
 <blockquote>
 <div>Inherit the current vector length across execve().  Otherwise, the
 vector length is reset to the system default at execve().  (See
@@ -375,7 +375,7 @@ flag, does not constitute a change to the vector length for this purpose.</li>
 <div><p>Gets the vector length of the calling thread.</p>
 <p>The following flag may be OR-ed into the result:</p>
 <blockquote>
-<div><p>PR_SVE_SET_VL_INHERIT</p>
+<div><p>PR_SVE_VL_INHERIT</p>
 <blockquote>
 <div>Vector length will be inherited across execve().</div></blockquote>
 </div></blockquote>
@@ -514,7 +514,7 @@ vector length of the init process (PID 1).</p>
 the system default vector length, unless</p>
 <blockquote>
 <div><ul class="simple">
-<li>PR_SVE_SET_VL_INHERIT (or equivalently SVE_PT_VL_INHERIT) is set for the
+<li>PR_SVE_VL_INHERIT (or equivalently SVE_PT_VL_INHERIT) is set for the
 calling thread, or</li>
 <li>a deferred vector length change is pending, established via the
 PR_SVE_SET_VL_ONEXEC flag (or SVE_PT_VL_ONEXEC).</li>

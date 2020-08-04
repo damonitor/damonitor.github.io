@@ -68,7 +68,7 @@
             
             
               <div class="version">
-                5.7.0
+                5.8.0
               </div>
             
           
@@ -300,17 +300,15 @@ time until the closest timer to estimate the idle duration in future.  How the
 governor uses that information depends on what algorithm is implemented by it
 and that is the primary reason for having more than one governor in the
 <code class="docutils literal notranslate"><span class="pre">CPUIdle</span></code> subsystem.</p>
-<p>There are three <code class="docutils literal notranslate"><span class="pre">CPUIdle</span></code> governors available, <code class="docutils literal notranslate"><span class="pre">menu</span></code>, <a class="reference internal" href="#teo-gov">TEO</a>
-and <code class="docutils literal notranslate"><span class="pre">ladder</span></code>.  Which of them is used by default depends on the configuration
-of the kernel and in particular on whether or not the scheduler tick can be
-<a class="reference internal" href="#idle-cpus-and-tick">stopped by the idle loop</a>.  It is possible to change the
-governor at run time if the <code class="docutils literal notranslate"><span class="pre">cpuidle_sysfs_switch</span></code> command line parameter has
-been passed to the kernel, but that is not safe in general, so it should not be
-done on production systems (that may change in the future, though).  The name of
-the <code class="docutils literal notranslate"><span class="pre">CPUIdle</span></code> governor currently used by the kernel can be read from the
-<code class="file docutils literal notranslate"><span class="pre">current_governor_ro</span></code> (or <code class="file docutils literal notranslate"><span class="pre">current_governor</span></code> if
-<code class="docutils literal notranslate"><span class="pre">cpuidle_sysfs_switch</span></code> is present in the kernel command line) file under
-<code class="file docutils literal notranslate"><span class="pre">/sys/devices/system/cpu/cpuidle/</span></code> in <code class="docutils literal notranslate"><span class="pre">sysfs</span></code>.</p>
+<p>There are four <code class="docutils literal notranslate"><span class="pre">CPUIdle</span></code> governors available, <code class="docutils literal notranslate"><span class="pre">menu</span></code>, <a class="reference internal" href="#teo-gov">TEO</a>,
+<code class="docutils literal notranslate"><span class="pre">ladder</span></code> and <code class="docutils literal notranslate"><span class="pre">haltpoll</span></code>.  Which of them is used by default depends on the
+configuration of the kernel and in particular on whether or not the scheduler
+tick can be <a class="reference internal" href="#idle-cpus-and-tick">stopped by the idle loop</a>.  Available
+governors can be read from the <code class="file docutils literal notranslate"><span class="pre">available_governors</span></code>, and the governor
+can be changed at runtime.  The name of the <code class="docutils literal notranslate"><span class="pre">CPUIdle</span></code> governor currently
+used by the kernel can be read from the <code class="file docutils literal notranslate"><span class="pre">current_governor_ro</span></code> or
+<code class="file docutils literal notranslate"><span class="pre">current_governor</span></code> file under <code class="file docutils literal notranslate"><span class="pre">/sys/devices/system/cpu/cpuidle/</span></code>
+in <code class="docutils literal notranslate"><span class="pre">sysfs</span></code>.</p>
 <p>Which <code class="docutils literal notranslate"><span class="pre">CPUIdle</span></code> driver is used, on the other hand, usually depends on the
 platform the kernel is running on, but there are platforms with more than one
 matching driver.  For example, there are two drivers that can work with the

@@ -494,6 +494,8 @@ videodev2.h
 
     \#define :ref:`V4L2_CAP_TOUCH <device-capabilities>`                  0x10000000  \/\* Is a touch device \*\/
 
+    \#define :ref:`V4L2_CAP_IO_MC <device-capabilities>`                  0x20000000  \/\* Is input\/output controlled by the media controller \*\/
+
     \#define :ref:`V4L2_CAP_DEVICE_CAPS <device-capabilities>`            0x80000000  \/\* sets device capabilities field \*\/
 
     \/\*
@@ -789,7 +791,8 @@ videodev2.h
             \_\_u32               flags;
             \_\_u8                description[32];   \/\* Description string \*\/
             \_\_u32               pixelformat;       \/\* Format fourcc      \*\/
-            \_\_u32               reserved[4];
+            \_\_u32               mbus\_code;          \/\* Media bus code    \*\/
+            \_\_u32               reserved[3];
     \};
 
     \#define :ref:`V4L2_FMT_FLAG_COMPRESSED <fmtdesc-flags>`                0x0001

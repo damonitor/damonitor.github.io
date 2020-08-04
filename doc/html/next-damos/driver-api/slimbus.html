@@ -68,7 +68,7 @@
             
             
               <div class="version">
-                5.7.0
+                5.8.0
               </div>
             
           
@@ -852,16 +852,9 @@ processor side, who is resposible for allocating laddr.</dd>
 <dd>This function pointer implements controller-specific procedure
 to enable a stream.</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">disable_stream</span></code></dt>
-<dd>This function pointer implements controller-specific procedure
-to disable stream.</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">wakeup</span></code></dt>
-<dd>This function pointer implements controller-specific procedure
-to wake it up from clock-pause. Framework will call this to bring
-the controller out of clock pause.</dd>
-</dl>
-<p><strong>Description</strong></p>
-<blockquote>
-<div><p>‘Manager device’ is responsible for  device management, bandwidth
+<dd><p class="first">This function pointer implements controller-specific procedure
+to disable stream.</p>
+<p>‘Manager device’ is responsible for  device management, bandwidth
 allocation, channel setup, and port associations per channel.
 Device management means Logical address assignment/removal based on
 enumeration (report-present, report-absent) of a device.
@@ -875,11 +868,16 @@ Manager is also responsible for entering (and exiting) low-power-mode
 Manager can do handover of framer if there are multiple framers on the
 bus and a certain usecase warrants using certain framer to avoid keeping
 previous framer being powered-on.</p>
-<p>Controller here performs duties of the manager device, and ‘interface
+<p class="last">Controller here performs duties of the manager device, and ‘interface
 device’. Interface device is responsible for monitoring the bus and
 reporting information such as loss-of-synchronization, data
 slot-collision.</p>
-</div></blockquote>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">wakeup</span></code></dt>
+<dd>This function pointer implements controller-specific procedure
+to wake it up from clock-pause. Framework will call this to bring
+the controller out of clock pause.</dd>
+</dl>
 <dl class="function">
 <dt id="c.slim_unregister_controller">
 int <code class="descname">slim_unregister_controller</code><span class="sig-paren">(</span>struct <a class="reference internal" href="#c.slim_controller" title="slim_controller">slim_controller</a> *<em>&nbsp;ctrl</em><span class="sig-paren">)</span><a class="headerlink" href="#c.slim_unregister_controller" title="Permalink to this definition">¶</a></dt>

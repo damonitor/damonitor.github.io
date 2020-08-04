@@ -68,7 +68,7 @@
             
             
               <div class="version">
-                5.7.0
+                5.8.0
               </div>
             
           
@@ -1527,9 +1527,10 @@ struct <code class="descname">ieee80211_vif</code><a class="headerlink" href="#c
 #ifdef CONFIG_MAC80211_DEBUGFS;
   struct dentry *debugfs_dir;
 #endif;
-  unsigned int probe_req_reg;
+  bool probe_req_reg;
+  bool rx_mcast_action_reg;
   bool txqs_stopped[IEEE80211_NUM_ACS];
-  u8 drv_priv[0] ;
+  u8 drv_priv[] ;
 };
 </pre></div>
 </div>
@@ -1575,6 +1576,9 @@ monitor interface (if that is requested.)</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">probe_req_reg</span></code></dt>
 <dd>probe requests should be reported to mac80211 for this
 interface.</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">rx_mcast_action_reg</span></code></dt>
+<dd>multicast Action frames should be reported to mac80211
+for this interface.</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">txqs_stopped</span></code></dt>
 <dd>per AC flag to indicate that intermediate TXQs are stopped,
 protected by fq-&gt;lock.</dd>
@@ -1655,7 +1659,7 @@ struct <code class="descname">ieee80211_rx_status</code><a class="headerlink" hr
   u32 device_timestamp;
   u32 ampdu_reference;
   u32 flag;
-  u16 freq;
+  u16 freq: 13, freq_offset: 1;
   u8 enc_flags;
   u8 encoding:2, bw:3, he_ru:3;
   u8 he_gi:2, he_dcm:1;
@@ -1692,6 +1696,8 @@ each A-MPDU but the same for each subframe within one A-MPDU</dd>
 <dd>frequency the radio was tuned to when receiving this frame, in MHz
 This field must be set for management frames, but isn’t strictly needed
 for data (other) frames - for those it only affects radiotap reporting.</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">freq_offset</span></code></dt>
+<dd><strong>freq</strong> has a positive offset of 500Khz.</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">enc_flags</span></code></dt>
 <dd>uses bits from <a class="reference internal" href="#c.mac80211_rx_encoding_flags" title="mac80211_rx_encoding_flags"><code class="xref c c-type docutils literal notranslate"><span class="pre">enum</span> <span class="pre">mac80211_rx_encoding_flags</span></code></a></dd>
 <dt><code class="docutils literal notranslate"><span class="pre">encoding</span></code></dt>
@@ -2051,7 +2057,8 @@ frame (PS-Poll or uAPSD).</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">IEEE80211_TX_CTRL_SKIP_MPATH_LOOKUP</span></code></dt>
 <dd>This frame skips mesh path lookup</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">IEEE80211_TX_CTRL_HW_80211_ENCAP</span></code></dt>
-<dd><em>undescribed</em></dd>
+<dd>This frame uses hardware encapsulation
+(header conversion)</dd>
 </dl>
 <p><strong>Description</strong></p>
 <p>These flags are used in tx_info-&gt;control.flags.</p>
@@ -2708,6 +2715,8 @@ station</dd>
 <dd>pass PS Poll frames</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">FIF_PROBE_REQ</span></code></dt>
 <dd>pass probe request frames</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">FIF_MCAST_ACTION</span></code></dt>
+<dd>pass multicast Action frames</dd>
 </dl>
 <p><strong>Description</strong></p>
 <p>These flags determine what the filter in hardware should be

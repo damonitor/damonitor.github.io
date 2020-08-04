@@ -68,7 +68,7 @@
             
             
               <div class="version">
-                5.7.0
+                5.8.0
               </div>
             
           
@@ -172,15 +172,16 @@
 <li><a class="reference internal" href="#foll-pin-foll-get-foll-longterm-when-to-use-which-flags" id="id5">FOLL_PIN, FOLL_GET, FOLL_LONGTERM: when to use which flags</a><ul>
 <li><a class="reference internal" href="#case-1-direct-io-dio" id="id6">CASE 1: Direct IO (DIO)</a></li>
 <li><a class="reference internal" href="#case-2-rdma" id="id7">CASE 2: RDMA</a></li>
-<li><a class="reference internal" href="#case-3-hardware-with-page-faulting-support" id="id8">CASE 3: Hardware with page faulting support</a></li>
+<li><a class="reference internal" href="#case-3-mmu-notifier-registration-with-or-without-page-faulting-hardware" id="id8">CASE 3: MMU notifier registration, with or without page faulting hardware</a></li>
 <li><a class="reference internal" href="#case-4-pinning-for-struct-page-manipulation-only" id="id9">CASE 4: Pinning for struct page manipulation only</a></li>
+<li><a class="reference internal" href="#case-5-pinning-in-order-to-write-to-the-data-within-the-page" id="id10">CASE 5: Pinning in order to write to the data within the page</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#page-maybe-dma-pinned-the-whole-point-of-pinning" id="id10">page_maybe_dma_pinned(): the whole point of pinning</a></li>
-<li><a class="reference internal" href="#another-way-of-thinking-about-foll-get-foll-pin-and-foll-longterm" id="id11">Another way of thinking about FOLL_GET, FOLL_PIN, and FOLL_LONGTERM</a></li>
-<li><a class="reference internal" href="#unit-testing" id="id12">Unit testing</a></li>
-<li><a class="reference internal" href="#other-diagnostics" id="id13">Other diagnostics</a></li>
-<li><a class="reference internal" href="#references" id="id14">References</a></li>
+<li><a class="reference internal" href="#page-maybe-dma-pinned-the-whole-point-of-pinning" id="id11">page_maybe_dma_pinned(): the whole point of pinning</a></li>
+<li><a class="reference internal" href="#another-way-of-thinking-about-foll-get-foll-pin-and-foll-longterm" id="id12">Another way of thinking about FOLL_GET, FOLL_PIN, and FOLL_LONGTERM</a></li>
+<li><a class="reference internal" href="#unit-testing" id="id13">Unit testing</a></li>
+<li><a class="reference internal" href="#other-diagnostics" id="id14">Other diagnostics</a></li>
+<li><a class="reference internal" href="#references" id="id15">References</a></li>
 </ul>
 </div>
 <div class="section" id="overview">
@@ -207,7 +208,7 @@ all combinations of get*(), pin*(), FOLL_LONGTERM, and more. Also, the
 pin_user_pages*() APIs are clearly distinct from the get_user_pages*() APIs, so
 that’s a natural dividing line, and a good point to make separate wrapper calls.
 In other words, use pin_user_pages*() for DMA-pinned pages, and
-get_user_pages*() for other cases. There are four cases described later on in
+get_user_pages*() for other cases. There are five cases described later on in
 this document, to further clarify that concept.</p>
 <p>FOLL_PIN and FOLL_GET are mutually exclusive for a given gup call. However,
 multiple threads and call sites are free to pin the same struct pages, via both
@@ -311,25 +312,48 @@ to set at the call site are:</p>
 because DAX pages do not have a separate page cache, and so “pinning” implies
 locking down file system blocks, which is not (yet) supported in that way.</p>
 </div>
-<div class="section" id="case-3-hardware-with-page-faulting-support">
-<h3><a class="toc-backref" href="#id8">CASE 3: Hardware with page faulting support</a><a class="headerlink" href="#case-3-hardware-with-page-faulting-support" title="Permalink to this headline">¶</a></h3>
-<p>Here, a well-written driver doesn’t normally need to pin pages at all. However,
-if the driver does choose to do so, it can register MMU notifiers for the range,
-and will be called back upon invalidation. Either way (avoiding page pinning, or
-using MMU notifiers to unpin upon request), there is proper synchronization with
-both filesystem and mm (page_mkclean(), munmap(), etc).</p>
-<p>Therefore, neither flag needs to be set.</p>
-<p>In this case, ideally, neither get_user_pages() nor pin_user_pages() should be
-called. Instead, the software should be written so that it does not pin pages.
-This allows mm and filesystems to operate more efficiently and reliably.</p>
+<div class="section" id="case-3-mmu-notifier-registration-with-or-without-page-faulting-hardware">
+<h3><a class="toc-backref" href="#id8">CASE 3: MMU notifier registration, with or without page faulting hardware</a><a class="headerlink" href="#case-3-mmu-notifier-registration-with-or-without-page-faulting-hardware" title="Permalink to this headline">¶</a></h3>
+<p>Device drivers can pin pages via get_user_pages*(), and register for mmu
+notifier callbacks for the memory range. Then, upon receiving a notifier
+“invalidate range” callback , stop the device from using the range, and unpin
+the pages. There may be other possible schemes, such as for example explicitly
+synchronizing against pending IO, that accomplish approximately the same thing.</p>
+<p>Or, if the hardware supports replayable page faults, then the device driver can
+avoid pinning entirely (this is ideal), as follows: register for mmu notifier
+callbacks as above, but instead of stopping the device and unpinning in the
+callback, simply remove the range from the device’s page tables.</p>
+<p>Either way, as long as the driver unpins the pages upon mmu notifier callback,
+then there is proper synchronization with both filesystem and mm
+(page_mkclean(), munmap(), etc). Therefore, neither flag needs to be set.</p>
 </div>
 <div class="section" id="case-4-pinning-for-struct-page-manipulation-only">
 <h3><a class="toc-backref" href="#id9">CASE 4: Pinning for struct page manipulation only</a><a class="headerlink" href="#case-4-pinning-for-struct-page-manipulation-only" title="Permalink to this headline">¶</a></h3>
-<p>Here, normal GUP calls are sufficient, so neither flag needs to be set.</p>
+<p>If only struct page data (as opposed to the actual memory contents that a page
+is tracking) is affected, then normal GUP calls are sufficient, and neither flag
+needs to be set.</p>
+</div>
+<div class="section" id="case-5-pinning-in-order-to-write-to-the-data-within-the-page">
+<h3><a class="toc-backref" href="#id10">CASE 5: Pinning in order to write to the data within the page</a><a class="headerlink" href="#case-5-pinning-in-order-to-write-to-the-data-within-the-page" title="Permalink to this headline">¶</a></h3>
+<p>Even though neither DMA nor Direct IO is involved, just a simple case of “pin,
+write to a page’s data, unpin” can cause a problem. Case 5 may be considered a
+superset of Case 1, plus Case 2, plus anything that invokes that pattern. In
+other words, if the code is neither Case 1 nor Case 2, it may still require
+FOLL_PIN, for patterns like this:</p>
+<dl class="docutils">
+<dt>Correct (uses FOLL_PIN calls):</dt>
+<dd>pin_user_pages()
+write to the data within the pages
+unpin_user_pages()</dd>
+<dt>INCORRECT (uses FOLL_GET calls):</dt>
+<dd>get_user_pages()
+write to the data within the pages
+put_page()</dd>
+</dl>
 </div>
 </div>
 <div class="section" id="page-maybe-dma-pinned-the-whole-point-of-pinning">
-<h2><a class="toc-backref" href="#id10">page_maybe_dma_pinned(): the whole point of pinning</a><a class="headerlink" href="#page-maybe-dma-pinned-the-whole-point-of-pinning" title="Permalink to this headline">¶</a></h2>
+<h2><a class="toc-backref" href="#id11">page_maybe_dma_pinned(): the whole point of pinning</a><a class="headerlink" href="#page-maybe-dma-pinned-the-whole-point-of-pinning" title="Permalink to this headline">¶</a></h2>
 <p>The whole point of marking pages as “DMA-pinned” or “gup-pinned” is to be able
 to query, “is this page DMA-pinned?” That allows code such as page_mkclean()
 (and file system writeback code in general) to make informed decisions about
@@ -344,7 +368,7 @@ that having this available:</p>
 <p>…is a prerequisite to solving the long-running gup+DMA problem.</p>
 </div>
 <div class="section" id="another-way-of-thinking-about-foll-get-foll-pin-and-foll-longterm">
-<h2><a class="toc-backref" href="#id11">Another way of thinking about FOLL_GET, FOLL_PIN, and FOLL_LONGTERM</a><a class="headerlink" href="#another-way-of-thinking-about-foll-get-foll-pin-and-foll-longterm" title="Permalink to this headline">¶</a></h2>
+<h2><a class="toc-backref" href="#id12">Another way of thinking about FOLL_GET, FOLL_PIN, and FOLL_LONGTERM</a><a class="headerlink" href="#another-way-of-thinking-about-foll-get-foll-pin-and-foll-longterm" title="Permalink to this headline">¶</a></h2>
 <p>Another way of thinking about these flags is as a progression of restrictions:
 FOLL_GET is for struct page manipulation, without affecting the data that the
 struct page refers to. FOLL_PIN is a <em>replacement</em> for FOLL_GET, and is for
@@ -354,7 +378,7 @@ restrictive case that has FOLL_PIN as a prerequisite: this is for pages that
 will be pinned longterm, and whose data will be accessed.</p>
 </div>
 <div class="section" id="unit-testing">
-<h2><a class="toc-backref" href="#id12">Unit testing</a><a class="headerlink" href="#unit-testing" title="Permalink to this headline">¶</a></h2>
+<h2><a class="toc-backref" href="#id13">Unit testing</a><a class="headerlink" href="#unit-testing" title="Permalink to this headline">¶</a></h2>
 <p>This file:</p>
 <div class="highlight-none notranslate"><div class="highlight"><pre><span></span>tools/testing/selftests/vm/gup_benchmark.c
 </pre></div>
@@ -400,13 +424,13 @@ for (each page in huge_page)
 place.)</p>
 </div>
 <div class="section" id="other-diagnostics">
-<h2><a class="toc-backref" href="#id13">Other diagnostics</a><a class="headerlink" href="#other-diagnostics" title="Permalink to this headline">¶</a></h2>
+<h2><a class="toc-backref" href="#id14">Other diagnostics</a><a class="headerlink" href="#other-diagnostics" title="Permalink to this headline">¶</a></h2>
 <p>dump_page() has been enhanced slightly, to handle these new counting fields, and
 to better report on compound pages in general. Specifically, for compound pages
 with order &gt; 1, the exact (hpage_pinned_refcount) pincount is reported.</p>
 </div>
 <div class="section" id="references">
-<h2><a class="toc-backref" href="#id14">References</a><a class="headerlink" href="#references" title="Permalink to this headline">¶</a></h2>
+<h2><a class="toc-backref" href="#id15">References</a><a class="headerlink" href="#references" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
 <li><a class="reference external" href="https://lwn.net/Articles/784574/">Some slow progress on get_user_pages() (Apr 2, 2019)</a></li>
 <li><a class="reference external" href="https://lwn.net/Articles/774411/">DMA and get_user_pages() (LPC: Dec 12, 2018)</a></li>

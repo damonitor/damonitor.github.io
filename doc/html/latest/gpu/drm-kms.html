@@ -68,7 +68,7 @@
             
             
               <div class="version">
-                5.7.0
+                5.8.0
               </div>
             
           
@@ -164,7 +164,7 @@
   <div class="section" id="kernel-mode-setting-kms">
 <h1>Kernel Mode Setting (KMS)<a class="headerlink" href="#kernel-mode-setting-kms" title="Permalink to this headline">¶</a></h1>
 <p>Drivers must initialize the mode setting core by calling
-<a class="reference internal" href="#c.drm_mode_config_init" title="drm_mode_config_init"><code class="xref c c-func docutils literal notranslate"><span class="pre">drm_mode_config_init()</span></code></a> on the DRM device. The function
+<a class="reference internal" href="#c.drmm_mode_config_init" title="drmm_mode_config_init"><code class="xref c c-func docutils literal notranslate"><span class="pre">drmm_mode_config_init()</span></code></a> on the DRM device. The function
 initializes the <a class="reference internal" href="drm-internals.html#c.drm_device" title="drm_device"><code class="xref c c-type docutils literal notranslate"><span class="pre">struct</span> <span class="pre">drm_device</span></code></a>
 mode_config field and never fails. Once done, mode configuration must
 be setup by initializing the following fields.</p>
@@ -557,6 +557,7 @@ struct <code class="descname">drm_mode_config</code><a class="headerlink" href="
   struct drm_property *hdcp_content_type_property;
   uint32_t preferred_depth, prefer_shadow;
   bool prefer_shadow_fbdev;
+  bool fbdev_use_iomem;
   bool quirk_addfb_prefer_xbgr_30bpp;
   bool quirk_addfb_prefer_host_byte_order;
   bool async_page_flip;
@@ -866,6 +867,13 @@ Protected Content.</dd>
 <dd>hint to userspace to prefer shadow-fb rendering</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">prefer_shadow_fbdev</span></code></dt>
 <dd>Hint to framebuffer emulation to prefer shadow-fb rendering.</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">fbdev_use_iomem</span></code></dt>
+<dd><p class="first">Set to true if framebuffer reside in iomem.
+When set to true memcpy_toio() is used when copying the framebuffer in
+drm_fb_helper.drm_fb_helper_dirty_blit_real().</p>
+<p class="last">FIXME: This should be replaced with a per-mapping is_iomem
+flag (like ttm does), and then used everywhere in fbdev code.</p>
+</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">quirk_addfb_prefer_xbgr_30bpp</span></code></dt>
 <dd>Special hack for legacy ADDFB to keep nouveau userspace happy. Should
 only ever be set by the nouveau kernel driver.</dd>
@@ -905,6 +913,22 @@ Set by <a class="reference internal" href="drm-kms-helpers.html#c.drm_mode_confi
 enumerated by the driver are added here, as are global properties.  Some
 global restrictions are also here, e.g. dimension restrictions.</p>
 <dl class="function">
+<dt id="c.drm_mode_config_init">
+int <code class="descname">drm_mode_config_init</code><span class="sig-paren">(</span>struct <a class="reference internal" href="drm-internals.html#c.drm_device" title="drm_device">drm_device</a> *<em>&nbsp;dev</em><span class="sig-paren">)</span><a class="headerlink" href="#c.drm_mode_config_init" title="Permalink to this definition">¶</a></dt>
+<dd><p>DRM mode_configuration structure initialization</p>
+</dd></dl>
+
+<p><strong>Parameters</strong></p>
+<dl class="docutils">
+<dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">drm_device</span> <span class="pre">*</span> <span class="pre">dev</span></code></dt>
+<dd>DRM device</dd>
+</dl>
+<p><strong>Description</strong></p>
+<p>This is the unmanaged version of <a class="reference internal" href="#c.drmm_mode_config_init" title="drmm_mode_config_init"><code class="xref c c-func docutils literal notranslate"><span class="pre">drmm_mode_config_init()</span></code></a> for drivers which
+still explicitly call <a class="reference internal" href="#c.drm_mode_config_cleanup" title="drm_mode_config_cleanup"><code class="xref c c-func docutils literal notranslate"><span class="pre">drm_mode_config_cleanup()</span></code></a>.</p>
+<p>FIXME: This function is deprecated and drivers should be converted over to
+<a class="reference internal" href="#c.drmm_mode_config_init" title="drmm_mode_config_init"><code class="xref c c-func docutils literal notranslate"><span class="pre">drmm_mode_config_init()</span></code></a>.</p>
+<dl class="function">
 <dt id="c.drm_mode_config_reset">
 void <code class="descname">drm_mode_config_reset</code><span class="sig-paren">(</span>struct <a class="reference internal" href="drm-internals.html#c.drm_device" title="drm_device">drm_device</a> *<em>&nbsp;dev</em><span class="sig-paren">)</span><a class="headerlink" href="#c.drm_mode_config_reset" title="Permalink to this definition">¶</a></dt>
 <dd><p>call -&gt;reset callbacks</p>
@@ -920,9 +944,9 @@ void <code class="descname">drm_mode_config_reset</code><span class="sig-paren">
 callback. Drivers can use this in e.g. their driver load or resume code to
 reset hardware and software state.</p>
 <dl class="function">
-<dt id="c.drm_mode_config_init">
-void <code class="descname">drm_mode_config_init</code><span class="sig-paren">(</span>struct <a class="reference internal" href="drm-internals.html#c.drm_device" title="drm_device">drm_device</a> *<em>&nbsp;dev</em><span class="sig-paren">)</span><a class="headerlink" href="#c.drm_mode_config_init" title="Permalink to this definition">¶</a></dt>
-<dd><p>initialize DRM mode_configuration structure</p>
+<dt id="c.drmm_mode_config_init">
+int <code class="descname">drmm_mode_config_init</code><span class="sig-paren">(</span>struct <a class="reference internal" href="drm-internals.html#c.drm_device" title="drm_device">drm_device</a> *<em>&nbsp;dev</em><span class="sig-paren">)</span><a class="headerlink" href="#c.drmm_mode_config_init" title="Permalink to this definition">¶</a></dt>
+<dd><p>managed DRM mode_configuration structure initialization</p>
 </dd></dl>
 
 <p><strong>Parameters</strong></p>
@@ -936,6 +960,10 @@ configuration of <strong>dev</strong>.</p>
 <p>Since this initializes the modeset locks, no locking is possible. Which is no
 problem, since this should happen single threaded at init time. It is the
 driver’s problem to ensure this guarantee.</p>
+<p>Cleanup is automatically handled through registering drm_mode_config_cleanup
+with <a class="reference internal" href="drm-internals.html#c.drmm_add_action" title="drmm_add_action"><code class="xref c c-func docutils literal notranslate"><span class="pre">drmm_add_action()</span></code></a>.</p>
+<p><strong>Return</strong></p>
+<p>0 on success, negative error value on failure.</p>
 <dl class="function">
 <dt id="c.drm_mode_config_cleanup">
 void <code class="descname">drm_mode_config_cleanup</code><span class="sig-paren">(</span>struct <a class="reference internal" href="drm-internals.html#c.drm_device" title="drm_device">drm_device</a> *<em>&nbsp;dev</em><span class="sig-paren">)</span><a class="headerlink" href="#c.drm_mode_config_cleanup" title="Permalink to this definition">¶</a></dt>
@@ -953,6 +981,8 @@ free up the framebuffers and associated buffer objects.</p>
 <p>Note that since this /should/ happen single-threaded at driver/device
 teardown time, no locking is required. It’s the driver’s job to ensure that
 this guarantee actually holds true.</p>
+<p>FIXME: With the managed <a class="reference internal" href="#c.drmm_mode_config_init" title="drmm_mode_config_init"><code class="xref c c-func docutils literal notranslate"><span class="pre">drmm_mode_config_init()</span></code></a> it is no longer necessary for
+drivers to explicitly call this function.</p>
 </div>
 <div class="section" id="modeset-base-object-abstraction">
 <h2>Modeset Base Object Abstraction<a class="headerlink" href="#modeset-base-object-abstraction" title="Permalink to this headline">¶</a></h2>
@@ -1779,8 +1809,8 @@ the CRTC lock is held already. In that case holding the CRTC lock gives a
 read-lock on all planes connected to that CRTC. But if planes can be
 reassigned things get more tricky. In that case it’s better to use
 drm_atomic_get_plane_state and wire up full error handling.</p>
-<p><strong>Return</strong></p>
 <p>Read-only pointer to the current plane state.</p>
+<p><strong>Return</strong></p>
 <dl class="function">
 <dt id="c.for_each_oldnew_connector_in_state">
 <code class="descname">for_each_oldnew_connector_in_state</code><span class="sig-paren">(</span><em>__state</em>, <em>connector</em>, <em>old_connector_state</em>, <em>new_connector_state</em>, <em>__i</em><span class="sig-paren">)</span><a class="headerlink" href="#c.for_each_oldnew_connector_in_state" title="Permalink to this definition">¶</a></dt>
@@ -2281,10 +2311,10 @@ struct <a class="reference internal" href="#c.drm_crtc_state" title="drm_crtc_st
 <p>This function returns the CRTC state for the given CRTC, allocating it if
 needed. It will also grab the relevant CRTC lock to make sure that the state
 is consistent.</p>
-<p><strong>Return</strong></p>
 <p>Either the allocated state or the error code encoded into the pointer. When
 the error is EDEADLK then the w/w mutex code has detected a deadlock and the
 entire atomic sequence must be restarted. All other errors are fatal.</p>
+<p><strong>Return</strong></p>
 <dl class="function">
 <dt id="c.drm_atomic_get_plane_state">
 struct <a class="reference internal" href="#c.drm_plane_state" title="drm_plane_state">drm_plane_state</a> * <code class="descname">drm_atomic_get_plane_state</code><span class="sig-paren">(</span>struct <a class="reference internal" href="#c.drm_atomic_state" title="drm_atomic_state">drm_atomic_state</a> *<em>&nbsp;state</em>, struct <a class="reference internal" href="#c.drm_plane" title="drm_plane">drm_plane</a> *<em>&nbsp;plane</em><span class="sig-paren">)</span><a class="headerlink" href="#c.drm_atomic_get_plane_state" title="Permalink to this definition">¶</a></dt>
@@ -2302,10 +2332,10 @@ struct <a class="reference internal" href="#c.drm_plane_state" title="drm_plane_
 <p>This function returns the plane state for the given plane, allocating it if
 needed. It will also grab the relevant plane lock to make sure that the state
 is consistent.</p>
-<p><strong>Return</strong></p>
 <p>Either the allocated state or the error code encoded into the pointer. When
 the error is EDEADLK then the w/w mutex code has detected a deadlock and the
 entire atomic sequence must be restarted. All other errors are fatal.</p>
+<p><strong>Return</strong></p>
 <dl class="function">
 <dt id="c.drm_atomic_private_obj_init">
 void <code class="descname">drm_atomic_private_obj_init</code><span class="sig-paren">(</span>struct <a class="reference internal" href="drm-internals.html#c.drm_device" title="drm_device">drm_device</a> *<em>&nbsp;dev</em>, struct <a class="reference internal" href="#c.drm_private_obj" title="drm_private_obj">drm_private_obj</a> *<em>&nbsp;obj</em>, struct <a class="reference internal" href="#c.drm_private_state" title="drm_private_state">drm_private_state</a> *<em>&nbsp;state</em>, const struct <a class="reference internal" href="#c.drm_private_state_funcs" title="drm_private_state_funcs">drm_private_state_funcs</a> *<em>&nbsp;funcs</em><span class="sig-paren">)</span><a class="headerlink" href="#c.drm_atomic_private_obj_init" title="Permalink to this definition">¶</a></dt>
@@ -2357,8 +2387,8 @@ struct <a class="reference internal" href="#c.drm_private_state" title="drm_priv
 <p>This function returns the private object state for the given private object,
 allocating the state if needed. It will also grab the relevant private
 object lock to make sure that the state is consistent.</p>
-<p><strong>Return</strong></p>
 <p>Either the allocated state or the error code encoded into a pointer.</p>
+<p><strong>Return</strong></p>
 <dl class="function">
 <dt id="c.drm_atomic_get_old_private_obj_state">
 struct <a class="reference internal" href="#c.drm_private_state" title="drm_private_state">drm_private_state</a> * <code class="descname">drm_atomic_get_old_private_obj_state</code><span class="sig-paren">(</span>struct <a class="reference internal" href="#c.drm_atomic_state" title="drm_atomic_state">drm_atomic_state</a> *<em>&nbsp;state</em>, struct <a class="reference internal" href="#c.drm_private_obj" title="drm_private_obj">drm_private_obj</a> *<em>&nbsp;obj</em><span class="sig-paren">)</span><a class="headerlink" href="#c.drm_atomic_get_old_private_obj_state" title="Permalink to this definition">¶</a></dt>
@@ -2455,10 +2485,10 @@ struct <a class="reference internal" href="#c.drm_connector_state" title="drm_co
 <p>This function returns the connector state for the given connector,
 allocating it if needed. It will also grab the relevant connector lock to
 make sure that the state is consistent.</p>
-<p><strong>Return</strong></p>
 <p>Either the allocated state or the error code encoded into the pointer. When
 the error is EDEADLK then the w/w mutex code has detected a deadlock and the
 entire atomic sequence must be restarted. All other errors are fatal.</p>
+<p><strong>Return</strong></p>
 <dl class="function">
 <dt id="c.drm_atomic_get_bridge_state">
 struct <a class="reference internal" href="#c.drm_bridge_state" title="drm_bridge_state">drm_bridge_state</a> * <code class="descname">drm_atomic_get_bridge_state</code><span class="sig-paren">(</span>struct <a class="reference internal" href="#c.drm_atomic_state" title="drm_atomic_state">drm_atomic_state</a> *<em>&nbsp;state</em>, struct <a class="reference internal" href="drm-kms-helpers.html#c.drm_bridge" title="drm_bridge">drm_bridge</a> *<em>&nbsp;bridge</em><span class="sig-paren">)</span><a class="headerlink" href="#c.drm_atomic_get_bridge_state" title="Permalink to this definition">¶</a></dt>
@@ -2476,10 +2506,10 @@ struct <a class="reference internal" href="#c.drm_bridge_state" title="drm_bridg
 <p>This function returns the bridge state for the given bridge, allocating it
 if needed. It will also grab the relevant bridge lock to make sure that the
 state is consistent.</p>
-<p><strong>Return</strong></p>
 <p>Either the allocated state or the error code encoded into the pointer. When
 the error is EDEADLK then the w/w mutex code has detected a deadlock and the
 entire atomic sequence must be restarted.</p>
+<p><strong>Return</strong></p>
 <dl class="function">
 <dt id="c.drm_atomic_get_old_bridge_state">
 struct <a class="reference internal" href="#c.drm_bridge_state" title="drm_bridge_state">drm_bridge_state</a> * <code class="descname">drm_atomic_get_old_bridge_state</code><span class="sig-paren">(</span>struct <a class="reference internal" href="#c.drm_atomic_state" title="drm_atomic_state">drm_atomic_state</a> *<em>&nbsp;state</em>, struct <a class="reference internal" href="drm-kms-helpers.html#c.drm_bridge" title="drm_bridge">drm_bridge</a> *<em>&nbsp;bridge</em><span class="sig-paren">)</span><a class="headerlink" href="#c.drm_atomic_get_old_bridge_state" title="Permalink to this definition">¶</a></dt>
@@ -4055,6 +4085,43 @@ void <code class="descname">drm_framebuffer_assign</code><span class="sig-paren"
 <p><strong>Description</strong></p>
 <p>This functions sets the location to store a reference to the framebuffer,
 unreferencing the framebuffer that was previously stored in that location.</p>
+<dl class="type">
+<dt id="c.drm_afbc_framebuffer">
+struct <code class="descname">drm_afbc_framebuffer</code><a class="headerlink" href="#c.drm_afbc_framebuffer" title="Permalink to this definition">¶</a></dt>
+<dd><p>a special afbc frame buffer object</p>
+</dd></dl>
+
+<p><strong>Definition</strong></p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>struct drm_afbc_framebuffer {
+  struct drm_framebuffer base;
+  u32 block_width;
+  u32 block_height;
+  u32 aligned_width;
+  u32 aligned_height;
+  u32 offset;
+  u32 afbc_size;
+};
+</pre></div>
+</div>
+<p><strong>Members</strong></p>
+<dl class="docutils">
+<dt><code class="docutils literal notranslate"><span class="pre">base</span></code></dt>
+<dd>base framebuffer structure.</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">block_width</span></code></dt>
+<dd>width of a single afbc block</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">block_height</span></code></dt>
+<dd>height of a single afbc block</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">aligned_width</span></code></dt>
+<dd>aligned frame buffer width</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">aligned_height</span></code></dt>
+<dd>aligned frame buffer height</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">offset</span></code></dt>
+<dd>offset of the first afbc header</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">afbc_size</span></code></dt>
+<dd>minimum size of afbc buffer</dd>
+</dl>
+<p><strong>Description</strong></p>
+<p>A derived class of struct drm_framebuffer, dedicated for afbc use cases.</p>
 <dl class="function">
 <dt id="c.drm_framebuffer_init">
 int <code class="descname">drm_framebuffer_init</code><span class="sig-paren">(</span>struct <a class="reference internal" href="drm-internals.html#c.drm_device" title="drm_device">drm_device</a> *<em>&nbsp;dev</em>, struct <a class="reference internal" href="#c.drm_framebuffer" title="drm_framebuffer">drm_framebuffer</a> *<em>&nbsp;fb</em>, const struct <a class="reference internal" href="#c.drm_framebuffer_funcs" title="drm_framebuffer_funcs">drm_framebuffer_funcs</a> *<em>&nbsp;funcs</em><span class="sig-paren">)</span><a class="headerlink" href="#c.drm_framebuffer_init" title="Permalink to this definition">¶</a></dt>
@@ -5551,7 +5618,6 @@ struct <code class="descname">drm_display_mode</code><a class="headerlink" href=
   int crtc_vtotal;
   int private_flags;
   int vrefresh;
-  int hsync;
   enum hdmi_picture_aspect picture_aspect_ratio;
   struct list_head export_head;
 };
@@ -5706,11 +5772,6 @@ subclassing state structures.</dd>
 <dd><p class="first">Vertical refresh rate, for debug output in human readable form. Not
 used in a functional way.</p>
 <p class="last">This value is in Hz.</p>
-</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">hsync</span></code></dt>
-<dd><p class="first">Horizontal refresh rate, for debug output in human readable form. Not
-used in a functional way.</p>
-<p class="last">This value is in kHz.</p>
 </dd>
 <dt><code class="docutils literal notranslate"><span class="pre">picture_aspect_ratio</span></code></dt>
 <dd>Field for setting the HDMI picture aspect ratio of a mode.</dd>
@@ -6037,20 +6098,6 @@ void <code class="descname">drm_mode_set_name</code><span class="sig-paren">(</s
 <p><strong>Description</strong></p>
 <p>Set the name of <strong>mode</strong> to a standard format which is &lt;hdisplay&gt;x&lt;vdisplay&gt;
 with an optional ‘i’ suffix for interlaced modes.</p>
-<dl class="function">
-<dt id="c.drm_mode_hsync">
-int <code class="descname">drm_mode_hsync</code><span class="sig-paren">(</span>const struct <a class="reference internal" href="#c.drm_display_mode" title="drm_display_mode">drm_display_mode</a> *<em>&nbsp;mode</em><span class="sig-paren">)</span><a class="headerlink" href="#c.drm_mode_hsync" title="Permalink to this definition">¶</a></dt>
-<dd><p>get the hsync of a mode</p>
-</dd></dl>
-
-<p><strong>Parameters</strong></p>
-<dl class="docutils">
-<dt><code class="docutils literal notranslate"><span class="pre">const</span> <span class="pre">struct</span> <span class="pre">drm_display_mode</span> <span class="pre">*</span> <span class="pre">mode</span></code></dt>
-<dd>mode</dd>
-</dl>
-<p><strong>Return</strong></p>
-<p><strong>modes</strong>’s hsync rate in kHz, rounded to the nearest integer. Calculates the
-value first if it is not yet set.</p>
 <dl class="function">
 <dt id="c.drm_mode_vrefresh">
 int <code class="descname">drm_mode_vrefresh</code><span class="sig-paren">(</span>const struct <a class="reference internal" href="#c.drm_display_mode" title="drm_display_mode">drm_display_mode</a> *<em>&nbsp;mode</em><span class="sig-paren">)</span><a class="headerlink" href="#c.drm_mode_vrefresh" title="Permalink to this definition">¶</a></dt>
@@ -8248,13 +8295,13 @@ void <code class="descname">drm_connector_set_link_status_property</code><span c
 may set this link status property to “BAD”. The caller then needs to send a
 hotplug uevent for userspace to re-check the valid modes through
 GET_CONNECTOR_IOCTL and retry modeset.</p>
+<p>The reason for adding this property is to handle link training failures, but
+it is not limited to DP or link training. For example, if we implement
+asynchronous setcrtc, this property can be used to report any failures in that.</p>
 <p><strong>Note</strong></p>
 <p>Drivers cannot rely on userspace to support this property and
 issue a modeset. As such, they may choose to handle issues (like
 re-training a link) without userspace’s intervention.</p>
-<p>The reason for adding this property is to handle link training failures, but
-it is not limited to DP or link training. For example, if we implement
-asynchronous setcrtc, this property can be used to report any failures in that.</p>
 <dl class="function">
 <dt id="c.drm_connector_attach_max_bpc_property">
 int <code class="descname">drm_connector_attach_max_bpc_property</code><span class="sig-paren">(</span>struct <a class="reference internal" href="#c.drm_connector" title="drm_connector">drm_connector</a> *<em>&nbsp;connector</em>, int<em>&nbsp;min</em>, int<em>&nbsp;max</em><span class="sig-paren">)</span><a class="headerlink" href="#c.drm_connector_attach_max_bpc_property" title="Permalink to this definition">¶</a></dt>
@@ -8352,7 +8399,7 @@ void <code class="descname">drm_mode_put_tile_group</code><span class="sig-paren
 <p>drop reference to tile group and free if 0.</p>
 <dl class="function">
 <dt id="c.drm_mode_get_tile_group">
-struct <a class="reference internal" href="#c.drm_tile_group" title="drm_tile_group">drm_tile_group</a> * <code class="descname">drm_mode_get_tile_group</code><span class="sig-paren">(</span>struct <a class="reference internal" href="drm-internals.html#c.drm_device" title="drm_device">drm_device</a> *<em>&nbsp;dev</em>, char<em>&nbsp;topology</em><span class="sig-paren">)</span><a class="headerlink" href="#c.drm_mode_get_tile_group" title="Permalink to this definition">¶</a></dt>
+struct <a class="reference internal" href="#c.drm_tile_group" title="drm_tile_group">drm_tile_group</a> * <code class="descname">drm_mode_get_tile_group</code><span class="sig-paren">(</span>struct <a class="reference internal" href="drm-internals.html#c.drm_device" title="drm_device">drm_device</a> *<em>&nbsp;dev</em>, const char<em>&nbsp;topology</em><span class="sig-paren">)</span><a class="headerlink" href="#c.drm_mode_get_tile_group" title="Permalink to this definition">¶</a></dt>
 <dd><p>get a reference to an existing tile group</p>
 </dd></dl>
 
@@ -8360,7 +8407,7 @@ struct <a class="reference internal" href="#c.drm_tile_group" title="drm_tile_gr
 <dl class="docutils">
 <dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">drm_device</span> <span class="pre">*</span> <span class="pre">dev</span></code></dt>
 <dd>DRM device</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">char</span> <span class="pre">topology</span></code></dt>
+<dt><code class="docutils literal notranslate"><span class="pre">const</span> <span class="pre">char</span> <span class="pre">topology</span></code></dt>
 <dd>8-bytes unique per monitor.</dd>
 </dl>
 <p><strong>Description</strong></p>
@@ -8369,7 +8416,7 @@ struct <a class="reference internal" href="#c.drm_tile_group" title="drm_tile_gr
 <p>tile group or NULL if not found.</p>
 <dl class="function">
 <dt id="c.drm_mode_create_tile_group">
-struct <a class="reference internal" href="#c.drm_tile_group" title="drm_tile_group">drm_tile_group</a> * <code class="descname">drm_mode_create_tile_group</code><span class="sig-paren">(</span>struct <a class="reference internal" href="drm-internals.html#c.drm_device" title="drm_device">drm_device</a> *<em>&nbsp;dev</em>, char<em>&nbsp;topology</em><span class="sig-paren">)</span><a class="headerlink" href="#c.drm_mode_create_tile_group" title="Permalink to this definition">¶</a></dt>
+struct <a class="reference internal" href="#c.drm_tile_group" title="drm_tile_group">drm_tile_group</a> * <code class="descname">drm_mode_create_tile_group</code><span class="sig-paren">(</span>struct <a class="reference internal" href="drm-internals.html#c.drm_device" title="drm_device">drm_device</a> *<em>&nbsp;dev</em>, const char<em>&nbsp;topology</em><span class="sig-paren">)</span><a class="headerlink" href="#c.drm_mode_create_tile_group" title="Permalink to this definition">¶</a></dt>
 <dd><p>create a tile group from a displayid description</p>
 </dd></dl>
 
@@ -8377,7 +8424,7 @@ struct <a class="reference internal" href="#c.drm_tile_group" title="drm_tile_gr
 <dl class="docutils">
 <dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">drm_device</span> <span class="pre">*</span> <span class="pre">dev</span></code></dt>
 <dd>DRM device</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">char</span> <span class="pre">topology</span></code></dt>
+<dt><code class="docutils literal notranslate"><span class="pre">const</span> <span class="pre">char</span> <span class="pre">topology</span></code></dt>
 <dd>8-bytes unique per monitor.</dd>
 </dl>
 <p><strong>Description</strong></p>
@@ -8388,6 +8435,96 @@ identifier for the tile group.</p>
 </div>
 <div class="section" id="writeback-connectors">
 <h3>Writeback Connectors<a class="headerlink" href="#writeback-connectors" title="Permalink to this headline">¶</a></h3>
+<dl class="type">
+<dt id="c.drm_writeback_connector">
+struct <code class="descname">drm_writeback_connector</code><a class="headerlink" href="#c.drm_writeback_connector" title="Permalink to this definition">¶</a></dt>
+<dd><p>DRM writeback connector</p>
+</dd></dl>
+
+<p><strong>Definition</strong></p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>struct drm_writeback_connector {
+  struct drm_connector base;
+  struct drm_encoder encoder;
+  struct drm_property_blob *pixel_formats_blob_ptr;
+  spinlock_t job_lock;
+  struct list_head job_queue;
+  unsigned int fence_context;
+  spinlock_t fence_lock;
+  unsigned long fence_seqno;
+  char timeline_name[32];
+};
+</pre></div>
+</div>
+<p><strong>Members</strong></p>
+<dl class="docutils">
+<dt><code class="docutils literal notranslate"><span class="pre">base</span></code></dt>
+<dd>base drm_connector object</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">encoder</span></code></dt>
+<dd>Internal encoder used by the connector to fulfill
+the DRM framework requirements. The users of the
+<strong>drm_writeback_connector</strong> control the behaviour of the <strong>encoder</strong>
+by passing the <strong>enc_funcs</strong> parameter to <a class="reference internal" href="#c.drm_writeback_connector_init" title="drm_writeback_connector_init"><code class="xref c c-func docutils literal notranslate"><span class="pre">drm_writeback_connector_init()</span></code></a>
+function.</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">pixel_formats_blob_ptr</span></code></dt>
+<dd>DRM blob property data for the pixel formats list on writeback
+connectors
+See also <a class="reference internal" href="#c.drm_writeback_connector_init" title="drm_writeback_connector_init"><code class="xref c c-func docutils literal notranslate"><span class="pre">drm_writeback_connector_init()</span></code></a></dd>
+<dt><code class="docutils literal notranslate"><span class="pre">job_lock</span></code></dt>
+<dd>Protects job_queue</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">job_queue</span></code></dt>
+<dd><p class="first">Holds a list of a connector’s writeback jobs; the last item is the
+most recent. The first item may be either waiting for the hardware
+to begin writing, or currently being written.</p>
+<p class="last">See also: <a class="reference internal" href="#c.drm_writeback_queue_job" title="drm_writeback_queue_job"><code class="xref c c-func docutils literal notranslate"><span class="pre">drm_writeback_queue_job()</span></code></a> and
+<a class="reference internal" href="#c.drm_writeback_signal_completion" title="drm_writeback_signal_completion"><code class="xref c c-func docutils literal notranslate"><span class="pre">drm_writeback_signal_completion()</span></code></a></p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">fence_context</span></code></dt>
+<dd>timeline context used for fence operations.</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">fence_lock</span></code></dt>
+<dd>spinlock to protect the fences in the fence_context.</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">fence_seqno</span></code></dt>
+<dd>Seqno variable used as monotonic counter for the fences
+created on the connector’s timeline.</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">timeline_name</span></code></dt>
+<dd>The name of the connector’s fence timeline.</dd>
+</dl>
+<dl class="type">
+<dt id="c.drm_writeback_job">
+struct <code class="descname">drm_writeback_job</code><a class="headerlink" href="#c.drm_writeback_job" title="Permalink to this definition">¶</a></dt>
+<dd><p>DRM writeback job</p>
+</dd></dl>
+
+<p><strong>Definition</strong></p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>struct drm_writeback_job {
+  struct drm_writeback_connector *connector;
+  bool prepared;
+  struct work_struct cleanup_work;
+  struct list_head list_entry;
+  struct drm_framebuffer *fb;
+  struct dma_fence *out_fence;
+  void *priv;
+};
+</pre></div>
+</div>
+<p><strong>Members</strong></p>
+<dl class="docutils">
+<dt><code class="docutils literal notranslate"><span class="pre">connector</span></code></dt>
+<dd>Back-pointer to the writeback connector associated with the job</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">prepared</span></code></dt>
+<dd>Set when the job has been prepared with drm_writeback_prepare_job()</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">cleanup_work</span></code></dt>
+<dd>Used to allow drm_writeback_signal_completion to defer dropping the
+framebuffer reference to a workqueue</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">list_entry</span></code></dt>
+<dd>List item for the writeback connector’s <strong>job_queue</strong></dd>
+<dt><code class="docutils literal notranslate"><span class="pre">fb</span></code></dt>
+<dd>Framebuffer to be written to by the writeback connector. Do not set
+directly, use drm_writeback_set_fb()</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">out_fence</span></code></dt>
+<dd>Fence which will signal once the writeback has completed</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">priv</span></code></dt>
+<dd>Driver-private data</dd>
+</dl>
 <p>Writeback connectors are used to expose hardware which can write the output
 from a CRTC to a memory buffer. They are used and act similarly to other
 types of connectors, with some important differences:</p>
@@ -8442,7 +8579,7 @@ From userspace, this property will always read as zero.</dd>
 </div></blockquote>
 <dl class="function">
 <dt id="c.drm_writeback_connector_init">
-int <code class="descname">drm_writeback_connector_init</code><span class="sig-paren">(</span>struct <a class="reference internal" href="drm-internals.html#c.drm_device" title="drm_device">drm_device</a> *<em>&nbsp;dev</em>, struct drm_writeback_connector *<em>&nbsp;wb_connector</em>, const struct <a class="reference internal" href="#c.drm_connector_funcs" title="drm_connector_funcs">drm_connector_funcs</a> *<em>&nbsp;con_funcs</em>, const struct <a class="reference internal" href="drm-kms-helpers.html#c.drm_encoder_helper_funcs" title="drm_encoder_helper_funcs">drm_encoder_helper_funcs</a> *<em>&nbsp;enc_helper_funcs</em>, const u32 *<em>&nbsp;formats</em>, int<em>&nbsp;n_formats</em><span class="sig-paren">)</span><a class="headerlink" href="#c.drm_writeback_connector_init" title="Permalink to this definition">¶</a></dt>
+int <code class="descname">drm_writeback_connector_init</code><span class="sig-paren">(</span>struct <a class="reference internal" href="drm-internals.html#c.drm_device" title="drm_device">drm_device</a> *<em>&nbsp;dev</em>, struct <a class="reference internal" href="#c.drm_writeback_connector" title="drm_writeback_connector">drm_writeback_connector</a> *<em>&nbsp;wb_connector</em>, const struct <a class="reference internal" href="#c.drm_connector_funcs" title="drm_connector_funcs">drm_connector_funcs</a> *<em>&nbsp;con_funcs</em>, const struct <a class="reference internal" href="drm-kms-helpers.html#c.drm_encoder_helper_funcs" title="drm_encoder_helper_funcs">drm_encoder_helper_funcs</a> *<em>&nbsp;enc_helper_funcs</em>, const u32 *<em>&nbsp;formats</em>, int<em>&nbsp;n_formats</em><span class="sig-paren">)</span><a class="headerlink" href="#c.drm_writeback_connector_init" title="Permalink to this definition">¶</a></dt>
 <dd><p>Initialize a writeback connector and its properties</p>
 </dd></dl>
 
@@ -8474,7 +8611,7 @@ set up writeback connectors.</p>
 <p>0 on success, or a negative error code</p>
 <dl class="function">
 <dt id="c.drm_writeback_queue_job">
-void <code class="descname">drm_writeback_queue_job</code><span class="sig-paren">(</span>struct drm_writeback_connector *<em>&nbsp;wb_connector</em>, struct <a class="reference internal" href="#c.drm_connector_state" title="drm_connector_state">drm_connector_state</a> *<em>&nbsp;conn_state</em><span class="sig-paren">)</span><a class="headerlink" href="#c.drm_writeback_queue_job" title="Permalink to this definition">¶</a></dt>
+void <code class="descname">drm_writeback_queue_job</code><span class="sig-paren">(</span>struct <a class="reference internal" href="#c.drm_writeback_connector" title="drm_writeback_connector">drm_writeback_connector</a> *<em>&nbsp;wb_connector</em>, struct <a class="reference internal" href="#c.drm_connector_state" title="drm_connector_state">drm_connector_state</a> *<em>&nbsp;conn_state</em><span class="sig-paren">)</span><a class="headerlink" href="#c.drm_writeback_queue_job" title="Permalink to this definition">¶</a></dt>
 <dd><p>Queue a writeback job for later signalling</p>
 </dd></dl>
 
@@ -8498,7 +8635,7 @@ signaled via drm_writeback_signal_completion).</p>
 <p>See also: <a class="reference internal" href="#c.drm_writeback_signal_completion" title="drm_writeback_signal_completion"><code class="xref c c-func docutils literal notranslate"><span class="pre">drm_writeback_signal_completion()</span></code></a></p>
 <dl class="function">
 <dt id="c.drm_writeback_signal_completion">
-void <code class="descname">drm_writeback_signal_completion</code><span class="sig-paren">(</span>struct drm_writeback_connector *<em>&nbsp;wb_connector</em>, int<em>&nbsp;status</em><span class="sig-paren">)</span><a class="headerlink" href="#c.drm_writeback_signal_completion" title="Permalink to this definition">¶</a></dt>
+void <code class="descname">drm_writeback_signal_completion</code><span class="sig-paren">(</span>struct <a class="reference internal" href="#c.drm_writeback_connector" title="drm_writeback_connector">drm_writeback_connector</a> *<em>&nbsp;wb_connector</em>, int<em>&nbsp;status</em><span class="sig-paren">)</span><a class="headerlink" href="#c.drm_writeback_signal_completion" title="Permalink to this definition">¶</a></dt>
 <dd><p>Signal the completion of a writeback job</p>
 </dd></dl>
 
@@ -8645,7 +8782,7 @@ index. It is invariant over the lifetime of the encoder.</dd>
 <a class="reference internal" href="#c.drm_crtc_index" title="drm_crtc_index"><code class="xref c c-func docutils literal notranslate"><span class="pre">drm_crtc_index()</span></code></a> as the index into the bitfield. The driver must set
 the bits for all <a class="reference internal" href="#c.drm_crtc" title="drm_crtc"><code class="xref c c-type docutils literal notranslate"><span class="pre">drm_crtc</span></code></a> objects this encoder can be connected to
 before calling <a class="reference internal" href="drm-internals.html#c.drm_dev_register" title="drm_dev_register"><code class="xref c c-func docutils literal notranslate"><span class="pre">drm_dev_register()</span></code></a>.</p>
-<p>In reality almost every driver gets this wrong.</p>
+<p>You will get a WARN if you get this wrong in the driver.</p>
 <p class="last">Note that since CRTC objects can’t be hotplugged the assigned indices
 are stable and hence known before registering all objects.</p>
 </dd>
@@ -8658,7 +8795,10 @@ must set the bits for all <a class="reference internal" href="#c.drm_encoder" ti
 encoder itself, too. Cloning bits should be set such that when two
 encoders can be used in a cloned configuration, they both should have
 each another bits set.</p>
-<p>In reality almost every driver gets this wrong.</p>
+<p>As an exception to the above rule if the driver doesn’t implement
+any cloning it can leave <strong>possible_clones</strong> set to 0. The core will
+automagically fix this up by setting the bit for the encoder itself.</p>
+<p>You will get a WARN if you get this wrong in the driver.</p>
 <p class="last">Note that since encoder objects can’t be hotplugged the assigned indices
 are stable and hence known before registering all objects.</p>
 </dd>
@@ -10188,7 +10328,9 @@ Z axis points towards the user, i.e. planes with lower Z position values
 are underneath planes with higher Z position values. Two planes with the
 same Z position value have undefined ordering. Note that the Z position
 value can also be immutable, to inform userspace about the hard-coded
-stacking of planes, see <a class="reference internal" href="#c.drm_plane_create_zpos_immutable_property" title="drm_plane_create_zpos_immutable_property"><code class="xref c c-func docutils literal notranslate"><span class="pre">drm_plane_create_zpos_immutable_property()</span></code></a>.</dd>
+stacking of planes, see <a class="reference internal" href="#c.drm_plane_create_zpos_immutable_property" title="drm_plane_create_zpos_immutable_property"><code class="xref c c-func docutils literal notranslate"><span class="pre">drm_plane_create_zpos_immutable_property()</span></code></a>. If
+any plane has a zpos property (either mutable or immutable), then all
+planes shall have a zpos property.</dd>
 <dt>pixel blend mode:</dt>
 <dd><p class="first">Pixel blend mode is set up with <a class="reference internal" href="#c.drm_plane_create_blend_mode_property" title="drm_plane_create_blend_mode_property"><code class="xref c c-func docutils literal notranslate"><span class="pre">drm_plane_create_blend_mode_property()</span></code></a>.
 It adds a blend mode for alpha blending equation selection, describing
@@ -10241,6 +10383,11 @@ assumed to be 1.0</dd>
 </dl>
 </div></blockquote>
 </dd>
+<dt>IN_FORMATS:</dt>
+<dd>Blob property which contains the set of buffer format and modifier
+pairs supported by this plane. The blob is a drm_format_modifier_blob
+struct. Without this property the plane doesn’t support buffers with
+modifiers. Userspace cannot change this property.</dd>
 </dl>
 <p>Note that all the property extensions described here apply either to the
 plane or the CRTC (e.g. for the background color, which currently is not
@@ -10357,10 +10504,10 @@ Drivers that attach a mutable zpos property to any plane should call the
 values and store them in <a class="reference internal" href="#c.drm_plane_state" title="drm_plane_state"><code class="xref c c-type docutils literal notranslate"><span class="pre">drm_plane_state.normalized_zpos</span></code></a>. Usually min
 should be set to 0 and max to maximal number of planes for given crtc - 1.</p>
 <p>If zpos of some planes cannot be changed (like fixed background or
-cursor/topmost planes), driver should adjust min/max values and assign those
-planes immutable zpos property with lower or higher values (for more
+cursor/topmost planes), drivers shall adjust the min/max values and assign
+those planes immutable zpos properties with lower or higher values (for more
 information, see <a class="reference internal" href="#c.drm_plane_create_zpos_immutable_property" title="drm_plane_create_zpos_immutable_property"><code class="xref c c-func docutils literal notranslate"><span class="pre">drm_plane_create_zpos_immutable_property()</span></code></a> function). In such
-case driver should also assign proper initial zpos values for all planes in
+case drivers shall also assign proper initial zpos values for all planes in
 its plane_reset() callback, so the planes will be always sorted properly.</p>
 <p>See also <a class="reference internal" href="#c.drm_atomic_normalize_zpos" title="drm_atomic_normalize_zpos"><code class="xref c c-func docutils literal notranslate"><span class="pre">drm_atomic_normalize_zpos()</span></code></a>.</p>
 <p>The property exposed to userspace is called “zpos”.</p>
@@ -10587,10 +10734,10 @@ this iterator round off clips that intersect with plane src. Round down for
 x1/y1 and round up for x2/y2 for the intersected coordinate. Similar rounding
 off for full plane src, in case it’s returned as damage. This iterator will
 skip damage clips outside of plane src.</p>
-<p><strong>Return</strong></p>
-<p>True if the output is valid, false if reached the end.</p>
 <p>If the first call to iterator next returns false then it means no need to
 update the plane.</p>
+<p><strong>Return</strong></p>
+<p>True if the output is valid, false if reached the end.</p>
 <dl class="function">
 <dt id="c.drm_atomic_helper_damage_merged">
 bool <code class="descname">drm_atomic_helper_damage_merged</code><span class="sig-paren">(</span>const struct <a class="reference internal" href="#c.drm_plane_state" title="drm_plane_state">drm_plane_state</a> *<em>&nbsp;old_state</em>, struct <a class="reference internal" href="#c.drm_plane_state" title="drm_plane_state">drm_plane_state</a> *<em>&nbsp;state</em>, struct <a class="reference internal" href="drm-kms-helpers.html#c.drm_rect" title="drm_rect">drm_rect</a> *<em>&nbsp;rect</em><span class="sig-paren">)</span><a class="headerlink" href="#c.drm_atomic_helper_damage_merged" title="Permalink to this definition">¶</a></dt>
@@ -11846,6 +11993,61 @@ properties here. Instead document them in a section above.</p>
 </div>
 <div class="section" id="vertical-blanking">
 <h2>Vertical Blanking<a class="headerlink" href="#vertical-blanking" title="Permalink to this headline">¶</a></h2>
+<p>From the computer’s perspective, every time the monitor displays
+a new frame the scanout engine has “scanned out” the display image
+from top to bottom, one row of pixels at a time. The current row
+of pixels is referred to as the current scanline.</p>
+<p>In addition to the display’s visible area, there’s usually a couple of
+extra scanlines which aren’t actually displayed on the screen.
+These extra scanlines don’t contain image data and are occasionally used
+for features like audio and infoframes. The region made up of these
+scanlines is referred to as the vertical blanking region, or vblank for
+short.</p>
+<p>For historical reference, the vertical blanking period was designed to
+give the electron gun (on CRTs) enough time to move back to the top of
+the screen to start scanning out the next frame. Similar for horizontal
+blanking periods. They were designed to give the electron gun enough
+time to move back to the other side of the screen to start scanning the
+next scanline.</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>physical →   ⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽
+top of      |                                        |
+display     |                                        |
+            |               New frame                |
+            |                                        |
+            |↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓|
+            |~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~| ← Scanline,
+            |↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓|   updates the
+            |                                        |   frame as it
+            |                                        |   travels down
+            |                                        |   (&quot;sacn out&quot;)
+            |               Old frame                |
+            |                                        |
+            |                                        |
+            |                                        |
+            |                                        |   physical
+            |                                        |   bottom of
+vertical    |⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽| ← display
+blanking    ┆xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx┆
+region   →  ┆xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx┆
+            ┆xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx┆
+start of →   ⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽⎽
+new frame
+</pre></div>
+</div>
+<p>“Physical top of display” is the reference point for the high-precision/
+corrected timestamp.</p>
+<p>On a lot of display hardware, programming needs to take effect during the
+vertical blanking period so that settings like gamma, the image buffer
+buffer to be scanned out, etc. can safely be changed without showing
+any visual artifacts on the screen. In some unforgiving hardware, some of
+this programming has to both start and end in the same vblank. To help
+with the timing of the hardware programming, an interrupt is usually
+available to notify the driver when it can start the updating of registers.
+The interrupt is in this context named the vblank interrupt.</p>
+<p>The vblank interrupt may be fired at different points depending on the
+hardware. Some hardware implementations will fire the interrupt when the
+new frame start, other implementations will fire the interrupt at different
+points in time.</p>
 <p>Vertical blanking plays a major role in graphics rendering. To achieve
 tear-free display, users must synchronize page flips and/or rendering to
 vertical blanking. The DRM API offers ioctls to perform page flips
@@ -12057,8 +12259,8 @@ int <code class="descname">drm_vblank_init</code><span class="sig-paren">(</span
 </dl>
 <p><strong>Description</strong></p>
 <p>This function initializes vblank support for <strong>num_crtcs</strong> display pipelines.
-Cleanup is handled by the DRM core, or through calling <a class="reference internal" href="drm-internals.html#c.drm_dev_fini" title="drm_dev_fini"><code class="xref c c-func docutils literal notranslate"><span class="pre">drm_dev_fini()</span></code></a> for
-drivers with a <a class="reference internal" href="drm-internals.html#c.drm_driver" title="drm_driver"><code class="xref c c-type docutils literal notranslate"><span class="pre">drm_driver.release</span></code></a> callback.</p>
+Cleanup is handled automatically through a cleanup function added with
+<a class="reference internal" href="drm-internals.html#c.drmm_add_action" title="drmm_add_action"><code class="xref c c-func docutils literal notranslate"><span class="pre">drmm_add_action()</span></code></a>.</p>
 <p><strong>Return</strong></p>
 <p>Zero on success or a negative error code on failure.</p>
 <dl class="function">
@@ -12148,9 +12350,9 @@ match the scanout position reported.</p>
 <p>Note that atomic drivers must call <a class="reference internal" href="#c.drm_calc_timestamping_constants" title="drm_calc_timestamping_constants"><code class="xref c c-func docutils literal notranslate"><span class="pre">drm_calc_timestamping_constants()</span></code></a> before
 enabling a CRTC. The atomic helpers already take care of that in
 <a class="reference internal" href="drm-kms-helpers.html#c.drm_atomic_helper_update_legacy_modeset_state" title="drm_atomic_helper_update_legacy_modeset_state"><code class="xref c c-func docutils literal notranslate"><span class="pre">drm_atomic_helper_update_legacy_modeset_state()</span></code></a>.</p>
-<p><strong>Return</strong></p>
 <p>Returns true on success, and false on failure, i.e. when no accurate
 timestamp could be acquired.</p>
+<p><strong>Return</strong></p>
 <dl class="function">
 <dt id="c.drm_crtc_vblank_helper_get_vblank_timestamp">
 bool <code class="descname">drm_crtc_vblank_helper_get_vblank_timestamp</code><span class="sig-paren">(</span>struct <a class="reference internal" href="#c.drm_crtc" title="drm_crtc">drm_crtc</a> *<em>&nbsp;crtc</em>, int *<em>&nbsp;max_error</em>, ktime_t *<em>&nbsp;vblank_time</em>, bool<em>&nbsp;in_vblank_irq</em><span class="sig-paren">)</span><a class="headerlink" href="#c.drm_crtc_vblank_helper_get_vblank_timestamp" title="Permalink to this definition">¶</a></dt>
@@ -12183,9 +12385,9 @@ match the scanout position reported.</p>
 <p>Note that atomic drivers must call <a class="reference internal" href="#c.drm_calc_timestamping_constants" title="drm_calc_timestamping_constants"><code class="xref c c-func docutils literal notranslate"><span class="pre">drm_calc_timestamping_constants()</span></code></a> before
 enabling a CRTC. The atomic helpers already take care of that in
 <a class="reference internal" href="drm-kms-helpers.html#c.drm_atomic_helper_update_legacy_modeset_state" title="drm_atomic_helper_update_legacy_modeset_state"><code class="xref c c-func docutils literal notranslate"><span class="pre">drm_atomic_helper_update_legacy_modeset_state()</span></code></a>.</p>
-<p><strong>Return</strong></p>
 <p>Returns true on success, and false on failure, i.e. when no accurate
 timestamp could be acquired.</p>
+<p><strong>Return</strong></p>
 <dl class="function">
 <dt id="c.drm_crtc_vblank_count">
 u64 <code class="descname">drm_crtc_vblank_count</code><span class="sig-paren">(</span>struct <a class="reference internal" href="#c.drm_crtc" title="drm_crtc">drm_crtc</a> *<em>&nbsp;crtc</em><span class="sig-paren">)</span><a class="headerlink" href="#c.drm_crtc_vblank_count" title="Permalink to this definition">¶</a></dt>
@@ -12254,12 +12456,6 @@ interrupt. For example when the page flip interrupt happens when the page
 flip gets armed, but not when it actually executes within the next vblank
 period. This helper function implements exactly the required vblank arming
 behaviour.</p>
-<p><strong>NOTE</strong></p>
-<p>Drivers using this to send out the <a class="reference internal" href="#c.drm_crtc_state" title="drm_crtc_state"><code class="xref c c-type docutils literal notranslate"><span class="pre">drm_crtc_state.event</span></code></a> as part of an
-atomic commit must ensure that the next vblank happens at exactly the same
-time as the atomic commit is committed to the hardware. This function itself
-does <strong>not</strong> protect against the next vblank interrupt racing with either this
-function call or the atomic commit operation. A possible sequence could be:</p>
 <ol class="arabic simple">
 <li>Driver commits new hardware state into vblank-synchronized registers.</li>
 <li>A vblank happens, committing the hardware state. Also the corresponding
@@ -12279,6 +12475,12 @@ handler by calling <a class="reference internal" href="#c.drm_crtc_send_vblank_e
 possible race with the hardware committing the atomic update.</p>
 <p>Caller must hold a vblank reference for the event <strong>e</strong> acquired by a
 <a class="reference internal" href="#c.drm_crtc_vblank_get" title="drm_crtc_vblank_get"><code class="xref c c-func docutils literal notranslate"><span class="pre">drm_crtc_vblank_get()</span></code></a>, which will be dropped when the next vblank arrives.</p>
+<p><strong>NOTE</strong></p>
+<p>Drivers using this to send out the <a class="reference internal" href="#c.drm_crtc_state" title="drm_crtc_state"><code class="xref c c-type docutils literal notranslate"><span class="pre">drm_crtc_state.event</span></code></a> as part of an
+atomic commit must ensure that the next vblank happens at exactly the same
+time as the atomic commit is committed to the hardware. This function itself
+does <strong>not</strong> protect against the next vblank interrupt racing with either this
+function call or the atomic commit operation. A possible sequence could be:</p>
 <dl class="function">
 <dt id="c.drm_crtc_send_vblank_event">
 void <code class="descname">drm_crtc_send_vblank_event</code><span class="sig-paren">(</span>struct <a class="reference internal" href="#c.drm_crtc" title="drm_crtc">drm_crtc</a> *<em>&nbsp;crtc</em>, struct <a class="reference internal" href="#c.drm_pending_vblank_event" title="drm_pending_vblank_event">drm_pending_vblank_event</a> *<em>&nbsp;e</em><span class="sig-paren">)</span><a class="headerlink" href="#c.drm_crtc_send_vblank_event" title="Permalink to this definition">¶</a></dt>

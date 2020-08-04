@@ -68,7 +68,7 @@
             
             
               <div class="version">
-                5.7.0
+                5.8.0
               </div>
             
           
@@ -418,13 +418,13 @@ handler function you will use, B) a help_msg string, that will print when SysRQ
 prints help, and C) an action_msg string, that will print right before your
 handler is called. Your handler must conform to the prototype in ‘sysrq.h’.</p>
 <p>After the <code class="docutils literal notranslate"><span class="pre">sysrq_key_op</span></code> is created, you can call the kernel function
-<code class="docutils literal notranslate"><span class="pre">register_sysrq_key(int</span> <span class="pre">key,</span> <span class="pre">struct</span> <span class="pre">sysrq_key_op</span> <span class="pre">*op_p);</span></code> this will
+<code class="docutils literal notranslate"><span class="pre">register_sysrq_key(int</span> <span class="pre">key,</span> <span class="pre">const</span> <span class="pre">struct</span> <span class="pre">sysrq_key_op</span> <span class="pre">*op_p);</span></code> this will
 register the operation pointed to by <code class="docutils literal notranslate"><span class="pre">op_p</span></code> at table key ‘key’,
 if that slot in the table is blank. At module unload time, you must call
-the function <code class="docutils literal notranslate"><span class="pre">unregister_sysrq_key(int</span> <span class="pre">key,</span> <span class="pre">struct</span> <span class="pre">sysrq_key_op</span> <span class="pre">*op_p)</span></code>, which
-will remove the key op pointed to by ‘op_p’ from the key ‘key’, if and only if
-it is currently registered in that slot. This is in case the slot has been
-overwritten since you registered it.</p>
+the function <code class="docutils literal notranslate"><span class="pre">unregister_sysrq_key(int</span> <span class="pre">key,</span> <span class="pre">const</span> <span class="pre">struct</span> <span class="pre">sysrq_key_op</span> <span class="pre">*op_p)</span></code>,
+which will remove the key op pointed to by ‘op_p’ from the key ‘key’, if and
+only if it is currently registered in that slot. This is in case the slot has
+been overwritten since you registered it.</p>
 <p>The Magic SysRQ system works by registering key operations against a key op
 lookup table, which is defined in ‘drivers/tty/sysrq.c’. This key table has
 a number of operations registered into it at compile time, but is mutable,

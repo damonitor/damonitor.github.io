@@ -68,7 +68,7 @@
             
             
               <div class="version">
-                5.7.0
+                5.8.0
               </div>
             
           
@@ -383,7 +383,7 @@ struct <code class="descname">ieee80211_key_conf</code><a class="headerlink" hre
   s8 keyidx;
   u16 flags;
   u8 keylen;
-  u8 key[0];
+  u8 key[];
 };
 </pre></div>
 </div>
@@ -1061,6 +1061,7 @@ struct <code class="descname">ieee80211_sta</code><a class="headerlink" href="#c
   struct ieee80211_sta_ht_cap ht_cap;
   struct ieee80211_sta_vht_cap vht_cap;
   struct ieee80211_sta_he_cap he_cap;
+  struct ieee80211_he_6ghz_capa he_6ghz_capa;
   u16 max_rx_aggregation_subframes;
   bool wme;
   u8 uapsd_queues;
@@ -1079,7 +1080,7 @@ struct <code class="descname">ieee80211_sta</code><a class="headerlink" href="#c
   u16 max_tid_amsdu_len[IEEE80211_NUM_TIDS];
   struct ieee80211_sta_txpwr txpwr;
   struct ieee80211_txq *txq[IEEE80211_NUM_TIDS + 1];
-  u8 drv_priv[0] ;
+  u8 drv_priv[] ;
 };
 </pre></div>
 </div>
@@ -1097,6 +1098,8 @@ struct <code class="descname">ieee80211_sta</code><a class="headerlink" href="#c
 <dd>VHT capabilities of this STA; restricted to our own capabilities</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">he_cap</span></code></dt>
 <dd>HE capabilities of this STA</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">he_6ghz_capa</span></code></dt>
+<dd>on 6 GHz, holds the HE 6 GHz band capabilities</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">max_rx_aggregation_subframes</span></code></dt>
 <dd>maximal amount of frames in a single AMPDU
 that this station is allowed to transmit to us.
@@ -1232,6 +1235,7 @@ BSSID on the same AP hardware without disconnecting first).
 In this case, the result of this method with localaddr NULL
 is not reliable.</dd>
 </dl>
+<p><strong>Description</strong></p>
 <p>DO NOT USE THIS FUNCTION with localaddr NULL if at all possible.</p>
 </div>
 <div class="section" id="hardware-scan-offload">
@@ -1321,7 +1325,10 @@ enum <code class="descname">ieee80211_ampdu_mlme_action</code><a class="headerli
 <dd>stop RX aggregation</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">IEEE80211_AMPDU_TX_START</span></code></dt>
 <dd>start TX aggregation, the driver must either
-call <a class="reference internal" href="#c.ieee80211_start_tx_ba_cb_irqsafe" title="ieee80211_start_tx_ba_cb_irqsafe"><code class="xref c c-func docutils literal notranslate"><span class="pre">ieee80211_start_tx_ba_cb_irqsafe()</span></code></a> or return the special
+call <a class="reference internal" href="#c.ieee80211_start_tx_ba_cb_irqsafe" title="ieee80211_start_tx_ba_cb_irqsafe"><code class="xref c c-func docutils literal notranslate"><span class="pre">ieee80211_start_tx_ba_cb_irqsafe()</span></code></a> or
+call <a class="reference internal" href="#c.ieee80211_start_tx_ba_cb_irqsafe" title="ieee80211_start_tx_ba_cb_irqsafe"><code class="xref c c-func docutils literal notranslate"><span class="pre">ieee80211_start_tx_ba_cb_irqsafe()</span></code></a> with status
+<code class="docutils literal notranslate"><span class="pre">IEEE80211_AMPDU_TX_START_DELAY_ADDBA</span></code> to delay addba after
+ieee80211_start_tx_ba_cb_irqsafe is called, or just return the special
 status <code class="docutils literal notranslate"><span class="pre">IEEE80211_AMPDU_TX_START_IMMEDIATE</span></code>.</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">IEEE80211_AMPDU_TX_STOP_CONT</span></code></dt>
 <dd>stop TX aggregation but continue transmitting
@@ -1428,6 +1435,7 @@ int <code class="descname">ieee80211_start_tx_ba_session</code><span class="sig-
 </dl>
 <p><strong>Return</strong></p>
 <p>success if addBA request was sent, failure otherwise</p>
+<p><strong>Description</strong></p>
 <p>Although mac80211/low level driver/user space application can estimate
 the need to start aggregation on a certain RA/TID, the session level
 will be managed by the mac80211.</p>
@@ -1465,6 +1473,7 @@ int <code class="descname">ieee80211_stop_tx_ba_session</code><span class="sig-p
 </dl>
 <p><strong>Return</strong></p>
 <p>negative error if the TID is invalid, or no aggregation active</p>
+<p><strong>Description</strong></p>
 <p>Although mac80211/low level driver/user space application can estimate
 the need to stop aggregation on a certain RA/TID, the session level
 will be managed by the mac80211.</p>
@@ -1910,7 +1919,8 @@ reply to other uAPSD trigger frames or PS-Poll.</dd>
 <dd>station woke up, but we’re still blocking TX
 until pending frames are delivered</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">WLAN_STA_USES_ENCRYPTION</span></code></dt>
-<dd><em>undescribed</em></dd>
+<dd>This station was configured for encryption,
+so drop all packets without a key later.</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">NUM_WLAN_STA_FLAGS</span></code></dt>
 <dd>number of defined flags</dd>
 </dl>

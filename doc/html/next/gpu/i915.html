@@ -68,7 +68,7 @@
             
             
               <div class="version">
-                5.7.0
+                5.8.0
               </div>
             
           
@@ -419,6 +419,19 @@ void <code class="descname">intel_uncore_forcewake_put</code><span class="sig-pa
 <p><strong>Description</strong></p>
 <p>This function drops the device-level forcewakes for specified
 domains obtained by <a class="reference internal" href="#c.intel_uncore_forcewake_get" title="intel_uncore_forcewake_get"><code class="xref c c-func docutils literal notranslate"><span class="pre">intel_uncore_forcewake_get()</span></code></a>.</p>
+<dl class="function">
+<dt id="c.intel_uncore_forcewake_flush">
+void <code class="descname">intel_uncore_forcewake_flush</code><span class="sig-paren">(</span>struct intel_uncore *<em>&nbsp;uncore</em>, enum forcewake_domains<em>&nbsp;fw_domains</em><span class="sig-paren">)</span><a class="headerlink" href="#c.intel_uncore_forcewake_flush" title="Permalink to this definition">¶</a></dt>
+<dd><p>flush the delayed release</p>
+</dd></dl>
+
+<p><strong>Parameters</strong></p>
+<dl class="docutils">
+<dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">intel_uncore</span> <span class="pre">*</span> <span class="pre">uncore</span></code></dt>
+<dd>the intel_uncore structure</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">enum</span> <span class="pre">forcewake_domains</span> <span class="pre">fw_domains</span></code></dt>
+<dd>forcewake domains to flush</dd>
+</dl>
 <dl class="function">
 <dt id="c.intel_uncore_forcewake_put__locked">
 void <code class="descname">intel_uncore_forcewake_put__locked</code><span class="sig-paren">(</span>struct intel_uncore *<em>&nbsp;uncore</em>, enum forcewake_domains<em>&nbsp;fw_domains</em><span class="sig-paren">)</span><a class="headerlink" href="#c.intel_uncore_forcewake_put__locked" title="Permalink to this definition">¶</a></dt>
@@ -1555,7 +1568,7 @@ would bring a lot of complexity and most of the moderns systems will only
 use page flips.</p>
 <dl class="function">
 <dt id="c.intel_psr_enable">
-void <code class="descname">intel_psr_enable</code><span class="sig-paren">(</span>struct intel_dp *<em>&nbsp;intel_dp</em>, const struct intel_crtc_state *<em>&nbsp;crtc_state</em><span class="sig-paren">)</span><a class="headerlink" href="#c.intel_psr_enable" title="Permalink to this definition">¶</a></dt>
+void <code class="descname">intel_psr_enable</code><span class="sig-paren">(</span>struct intel_dp *<em>&nbsp;intel_dp</em>, const struct intel_crtc_state *<em>&nbsp;crtc_state</em>, const struct <a class="reference internal" href="drm-kms.html#c.drm_connector_state" title="drm_connector_state">drm_connector_state</a> *<em>&nbsp;conn_state</em><span class="sig-paren">)</span><a class="headerlink" href="#c.intel_psr_enable" title="Permalink to this definition">¶</a></dt>
 <dd><p>Enable PSR</p>
 </dd></dl>
 
@@ -1565,6 +1578,8 @@ void <code class="descname">intel_psr_enable</code><span class="sig-paren">(</sp
 <dd>Intel DP</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">const</span> <span class="pre">struct</span> <span class="pre">intel_crtc_state</span> <span class="pre">*</span> <span class="pre">crtc_state</span></code></dt>
 <dd>new CRTC state</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">const</span> <span class="pre">struct</span> <span class="pre">drm_connector_state</span> <span class="pre">*</span> <span class="pre">conn_state</span></code></dt>
+<dd>new CONNECTOR state</dd>
 </dl>
 <p><strong>Description</strong></p>
 <p>This function can only be called after the pipe is fully trained and enabled.</p>
@@ -1585,7 +1600,7 @@ void <code class="descname">intel_psr_disable</code><span class="sig-paren">(</s
 <p>This function needs to be called before disabling pipe.</p>
 <dl class="function">
 <dt id="c.intel_psr_update">
-void <code class="descname">intel_psr_update</code><span class="sig-paren">(</span>struct intel_dp *<em>&nbsp;intel_dp</em>, const struct intel_crtc_state *<em>&nbsp;crtc_state</em><span class="sig-paren">)</span><a class="headerlink" href="#c.intel_psr_update" title="Permalink to this definition">¶</a></dt>
+void <code class="descname">intel_psr_update</code><span class="sig-paren">(</span>struct intel_dp *<em>&nbsp;intel_dp</em>, const struct intel_crtc_state *<em>&nbsp;crtc_state</em>, const struct <a class="reference internal" href="drm-kms.html#c.drm_connector_state" title="drm_connector_state">drm_connector_state</a> *<em>&nbsp;conn_state</em><span class="sig-paren">)</span><a class="headerlink" href="#c.intel_psr_update" title="Permalink to this definition">¶</a></dt>
 <dd><p>Update PSR state</p>
 </dd></dl>
 
@@ -1595,6 +1610,8 @@ void <code class="descname">intel_psr_update</code><span class="sig-paren">(</sp
 <dd>Intel DP</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">const</span> <span class="pre">struct</span> <span class="pre">intel_crtc_state</span> <span class="pre">*</span> <span class="pre">crtc_state</span></code></dt>
 <dd>new CRTC state</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">const</span> <span class="pre">struct</span> <span class="pre">drm_connector_state</span> <span class="pre">*</span> <span class="pre">conn_state</span></code></dt>
+<dd>new CONNECTOR state</dd>
 </dl>
 <p><strong>Description</strong></p>
 <p>This functions will update PSR states, disabling, enabling or switching PSR
@@ -3123,6 +3140,60 @@ for execution also include a list of all locations within buffers that
 refer to GPU-addresses so that the kernel can edit the buffer correctly.
 This process is dubbed relocation.</p>
 </div>
+<div class="section" id="locking-guidelines">
+<h3>Locking Guidelines<a class="headerlink" href="#locking-guidelines" title="Permalink to this headline">¶</a></h3>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">This is a description of how the locking should be after
+refactoring is done. Does not necessarily reflect what the locking
+looks like while WIP.</p>
+</div>
+<ol class="arabic">
+<li><p class="first">All locking rules and interface contracts with cross-driver interfaces
+(dma-buf, dma_fence) need to be followed.</p>
+</li>
+<li><p class="first">No struct_mutex anywhere in the code</p>
+</li>
+<li><p class="first">dma_resv will be the outermost lock (when needed) and ww_acquire_ctx
+is to be hoisted at highest level and passed down within i915_gem_ctx
+in the call chain</p>
+</li>
+<li><p class="first">While holding lru/memory manager (buddy, drm_mm, whatever) locks
+system memory allocations are not allowed</p>
+<blockquote>
+<div><ul class="simple">
+<li>Enforce this by priming lockdep (with fs_reclaim). If we
+allocate memory while holding these looks we get a rehash
+of the shrinker vs. struct_mutex saga, and that would be
+real bad.</li>
+</ul>
+</div></blockquote>
+</li>
+<li><p class="first">Do not nest different lru/memory manager locks within each other.
+Take them in turn to update memory allocations, relying on the object’s
+dma_resv ww_mutex to serialize against other operations.</p>
+</li>
+<li><p class="first">The suggestion for lru/memory managers locks is that they are small
+enough to be spinlocks.</p>
+</li>
+<li><p class="first">All features need to come with exhaustive kernel selftests and/or
+IGT tests when appropriate</p>
+</li>
+<li><p class="first">All LMEM uAPI paths need to be fully restartable (_interruptible()
+for all locks/waits/sleeps)</p>
+<blockquote>
+<div><ul class="simple">
+<li>Error handling validation through signal injection.
+Still the best strategy we have for validating GEM uAPI
+corner cases.
+Must be excessively used in the IGT, and we need to check
+that we really have full path coverage of all error cases.</li>
+<li>-EDEADLK handling with ww_mutex</li>
+</ul>
+</div></blockquote>
+</li>
+</ol>
+</div>
 <div class="section" id="gem-bo-management-implementation-details">
 <h3>GEM BO Management Implementation Details<a class="headerlink" href="#gem-bo-management-implementation-details" title="Permalink to this headline">¶</a></h3>
 <p>A VMA represents a GEM BO that is bound into an address space. Therefore, a
@@ -3742,7 +3813,7 @@ asked to wait for eviction and interrupted.</p>
 <h3>GTT Fences and Swizzling<a class="headerlink" href="#gtt-fences-and-swizzling" title="Permalink to this headline">¶</a></h3>
 <dl class="function">
 <dt id="c.i915_vma_revoke_fence">
-int <code class="descname">i915_vma_revoke_fence</code><span class="sig-paren">(</span>struct i915_vma *<em>&nbsp;vma</em><span class="sig-paren">)</span><a class="headerlink" href="#c.i915_vma_revoke_fence" title="Permalink to this definition">¶</a></dt>
+void <code class="descname">i915_vma_revoke_fence</code><span class="sig-paren">(</span>struct i915_vma *<em>&nbsp;vma</em><span class="sig-paren">)</span><a class="headerlink" href="#c.i915_vma_revoke_fence" title="Permalink to this definition">¶</a></dt>
 <dd><p>force-remove fence for a VMA</p>
 </dd></dl>
 
@@ -3754,8 +3825,6 @@ int <code class="descname">i915_vma_revoke_fence</code><span class="sig-paren">(
 <p><strong>Description</strong></p>
 <p>This function force-removes any fence from the given object, which is useful
 if the kernel wants to do untiled GTT access.</p>
-<p><strong>Return</strong></p>
-<p>0 on success, negative error code on failure.</p>
 <dl class="function">
 <dt id="c.i915_vma_pin_fence">
 int <code class="descname">i915_vma_pin_fence</code><span class="sig-paren">(</span>struct i915_vma *<em>&nbsp;vma</em><span class="sig-paren">)</span><a class="headerlink" href="#c.i915_vma_pin_fence" title="Permalink to this definition">¶</a></dt>
@@ -3775,8 +3844,8 @@ stealing one if it can’t find any.</p>
 <p>It then sets up the reg based on the object’s properties: address, pitch
 and tiling format.</p>
 <p>For an untiled surface, this removes any existing fence.</p>
-<p><strong>Return</strong></p>
 <p>0 on success, negative error code on failure.</p>
+<p><strong>Return</strong></p>
 <dl class="function">
 <dt id="c.i915_reserve_fence">
 struct i915_fence_reg * <code class="descname">i915_reserve_fence</code><span class="sig-paren">(</span>struct i915_ggtt *<em>&nbsp;ggtt</em><span class="sig-paren">)</span><a class="headerlink" href="#c.i915_reserve_fence" title="Permalink to this definition">¶</a></dt>
@@ -3805,8 +3874,8 @@ void <code class="descname">i915_unreserve_fence</code><span class="sig-paren">(
 <p><strong>Description</strong></p>
 <p>This function add a reserved fence register from vGPU to the fence_list.</p>
 <dl class="function">
-<dt id="c.i915_gem_restore_fences">
-void <code class="descname">i915_gem_restore_fences</code><span class="sig-paren">(</span>struct i915_ggtt *<em>&nbsp;ggtt</em><span class="sig-paren">)</span><a class="headerlink" href="#c.i915_gem_restore_fences" title="Permalink to this definition">¶</a></dt>
+<dt id="c.intel_ggtt_restore_fences">
+void <code class="descname">intel_ggtt_restore_fences</code><span class="sig-paren">(</span>struct i915_ggtt *<em>&nbsp;ggtt</em><span class="sig-paren">)</span><a class="headerlink" href="#c.intel_ggtt_restore_fences" title="Permalink to this definition">¶</a></dt>
 <dd><p>restore fence state</p>
 </dd></dl>
 
@@ -4181,19 +4250,6 @@ range is reserved inside GuC.</p>
 <div class="section" id="guc-specific-firmware-loader">
 <h4>GuC-specific firmware loader<a class="headerlink" href="#guc-specific-firmware-loader" title="Permalink to this headline">¶</a></h4>
 <dl class="function">
-<dt id="c.intel_guc_fw_init_early">
-void <code class="descname">intel_guc_fw_init_early</code><span class="sig-paren">(</span>struct intel_guc *<em>&nbsp;guc</em><span class="sig-paren">)</span><a class="headerlink" href="#c.intel_guc_fw_init_early" title="Permalink to this definition">¶</a></dt>
-<dd><p>initializes GuC firmware struct</p>
-</dd></dl>
-
-<p><strong>Parameters</strong></p>
-<dl class="docutils">
-<dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">intel_guc</span> <span class="pre">*</span> <span class="pre">guc</span></code></dt>
-<dd>intel_guc struct</dd>
-</dl>
-<p><strong>Description</strong></p>
-<p>On platforms with GuC selects firmware for uploading</p>
-<dl class="function">
 <dt id="c.intel_guc_fw_upload">
 int <code class="descname">intel_guc_fw_upload</code><span class="sig-paren">(</span>struct intel_guc *<em>&nbsp;guc</em><span class="sig-paren">)</span><a class="headerlink" href="#c.intel_guc_fw_upload" title="Permalink to this definition">¶</a></dt>
 <dd><p>load GuC uCode to device</p>
@@ -4540,7 +4596,7 @@ opened (for instance we don’t assume it’s for periodic OA unit metrics). An
 i915-perf stream is expected to be a suitable interface for other forms of
 buffered data written by the GPU besides periodic OA metrics.</p>
 <p>Note we copy the properties from userspace outside of the i915 perf
-mutex to avoid an awkward lockdep with mmap_sem.</p>
+mutex to avoid an awkward lockdep with mmap_lock.</p>
 <p>Most of the implementation details are handled by
 <a class="reference internal" href="#c.i915_perf_open_ioctl_locked" title="i915_perf_open_ioctl_locked"><code class="xref c c-func docutils literal notranslate"><span class="pre">i915_perf_open_ioctl_locked()</span></code></a> after taking the <code class="xref c c-type docutils literal notranslate"><span class="pre">perf-&gt;lock</span></code>
 mutex for serializing with any non-file-operation driver hooks.</p>
@@ -4647,14 +4703,13 @@ struct <code class="descname">i915_perf_stream</code><a class="headerlink" href=
     int format_size;
     int size_exponent;
     spinlock_t ptr_lock;
-    struct {
-      u32 offset;
-    } tails[2];
-    unsigned int aged_tail_idx;
+    u32 aging_tail;
     u64 aging_timestamp;
     u32 head;
+    u32 tail;
   } oa_buffer;
   struct i915_vma *noa_wait;
+  u64 poll_oa_period;
 };
 </pre></div>
 </div>
@@ -4718,6 +4773,9 @@ sees data ready to read in the circular OA buffer.</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">noa_wait</span></code></dt>
 <dd>A batch buffer doing a wait on the GPU for the NOA logic to be
 reprogrammed.</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">poll_oa_period</span></code></dt>
+<dd>The period in nanoseconds at which the OA
+buffer should be checked for available data.</dd>
 </dl>
 <dl class="type">
 <dt id="c.i915_perf_stream_ops">
@@ -4819,14 +4877,14 @@ int <code class="descname">i915_perf_open_ioctl_locked</code><span class="sig-pa
 <p>Implements further stream config validation and stream initialization on
 behalf of <a class="reference internal" href="#c.i915_perf_open_ioctl" title="i915_perf_open_ioctl"><code class="xref c c-func docutils literal notranslate"><span class="pre">i915_perf_open_ioctl()</span></code></a> with the <code class="xref c c-type docutils literal notranslate"><span class="pre">perf-&gt;lock</span></code> mutex
 taken to serialize with any non-file-operation driver hooks.</p>
-<p><strong>Note</strong></p>
-<p>at this point the <strong>props</strong> have only been validated in isolation and
-it’s still necessary to validate that the combination of properties makes
-sense.</p>
 <p>In the case where userspace is interested in OA unit metrics then further
 config validation and stream initialization details will be handled by
 <a class="reference internal" href="#c.i915_oa_stream_init" title="i915_oa_stream_init"><code class="xref c c-func docutils literal notranslate"><span class="pre">i915_oa_stream_init()</span></code></a>. The code here should only validate config state that
 will be relevant to all stream types / backends.</p>
+<p><strong>Note</strong></p>
+<p>at this point the <strong>props</strong> have only been validated in isolation and
+it’s still necessary to validate that the combination of properties makes
+sense.</p>
 <p><strong>Return</strong></p>
 <p>zero on success or a negative error code.</p>
 <dl class="function">
@@ -4988,7 +5046,7 @@ struct <code class="descname">i915_oa_ops</code><a class="headerlink" href="#c.i
   bool (*is_valid_b_counter_reg)(struct i915_perf *perf, u32 addr);
   bool (*is_valid_mux_reg)(struct i915_perf *perf, u32 addr);
   bool (*is_valid_flex_reg)(struct i915_perf *perf, u32 addr);
-  struct i915_request * (*enable_metric_set)(struct i915_perf_stream *stream);
+  int (*enable_metric_set)(struct i915_perf_stream *stream, struct i915_active *active);
   void (*disable_metric_set)(struct i915_perf_stream *stream);
   void (*oa_enable)(struct i915_perf_stream *stream);
   void (*oa_disable)(struct i915_perf_stream *stream);
@@ -5171,6 +5229,9 @@ struct <code class="descname">perf_open_properties</code><a class="headerlink" h
   bool oa_periodic;
   int oa_period_exponent;
   struct intel_engine_cs *engine;
+  bool has_sseu;
+  struct intel_sseu sseu;
+  u64 poll_oa_period;
 };
 </pre></div>
 </div>
@@ -5195,6 +5256,15 @@ context</dd>
 <dd>The OA unit sampling period is derived from this</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">engine</span></code></dt>
 <dd>The engine (typically rcs0) being monitored by the OA unit</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">has_sseu</span></code></dt>
+<dd>Whether <strong>sseu</strong> was specified by userspace</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">sseu</span></code></dt>
+<dd>internal SSEU configuration computed either from the userspace
+specified configuration in the opening parameters or a default value
+(see get_default_sseu_config())</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">poll_oa_period</span></code></dt>
+<dd>The period in nanoseconds at which the CPU will check for OA
+data availability</dd>
 </dl>
 <p><strong>Description</strong></p>
 <p>As <a class="reference internal" href="#c.read_properties_unlocked" title="read_properties_unlocked"><code class="xref c c-func docutils literal notranslate"><span class="pre">read_properties_unlocked()</span></code></a> enumerates and validates the properties given
@@ -5221,8 +5291,8 @@ It is responsible for reading tail pointers from the hardware and giving
 the pointers time to ‘age’ before they are made available for reading.
 (See description of OA_TAIL_MARGIN_NSEC above for further details.)</p>
 <p>Besides returning true when there is data available to read() this function
-also has the side effect of updating the oa_buffer.tails[], .aging_timestamp
-and .aged_tail_idx state used for reading.</p>
+also updates the tail, aging_tail and aging_timestamp in the oa_buffer
+object.</p>
 <p><strong>Note</strong></p>
 <p>It’s safe to read OA config state here unlocked, assuming that this is
 only called while the stream is enabled, while the global OA configuration
@@ -5747,14 +5817,14 @@ int <code class="descname">i915_perf_open_ioctl_locked</code><span class="sig-pa
 <p>Implements further stream config validation and stream initialization on
 behalf of <a class="reference internal" href="#c.i915_perf_open_ioctl" title="i915_perf_open_ioctl"><code class="xref c c-func docutils literal notranslate"><span class="pre">i915_perf_open_ioctl()</span></code></a> with the <code class="xref c c-type docutils literal notranslate"><span class="pre">perf-&gt;lock</span></code> mutex
 taken to serialize with any non-file-operation driver hooks.</p>
-<p><strong>Note</strong></p>
-<p>at this point the <strong>props</strong> have only been validated in isolation and
-it’s still necessary to validate that the combination of properties makes
-sense.</p>
 <p>In the case where userspace is interested in OA unit metrics then further
 config validation and stream initialization details will be handled by
 <a class="reference internal" href="#c.i915_oa_stream_init" title="i915_oa_stream_init"><code class="xref c c-func docutils literal notranslate"><span class="pre">i915_oa_stream_init()</span></code></a>. The code here should only validate config state that
 will be relevant to all stream types / backends.</p>
+<p><strong>Note</strong></p>
+<p>at this point the <strong>props</strong> have only been validated in isolation and
+it’s still necessary to validate that the combination of properties makes
+sense.</p>
 <p><strong>Return</strong></p>
 <p>zero on success or a negative error code.</p>
 <dl class="function">
@@ -5804,7 +5874,7 @@ opened (for instance we don’t assume it’s for periodic OA unit metrics). An
 i915-perf stream is expected to be a suitable interface for other forms of
 buffered data written by the GPU besides periodic OA metrics.</p>
 <p>Note we copy the properties from userspace outside of the i915 perf
-mutex to avoid an awkward lockdep with mmap_sem.</p>
+mutex to avoid an awkward lockdep with mmap_lock.</p>
 <p>Most of the implementation details are handled by
 <a class="reference internal" href="#c.i915_perf_open_ioctl_locked" title="i915_perf_open_ioctl_locked"><code class="xref c c-func docutils literal notranslate"><span class="pre">i915_perf_open_ioctl_locked()</span></code></a> after taking the <code class="xref c c-type docutils literal notranslate"><span class="pre">perf-&gt;lock</span></code>
 mutex for serializing with any non-file-operation driver hooks.</p>

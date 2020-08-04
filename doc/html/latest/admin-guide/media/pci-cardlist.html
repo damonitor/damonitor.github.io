@@ -1,0 +1,385 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>5.2. PCI drivers &mdash; The Linux Kernel  documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript">
+          var DOCUMENTATION_OPTIONS = {
+              URL_ROOT:'../../',
+              VERSION:'',
+              LANGUAGE:'None',
+              COLLAPSE_INDEX:false,
+              FILE_SUFFIX:'.html',
+              HAS_SOURCE:  true,
+              SOURCELINK_SUFFIX: '.txt'
+          };
+      </script>
+        <script type="text/javascript" src="../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../_static/doctools.js"></script>
+    
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/theme_overrides.css" type="text/css" />
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../index.html" class="icon icon-home"> The Linux Kernel
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                5.8.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../mm/damon/index.html">Monitoring Data Accesses</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../vm/damon/index.html">DAMON: Data Access MONitor</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">The Linux Kernel</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html">Docs</a> &raquo;</li>
+        
+      <li>5.2. PCI drivers</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../../_sources/admin-guide/media/pci-cardlist.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="pci-drivers">
+<h1>5.2. PCI drivers<a class="headerlink" href="#pci-drivers" title="Permalink to this headline">¶</a></h1>
+<p>The PCI boards are identified by an identification called PCI ID. The PCI ID
+is actually composed by two parts:</p>
+<blockquote>
+<div><ul class="simple">
+<li>Vendor ID and device ID;</li>
+<li>Subsystem ID and Subsystem device ID;</li>
+</ul>
+</div></blockquote>
+<p>The <code class="docutils literal notranslate"><span class="pre">lspci</span> <span class="pre">-nn</span></code> command allows identifying the vendor/device PCI IDs:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span> $ lspci -nn
+ ...
+<span class="hll"> 00:0a.0 Multimedia controller [0480]: Philips Semiconductors SAA7131/SAA7133/SAA7135 Video Broadcast Decoder [1131:7133] (rev d1)
+</span> 00:0b.0 Multimedia controller [0480]: Brooktree Corporation Bt878 Audio Capture [109e:0878] (rev 11)
+ 01:00.0 Multimedia video controller [0400]: Conexant Systems, Inc. CX23887/8 PCIe Broadcast Audio and Video Decoder with 3D Comb [14f1:8880] (rev 0f)
+ 02:01.0 Multimedia video controller [0400]: Internext Compression Inc iTVC15 (CX23415) Video Decoder [4444:0803] (rev 01)
+ 02:02.0 Multimedia video controller [0400]: Conexant Systems, Inc. CX23418 Single-Chip MPEG-2 Encoder with Integrated Analog Video/Broadcast Audio Decoder [14f1:5b7a]
+ 02:03.0 Multimedia video controller [0400]: Brooktree Corporation Bt878 Video Capture [109e:036e] (rev 11)
+ ...
+</pre></div>
+</div>
+<p>The subsystem IDs can be obtained using <code class="docutils literal notranslate"><span class="pre">lspci</span> <span class="pre">-vn</span></code></p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span> $ lspci -vn
+ ...
+     00:0a.0 0480: 1131:7133 (rev d1)
+<span class="hll">             Subsystem: 1461:f01d
+</span>             Flags: bus master, medium devsel, latency 32, IRQ 209
+             Memory at e2002000 (32-bit, non-prefetchable) [size=2K]
+             Capabilities: [40] Power Management version 2
+ ...
+</pre></div>
+</div>
+<p>At the above example, the first card uses the <code class="docutils literal notranslate"><span class="pre">saa7134</span></code> driver, and
+has a vendor/device PCI ID equal to <code class="docutils literal notranslate"><span class="pre">1131:7133</span></code> and a PCI subsystem
+ID equal to <code class="docutils literal notranslate"><span class="pre">1461:f01d</span></code> (see <a class="reference internal" href="saa7134-cardlist.html"><span class="doc">Saa7134 card list</span></a>).</p>
+<p>Unfortunately, sometimes the same PCI subsystem ID is used by different
+products. So, several media drivers allow passing a <code class="docutils literal notranslate"><span class="pre">card=</span></code> parameter,
+in order to setup a card number that would match the correct settings for
+an specific board.</p>
+<p>The current supported PCI/PCIe cards (not including staging drivers) are
+listed below<a class="footnote-reference" href="#id2" id="id1">[1]</a>.</p>
+<table class="docutils footnote" frame="void" id="id2" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id1">[1]</a></td><td>some of the drivers have sub-drivers, not shown at this table</td></tr>
+</tbody>
+</table>
+<table border="1" class="docutils">
+<colgroup>
+<col width="22%" />
+<col width="78%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Driver</th>
+<th class="head">Name</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>altera-ci</td>
+<td>Altera FPGA based CI module</td>
+</tr>
+<tr class="row-odd"><td>b2c2-flexcop-pci</td>
+<td>Technisat/B2C2 Air/Sky/Cable2PC PCI</td>
+</tr>
+<tr class="row-even"><td>bt878</td>
+<td>DVB/ATSC Support for bt878 based TV cards</td>
+</tr>
+<tr class="row-odd"><td>bttv</td>
+<td>BT8x8 Video For Linux</td>
+</tr>
+<tr class="row-even"><td>cobalt</td>
+<td>Cisco Cobalt</td>
+</tr>
+<tr class="row-odd"><td>cx18</td>
+<td>Conexant cx23418 MPEG encoder</td>
+</tr>
+<tr class="row-even"><td>cx23885</td>
+<td>Conexant cx23885 (2388x successor)</td>
+</tr>
+<tr class="row-odd"><td>cx25821</td>
+<td>Conexant cx25821</td>
+</tr>
+<tr class="row-even"><td>cx88xx</td>
+<td>Conexant 2388x (bt878 successor)</td>
+</tr>
+<tr class="row-odd"><td>ddbridge</td>
+<td>Digital Devices bridge</td>
+</tr>
+<tr class="row-even"><td>dm1105</td>
+<td>SDMC DM1105 based PCI cards</td>
+</tr>
+<tr class="row-odd"><td>dt3155</td>
+<td>DT3155 frame grabber</td>
+</tr>
+<tr class="row-even"><td>dvb-ttpci</td>
+<td>AV7110 cards</td>
+</tr>
+<tr class="row-odd"><td>earth-pt1</td>
+<td>PT1 cards</td>
+</tr>
+<tr class="row-even"><td>earth-pt3</td>
+<td>Earthsoft PT3 cards</td>
+</tr>
+<tr class="row-odd"><td>hexium_gemini</td>
+<td>Hexium Gemini frame grabber</td>
+</tr>
+<tr class="row-even"><td>hexium_orion</td>
+<td>Hexium HV-PCI6 and Orion frame grabber</td>
+</tr>
+<tr class="row-odd"><td>hopper</td>
+<td>HOPPER based cards</td>
+</tr>
+<tr class="row-even"><td>ipu3-cio2</td>
+<td>Intel ipu3-cio2 driver</td>
+</tr>
+<tr class="row-odd"><td>ivtv</td>
+<td>Conexant cx23416/cx23415 MPEG encoder/decoder</td>
+</tr>
+<tr class="row-even"><td>ivtvfb</td>
+<td>Conexant cx23415 framebuffer</td>
+</tr>
+<tr class="row-odd"><td>mantis</td>
+<td>MANTIS based cards</td>
+</tr>
+<tr class="row-even"><td>meye</td>
+<td>Sony Vaio Picturebook Motion Eye</td>
+</tr>
+<tr class="row-odd"><td>mxb</td>
+<td>Siemens-Nixdorf ‘Multimedia eXtension Board’</td>
+</tr>
+<tr class="row-even"><td>netup-unidvb</td>
+<td>NetUP Universal DVB card</td>
+</tr>
+<tr class="row-odd"><td>ngene</td>
+<td>Micronas nGene</td>
+</tr>
+<tr class="row-even"><td>pluto2</td>
+<td>Pluto2 cards</td>
+</tr>
+<tr class="row-odd"><td>saa7134</td>
+<td>Philips SAA7134</td>
+</tr>
+<tr class="row-even"><td>saa7164</td>
+<td>NXP SAA7164</td>
+</tr>
+<tr class="row-odd"><td>smipcie</td>
+<td>SMI PCIe DVBSky cards</td>
+</tr>
+<tr class="row-even"><td>solo6x10</td>
+<td>Bluecherry / Softlogic 6x10 capture cards (MPEG-4/H.264)</td>
+</tr>
+<tr class="row-odd"><td>sta2x11_vip</td>
+<td>STA2X11 VIP Video For Linux</td>
+</tr>
+<tr class="row-even"><td>tw5864</td>
+<td>Techwell TW5864 video/audio grabber and encoder</td>
+</tr>
+<tr class="row-odd"><td>tw686x</td>
+<td>Intersil/Techwell TW686x</td>
+</tr>
+<tr class="row-even"><td>tw68</td>
+<td>Techwell tw68x Video For Linux</td>
+</tr>
+</tbody>
+</table>
+<p>Some of those drivers support multiple devices, as shown at the card
+lists below:</p>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="bttv-cardlist.html">5.2.1. BTTV cards list</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cx18-cardlist.html">5.2.2. CX18 cards list</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cx23885-cardlist.html">5.2.3. cx23885 cards list</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cx88-cardlist.html">5.2.4. CX88 cards list</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ivtv-cardlist.html">5.2.5. IVTV cards list</a></li>
+<li class="toctree-l1"><a class="reference internal" href="saa7134-cardlist.html">5.2.6. SAA7134 cards list</a></li>
+<li class="toctree-l1"><a class="reference internal" href="saa7164-cardlist.html">5.2.7. SAA7164 cards list</a></li>
+</ul>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright The kernel development community
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

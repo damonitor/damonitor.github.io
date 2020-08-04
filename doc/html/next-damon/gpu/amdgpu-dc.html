@@ -68,7 +68,7 @@
             
             
               <div class="version">
-                5.7.0
+                5.8.0
               </div>
             
           
@@ -306,10 +306,12 @@ struct <code class="descname">amdgpu_display_manager</code><a class="headerlink"
   struct hdcp_workqueue *hdcp_workqueue;
 #endif;
   struct drm_atomic_state *cached_state;
+  struct dc_state *cached_dc_state;
   struct dm_comressor_info compressor;
   const struct firmware *fw_dmcu;
   uint32_t dmcu_fw_version;
   const struct gpu_info_soc_bounding_box_v1_0 *soc_bounding_box;
+  struct amdgpu_encoder mst_encoders[AMDGPU_DM_MAX_CRTC];
 };
 </pre></div>
 </div>
@@ -399,6 +401,8 @@ triggered.</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">soc_bounding_box</span></code></dt>
 <dd>gpu_info FW provided soc bounding box struct or 0 if not
 available in FW</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">mst_encoders</span></code></dt>
+<dd>fake encoders used for DP MST.</dd>
 </dl>
 <div class="section" id="lifecycle">
 <h3>Lifecycle<a class="headerlink" href="#lifecycle" title="Permalink to this headline">¶</a></h3>

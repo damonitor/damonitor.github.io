@@ -68,7 +68,7 @@
             
             
               <div class="version">
-                5.7.0
+                5.8.0
               </div>
             
           
@@ -1266,18 +1266,16 @@ bool <code class="descname">synchronize_hardirq</code><span class="sig-paren">(<
 <p><strong>Parameters</strong></p>
 <dl class="docutils">
 <dt><code class="docutils literal notranslate"><span class="pre">unsigned</span> <span class="pre">int</span> <span class="pre">irq</span></code></dt>
-<dd>interrupt number to wait for</dd>
-</dl>
-<p><strong>Description</strong></p>
-<blockquote>
-<div><p>This function waits for any pending hard IRQ handlers for this
+<dd><p class="first">interrupt number to wait for</p>
+<p>This function waits for any pending hard IRQ handlers for this
 interrupt to complete before returning. If you use this
 function while holding a resource the IRQ handler may need you
 will deadlock. It does not take associated threaded handlers
 into account.</p>
-<p>Do not use this for shutdown scenarios where you must be sure
+<p class="last">Do not use this for shutdown scenarios where you must be sure
 that all parts (hardirq and threaded handler) have completed.</p>
-</div></blockquote>
+</dd>
+</dl>
 <p><strong>Return</strong></p>
 <p>false if a threaded handler is active.</p>
 <blockquote>
@@ -1296,19 +1294,17 @@ void <code class="descname">synchronize_irq</code><span class="sig-paren">(</spa
 <p><strong>Parameters</strong></p>
 <dl class="docutils">
 <dt><code class="docutils literal notranslate"><span class="pre">unsigned</span> <span class="pre">int</span> <span class="pre">irq</span></code></dt>
-<dd>interrupt number to wait for</dd>
-</dl>
-<p><strong>Description</strong></p>
-<blockquote>
-<div><p>This function waits for any pending IRQ handlers for this interrupt
+<dd><p class="first">interrupt number to wait for</p>
+<p>This function waits for any pending IRQ handlers for this interrupt
 to complete before returning. If you use this function while
 holding a resource the IRQ handler may need you will deadlock.</p>
 <p>Can only be called from preemptible code as it might sleep when
 an interrupt thread is associated to <strong>irq</strong>.</p>
-<p>It optionally makes sure (when the irq chip supports that method)
+<p class="last">It optionally makes sure (when the irq chip supports that method)
 that the interrupt is not pending in any CPU and waiting for
 service.</p>
-</div></blockquote>
+</dd>
+</dl>
 <dl class="function">
 <dt id="c.irq_can_set_affinity">
 int <code class="descname">irq_can_set_affinity</code><span class="sig-paren">(</span>unsigned int<em>&nbsp;irq</em><span class="sig-paren">)</span><a class="headerlink" href="#c.irq_can_set_affinity" title="Permalink to this definition">¶</a></dt>
@@ -1343,14 +1339,13 @@ void <code class="descname">irq_set_thread_affinity</code><span class="sig-paren
 <p><strong>Parameters</strong></p>
 <dl class="docutils">
 <dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">irq_desc</span> <span class="pre">*</span> <span class="pre">desc</span></code></dt>
-<dd>irq descriptor which has affitnity changed</dd>
-</dl>
-<p><strong>Description</strong></p>
-<blockquote>
-<div>We just set IRQTF_AFFINITY and delegate the affinity setting
+<dd><p class="first">irq descriptor which has affitnity changed</p>
+<p class="last">We just set IRQTF_AFFINITY and delegate the affinity setting
 to the interrupt thread itself. We can not call
 set_cpus_allowed_ptr() here as we hold desc-&gt;lock and this
-code can be called from hard interrupt context.</div></blockquote>
+code can be called from hard interrupt context.</p>
+</dd>
+</dl>
 <dl class="function">
 <dt id="c.irq_set_affinity_notifier">
 int <code class="descname">irq_set_affinity_notifier</code><span class="sig-paren">(</span>unsigned int<em>&nbsp;irq</em>, struct <a class="reference internal" href="#c.irq_affinity_notify" title="irq_affinity_notify">irq_affinity_notify</a> *<em>&nbsp;notify</em><span class="sig-paren">)</span><a class="headerlink" href="#c.irq_set_affinity_notifier" title="Permalink to this definition">¶</a></dt>
@@ -1362,15 +1357,15 @@ int <code class="descname">irq_set_affinity_notifier</code><span class="sig-pare
 <dt><code class="docutils literal notranslate"><span class="pre">unsigned</span> <span class="pre">int</span> <span class="pre">irq</span></code></dt>
 <dd>Interrupt for which to enable/disable notification</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">irq_affinity_notify</span> <span class="pre">*</span> <span class="pre">notify</span></code></dt>
-<dd>Context for notification, or <code class="docutils literal notranslate"><span class="pre">NULL</span></code> to disable
+<dd><p class="first">Context for notification, or <code class="docutils literal notranslate"><span class="pre">NULL</span></code> to disable
 notification.  Function pointers must be initialised;
-the other fields will be initialised by this function.</dd>
-</dl>
-<p><strong>Description</strong></p>
-<blockquote>
+the other fields will be initialised by this function.</p>
+<blockquote class="last">
 <div>Must be called in process context.  Notification may only be enabled
 after the IRQ is allocated and must be disabled before the IRQ is
 freed using <a class="reference internal" href="kernel-api.html#c.free_irq" title="free_irq"><code class="xref c c-func docutils literal notranslate"><span class="pre">free_irq()</span></code></a>.</div></blockquote>
+</dd>
+</dl>
 <dl class="function">
 <dt id="c.irq_set_vcpu_affinity">
 int <code class="descname">irq_set_vcpu_affinity</code><span class="sig-paren">(</span>unsigned int<em>&nbsp;irq</em>, void *<em>&nbsp;vcpu_info</em><span class="sig-paren">)</span><a class="headerlink" href="#c.irq_set_vcpu_affinity" title="Permalink to this definition">¶</a></dt>
@@ -1382,15 +1377,15 @@ int <code class="descname">irq_set_vcpu_affinity</code><span class="sig-paren">(
 <dt><code class="docutils literal notranslate"><span class="pre">unsigned</span> <span class="pre">int</span> <span class="pre">irq</span></code></dt>
 <dd>interrupt number to set affinity</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">void</span> <span class="pre">*</span> <span class="pre">vcpu_info</span></code></dt>
-<dd>vCPU specific data or pointer to a percpu array of vCPU
-specific data for percpu_devid interrupts</dd>
-</dl>
-<p><strong>Description</strong></p>
-<blockquote>
+<dd><p class="first">vCPU specific data or pointer to a percpu array of vCPU
+specific data for percpu_devid interrupts</p>
+<blockquote class="last">
 <div>This function uses the vCPU specific data to set the vCPU
 affinity for an irq. The vCPU specific data is passed from
 outside, such as KVM. One example code path is as below:
 KVM -&gt; IOMMU -&gt; <a class="reference internal" href="kernel-api.html#c.irq_set_vcpu_affinity" title="irq_set_vcpu_affinity"><code class="xref c c-func docutils literal notranslate"><span class="pre">irq_set_vcpu_affinity()</span></code></a>.</div></blockquote>
+</dd>
+</dl>
 <dl class="function">
 <dt id="c.disable_irq_nosync">
 void <code class="descname">disable_irq_nosync</code><span class="sig-paren">(</span>unsigned int<em>&nbsp;irq</em><span class="sig-paren">)</span><a class="headerlink" href="#c.disable_irq_nosync" title="Permalink to this definition">¶</a></dt>
@@ -1400,16 +1395,14 @@ void <code class="descname">disable_irq_nosync</code><span class="sig-paren">(</
 <p><strong>Parameters</strong></p>
 <dl class="docutils">
 <dt><code class="docutils literal notranslate"><span class="pre">unsigned</span> <span class="pre">int</span> <span class="pre">irq</span></code></dt>
-<dd>Interrupt to disable</dd>
-</dl>
-<p><strong>Description</strong></p>
-<blockquote>
-<div><p>Disable the selected interrupt line.  Disables and Enables are
+<dd><p class="first">Interrupt to disable</p>
+<p>Disable the selected interrupt line.  Disables and Enables are
 nested.
 Unlike <a class="reference internal" href="kernel-api.html#c.disable_irq" title="disable_irq"><code class="xref c c-func docutils literal notranslate"><span class="pre">disable_irq()</span></code></a>, this function does not ensure existing
 instances of the IRQ handler have completed before returning.</p>
-<p>This function may be called from IRQ context.</p>
-</div></blockquote>
+<p class="last">This function may be called from IRQ context.</p>
+</dd>
+</dl>
 <dl class="function">
 <dt id="c.disable_irq">
 void <code class="descname">disable_irq</code><span class="sig-paren">(</span>unsigned int<em>&nbsp;irq</em><span class="sig-paren">)</span><a class="headerlink" href="#c.disable_irq" title="Permalink to this definition">¶</a></dt>
@@ -1419,17 +1412,15 @@ void <code class="descname">disable_irq</code><span class="sig-paren">(</span>un
 <p><strong>Parameters</strong></p>
 <dl class="docutils">
 <dt><code class="docutils literal notranslate"><span class="pre">unsigned</span> <span class="pre">int</span> <span class="pre">irq</span></code></dt>
-<dd>Interrupt to disable</dd>
-</dl>
-<p><strong>Description</strong></p>
-<blockquote>
-<div><p>Disable the selected interrupt line.  Enables and Disables are
+<dd><p class="first">Interrupt to disable</p>
+<p>Disable the selected interrupt line.  Enables and Disables are
 nested.
 This function waits for any pending IRQ handlers for this interrupt
 to complete before returning. If you use this function while
 holding a resource the IRQ handler may need you will deadlock.</p>
-<p>This function may be called - with care - from IRQ context.</p>
-</div></blockquote>
+<p class="last">This function may be called - with care - from IRQ context.</p>
+</dd>
+</dl>
 <dl class="function">
 <dt id="c.disable_hardirq">
 bool <code class="descname">disable_hardirq</code><span class="sig-paren">(</span>unsigned int<em>&nbsp;irq</em><span class="sig-paren">)</span><a class="headerlink" href="#c.disable_hardirq" title="Permalink to this definition">¶</a></dt>
@@ -1439,18 +1430,16 @@ bool <code class="descname">disable_hardirq</code><span class="sig-paren">(</spa
 <p><strong>Parameters</strong></p>
 <dl class="docutils">
 <dt><code class="docutils literal notranslate"><span class="pre">unsigned</span> <span class="pre">int</span> <span class="pre">irq</span></code></dt>
-<dd>Interrupt to disable</dd>
-</dl>
-<p><strong>Description</strong></p>
-<blockquote>
-<div><p>Disable the selected interrupt line.  Enables and Disables are
+<dd><p class="first">Interrupt to disable</p>
+<p>Disable the selected interrupt line.  Enables and Disables are
 nested.
 This function waits for any pending hard IRQ handlers for this
 interrupt to complete before returning. If you use this function while
 holding a resource the hard IRQ handler may need you will deadlock.</p>
-<p>When used to optimistically disable an interrupt from atomic context
+<p class="last">When used to optimistically disable an interrupt from atomic context
 the return value must be checked.</p>
-</div></blockquote>
+</dd>
+</dl>
 <p><strong>Return</strong></p>
 <p>false if a threaded handler is active.</p>
 <blockquote>
@@ -1464,15 +1453,14 @@ void <code class="descname">disable_nmi_nosync</code><span class="sig-paren">(</
 <p><strong>Parameters</strong></p>
 <dl class="docutils">
 <dt><code class="docutils literal notranslate"><span class="pre">unsigned</span> <span class="pre">int</span> <span class="pre">irq</span></code></dt>
-<dd>Interrupt to disable</dd>
-</dl>
-<p><strong>Description</strong></p>
-<blockquote>
-<div>Disable the selected interrupt line. Disables and enables are
+<dd><p class="first">Interrupt to disable</p>
+<p class="last">Disable the selected interrupt line. Disables and enables are
 nested.
 The interrupt to disable must have been requested through request_nmi.
 Unlike disable_nmi(), this function does not ensure existing
-instances of the IRQ handler have completed before returning.</div></blockquote>
+instances of the IRQ handler have completed before returning.</p>
+</dd>
+</dl>
 <dl class="function">
 <dt id="c.enable_irq">
 void <code class="descname">enable_irq</code><span class="sig-paren">(</span>unsigned int<em>&nbsp;irq</em><span class="sig-paren">)</span><a class="headerlink" href="#c.enable_irq" title="Permalink to this definition">¶</a></dt>
@@ -1482,16 +1470,14 @@ void <code class="descname">enable_irq</code><span class="sig-paren">(</span>uns
 <p><strong>Parameters</strong></p>
 <dl class="docutils">
 <dt><code class="docutils literal notranslate"><span class="pre">unsigned</span> <span class="pre">int</span> <span class="pre">irq</span></code></dt>
-<dd>Interrupt to enable</dd>
-</dl>
-<p><strong>Description</strong></p>
-<blockquote>
-<div><p>Undoes the effect of one call to <a class="reference internal" href="kernel-api.html#c.disable_irq" title="disable_irq"><code class="xref c c-func docutils literal notranslate"><span class="pre">disable_irq()</span></code></a>.  If this
+<dd><p class="first">Interrupt to enable</p>
+<p>Undoes the effect of one call to <a class="reference internal" href="kernel-api.html#c.disable_irq" title="disable_irq"><code class="xref c c-func docutils literal notranslate"><span class="pre">disable_irq()</span></code></a>.  If this
 matches the last disable, processing of interrupts on this
 IRQ line is re-enabled.</p>
-<p>This function may be called from IRQ context only when
+<p class="last">This function may be called from IRQ context only when
 desc-&gt;irq_data.chip-&gt;bus_lock and desc-&gt;chip-&gt;bus_sync_unlock are NULL !</p>
-</div></blockquote>
+</dd>
+</dl>
 <dl class="function">
 <dt id="c.enable_nmi">
 void <code class="descname">enable_nmi</code><span class="sig-paren">(</span>unsigned int<em>&nbsp;irq</em><span class="sig-paren">)</span><a class="headerlink" href="#c.enable_nmi" title="Permalink to this definition">¶</a></dt>
@@ -1501,14 +1487,13 @@ void <code class="descname">enable_nmi</code><span class="sig-paren">(</span>uns
 <p><strong>Parameters</strong></p>
 <dl class="docutils">
 <dt><code class="docutils literal notranslate"><span class="pre">unsigned</span> <span class="pre">int</span> <span class="pre">irq</span></code></dt>
-<dd>Interrupt to enable</dd>
-</dl>
-<p><strong>Description</strong></p>
-<blockquote>
-<div>The interrupt to enable must have been requested through request_nmi.
+<dd><p class="first">Interrupt to enable</p>
+<p class="last">The interrupt to enable must have been requested through request_nmi.
 Undoes the effect of one call to disable_nmi(). If this
 matches the last disable, processing of interrupts on this
-IRQ line is re-enabled.</div></blockquote>
+IRQ line is re-enabled.</p>
+</dd>
+</dl>
 <dl class="function">
 <dt id="c.irq_set_irq_wake">
 int <code class="descname">irq_set_irq_wake</code><span class="sig-paren">(</span>unsigned int<em>&nbsp;irq</em>, unsigned int<em>&nbsp;on</em><span class="sig-paren">)</span><a class="headerlink" href="#c.irq_set_irq_wake" title="Permalink to this definition">¶</a></dt>
@@ -1520,16 +1505,14 @@ int <code class="descname">irq_set_irq_wake</code><span class="sig-paren">(</spa
 <dt><code class="docutils literal notranslate"><span class="pre">unsigned</span> <span class="pre">int</span> <span class="pre">irq</span></code></dt>
 <dd>interrupt to control</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">unsigned</span> <span class="pre">int</span> <span class="pre">on</span></code></dt>
-<dd>enable/disable power management wakeup</dd>
-</dl>
-<p><strong>Description</strong></p>
-<blockquote>
-<div><p>Enable/disable power management wakeup mode, which is
+<dd><p class="first">enable/disable power management wakeup</p>
+<p>Enable/disable power management wakeup mode, which is
 disabled by default.  Enables and disables must match,
 just as they match for non-wakeup mode support.</p>
-<p>Wakeup mode lets this IRQ wake the system from sleep
+<p class="last">Wakeup mode lets this IRQ wake the system from sleep
 states like “suspend to RAM”.</p>
-</div></blockquote>
+</dd>
+</dl>
 <p><strong>Note</strong></p>
 <dl class="docutils">
 <dt>irq enable/disable state is completely orthogonal</dt>
@@ -1563,19 +1546,17 @@ const void * <code class="descname">free_irq</code><span class="sig-paren">(</sp
 <dt><code class="docutils literal notranslate"><span class="pre">unsigned</span> <span class="pre">int</span> <span class="pre">irq</span></code></dt>
 <dd>Interrupt line to free</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">void</span> <span class="pre">*</span> <span class="pre">dev_id</span></code></dt>
-<dd>Device identity to free</dd>
-</dl>
-<p><strong>Description</strong></p>
-<blockquote>
-<div><p>Remove an interrupt handler. The handler is removed and if the
+<dd><p class="first">Device identity to free</p>
+<p>Remove an interrupt handler. The handler is removed and if the
 interrupt line is no longer in use by any driver it is disabled.
 On a shared IRQ the caller must ensure the interrupt is disabled
 on the card it drives before calling this function. The function
 does not return until any executing interrupts for this IRQ
 have completed.</p>
 <p>This function must not be called from interrupt context.</p>
-<p>Returns the devname argument passed to request_irq.</p>
-</div></blockquote>
+<p class="last">Returns the devname argument passed to request_irq.</p>
+</dd>
+</dl>
 <dl class="function">
 <dt id="c.request_threaded_irq">
 int <code class="descname">request_threaded_irq</code><span class="sig-paren">(</span>unsigned int<em>&nbsp;irq</em>, irq_handler_t<em>&nbsp;handler</em>, irq_handler_t<em>&nbsp;thread_fn</em>, unsigned long<em>&nbsp;irqflags</em>, const char *<em>&nbsp;devname</em>, void *<em>&nbsp;dev_id</em><span class="sig-paren">)</span><a class="headerlink" href="#c.request_threaded_irq" title="Permalink to this definition">¶</a></dt>
@@ -1599,11 +1580,8 @@ If NULL, no irq thread is created</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">const</span> <span class="pre">char</span> <span class="pre">*</span> <span class="pre">devname</span></code></dt>
 <dd>An ascii name for the claiming device</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">void</span> <span class="pre">*</span> <span class="pre">dev_id</span></code></dt>
-<dd>A cookie passed back to the handler function</dd>
-</dl>
-<p><strong>Description</strong></p>
-<blockquote>
-<div><p>This call allocates interrupt resources and enables the
+<dd><p class="first">A cookie passed back to the handler function</p>
+<p>This call allocates interrupt resources and enables the
 interrupt line and IRQ handling. From the point this
 call is made your handler function may be invoked. Since
 your handler function must clear any interrupt the board
@@ -1623,9 +1601,10 @@ receives this value it makes sense to use it.</p>
 <p>If your interrupt is shared you must pass a non NULL dev_id
 as this is required when freeing the interrupt.</p>
 <p>Flags:</p>
-<p>IRQF_SHARED             Interrupt is shared
+<p class="last">IRQF_SHARED             Interrupt is shared
 IRQF_TRIGGER_*          Specify active edge(s) or level</p>
-</div></blockquote>
+</dd>
+</dl>
 <dl class="function">
 <dt id="c.request_any_context_irq">
 int <code class="descname">request_any_context_irq</code><span class="sig-paren">(</span>unsigned int<em>&nbsp;irq</em>, irq_handler_t<em>&nbsp;handler</em>, unsigned long<em>&nbsp;flags</em>, const char *<em>&nbsp;name</em>, void *<em>&nbsp;dev_id</em><span class="sig-paren">)</span><a class="headerlink" href="#c.request_any_context_irq" title="Permalink to this definition">¶</a></dt>
@@ -1644,17 +1623,15 @@ Threaded handler for threaded interrupts.</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">const</span> <span class="pre">char</span> <span class="pre">*</span> <span class="pre">name</span></code></dt>
 <dd>An ascii name for the claiming device</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">void</span> <span class="pre">*</span> <span class="pre">dev_id</span></code></dt>
-<dd>A cookie passed back to the handler function</dd>
-</dl>
-<p><strong>Description</strong></p>
-<blockquote>
-<div><p>This call allocates interrupt resources and enables the
+<dd><p class="first">A cookie passed back to the handler function</p>
+<p>This call allocates interrupt resources and enables the
 interrupt line and IRQ handling. It selects either a
 hardirq or threaded handling method depending on the
 context.</p>
-<p>On failure, it returns a negative value. On success,
+<p class="last">On failure, it returns a negative value. On success,
 it returns either IRQC_IS_HARDIRQ or IRQC_IS_NESTED.</p>
-</div></blockquote>
+</dd>
+</dl>
 <dl class="function">
 <dt id="c.request_nmi">
 int <code class="descname">request_nmi</code><span class="sig-paren">(</span>unsigned int<em>&nbsp;irq</em>, irq_handler_t<em>&nbsp;handler</em>, unsigned long<em>&nbsp;irqflags</em>, const char *<em>&nbsp;name</em>, void *<em>&nbsp;dev_id</em><span class="sig-paren">)</span><a class="headerlink" href="#c.request_nmi" title="Permalink to this definition">¶</a></dt>
@@ -1673,11 +1650,8 @@ Threaded handler for threaded interrupts.</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">const</span> <span class="pre">char</span> <span class="pre">*</span> <span class="pre">name</span></code></dt>
 <dd>An ascii name for the claiming device</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">void</span> <span class="pre">*</span> <span class="pre">dev_id</span></code></dt>
-<dd>A cookie passed back to the handler function</dd>
-</dl>
-<p><strong>Description</strong></p>
-<blockquote>
-<div><p>This call allocates interrupt resources and enables the
+<dd><p class="first">A cookie passed back to the handler function</p>
+<p>This call allocates interrupt resources and enables the
 interrupt line and IRQ handling. It sets up the IRQ line
 to be handled as an NMI.</p>
 <p>An interrupt line delivering NMIs cannot be shared and IRQ handling
@@ -1687,9 +1661,10 @@ interrupts and have auto enabling setting disabled.</p>
 <p>Dev_id must be globally unique. Normally the address of the
 device data structure is used as the cookie. Since the handler
 receives this value it makes sense to use it.</p>
-<p>If the interrupt line cannot be used to deliver NMIs, function
+<p class="last">If the interrupt line cannot be used to deliver NMIs, function
 will fail and return a negative value.</p>
-</div></blockquote>
+</dd>
+</dl>
 <dl class="function">
 <dt id="c.irq_percpu_is_enabled">
 bool <code class="descname">irq_percpu_is_enabled</code><span class="sig-paren">(</span>unsigned int<em>&nbsp;irq</em><span class="sig-paren">)</span><a class="headerlink" href="#c.irq_percpu_is_enabled" title="Permalink to this definition">¶</a></dt>
@@ -1730,16 +1705,14 @@ void <code class="descname">free_percpu_irq</code><span class="sig-paren">(</spa
 <dt><code class="docutils literal notranslate"><span class="pre">unsigned</span> <span class="pre">int</span> <span class="pre">irq</span></code></dt>
 <dd>Interrupt line to free</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">void</span> <span class="pre">__percpu</span> <span class="pre">*</span> <span class="pre">dev_id</span></code></dt>
-<dd>Device identity to free</dd>
-</dl>
-<p><strong>Description</strong></p>
-<blockquote>
-<div><p>Remove a percpu interrupt handler. The handler is removed, but
+<dd><p class="first">Device identity to free</p>
+<p>Remove a percpu interrupt handler. The handler is removed, but
 the interrupt line is not disabled. This must be done on each
 CPU before calling this function. The function does not return
 until any executing interrupts for this IRQ have completed.</p>
-<p>This function must not be called from interrupt context.</p>
-</div></blockquote>
+<p class="last">This function must not be called from interrupt context.</p>
+</dd>
+</dl>
 <dl class="function">
 <dt id="c.setup_percpu_irq">
 int <code class="descname">setup_percpu_irq</code><span class="sig-paren">(</span>unsigned int<em>&nbsp;irq</em>, struct <a class="reference internal" href="#c.irqaction" title="irqaction">irqaction</a> *<em>&nbsp;act</em><span class="sig-paren">)</span><a class="headerlink" href="#c.setup_percpu_irq" title="Permalink to this definition">¶</a></dt>
@@ -1772,18 +1745,16 @@ int <code class="descname">__request_percpu_irq</code><span class="sig-paren">(<
 <dt><code class="docutils literal notranslate"><span class="pre">const</span> <span class="pre">char</span> <span class="pre">*</span> <span class="pre">devname</span></code></dt>
 <dd>An ascii name for the claiming device</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">void</span> <span class="pre">__percpu</span> <span class="pre">*</span> <span class="pre">dev_id</span></code></dt>
-<dd>A percpu cookie passed back to the handler function</dd>
-</dl>
-<p><strong>Description</strong></p>
-<blockquote>
-<div><p>This call allocates interrupt resources and enables the
+<dd><p class="first">A percpu cookie passed back to the handler function</p>
+<p>This call allocates interrupt resources and enables the
 interrupt on the local CPU. If the interrupt is supposed to be
 enabled on other CPUs, it has to be done on each CPU using
 enable_percpu_irq().</p>
-<p>Dev_id must be globally unique. It is a per-cpu variable, and
+<p class="last">Dev_id must be globally unique. It is a per-cpu variable, and
 the handler gets called with the interrupted CPU’s instance of
 that variable.</p>
-</div></blockquote>
+</dd>
+</dl>
 <dl class="function">
 <dt id="c.request_percpu_nmi">
 int <code class="descname">request_percpu_nmi</code><span class="sig-paren">(</span>unsigned int<em>&nbsp;irq</em>, irq_handler_t<em>&nbsp;handler</em>, const char *<em>&nbsp;name</em>, void __percpu *<em>&nbsp;dev_id</em><span class="sig-paren">)</span><a class="headerlink" href="#c.request_percpu_nmi" title="Permalink to this definition">¶</a></dt>
@@ -1799,11 +1770,8 @@ int <code class="descname">request_percpu_nmi</code><span class="sig-paren">(</s
 <dt><code class="docutils literal notranslate"><span class="pre">const</span> <span class="pre">char</span> <span class="pre">*</span> <span class="pre">name</span></code></dt>
 <dd>An ascii name for the claiming device</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">void</span> <span class="pre">__percpu</span> <span class="pre">*</span> <span class="pre">dev_id</span></code></dt>
-<dd>A percpu cookie passed back to the handler function</dd>
-</dl>
-<p><strong>Description</strong></p>
-<blockquote>
-<div><p>This call allocates interrupt resources for a per CPU NMI. Per CPU NMIs
+<dd><p class="first">A percpu cookie passed back to the handler function</p>
+<p>This call allocates interrupt resources for a per CPU NMI. Per CPU NMIs
 have to be setup on each CPU by calling <a class="reference internal" href="#c.prepare_percpu_nmi" title="prepare_percpu_nmi"><code class="xref c c-func docutils literal notranslate"><span class="pre">prepare_percpu_nmi()</span></code></a> before
 being enabled on the same CPU by using enable_percpu_nmi().</p>
 <p>Dev_id must be globally unique. It is a per-cpu variable, and
@@ -1811,9 +1779,10 @@ the handler gets called with the interrupted CPU’s instance of
 that variable.</p>
 <p>Interrupt lines requested for NMI delivering should have auto enabling
 setting disabled.</p>
-<p>If the interrupt line cannot be used to deliver NMIs, function
+<p class="last">If the interrupt line cannot be used to deliver NMIs, function
 will fail returning a negative value.</p>
-</div></blockquote>
+</dd>
+</dl>
 <dl class="function">
 <dt id="c.prepare_percpu_nmi">
 int <code class="descname">prepare_percpu_nmi</code><span class="sig-paren">(</span>unsigned int<em>&nbsp;irq</em><span class="sig-paren">)</span><a class="headerlink" href="#c.prepare_percpu_nmi" title="Permalink to this definition">¶</a></dt>
@@ -1823,17 +1792,15 @@ int <code class="descname">prepare_percpu_nmi</code><span class="sig-paren">(</s
 <p><strong>Parameters</strong></p>
 <dl class="docutils">
 <dt><code class="docutils literal notranslate"><span class="pre">unsigned</span> <span class="pre">int</span> <span class="pre">irq</span></code></dt>
-<dd>Interrupt line to prepare for NMI delivery</dd>
-</dl>
-<p><strong>Description</strong></p>
-<blockquote>
-<div><p>This call prepares an interrupt line to deliver NMI on the current CPU,
+<dd><p class="first">Interrupt line to prepare for NMI delivery</p>
+<p>This call prepares an interrupt line to deliver NMI on the current CPU,
 before that interrupt line gets enabled with enable_percpu_nmi().</p>
 <p>As a CPU local operation, this should be called from non-preemptible
 context.</p>
-<p>If the interrupt line cannot be used to deliver NMIs, function
+<p class="last">If the interrupt line cannot be used to deliver NMIs, function
 will fail returning a negative value.</p>
-</div></blockquote>
+</dd>
+</dl>
 <dl class="function">
 <dt id="c.teardown_percpu_nmi">
 void <code class="descname">teardown_percpu_nmi</code><span class="sig-paren">(</span>unsigned int<em>&nbsp;irq</em><span class="sig-paren">)</span><a class="headerlink" href="#c.teardown_percpu_nmi" title="Permalink to this definition">¶</a></dt>
@@ -1843,16 +1810,16 @@ void <code class="descname">teardown_percpu_nmi</code><span class="sig-paren">(<
 <p><strong>Parameters</strong></p>
 <dl class="docutils">
 <dt><code class="docutils literal notranslate"><span class="pre">unsigned</span> <span class="pre">int</span> <span class="pre">irq</span></code></dt>
-<dd>Interrupt line from which CPU local NMI configuration should be
-removed</dd>
-</dl>
-<p><strong>Description</strong></p>
-<blockquote>
+<dd><p class="first">Interrupt line from which CPU local NMI configuration should be
+removed</p>
+<blockquote class="last">
 <div><p>This call undoes the setup done by <a class="reference internal" href="#c.prepare_percpu_nmi" title="prepare_percpu_nmi"><code class="xref c c-func docutils literal notranslate"><span class="pre">prepare_percpu_nmi()</span></code></a>.</p>
 <p>IRQ line should not be enabled for the current CPU.</p>
 <p>As a CPU local operation, this should be called from non-preemptible
 context.</p>
 </div></blockquote>
+</dd>
+</dl>
 <dl class="function">
 <dt id="c.irq_get_irqchip_state">
 int <code class="descname">irq_get_irqchip_state</code><span class="sig-paren">(</span>unsigned int<em>&nbsp;irq</em>, enum irqchip_irq_state<em>&nbsp;which</em>, bool *<em>&nbsp;state</em><span class="sig-paren">)</span><a class="headerlink" href="#c.irq_get_irqchip_state" title="Permalink to this definition">¶</a></dt>
@@ -1866,16 +1833,14 @@ int <code class="descname">irq_get_irqchip_state</code><span class="sig-paren">(
 <dt><code class="docutils literal notranslate"><span class="pre">enum</span> <span class="pre">irqchip_irq_state</span> <span class="pre">which</span></code></dt>
 <dd>One of IRQCHIP_STATE_* the caller wants to know about</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">bool</span> <span class="pre">*</span> <span class="pre">state</span></code></dt>
-<dd>a pointer to a boolean where the state is to be storeed</dd>
-</dl>
-<p><strong>Description</strong></p>
-<blockquote>
-<div><p>This call snapshots the internal irqchip state of an
+<dd><p class="first">a pointer to a boolean where the state is to be storeed</p>
+<p>This call snapshots the internal irqchip state of an
 interrupt, returning into <strong>state</strong> the bit corresponding to
 stage <strong>which</strong></p>
-<p>This function should be called with preemption disabled if the
+<p class="last">This function should be called with preemption disabled if the
 interrupt controller has per-cpu registers.</p>
-</div></blockquote>
+</dd>
+</dl>
 <dl class="function">
 <dt id="c.irq_set_irqchip_state">
 int <code class="descname">irq_set_irqchip_state</code><span class="sig-paren">(</span>unsigned int<em>&nbsp;irq</em>, enum irqchip_irq_state<em>&nbsp;which</em>, bool<em>&nbsp;val</em><span class="sig-paren">)</span><a class="headerlink" href="#c.irq_set_irqchip_state" title="Permalink to this definition">¶</a></dt>
@@ -1889,15 +1854,13 @@ int <code class="descname">irq_set_irqchip_state</code><span class="sig-paren">(
 <dt><code class="docutils literal notranslate"><span class="pre">enum</span> <span class="pre">irqchip_irq_state</span> <span class="pre">which</span></code></dt>
 <dd>State to be restored (one of IRQCHIP_STATE_*)</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">bool</span> <span class="pre">val</span></code></dt>
-<dd>Value corresponding to <strong>which</strong></dd>
-</dl>
-<p><strong>Description</strong></p>
-<blockquote>
-<div><p>This call sets the internal irqchip state of an interrupt,
+<dd><p class="first">Value corresponding to <strong>which</strong></p>
+<p>This call sets the internal irqchip state of an interrupt,
 depending on the value of <strong>which</strong>.</p>
-<p>This function should be called with preemption disabled if the
+<p class="last">This function should be called with preemption disabled if the
 interrupt controller has per-cpu registers.</p>
-</div></blockquote>
+</dd>
+</dl>
 <dl class="function">
 <dt id="c.irq_set_chip">
 int <code class="descname">irq_set_chip</code><span class="sig-paren">(</span>unsigned int<em>&nbsp;irq</em>, struct <a class="reference internal" href="#c.irq_chip" title="irq_chip">irq_chip</a> *<em>&nbsp;chip</em><span class="sig-paren">)</span><a class="headerlink" href="#c.irq_set_chip" title="Permalink to this definition">¶</a></dt>
@@ -1935,11 +1898,10 @@ int <code class="descname">irq_set_handler_data</code><span class="sig-paren">(<
 <dt><code class="docutils literal notranslate"><span class="pre">unsigned</span> <span class="pre">int</span> <span class="pre">irq</span></code></dt>
 <dd>Interrupt number</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">void</span> <span class="pre">*</span> <span class="pre">data</span></code></dt>
-<dd>Pointer to interrupt specific data</dd>
+<dd><p class="first">Pointer to interrupt specific data</p>
+<p class="last">Set the hardware irq controller data for an irq</p>
+</dd>
 </dl>
-<p><strong>Description</strong></p>
-<blockquote>
-<div>Set the hardware irq controller data for an irq</div></blockquote>
 <dl class="function">
 <dt id="c.irq_set_msi_desc_off">
 int <code class="descname">irq_set_msi_desc_off</code><span class="sig-paren">(</span>unsigned int<em>&nbsp;irq_base</em>, unsigned int<em>&nbsp;irq_offset</em>, struct msi_desc *<em>&nbsp;entry</em><span class="sig-paren">)</span><a class="headerlink" href="#c.irq_set_msi_desc_off" title="Permalink to this definition">¶</a></dt>
@@ -1953,11 +1915,10 @@ int <code class="descname">irq_set_msi_desc_off</code><span class="sig-paren">(<
 <dt><code class="docutils literal notranslate"><span class="pre">unsigned</span> <span class="pre">int</span> <span class="pre">irq_offset</span></code></dt>
 <dd>Interrupt number offset</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">msi_desc</span> <span class="pre">*</span> <span class="pre">entry</span></code></dt>
-<dd>Pointer to MSI descriptor data</dd>
+<dd><p class="first">Pointer to MSI descriptor data</p>
+<p class="last">Set the MSI descriptor entry for an irq at offset</p>
+</dd>
 </dl>
-<p><strong>Description</strong></p>
-<blockquote>
-<div>Set the MSI descriptor entry for an irq at offset</div></blockquote>
 <dl class="function">
 <dt id="c.irq_set_msi_desc">
 int <code class="descname">irq_set_msi_desc</code><span class="sig-paren">(</span>unsigned int<em>&nbsp;irq</em>, struct msi_desc *<em>&nbsp;entry</em><span class="sig-paren">)</span><a class="headerlink" href="#c.irq_set_msi_desc" title="Permalink to this definition">¶</a></dt>
@@ -1969,11 +1930,10 @@ int <code class="descname">irq_set_msi_desc</code><span class="sig-paren">(</spa
 <dt><code class="docutils literal notranslate"><span class="pre">unsigned</span> <span class="pre">int</span> <span class="pre">irq</span></code></dt>
 <dd>Interrupt number</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">msi_desc</span> <span class="pre">*</span> <span class="pre">entry</span></code></dt>
-<dd>Pointer to MSI descriptor data</dd>
+<dd><p class="first">Pointer to MSI descriptor data</p>
+<p class="last">Set the MSI descriptor entry for an irq</p>
+</dd>
 </dl>
-<p><strong>Description</strong></p>
-<blockquote>
-<div>Set the MSI descriptor entry for an irq</div></blockquote>
 <dl class="function">
 <dt id="c.irq_set_chip_data">
 int <code class="descname">irq_set_chip_data</code><span class="sig-paren">(</span>unsigned int<em>&nbsp;irq</em>, void *<em>&nbsp;data</em><span class="sig-paren">)</span><a class="headerlink" href="#c.irq_set_chip_data" title="Permalink to this definition">¶</a></dt>
@@ -1985,11 +1945,10 @@ int <code class="descname">irq_set_chip_data</code><span class="sig-paren">(</sp
 <dt><code class="docutils literal notranslate"><span class="pre">unsigned</span> <span class="pre">int</span> <span class="pre">irq</span></code></dt>
 <dd>Interrupt number</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">void</span> <span class="pre">*</span> <span class="pre">data</span></code></dt>
-<dd>Pointer to chip specific data</dd>
+<dd><p class="first">Pointer to chip specific data</p>
+<p class="last">Set the hardware irq chip data for an irq</p>
+</dd>
 </dl>
-<p><strong>Description</strong></p>
-<blockquote>
-<div>Set the hardware irq chip data for an irq</div></blockquote>
 <dl class="function">
 <dt id="c.irq_disable">
 void <code class="descname">irq_disable</code><span class="sig-paren">(</span>struct irq_desc *<em>&nbsp;desc</em><span class="sig-paren">)</span><a class="headerlink" href="#c.irq_disable" title="Permalink to this definition">¶</a></dt>
@@ -2025,13 +1984,12 @@ void <code class="descname">handle_simple_irq</code><span class="sig-paren">(</s
 <p><strong>Parameters</strong></p>
 <dl class="docutils">
 <dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">irq_desc</span> <span class="pre">*</span> <span class="pre">desc</span></code></dt>
-<dd>the interrupt description structure for this irq</dd>
-</dl>
-<p><strong>Description</strong></p>
-<blockquote>
-<div>Simple interrupts are either sent from a demultiplexing interrupt
+<dd><p class="first">the interrupt description structure for this irq</p>
+<p class="last">Simple interrupts are either sent from a demultiplexing interrupt
 handler or come from hardware, where no interrupt hardware control
-is necessary.</div></blockquote>
+is necessary.</p>
+</dd>
+</dl>
 <p><strong>Note</strong></p>
 <dl class="docutils">
 <dt>The caller is expected to handle the ack, clear, mask and</dt>
@@ -2046,15 +2004,14 @@ void <code class="descname">handle_untracked_irq</code><span class="sig-paren">(
 <p><strong>Parameters</strong></p>
 <dl class="docutils">
 <dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">irq_desc</span> <span class="pre">*</span> <span class="pre">desc</span></code></dt>
-<dd>the interrupt description structure for this irq</dd>
-</dl>
-<p><strong>Description</strong></p>
-<blockquote>
-<div>Untracked interrupts are sent from a demultiplexing interrupt
+<dd><p class="first">the interrupt description structure for this irq</p>
+<p class="last">Untracked interrupts are sent from a demultiplexing interrupt
 handler when the demultiplexer does not know which device it its
 multiplexed irq domain generated the interrupt. IRQ’s handled
 through here are not subjected to stats tracking, randomness, or
-spurious interrupt detection.</div></blockquote>
+spurious interrupt detection.</p>
+</dd>
+</dl>
 <p><strong>Note</strong></p>
 <dl class="docutils">
 <dt>Like handle_simple_irq, the caller is expected to handle</dt>
@@ -2069,14 +2026,13 @@ void <code class="descname">handle_level_irq</code><span class="sig-paren">(</sp
 <p><strong>Parameters</strong></p>
 <dl class="docutils">
 <dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">irq_desc</span> <span class="pre">*</span> <span class="pre">desc</span></code></dt>
-<dd>the interrupt description structure for this irq</dd>
-</dl>
-<p><strong>Description</strong></p>
-<blockquote>
-<div>Level type interrupts are active as long as the hardware line has
+<dd><p class="first">the interrupt description structure for this irq</p>
+<p class="last">Level type interrupts are active as long as the hardware line has
 the active level. This may require to mask the interrupt and unmask
 it after the associated handler has acknowledged the device, so the
-interrupt line is back to inactive.</div></blockquote>
+interrupt line is back to inactive.</p>
+</dd>
+</dl>
 <dl class="function">
 <dt id="c.handle_fasteoi_irq">
 void <code class="descname">handle_fasteoi_irq</code><span class="sig-paren">(</span>struct irq_desc *<em>&nbsp;desc</em><span class="sig-paren">)</span><a class="headerlink" href="#c.handle_fasteoi_irq" title="Permalink to this definition">¶</a></dt>
@@ -2086,14 +2042,13 @@ void <code class="descname">handle_fasteoi_irq</code><span class="sig-paren">(</
 <p><strong>Parameters</strong></p>
 <dl class="docutils">
 <dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">irq_desc</span> <span class="pre">*</span> <span class="pre">desc</span></code></dt>
-<dd>the interrupt description structure for this irq</dd>
-</dl>
-<p><strong>Description</strong></p>
-<blockquote>
-<div>Only a single callback will be issued to the chip: an -&gt;eoi()
+<dd><p class="first">the interrupt description structure for this irq</p>
+<p class="last">Only a single callback will be issued to the chip: an -&gt;eoi()
 call when the interrupt has been serviced. This enables support
 for modern forms of interrupt handlers, which handle the flow
-details in hardware, transparently.</div></blockquote>
+details in hardware, transparently.</p>
+</dd>
+</dl>
 <dl class="function">
 <dt id="c.handle_fasteoi_nmi">
 void <code class="descname">handle_fasteoi_nmi</code><span class="sig-paren">(</span>struct irq_desc *<em>&nbsp;desc</em><span class="sig-paren">)</span><a class="headerlink" href="#c.handle_fasteoi_nmi" title="Permalink to this definition">¶</a></dt>
@@ -2103,17 +2058,15 @@ void <code class="descname">handle_fasteoi_nmi</code><span class="sig-paren">(</
 <p><strong>Parameters</strong></p>
 <dl class="docutils">
 <dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">irq_desc</span> <span class="pre">*</span> <span class="pre">desc</span></code></dt>
-<dd>the interrupt description structure for this irq</dd>
-</dl>
-<p><strong>Description</strong></p>
-<blockquote>
-<div><p>A simple NMI-safe handler, considering the restrictions
+<dd><p class="first">the interrupt description structure for this irq</p>
+<p>A simple NMI-safe handler, considering the restrictions
 from request_nmi.</p>
-<p>Only a single callback will be issued to the chip: an -&gt;eoi()
+<p class="last">Only a single callback will be issued to the chip: an -&gt;eoi()
 call when the interrupt has been serviced. This enables support
 for modern forms of interrupt handlers, which handle the flow
 details in hardware, transparently.</p>
-</div></blockquote>
+</dd>
+</dl>
 <dl class="function">
 <dt id="c.handle_edge_irq">
 void <code class="descname">handle_edge_irq</code><span class="sig-paren">(</span>struct irq_desc *<em>&nbsp;desc</em><span class="sig-paren">)</span><a class="headerlink" href="#c.handle_edge_irq" title="Permalink to this definition">¶</a></dt>
@@ -2123,11 +2076,8 @@ void <code class="descname">handle_edge_irq</code><span class="sig-paren">(</spa
 <p><strong>Parameters</strong></p>
 <dl class="docutils">
 <dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">irq_desc</span> <span class="pre">*</span> <span class="pre">desc</span></code></dt>
-<dd>the interrupt description structure for this irq</dd>
-</dl>
-<p><strong>Description</strong></p>
-<blockquote>
-<div>Interrupt occures on the falling and/or rising edge of a hardware
+<dd><p class="first">the interrupt description structure for this irq</p>
+<p class="last">Interrupt occures on the falling and/or rising edge of a hardware
 signal. The occurrence is latched into the irq controller hardware
 and must be acked in order to be reenabled. After the ack another
 interrupt can happen on the same source even before the first one
@@ -2136,7 +2086,9 @@ might be necessary to disable (mask) the interrupt depending on the
 controller hardware. This requires to reenable the interrupt inside
 of the loop which handles the interrupts which have arrived while
 the handler was running. If all pending interrupts are handled, the
-loop is left.</div></blockquote>
+loop is left.</p>
+</dd>
+</dl>
 <dl class="function">
 <dt id="c.handle_edge_eoi_irq">
 void <code class="descname">handle_edge_eoi_irq</code><span class="sig-paren">(</span>struct irq_desc *<em>&nbsp;desc</em><span class="sig-paren">)</span><a class="headerlink" href="#c.handle_edge_eoi_irq" title="Permalink to this definition">¶</a></dt>
@@ -2160,11 +2112,10 @@ void <code class="descname">handle_percpu_irq</code><span class="sig-paren">(</s
 <p><strong>Parameters</strong></p>
 <dl class="docutils">
 <dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">irq_desc</span> <span class="pre">*</span> <span class="pre">desc</span></code></dt>
-<dd>the interrupt description structure for this irq</dd>
+<dd><p class="first">the interrupt description structure for this irq</p>
+<p class="last">Per CPU interrupts on SMP machines without locking requirements</p>
+</dd>
 </dl>
-<p><strong>Description</strong></p>
-<blockquote>
-<div>Per CPU interrupts on SMP machines without locking requirements</div></blockquote>
 <dl class="function">
 <dt id="c.handle_percpu_devid_irq">
 void <code class="descname">handle_percpu_devid_irq</code><span class="sig-paren">(</span>struct irq_desc *<em>&nbsp;desc</em><span class="sig-paren">)</span><a class="headerlink" href="#c.handle_percpu_devid_irq" title="Permalink to this definition">¶</a></dt>
@@ -2235,13 +2186,12 @@ void <code class="descname">handle_fasteoi_ack_irq</code><span class="sig-paren"
 <p><strong>Parameters</strong></p>
 <dl class="docutils">
 <dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">irq_desc</span> <span class="pre">*</span> <span class="pre">desc</span></code></dt>
-<dd>the interrupt description structure for this irq</dd>
-</dl>
-<p><strong>Description</strong></p>
-<blockquote>
-<div>Like <a class="reference internal" href="#c.handle_fasteoi_irq" title="handle_fasteoi_irq"><code class="xref c c-func docutils literal notranslate"><span class="pre">handle_fasteoi_irq()</span></code></a>, but for use with hierarchy where
+<dd><p class="first">the interrupt description structure for this irq</p>
+<p class="last">Like <a class="reference internal" href="#c.handle_fasteoi_irq" title="handle_fasteoi_irq"><code class="xref c c-func docutils literal notranslate"><span class="pre">handle_fasteoi_irq()</span></code></a>, but for use with hierarchy where
 the irq_chip also needs to have its -&gt;irq_ack() function
-called.</div></blockquote>
+called.</p>
+</dd>
+</dl>
 <dl class="function">
 <dt id="c.handle_fasteoi_mask_irq">
 void <code class="descname">handle_fasteoi_mask_irq</code><span class="sig-paren">(</span>struct irq_desc *<em>&nbsp;desc</em><span class="sig-paren">)</span><a class="headerlink" href="#c.handle_fasteoi_mask_irq" title="Permalink to this definition">¶</a></dt>
@@ -2251,13 +2201,12 @@ void <code class="descname">handle_fasteoi_mask_irq</code><span class="sig-paren
 <p><strong>Parameters</strong></p>
 <dl class="docutils">
 <dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">irq_desc</span> <span class="pre">*</span> <span class="pre">desc</span></code></dt>
-<dd>the interrupt description structure for this irq</dd>
-</dl>
-<p><strong>Description</strong></p>
-<blockquote>
-<div>Like <a class="reference internal" href="#c.handle_fasteoi_irq" title="handle_fasteoi_irq"><code class="xref c c-func docutils literal notranslate"><span class="pre">handle_fasteoi_irq()</span></code></a>, but for use with hierarchy where
+<dd><p class="first">the interrupt description structure for this irq</p>
+<p class="last">Like <a class="reference internal" href="#c.handle_fasteoi_irq" title="handle_fasteoi_irq"><code class="xref c c-func docutils literal notranslate"><span class="pre">handle_fasteoi_irq()</span></code></a>, but for use with hierarchy where
 the irq_chip also needs to have its -&gt;irq_mask_ack() function
-called.</div></blockquote>
+called.</p>
+</dd>
+</dl>
 <dl class="function">
 <dt id="c.irq_chip_set_parent_state">
 int <code class="descname">irq_chip_set_parent_state</code><span class="sig-paren">(</span>struct <a class="reference internal" href="#c.irq_data" title="irq_data">irq_data</a> *<em>&nbsp;data</em>, enum irqchip_irq_state<em>&nbsp;which</em>, bool<em>&nbsp;val</em><span class="sig-paren">)</span><a class="headerlink" href="#c.irq_chip_set_parent_state" title="Permalink to this definition">¶</a></dt>
@@ -2559,11 +2508,10 @@ int <code class="descname">handle_domain_nmi</code><span class="sig-paren">(</sp
 <dt><code class="docutils literal notranslate"><span class="pre">unsigned</span> <span class="pre">int</span> <span class="pre">hwirq</span></code></dt>
 <dd>The HW irq number to convert to a logical one</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">pt_regs</span> <span class="pre">*</span> <span class="pre">regs</span></code></dt>
-<dd>Register file coming from the low-level handling code</dd>
+<dd><p class="first">Register file coming from the low-level handling code</p>
+<p class="last">This function must be called from an NMI context.</p>
+</dd>
 </dl>
-<p><strong>Description</strong></p>
-<blockquote>
-<div>This function must be called from an NMI context.</div></blockquote>
 <p><strong>Return</strong></p>
 <p>0 on success, or -EINVAL if conversion has failed</p>
 <dl class="function">
@@ -2743,11 +2691,10 @@ int <code class="descname">irq_set_handler_data</code><span class="sig-paren">(<
 <dt><code class="docutils literal notranslate"><span class="pre">unsigned</span> <span class="pre">int</span> <span class="pre">irq</span></code></dt>
 <dd>Interrupt number</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">void</span> <span class="pre">*</span> <span class="pre">data</span></code></dt>
-<dd>Pointer to interrupt specific data</dd>
+<dd><p class="first">Pointer to interrupt specific data</p>
+<p class="last">Set the hardware irq controller data for an irq</p>
+</dd>
 </dl>
-<p><strong>Description</strong></p>
-<blockquote>
-<div>Set the hardware irq controller data for an irq</div></blockquote>
 <dl class="function">
 <dt>
 int <code class="descname">irq_set_msi_desc_off</code><span class="sig-paren">(</span>unsigned int<em>&nbsp;irq_base</em>, unsigned int<em>&nbsp;irq_offset</em>, struct msi_desc *<em>&nbsp;entry</em><span class="sig-paren">)</span></dt>
@@ -2761,11 +2708,10 @@ int <code class="descname">irq_set_msi_desc_off</code><span class="sig-paren">(<
 <dt><code class="docutils literal notranslate"><span class="pre">unsigned</span> <span class="pre">int</span> <span class="pre">irq_offset</span></code></dt>
 <dd>Interrupt number offset</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">msi_desc</span> <span class="pre">*</span> <span class="pre">entry</span></code></dt>
-<dd>Pointer to MSI descriptor data</dd>
+<dd><p class="first">Pointer to MSI descriptor data</p>
+<p class="last">Set the MSI descriptor entry for an irq at offset</p>
+</dd>
 </dl>
-<p><strong>Description</strong></p>
-<blockquote>
-<div>Set the MSI descriptor entry for an irq at offset</div></blockquote>
 <dl class="function">
 <dt>
 int <code class="descname">irq_set_msi_desc</code><span class="sig-paren">(</span>unsigned int<em>&nbsp;irq</em>, struct msi_desc *<em>&nbsp;entry</em><span class="sig-paren">)</span></dt>
@@ -2777,11 +2723,10 @@ int <code class="descname">irq_set_msi_desc</code><span class="sig-paren">(</spa
 <dt><code class="docutils literal notranslate"><span class="pre">unsigned</span> <span class="pre">int</span> <span class="pre">irq</span></code></dt>
 <dd>Interrupt number</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">msi_desc</span> <span class="pre">*</span> <span class="pre">entry</span></code></dt>
-<dd>Pointer to MSI descriptor data</dd>
+<dd><p class="first">Pointer to MSI descriptor data</p>
+<p class="last">Set the MSI descriptor entry for an irq</p>
+</dd>
 </dl>
-<p><strong>Description</strong></p>
-<blockquote>
-<div>Set the MSI descriptor entry for an irq</div></blockquote>
 <dl class="function">
 <dt>
 int <code class="descname">irq_set_chip_data</code><span class="sig-paren">(</span>unsigned int<em>&nbsp;irq</em>, void *<em>&nbsp;data</em><span class="sig-paren">)</span></dt>
@@ -2793,11 +2738,10 @@ int <code class="descname">irq_set_chip_data</code><span class="sig-paren">(</sp
 <dt><code class="docutils literal notranslate"><span class="pre">unsigned</span> <span class="pre">int</span> <span class="pre">irq</span></code></dt>
 <dd>Interrupt number</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">void</span> <span class="pre">*</span> <span class="pre">data</span></code></dt>
-<dd>Pointer to chip specific data</dd>
+<dd><p class="first">Pointer to chip specific data</p>
+<p class="last">Set the hardware irq chip data for an irq</p>
+</dd>
 </dl>
-<p><strong>Description</strong></p>
-<blockquote>
-<div>Set the hardware irq chip data for an irq</div></blockquote>
 <dl class="function">
 <dt>
 void <code class="descname">irq_disable</code><span class="sig-paren">(</span>struct irq_desc *<em>&nbsp;desc</em><span class="sig-paren">)</span></dt>
@@ -2833,13 +2777,12 @@ void <code class="descname">handle_simple_irq</code><span class="sig-paren">(</s
 <p><strong>Parameters</strong></p>
 <dl class="docutils">
 <dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">irq_desc</span> <span class="pre">*</span> <span class="pre">desc</span></code></dt>
-<dd>the interrupt description structure for this irq</dd>
-</dl>
-<p><strong>Description</strong></p>
-<blockquote>
-<div>Simple interrupts are either sent from a demultiplexing interrupt
+<dd><p class="first">the interrupt description structure for this irq</p>
+<p class="last">Simple interrupts are either sent from a demultiplexing interrupt
 handler or come from hardware, where no interrupt hardware control
-is necessary.</div></blockquote>
+is necessary.</p>
+</dd>
+</dl>
 <p><strong>Note</strong></p>
 <dl class="docutils">
 <dt>The caller is expected to handle the ack, clear, mask and</dt>
@@ -2854,15 +2797,14 @@ void <code class="descname">handle_untracked_irq</code><span class="sig-paren">(
 <p><strong>Parameters</strong></p>
 <dl class="docutils">
 <dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">irq_desc</span> <span class="pre">*</span> <span class="pre">desc</span></code></dt>
-<dd>the interrupt description structure for this irq</dd>
-</dl>
-<p><strong>Description</strong></p>
-<blockquote>
-<div>Untracked interrupts are sent from a demultiplexing interrupt
+<dd><p class="first">the interrupt description structure for this irq</p>
+<p class="last">Untracked interrupts are sent from a demultiplexing interrupt
 handler when the demultiplexer does not know which device it its
 multiplexed irq domain generated the interrupt. IRQ’s handled
 through here are not subjected to stats tracking, randomness, or
-spurious interrupt detection.</div></blockquote>
+spurious interrupt detection.</p>
+</dd>
+</dl>
 <p><strong>Note</strong></p>
 <dl class="docutils">
 <dt>Like handle_simple_irq, the caller is expected to handle</dt>
@@ -2877,14 +2819,13 @@ void <code class="descname">handle_level_irq</code><span class="sig-paren">(</sp
 <p><strong>Parameters</strong></p>
 <dl class="docutils">
 <dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">irq_desc</span> <span class="pre">*</span> <span class="pre">desc</span></code></dt>
-<dd>the interrupt description structure for this irq</dd>
-</dl>
-<p><strong>Description</strong></p>
-<blockquote>
-<div>Level type interrupts are active as long as the hardware line has
+<dd><p class="first">the interrupt description structure for this irq</p>
+<p class="last">Level type interrupts are active as long as the hardware line has
 the active level. This may require to mask the interrupt and unmask
 it after the associated handler has acknowledged the device, so the
-interrupt line is back to inactive.</div></blockquote>
+interrupt line is back to inactive.</p>
+</dd>
+</dl>
 <dl class="function">
 <dt>
 void <code class="descname">handle_fasteoi_irq</code><span class="sig-paren">(</span>struct irq_desc *<em>&nbsp;desc</em><span class="sig-paren">)</span></dt>
@@ -2894,14 +2835,13 @@ void <code class="descname">handle_fasteoi_irq</code><span class="sig-paren">(</
 <p><strong>Parameters</strong></p>
 <dl class="docutils">
 <dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">irq_desc</span> <span class="pre">*</span> <span class="pre">desc</span></code></dt>
-<dd>the interrupt description structure for this irq</dd>
-</dl>
-<p><strong>Description</strong></p>
-<blockquote>
-<div>Only a single callback will be issued to the chip: an -&gt;eoi()
+<dd><p class="first">the interrupt description structure for this irq</p>
+<p class="last">Only a single callback will be issued to the chip: an -&gt;eoi()
 call when the interrupt has been serviced. This enables support
 for modern forms of interrupt handlers, which handle the flow
-details in hardware, transparently.</div></blockquote>
+details in hardware, transparently.</p>
+</dd>
+</dl>
 <dl class="function">
 <dt>
 void <code class="descname">handle_fasteoi_nmi</code><span class="sig-paren">(</span>struct irq_desc *<em>&nbsp;desc</em><span class="sig-paren">)</span></dt>
@@ -2911,17 +2851,15 @@ void <code class="descname">handle_fasteoi_nmi</code><span class="sig-paren">(</
 <p><strong>Parameters</strong></p>
 <dl class="docutils">
 <dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">irq_desc</span> <span class="pre">*</span> <span class="pre">desc</span></code></dt>
-<dd>the interrupt description structure for this irq</dd>
-</dl>
-<p><strong>Description</strong></p>
-<blockquote>
-<div><p>A simple NMI-safe handler, considering the restrictions
+<dd><p class="first">the interrupt description structure for this irq</p>
+<p>A simple NMI-safe handler, considering the restrictions
 from request_nmi.</p>
-<p>Only a single callback will be issued to the chip: an -&gt;eoi()
+<p class="last">Only a single callback will be issued to the chip: an -&gt;eoi()
 call when the interrupt has been serviced. This enables support
 for modern forms of interrupt handlers, which handle the flow
 details in hardware, transparently.</p>
-</div></blockquote>
+</dd>
+</dl>
 <dl class="function">
 <dt>
 void <code class="descname">handle_edge_irq</code><span class="sig-paren">(</span>struct irq_desc *<em>&nbsp;desc</em><span class="sig-paren">)</span></dt>
@@ -2931,11 +2869,8 @@ void <code class="descname">handle_edge_irq</code><span class="sig-paren">(</spa
 <p><strong>Parameters</strong></p>
 <dl class="docutils">
 <dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">irq_desc</span> <span class="pre">*</span> <span class="pre">desc</span></code></dt>
-<dd>the interrupt description structure for this irq</dd>
-</dl>
-<p><strong>Description</strong></p>
-<blockquote>
-<div>Interrupt occures on the falling and/or rising edge of a hardware
+<dd><p class="first">the interrupt description structure for this irq</p>
+<p class="last">Interrupt occures on the falling and/or rising edge of a hardware
 signal. The occurrence is latched into the irq controller hardware
 and must be acked in order to be reenabled. After the ack another
 interrupt can happen on the same source even before the first one
@@ -2944,7 +2879,9 @@ might be necessary to disable (mask) the interrupt depending on the
 controller hardware. This requires to reenable the interrupt inside
 of the loop which handles the interrupts which have arrived while
 the handler was running. If all pending interrupts are handled, the
-loop is left.</div></blockquote>
+loop is left.</p>
+</dd>
+</dl>
 <dl class="function">
 <dt>
 void <code class="descname">handle_edge_eoi_irq</code><span class="sig-paren">(</span>struct irq_desc *<em>&nbsp;desc</em><span class="sig-paren">)</span></dt>
@@ -2968,11 +2905,10 @@ void <code class="descname">handle_percpu_irq</code><span class="sig-paren">(</s
 <p><strong>Parameters</strong></p>
 <dl class="docutils">
 <dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">irq_desc</span> <span class="pre">*</span> <span class="pre">desc</span></code></dt>
-<dd>the interrupt description structure for this irq</dd>
+<dd><p class="first">the interrupt description structure for this irq</p>
+<p class="last">Per CPU interrupts on SMP machines without locking requirements</p>
+</dd>
 </dl>
-<p><strong>Description</strong></p>
-<blockquote>
-<div>Per CPU interrupts on SMP machines without locking requirements</div></blockquote>
 <dl class="function">
 <dt>
 void <code class="descname">handle_percpu_devid_irq</code><span class="sig-paren">(</span>struct irq_desc *<em>&nbsp;desc</em><span class="sig-paren">)</span></dt>
@@ -3043,13 +2979,12 @@ void <code class="descname">handle_fasteoi_ack_irq</code><span class="sig-paren"
 <p><strong>Parameters</strong></p>
 <dl class="docutils">
 <dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">irq_desc</span> <span class="pre">*</span> <span class="pre">desc</span></code></dt>
-<dd>the interrupt description structure for this irq</dd>
-</dl>
-<p><strong>Description</strong></p>
-<blockquote>
-<div>Like <a class="reference internal" href="#c.handle_fasteoi_irq" title="handle_fasteoi_irq"><code class="xref c c-func docutils literal notranslate"><span class="pre">handle_fasteoi_irq()</span></code></a>, but for use with hierarchy where
+<dd><p class="first">the interrupt description structure for this irq</p>
+<p class="last">Like <a class="reference internal" href="#c.handle_fasteoi_irq" title="handle_fasteoi_irq"><code class="xref c c-func docutils literal notranslate"><span class="pre">handle_fasteoi_irq()</span></code></a>, but for use with hierarchy where
 the irq_chip also needs to have its -&gt;irq_ack() function
-called.</div></blockquote>
+called.</p>
+</dd>
+</dl>
 <dl class="function">
 <dt>
 void <code class="descname">handle_fasteoi_mask_irq</code><span class="sig-paren">(</span>struct irq_desc *<em>&nbsp;desc</em><span class="sig-paren">)</span></dt>
@@ -3059,13 +2994,12 @@ void <code class="descname">handle_fasteoi_mask_irq</code><span class="sig-paren
 <p><strong>Parameters</strong></p>
 <dl class="docutils">
 <dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">irq_desc</span> <span class="pre">*</span> <span class="pre">desc</span></code></dt>
-<dd>the interrupt description structure for this irq</dd>
-</dl>
-<p><strong>Description</strong></p>
-<blockquote>
-<div>Like <a class="reference internal" href="#c.handle_fasteoi_irq" title="handle_fasteoi_irq"><code class="xref c c-func docutils literal notranslate"><span class="pre">handle_fasteoi_irq()</span></code></a>, but for use with hierarchy where
+<dd><p class="first">the interrupt description structure for this irq</p>
+<p class="last">Like <a class="reference internal" href="#c.handle_fasteoi_irq" title="handle_fasteoi_irq"><code class="xref c c-func docutils literal notranslate"><span class="pre">handle_fasteoi_irq()</span></code></a>, but for use with hierarchy where
 the irq_chip also needs to have its -&gt;irq_mask_ack() function
-called.</div></blockquote>
+called.</p>
+</dd>
+</dl>
 <dl class="function">
 <dt>
 int <code class="descname">irq_chip_set_parent_state</code><span class="sig-paren">(</span>struct <a class="reference internal" href="#c.irq_data" title="irq_data">irq_data</a> *<em>&nbsp;data</em>, enum irqchip_irq_state<em>&nbsp;which</em>, bool<em>&nbsp;val</em><span class="sig-paren">)</span></dt>

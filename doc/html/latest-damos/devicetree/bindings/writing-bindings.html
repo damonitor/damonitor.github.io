@@ -1,0 +1,258 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>DOs and DON’Ts for designing and writing Devicetree bindings &mdash; The Linux Kernel  documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript">
+          var DOCUMENTATION_OPTIONS = {
+              URL_ROOT:'../../',
+              VERSION:'',
+              LANGUAGE:'None',
+              COLLAPSE_INDEX:false,
+              FILE_SUFFIX:'.html',
+              HAS_SOURCE:  true,
+              SOURCELINK_SUFFIX: '.txt'
+          };
+      </script>
+        <script type="text/javascript" src="../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../_static/doctools.js"></script>
+    
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/theme_overrides.css" type="text/css" />
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../index.html" class="icon icon-home"> The Linux Kernel
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                5.8.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../admin-guide/mm/damon/index.html">Monitoring Data Accesses</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../vm/damon/index.html">DAMON: Data Access MONitor</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">The Linux Kernel</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html">Docs</a> &raquo;</li>
+        
+      <li>DOs and DON’Ts for designing and writing Devicetree bindings</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../../_sources/devicetree/bindings/writing-bindings.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="dos-and-don-ts-for-designing-and-writing-devicetree-bindings">
+<h1>DOs and DON’Ts for designing and writing Devicetree bindings<a class="headerlink" href="#dos-and-don-ts-for-designing-and-writing-devicetree-bindings" title="Permalink to this headline">¶</a></h1>
+<p>This is a list of common review feedback items focused on binding design. With
+every rule, there are exceptions and bindings have many gray areas.</p>
+<p>For guidelines related to patches, see
+Documentation/devicetree/bindings/submitting-patches.rst</p>
+<div class="section" id="overall-design">
+<h2>Overall design<a class="headerlink" href="#overall-design" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li>DO attempt to make bindings complete even if a driver doesn’t support some
+features. For example, if a device has an interrupt, then include the
+‘interrupts’ property even if the driver is only polled mode.</li>
+<li>DON’T refer to Linux or “device driver” in bindings. Bindings should be
+based on what the hardware has, not what an OS and driver currently support.</li>
+<li>DO use node names matching the class of the device. Many standard names are
+defined in the DT Spec. If there isn’t one, consider adding it.</li>
+<li>DO check that the example matches the documentation especially after making
+review changes.</li>
+<li>DON’T create nodes just for the sake of instantiating drivers. Multi-function
+devices only need child nodes when the child nodes have their own DT
+resources. A single node can be multiple providers (e.g. clocks and resets).</li>
+<li>DON’T use ‘syscon’ alone without a specific compatible string. A ‘syscon’
+hardware block should have a compatible string unique enough to infer the
+register layout of the entire block (at a minimum).</li>
+</ul>
+</div>
+<div class="section" id="properties">
+<h2>Properties<a class="headerlink" href="#properties" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li>DO make ‘compatible’ properties specific. DON’T use wildcards in compatible
+strings. DO use fallback compatibles when devices are the same as or a subset
+of prior implementations. DO add new compatibles in case there are new
+features or bugs.</li>
+<li>DO use a vendor prefix on device specific property names. Consider if
+properties could be common among devices of the same class. Check other
+existing bindings for similar devices.</li>
+<li>DON’T redefine common properties. Just reference the definition and define
+constraints specific to the device.</li>
+<li>DO use common property unit suffixes for properties with scientific units.
+See property-units.txt.</li>
+<li>DO define properties in terms of constraints. How many entries? What are
+possible values? What is the order?</li>
+</ul>
+</div>
+<div class="section" id="board-soc-dts-files">
+<h2>Board/SoC .dts Files<a class="headerlink" href="#board-soc-dts-files" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li>DO put all MMIO devices under a bus node and not at the top-level.</li>
+<li>DO use non-empty ‘ranges’ to limit the size of child buses/devices. 64-bit
+platforms don’t need all devices to have 64-bit address and size.</li>
+</ul>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright The kernel development community
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

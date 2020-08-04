@@ -68,7 +68,7 @@
             
             
               <div class="version">
-                5.7.0
+                5.8.0
               </div>
             
           
@@ -439,6 +439,7 @@ struct <code class="descname">journal_s</code><a class="headerlink" href="#c.jou
 <div class="highlight-none notranslate"><div class="highlight"><pre><span></span>struct journal_s {
   unsigned long           j_flags;
   int j_errno;
+  struct mutex            j_abort_mutex;
   struct buffer_head      *j_sb_buffer;
   journal_superblock_t *j_superblock;
   int j_format_version;
@@ -509,6 +510,8 @@ struct <code class="descname">journal_s</code><a class="headerlink" href="#c.jou
 <dt><code class="docutils literal notranslate"><span class="pre">j_errno</span></code></dt>
 <dd>Is there an outstanding uncleared error on the journal (from a prior
 abort)? [j_state_lock]</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">j_abort_mutex</span></code></dt>
+<dd>Lock the whole aborting procedure.</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">j_sb_buffer</span></code></dt>
 <dd>The first part of the superblock buffer.</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">j_superblock</span></code></dt>
@@ -1142,6 +1145,7 @@ int <code class="descname">jbd2_journal_get_write_access</code><span class="sig-
 </dl>
 <p><strong>Return</strong></p>
 <p>error code or 0 on success.</p>
+<p><strong>Description</strong></p>
 <p>In full data journalling mode the buffer may be of type BJ_AsyncData,
 because we’re <code class="docutils literal notranslate"><span class="pre">write()ing</span></code> a buffer which is also part of a shared mapping.</p>
 <dl class="function">

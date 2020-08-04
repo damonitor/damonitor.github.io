@@ -68,7 +68,7 @@
             
             
               <div class="version">
-                5.7.0
+                5.8.0
               </div>
             
           
@@ -398,6 +398,32 @@ POWER9N DD2.2.</p>
 <p>Guest migration from POWER8 to POWER9 will work with POWER9N DD2.2 and
 POWER9C DD1.2. Since earlier POWER9 processors don’t support TM
 emulation, migration from POWER8 to POWER9 is not supported there.</p>
+</div>
+<div class="section" id="kernel-implementation">
+<h2>Kernel implementation<a class="headerlink" href="#kernel-implementation" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="h-rfid-mtmsrd-quirk">
+<h3>h/rfid mtmsrd quirk<a class="headerlink" href="#h-rfid-mtmsrd-quirk" title="Permalink to this headline">¶</a></h3>
+<p>As defined in the ISA, rfid has a quirk which is useful in early
+exception handling. When in a userspace transaction and we enter the
+kernel via some exception, MSR will end up as TM=0 and TS=01 (ie. TM
+off but TM suspended). Regularly the kernel will want change bits in
+the MSR and will perform an rfid to do this. In this case rfid can
+have SRR0 TM = 0 and TS = 00 (ie. TM off and non transaction) and the
+resulting MSR will retain TM = 0 and TS=01 from before (ie. stay in
+suspend). This is a quirk in the architecture as this would normally
+be a transition from TS=01 to TS=00 (ie. suspend -&gt; non transactional)
+which is an illegal transition.</p>
+<p>This quirk is described the architecture in the definition of rfid
+with these lines:</p>
+<blockquote>
+<div><dl class="docutils">
+<dt>if (MSR 29:31 ¬ = 0b010 | SRR1 29:31 ¬ = 0b000) then</dt>
+<dd>MSR 29:31 &lt;- SRR1 29:31</dd>
+</dl>
+</div></blockquote>
+<p>hrfid and mtmsrd have the same quirk.</p>
+<p>The Linux kernel uses this quirk in it’s early exception handling.</p>
+</div>
 </div>
 </div>
 

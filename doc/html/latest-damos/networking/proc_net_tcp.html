@@ -1,0 +1,274 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>The proc/net/tcp and proc/net/tcp6 variables &mdash; The Linux Kernel  documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript">
+          var DOCUMENTATION_OPTIONS = {
+              URL_ROOT:'../',
+              VERSION:'',
+              LANGUAGE:'None',
+              COLLAPSE_INDEX:false,
+              FILE_SUFFIX:'.html',
+              HAS_SOURCE:  true,
+              SOURCELINK_SUFFIX: '.txt'
+          };
+      </script>
+        <script type="text/javascript" src="../_static/jquery.js"></script>
+        <script type="text/javascript" src="../_static/underscore.js"></script>
+        <script type="text/javascript" src="../_static/doctools.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/theme_overrides.css" type="text/css" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> The Linux Kernel
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                5.8.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../admin-guide/mm/damon/index.html">Monitoring Data Accesses</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../vm/damon/index.html">DAMON: Data Access MONitor</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">The Linux Kernel</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+      <li>The proc/net/tcp and proc/net/tcp6 variables</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/networking/proc_net_tcp.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="the-proc-net-tcp-and-proc-net-tcp6-variables">
+<h1>The proc/net/tcp and proc/net/tcp6 variables<a class="headerlink" href="#the-proc-net-tcp-and-proc-net-tcp6-variables" title="Permalink to this headline">¶</a></h1>
+<p>This document describes the interfaces /proc/net/tcp and /proc/net/tcp6.
+Note that these interfaces are deprecated in favor of tcp_diag.</p>
+<p>These /proc interfaces provide information about currently active TCP
+connections, and are implemented by tcp4_seq_show() in net/ipv4/tcp_ipv4.c
+and tcp6_seq_show() in net/ipv6/tcp_ipv6.c, respectively.</p>
+<p>It will first list all listening TCP sockets, and next list all established
+TCP connections. A typical entry of /proc/net/tcp would look like this (split
+up into 3 parts because of the length of the line):</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>46: 010310AC:9C4C 030310AC:1770 01
+|      |      |      |      |   |--&gt; connection state
+|      |      |      |      |------&gt; remote TCP port number
+|      |      |      |-------------&gt; remote IPv4 address
+|      |      |--------------------&gt; local TCP port number
+|      |---------------------------&gt; local IPv4 address
+|----------------------------------&gt; number of entry
+
+00000150:00000000 01:00000019 00000000
+   |        |     |     |       |--&gt; number of unrecovered RTO timeouts
+   |        |     |     |----------&gt; number of jiffies until timer expires
+   |        |     |----------------&gt; timer_active (see below)
+   |        |----------------------&gt; receive-queue
+   |-------------------------------&gt; transmit-queue
+
+1000        0 54165785 4 cd1e6040 25 4 27 3 -1
+ |          |    |     |    |     |  | |  | |--&gt; slow start size threshold,
+ |          |    |     |    |     |  | |  |      or -1 if the threshold
+ |          |    |     |    |     |  | |  |      is &gt;= 0xFFFF
+ |          |    |     |    |     |  | |  |----&gt; sending congestion window
+ |          |    |     |    |     |  | |-------&gt; (ack.quick&lt;&lt;1)|ack.pingpong
+ |          |    |     |    |     |  |---------&gt; Predicted tick of soft clock
+ |          |    |     |    |     |              (delayed ACK control data)
+ |          |    |     |    |     |------------&gt; retransmit timeout
+ |          |    |     |    |------------------&gt; location of socket in memory
+ |          |    |     |-----------------------&gt; socket reference count
+ |          |    |-----------------------------&gt; inode
+ |          |----------------------------------&gt; unanswered 0-window probes
+ |---------------------------------------------&gt; uid
+</pre></div>
+</div>
+<p>timer_active:</p>
+<blockquote>
+<div><table border="1" class="docutils">
+<colgroup>
+<col width="3%" />
+<col width="97%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td>0</td>
+<td>no timer is pending</td>
+</tr>
+<tr class="row-even"><td>1</td>
+<td>retransmit-timer is pending</td>
+</tr>
+<tr class="row-odd"><td>2</td>
+<td>another timer (e.g. delayed ack or keepalive) is pending</td>
+</tr>
+<tr class="row-even"><td>3</td>
+<td>this is a socket in TIME_WAIT state. Not all fields will contain
+data (or even exist)</td>
+</tr>
+<tr class="row-odd"><td>4</td>
+<td>zero window probe timer is pending</td>
+</tr>
+</tbody>
+</table>
+</div></blockquote>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright The kernel development community
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

@@ -68,7 +68,7 @@
             
             
               <div class="version">
-                5.7.0
+                5.8.0
               </div>
             
           
@@ -403,13 +403,70 @@ from the LPAR memory.</p>
 <p><strong>H_SCM_HEALTH</strong></p>
 <div class="line-block">
 <div class="line">Input: drcIndex</div>
-<div class="line">Out: <em>health-bitmap, health-bit-valid-bitmap</em></div>
+<div class="line">Out: <em>health-bitmap (r4), health-bit-valid-bitmap (r5)</em></div>
 <div class="line">Return Value: <em>H_Success, H_Parameter, H_Hardware</em></div>
 </div>
 <p>Given a DRC Index return the info on predictive failure and overall health of
-the NVDIMM. The asserted bits in the health-bitmap indicate a single predictive
-failure and health-bit-valid-bitmap indicate which bits in health-bitmap are
-valid.</p>
+the PMEM device. The asserted bits in the health-bitmap indicate one or more states
+(described in table below) of the PMEM device and health-bit-valid-bitmap indicate
+which bits in health-bitmap are valid. The bits are reported in
+reverse bit ordering for example a value of 0xC400000000000000
+indicates bits 0, 1, and 5 are valid.</p>
+<p>Health Bitmap Flags:</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="8%" />
+<col width="92%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Bit</th>
+<th class="head">Definition</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>00</td>
+<td>PMEM device is unable to persist memory contents.
+If the system is powered down, nothing will be saved.</td>
+</tr>
+<tr class="row-odd"><td>01</td>
+<td>PMEM device failed to persist memory contents. Either contents were
+not saved successfully on power down or were not restored properly on
+power up.</td>
+</tr>
+<tr class="row-even"><td>02</td>
+<td>PMEM device contents are persisted from previous IPL. The data from
+the last boot were successfully restored.</td>
+</tr>
+<tr class="row-odd"><td>03</td>
+<td>PMEM device contents are not persisted from previous IPL. There was no
+data to restore from the last boot.</td>
+</tr>
+<tr class="row-even"><td>04</td>
+<td>PMEM device memory life remaining is critically low</td>
+</tr>
+<tr class="row-odd"><td>05</td>
+<td>PMEM device will be garded off next IPL due to failure</td>
+</tr>
+<tr class="row-even"><td>06</td>
+<td>PMEM device contents cannot persist due to current platform health
+status. A hardware failure may prevent data from being saved or
+restored.</td>
+</tr>
+<tr class="row-odd"><td>07</td>
+<td>PMEM device is unable to persist memory contents in certain conditions</td>
+</tr>
+<tr class="row-even"><td>08</td>
+<td>PMEM device is encrypted</td>
+</tr>
+<tr class="row-odd"><td>09</td>
+<td>PMEM device has successfully completed a requested erase or secure
+erase procedure.</td>
+</tr>
+<tr class="row-even"><td>10:63</td>
+<td>Reserved / Unused</td>
+</tr>
+</tbody>
+</table>
 <p><strong>H_SCM_PERFORMANCE_STATS</strong></p>
 <div class="line-block">
 <div class="line">Input: drcIndex, resultBuffer Addr</div>

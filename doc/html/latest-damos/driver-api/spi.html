@@ -68,7 +68,7 @@
             
             
               <div class="version">
-                5.7.0
+                5.8.0
               </div>
             
           
@@ -670,16 +670,17 @@ context.</dd>
 <dd>set the logic level of the chip select line.  May be called
 from interrupt context.</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">transfer_one</span></code></dt>
-<dd><p class="first">transfer a single spi_transfer.
-- return 0 if the transfer is finished,
-- return 1 if the transfer is still in progress. When</p>
-<blockquote class="last">
-<div>the driver is finished with this transfer it must
+<dd><p class="first">transfer a single spi_transfer.</p>
+<ul class="last simple">
+<li>return 0 if the transfer is finished,</li>
+<li>return 1 if the transfer is still in progress. When
+the driver is finished with this transfer it must
 call <a class="reference internal" href="#c.spi_finalize_current_transfer" title="spi_finalize_current_transfer"><code class="xref c c-func docutils literal notranslate"><span class="pre">spi_finalize_current_transfer()</span></code></a> so the subsystem
 can issue the next transfer. Note: transfer_one and
 transfer_one_message are mutually exclusive; when both
 are set, the generic subsystem does not call your
-transfer_one callback.</div></blockquote>
+transfer_one callback.</li>
+</ul>
 </dd>
 <dt><code class="docutils literal notranslate"><span class="pre">handle_err</span></code></dt>
 <dd>the subsystem calls the driver to handle an error that occurs
@@ -1622,6 +1623,7 @@ void * <code class="descname">spi_res_alloc</code><span class="sig-paren">(</spa
 </dl>
 <p><strong>Return</strong></p>
 <p>the pointer to the allocated data</p>
+<p><strong>Description</strong></p>
 <p>This may get enhanced in the future to allocate from a memory pool
 of the <strong>spi_device</strong> or <strong>spi_controller</strong> to avoid repeated allocations.</p>
 <dl class="function">
@@ -1949,8 +1951,7 @@ int <code class="descname">spi_write_then_read</code><span class="sig-paren">(</
 device, sending txbuf and then reading rxbuf.  The return value
 is zero for success, else a negative errno status code.
 This call may only be used from a context that may sleep.</p>
-<p>Parameters to this routine are always copied using a small buffer;
-portable code should never use this for more than 32 bytes.
+<p>Parameters to this routine are always copied using a small buffer.
 Performance-sensitive or bulk transfer code should instead use
 spi_{async,sync}() calls with dma-safe buffers.</p>
 <p><strong>Return</strong></p>

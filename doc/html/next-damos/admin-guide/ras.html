@@ -68,7 +68,7 @@
             
             
               <div class="version">
-                5.7.0
+                5.8.0
               </div>
             
           
@@ -307,11 +307,11 @@ the labels provided by the BIOS won’t match the real ones.</p>
 </div>
 <div class="section" id="ecc-memory">
 <h3>ECC memory<a class="headerlink" href="#ecc-memory" title="Permalink to this headline">¶</a></h3>
-<p>As mentioned on the previous section, ECC memory has extra bits to be
-used for error correction. So, on 64 bit systems, a memory module
-has 64 bits of <em>data width</em>, and 74 bits of <em>total width</em>. So, there are
-8 bits extra bits to be used for the error detection and correction
-mechanisms. Those extra bits are called <em>syndrome</em><a class="footnote-reference" href="#f1" id="id1">[1]</a><a class="footnote-reference" href="#f2" id="id2">[2]</a>.</p>
+<p>As mentioned in the previous section, ECC memory has extra bits to be
+used for error correction. In the above example, a memory module has
+64 bits of <em>data width</em>, and 72 bits of <em>total width</em>.  The extra 8
+bits which are used for the error detection and correction mechanisms
+are referred to as the <em>syndrome</em><a class="footnote-reference" href="#f1" id="id1">[1]</a><a class="footnote-reference" href="#f2" id="id2">[2]</a>.</p>
 <p>So, when the cpu requests the memory controller to write a word with
 <em>data width</em>, the memory controller calculates the <em>syndrome</em> in real time,
 using Hamming code, or some other error correction code, like SECDED+,
@@ -370,7 +370,7 @@ was “out-of-tree” and maintained at <a class="reference external" href="http
 That site is mostly archaic now and can be used only for historical
 purposes.</p>
 <p class="last">When the subsystem was pushed upstream for the first time, on
-Kernel 2.6.16, for the first time, it was renamed to <code class="docutils literal notranslate"><span class="pre">EDAC</span></code>.</p>
+Kernel 2.6.16, it was renamed to <code class="docutils literal notranslate"><span class="pre">EDAC</span></code>.</p>
 </div>
 <div class="section" id="purpose">
 <h3>Purpose<a class="headerlink" href="#purpose" title="Permalink to this headline">¶</a></h3>
@@ -510,65 +510,29 @@ controllers. The following example will assume 2 channels:</p>
 </tr>
 </thead>
 <tbody valign="top">
-<tr class="row-odd"><td><code class="docutils literal notranslate"><span class="pre">csrow0</span></code></td>
-<td rowspan="2"><dl class="first last docutils">
-<dt>DIMM_A0</dt>
-<dd><dl class="first docutils">
-<dt>rank0</dt>
-<dd><ul class="first last simple">
-<li></li>
-</ul>
-</dd>
-</dl>
-<p class="last">rank1</p>
-</dd>
-</dl>
-</td>
-<td rowspan="2"><dl class="first last docutils">
-<dt>DIMM_B0</dt>
-<dd><dl class="first docutils">
-<dt>rank0</dt>
-<dd><ul class="first last simple">
-<li></li>
-</ul>
-</dd>
-</dl>
-<p class="last">rank1</p>
-</dd>
-</dl>
-</td>
+<tr class="row-odd"><td>&#160;</td>
+<td><strong>DIMM_A0</strong></td>
+<td><strong>DIMM_B0</strong></td>
 </tr>
-<tr class="row-even"><td><code class="docutils literal notranslate"><span class="pre">csrow1</span></code></td>
+<tr class="row-even"><td><code class="docutils literal notranslate"><span class="pre">csrow0</span></code></td>
+<td>rank0</td>
+<td>rank0</td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal notranslate"><span class="pre">csrow1</span></code></td>
+<td>rank1</td>
+<td>rank1</td>
+</tr>
+<tr class="row-even"><td>&#160;</td>
+<td><strong>DIMM_A1</strong></td>
+<td><strong>DIMM_B1</strong></td>
 </tr>
 <tr class="row-odd"><td><code class="docutils literal notranslate"><span class="pre">csrow2</span></code></td>
-<td rowspan="2"><dl class="first last docutils">
-<dt>DIMM_A1</dt>
-<dd><dl class="first docutils">
-<dt>rank0</dt>
-<dd><ul class="first last simple">
-<li></li>
-</ul>
-</dd>
-</dl>
-<p class="last">rank1</p>
-</dd>
-</dl>
-</td>
-<td rowspan="2"><dl class="first last docutils">
-<dt>DIMM_B1</dt>
-<dd><dl class="first docutils">
-<dt>rank0</dt>
-<dd><ul class="first last simple">
-<li></li>
-</ul>
-</dd>
-</dl>
-<p class="last">rank1</p>
-</dd>
-</dl>
-</td>
+<td>rank0</td>
+<td>rank0</td>
 </tr>
 <tr class="row-even"><td><code class="docutils literal notranslate"><span class="pre">csrow3</span></code></td>
+<td>rank1</td>
+<td>rank1</td>
 </tr>
 </tbody>
 </table>

@@ -68,7 +68,7 @@
             
             
               <div class="version">
-                5.7.0
+                5.8.0
               </div>
             
           
@@ -177,7 +177,8 @@ system register interface to the counter registers and also supports an
 optional external memory-mapped interface.</p>
 <p>Version 1 of the Activity Monitors architecture implements a counter group
 of four fixed and architecturally defined 64-bit event counters.</p>
-<ul class="simple">
+<blockquote>
+<div><ul class="simple">
 <li>CPU cycle counter: increments at the frequency of the CPU.</li>
 <li>Constant counter: increments at the fixed frequency of the system
 clock.</li>
@@ -186,6 +187,7 @@ instruction.</li>
 <li>Memory stall cycles: counts instruction dispatch stall cycles caused by
 misses in the last level cache within the clock domain.</li>
 </ul>
+</div></blockquote>
 <p>When in WFI or WFE these counters do not increment.</p>
 <p>The Activity Monitors architecture provides space for up to 16 architected
 event counters. Future versions of the architecture may use this space to
@@ -205,13 +207,15 @@ feature but this does not guarantee the correct functionality of the
 counters, only the presence of the extension.</p>
 <p>Firmware (code running at higher exception levels, e.g. arm-tf) support is
 needed to:</p>
-<ul class="simple">
+<blockquote>
+<div><ul class="simple">
 <li>Enable access for lower exception levels (EL2 and EL1) to the AMU
 registers.</li>
 <li>Enable the counters. If not enabled these will read as 0.</li>
 <li>Save/restore the counters before/after the CPU is being put/brought up
 from the ‘off’ power state.</li>
 </ul>
+</div></blockquote>
 <p>When using kernels that have this feature enabled but boot with broken
 firmware the user may experience panics or lockups when accessing the
 counter registers. Even if these symptoms are not observed, the values
@@ -225,12 +229,14 @@ EL1 (kernel). Therefore, firmware should still ensure accesses to AMU registers
 are not trapped in EL2/EL3.</p>
 <p>The fixed counters of AMUv1 are accessible though the following system
 register definitions:</p>
-<ul class="simple">
+<blockquote>
+<div><ul class="simple">
 <li>SYS_AMEVCNTR0_CORE_EL0</li>
 <li>SYS_AMEVCNTR0_CONST_EL0</li>
 <li>SYS_AMEVCNTR0_INST_RET_EL0</li>
 <li>SYS_AMEVCNTR0_MEM_STALL_EL0</li>
 </ul>
+</div></blockquote>
 <p>Auxiliary platform specific counters can be accessed using
 SYS_AMEVCNTR1_EL0(n), where n is a value between 0 and 15.</p>
 <p>Details can be found in: arch/arm64/include/asm/sysreg.h.</p>
@@ -238,21 +244,25 @@ SYS_AMEVCNTR1_EL0(n), where n is a value between 0 and 15.</p>
 <div class="section" id="userspace-access">
 <h2>Userspace access<a class="headerlink" href="#userspace-access" title="Permalink to this headline">¶</a></h2>
 <p>Currently, access from userspace to the AMU registers is disabled due to:</p>
-<ul class="simple">
+<blockquote>
+<div><ul class="simple">
 <li>Security reasons: they might expose information about code executed in
 secure mode.</li>
 <li>Purpose: AMU counters are intended for system management use.</li>
 </ul>
+</div></blockquote>
 <p>Also, the presence of the feature is not visible to userspace.</p>
 </div>
 <div class="section" id="virtualization">
 <h2>Virtualization<a class="headerlink" href="#virtualization" title="Permalink to this headline">¶</a></h2>
 <p>Currently, access from userspace (EL0) and kernelspace (EL1) on the KVM
 guest side is disabled due to:</p>
-<ul class="simple">
+<blockquote>
+<div><ul class="simple">
 <li>Security reasons: they might expose information about code executed
 by other guests or the host.</li>
 </ul>
+</div></blockquote>
 <p>Any attempt to access the AMU registers will result in an UNDEFINED
 exception being injected into the guest.</p>
 </div>

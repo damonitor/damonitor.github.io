@@ -68,7 +68,7 @@
             
             
               <div class="version">
-                5.7.0
+                5.8.0
               </div>
             
           
@@ -608,6 +608,7 @@ unlocks and drops the reference.</p>
 int (*readpage)(struct file *, struct page *);
 int (*writepages)(struct address_space *, struct writeback_control *);
 int (*set_page_dirty)(struct page *page);
+void (*readahead)(struct readahead_control *);
 int (*readpages)(struct file *filp, struct address_space *mapping,
                 struct list_head *pages, unsigned nr_pages);
 int (*write_begin)(struct file *, struct address_space *mapping,
@@ -664,67 +665,71 @@ int (*swap_deactivate)(struct file *);
 <td>no</td>
 <td>&#160;</td>
 </tr>
-<tr class="row-even"><td>readpages:</td>
-<td>&#160;</td>
-<td>&#160;</td>
-</tr>
-<tr class="row-odd"><td>write_begin:</td>
-<td>locks the page</td>
-<td>exclusive</td>
-</tr>
-<tr class="row-even"><td>write_end:</td>
+<tr class="row-even"><td>readahead:</td>
 <td>yes, unlocks</td>
-<td>exclusive</td>
-</tr>
-<tr class="row-odd"><td>bmap:</td>
-<td>&#160;</td>
 <td>&#160;</td>
 </tr>
-<tr class="row-even"><td>invalidatepage:</td>
-<td>yes</td>
-<td>&#160;</td>
-</tr>
-<tr class="row-odd"><td>releasepage:</td>
-<td>yes</td>
-<td>&#160;</td>
-</tr>
-<tr class="row-even"><td>freepage:</td>
-<td>yes</td>
-<td>&#160;</td>
-</tr>
-<tr class="row-odd"><td>direct_IO:</td>
-<td>&#160;</td>
-<td>&#160;</td>
-</tr>
-<tr class="row-even"><td>isolate_page:</td>
-<td>yes</td>
-<td>&#160;</td>
-</tr>
-<tr class="row-odd"><td>migratepage:</td>
-<td>yes (both)</td>
-<td>&#160;</td>
-</tr>
-<tr class="row-even"><td>putback_page:</td>
-<td>yes</td>
-<td>&#160;</td>
-</tr>
-<tr class="row-odd"><td>launder_page:</td>
-<td>yes</td>
-<td>&#160;</td>
-</tr>
-<tr class="row-even"><td>is_partially_uptodate:</td>
-<td>yes</td>
-<td>&#160;</td>
-</tr>
-<tr class="row-odd"><td>error_remove_page:</td>
-<td>yes</td>
-<td>&#160;</td>
-</tr>
-<tr class="row-even"><td>swap_activate:</td>
+<tr class="row-odd"><td>readpages:</td>
 <td>no</td>
 <td>&#160;</td>
 </tr>
-<tr class="row-odd"><td>swap_deactivate:</td>
+<tr class="row-even"><td>write_begin:</td>
+<td>locks the page</td>
+<td>exclusive</td>
+</tr>
+<tr class="row-odd"><td>write_end:</td>
+<td>yes, unlocks</td>
+<td>exclusive</td>
+</tr>
+<tr class="row-even"><td>bmap:</td>
+<td>&#160;</td>
+<td>&#160;</td>
+</tr>
+<tr class="row-odd"><td>invalidatepage:</td>
+<td>yes</td>
+<td>&#160;</td>
+</tr>
+<tr class="row-even"><td>releasepage:</td>
+<td>yes</td>
+<td>&#160;</td>
+</tr>
+<tr class="row-odd"><td>freepage:</td>
+<td>yes</td>
+<td>&#160;</td>
+</tr>
+<tr class="row-even"><td>direct_IO:</td>
+<td>&#160;</td>
+<td>&#160;</td>
+</tr>
+<tr class="row-odd"><td>isolate_page:</td>
+<td>yes</td>
+<td>&#160;</td>
+</tr>
+<tr class="row-even"><td>migratepage:</td>
+<td>yes (both)</td>
+<td>&#160;</td>
+</tr>
+<tr class="row-odd"><td>putback_page:</td>
+<td>yes</td>
+<td>&#160;</td>
+</tr>
+<tr class="row-even"><td>launder_page:</td>
+<td>yes</td>
+<td>&#160;</td>
+</tr>
+<tr class="row-odd"><td>is_partially_uptodate:</td>
+<td>yes</td>
+<td>&#160;</td>
+</tr>
+<tr class="row-even"><td>error_remove_page:</td>
+<td>yes</td>
+<td>&#160;</td>
+</tr>
+<tr class="row-odd"><td>swap_activate:</td>
+<td>no</td>
+<td>&#160;</td>
+</tr>
+<tr class="row-even"><td>swap_deactivate:</td>
 <td>no</td>
 <td>&#160;</td>
 </tr>
@@ -734,6 +739,7 @@ int (*swap_deactivate)(struct file *);
 the request handler (/dev/loop).</p>
 <p>-&gt;readpage() unlocks the page, either synchronously or via I/O
 completion.</p>
+<p>-&gt;readahead() unlocks the pages that I/O is attempted on like -&gt;readpage().</p>
 <p>-&gt;readpages() populates the pagecache with the passed pages and starts
 I/O against them.  They come unlocked upon I/O completion.</p>
 <p>-&gt;writepage() is used for two purposes: for “memory cleansing” and for
@@ -852,46 +858,10 @@ void (*fl_release_private)(struct file_lock *);
 int (*lm_grant)(struct file_lock *, struct file_lock *, int);
 void (*lm_break)(struct file_lock *); /* break_lease callback */
 int (*lm_change)(struct file_lock **, int);
+bool (*lm_breaker_owns_lease)(struct file_lock *);
 </pre></div>
 </div>
 <p>locking rules:</p>
-<table border="1" class="docutils">
-<colgroup>
-<col width="20%" />
-<col width="27%" />
-<col width="35%" />
-<col width="18%" />
-</colgroup>
-<thead valign="bottom">
-<tr class="row-odd"><th class="head">ops</th>
-<th class="head">inode-&gt;i_lock</th>
-<th class="head">blocked_lock_lock</th>
-<th class="head">may block</th>
-</tr>
-</thead>
-<tbody valign="top">
-<tr class="row-even"><td>lm_notify:</td>
-<td>yes</td>
-<td>yes</td>
-<td>no</td>
-</tr>
-<tr class="row-odd"><td>lm_grant:</td>
-<td>no</td>
-<td>no</td>
-<td>no</td>
-</tr>
-<tr class="row-even"><td>lm_break:</td>
-<td>yes</td>
-<td>no</td>
-<td>no</td>
-</tr>
-<tr class="row-odd"><td>lm_change</td>
-<td>yes</td>
-<td>no</td>
-<td>no</td>
-</tr>
-</tbody>
-</table>
 </div>
 <div class="section" id="buffer-head">
 <h2>buffer_head<a class="headerlink" href="#buffer-head" title="Permalink to this headline">¶</a></h2>
@@ -1105,49 +1075,6 @@ int (*access)(struct vm_area_struct *, unsigned long, void*, int, int);
 </pre></div>
 </div>
 <p>locking rules:</p>
-<table border="1" class="docutils">
-<colgroup>
-<col width="27%" />
-<col width="17%" />
-<col width="56%" />
-</colgroup>
-<thead valign="bottom">
-<tr class="row-odd"><th class="head">ops</th>
-<th class="head">mmap_sem</th>
-<th class="head">PageLocked(page)</th>
-</tr>
-</thead>
-<tbody valign="top">
-<tr class="row-even"><td>open:</td>
-<td>yes</td>
-<td>&#160;</td>
-</tr>
-<tr class="row-odd"><td>close:</td>
-<td>yes</td>
-<td>&#160;</td>
-</tr>
-<tr class="row-even"><td>fault:</td>
-<td>yes</td>
-<td>can return with page locked</td>
-</tr>
-<tr class="row-odd"><td>map_pages:</td>
-<td>yes</td>
-<td>&#160;</td>
-</tr>
-<tr class="row-even"><td>page_mkwrite:</td>
-<td>yes</td>
-<td>can return with page locked</td>
-</tr>
-<tr class="row-odd"><td>pfn_mkwrite:</td>
-<td>yes</td>
-<td>&#160;</td>
-</tr>
-<tr class="row-even"><td>access:</td>
-<td>yes</td>
-<td>&#160;</td>
-</tr>
-</tbody>
-</table>
 <p>-&gt;fault() is called when a previously not present pte is about
 to be faulted in. The filesystem must find and return the page associated
 with the passed in “pgoff” in the vm_fault structure. If it is possible that

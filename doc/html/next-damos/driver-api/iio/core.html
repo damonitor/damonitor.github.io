@@ -68,7 +68,7 @@
             
             
               <div class="version">
-                5.7.0
+                5.8.0
               </div>
             
           
@@ -868,7 +868,7 @@ and owner</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">scan_bytes</span></code></dt>
 <dd>[INTERN] num bytes captured to be fed to buffer demux</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">mlock</span></code></dt>
-<dd>[DRIVER] lock used to prevent simultaneous device state
+<dd>[INTERN] lock used to prevent simultaneous device state
 changes</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">available_scan_masks</span></code></dt>
 <dd>[DRIVER] optional array of allowed bitmasks</dd>
@@ -953,8 +953,6 @@ enable/disable</dd>
 function is automatically unregistered on driver detach. This function
 calls <a class="reference internal" href="#c.iio_device_register" title="iio_device_register"><code class="xref c c-func docutils literal notranslate"><span class="pre">iio_device_register()</span></code></a> internally. Refer to that function for more
 information.</p>
-<p>If an iio_dev registered with this function needs to be unregistered
-separately, <a class="reference internal" href="#c.devm_iio_device_unregister" title="devm_iio_device_unregister"><code class="xref c c-func docutils literal notranslate"><span class="pre">devm_iio_device_unregister()</span></code></a> must be used.</p>
 <p><strong>Return</strong></p>
 <p>0 on success, negative error number on failure.</p>
 <dl class="function">
@@ -1247,25 +1245,8 @@ struct <a class="reference internal" href="#c.iio_dev" title="iio_dev">iio_dev</
 <p><strong>Description</strong></p>
 <p>Managed iio_device_alloc. iio_dev allocated with this function is
 automatically freed on driver detach.</p>
-<p>If an iio_dev allocated with this function needs to be freed separately,
-<a class="reference internal" href="#c.devm_iio_device_free" title="devm_iio_device_free"><code class="xref c c-func docutils literal notranslate"><span class="pre">devm_iio_device_free()</span></code></a> must be used.</p>
 <p><strong>Return</strong></p>
 <p>Pointer to allocated iio_dev on success, NULL on failure.</p>
-<dl class="function">
-<dt id="c.devm_iio_device_free">
-void <code class="descname">devm_iio_device_free</code><span class="sig-paren">(</span>struct <a class="reference internal" href="../infrastructure.html#c.device" title="device">device</a> *<em>&nbsp;dev</em>, struct <a class="reference internal" href="#c.iio_dev" title="iio_dev">iio_dev</a> *<em>&nbsp;iio_dev</em><span class="sig-paren">)</span><a class="headerlink" href="#c.devm_iio_device_free" title="Permalink to this definition">¶</a></dt>
-<dd><p>Resource-managed <a class="reference internal" href="#c.iio_device_free" title="iio_device_free"><code class="xref c c-func docutils literal notranslate"><span class="pre">iio_device_free()</span></code></a></p>
-</dd></dl>
-
-<p><strong>Parameters</strong></p>
-<dl class="docutils">
-<dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">device</span> <span class="pre">*</span> <span class="pre">dev</span></code></dt>
-<dd>Device this iio_dev belongs to</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">iio_dev</span> <span class="pre">*</span> <span class="pre">iio_dev</span></code></dt>
-<dd>the iio_dev associated with the device</dd>
-</dl>
-<p><strong>Description</strong></p>
-<p>Free iio_dev allocated with <a class="reference internal" href="#c.devm_iio_device_alloc" title="devm_iio_device_alloc"><code class="xref c c-func docutils literal notranslate"><span class="pre">devm_iio_device_alloc()</span></code></a>.</p>
 <dl class="function">
 <dt id="c.iio_device_unregister">
 void <code class="descname">iio_device_unregister</code><span class="sig-paren">(</span>struct <a class="reference internal" href="#c.iio_dev" title="iio_dev">iio_dev</a> *<em>&nbsp;indio_dev</em><span class="sig-paren">)</span><a class="headerlink" href="#c.iio_device_unregister" title="Permalink to this definition">¶</a></dt>
@@ -1277,21 +1258,6 @@ void <code class="descname">iio_device_unregister</code><span class="sig-paren">
 <dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">iio_dev</span> <span class="pre">*</span> <span class="pre">indio_dev</span></code></dt>
 <dd>Device structure representing the device.</dd>
 </dl>
-<dl class="function">
-<dt id="c.devm_iio_device_unregister">
-void <code class="descname">devm_iio_device_unregister</code><span class="sig-paren">(</span>struct <a class="reference internal" href="../infrastructure.html#c.device" title="device">device</a> *<em>&nbsp;dev</em>, struct <a class="reference internal" href="#c.iio_dev" title="iio_dev">iio_dev</a> *<em>&nbsp;indio_dev</em><span class="sig-paren">)</span><a class="headerlink" href="#c.devm_iio_device_unregister" title="Permalink to this definition">¶</a></dt>
-<dd><p>Resource-managed <a class="reference internal" href="#c.iio_device_unregister" title="iio_device_unregister"><code class="xref c c-func docutils literal notranslate"><span class="pre">iio_device_unregister()</span></code></a></p>
-</dd></dl>
-
-<p><strong>Parameters</strong></p>
-<dl class="docutils">
-<dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">device</span> <span class="pre">*</span> <span class="pre">dev</span></code></dt>
-<dd>Device this iio_dev belongs to</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">iio_dev</span> <span class="pre">*</span> <span class="pre">indio_dev</span></code></dt>
-<dd>the iio_dev associated with the device</dd>
-</dl>
-<p><strong>Description</strong></p>
-<p>Unregister iio_dev registered with <a class="reference internal" href="#c.devm_iio_device_register" title="devm_iio_device_register"><code class="xref c c-func docutils literal notranslate"><span class="pre">devm_iio_device_register()</span></code></a>.</p>
 <dl class="function">
 <dt id="c.iio_device_claim_direct_mode">
 int <code class="descname">iio_device_claim_direct_mode</code><span class="sig-paren">(</span>struct <a class="reference internal" href="#c.iio_dev" title="iio_dev">iio_dev</a> *<em>&nbsp;indio_dev</em><span class="sig-paren">)</span><a class="headerlink" href="#c.iio_device_claim_direct_mode" title="Permalink to this definition">¶</a></dt>

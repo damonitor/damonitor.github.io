@@ -68,7 +68,7 @@
             
             
               <div class="version">
-                5.7.0
+                5.8.0
               </div>
             
           
@@ -561,35 +561,6 @@ be usable.</dd>
 <p><strong>Description</strong></p>
 <p>Initialisation constraints, our supply and consumers supplies.</p>
 <dl class="type">
-<dt id="c.regulator_linear_range">
-struct <code class="descname">regulator_linear_range</code><a class="headerlink" href="#c.regulator_linear_range" title="Permalink to this definition">¶</a></dt>
-<dd><p>specify linear voltage ranges</p>
-</dd></dl>
-
-<p><strong>Definition</strong></p>
-<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>struct regulator_linear_range {
-  unsigned int min_uV;
-  unsigned int min_sel;
-  unsigned int max_sel;
-  unsigned int uV_step;
-};
-</pre></div>
-</div>
-<p><strong>Members</strong></p>
-<dl class="docutils">
-<dt><code class="docutils literal notranslate"><span class="pre">min_uV</span></code></dt>
-<dd>Lowest voltage in range</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">min_sel</span></code></dt>
-<dd>Lowest selector for range</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">max_sel</span></code></dt>
-<dd>Highest selector for range</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">uV_step</span></code></dt>
-<dd>Step size</dd>
-</dl>
-<p><strong>Description</strong></p>
-<p>Specify a range of voltages for regulator_map_linear_range() and
-regulator_list_linear_range().</p>
-<dl class="type">
 <dt id="c.regulator_ops">
 struct <code class="descname">regulator_ops</code><a class="headerlink" href="#c.regulator_ops" title="Permalink to this definition">¶</a></dt>
 <dd><p>regulator operations.</p>
@@ -757,7 +728,7 @@ struct <code class="descname">regulator_desc</code><a class="headerlink" href="#
   int fixed_uV;
   unsigned int ramp_delay;
   int min_dropout_uV;
-  const struct regulator_linear_range *linear_ranges;
+  const struct linear_range *linear_ranges;
   const unsigned int *linear_range_selectors;
   int n_linear_ranges;
   const unsigned int *volt_table;
@@ -1586,14 +1557,14 @@ o Device is idling in between work.</div></blockquote>
 <p>This information is also exported via sysfs to userspace.</p>
 <p>DRMS will sum the total requested load on the regulator and change
 to the most efficient operating mode if platform constraints allow.</p>
+<p>If a regulator is an always-on regulator then an individual consumer’s
+load will still be removed if that consumer is fully disabled.</p>
+<p>On error a negative errno is returned.</p>
 <p><strong>NOTE</strong></p>
 <p>when a regulator consumer requests to have a regulator
 disabled then any load that consumer requested no longer counts
 toward the total requested load.  If the regulator is re-enabled
 then the previously requested load will start counting again.</p>
-<p>If a regulator is an always-on regulator then an individual consumer’s
-load will still be removed if that consumer is fully disabled.</p>
-<p>On error a negative errno is returned.</p>
 <dl class="function">
 <dt id="c.regulator_allow_bypass">
 int <code class="descname">regulator_allow_bypass</code><span class="sig-paren">(</span>struct regulator *<em>&nbsp;regulator</em>, bool<em>&nbsp;enable</em><span class="sig-paren">)</span><a class="headerlink" href="#c.regulator_allow_bypass" title="Permalink to this definition">¶</a></dt>

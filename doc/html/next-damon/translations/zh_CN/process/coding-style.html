@@ -68,7 +68,7 @@
             
             
               <div class="version">
-                5.7.0
+                5.8.0
               </div>
             
           
@@ -759,10 +759,10 @@ mm_count)，和文件系统 (<code class="docutils literal notranslate"><span cl
 <p>&lt;linux/device.h&gt; 里有一些驱动模型诊断宏，你应该使用它们，以确保信息对应于正确
 的设备和驱动，并且被标记了正确的消息级别。这些宏有：dev_err(), dev_warn(),
 dev_info() 等等。对于那些不和某个特定设备相关连的信息，&lt;linux/printk.h&gt; 定义
-了 pr_notice(), pr_info(), pr_warn(), pr_err() 和其他。</p>
+了 <a class="reference internal" href="../../../core-api/printk-basics.html#c.pr_notice" title="pr_notice"><code class="xref c c-func docutils literal notranslate"><span class="pre">pr_notice()</span></code></a>, <a class="reference internal" href="../../../core-api/printk-basics.html#c.pr_info" title="pr_info"><code class="xref c c-func docutils literal notranslate"><span class="pre">pr_info()</span></code></a>, <a class="reference internal" href="../../../core-api/printk-basics.html#c.pr_warn" title="pr_warn"><code class="xref c c-func docutils literal notranslate"><span class="pre">pr_warn()</span></code></a>, <a class="reference internal" href="../../../core-api/printk-basics.html#c.pr_err" title="pr_err"><code class="xref c c-func docutils literal notranslate"><span class="pre">pr_err()</span></code></a> 和其他。</p>
 <p>写出好的调试信息可以是一个很大的挑战；一旦你写出后，这些信息在远程除错时能提
 供极大的帮助。然而打印调试信息的处理方式同打印非调试信息不同。其他 pr_XXX()
-函数能无条件地打印，pr_debug() 却不；默认情况下它不会被编译，除非定义了 DEBUG
+函数能无条件地打印，<a class="reference internal" href="../../../core-api/printk-basics.html#c.pr_debug" title="pr_debug"><code class="xref c c-func docutils literal notranslate"><span class="pre">pr_debug()</span></code></a> 却不；默认情况下它不会被编译，除非定义了 DEBUG
 或设定了 CONFIG_DYNAMIC_DEBUG。实际这同样是为了 dev_dbg()，一个相关约定是在一
 个已经开启了 DEBUG 时，使用 VERBOSE_DEBUG 来添加 dev_vdbg()。</p>
 <p>许多子系统拥有 Kconfig 调试选项来开启 -DDEBUG 在对应的 Makefile 里面；在其他

@@ -68,7 +68,7 @@
             
             
               <div class="version">
-                5.7.0
+                5.8.0
               </div>
             
           
@@ -167,22 +167,23 @@
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Date:</th><td class="field-body">December 2019</td>
+<tr class="field-odd field"><th class="field-name">Date:</th><td class="field-body">May 2020</td>
 </tr>
 </tbody>
 </table>
 <p>Padata is a mechanism by which the kernel can farm jobs out to be done in
-parallel on multiple CPUs while retaining their ordering.  It was developed for
-use with the IPsec code, which needs to be able to perform encryption and
-decryption on large numbers of packets without reordering those packets.  The
-crypto developers made a point of writing padata in a sufficiently general
-fashion that it could be put to other uses as well.</p>
-<div class="section" id="usage">
-<h2>Usage<a class="headerlink" href="#usage" title="Permalink to this headline">¶</a></h2>
+parallel on multiple CPUs while optionally retaining their ordering.</p>
+<p>It was originally developed for IPsec, which needs to perform encryption and
+decryption on large numbers of packets without reordering those packets.  This
+is currently the sole consumer of padata’s serialized job support.</p>
+<p>Padata also supports multithreaded jobs, splitting up the job evenly while load
+balancing and coordinating between threads.</p>
+<div class="section" id="running-serialized-jobs">
+<h2>Running Serialized Jobs<a class="headerlink" href="#running-serialized-jobs" title="Permalink to this headline">¶</a></h2>
 <div class="section" id="initializing">
 <h3>Initializing<a class="headerlink" href="#initializing" title="Permalink to this headline">¶</a></h3>
-<p>The first step in using padata is to set up a padata_instance structure for
-overall control of how jobs are to be run:</p>
+<p>The first step in using padata to run serialized jobs is to set up a
+padata_instance structure for overall control of how jobs are to be run:</p>
 <div class="highlight-none notranslate"><div class="highlight"><pre><span></span>#include &lt;linux/padata.h&gt;
 
 struct padata_instance *padata_alloc_possible(const char *name);
@@ -313,6 +314,22 @@ void padata_free(struct padata_instance *pinst);
 before any of the above are called.</p>
 </div>
 </div>
+<div class="section" id="running-multithreaded-jobs">
+<h2>Running Multithreaded Jobs<a class="headerlink" href="#running-multithreaded-jobs" title="Permalink to this headline">¶</a></h2>
+<p>A multithreaded job has a main thread and zero or more helper threads, with the
+main thread participating in the job and then waiting until all helpers have
+finished.  padata splits the job into units called chunks, where a chunk is a
+piece of the job that one thread completes in one call to the thread function.</p>
+<p>A user has to do three things to run a multithreaded job.  First, describe the
+job by defining a padata_mt_job structure, which is explained in the Interface
+section.  This includes a pointer to the thread function, which padata will
+call each time it assigns a job chunk to a thread.  Then, define the thread
+function, which accepts three arguments, <code class="docutils literal notranslate"><span class="pre">start</span></code>, <code class="docutils literal notranslate"><span class="pre">end</span></code>, and <code class="docutils literal notranslate"><span class="pre">arg</span></code>, where
+the first two delimit the range that the thread operates on and the last is a
+pointer to the job’s shared state, if any.  Prepare the shared state, which is
+typically allocated on the main thread’s stack.  Last, call
+<a class="reference internal" href="#c.padata_do_multithreaded" title="padata_do_multithreaded"><code class="xref c c-func docutils literal notranslate"><span class="pre">padata_do_multithreaded()</span></code></a>, which will return once the job is finished.</p>
+</div>
 <div class="section" id="interface">
 <h2>Interface<a class="headerlink" href="#interface" title="Permalink to this headline">¶</a></h2>
 <dl class="type">
@@ -326,7 +343,6 @@ struct <code class="descname">padata_priv</code><a class="headerlink" href="#c.p
   struct list_head        list;
   struct parallel_data    *pd;
   int cb_cpu;
-  int cpu;
   unsigned int            seq_nr;
   int info;
   void (*parallel)(struct padata_priv *padata);
@@ -342,8 +358,6 @@ struct <code class="descname">padata_priv</code><a class="headerlink" href="#c.p
 <dd>Pointer to the internal control structure.</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">cb_cpu</span></code></dt>
 <dd>Callback cpu for serializatioon.</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">cpu</span></code></dt>
-<dd>Cpu for parallelization.</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">seq_nr</span></code></dt>
 <dd>Sequence number of the parallelized data object.</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">info</span></code></dt>
@@ -404,21 +418,15 @@ struct <code class="descname">padata_parallel_queue</code><a class="headerlink" 
 
 <p><strong>Definition</strong></p>
 <div class="highlight-none notranslate"><div class="highlight"><pre><span></span>struct padata_parallel_queue {
-  struct padata_list    parallel;
   struct padata_list    reorder;
-  struct work_struct    work;
   atomic_t num_obj;
 };
 </pre></div>
 </div>
 <p><strong>Members</strong></p>
 <dl class="docutils">
-<dt><code class="docutils literal notranslate"><span class="pre">parallel</span></code></dt>
-<dd>List to wait for parallelization.</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">reorder</span></code></dt>
 <dd>List to wait for reordering after parallel processing.</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">work</span></code></dt>
-<dd>work struct for parallelization.</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">num_obj</span></code></dt>
 <dd>Number of objects that are processed by this cpu.</dd>
 </dl>
@@ -454,7 +462,7 @@ struct <code class="descname">parallel_data</code><a class="headerlink" href="#c
   struct padata_parallel_queue    __percpu *pqueue;
   struct padata_serial_queue      __percpu *squeue;
   atomic_t refcnt;
-  atomic_t seq_nr;
+  unsigned int                    seq_nr;
   unsigned int                    processed;
   int cpu;
   struct padata_cpumask           cpumask;
@@ -513,6 +521,45 @@ struct <code class="descname">padata_shell</code><a class="headerlink" href="#c.
 <dd>List entry in padata_instance list.</dd>
 </dl>
 <dl class="type">
+<dt id="c.padata_mt_job">
+struct <code class="descname">padata_mt_job</code><a class="headerlink" href="#c.padata_mt_job" title="Permalink to this definition">¶</a></dt>
+<dd><p>represents one multithreaded job</p>
+</dd></dl>
+
+<p><strong>Definition</strong></p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>struct padata_mt_job {
+  void (*thread_fn)(unsigned long start, unsigned long end, void *arg);
+  void *fn_arg;
+  unsigned long           start;
+  unsigned long           size;
+  unsigned long           align;
+  unsigned long           min_chunk;
+  int max_threads;
+};
+</pre></div>
+</div>
+<p><strong>Members</strong></p>
+<dl class="docutils">
+<dt><code class="docutils literal notranslate"><span class="pre">thread_fn</span></code></dt>
+<dd>Called for each chunk of work that a padata thread does.</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">fn_arg</span></code></dt>
+<dd>The thread function argument.</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">start</span></code></dt>
+<dd>The start of the job (units are job-specific).</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">size</span></code></dt>
+<dd>size of this node’s work (units are job-specific).</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">align</span></code></dt>
+<dd>Ranges passed to the thread function fall on this boundary, with the
+possible exceptions of the beginning and end of the job.</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">min_chunk</span></code></dt>
+<dd>The minimum chunk size in job-specific units.  This allows
+the client to communicate the minimum amount of work that’s
+appropriate for one worker thread to do at once.</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">max_threads</span></code></dt>
+<dd>Max threads to use for the job, actual number may be less
+depending on task size and minimum chunk size.</dd>
+</dl>
+<dl class="type">
 <dt id="c.padata_instance">
 struct <code class="descname">padata_instance</code><a class="headerlink" href="#c.padata_instance" title="Permalink to this definition">¶</a></dt>
 <dd><p>The overall control structure.</p>
@@ -520,7 +567,8 @@ struct <code class="descname">padata_instance</code><a class="headerlink" href="
 
 <p><strong>Definition</strong></p>
 <div class="highlight-none notranslate"><div class="highlight"><pre><span></span>struct padata_instance {
-  struct hlist_node                node;
+  struct hlist_node               cpu_online_node;
+  struct hlist_node               cpu_dead_node;
   struct workqueue_struct         *parallel_wq;
   struct workqueue_struct         *serial_wq;
   struct list_head                pslist;
@@ -537,8 +585,10 @@ struct <code class="descname">padata_instance</code><a class="headerlink" href="
 </div>
 <p><strong>Members</strong></p>
 <dl class="docutils">
-<dt><code class="docutils literal notranslate"><span class="pre">node</span></code></dt>
-<dd>Used by CPU hotplug.</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">cpu_online_node</span></code></dt>
+<dd>Linkage for CPU online callback.</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">cpu_dead_node</span></code></dt>
+<dd>Linkage for CPU offline callback.</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">parallel_wq</span></code></dt>
 <dd>The workqueue used for parallel work.</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">serial_wq</span></code></dt>
@@ -595,6 +645,19 @@ void <code class="descname">padata_do_serial</code><span class="sig-paren">(</sp
 <p><strong>Description</strong></p>
 <p>padata_do_serial must be called for every parallelized object.
 The serialization callback function will run with BHs off.</p>
+<dl class="function">
+<dt id="c.padata_do_multithreaded">
+void <code class="descname">padata_do_multithreaded</code><span class="sig-paren">(</span>struct <a class="reference internal" href="#c.padata_mt_job" title="padata_mt_job">padata_mt_job</a> *<em>&nbsp;job</em><span class="sig-paren">)</span><a class="headerlink" href="#c.padata_do_multithreaded" title="Permalink to this definition">¶</a></dt>
+<dd><p>run a multithreaded job</p>
+</dd></dl>
+
+<p><strong>Parameters</strong></p>
+<dl class="docutils">
+<dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">padata_mt_job</span> <span class="pre">*</span> <span class="pre">job</span></code></dt>
+<dd>Description of the job.</dd>
+</dl>
+<p><strong>Description</strong></p>
+<p>See the definition of struct padata_mt_job for more details.</p>
 <dl class="function">
 <dt id="c.padata_set_cpumask">
 int <code class="descname">padata_set_cpumask</code><span class="sig-paren">(</span>struct <a class="reference internal" href="#c.padata_instance" title="padata_instance">padata_instance</a> *<em>&nbsp;pinst</em>, int<em>&nbsp;cpumask_type</em>, cpumask_var_t<em>&nbsp;cpumask</em><span class="sig-paren">)</span><a class="headerlink" href="#c.padata_set_cpumask" title="Permalink to this definition">¶</a></dt>

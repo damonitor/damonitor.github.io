@@ -68,7 +68,7 @@
             
             
               <div class="version">
-                5.7.0
+                5.8.0
               </div>
             
           
@@ -206,31 +206,6 @@ given by <strong>max</strong>.</p>
 <p><strong>Return</strong></p>
 <p>status code</p>
 <dl class="function">
-<dt id="c.efi_low_alloc_above">
-efi_status_t <code class="descname">efi_low_alloc_above</code><span class="sig-paren">(</span>unsigned long<em>&nbsp;size</em>, unsigned long<em>&nbsp;align</em>, unsigned long *<em>&nbsp;addr</em>, unsigned long<em>&nbsp;min</em><span class="sig-paren">)</span><a class="headerlink" href="#c.efi_low_alloc_above" title="Permalink to this definition">¶</a></dt>
-<dd><p>allocate pages at or above given address</p>
-</dd></dl>
-
-<p><strong>Parameters</strong></p>
-<dl class="docutils">
-<dt><code class="docutils literal notranslate"><span class="pre">unsigned</span> <span class="pre">long</span> <span class="pre">size</span></code></dt>
-<dd>size of the memory area to allocate</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">unsigned</span> <span class="pre">long</span> <span class="pre">align</span></code></dt>
-<dd>minimum alignment of the allocated memory area. It should
-a power of two.</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">unsigned</span> <span class="pre">long</span> <span class="pre">*</span> <span class="pre">addr</span></code></dt>
-<dd>on exit the address of the allocated memory</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">unsigned</span> <span class="pre">long</span> <span class="pre">min</span></code></dt>
-<dd>minimum address to used for the memory allocation</dd>
-</dl>
-<p><strong>Description</strong></p>
-<p>Allocate at the lowest possible address that is not below <strong>min</strong> as
-EFI_LOADER_DATA. The allocated pages are aligned according to <strong>align</strong> but at
-least EFI_ALLOC_ALIGN. The first allocated page will not below the address
-given by <strong>min</strong>.</p>
-<p><strong>Return</strong></p>
-<p>status code</p>
-<dl class="function">
 <dt id="c.efi_free">
 void <code class="descname">efi_free</code><span class="sig-paren">(</span>unsigned long<em>&nbsp;size</em>, unsigned long<em>&nbsp;addr</em><span class="sig-paren">)</span><a class="headerlink" href="#c.efi_free" title="Permalink to this definition">¶</a></dt>
 <dd><p>free memory pages</p>
@@ -248,39 +223,7 @@ aligned)</dd>
 <p><strong>size</strong> is rounded up to a multiple of EFI_ALLOC_ALIGN which is an
 architecture specific multiple of EFI_PAGE_SIZE. So this function should
 only be used to return pages allocated with <a class="reference internal" href="#c.efi_allocate_pages" title="efi_allocate_pages"><code class="xref c c-func docutils literal notranslate"><span class="pre">efi_allocate_pages()</span></code></a> or
-<a class="reference internal" href="#c.efi_low_alloc_above" title="efi_low_alloc_above"><code class="xref c c-func docutils literal notranslate"><span class="pre">efi_low_alloc_above()</span></code></a>.</p>
-<dl class="function">
-<dt id="c.efi_relocate_kernel">
-efi_status_t <code class="descname">efi_relocate_kernel</code><span class="sig-paren">(</span>unsigned long *<em>&nbsp;image_addr</em>, unsigned long<em>&nbsp;image_size</em>, unsigned long<em>&nbsp;alloc_size</em>, unsigned long<em>&nbsp;preferred_addr</em>, unsigned long<em>&nbsp;alignment</em>, unsigned long<em>&nbsp;min_addr</em><span class="sig-paren">)</span><a class="headerlink" href="#c.efi_relocate_kernel" title="Permalink to this definition">¶</a></dt>
-<dd><p>copy memory area</p>
-</dd></dl>
-
-<p><strong>Parameters</strong></p>
-<dl class="docutils">
-<dt><code class="docutils literal notranslate"><span class="pre">unsigned</span> <span class="pre">long</span> <span class="pre">*</span> <span class="pre">image_addr</span></code></dt>
-<dd>pointer to address of memory area to copy</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">unsigned</span> <span class="pre">long</span> <span class="pre">image_size</span></code></dt>
-<dd>size of memory area to copy</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">unsigned</span> <span class="pre">long</span> <span class="pre">alloc_size</span></code></dt>
-<dd>minimum size of memory to allocate, must be greater or
-equal to image_size</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">unsigned</span> <span class="pre">long</span> <span class="pre">preferred_addr</span></code></dt>
-<dd>preferred target address</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">unsigned</span> <span class="pre">long</span> <span class="pre">alignment</span></code></dt>
-<dd>minimum alignment of the allocated memory area. It
-should be a power of two.</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">unsigned</span> <span class="pre">long</span> <span class="pre">min_addr</span></code></dt>
-<dd>minimum target address</dd>
-</dl>
-<p><strong>Description</strong></p>
-<p>Copy a memory area to a newly allocated memory area aligned according
-to <strong>alignment</strong> but at least EFI_ALLOC_ALIGN. If the preferred address
-is not available, the allocated address will not be below <strong>min_addr</strong>.
-On exit, <strong>image_addr</strong> is updated to the target copy address that was used.</p>
-<p>This function is used to copy the Linux kernel verbatim. It does not apply
-any relocation changes.</p>
-<p><strong>Return</strong></p>
-<p>status code</p>
+efi_low_alloc_above().</p>
 </div>
 </div>
 

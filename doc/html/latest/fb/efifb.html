@@ -68,7 +68,7 @@
             
             
               <div class="version">
-                5.7.0
+                5.8.0
               </div>
             
           
@@ -163,8 +163,10 @@
             
   <div class="section" id="what-is-efifb">
 <h1>What is efifb?<a class="headerlink" href="#what-is-efifb" title="Permalink to this headline">¶</a></h1>
-<p>This is a generic EFI platform driver for Intel based Apple computers.
-efifb is only for EFI booted Intel Macs.</p>
+<p>This is a generic EFI platform driver for systems with UEFI firmware. The
+system must be booted via the EFI stub for this to be usable. efifb supports
+both firmware with Graphics Output Protocol (GOP) displays as well as older
+systems with only Universal Graphics Adapter (UGA) displays.</p>
 <div class="section" id="supported-hardware">
 <h2>Supported Hardware<a class="headerlink" href="#supported-hardware" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
@@ -172,12 +174,14 @@ efifb is only for EFI booted Intel Macs.</p>
 <li>Macbook</li>
 <li>Macbook Pro 15”/17”</li>
 <li>MacMini</li>
+<li>ARM/ARM64/X86 systems with UEFI firmware</li>
 </ul>
 </div>
 <div class="section" id="how-to-use-it">
 <h2>How to use it?<a class="headerlink" href="#how-to-use-it" title="Permalink to this headline">¶</a></h2>
-<p>efifb does not have any kind of autodetection of your machine.
-You have to add the following kernel parameters in your elilo.conf:</p>
+<p>For UGA displays, efifb does not have any kind of autodetection of your
+machine.</p>
+<p>You have to add the following kernel parameters in your elilo.conf:</p>
 <div class="highlight-none notranslate"><div class="highlight"><pre><span></span>Macbook :
         video=efifb:macbook
 MacMini :
@@ -188,6 +192,8 @@ Macbook Pro 17&quot;, iMac 20&quot; :
         video=efifb:i20
 </pre></div>
 </div>
+<p>For GOP displays, efifb can autodetect the display’s resolution and framebuffer
+address, so these should work out of the box without any special parameters.</p>
 <p>Accepted options:</p>
 <table border="1" class="docutils">
 <colgroup>
@@ -202,6 +208,27 @@ when large amounts of console data are written.</td>
 </tr>
 </tbody>
 </table>
+<p>Options for GOP displays:</p>
+<dl class="docutils">
+<dt>mode=n</dt>
+<dd>The EFI stub will set the mode of the display to mode number n if
+possible.</dd>
+<dt>&lt;xres&gt;x&lt;yres&gt;[-(rgb|bgr|&lt;bpp&gt;)]</dt>
+<dd>The EFI stub will search for a display mode that matches the specified
+horizontal and vertical resolution, and optionally bit depth, and set
+the mode of the display to it if one is found. The bit depth can either
+“rgb” or “bgr” to match specifically those pixel formats, or a number
+for a mode with matching bits per pixel.</dd>
+<dt>auto</dt>
+<dd>The EFI stub will choose the mode with the highest resolution (product
+of horizontal and vertical resolution). If there are multiple modes
+with the highest resolution, it will choose one with the highest color
+depth.</dd>
+<dt>list</dt>
+<dd>The EFI stub will list out all the display modes that are available. A
+specific mode can then be chosen using one of the above options for the
+next boot.</dd>
+</dl>
 <p>Edgar Hucek &lt;<a class="reference external" href="mailto:gimli&#37;&#52;&#48;dark-green&#46;com">gimli<span>&#64;</span>dark-green<span>&#46;</span>com</a>&gt;</p>
 </div>
 </div>

@@ -1,0 +1,457 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>ATM (i)Chip IA Linux Driver Source &mdash; The Linux Kernel  documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript">
+          var DOCUMENTATION_OPTIONS = {
+              URL_ROOT:'../',
+              VERSION:'',
+              LANGUAGE:'None',
+              COLLAPSE_INDEX:false,
+              FILE_SUFFIX:'.html',
+              HAS_SOURCE:  true,
+              SOURCELINK_SUFFIX: '.txt'
+          };
+      </script>
+        <script type="text/javascript" src="../_static/jquery.js"></script>
+        <script type="text/javascript" src="../_static/underscore.js"></script>
+        <script type="text/javascript" src="../_static/doctools.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/theme_overrides.css" type="text/css" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> The Linux Kernel
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                5.8.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../admin-guide/mm/damon/index.html">Monitoring Data Accesses</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../vm/damon/index.html">DAMON: Data Access MONitor</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">The Linux Kernel</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+      <li>ATM (i)Chip IA Linux Driver Source</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/networking/iphase.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="atm-i-chip-ia-linux-driver-source">
+<h1>ATM (i)Chip IA Linux Driver Source<a class="headerlink" href="#atm-i-chip-ia-linux-driver-source" title="Permalink to this headline">¶</a></h1>
+<blockquote>
+<div>READ ME FISRT</div></blockquote>
+<hr class="docutils" />
+<blockquote>
+<div>Read This Before You Begin!</div></blockquote>
+<hr class="docutils" />
+<div class="section" id="description">
+<h2>Description<a class="headerlink" href="#description" title="Permalink to this headline">¶</a></h2>
+<p>This is the README file for the Interphase PCI ATM (i)Chip IA Linux driver
+source release.</p>
+<p>The features and limitations of this driver are as follows:</p>
+<blockquote>
+<div><ul class="simple">
+<li>A single VPI (VPI value of 0) is supported.</li>
+<li>Supports 4K VCs for the server board (with 512K control memory) and 1K
+VCs for the client board (with 128K control memory).</li>
+<li>UBR, ABR and CBR service categories are supported.</li>
+<li>Only AAL5 is supported.</li>
+<li>Supports setting of PCR on the VCs.</li>
+<li>Multiple adapters in a system are supported.</li>
+<li>All variants of Interphase ATM PCI (i)Chip adapter cards are supported,
+including x575 (OC3, control memory 128K , 512K and packet memory 128K,
+512K and 1M), x525 (UTP25) and x531 (DS3 and E3). See
+<a class="reference external" href="http://www.iphase.com/">http://www.iphase.com/</a>
+for details.</li>
+<li>Only x86 platforms are supported.</li>
+<li>SMP is supported.</li>
+</ul>
+</div></blockquote>
+</div>
+<div class="section" id="before-you-start">
+<h2>Before You Start<a class="headerlink" href="#before-you-start" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="installation">
+<h3>Installation<a class="headerlink" href="#installation" title="Permalink to this headline">¶</a></h3>
+<ol class="arabic">
+<li><p class="first">Installing the adapters in the system</p>
+<p>To install the ATM adapters in the system, follow the steps below.</p>
+<blockquote>
+<div><ol class="loweralpha simple">
+<li>Login as root.</li>
+<li>Shut down the system and power off the system.</li>
+<li>Install one or more ATM adapters in the system.</li>
+<li>Connect each adapter to a port on an ATM switch. The green ‘Link’
+LED on the front panel of the adapter will be on if the adapter is
+connected to the switch properly when the system is powered up.</li>
+<li>Power on and boot the system.</li>
+</ol>
+</div></blockquote>
+</li>
+<li><p class="first">[ Removed ]</p>
+</li>
+<li><p class="first">Rebuild kernel with ABR support</p>
+<p>[ a. and b. removed ]</p>
+<blockquote>
+<div><ol class="loweralpha simple" start="3">
+<li>Reconfigure the kernel, choose the Interphase ia driver through “make
+menuconfig” or “make xconfig”.</li>
+<li>Rebuild the kernel, loadable modules and the atm tools.</li>
+<li>Install the new built kernel and modules and reboot.</li>
+</ol>
+</div></blockquote>
+</li>
+<li><p class="first">Load the adapter hardware driver (ia driver) if it is built as a module</p>
+<blockquote>
+<div><ol class="loweralpha">
+<li><p class="first">Login as root.</p>
+</li>
+<li><p class="first">Change directory to /lib/modules/&lt;kernel-version&gt;/atm.</p>
+</li>
+<li><p class="first">Run “insmod suni.o;insmod iphase.o”
+The yellow ‘status’ LED on the front panel of the adapter will blink
+while the driver is loaded in the system.</p>
+</li>
+<li><p class="first">To verify that the ‘ia’ driver is loaded successfully, run the
+following command:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>cat /proc/atm/devices
+</pre></div>
+</div>
+<p>If the driver is loaded successfully, the output of the command will
+be similar to the following lines:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>Itf Type    ESI/&quot;MAC&quot;addr AAL(TX,err,RX,err,drop) ...
+0   ia      xxxxxxxxx  0 ( 0 0 0 0 0 )  5 ( 0 0 0 0 0 )
+</pre></div>
+</div>
+<p>You can also check the system log file /var/log/messages for messages
+related to the ATM driver.</p>
+</li>
+</ol>
+</div></blockquote>
+</li>
+<li><p class="first">Ia Driver Configuration</p>
+</li>
+</ol>
+<dl class="docutils">
+<dt>5.1 Configuration of adapter buffers</dt>
+<dd><p class="first">The (i)Chip boards have 3 different packet RAM size variants: 128K, 512K and
+1M. The RAM size decides the number of buffers and buffer size. The default
+size and number of buffers are set as following:</p>
+<blockquote class="last">
+<div><blockquote>
+<div><table border="1" class="docutils">
+<colgroup>
+<col width="20%" />
+<col width="15%" />
+<col width="13%" />
+<col width="13%" />
+<col width="13%" />
+<col width="13%" />
+<col width="13%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Total</th>
+<th class="head">Rx RAM</th>
+<th class="head">Tx RAM</th>
+<th class="head">Rx Buf</th>
+<th class="head">Tx Buf</th>
+<th class="head">Rx buf</th>
+<th class="head">Tx buf</th>
+</tr>
+<tr class="row-even"><th class="head">RAM size</th>
+<th class="head">size</th>
+<th class="head">size</th>
+<th class="head">size</th>
+<th class="head">size</th>
+<th class="head">cnt</th>
+<th class="head">cnt</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-odd"><td>128K</td>
+<td>64K</td>
+<td>64K</td>
+<td>10K</td>
+<td>10K</td>
+<td>6</td>
+<td>6</td>
+</tr>
+<tr class="row-even"><td>512K</td>
+<td>256K</td>
+<td>256K</td>
+<td>10K</td>
+<td>10K</td>
+<td>25</td>
+<td>25</td>
+</tr>
+<tr class="row-odd"><td>1M</td>
+<td>512K</td>
+<td>512K</td>
+<td>10K</td>
+<td>10K</td>
+<td>51</td>
+<td>51</td>
+</tr>
+</tbody>
+</table>
+</div></blockquote>
+<p>These setting should work well in most environments, but can be
+changed by typing the following command:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>insmod &lt;IA_DIR&gt;/ia.o IA_RX_BUF=&lt;RX_CNT&gt; IA_RX_BUF_SZ=&lt;RX_SIZE&gt; \
+        IA_TX_BUF=&lt;TX_CNT&gt; IA_TX_BUF_SZ=&lt;TX_SIZE&gt;
+</pre></div>
+</div>
+<p>Where:</p>
+<blockquote>
+<div><ul class="simple">
+<li>RX_CNT = number of receive buffers in the range (1-128)</li>
+<li>RX_SIZE = size of receive buffers in the range (48-64K)</li>
+<li>TX_CNT = number of transmit buffers in the range (1-128)</li>
+<li>TX_SIZE = size of transmit buffers in the range (48-64K)</li>
+</ul>
+<ol class="arabic simple">
+<li>Transmit and receive buffer size must be a multiple of 4.</li>
+<li>Care should be taken so that the memory required for the
+transmit and receive buffers is less than or equal to the
+total adapter packet memory.</li>
+</ol>
+</div></blockquote>
+</div></blockquote>
+</dd>
+</dl>
+<p>5.2 Turn on ia debug trace</p>
+<blockquote>
+<div>When the ia driver is built with the CONFIG_ATM_IA_DEBUG flag, the driver
+can provide more debug trace if needed. There is a bit mask variable,
+IADebugFlag, which controls the output of the traces. You can find the bit
+map of the IADebugFlag in iphase.h.
+The debug trace can be turn on through the insmod command line option, for
+example, “insmod iphase.o IADebugFlag=0xffffffff” can turn on all the debug
+traces together with loading the driver.</div></blockquote>
+<ol class="arabic" start="6">
+<li><p class="first">Ia Driver Test Using ttcp_atm and PVC</p>
+<p>For the PVC setup, the test machines can either be connected back-to-back or
+through a switch. If connected through the switch, the switch must be
+configured for the PVC(s).</p>
+<ol class="loweralpha">
+<li><p class="first">For UBR test:</p>
+<p>At the test machine intended to receive data, type:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>ttcp_atm -r -a -s 0.100
+</pre></div>
+</div>
+<p>At the other test machine, type:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>ttcp_atm -t -a -s 0.100 -n 10000
+</pre></div>
+</div>
+<p>Run “ttcp_atm -h” to display more options of the ttcp_atm tool.</p>
+</li>
+<li><p class="first">For ABR test:</p>
+<p>It is the same as the UBR testing, but with an extra command option:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>-Pabr:max_pcr=&lt;xxx&gt;
+</pre></div>
+</div>
+<p>where:</p>
+<blockquote>
+<div><p>xxx = the maximum peak cell rate, from 170 - 353207.</p>
+</div></blockquote>
+<p>This option must be set on both the machines.</p>
+</li>
+<li><p class="first">For CBR test:</p>
+<p>It is the same as the UBR testing, but with an extra command option:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>-Pcbr:max_pcr=&lt;xxx&gt;
+</pre></div>
+</div>
+<p>where:</p>
+<blockquote>
+<div><p>xxx = the maximum peak cell rate, from 170 - 353207.</p>
+</div></blockquote>
+<p>This option may only be set on the transmit machine.</p>
+</li>
+</ol>
+</li>
+</ol>
+</div>
+</div>
+<div class="section" id="outstanding-issues">
+<h2>Outstanding Issues<a class="headerlink" href="#outstanding-issues" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="contact-information">
+<h3>Contact Information<a class="headerlink" href="#contact-information" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>Customer Support:
+    United States: Telephone:      (214) 654-5555
+                   Fax:            (214) 654-5500
+                   E-Mail:         intouch@iphase.com
+    Europe:        Telephone:      33 (0)1 41 15 44 00
+                   Fax:            33 (0)1 41 15 12 13
+World Wide Web:    http://www.iphase.com
+Anonymous FTP:     ftp.iphase.com
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright The kernel development community
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

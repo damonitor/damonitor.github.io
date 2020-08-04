@@ -68,7 +68,7 @@
             
             
               <div class="version">
-                5.7.0
+                5.8.0
               </div>
             
           
@@ -196,6 +196,7 @@
 <li class="toctree-l4"><a class="reference internal" href="drm-internals.html#miscellaneous-device-configuration">Miscellaneous Device Configuration</a></li>
 </ul>
 </li>
+<li class="toctree-l3"><a class="reference internal" href="drm-internals.html#managed-resources">Managed Resources</a></li>
 <li class="toctree-l3"><a class="reference internal" href="drm-internals.html#bus-specific-device-registration-and-pci-support">Bus-specific Device Registration and PCI Support</a></li>
 </ul>
 </li>
@@ -230,9 +231,6 @@
 <li class="toctree-l3"><a class="reference internal" href="drm-mm.html#command-execution">Command Execution</a></li>
 <li class="toctree-l3"><a class="reference internal" href="drm-mm.html#gem-function-reference">GEM Function Reference</a></li>
 <li class="toctree-l3"><a class="reference internal" href="drm-mm.html#gem-cma-helper-functions-reference">GEM CMA Helper Functions Reference</a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="drm-mm.html#vram-helper-function-reference">VRAM Helper Function Reference</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="drm-mm.html#gem-vram-helper-functions-reference">GEM VRAM Helper Functions Reference</a></li>
 <li class="toctree-l3"><a class="reference internal" href="drm-mm.html#gem-ttm-helper-functions-reference">GEM TTM Helper Functions Reference</a></li>
 </ul>
@@ -442,9 +440,30 @@
 <li class="toctree-l5"><a class="reference internal" href="amdgpu.html#pp-od-clk-voltage">pp_od_clk_voltage</a></li>
 <li class="toctree-l5"><a class="reference internal" href="amdgpu.html#pp-dpm">pp_dpm_*</a></li>
 <li class="toctree-l5"><a class="reference internal" href="amdgpu.html#pp-power-profile-mode">pp_power_profile_mode</a></li>
-<li class="toctree-l5"><a class="reference internal" href="amdgpu.html#busy-percent">busy_percent</a></li>
+<li class="toctree-l5"><a class="reference internal" href="amdgpu.html#busy-percent">*_busy_percent</a></li>
 </ul>
 </li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="amdgpu.html#gpu-product-information">GPU Product Information</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="amdgpu.html#product-name">product_name</a></li>
+<li class="toctree-l4"><a class="reference internal" href="amdgpu.html#product-number">product_number</a></li>
+<li class="toctree-l4"><a class="reference internal" href="amdgpu.html#serial-number">serial_number</a></li>
+<li class="toctree-l4"><a class="reference internal" href="amdgpu.html#unique-id">unique_id</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="amdgpu.html#gpu-memory-usage-information">GPU Memory Usage Information</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="amdgpu.html#mem-info-vram-total">mem_info_vram_total</a></li>
+<li class="toctree-l4"><a class="reference internal" href="amdgpu.html#mem-info-vram-used">mem_info_vram_used</a></li>
+<li class="toctree-l4"><a class="reference internal" href="amdgpu.html#mem-info-vis-vram-total">mem_info_vis_vram_total</a></li>
+<li class="toctree-l4"><a class="reference internal" href="amdgpu.html#mem-info-vis-vram-used">mem_info_vis_vram_used</a></li>
+<li class="toctree-l4"><a class="reference internal" href="amdgpu.html#mem-info-gtt-total">mem_info_gtt_total</a></li>
+<li class="toctree-l4"><a class="reference internal" href="amdgpu.html#mem-info-gtt-used">mem_info_gtt_used</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="amdgpu.html#pcie-accounting-information">PCIe Accounting Information</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="amdgpu.html#pcie-bw">pcie_bw</a></li>
+<li class="toctree-l4"><a class="reference internal" href="amdgpu.html#pcie-replay-count">pcie_replay_count</a></li>
 </ul>
 </li>
 </ul>
@@ -494,6 +513,7 @@
 </li>
 <li class="toctree-l3"><a class="reference internal" href="i915.html#memory-management-and-command-submission">Memory Management and Command Submission</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="i915.html#intel-gpu-basics">Intel GPU Basics</a></li>
+<li class="toctree-l4"><a class="reference internal" href="i915.html#locking-guidelines">Locking Guidelines</a></li>
 <li class="toctree-l4"><a class="reference internal" href="i915.html#gem-bo-management-implementation-details">GEM BO Management Implementation Details</a></li>
 <li class="toctree-l4"><a class="reference internal" href="i915.html#buffer-object-eviction">Buffer Object Eviction</a></li>
 <li class="toctree-l4"><a class="reference internal" href="i915.html#buffer-object-memory-shrinking">Buffer Object Memory Shrinking</a></li>
@@ -761,7 +781,6 @@
 <li class="toctree-l2"><a class="reference internal" href="todo.html#use-drm-modeset-lock-all-helpers-instead-of-boilerplate">Use DRM_MODESET_LOCK_ALL_* helpers instead of boilerplate</a></li>
 <li class="toctree-l2"><a class="reference internal" href="todo.html#rename-cma-helpers-to-dma-helpers">Rename CMA helpers to DMA helpers</a></li>
 <li class="toctree-l2"><a class="reference internal" href="todo.html#convert-direct-mode-vrefresh-accesses-to-use-drm-mode-vrefresh">Convert direct mode.vrefresh accesses to use drm_mode_vrefresh()</a></li>
-<li class="toctree-l2"><a class="reference internal" href="todo.html#remove-drm-display-mode-hsync">Remove drm_display_mode.hsync</a></li>
 <li class="toctree-l2"><a class="reference internal" href="todo.html#connector-register-unregister-fixes">connector register/unregister fixes</a></li>
 <li class="toctree-l2"><a class="reference internal" href="todo.html#remove-load-unload-callbacks-from-all-non-driver-legacy-drivers">Remove load/unload callbacks from all non-DRIVER_LEGACY drivers</a></li>
 <li class="toctree-l2"><a class="reference internal" href="todo.html#replace-drm-detect-hdmi-monitor-with-drm-display-info-is-hdmi">Replace drm_detect_hdmi_monitor() with drm_display_info.is_hdmi</a><ul>

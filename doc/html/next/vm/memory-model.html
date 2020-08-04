@@ -68,7 +68,7 @@
             
             
               <div class="version">
-                5.7.0
+                5.8.0
               </div>
             
           
@@ -196,11 +196,10 @@ memory.</p>
 maps the entire physical memory. For most architectures, the holes
 have entries in the <cite>mem_map</cite> array. The <cite>struct page</cite> objects
 corresponding to the holes are never fully initialized.</p>
-<p>To allocate the <cite>mem_map</cite> array, architecture specific setup code
-should call <code class="xref c c-func docutils literal notranslate"><span class="pre">free_area_init_node()</span></code> function or its convenience
-wrapper <code class="xref c c-func docutils literal notranslate"><span class="pre">free_area_init()</span></code>. Yet, the mappings array is not
-usable until the call to <a class="reference internal" href="../core-api/boot-time-mm.html#c.memblock_free_all" title="memblock_free_all"><code class="xref c c-func docutils literal notranslate"><span class="pre">memblock_free_all()</span></code></a> that hands all
-the memory to the page allocator.</p>
+<p>To allocate the <cite>mem_map</cite> array, architecture specific setup code should
+call <a class="reference internal" href="../core-api/mm-api.html#c.free_area_init" title="free_area_init"><code class="xref c c-func docutils literal notranslate"><span class="pre">free_area_init()</span></code></a> function. Yet, the mappings array is not
+usable until the call to <a class="reference internal" href="../core-api/boot-time-mm.html#c.memblock_free_all" title="memblock_free_all"><code class="xref c c-func docutils literal notranslate"><span class="pre">memblock_free_all()</span></code></a> that hands all the
+memory to the page allocator.</p>
 <p>If an architecture enables <cite>CONFIG_ARCH_HAS_HOLES_MEMORYMODEL</cite> option,
 it may free parts of the <cite>mem_map</cite> array that do not cover the
 actual physical pages. In such case, the architecture specific

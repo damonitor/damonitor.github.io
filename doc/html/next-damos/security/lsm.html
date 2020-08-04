@@ -68,7 +68,7 @@
             
             
               <div class="version">
-                5.7.0
+                5.8.0
               </div>
             
           
@@ -201,153 +201,89 @@ framework could then be used by loadable kernel modules to implement any
 desired model of security. Linus also suggested the possibility of
 migrating the Linux capabilities code into such a module.</p>
 <p>The Linux Security Modules (LSM) project was started by WireX to develop
-such a framework. LSM is a joint development effort by several security
+such a framework. LSM was a joint development effort by several security
 projects, including Immunix, SELinux, SGI and Janus, and several
 individuals, including Greg Kroah-Hartman and James Morris, to develop a
-Linux kernel patch that implements this framework. The patch is
-currently tracking the 2.4 series and is targeted for integration into
-the 2.5 development series. This technical report provides an overview
-of the framework and the example capabilities security module provided
-by the LSM kernel patch.</p>
+Linux kernel patch that implements this framework. The work was
+incorporated in the mainstream in December of 2003. This technical
+report provides an overview of the framework and the capabilities
+security module.</p>
 </div>
 <div class="section" id="lsm-framework">
 <h2>LSM Framework<a class="headerlink" href="#lsm-framework" title="Permalink to this headline">¶</a></h2>
-<p>The LSM kernel patch provides a general kernel framework to support
+<p>The LSM framework provides a general kernel framework to support
 security modules. In particular, the LSM framework is primarily focused
 on supporting access control modules, although future development is
-likely to address other security needs such as auditing. By itself, the
+likely to address other security needs such as sandboxing. By itself, the
 framework does not provide any additional security; it merely provides
-the infrastructure to support security modules. The LSM kernel patch
-also moves most of the capabilities logic into an optional security
-module, with the system defaulting to the traditional superuser logic.
+the infrastructure to support security modules. The LSM framework is
+optional, requiring <cite>CONFIG_SECURITY</cite> to be enabled. The capabilities
+logic is implemented as a security module.
 This capabilities module is discussed further in
 <a class="reference internal" href="#lsm-capabilities-module">LSM Capabilities Module</a>.</p>
-<p>The LSM kernel patch adds security fields to kernel data structures and
-inserts calls to hook functions at critical points in the kernel code to
-manage the security fields and to perform access control. It also adds
-functions for registering and unregistering security modules, and adds a
-general <code class="xref c c-func docutils literal notranslate"><span class="pre">security()</span></code> system call to support new system calls
-for security-aware applications.</p>
-<p>The LSM security fields are simply <code class="docutils literal notranslate"><span class="pre">void*</span></code> pointers. For process and
-program execution security information, security fields were added to
+<p>The LSM framework includes security fields in kernel data structures and
+calls to hook functions at critical points in the kernel code to
+manage the security fields and to perform access control.
+It also adds functions for registering security modules.
+An interface <cite>/sys/kernel/security/lsm</cite> reports a comma separated list
+of security modules that are active on the system.</p>
+<p>The LSM security fields are simply <code class="docutils literal notranslate"><span class="pre">void*</span></code> pointers.
+The data is referred to as a blob, which may be managed by
+the framework or by the individual security modules that use it.
+Security blobs that are used by more than one security module are
+typically managed by the framework.
+For process and
+program execution security information, security fields are included in
 <code class="xref c c-type docutils literal notranslate"><span class="pre">struct</span> <span class="pre">task_struct</span></code> and
-<code class="xref c c-type docutils literal notranslate"><span class="pre">struct</span> <span class="pre">linux_binprm</span></code>. For filesystem
-security information, a security field was added to <code class="xref c c-type docutils literal notranslate"><span class="pre">struct</span>
+<code class="xref c c-type docutils literal notranslate"><span class="pre">struct</span> <span class="pre">cred</span></code>.
+For filesystem
+security information, a security field is included in <code class="xref c c-type docutils literal notranslate"><span class="pre">struct</span>
 <span class="pre">super_block</span></code>. For pipe, file, and socket security
-information, security fields were added to <code class="xref c c-type docutils literal notranslate"><span class="pre">struct</span> <span class="pre">inode</span></code> and <code class="xref c c-type docutils literal notranslate"><span class="pre">struct</span> <span class="pre">file</span></code>. For packet and
-network device security information, security fields were added to
-<a class="reference internal" href="../networking/kapi.html#c.sk_buff" title="sk_buff"><code class="xref c c-type docutils literal notranslate"><span class="pre">struct</span> <span class="pre">sk_buff</span></code></a> and <a class="reference internal" href="../networking/kapi.html#c.net_device" title="net_device"><code class="xref c c-type docutils literal notranslate"><span class="pre">struct</span>
-<span class="pre">net_device</span></code></a>. For System V IPC security information,
+information, security fields are included in <code class="xref c c-type docutils literal notranslate"><span class="pre">struct</span> <span class="pre">inode</span></code> and <code class="xref c c-type docutils literal notranslate"><span class="pre">struct</span> <span class="pre">file</span></code>.
+For System V IPC security information,
 security fields were added to <code class="xref c c-type docutils literal notranslate"><span class="pre">struct</span> <span class="pre">kern_ipc_perm</span></code> and <code class="xref c c-type docutils literal notranslate"><span class="pre">struct</span> <span class="pre">msg_msg</span></code>; additionally, the definitions for <code class="xref c c-type docutils literal notranslate"><span class="pre">struct</span>
 <span class="pre">msg_msg</span></code>, struct msg_queue, and struct shmid_kernel
 were moved to header files (<code class="docutils literal notranslate"><span class="pre">include/linux/msg.h</span></code> and
 <code class="docutils literal notranslate"><span class="pre">include/linux/shm.h</span></code> as appropriate) to allow the security modules to
 use these definitions.</p>
-<p>Each LSM hook is a function pointer in a global table, security_ops.
-This table is a <code class="xref c c-type docutils literal notranslate"><span class="pre">struct</span> <span class="pre">security_operations</span></code> structure as defined by
-<code class="docutils literal notranslate"><span class="pre">include/linux/security.h</span></code>. Detailed documentation for each hook is
-included in this header file. At present, this structure consists of a
-collection of substructures that group related hooks based on the kernel
-object (e.g. task, inode, file, sk_buff, etc) as well as some top-level
-hook function pointers for system operations. This structure is likely
-to be flattened in the future for performance. The placement of the hook
-calls in the kernel code is described by the “called:” lines in the
-per-hook documentation in the header file. The hook calls can also be
-easily found in the kernel code by looking for the string
-“security_ops-&gt;”.</p>
-<p>Linus mentioned per-process security hooks in his original remarks as a
-possible alternative to global security hooks. However, if LSM were to
-start from the perspective of per-process hooks, then the base framework
-would have to deal with how to handle operations that involve multiple
-processes (e.g. kill), since each process might have its own hook for
-controlling the operation. This would require a general mechanism for
-composing hooks in the base framework. Additionally, LSM would still
-need global hooks for operations that have no process context (e.g.
-network input operations). Consequently, LSM provides global security
-hooks, but a security module is free to implement per-process hooks
-(where that makes sense) by storing a security_ops table in each
-process’ security field and then invoking these per-process hooks from
-the global hooks. The problem of composition is thus deferred to the
-module.</p>
-<p>The global security_ops table is initialized to a set of hook functions
-provided by a dummy security module that provides traditional superuser
-logic. A <code class="xref c c-func docutils literal notranslate"><span class="pre">register_security()</span></code> function (in
-<code class="docutils literal notranslate"><span class="pre">security/security.c</span></code>) is provided to allow a security module to set
-security_ops to refer to its own hook functions, and an
-<code class="xref c c-func docutils literal notranslate"><span class="pre">unregister_security()</span></code> function is provided to revert
-security_ops to the dummy module hooks. This mechanism is used to set
-the primary security module, which is responsible for making the final
-decision for each hook.</p>
-<p>LSM also provides a simple mechanism for stacking additional security
-modules with the primary security module. It defines
-<code class="xref c c-func docutils literal notranslate"><span class="pre">register_security()</span></code> and
-<code class="xref c c-func docutils literal notranslate"><span class="pre">unregister_security()</span></code> hooks in the <code class="xref c c-type docutils literal notranslate"><span class="pre">struct</span>
-<span class="pre">security_operations</span></code> structure and
-provides <code class="xref c c-func docutils literal notranslate"><span class="pre">mod_reg_security()</span></code> and
-<code class="xref c c-func docutils literal notranslate"><span class="pre">mod_unreg_security()</span></code> functions that invoke these hooks
-after performing some sanity checking. A security module can call these
-functions in order to stack with other modules. However, the actual
-details of how this stacking is handled are deferred to the module,
-which can implement these hooks in any way it wishes (including always
-returning an error if it does not wish to support stacking). In this
-manner, LSM again defers the problem of composition to the module.</p>
-<p>Although the LSM hooks are organized into substructures based on kernel
-object, all of the hooks can be viewed as falling into two major
+<p>For packet and
+network device security information, security fields were added to
+<a class="reference internal" href="../networking/kapi.html#c.sk_buff" title="sk_buff"><code class="xref c c-type docutils literal notranslate"><span class="pre">struct</span> <span class="pre">sk_buff</span></code></a> and
+<code class="xref c c-type docutils literal notranslate"><span class="pre">struct</span> <span class="pre">scm_cookie</span></code>.
+Unlike the other security module data, the data used here is a
+32-bit integer. The security modules are required to map or otherwise
+associate these values with real security attributes.</p>
+<p>LSM hooks are maintained in lists. A list is maintained for each
+hook, and the hooks are called in the order specified by CONFIG_LSM.
+Detailed documentation for each hook is
+included in the <cite>include/linux/lsm_hooks.h</cite> header file.</p>
+<p>The LSM framework provides for a close approximation of
+general security module stacking. It defines
+<a class="reference internal" href="../core-api/kernel-api.html#c.security_add_hooks" title="security_add_hooks"><code class="xref c c-func docutils literal notranslate"><span class="pre">security_add_hooks()</span></code></a> to which each security module passes a
+<code class="xref c c-type docutils literal notranslate"><span class="pre">struct</span> <span class="pre">security_hooks_list</span></code>,
+which are added to the lists.
+The LSM framework does not provide a mechanism for removing hooks that
+have been registered. The SELinux security module has implemented
+a way to remove itself, however the feature has been deprecated.</p>
+<p>The hooks can be viewed as falling into two major
 categories: hooks that are used to manage the security fields and hooks
 that are used to perform access control. Examples of the first category
-of hooks include the <code class="xref c c-func docutils literal notranslate"><span class="pre">alloc_security()</span></code> and
-<code class="xref c c-func docutils literal notranslate"><span class="pre">free_security()</span></code> hooks defined for each kernel data
-structure that has a security field. These hooks are used to allocate
-and free security structures for kernel objects. The first category of
-hooks also includes hooks that set information in the security field
-after allocation, such as the <code class="xref c c-func docutils literal notranslate"><span class="pre">post_lookup()</span></code> hook in
-<code class="xref c c-type docutils literal notranslate"><span class="pre">struct</span> <span class="pre">inode_security_ops</span></code>.
-This hook is used to set security information for inodes after
-successful lookup operations. An example of the second category of hooks
-is the <code class="xref c c-func docutils literal notranslate"><span class="pre">permission()</span></code> hook in <code class="xref c c-type docutils literal notranslate"><span class="pre">struct</span>
-<span class="pre">inode_security_ops</span></code>. This hook checks
-permission when accessing an inode.</p>
+of hooks include the security_inode_alloc() and security_inode_free()
+These hooks are used to allocate
+and free security structures for inode objects.
+An example of the second category of hooks
+is the security_inode_permission() hook.
+This hook checks permission when accessing an inode.</p>
 </div>
 <div class="section" id="lsm-capabilities-module">
 <h2>LSM Capabilities Module<a class="headerlink" href="#lsm-capabilities-module" title="Permalink to this headline">¶</a></h2>
-<p>The LSM kernel patch moves most of the existing POSIX.1e capabilities
-logic into an optional security module stored in the file
-<code class="docutils literal notranslate"><span class="pre">security/capability.c</span></code>. This change allows users who do not want to
-use capabilities to omit this code entirely from their kernel, instead
-using the dummy module for traditional superuser logic or any other
-module that they desire. This change also allows the developers of the
-capabilities logic to maintain and enhance their code more freely,
-without needing to integrate patches back into the base kernel.</p>
-<p>In addition to moving the capabilities logic, the LSM kernel patch could
-move the capability-related fields from the kernel data structures into
-the new security fields managed by the security modules. However, at
-present, the LSM kernel patch leaves the capability fields in the kernel
-data structures. In his original remarks, Linus suggested that this
-might be preferable so that other security modules can be easily stacked
-with the capabilities module without needing to chain multiple security
-structures on the security field. It also avoids imposing extra overhead
-on the capabilities module to manage the security fields. However, the
-LSM framework could certainly support such a move if it is determined to
-be desirable, with only a few additional changes described below.</p>
-<p>At present, the capabilities logic for computing process capabilities on
-<code class="xref c c-func docutils literal notranslate"><span class="pre">execve()</span></code> and <code class="xref c c-func docutils literal notranslate"><span class="pre">set*uid()</span></code>, checking
-capabilities for a particular process, saving and checking capabilities
-for netlink messages, and handling the <code class="xref c c-func docutils literal notranslate"><span class="pre">capget()</span></code> and
-<code class="xref c c-func docutils literal notranslate"><span class="pre">capset()</span></code> system calls have been moved into the
-capabilities module. There are still a few locations in the base kernel
-where capability-related fields are directly examined or modified, but
-the current version of the LSM patch does allow a security module to
-completely replace the assignment and testing of capabilities. These few
-locations would need to be changed if the capability-related fields were
-moved into the security field. The following is a list of known
-locations that still perform such direct examination or modification of
-capability-related fields:</p>
-<ul class="simple">
-<li><code class="docutils literal notranslate"><span class="pre">fs/open.c</span></code>:<code class="xref c c-func docutils literal notranslate"><span class="pre">sys_access()</span></code></li>
-<li><code class="docutils literal notranslate"><span class="pre">fs/lockd/host.c</span></code>:<code class="xref c c-func docutils literal notranslate"><span class="pre">nlm_bind_host()</span></code></li>
-<li><code class="docutils literal notranslate"><span class="pre">fs/nfsd/auth.c</span></code>:<code class="xref c c-func docutils literal notranslate"><span class="pre">nfsd_setuser()</span></code></li>
-<li><code class="docutils literal notranslate"><span class="pre">fs/proc/array.c</span></code>:<code class="xref c c-func docutils literal notranslate"><span class="pre">task_cap()</span></code></li>
-</ul>
+<p>The POSIX.1e capabilities logic is maintained as a security module
+stored in the file <code class="docutils literal notranslate"><span class="pre">security/commoncap.c</span></code>. The capabilities
+module uses the order field of the <code class="xref c c-type docutils literal notranslate"><span class="pre">lsm_info</span></code> description
+to identify it as the first security module to be registered.
+The capabilities security module does not use the general security
+blobs, unlike other modules. The reasons are historical and are
+based on overhead, complexity and performance concerns.</p>
 </div>
 </div>
 

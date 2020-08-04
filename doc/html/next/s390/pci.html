@@ -1,0 +1,323 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>S/390 PCI &mdash; The Linux Kernel  documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript">
+          var DOCUMENTATION_OPTIONS = {
+              URL_ROOT:'../',
+              VERSION:'',
+              LANGUAGE:'None',
+              COLLAPSE_INDEX:false,
+              FILE_SUFFIX:'.html',
+              HAS_SOURCE:  true,
+              SOURCELINK_SUFFIX: '.txt'
+          };
+      </script>
+        <script type="text/javascript" src="../_static/jquery.js"></script>
+        <script type="text/javascript" src="../_static/underscore.js"></script>
+        <script type="text/javascript" src="../_static/doctools.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/theme_overrides.css" type="text/css" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> The Linux Kernel
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                5.8.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../admin-guide/mm/damon/index.html">Monitoring Data Accesses</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../vm/damon/index.html">DAMON: Data Access MONitor</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">The Linux Kernel</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+      <li>S/390 PCI</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/s390/pci.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="s-390-pci">
+<h1>S/390 PCI<a class="headerlink" href="#s-390-pci" title="Permalink to this headline">¶</a></h1>
+<dl class="docutils">
+<dt>Authors:</dt>
+<dd><ul class="first last simple">
+<li>Pierre Morel</li>
+</ul>
+</dd>
+</dl>
+<p>Copyright, IBM Corp. 2020</p>
+<div class="section" id="command-line-parameters-and-debugfs-entries">
+<h2>Command line parameters and debugfs entries<a class="headerlink" href="#command-line-parameters-and-debugfs-entries" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="command-line-parameters">
+<h3>Command line parameters<a class="headerlink" href="#command-line-parameters" title="Permalink to this headline">¶</a></h3>
+<ul>
+<li><p class="first">nomio</p>
+<p>Do not use PCI Mapped I/O (MIO) instructions.</p>
+</li>
+<li><p class="first">norid</p>
+<p>Ignore the RID field and force use of one PCI domain per PCI function.</p>
+</li>
+</ul>
+</div>
+<div class="section" id="debugfs-entries">
+<h3>debugfs entries<a class="headerlink" href="#debugfs-entries" title="Permalink to this headline">¶</a></h3>
+<p>The S/390 debug feature (s390dbf) generates views to hold various debug results in sysfs directories of the form:</p>
+<blockquote>
+<div><ul class="simple">
+<li>/sys/kernel/debug/s390dbf/pci_*/</li>
+</ul>
+</div></blockquote>
+<p>For example:</p>
+<blockquote>
+<div><ul class="simple">
+<li>/sys/kernel/debug/s390dbf/pci_msg/sprintf
+Holds messages from the processing of PCI events, like machine check handling
+and setting of global functionality, like UID checking.</li>
+</ul>
+<p>Change the level of logging to be more or less verbose by piping
+a number between 0 and 6 to  /sys/kernel/debug/s390dbf/pci_*/level. For
+details, see the documentation on the S/390 debug feature at
+Documentation/s390/s390dbf.rst.</p>
+</div></blockquote>
+</div>
+</div>
+<div class="section" id="sysfs-entries">
+<h2>Sysfs entries<a class="headerlink" href="#sysfs-entries" title="Permalink to this headline">¶</a></h2>
+<p>Entries specific to zPCI functions and entries that hold zPCI information.</p>
+<ul>
+<li><p class="first">/sys/bus/pci/slots/XXXXXXXX</p>
+<p>The slot entries are set up using the function identifier (FID) of the
+PCI function.</p>
+<ul class="simple">
+<li>/sys/bus/pci/slots/XXXXXXXX/power</li>
+</ul>
+<p>A physical function that currently supports a virtual function cannot be
+powered off until all virtual functions are removed with:
+echo 0 &gt; /sys/bus/pci/devices/XXXX:XX:XX.X/sriov_numvf</p>
+</li>
+<li><p class="first">/sys/bus/pci/devices/XXXX:XX:XX.X/</p>
+<ul class="simple">
+<li>function_id
+A zPCI function identifier that uniquely identifies the function in the Z server.</li>
+<li>function_handle
+Low-level identifier used for a configured PCI function.
+It might be useful for debuging.</li>
+<li>pchid
+Model-dependent location of the I/O adapter.</li>
+<li>pfgid
+PCI function group ID, functions that share identical functionality
+use a common identifier.
+A PCI group defines interrupts, IOMMU, IOTLB, and DMA specifics.</li>
+<li>vfn
+The virtual function number, from 1 to N for virtual functions,
+0 for physical functions.</li>
+<li>pft
+The PCI function type</li>
+<li>port
+The port corresponds to the physical port the function is attached to.
+It also gives an indication of the physical function a virtual function
+is attached to.</li>
+<li>uid
+The unique identifier (UID) is defined when configuring an LPAR and is
+unique in the LPAR.</li>
+<li>pfip/segmentX
+The segments determine the isolation of a function.
+They correspond to the physical path to the function.
+The more the segments are different, the more the functions are isolated.</li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="section" id="enumeration-and-hotplug">
+<h2>Enumeration and hotplug<a class="headerlink" href="#enumeration-and-hotplug" title="Permalink to this headline">¶</a></h2>
+<p>The PCI address consists of four parts: domain, bus, device and function,
+and is of this form: DDDD:BB:dd.f</p>
+<ul class="simple">
+<li>When not using multi-functions (norid is set, or the firmware does not
+support multi-functions):<ul>
+<li>There is only one function per domain.</li>
+<li>The domain is set from the zPCI function’s UID as defined during the
+LPAR creation.</li>
+</ul>
+</li>
+<li>When using multi-functions (norid parameter is not set),
+zPCI functions are addressed differently:<ul>
+<li>There is still only one bus per domain.</li>
+<li>There can be up to 256 functions per bus.</li>
+<li>The domain part of the address of all functions for
+a multi-Function device is set from the zPCI function’s UID as defined
+in the LPAR creation for the function zero.</li>
+<li>New functions will only be ready for use after the function zero
+(the function with devfn 0) has been enumerated.</li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright The kernel development community
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>
