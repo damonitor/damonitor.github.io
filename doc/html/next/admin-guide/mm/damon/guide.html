@@ -103,6 +103,7 @@
 <li class="toctree-l3"><a class="reference internal" href="#optimize">Optimize</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#memory-configuration">Memory Configuration</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#program-modification">Program Modification</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#automated-damon-based-memory-operations">Automated DAMON-based Memory Operations</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#personalized-damon-application">Personalized DAMON Application</a></li>
 </ul>
 </li>
@@ -225,6 +226,10 @@ you estimated, you could consider <a class="reference internal" href="#memory-co
 <span class="pre">heats</span></code>.  If it shows a simple pattern consists of a small number of memory
 regions having high contrast of access temperature, you could consider manual
 <a class="reference internal" href="#program-modification">Program Modification</a>.</p>
+<p>If the access pattern is very frequently changing so that you cannot figure out
+what is the performance important region using your human eye, <a class="reference internal" href="#automated-damon-based-memory-operations">Automated
+DAMON-based Memory Operations</a> might help the case owing to its machine-level
+microscope view.</p>
 <p>If you still want to absorb more benefits, you should develop <a class="reference internal" href="#personalized-damon-application">Personalized
 DAMON Application</a> for your special case.</p>
 <p>You don’t need to take only one approach among the above plans, but you could
@@ -263,17 +268,17 @@ workload, it will work well for 95% of the time.  Meanwhile, you can save the
 <col width="33%" />
 </colgroup>
 <tbody valign="top">
-<tr class="row-odd"><td><div class="figure align-center" id="id12">
+<tr class="row-odd"><td><div class="figure align-center" id="id13">
 <img alt="the access pattern in heatmap format" src="../../../_images/freqmine_heatmap.png" />
 <p class="caption"><span class="caption-text">The access pattern in heatmap format.</span></p>
 </div>
 </td>
-<td><div class="figure align-center" id="id13">
+<td><div class="figure align-center" id="id14">
 <img alt="the distribution of working set size" src="../../../_images/freqmine_wss_sz.png" />
 <p class="caption"><span class="caption-text">The distribution of working set size.</span></p>
 </div>
 </td>
-<td><div class="figure align-center" id="id14">
+<td><div class="figure align-center" id="id15">
 <img alt="the chronological changes of working set size" src="../../../_images/freqmine_wss_time.png" />
 <p class="caption"><span class="caption-text">The chronological changes of working set size.</span></p>
 </div>
@@ -294,7 +299,7 @@ object in the main memory by invoking <code class="docutils literal notranslate"
 <code class="docutils literal notranslate"><span class="pre">MADV_WILLNEED</span></code>.  Or, you could proactively evict the cold object using
 <code class="docutils literal notranslate"><span class="pre">madvise()</span></code> with <code class="docutils literal notranslate"><span class="pre">MADV_COLD</span></code> or <code class="docutils literal notranslate"><span class="pre">MADV_PAGEOUT</span></code>.  Using both together
 would be also worthy.</p>
-<p>A research work <a class="footnote-reference" href="#id7" id="id1">[1]</a> using the <code class="docutils literal notranslate"><span class="pre">mlock()</span></code> achieved up to 2.55x performance
+<p>A research work <a class="footnote-reference" href="#id8" id="id1">[1]</a> using the <code class="docutils literal notranslate"><span class="pre">mlock()</span></code> achieved up to 2.55x performance
 speedup.</p>
 <p>Let’s see another realistic example access pattern for this kind of
 optimizations.  Below are the visualized access patterns of streamcluster
@@ -307,17 +312,17 @@ hot object.</p>
 <col width="33%" />
 </colgroup>
 <tbody valign="top">
-<tr class="row-odd"><td><div class="figure align-center" id="id15">
+<tr class="row-odd"><td><div class="figure align-center" id="id16">
 <img alt="the access pattern in heatmap format" src="../../../_images/streamcluster_heatmap.png" />
 <p class="caption"><span class="caption-text">The access pattern in heatmap format.</span></p>
 </div>
 </td>
-<td><div class="figure align-center" id="id16">
+<td><div class="figure align-center" id="id17">
 <img alt="the distribution of working set size" src="../../../_images/streamcluster_wss_sz.png" />
 <p class="caption"><span class="caption-text">The distribution of working set size.</span></p>
 </div>
 </td>
-<td><div class="figure align-center" id="id17">
+<td><div class="figure align-center" id="id18">
 <img alt="the chronological changes of working set size" src="../../../_images/streamcluster_wss_time.png" />
 <p class="caption"><span class="caption-text">The chronological changes of working set size.</span></p>
 </div>
@@ -325,6 +330,31 @@ hot object.</p>
 </tr>
 </tbody>
 </table>
+</div>
+<div class="section" id="automated-damon-based-memory-operations">
+<h3>Automated DAMON-based Memory Operations<a class="headerlink" href="#automated-damon-based-memory-operations" title="Permalink to this headline">¶</a></h3>
+<p>Though <cite>Manual Program Optimization</cite> works well in many cases and DAMON can
+help it, modifying the source code is not a good option in many cases.  First
+of all, the source code could be too old or unavailable.  And, many workloads
+will have complex data access patterns that even hard to distinguish hot memory
+objects and cold memory objects with the human eye.  Finding the mapping from
+the visualized access pattern to the source code and injecting the hinting
+system calls inside the code will also be quite challenging.</p>
+<p>By using DAMON-based operation schemes (DAMOS) via <code class="docutils literal notranslate"><span class="pre">damo</span> <span class="pre">schemes</span></code>, you will
+be able to easily optimize your workload in such a case.  Our example schemes
+called ‘efficient THP’ and ‘proactive reclamation’ achieved significant speedup
+and memory space saves against 25 realistic workloads <a class="footnote-reference" href="#id9" id="id2">[2]</a>.</p>
+<p>That said, note that you need careful tune of the schemes (e.g., target region
+size and age) and monitoring attributes for the successful use of this
+approach.  Because the optimal values of the parameters will be dependent on
+each system and workload, misconfiguring the parameters could result in worse
+memory management.</p>
+<p>For the tuning, you could measure the performance metrics such as IPC, TLB
+misses, and swap in/out events and adjusts the parameters based on their
+changes.  The total number and the total size of the regions that each scheme
+is applied, which are provided via the debugfs interface and the programming
+interface can also be useful.  Writing a program automating this optimal
+parameter could be an option.</p>
 </div>
 <div class="section" id="personalized-damon-application">
 <h3>Personalized DAMON Application<a class="headerlink" href="#personalized-damon-application" title="Permalink to this headline">¶</a></h3>
@@ -345,40 +375,40 @@ option.</p>
 <div class="section" id="reference-practices">
 <h2>Reference Practices<a class="headerlink" href="#reference-practices" title="Permalink to this headline">¶</a></h2>
 <p>Referencing previously done successful practices could help you getting the
-sense for this kind of optimizations.  There is an academic paper <a class="footnote-reference" href="#id7" id="id2">[1]</a>
+sense for this kind of optimizations.  There is an academic paper <a class="footnote-reference" href="#id8" id="id3">[1]</a>
 reporting the visualized access pattern and manual <a class="reference internal" href="#program-modification">Program
 Modification</a> results for a number of realistic workloads.  You can also get
-the visualized access patterns <a class="footnote-reference" href="#id9" id="id3">[3]</a> <a class="footnote-reference" href="#id10" id="id4">[4]</a> <a class="footnote-reference" href="#id11" id="id5">[5]</a> and automated DAMON-based memory
-operations results for other realistic workloads that collected with latest
-version of DAMON <a class="footnote-reference" href="#id8" id="id6">[2]</a> .</p>
-<table class="docutils footnote" frame="void" id="id7" rules="none">
-<colgroup><col class="label" /><col /></colgroup>
-<tbody valign="top">
-<tr><td class="label">[1]</td><td><em>(<a class="fn-backref" href="#id1">1</a>, <a class="fn-backref" href="#id2">2</a>)</em> <a class="reference external" href="https://dl.acm.org/doi/10.1145/3366626.3368125">https://dl.acm.org/doi/10.1145/3366626.3368125</a></td></tr>
-</tbody>
-</table>
+the visualized access patterns <a class="footnote-reference" href="#id10" id="id4">[3]</a> <a class="footnote-reference" href="#id11" id="id5">[4]</a> <a class="footnote-reference" href="#id12" id="id6">[5]</a> and
+<a class="reference internal" href="#automated-damon-based-memory-operations">Automated DAMON-based Memory Operations</a> results for other realistic
+workloads that collected with latest version of DAMON <a class="footnote-reference" href="#id9" id="id7">[2]</a> .</p>
 <table class="docutils footnote" frame="void" id="id8" rules="none">
 <colgroup><col class="label" /><col /></colgroup>
 <tbody valign="top">
-<tr><td class="label"><a class="fn-backref" href="#id6">[2]</a></td><td><a class="reference external" href="https://damonitor.github.io/test/result/perf/latest/html/">https://damonitor.github.io/test/result/perf/latest/html/</a></td></tr>
+<tr><td class="label">[1]</td><td><em>(<a class="fn-backref" href="#id1">1</a>, <a class="fn-backref" href="#id3">2</a>)</em> <a class="reference external" href="https://dl.acm.org/doi/10.1145/3366626.3368125">https://dl.acm.org/doi/10.1145/3366626.3368125</a></td></tr>
 </tbody>
 </table>
 <table class="docutils footnote" frame="void" id="id9" rules="none">
 <colgroup><col class="label" /><col /></colgroup>
 <tbody valign="top">
-<tr><td class="label"><a class="fn-backref" href="#id3">[3]</a></td><td><a class="reference external" href="https://damonitor.github.io/test/result/visual/latest/rec.heatmap.1.png.html">https://damonitor.github.io/test/result/visual/latest/rec.heatmap.1.png.html</a></td></tr>
+<tr><td class="label">[2]</td><td><em>(<a class="fn-backref" href="#id2">1</a>, <a class="fn-backref" href="#id7">2</a>)</em> <a class="reference external" href="https://damonitor.github.io/test/result/perf/latest/html/">https://damonitor.github.io/test/result/perf/latest/html/</a></td></tr>
 </tbody>
 </table>
 <table class="docutils footnote" frame="void" id="id10" rules="none">
 <colgroup><col class="label" /><col /></colgroup>
 <tbody valign="top">
-<tr><td class="label"><a class="fn-backref" href="#id4">[4]</a></td><td><a class="reference external" href="https://damonitor.github.io/test/result/visual/latest/rec.wss_sz.png.html">https://damonitor.github.io/test/result/visual/latest/rec.wss_sz.png.html</a></td></tr>
+<tr><td class="label"><a class="fn-backref" href="#id4">[3]</a></td><td><a class="reference external" href="https://damonitor.github.io/test/result/visual/latest/rec.heatmap.1.png.html">https://damonitor.github.io/test/result/visual/latest/rec.heatmap.1.png.html</a></td></tr>
 </tbody>
 </table>
 <table class="docutils footnote" frame="void" id="id11" rules="none">
 <colgroup><col class="label" /><col /></colgroup>
 <tbody valign="top">
-<tr><td class="label"><a class="fn-backref" href="#id5">[5]</a></td><td><a class="reference external" href="https://damonitor.github.io/test/result/visual/latest/rec.wss_time.png.html">https://damonitor.github.io/test/result/visual/latest/rec.wss_time.png.html</a></td></tr>
+<tr><td class="label"><a class="fn-backref" href="#id5">[4]</a></td><td><a class="reference external" href="https://damonitor.github.io/test/result/visual/latest/rec.wss_sz.png.html">https://damonitor.github.io/test/result/visual/latest/rec.wss_sz.png.html</a></td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="id12" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id6">[5]</a></td><td><a class="reference external" href="https://damonitor.github.io/test/result/visual/latest/rec.wss_time.png.html">https://damonitor.github.io/test/result/visual/latest/rec.wss_time.png.html</a></td></tr>
 </tbody>
 </table>
 </div>
