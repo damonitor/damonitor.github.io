@@ -105,7 +105,6 @@
 </li>
 <li class="toctree-l3"><a class="reference internal" href="#recording-data-access-patterns">Recording Data Access Patterns</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#visualizing-recorded-patterns">Visualizing Recorded Patterns</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#data-access-pattern-aware-memory-management">Data Access Pattern Aware Memory Management</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="guide.html">Optimization Guide</a></li>
@@ -284,16 +283,6 @@ workloads at external web pages <a class="footnote-reference" href="#id4" id="id
 </tr>
 </tbody>
 </table>
-</div>
-<div class="section" id="data-access-pattern-aware-memory-management">
-<h2>Data Access Pattern Aware Memory Management<a class="headerlink" href="#data-access-pattern-aware-memory-management" title="Permalink to this headline">¶</a></h2>
-<p>Below three commands make every memory region of size &gt;=4K that doesn’t
-accessed for &gt;=60 seconds in your workload to be swapped out.</p>
-<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>$ echo &quot;#min-size max-size min-acc max-acc min-age max-age action&quot; &gt; scheme
-$ echo &quot;4K        max      0       0       60s     max     pageout&quot; &gt;&gt; scheme
-$ damo schemes -c my_thp_scheme &lt;pid of your workload&gt;
-</pre></div>
-</div>
 <table class="docutils footnote" frame="void" id="id4" rules="none">
 <colgroup><col class="label" /><col /></colgroup>
 <tbody valign="top">
