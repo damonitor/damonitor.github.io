@@ -1,8 +1,7 @@
 
 
 <!DOCTYPE html>
-<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
-<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<html class="writer-html5" lang="en" >
 <head>
   <meta charset="utf-8">
   
@@ -12,39 +11,34 @@
   
 
   
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/theme_overrides.css" type="text/css" />
+
+  
   
   
   
 
   
-  <script type="text/javascript" src="../../_static/js/modernizr.min.js"></script>
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
   
     
-      <script type="text/javascript">
-          var DOCUMENTATION_OPTIONS = {
-              URL_ROOT:'../../',
-              VERSION:'',
-              LANGUAGE:'None',
-              COLLAPSE_INDEX:false,
-              FILE_SUFFIX:'.html',
-              HAS_SOURCE:  true,
-              SOURCELINK_SUFFIX: '.txt'
-          };
-      </script>
-        <script type="text/javascript" src="../../_static/jquery.js"></script>
-        <script type="text/javascript" src="../../_static/underscore.js"></script>
-        <script type="text/javascript" src="../../_static/doctools.js"></script>
+      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/doctools.js"></script>
+        <script src="../../_static/language_data.js"></script>
     
     <script type="text/javascript" src="../../_static/js/theme.js"></script>
 
     
-
-  
-  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
-  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="../../_static/theme_overrides.css" type="text/css" />
     <link rel="index" title="Index" href="../../genindex.html" />
-    <link rel="search" title="Search" href="../../search.html" /> 
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="L1TF - L1 Terminal Fault" href="l1tf.html" />
+    <link rel="prev" title="Hardware vulnerabilities" href="index.html" /> 
 </head>
 
 <body class="wy-body-for-nav">
@@ -58,7 +52,7 @@
           
 
           
-            <a href="../../index.html" class="icon icon-home"> The Linux Kernel
+            <a href="../../index.html" class="icon icon-home" alt="Documentation Home"> The Linux Kernel
           
 
           
@@ -85,6 +79,7 @@
           
         </div>
 
+        
         <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
           
             
@@ -92,16 +87,199 @@
               
             
             
-              <ul>
-<li class="toctree-l1"><a class="reference internal" href="../mm/damon/index.html">Monitoring Data Accesses</a></li>
+              <ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">The Linux kernel user’s and administrator’s guide</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../README.html">Linux kernel release 5.x &lt;http://kernel.org/&gt;</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../kernel-parameters.html">The kernel’s command-line parameters</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices.html">Linux allocated devices (4.x+ version)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../sysctl/index.html">Documentation for /proc/sys</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="index.html">Hardware vulnerabilities</a><ul class="current">
+<li class="toctree-l3 current"><a class="current reference internal" href="#">Spectre Side Channels</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#affected-processors">Affected processors</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#related-cves">Related CVEs</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#problem">Problem</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#spectre-variant-1-bounds-check-bypass">Spectre variant 1 (Bounds Check Bypass)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#spectre-variant-2-branch-target-injection">Spectre variant 2 (Branch Target Injection)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#attack-scenarios">Attack scenarios</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#spectre-system-information">Spectre system information</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#turning-on-mitigation-for-spectre-variant-1-and-spectre-variant-2">Turning on mitigation for Spectre variant 1 and Spectre variant 2</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#mitigation-control-on-the-kernel-command-line">Mitigation control on the kernel command line</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#mitigation-selection-guide">Mitigation selection guide</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#references-on-spectre">References on Spectre</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="l1tf.html">L1TF - L1 Terminal Fault</a></li>
+<li class="toctree-l3"><a class="reference internal" href="mds.html">MDS - Microarchitectural Data Sampling</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tsx_async_abort.html">TAA - TSX Asynchronous Abort</a></li>
+<li class="toctree-l3"><a class="reference internal" href="multihit.html">iTLB multihit</a></li>
+<li class="toctree-l3"><a class="reference internal" href="special-register-buffer-data-sampling.html">SRBDS - Special Register Buffer Data Sampling</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../reporting-bugs.html">Reporting bugs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../security-bugs.html">Security bugs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../bug-hunting.html">Bug hunting</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../bug-bisect.html">Bisecting a bug</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tainted-kernels.html">Tainted kernels</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../ramoops.html">Ramoops oops/panic logger</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../dynamic-debug-howto.html">Dynamic debug</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../init.html">Explaining the “No working init found.” boot hang message</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../kdump/index.html">Documentation for Kdump - The kexec-based Crash Dumping Solution</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../perf/index.html">Performance monitor support</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../sysfs-rules.html">Rules on how to access information in sysfs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../acpi/index.html">ACPI Support</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../aoe/index.html">ATA over Ethernet (AoE)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../auxdisplay/index.html">Auxiliary Display Support</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../bcache.html">A block layer cache (bcache)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../binderfs.html">The Android binderfs Filesystem</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../binfmt-misc.html">Kernel Support for miscellaneous Binary Formats (binfmt_misc)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../blockdev/index.html">The Linux RapidIO Subsystem</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../bootconfig.html">Boot Configuration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../braille-console.html">Linux Braille Console</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../btmrvl.html">btmrvl driver</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../cgroup-v1/index.html">Control Groups version 1</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../cgroup-v2.html">Control Group v2</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../cifs/index.html">CIFS</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../clearing-warn-once.html">Clearing WARN_ONCE</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../cpu-load.html">CPU load</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../cputopology.html">How CPU topology info is exported via sysfs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../dell_rbu.html">Dell Remote BIOS Update driver (dell_rbu)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../device-mapper/index.html">Device Mapper</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../edid.html">EDID</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../efi-stub.html">The EFI Boot Stub</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../ext4.html">ext4 General Information</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../nfs/index.html">NFS</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../gpio/index.html">gpio</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../highuid.html">Notes on the change from 16-bit UIDs to 32-bit UIDs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../hw_random.html">Linux support for random number generator in i8xx chipsets</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../initrd.html">Using the initial RAM disk (initrd)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../iostats.html">I/O statistics fields</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../java.html">Java(tm) Binary Kernel Support for Linux v1.03</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../jfs.html">IBM’s Journaled File System (JFS) for Linux</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../kernel-per-CPU-kthreads.html">Reducing OS jitter due to per-cpu kthreads</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../laptops/index.html">Laptop Drivers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../lcd-panel-cgram.html">Parallel port LCD/Keypad Panel support</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../ldm.html">LDM - Logical Disk Manager (Dynamic Disks)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../lockup-watchdogs.html">Softlockup detector and hardlockup detector (aka nmi_watchdog)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../LSM/index.html">Linux Security Module Usage</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../md.html">RAID arrays</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../media/index.html">Media subsystem admin and user guide</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../mm/index.html">Memory Management</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../module-signing.html">Kernel module signing facility</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../mono.html">Mono(tm) Binary Kernel Support for Linux</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../namespaces/index.html">Namespaces</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../numastat.html">Numa policy hit/miss statistics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../parport.html">Parport</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../perf-security.html">Perf events and tool security</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../pm/index.html">Power Management</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../pnp.html">Linux Plug and Play Documentation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../rapidio.html">RapidIO Subsystem Guide</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../ras.html">Reliability, Availability and Serviceability</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../rtc.html">Real Time Clock (RTC) Drivers for Linux</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../serial-console.html">Linux Serial Console</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../svga.html">Video Mode Selection Support 2.13</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../sysrq.html">Linux Magic System Request Key Hacks</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../thunderbolt.html">USB4 and Thunderbolt</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../ufs.html">Using UFS</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../unicode.html">Unicode support</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../vga-softcursor.html">Software cursor for VGA</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../video-output.html">Video Output Switcher Control</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../wimax/index.html">WiMAX subsystem</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../xfs.html">The SGI XFS Filesystem</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../kbuild/index.html">Kernel Build System</a></li>
 </ul>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../../vm/damon/index.html">DAMON: Data Access MONitor</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../firmware-guide/index.html">The Linux kernel firmware guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../devicetree/index.html">Open Firmware and Device Tree</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../userspace-api/index.html">The Linux kernel user-space API guide</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../process/index.html">Working with the kernel development community</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../dev-tools/index.html">Development tools for the kernel</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../doc-guide/index.html">How to write kernel documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../kernel-hacking/index.html">Kernel Hacking Guides</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../trace/index.html">Linux Tracing Technologies</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../maintainer/index.html">Kernel Maintainer Handbook</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../fault-injection/index.html">fault-injection</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../livepatch/index.html">Kernel Livepatching</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../driver-api/index.html">The Linux driver implementer’s API guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../core-api/index.html">Core API Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../locking/index.html">locking</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../accounting/index.html">Accounting</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../block/index.html">Block</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../cdrom/index.html">cdrom</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../cpu-freq/index.html">Linux CPUFreq - CPU frequency and voltage scaling code in the Linux(TM) kernel</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../ide/index.html">Integrated Drive Electronics (IDE)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../fb/index.html">Frame Buffer</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../fpga/index.html">fpga</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../hid/index.html">Human Interface Devices (HID)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../i2c/index.html">I2C/SMBus Subsystem</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../iio/index.html">Industrial I/O</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../isdn/index.html">ISDN</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../infiniband/index.html">InfiniBand</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../leds/index.html">LEDs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../netlabel/index.html">NetLabel</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../networking/index.html">Linux Networking Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../pcmcia/index.html">pcmcia</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../power/index.html">Power Management</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../target/index.html">TCM Virtual Device</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../timers/index.html">timers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../spi/index.html">Serial Peripheral Interface (SPI)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../w1/index.html">1-Wire Subsystem</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../watchdog/index.html">Linux Watchdog Support</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../virt/index.html">Linux Virtualization Support</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../input/index.html">The Linux Input Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../hwmon/index.html">Linux Hardware Monitoring</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../gpu/index.html">Linux GPU Driver Developer’s Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../security/index.html">Security Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../sound/index.html">Linux Sound Subsystem Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../crypto/index.html">Linux Kernel Crypto API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../filesystems/index.html">Filesystems in the Linux kernel</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../vm/index.html">Linux Memory Management Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../bpf/index.html">BPF Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../usb/index.html">USB support</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../PCI/index.html">Linux PCI Bus Subsystem</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../scsi/index.html">Linux SCSI Subsystem</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../misc-devices/index.html">Assorted Miscellaneous Devices Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../scheduler/index.html">Linux Scheduler</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../mhi/index.html">MHI</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../asm-annotations.html">Assembler Annotations</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../arm/index.html">ARM Architecture</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../arm64/index.html">ARM64 Architecture</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../ia64/index.html">IA-64 Architecture</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../m68k/index.html">m68k Architecture</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../mips/index.html">MIPS-specific Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../nios2/nios2.html">Linux on the Nios II architecture</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../openrisc/index.html">OpenRISC Architecture</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../parisc/index.html">PA-RISC Architecture</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../powerpc/index.html">powerpc</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../riscv/index.html">RISC-V architecture</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../s390/index.html">s390 Architecture</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../sh/index.html">SuperH Interfaces Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../sparc/index.html">Sparc Architecture</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../x86/index.html">x86-specific Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../xtensa/index.html">Xtensa Architecture</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../filesystems/ext4/index.html">ext4 Data Structures and Algorithms</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../translations/index.html">Translations</a></li>
 </ul>
 
             
           
         </div>
+        
       </div>
     </nav>
 
@@ -140,7 +318,11 @@
 
   <ul class="wy-breadcrumbs">
     
-      <li><a href="../../index.html">Docs</a> &raquo;</li>
+      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="../index.html">The Linux kernel user’s and administrator’s guide</a> &raquo;</li>
+        
+          <li><a href="index.html">Hardware vulnerabilities</a> &raquo;</li>
         
       <li>Spectre Side Channels</li>
     
@@ -176,13 +358,13 @@ use branch prediction and speculative execution.</p>
 <p>The following CPUs are vulnerable:</p>
 <blockquote>
 <div><ul class="simple">
-<li>Intel Core, Atom, Pentium, and Xeon processors</li>
-<li>AMD Phenom, EPYC, and Zen processors</li>
-<li>IBM POWER and zSeries processors</li>
-<li>Higher end ARM processors</li>
-<li>Apple CPUs</li>
-<li>Higher end MIPS CPUs</li>
-<li>Likely most other high performance CPUs. Contact your CPU vendor for details.</li>
+<li><p>Intel Core, Atom, Pentium, and Xeon processors</p></li>
+<li><p>AMD Phenom, EPYC, and Zen processors</p></li>
+<li><p>IBM POWER and zSeries processors</p></li>
+<li><p>Higher end ARM processors</p></li>
+<li><p>Apple CPUs</p></li>
+<li><p>Higher end MIPS CPUs</p></li>
+<li><p>Likely most other high performance CPUs. Contact your CPU vendor for details.</p></li>
 </ul>
 </div></blockquote>
 <p>Whether a processor is affected or not can be read out from the Spectre
@@ -192,24 +374,24 @@ vulnerability files in sysfs. See <a class="reference internal" href="#spectre-s
 <h2>Related CVEs<a class="headerlink" href="#related-cves" title="Permalink to this headline">¶</a></h2>
 <p>The following CVE entries describe Spectre variants:</p>
 <blockquote>
-<div><table border="1" class="docutils">
+<div><table class="docutils align-default">
 <colgroup>
-<col width="21%" />
-<col width="37%" />
-<col width="42%" />
+<col style="width: 21%" />
+<col style="width: 37%" />
+<col style="width: 42%" />
 </colgroup>
-<tbody valign="top">
-<tr class="row-odd"><td>CVE-2017-5753</td>
-<td>Bounds check bypass</td>
-<td>Spectre variant 1</td>
+<tbody>
+<tr class="row-odd"><td><p>CVE-2017-5753</p></td>
+<td><p>Bounds check bypass</p></td>
+<td><p>Spectre variant 1</p></td>
 </tr>
-<tr class="row-even"><td>CVE-2017-5715</td>
-<td>Branch target injection</td>
-<td>Spectre variant 2</td>
+<tr class="row-even"><td><p>CVE-2017-5715</p></td>
+<td><p>Branch target injection</p></td>
+<td><p>Spectre variant 2</p></td>
 </tr>
-<tr class="row-odd"><td>CVE-2019-1125</td>
-<td>Spectre v1 swapgs</td>
-<td>Spectre variant 1 (swapgs)</td>
+<tr class="row-odd"><td><p>CVE-2019-1125</p></td>
+<td><p>Spectre v1 swapgs</p></td>
+<td><p>Spectre variant 1 (swapgs)</p></td>
 </tr>
 </tbody>
 </table>
@@ -455,27 +637,28 @@ mitigation status of the system for Spectre: whether the system is
 vulnerable, and which mitigations are active.</p>
 <p>The sysfs file showing Spectre variant 1 mitigation status is:</p>
 <blockquote>
-<div>/sys/devices/system/cpu/vulnerabilities/spectre_v1</div></blockquote>
+<div><p>/sys/devices/system/cpu/vulnerabilities/spectre_v1</p>
+</div></blockquote>
 <p>The possible values in this file are:</p>
 <blockquote>
-<div><table border="1" class="docutils">
+<div><table class="docutils align-default">
 <colgroup>
-<col width="50%" />
-<col width="50%" />
+<col style="width: 50%" />
+<col style="width: 50%" />
 </colgroup>
-<tbody valign="top">
-<tr class="row-odd"><td>‘Not affected’</td>
-<td>The processor is not vulnerable.</td>
+<tbody>
+<tr class="row-odd"><td><p>‘Not affected’</p></td>
+<td><p>The processor is not vulnerable.</p></td>
 </tr>
-<tr class="row-even"><td>‘Vulnerable: __user pointer sanitization and usercopy barriers only; no swapgs barriers’</td>
-<td>The swapgs protections are disabled; otherwise it has
+<tr class="row-even"><td><p>‘Vulnerable: __user pointer sanitization and usercopy barriers only; no swapgs barriers’</p></td>
+<td><p>The swapgs protections are disabled; otherwise it has
 protection in the kernel on a case by case base with explicit
-pointer sanitation and usercopy LFENCE barriers.</td>
+pointer sanitation and usercopy LFENCE barriers.</p></td>
 </tr>
-<tr class="row-odd"><td>‘Mitigation: usercopy/swapgs barriers and __user pointer sanitization’</td>
-<td>Protection in the kernel on a case by case base with explicit
+<tr class="row-odd"><td><p>‘Mitigation: usercopy/swapgs barriers and __user pointer sanitization’</p></td>
+<td><p>Protection in the kernel on a case by case base with explicit
 pointer sanitation, usercopy LFENCE barriers, and swapgs LFENCE
-barriers.</td>
+barriers.</p></td>
 </tr>
 </tbody>
 </table>
@@ -489,116 +672,117 @@ CPU has support for additional process-specific mitigation.</p>
 <p>This file also reports CPU features enabled by microcode to mitigate
 attack between user processes:</p>
 <ol class="arabic simple">
-<li>Indirect Branch Prediction Barrier (IBPB) to add additional
-isolation between processes of different users.</li>
-<li>Single Thread Indirect Branch Predictors (STIBP) to add additional
-isolation between CPU threads running on the same core.</li>
+<li><p>Indirect Branch Prediction Barrier (IBPB) to add additional
+isolation between processes of different users.</p></li>
+<li><p>Single Thread Indirect Branch Predictors (STIBP) to add additional
+isolation between CPU threads running on the same core.</p></li>
 </ol>
 <p>These CPU features may impact performance when used and can be enabled
 per process on a case-by-case base.</p>
 <p>The sysfs file showing Spectre variant 2 mitigation status is:</p>
 <blockquote>
-<div>/sys/devices/system/cpu/vulnerabilities/spectre_v2</div></blockquote>
+<div><p>/sys/devices/system/cpu/vulnerabilities/spectre_v2</p>
+</div></blockquote>
 <p>The possible values in this file are:</p>
 <blockquote>
 <div><ul class="simple">
-<li>Kernel status:</li>
+<li><p>Kernel status:</p></li>
 </ul>
-<table border="1" class="docutils">
+<table class="docutils align-default">
 <colgroup>
-<col width="52%" />
-<col width="48%" />
+<col style="width: 52%" />
+<col style="width: 48%" />
 </colgroup>
-<tbody valign="top">
-<tr class="row-odd"><td>‘Not affected’</td>
-<td>The processor is not vulnerable</td>
+<tbody>
+<tr class="row-odd"><td><p>‘Not affected’</p></td>
+<td><p>The processor is not vulnerable</p></td>
 </tr>
-<tr class="row-even"><td>‘Vulnerable’</td>
-<td>Vulnerable, no mitigation</td>
+<tr class="row-even"><td><p>‘Vulnerable’</p></td>
+<td><p>Vulnerable, no mitigation</p></td>
 </tr>
-<tr class="row-odd"><td>‘Mitigation: Full generic retpoline’</td>
-<td>Software-focused mitigation</td>
+<tr class="row-odd"><td><p>‘Mitigation: Full generic retpoline’</p></td>
+<td><p>Software-focused mitigation</p></td>
 </tr>
-<tr class="row-even"><td>‘Mitigation: Full AMD retpoline’</td>
-<td>AMD-specific software mitigation</td>
+<tr class="row-even"><td><p>‘Mitigation: Full AMD retpoline’</p></td>
+<td><p>AMD-specific software mitigation</p></td>
 </tr>
-<tr class="row-odd"><td>‘Mitigation: Enhanced IBRS’</td>
-<td>Hardware-focused mitigation</td>
+<tr class="row-odd"><td><p>‘Mitigation: Enhanced IBRS’</p></td>
+<td><p>Hardware-focused mitigation</p></td>
 </tr>
 </tbody>
 </table>
 <ul class="simple">
-<li>Firmware status: Show if Indirect Branch Restricted Speculation (IBRS) is
-used to protect against Spectre variant 2 attacks when calling firmware (x86 only).</li>
+<li><p>Firmware status: Show if Indirect Branch Restricted Speculation (IBRS) is
+used to protect against Spectre variant 2 attacks when calling firmware (x86 only).</p></li>
 </ul>
-<table border="1" class="docutils">
+<table class="docutils align-default">
 <colgroup>
-<col width="14%" />
-<col width="86%" />
+<col style="width: 14%" />
+<col style="width: 86%" />
 </colgroup>
-<tbody valign="top">
-<tr class="row-odd"><td>‘IBRS_FW’</td>
-<td>Protection against user program attacks when calling firmware</td>
+<tbody>
+<tr class="row-odd"><td><p>‘IBRS_FW’</p></td>
+<td><p>Protection against user program attacks when calling firmware</p></td>
 </tr>
 </tbody>
 </table>
 <ul class="simple">
-<li>Indirect branch prediction barrier (IBPB) status for protection between
+<li><p>Indirect branch prediction barrier (IBPB) status for protection between
 processes of different users. This feature can be controlled through
 prctl() per process, or through kernel command line options. This is
-an x86 only feature. For more details see below.</li>
+an x86 only feature. For more details see below.</p></li>
 </ul>
-<table border="1" class="docutils">
+<table class="docutils align-default">
 <colgroup>
-<col width="25%" />
-<col width="75%" />
+<col style="width: 25%" />
+<col style="width: 75%" />
 </colgroup>
-<tbody valign="top">
-<tr class="row-odd"><td>‘IBPB: disabled’</td>
-<td>IBPB unused</td>
+<tbody>
+<tr class="row-odd"><td><p>‘IBPB: disabled’</p></td>
+<td><p>IBPB unused</p></td>
 </tr>
-<tr class="row-even"><td>‘IBPB: always-on’</td>
-<td>Use IBPB on all tasks</td>
+<tr class="row-even"><td><p>‘IBPB: always-on’</p></td>
+<td><p>Use IBPB on all tasks</p></td>
 </tr>
-<tr class="row-odd"><td>‘IBPB: conditional’</td>
-<td>Use IBPB on SECCOMP or indirect branch restricted tasks</td>
+<tr class="row-odd"><td><p>‘IBPB: conditional’</p></td>
+<td><p>Use IBPB on SECCOMP or indirect branch restricted tasks</p></td>
 </tr>
 </tbody>
 </table>
 <ul class="simple">
-<li>Single threaded indirect branch prediction (STIBP) status for protection
+<li><p>Single threaded indirect branch prediction (STIBP) status for protection
 between different hyper threads. This feature can be controlled through
 prctl per process, or through kernel command line options. This is x86
-only feature. For more details see below.</li>
+only feature. For more details see below.</p></li>
 </ul>
-<table border="1" class="docutils">
+<table class="docutils align-default">
 <colgroup>
-<col width="26%" />
-<col width="74%" />
+<col style="width: 26%" />
+<col style="width: 74%" />
 </colgroup>
-<tbody valign="top">
-<tr class="row-odd"><td>‘STIBP: disabled’</td>
-<td>STIBP unused</td>
+<tbody>
+<tr class="row-odd"><td><p>‘STIBP: disabled’</p></td>
+<td><p>STIBP unused</p></td>
 </tr>
-<tr class="row-even"><td>‘STIBP: forced’</td>
-<td>Use STIBP on all tasks</td>
+<tr class="row-even"><td><p>‘STIBP: forced’</p></td>
+<td><p>Use STIBP on all tasks</p></td>
 </tr>
-<tr class="row-odd"><td>‘STIBP: conditional’</td>
-<td>Use STIBP on SECCOMP or indirect branch restricted tasks</td>
+<tr class="row-odd"><td><p>‘STIBP: conditional’</p></td>
+<td><p>Use STIBP on SECCOMP or indirect branch restricted tasks</p></td>
 </tr>
 </tbody>
 </table>
 <ul class="simple">
-<li>Return stack buffer (RSB) protection status:</li>
+<li><p>Return stack buffer (RSB) protection status:</p></li>
 </ul>
-<table border="1" class="docutils">
+<table class="docutils align-default">
 <colgroup>
-<col width="23%" />
-<col width="77%" />
+<col style="width: 23%" />
+<col style="width: 77%" />
 </colgroup>
-<tbody valign="top">
-<tr class="row-odd"><td>‘RSB filling’</td>
-<td>Protection of RSB on context switch enabled</td>
+<tbody>
+<tr class="row-odd"><td><p>‘RSB filling’</p></td>
+<td><p>Protection of RSB on context switch enabled</p></td>
 </tr>
 </tbody>
 </table>
@@ -720,31 +904,33 @@ kernel command line.</p>
 <blockquote>
 <div><p>nospectre_v1</p>
 <blockquote>
-<div>[X86,PPC] Disable mitigations for Spectre Variant 1
+<div><p>[X86,PPC] Disable mitigations for Spectre Variant 1
 (bounds check bypass). With this option data leaks are
-possible in the system.</div></blockquote>
+possible in the system.</p>
+</div></blockquote>
 <p>nospectre_v2</p>
 <blockquote>
-<div>[X86] Disable all mitigations for the Spectre variant 2
+<div><p>[X86] Disable all mitigations for the Spectre variant 2
 (indirect branch prediction) vulnerability. System may
 allow data leaks with this option, which is equivalent
-to spectre_v2=off.</div></blockquote>
+to spectre_v2=off.</p>
+</div></blockquote>
 <p>spectre_v2=</p>
 <blockquote>
 <div><p>[X86] Control mitigation of Spectre variant 2
 (indirect branch speculation) vulnerability.
 The default operation protects the kernel from
 user space attacks.</p>
-<dl class="docutils">
-<dt>on</dt>
-<dd>unconditionally enable, implies
-spectre_v2_user=on</dd>
-<dt>off</dt>
-<dd>unconditionally disable, implies
-spectre_v2_user=off</dd>
-<dt>auto</dt>
-<dd>kernel detects whether your CPU model is
-vulnerable</dd>
+<dl class="simple">
+<dt>on</dt><dd><p>unconditionally enable, implies
+spectre_v2_user=on</p>
+</dd>
+<dt>off</dt><dd><p>unconditionally disable, implies
+spectre_v2_user=off</p>
+</dd>
+<dt>auto</dt><dd><p>kernel detects whether your CPU model is
+vulnerable</p>
+</dd>
 </dl>
 <p>Selecting ‘on’ will, and ‘auto’ may, choose a
 mitigation method at run time according to the
@@ -756,13 +942,13 @@ against user space to user space task attacks.</p>
 <p>Selecting ‘off’ will disable both the kernel and
 the user space protections.</p>
 <p>Specific mitigations can also be selected manually:</p>
-<dl class="docutils">
-<dt>retpoline</dt>
-<dd>replace indirect branches</dd>
-<dt>retpoline,generic</dt>
-<dd>google’s original retpoline</dd>
-<dt>retpoline,amd</dt>
-<dd>AMD-specific minimal thunk</dd>
+<dl class="simple">
+<dt>retpoline</dt><dd><p>replace indirect branches</p>
+</dd>
+<dt>retpoline,generic</dt><dd><p>google’s original retpoline</p>
+</dd>
+<dt>retpoline,amd</dt><dd><p>AMD-specific minimal thunk</p>
+</dd>
 </dl>
 <p>Not specifying this option is equivalent to
 spectre_v2=auto.</p>
@@ -775,35 +961,35 @@ spectre_v2=auto.</p>
 <div><p>[X86] Control mitigation of Spectre variant 2
 (indirect branch speculation) vulnerability between
 user space tasks</p>
-<dl class="docutils">
-<dt>on</dt>
-<dd>Unconditionally enable mitigations. Is
-enforced by spectre_v2=on</dd>
-<dt>off</dt>
-<dd>Unconditionally disable mitigations. Is
-enforced by spectre_v2=off</dd>
-<dt>prctl</dt>
-<dd>Indirect branch speculation is enabled,
+<dl class="simple">
+<dt>on</dt><dd><p>Unconditionally enable mitigations. Is
+enforced by spectre_v2=on</p>
+</dd>
+<dt>off</dt><dd><p>Unconditionally disable mitigations. Is
+enforced by spectre_v2=off</p>
+</dd>
+<dt>prctl</dt><dd><p>Indirect branch speculation is enabled,
 but mitigation can be enabled via prctl
 per thread. The mitigation control state
-is inherited on fork.</dd>
-<dt>prctl,ibpb</dt>
-<dd>Like “prctl” above, but only STIBP is
+is inherited on fork.</p>
+</dd>
+<dt>prctl,ibpb</dt><dd><p>Like “prctl” above, but only STIBP is
 controlled per thread. IBPB is issued
 always when switching between different user
-space processes.</dd>
-<dt>seccomp</dt>
-<dd>Same as “prctl” above, but all seccomp
+space processes.</p>
+</dd>
+<dt>seccomp</dt><dd><p>Same as “prctl” above, but all seccomp
 threads will enable the mitigation unless
-they explicitly opt out.</dd>
-<dt>seccomp,ibpb</dt>
-<dd>Like “seccomp” above, but only STIBP is
+they explicitly opt out.</p>
+</dd>
+<dt>seccomp,ibpb</dt><dd><p>Like “seccomp” above, but only STIBP is
 controlled per thread. IBPB is issued
 always when switching between different
-user space processes.</dd>
-<dt>auto</dt>
-<dd>Kernel selects the mitigation depending on
-the available CPU features and vulnerability.</dd>
+user space processes.</p>
+</dd>
+<dt>auto</dt><dd><p>Kernel selects the mitigation depending on
+the available CPU features and vulnerability.</p>
+</dd>
 </dl>
 <p>Default mitigation:
 If CONFIG_SECCOMP=y then “seccomp”, otherwise “prctl”</p>
@@ -822,29 +1008,32 @@ cannot be disabled.</p>
 <div class="section" id="trusted-userspace">
 <h3>1. Trusted userspace<a class="headerlink" href="#trusted-userspace" title="Permalink to this headline">¶</a></h3>
 <blockquote>
-<div>If all userspace applications are from trusted sources and do not
+<div><p>If all userspace applications are from trusted sources and do not
 execute externally supplied untrusted code, then the mitigations can
-be disabled.</div></blockquote>
+be disabled.</p>
+</div></blockquote>
 </div>
 <div class="section" id="protect-sensitive-programs">
 <h3>2. Protect sensitive programs<a class="headerlink" href="#protect-sensitive-programs" title="Permalink to this headline">¶</a></h3>
 <blockquote>
-<div>For security-sensitive programs that have secrets (e.g. crypto
+<div><p>For security-sensitive programs that have secrets (e.g. crypto
 keys), protection against Spectre variant 2 can be put in place by
 disabling indirect branch speculation when the program is running
-(See <a class="reference internal" href="../../userspace-api/spec_ctrl.html#set-spec-ctrl"><span class="std std-ref">Documentation/userspace-api/spec_ctrl.rst</span></a>).</div></blockquote>
+(See <a class="reference internal" href="../../userspace-api/spec_ctrl.html#set-spec-ctrl"><span class="std std-ref">Documentation/userspace-api/spec_ctrl.rst</span></a>).</p>
+</div></blockquote>
 </div>
 <div class="section" id="sandbox-untrusted-programs">
 <h3>3. Sandbox untrusted programs<a class="headerlink" href="#sandbox-untrusted-programs" title="Permalink to this headline">¶</a></h3>
 <blockquote>
-<div>Untrusted programs that could be a source of attacks can be cordoned
+<div><p>Untrusted programs that could be a source of attacks can be cordoned
 off by disabling their indirect branch speculation when they are run
 (See <a class="reference internal" href="../../userspace-api/spec_ctrl.html#set-spec-ctrl"><span class="std std-ref">Documentation/userspace-api/spec_ctrl.rst</span></a>).
 This prevents untrusted programs from polluting the branch target
 buffer.  All programs running in SECCOMP sandboxes have indirect
 branch speculation restricted by default. This behavior can be
 changed via the kernel command line and sysfs control files. See
-<a class="reference internal" href="#spectre-mitigation-control-command-line"><span class="std std-ref">Mitigation control on the kernel command line</span></a>.</div></blockquote>
+<a class="reference internal" href="#spectre-mitigation-control-command-line"><span class="std std-ref">Mitigation control on the kernel command line</span></a>.</p>
+</div></blockquote>
 </div>
 <div class="section" id="high-security-mode">
 <h3>3. High security mode<a class="headerlink" href="#high-security-mode" title="Permalink to this headline">¶</a></h3>
@@ -898,16 +1087,33 @@ on all the time.</p>
           </div>
           <footer>
   
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="l1tf.html" class="btn btn-neutral float-right" title="L1TF - L1 Terminal Fault" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="index.html" class="btn btn-neutral float-left" title="Hardware vulnerabilities" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
 
   <hr/>
 
   <div role="contentinfo">
     <p>
+        
         &copy; Copyright The kernel development community
 
     </p>
   </div>
-  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
 
 </footer>
 
@@ -918,7 +1124,6 @@ on all the time.</p>
 
   </div>
   
-
 
   <script type="text/javascript">
       jQuery(function () {

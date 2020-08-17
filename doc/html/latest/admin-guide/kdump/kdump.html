@@ -1,8 +1,7 @@
 
 
 <!DOCTYPE html>
-<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
-<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<html class="writer-html5" lang="en" >
 <head>
   <meta charset="utf-8">
   
@@ -12,39 +11,34 @@
   
 
   
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/theme_overrides.css" type="text/css" />
+
+  
   
   
   
 
   
-  <script type="text/javascript" src="../../_static/js/modernizr.min.js"></script>
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
   
     
-      <script type="text/javascript">
-          var DOCUMENTATION_OPTIONS = {
-              URL_ROOT:'../../',
-              VERSION:'',
-              LANGUAGE:'None',
-              COLLAPSE_INDEX:false,
-              FILE_SUFFIX:'.html',
-              HAS_SOURCE:  true,
-              SOURCELINK_SUFFIX: '.txt'
-          };
-      </script>
-        <script type="text/javascript" src="../../_static/jquery.js"></script>
-        <script type="text/javascript" src="../../_static/underscore.js"></script>
-        <script type="text/javascript" src="../../_static/doctools.js"></script>
+      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/doctools.js"></script>
+        <script src="../../_static/language_data.js"></script>
     
     <script type="text/javascript" src="../../_static/js/theme.js"></script>
 
     
-
-  
-  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
-  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="../../_static/theme_overrides.css" type="text/css" />
     <link rel="index" title="Index" href="../../genindex.html" />
-    <link rel="search" title="Search" href="../../search.html" /> 
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="VMCOREINFO" href="vmcoreinfo.html" />
+    <link rel="prev" title="Documentation for Kdump - The kexec-based Crash Dumping Solution" href="index.html" /> 
 </head>
 
 <body class="wy-body-for-nav">
@@ -58,7 +52,7 @@
           
 
           
-            <a href="../../index.html" class="icon icon-home"> The Linux Kernel
+            <a href="../../index.html" class="icon icon-home" alt="Documentation Home"> The Linux Kernel
           
 
           
@@ -85,6 +79,7 @@
           
         </div>
 
+        
         <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
           
             
@@ -92,16 +87,196 @@
               
             
             
-              <ul>
-<li class="toctree-l1"><a class="reference internal" href="../mm/damon/index.html">Monitoring Data Accesses</a></li>
+              <ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">The Linux kernel user’s and administrator’s guide</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../README.html">Linux kernel release 5.x &lt;http://kernel.org/&gt;</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../kernel-parameters.html">The kernel’s command-line parameters</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../devices.html">Linux allocated devices (4.x+ version)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../sysctl/index.html">Documentation for /proc/sys</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../hw-vuln/index.html">Hardware vulnerabilities</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../reporting-bugs.html">Reporting bugs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../security-bugs.html">Security bugs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../bug-hunting.html">Bug hunting</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../bug-bisect.html">Bisecting a bug</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tainted-kernels.html">Tainted kernels</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../ramoops.html">Ramoops oops/panic logger</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../dynamic-debug-howto.html">Dynamic debug</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../init.html">Explaining the “No working init found.” boot hang message</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="index.html">Documentation for Kdump - The kexec-based Crash Dumping Solution</a><ul class="current">
+<li class="toctree-l3 current"><a class="current reference internal" href="#">Documentation for Kdump - The kexec-based Crash Dumping Solution</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#overview">Overview</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#setup-and-installation">Setup and Installation</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#extended-crashkernel-syntax">Extended crashkernel syntax</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#boot-into-system-kernel">Boot into System Kernel</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#load-the-dump-capture-kernel">Load the Dump-capture Kernel</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#kernel-panic">Kernel Panic</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#write-out-the-dump-file">Write Out the Dump File</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#analysis">Analysis</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#trigger-kdump-on-warn">Trigger Kdump on WARN()</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#trigger-kdump-on-add-taint">Trigger Kdump on add_taint()</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#contact">Contact</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#gdb-macros">GDB macros</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="vmcoreinfo.html">VMCOREINFO</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../perf/index.html">Performance monitor support</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../sysfs-rules.html">Rules on how to access information in sysfs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../acpi/index.html">ACPI Support</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../aoe/index.html">ATA over Ethernet (AoE)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../auxdisplay/index.html">Auxiliary Display Support</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../bcache.html">A block layer cache (bcache)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../binderfs.html">The Android binderfs Filesystem</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../binfmt-misc.html">Kernel Support for miscellaneous Binary Formats (binfmt_misc)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../blockdev/index.html">The Linux RapidIO Subsystem</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../bootconfig.html">Boot Configuration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../braille-console.html">Linux Braille Console</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../btmrvl.html">btmrvl driver</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../cgroup-v1/index.html">Control Groups version 1</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../cgroup-v2.html">Control Group v2</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../cifs/index.html">CIFS</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../clearing-warn-once.html">Clearing WARN_ONCE</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../cpu-load.html">CPU load</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../cputopology.html">How CPU topology info is exported via sysfs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../dell_rbu.html">Dell Remote BIOS Update driver (dell_rbu)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../device-mapper/index.html">Device Mapper</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../edid.html">EDID</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../efi-stub.html">The EFI Boot Stub</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../ext4.html">ext4 General Information</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../nfs/index.html">NFS</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../gpio/index.html">gpio</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../highuid.html">Notes on the change from 16-bit UIDs to 32-bit UIDs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../hw_random.html">Linux support for random number generator in i8xx chipsets</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../initrd.html">Using the initial RAM disk (initrd)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../iostats.html">I/O statistics fields</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../java.html">Java(tm) Binary Kernel Support for Linux v1.03</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../jfs.html">IBM’s Journaled File System (JFS) for Linux</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../kernel-per-CPU-kthreads.html">Reducing OS jitter due to per-cpu kthreads</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../laptops/index.html">Laptop Drivers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../lcd-panel-cgram.html">Parallel port LCD/Keypad Panel support</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../ldm.html">LDM - Logical Disk Manager (Dynamic Disks)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../lockup-watchdogs.html">Softlockup detector and hardlockup detector (aka nmi_watchdog)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../LSM/index.html">Linux Security Module Usage</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../md.html">RAID arrays</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../media/index.html">Media subsystem admin and user guide</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../mm/index.html">Memory Management</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../module-signing.html">Kernel module signing facility</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../mono.html">Mono(tm) Binary Kernel Support for Linux</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../namespaces/index.html">Namespaces</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../numastat.html">Numa policy hit/miss statistics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../parport.html">Parport</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../perf-security.html">Perf events and tool security</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../pm/index.html">Power Management</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../pnp.html">Linux Plug and Play Documentation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../rapidio.html">RapidIO Subsystem Guide</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../ras.html">Reliability, Availability and Serviceability</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../rtc.html">Real Time Clock (RTC) Drivers for Linux</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../serial-console.html">Linux Serial Console</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../svga.html">Video Mode Selection Support 2.13</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../sysrq.html">Linux Magic System Request Key Hacks</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../thunderbolt.html">USB4 and Thunderbolt</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../ufs.html">Using UFS</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../unicode.html">Unicode support</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../vga-softcursor.html">Software cursor for VGA</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../video-output.html">Video Output Switcher Control</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../wimax/index.html">WiMAX subsystem</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../xfs.html">The SGI XFS Filesystem</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../kbuild/index.html">Kernel Build System</a></li>
 </ul>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../../vm/damon/index.html">DAMON: Data Access MONitor</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../firmware-guide/index.html">The Linux kernel firmware guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../devicetree/index.html">Open Firmware and Device Tree</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../userspace-api/index.html">The Linux kernel user-space API guide</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../process/index.html">Working with the kernel development community</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../dev-tools/index.html">Development tools for the kernel</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../doc-guide/index.html">How to write kernel documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../kernel-hacking/index.html">Kernel Hacking Guides</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../trace/index.html">Linux Tracing Technologies</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../maintainer/index.html">Kernel Maintainer Handbook</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../fault-injection/index.html">fault-injection</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../livepatch/index.html">Kernel Livepatching</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../driver-api/index.html">The Linux driver implementer’s API guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../core-api/index.html">Core API Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../locking/index.html">locking</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../accounting/index.html">Accounting</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../block/index.html">Block</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../cdrom/index.html">cdrom</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../cpu-freq/index.html">Linux CPUFreq - CPU frequency and voltage scaling code in the Linux(TM) kernel</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../ide/index.html">Integrated Drive Electronics (IDE)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../fb/index.html">Frame Buffer</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../fpga/index.html">fpga</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../hid/index.html">Human Interface Devices (HID)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../i2c/index.html">I2C/SMBus Subsystem</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../iio/index.html">Industrial I/O</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../isdn/index.html">ISDN</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../infiniband/index.html">InfiniBand</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../leds/index.html">LEDs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../netlabel/index.html">NetLabel</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../networking/index.html">Linux Networking Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../pcmcia/index.html">pcmcia</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../power/index.html">Power Management</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../target/index.html">TCM Virtual Device</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../timers/index.html">timers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../spi/index.html">Serial Peripheral Interface (SPI)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../w1/index.html">1-Wire Subsystem</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../watchdog/index.html">Linux Watchdog Support</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../virt/index.html">Linux Virtualization Support</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../input/index.html">The Linux Input Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../hwmon/index.html">Linux Hardware Monitoring</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../gpu/index.html">Linux GPU Driver Developer’s Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../security/index.html">Security Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../sound/index.html">Linux Sound Subsystem Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../crypto/index.html">Linux Kernel Crypto API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../filesystems/index.html">Filesystems in the Linux kernel</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../vm/index.html">Linux Memory Management Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../bpf/index.html">BPF Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../usb/index.html">USB support</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../PCI/index.html">Linux PCI Bus Subsystem</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../scsi/index.html">Linux SCSI Subsystem</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../misc-devices/index.html">Assorted Miscellaneous Devices Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../scheduler/index.html">Linux Scheduler</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../mhi/index.html">MHI</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../asm-annotations.html">Assembler Annotations</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../arm/index.html">ARM Architecture</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../arm64/index.html">ARM64 Architecture</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../ia64/index.html">IA-64 Architecture</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../m68k/index.html">m68k Architecture</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../mips/index.html">MIPS-specific Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../nios2/nios2.html">Linux on the Nios II architecture</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../openrisc/index.html">OpenRISC Architecture</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../parisc/index.html">PA-RISC Architecture</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../powerpc/index.html">powerpc</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../riscv/index.html">RISC-V architecture</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../s390/index.html">s390 Architecture</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../sh/index.html">SuperH Interfaces Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../sparc/index.html">Sparc Architecture</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../x86/index.html">x86-specific Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../xtensa/index.html">Xtensa Architecture</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../filesystems/ext4/index.html">ext4 Data Structures and Algorithms</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../translations/index.html">Translations</a></li>
 </ul>
 
             
           
         </div>
+        
       </div>
     </nav>
 
@@ -140,7 +315,11 @@
 
   <ul class="wy-breadcrumbs">
     
-      <li><a href="../../index.html">Docs</a> &raquo;</li>
+      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="../index.html">The Linux kernel user’s and administrator’s guide</a> &raquo;</li>
+        
+          <li><a href="index.html">Documentation for Kdump - The kexec-based Crash Dumping Solution</a> &raquo;</li>
         
       <li>Documentation for Kdump - The kexec-based Crash Dumping Solution</li>
     
@@ -209,42 +388,42 @@ ordered.</p>
 <div class="section" id="install-kexec-tools">
 <h3>Install kexec-tools<a class="headerlink" href="#install-kexec-tools" title="Permalink to this headline">¶</a></h3>
 <ol class="arabic simple">
-<li>Login as the root user.</li>
-<li>Download the kexec-tools user-space package from the following URL:</li>
+<li><p>Login as the root user.</p></li>
+<li><p>Download the kexec-tools user-space package from the following URL:</p></li>
 </ol>
 <p><a class="reference external" href="http://kernel.org/pub/linux/utils/kernel/kexec/kexec-tools.tar.gz">http://kernel.org/pub/linux/utils/kernel/kexec/kexec-tools.tar.gz</a></p>
 <p>This is a symlink to the latest version.</p>
 <p>The latest kexec-tools git tree is available at:</p>
 <ul class="simple">
-<li>git://git.kernel.org/pub/scm/utils/kernel/kexec/kexec-tools.git</li>
-<li><a class="reference external" href="http://www.kernel.org/pub/scm/utils/kernel/kexec/kexec-tools.git">http://www.kernel.org/pub/scm/utils/kernel/kexec/kexec-tools.git</a></li>
+<li><p>git://git.kernel.org/pub/scm/utils/kernel/kexec/kexec-tools.git</p></li>
+<li><p><a class="reference external" href="http://www.kernel.org/pub/scm/utils/kernel/kexec/kexec-tools.git">http://www.kernel.org/pub/scm/utils/kernel/kexec/kexec-tools.git</a></p></li>
 </ul>
 <p>There is also a gitweb interface available at
 <a class="reference external" href="http://www.kernel.org/git/?p=utils/kernel/kexec/kexec-tools.git">http://www.kernel.org/git/?p=utils/kernel/kexec/kexec-tools.git</a></p>
 <p>More information about kexec-tools can be found at
 <a class="reference external" href="http://horms.net/projects/kexec/">http://horms.net/projects/kexec/</a></p>
 <ol class="arabic" start="3">
-<li><p class="first">Unpack the tarball with the tar command, as follows:</p>
+<li><p>Unpack the tarball with the tar command, as follows:</p>
 <div class="highlight-none notranslate"><div class="highlight"><pre><span></span>tar xvpzf kexec-tools.tar.gz
 </pre></div>
 </div>
 </li>
-<li><p class="first">Change to the kexec-tools directory, as follows:</p>
+<li><p>Change to the kexec-tools directory, as follows:</p>
 <div class="highlight-none notranslate"><div class="highlight"><pre><span></span>cd kexec-tools-VERSION
 </pre></div>
 </div>
 </li>
-<li><p class="first">Configure the package, as follows:</p>
+<li><p>Configure the package, as follows:</p>
 <div class="highlight-none notranslate"><div class="highlight"><pre><span></span>./configure
 </pre></div>
 </div>
 </li>
-<li><p class="first">Compile the package, as follows:</p>
+<li><p>Compile the package, as follows:</p>
 <div class="highlight-none notranslate"><div class="highlight"><pre><span></span>make
 </pre></div>
 </div>
 </li>
-<li><p class="first">Install the package, as follows:</p>
+<li><p>Install the package, as follows:</p>
 <div class="highlight-none notranslate"><div class="highlight"><pre><span></span>make install
 </pre></div>
 </div>
@@ -255,13 +434,13 @@ ordered.</p>
 <h3>Build the system and dump-capture kernels<a class="headerlink" href="#build-the-system-and-dump-capture-kernels" title="Permalink to this headline">¶</a></h3>
 <p>There are two possible methods of using Kdump.</p>
 <ol class="arabic simple">
-<li>Build a separate custom dump-capture kernel for capturing the
-kernel core dump.</li>
-<li>Or use the system kernel binary itself as dump-capture kernel and there is
+<li><p>Build a separate custom dump-capture kernel for capturing the
+kernel core dump.</p></li>
+<li><p>Or use the system kernel binary itself as dump-capture kernel and there is
 no need to build a separate dump-capture kernel. This is possible
 only with the architectures which support a relocatable kernel. As
 of today, i386, x86_64, ppc64, ia64, arm and arm64 architectures support
-relocatable kernel.</li>
+relocatable kernel.</p></li>
 </ol>
 <p>Building a relocatable kernel is advantageous from the point of view that
 one does not have to build a second kernel for capturing the dump. But
@@ -273,12 +452,12 @@ dump-capture kernels for enabling kdump support.</p>
 <div class="section" id="system-kernel-config-options">
 <h3>System kernel config options<a class="headerlink" href="#system-kernel-config-options" title="Permalink to this headline">¶</a></h3>
 <ol class="arabic">
-<li><p class="first">Enable “kexec system call” in “Processor type and features.”:</p>
+<li><p>Enable “kexec system call” in “Processor type and features.”:</p>
 <div class="highlight-none notranslate"><div class="highlight"><pre><span></span>CONFIG_KEXEC=y
 </pre></div>
 </div>
 </li>
-<li><p class="first">Enable “sysfs file system support” in “Filesystem” -&gt; “Pseudo
+<li><p>Enable “sysfs file system support” in “Filesystem” -&gt; “Pseudo
 filesystems.” This is usually enabled by default:</p>
 <div class="highlight-none notranslate"><div class="highlight"><pre><span></span>CONFIG_SYSFS=y
 </pre></div>
@@ -291,7 +470,7 @@ systems)” is not enabled in “General Setup.” In this case, check the
 </pre></div>
 </div>
 </li>
-<li><p class="first">Enable “Compile the kernel with debug info” in “Kernel hacking.”:</p>
+<li><p>Enable “Compile the kernel with debug info” in “Kernel hacking.”:</p>
 <div class="highlight-none notranslate"><div class="highlight"><pre><span></span>CONFIG_DEBUG_INFO=Y
 </pre></div>
 </div>
@@ -304,13 +483,13 @@ and analyze a dump file.</p>
 <div class="section" id="dump-capture-kernel-config-options-arch-independent">
 <h3>Dump-capture kernel config options (Arch Independent)<a class="headerlink" href="#dump-capture-kernel-config-options-arch-independent" title="Permalink to this headline">¶</a></h3>
 <ol class="arabic">
-<li><p class="first">Enable “kernel crash dumps” support under “Processor type and
+<li><p>Enable “kernel crash dumps” support under “Processor type and
 features”:</p>
 <div class="highlight-none notranslate"><div class="highlight"><pre><span></span>CONFIG_CRASH_DUMP=y
 </pre></div>
 </div>
 </li>
-<li><p class="first">Enable “/proc/vmcore support” under “Filesystems” -&gt; “Pseudo filesystems”:</p>
+<li><p>Enable “/proc/vmcore support” under “Filesystems” -&gt; “Pseudo filesystems”:</p>
 <div class="highlight-none notranslate"><div class="highlight"><pre><span></span>CONFIG_PROC_VMCORE=y
 </pre></div>
 </div>
@@ -321,7 +500,7 @@ features”:</p>
 <div class="section" id="dump-capture-kernel-config-options-arch-dependent-i386-and-x86-64">
 <h3>Dump-capture kernel config options (Arch Dependent, i386 and x86_64)<a class="headerlink" href="#dump-capture-kernel-config-options-arch-dependent-i386-and-x86-64" title="Permalink to this headline">¶</a></h3>
 <ol class="arabic">
-<li><p class="first">On i386, enable high memory support under “Processor type and
+<li><p>On i386, enable high memory support under “Processor type and
 features”:</p>
 <div class="highlight-none notranslate"><div class="highlight"><pre><span></span>CONFIG_HIGHMEM64G=y
 </pre></div>
@@ -331,7 +510,7 @@ features”:</p>
 </pre></div>
 </div>
 </li>
-<li><p class="first">On i386 and x86_64, disable symmetric multi-processing support
+<li><p>On i386 and x86_64, disable symmetric multi-processing support
 under “Processor type and features”:</p>
 <div class="highlight-none notranslate"><div class="highlight"><pre><span></span>CONFIG_SMP=n
 </pre></div>
@@ -340,14 +519,14 @@ under “Processor type and features”:</p>
 when loading the dump-capture kernel, see section “Load the Dump-capture
 Kernel”.)</p>
 </li>
-<li><p class="first">If one wants to build and use a relocatable kernel,
+<li><p>If one wants to build and use a relocatable kernel,
 Enable “Build a relocatable kernel” support under “Processor type and
 features”:</p>
 <div class="highlight-none notranslate"><div class="highlight"><pre><span></span>CONFIG_RELOCATABLE=y
 </pre></div>
 </div>
 </li>
-<li><p class="first">Use a suitable value for “Physical address where the kernel is
+<li><p>Use a suitable value for “Physical address where the kernel is
 loaded” (under “Processor type and features”). This only appears when
 “kernel crash dumps” is enabled. A suitable value depends upon
 whether kernel is relocatable or not.</p>
@@ -362,32 +541,32 @@ start of memory region reserved for dump-capture kernel.
 Generally X is 16MB (0x1000000). So you can set
 CONFIG_PHYSICAL_START=0x1000000</p>
 </li>
-<li><p class="first">Make and install the kernel and its modules. DO NOT add this kernel
-to the boot loader configuration files.</p>
-</li>
+<li><p>Make and install the kernel and its modules. DO NOT add this kernel
+to the boot loader configuration files.</p></li>
 </ol>
 </div>
 <div class="section" id="dump-capture-kernel-config-options-arch-dependent-ppc64">
 <h3>Dump-capture kernel config options (Arch Dependent, ppc64)<a class="headerlink" href="#dump-capture-kernel-config-options-arch-dependent-ppc64" title="Permalink to this headline">¶</a></h3>
 <ol class="arabic">
-<li><p class="first">Enable “Build a kdump crash kernel” support under “Kernel” options:</p>
+<li><p>Enable “Build a kdump crash kernel” support under “Kernel” options:</p>
 <div class="highlight-none notranslate"><div class="highlight"><pre><span></span>CONFIG_CRASH_DUMP=y
 </pre></div>
 </div>
 </li>
-<li><p class="first">Enable “Build a relocatable kernel” support:</p>
+<li><p>Enable “Build a relocatable kernel” support:</p>
 <div class="highlight-none notranslate"><div class="highlight"><pre><span></span>CONFIG_RELOCATABLE=y
 </pre></div>
 </div>
 </li>
 </ol>
 <blockquote>
-<div>Make and install the kernel and its modules.</div></blockquote>
+<div><p>Make and install the kernel and its modules.</p>
+</div></blockquote>
 </div>
 <div class="section" id="dump-capture-kernel-config-options-arch-dependent-ia64">
 <h3>Dump-capture kernel config options (Arch Dependent, ia64)<a class="headerlink" href="#dump-capture-kernel-config-options-arch-dependent-ia64" title="Permalink to this headline">¶</a></h3>
 <ul>
-<li><p class="first">No specific options are required to create a dump-capture kernel
+<li><p>No specific options are required to create a dump-capture kernel
 for ia64, other than those specified in the arch independent section
 above. This means that it is possible to use the system kernel
 as a dump-capture kernel if desired.</p>
@@ -410,7 +589,7 @@ any space below the alignment point will be wasted.</p>
 <div class="section" id="dump-capture-kernel-config-options-arch-dependent-arm">
 <h3>Dump-capture kernel config options (Arch Dependent, arm)<a class="headerlink" href="#dump-capture-kernel-config-options-arch-dependent-arm" title="Permalink to this headline">¶</a></h3>
 <ul>
-<li><p class="first">To use a relocatable kernel,
+<li><p>To use a relocatable kernel,
 Enable “AUTO_ZRELADDR” support under “Boot” options:</p>
 <div class="highlight-none notranslate"><div class="highlight"><pre><span></span>AUTO_ZRELADDR=y
 </pre></div>
@@ -421,9 +600,9 @@ Enable “AUTO_ZRELADDR” support under “Boot” options:</p>
 <div class="section" id="dump-capture-kernel-config-options-arch-dependent-arm64">
 <h3>Dump-capture kernel config options (Arch Dependent, arm64)<a class="headerlink" href="#dump-capture-kernel-config-options-arch-dependent-arm64" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
-<li>Please note that kvm of the dump-capture kernel will not be enabled
+<li><p>Please note that kvm of the dump-capture kernel will not be enabled
 on non-VHE systems even if it is configured. This is because the CPU
-will not be reset to EL2 on panic.</li>
+will not be reset to EL2 on panic.</p></li>
 </ul>
 </div>
 </div>
@@ -446,20 +625,19 @@ range=start-[end]
 <p>This would mean:</p>
 <blockquote>
 <div><ol class="arabic simple">
-<li>if the RAM is smaller than 512M, then don’t reserve anything
-(this is the “rescue” case)</li>
-<li>if the RAM size is between 512M and 2G (exclusive), then reserve 64M</li>
-<li>if the RAM size is larger than 2G, then reserve 128M</li>
+<li><p>if the RAM is smaller than 512M, then don’t reserve anything
+(this is the “rescue” case)</p></li>
+<li><p>if the RAM size is between 512M and 2G (exclusive), then reserve 64M</p></li>
+<li><p>if the RAM size is larger than 2G, then reserve 128M</p></li>
 </ol>
 </div></blockquote>
 </div>
 <div class="section" id="boot-into-system-kernel">
 <h2>Boot into System Kernel<a class="headerlink" href="#boot-into-system-kernel" title="Permalink to this headline">¶</a></h2>
 <ol class="arabic">
-<li><p class="first">Update the boot loader (such as grub, yaboot, or lilo) configuration
-files as necessary.</p>
-</li>
-<li><p class="first">Boot the system kernel with the boot parameter “crashkernel=Y&#64;X”,
+<li><p>Update the boot loader (such as grub, yaboot, or lilo) configuration
+files as necessary.</p></li>
+<li><p>Boot the system kernel with the boot parameter “crashkernel=Y&#64;X”,
 where Y specifies how much memory to reserve for the dump-capture kernel
 and X specifies the beginning of this reserved memory. For example,
 “<a class="reference external" href="mailto:crashkernel=64M&#37;&#52;&#48;16M">crashkernel=64M<span>&#64;</span>16M</a>” tells the system kernel to reserve 64 MB of memory
@@ -491,38 +669,38 @@ of dump-capture kernel. Following is the summary.</p>
 <p>For i386 and x86_64:</p>
 <blockquote>
 <div><ul class="simple">
-<li>Use vmlinux if kernel is not relocatable.</li>
-<li>Use bzImage/vmlinuz if kernel is relocatable.</li>
+<li><p>Use vmlinux if kernel is not relocatable.</p></li>
+<li><p>Use bzImage/vmlinuz if kernel is relocatable.</p></li>
 </ul>
 </div></blockquote>
 <p>For ppc64:</p>
 <blockquote>
 <div><ul class="simple">
-<li>Use vmlinux</li>
+<li><p>Use vmlinux</p></li>
 </ul>
 </div></blockquote>
 <p>For ia64:</p>
 <blockquote>
 <div><ul class="simple">
-<li>Use vmlinux or vmlinuz.gz</li>
+<li><p>Use vmlinux or vmlinuz.gz</p></li>
 </ul>
 </div></blockquote>
 <p>For s390x:</p>
 <blockquote>
 <div><ul class="simple">
-<li>Use image or bzImage</li>
+<li><p>Use image or bzImage</p></li>
 </ul>
 </div></blockquote>
 <p>For arm:</p>
 <blockquote>
 <div><ul class="simple">
-<li>Use zImage</li>
+<li><p>Use zImage</p></li>
 </ul>
 </div></blockquote>
 <p>For arm64:</p>
 <blockquote>
 <div><ul class="simple">
-<li>Use vmlinux or Image</li>
+<li><p>Use vmlinux or Image</p></li>
 </ul>
 </div></blockquote>
 <p>If you are using an uncompressed vmlinux image then use following command
@@ -561,22 +739,27 @@ it should be omitted</p>
 loading dump-capture kernel.</p>
 <p>For i386, x86_64 and ia64:</p>
 <blockquote>
-<div>“1 irqpoll maxcpus=1 reset_devices”</div></blockquote>
+<div><p>“1 irqpoll maxcpus=1 reset_devices”</p>
+</div></blockquote>
 <p>For ppc64:</p>
 <blockquote>
-<div>“1 maxcpus=1 noirqdistrib reset_devices”</div></blockquote>
+<div><p>“1 maxcpus=1 noirqdistrib reset_devices”</p>
+</div></blockquote>
 <p>For s390x:</p>
 <blockquote>
-<div>“1 maxcpus=1 cgroup_disable=memory”</div></blockquote>
+<div><p>“1 maxcpus=1 cgroup_disable=memory”</p>
+</div></blockquote>
 <p>For arm:</p>
 <blockquote>
-<div>“1 maxcpus=1 reset_devices”</div></blockquote>
+<div><p>“1 maxcpus=1 reset_devices”</p>
+</div></blockquote>
 <p>For arm64:</p>
 <blockquote>
-<div>“1 maxcpus=1 reset_devices”</div></blockquote>
+<div><p>“1 maxcpus=1 reset_devices”</p>
+</div></blockquote>
 <p>Notes on loading the dump-capture kernel:</p>
 <ul>
-<li><p class="first">By default, the ELF headers are stored in ELF64 format to support
+<li><p>By default, the ELF headers are stored in ELF64 format to support
 systems with more than 4GB memory. On i386, kexec automatically checks if
 the physical RAM size exceeds the 4 GB limit and if not, uses ELF32.
 So, on non-PAE systems, ELF32 is always used.</p>
@@ -584,42 +767,35 @@ So, on non-PAE systems, ELF32 is always used.</p>
 headers. This is necessary because GDB currently cannot open vmcore files
 with ELF64 headers on 32-bit systems.</p>
 </li>
-<li><p class="first">The “irqpoll” boot parameter reduces driver initialization failures
-due to shared interrupts in the dump-capture kernel.</p>
-</li>
-<li><p class="first">You must specify &lt;root-dev&gt; in the format corresponding to the root
-device name in the output of mount command.</p>
-</li>
-<li><p class="first">Boot parameter “1” boots the dump-capture kernel into single-user
-mode without networking. If you want networking, use “3”.</p>
-</li>
-<li><p class="first">We generally don’t have to bring up a SMP kernel just to capture the
+<li><p>The “irqpoll” boot parameter reduces driver initialization failures
+due to shared interrupts in the dump-capture kernel.</p></li>
+<li><p>You must specify &lt;root-dev&gt; in the format corresponding to the root
+device name in the output of mount command.</p></li>
+<li><p>Boot parameter “1” boots the dump-capture kernel into single-user
+mode without networking. If you want networking, use “3”.</p></li>
+<li><p>We generally don’t have to bring up a SMP kernel just to capture the
 dump. Hence generally it is useful either to build a UP dump-capture
 kernel or specify maxcpus=1 option while loading dump-capture kernel.
 Note, though maxcpus always works, you had better replace it with
-nr_cpus to save memory if supported by the current ARCH, such as x86.</p>
-</li>
-<li><p class="first">You should enable multi-cpu support in dump-capture kernel if you intend
+nr_cpus to save memory if supported by the current ARCH, such as x86.</p></li>
+<li><p>You should enable multi-cpu support in dump-capture kernel if you intend
 to use multi-thread programs with it, such as parallel dump feature of
 makedumpfile. Otherwise, the multi-thread program may have a great
 performance degradation. To enable multi-cpu support, you should bring up an
 SMP dump-capture kernel and specify maxcpus/nr_cpus, disable_cpu_apicid=[X]
-options while loading it.</p>
-</li>
-<li><p class="first">For s390x there are two kdump modes: If a ELF header is specified with
+options while loading it.</p></li>
+<li><p>For s390x there are two kdump modes: If a ELF header is specified with
 the elfcorehdr= kernel parameter, it is used by the kdump kernel as it
 is done on all other architectures. If no elfcorehdr= kernel parameter is
 specified, the s390x kdump kernel dynamically creates the header. The
 second mode has the advantage that for CPU and memory hotplug, kdump has
-not to be reloaded with kexec_load().</p>
-</li>
-<li><p class="first">For s390x systems with many attached devices the “cio_ignore” kernel
+not to be reloaded with kexec_load().</p></li>
+<li><p>For s390x systems with many attached devices the “cio_ignore” kernel
 parameter should be used for the kdump kernel in order to prevent allocation
 of kernel memory for devices that are not relevant for kdump. The same
 applies to systems that use SCSI/FCP devices. In that case the
 “allow_lun_scan” zfcp module parameter should be set to zero before
-setting FCP devices online.</p>
-</li>
+setting FCP devices online.</p></li>
 </ul>
 </div>
 <div class="section" id="kernel-panic">
@@ -665,7 +841,8 @@ dump kernel.</p>
 <p>You can also use the Crash utility to analyze dump files in Kdump
 format. Crash is available on Dave Anderson’s site at the following URL:</p>
 <blockquote>
-<div><a class="reference external" href="http://people.redhat.com/~anderson/">http://people.redhat.com/~anderson/</a></div></blockquote>
+<div><p><a class="reference external" href="http://people.redhat.com/~anderson/">http://people.redhat.com/~anderson/</a></p>
+</div></blockquote>
 </div>
 <div class="section" id="trigger-kdump-on-warn">
 <h2>Trigger Kdump on WARN()<a class="headerlink" href="#trigger-kdump-on-warn" title="Permalink to this headline">¶</a></h2>
@@ -684,14 +861,13 @@ This will cause a kdump to occur at the <a class="reference internal" href="../.
 <div class="section" id="contact">
 <h2>Contact<a class="headerlink" href="#contact" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
-<li>Vivek Goyal (<a class="reference external" href="mailto:vgoyal&#37;&#52;&#48;redhat&#46;com">vgoyal<span>&#64;</span>redhat<span>&#46;</span>com</a>)</li>
-<li>Maneesh Soni (<a class="reference external" href="mailto:maneesh&#37;&#52;&#48;in&#46;ibm&#46;com">maneesh<span>&#64;</span>in<span>&#46;</span>ibm<span>&#46;</span>com</a>)</li>
+<li><p>Vivek Goyal (<a class="reference external" href="mailto:vgoyal&#37;&#52;&#48;redhat&#46;com">vgoyal<span>&#64;</span>redhat<span>&#46;</span>com</a>)</p></li>
+<li><p>Maneesh Soni (<a class="reference external" href="mailto:maneesh&#37;&#52;&#48;in&#46;ibm&#46;com">maneesh<span>&#64;</span>in<span>&#46;</span>ibm<span>&#46;</span>com</a>)</p></li>
 </ul>
 </div>
 <div class="section" id="gdb-macros">
 <h2>GDB macros<a class="headerlink" href="#gdb-macros" title="Permalink to this headline">¶</a></h2>
-<pre class="literal-block">
-#
+<pre class="literal-block">#
 # This file contains a few gdb macros (user defined commands) to extract
 # useful information from kernel crashdump (kdump) like stack traces of
 # all the processes or a particular process and trapinfo.
@@ -955,7 +1131,6 @@ end
 document dmesg
         print the kernel ring buffer
 end
-
 </pre>
 </div>
 </div>
@@ -966,16 +1141,33 @@ end
           </div>
           <footer>
   
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="vmcoreinfo.html" class="btn btn-neutral float-right" title="VMCOREINFO" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="index.html" class="btn btn-neutral float-left" title="Documentation for Kdump - The kexec-based Crash Dumping Solution" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
 
   <hr/>
 
   <div role="contentinfo">
     <p>
+        
         &copy; Copyright The kernel development community
 
     </p>
   </div>
-  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
 
 </footer>
 
@@ -986,7 +1178,6 @@ end
 
   </div>
   
-
 
   <script type="text/javascript">
       jQuery(function () {

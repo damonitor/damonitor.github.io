@@ -1,8 +1,7 @@
 
 
 <!DOCTYPE html>
-<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
-<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<html class="writer-html5" lang="en" >
 <head>
   <meta charset="utf-8">
   
@@ -12,37 +11,30 @@
   
 
   
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/theme_overrides.css" type="text/css" />
+
+  
   
   
   
 
   
-  <script type="text/javascript" src="../../_static/js/modernizr.min.js"></script>
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
   
     
-      <script type="text/javascript">
-          var DOCUMENTATION_OPTIONS = {
-              URL_ROOT:'../../',
-              VERSION:'',
-              LANGUAGE:'None',
-              COLLAPSE_INDEX:false,
-              FILE_SUFFIX:'.html',
-              HAS_SOURCE:  true,
-              SOURCELINK_SUFFIX: '.txt'
-          };
-      </script>
-        <script type="text/javascript" src="../../_static/jquery.js"></script>
-        <script type="text/javascript" src="../../_static/underscore.js"></script>
-        <script type="text/javascript" src="../../_static/doctools.js"></script>
+      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/doctools.js"></script>
+        <script src="../../_static/language_data.js"></script>
     
     <script type="text/javascript" src="../../_static/js/theme.js"></script>
 
     
-
-  
-  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
-  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="../../_static/theme_overrides.css" type="text/css" />
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
     <link rel="prev" title="Evaluation" href="eval.html" /> 
@@ -59,7 +51,7 @@
           
 
           
-            <a href="../../index.html" class="icon icon-home"> The Linux Kernel
+            <a href="../../index.html" class="icon icon-home" alt="Documentation Home"> The Linux Kernel
           
 
           
@@ -86,6 +78,7 @@
           
         </div>
 
+        
         <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
           
             
@@ -113,6 +106,7 @@
             
           
         </div>
+        
       </div>
     </nav>
 
@@ -151,7 +145,7 @@
 
   <ul class="wy-breadcrumbs">
     
-      <li><a href="../../index.html">Docs</a> &raquo;</li>
+      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
         
           <li><a href="index.html">DAMON: Data Access MONitor</a> &raquo;</li>
         
@@ -183,7 +177,7 @@ the source tree.</p>
 <h2>Structures<a class="headerlink" href="#structures" title="Permalink to this headline">¶</a></h2>
 <dl class="type">
 <dt id="c.damon_addr_range">
-struct <code class="descname">damon_addr_range</code><a class="headerlink" href="#c.damon_addr_range" title="Permalink to this definition">¶</a></dt>
+struct <code class="sig-name descname">damon_addr_range</code><a class="headerlink" href="#c.damon_addr_range" title="Permalink to this definition">¶</a></dt>
 <dd><p>Represents an address region of [<strong>start</strong>, <strong>end</strong>).</p>
 </dd></dl>
 
@@ -195,15 +189,15 @@ struct <code class="descname">damon_addr_range</code><a class="headerlink" href=
 </pre></div>
 </div>
 <p><strong>Members</strong></p>
-<dl class="docutils">
-<dt><code class="docutils literal notranslate"><span class="pre">start</span></code></dt>
-<dd>Start address of the region (inclusive).</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">end</span></code></dt>
-<dd>End address of the region (exclusive).</dd>
+<dl class="simple">
+<dt><code class="docutils literal notranslate"><span class="pre">start</span></code></dt><dd><p>Start address of the region (inclusive).</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">end</span></code></dt><dd><p>End address of the region (exclusive).</p>
+</dd>
 </dl>
 <dl class="type">
 <dt id="c.damon_region">
-struct <code class="descname">damon_region</code><a class="headerlink" href="#c.damon_region" title="Permalink to this definition">¶</a></dt>
+struct <code class="sig-name descname">damon_region</code><a class="headerlink" href="#c.damon_region" title="Permalink to this definition">¶</a></dt>
 <dd><p>Represents a monitoring target region.</p>
 </dd></dl>
 
@@ -219,19 +213,19 @@ struct <code class="descname">damon_region</code><a class="headerlink" href="#c.
 </pre></div>
 </div>
 <p><strong>Members</strong></p>
-<dl class="docutils">
-<dt><code class="docutils literal notranslate"><span class="pre">ar</span></code></dt>
-<dd>The address range of the region.</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">sampling_addr</span></code></dt>
-<dd>Address of the sample for the next access check.</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">nr_accesses</span></code></dt>
-<dd>Access frequency of this region.</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">list</span></code></dt>
-<dd>List head for siblings.</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">age</span></code></dt>
-<dd>Age of this region.</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">last_nr_accesses</span></code></dt>
-<dd>Internal value for age calculation.</dd>
+<dl class="simple">
+<dt><code class="docutils literal notranslate"><span class="pre">ar</span></code></dt><dd><p>The address range of the region.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">sampling_addr</span></code></dt><dd><p>Address of the sample for the next access check.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">nr_accesses</span></code></dt><dd><p>Access frequency of this region.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">list</span></code></dt><dd><p>List head for siblings.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">age</span></code></dt><dd><p>Age of this region.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">last_nr_accesses</span></code></dt><dd><p>Internal value for age calculation.</p>
+</dd>
 </dl>
 <p><strong>Description</strong></p>
 <p><strong>age</strong> is initially zero, increased for each aggregation interval, and reset
@@ -240,7 +234,7 @@ regions are merged into a new region, both <strong>nr_accesses</strong> and <str
 region are set as region size-weighted average of those of the two regions.</p>
 <dl class="type">
 <dt id="c.damon_target">
-struct <code class="descname">damon_target</code><a class="headerlink" href="#c.damon_target" title="Permalink to this definition">¶</a></dt>
+struct <code class="sig-name descname">damon_target</code><a class="headerlink" href="#c.damon_target" title="Permalink to this definition">¶</a></dt>
 <dd><p>Represents a monitoring target.</p>
 </dd></dl>
 
@@ -253,13 +247,13 @@ struct <code class="descname">damon_target</code><a class="headerlink" href="#c.
 </pre></div>
 </div>
 <p><strong>Members</strong></p>
-<dl class="docutils">
-<dt><code class="docutils literal notranslate"><span class="pre">id</span></code></dt>
-<dd>Unique identifier for this target.</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">regions_list</span></code></dt>
-<dd>Head of the monitoring target regions of this target.</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">list</span></code></dt>
-<dd>List head for siblings.</dd>
+<dl class="simple">
+<dt><code class="docutils literal notranslate"><span class="pre">id</span></code></dt><dd><p>Unique identifier for this target.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">regions_list</span></code></dt><dd><p>Head of the monitoring target regions of this target.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">list</span></code></dt><dd><p>List head for siblings.</p>
+</dd>
 </dl>
 <p><strong>Description</strong></p>
 <p>Each monitoring context could have multiple targets.  For example, a context
@@ -269,28 +263,28 @@ example, in the virtual address monitoring context, it could be a pidfd or
 an address of an mm_struct.</p>
 <dl class="type">
 <dt id="c.damos_action">
-enum <code class="descname">damos_action</code><a class="headerlink" href="#c.damos_action" title="Permalink to this definition">¶</a></dt>
+enum <code class="sig-name descname">damos_action</code><a class="headerlink" href="#c.damos_action" title="Permalink to this definition">¶</a></dt>
 <dd><p>Represents an action of a Data Access Monitoring-based Operation Scheme.</p>
 </dd></dl>
 
 <p><strong>Constants</strong></p>
-<dl class="docutils">
-<dt><code class="docutils literal notranslate"><span class="pre">DAMOS_WILLNEED</span></code></dt>
-<dd>Call <code class="docutils literal notranslate"><span class="pre">madvise()</span></code> for the region with MADV_WILLNEED.</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">DAMOS_COLD</span></code></dt>
-<dd>Call <code class="docutils literal notranslate"><span class="pre">madvise()</span></code> for the region with MADV_COLD.</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">DAMOS_PAGEOUT</span></code></dt>
-<dd>Call <code class="docutils literal notranslate"><span class="pre">madvise()</span></code> for the region with MADV_PAGEOUT.</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">DAMOS_HUGEPAGE</span></code></dt>
-<dd>Call <code class="docutils literal notranslate"><span class="pre">madvise()</span></code> for the region with MADV_HUGEPAGE.</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">DAMOS_NOHUGEPAGE</span></code></dt>
-<dd>Call <code class="docutils literal notranslate"><span class="pre">madvise()</span></code> for the region with MADV_NOHUGEPAGE.</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">DAMOS_STAT</span></code></dt>
-<dd>Do nothing but count the stat.</dd>
+<dl class="simple">
+<dt><code class="docutils literal notranslate"><span class="pre">DAMOS_WILLNEED</span></code></dt><dd><p>Call <code class="docutils literal notranslate"><span class="pre">madvise()</span></code> for the region with MADV_WILLNEED.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">DAMOS_COLD</span></code></dt><dd><p>Call <code class="docutils literal notranslate"><span class="pre">madvise()</span></code> for the region with MADV_COLD.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">DAMOS_PAGEOUT</span></code></dt><dd><p>Call <code class="docutils literal notranslate"><span class="pre">madvise()</span></code> for the region with MADV_PAGEOUT.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">DAMOS_HUGEPAGE</span></code></dt><dd><p>Call <code class="docutils literal notranslate"><span class="pre">madvise()</span></code> for the region with MADV_HUGEPAGE.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">DAMOS_NOHUGEPAGE</span></code></dt><dd><p>Call <code class="docutils literal notranslate"><span class="pre">madvise()</span></code> for the region with MADV_NOHUGEPAGE.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">DAMOS_STAT</span></code></dt><dd><p>Do nothing but count the stat.</p>
+</dd>
 </dl>
 <dl class="type">
 <dt id="c.damos">
-struct <code class="descname">damos</code><a class="headerlink" href="#c.damos" title="Permalink to this definition">¶</a></dt>
+struct <code class="sig-name descname">damos</code><a class="headerlink" href="#c.damos" title="Permalink to this definition">¶</a></dt>
 <dd><p>Represents a Data Access Monitoring-based Operation Scheme.</p>
 </dd></dl>
 
@@ -310,27 +304,27 @@ struct <code class="descname">damos</code><a class="headerlink" href="#c.damos" 
 </pre></div>
 </div>
 <p><strong>Members</strong></p>
-<dl class="docutils">
-<dt><code class="docutils literal notranslate"><span class="pre">min_sz_region</span></code></dt>
-<dd>Minimum size of target regions.</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">max_sz_region</span></code></dt>
-<dd>Maximum size of target regions.</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">min_nr_accesses</span></code></dt>
-<dd>Minimum <code class="docutils literal notranslate"><span class="pre">-&gt;nr_accesses</span></code> of target regions.</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">max_nr_accesses</span></code></dt>
-<dd>Maximum <code class="docutils literal notranslate"><span class="pre">-&gt;nr_accesses</span></code> of target regions.</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">min_age_region</span></code></dt>
-<dd>Minimum age of target regions.</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">max_age_region</span></code></dt>
-<dd>Maximum age of target regions.</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">action</span></code></dt>
-<dd><code class="xref c c-type docutils literal notranslate"><span class="pre">damo_action</span></code> to be applied to the target regions.</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">stat_count</span></code></dt>
-<dd>Total number of regions that this scheme is applied.</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">stat_sz</span></code></dt>
-<dd>Total size of regions that this scheme is applied.</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">list</span></code></dt>
-<dd>List head for siblings.</dd>
+<dl class="simple">
+<dt><code class="docutils literal notranslate"><span class="pre">min_sz_region</span></code></dt><dd><p>Minimum size of target regions.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">max_sz_region</span></code></dt><dd><p>Maximum size of target regions.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">min_nr_accesses</span></code></dt><dd><p>Minimum <code class="docutils literal notranslate"><span class="pre">-&gt;nr_accesses</span></code> of target regions.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">max_nr_accesses</span></code></dt><dd><p>Maximum <code class="docutils literal notranslate"><span class="pre">-&gt;nr_accesses</span></code> of target regions.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">min_age_region</span></code></dt><dd><p>Minimum age of target regions.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">max_age_region</span></code></dt><dd><p>Maximum age of target regions.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">action</span></code></dt><dd><p><code class="xref c c-type docutils literal notranslate"><span class="pre">damo_action</span></code> to be applied to the target regions.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">stat_count</span></code></dt><dd><p>Total number of regions that this scheme is applied.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">stat_sz</span></code></dt><dd><p>Total size of regions that this scheme is applied.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">list</span></code></dt><dd><p>List head for siblings.</p>
+</dd>
 </dl>
 <p><strong>Description</strong></p>
 <p>For each aggregation interval, DAMON applies <strong>action</strong> to monitoring target
@@ -338,7 +332,7 @@ regions fit in the condition and updates the statistics.  Note that both
 the minimums and the maximums are inclusive.</p>
 <dl class="type">
 <dt id="c.damon_ctx">
-struct <code class="descname">damon_ctx</code><a class="headerlink" href="#c.damon_ctx" title="Permalink to this definition">¶</a></dt>
+struct <code class="sig-name descname">damon_ctx</code><a class="headerlink" href="#c.damon_ctx" title="Permalink to this definition">¶</a></dt>
 <dd><p>Represents a context for each monitoring. This is the main interface that allows users to set the attributes and get the results of the monitoring.</p>
 </dd></dl>
 
@@ -365,55 +359,58 @@ struct <code class="descname">damon_ctx</code><a class="headerlink" href="#c.dam
   void (*prepare_access_checks)(struct damon_ctx *context);
   unsigned int (*check_accesses)(struct damon_ctx *context);
   bool (*target_valid)(struct damon_target *target);
+  void (*cleanup)(struct damon_ctx *context);
   void (*sample_cb)(struct damon_ctx *context);
   void (*aggregate_cb)(struct damon_ctx *context);
 };
 </pre></div>
 </div>
 <p><strong>Members</strong></p>
-<dl class="docutils">
-<dt><code class="docutils literal notranslate"><span class="pre">sample_interval</span></code></dt>
-<dd>The time between access samplings.</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">aggr_interval</span></code></dt>
-<dd>The time between monitor results aggregations.</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">regions_update_interval</span></code></dt>
-<dd>The time between monitor regions updates.</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">min_nr_regions</span></code></dt>
-<dd>The minimum number of monitoring regions.</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">max_nr_regions</span></code></dt>
-<dd>The maximum number of monitoring regions.</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">rbuf</span></code></dt>
-<dd>In-memory buffer for monitoring result recording.</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">rbuf_len</span></code></dt>
-<dd>The length of <strong>rbuf</strong>.</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">rbuf_offset</span></code></dt>
-<dd>The offset for next write to <strong>rbuf</strong>.</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">rfile_path</span></code></dt>
-<dd>Record file path.</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">kdamond</span></code></dt>
-<dd>Kernel thread who does the monitoring.</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">kdamond_stop</span></code></dt>
-<dd>Notifies whether kdamond should stop.</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">kdamond_lock</span></code></dt>
-<dd>Mutex for the synchronizations with <strong>kdamond</strong>.</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">targets_list</span></code></dt>
-<dd>Head of monitoring targets (<a class="reference internal" href="#c.damon_target" title="damon_target"><code class="xref c c-type docutils literal notranslate"><span class="pre">damon_target</span></code></a>) list.</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">schemes_list</span></code></dt>
-<dd>Head of schemes (<a class="reference internal" href="#c.damos" title="damos"><code class="xref c c-type docutils literal notranslate"><span class="pre">damos</span></code></a>) list.</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">init_target_regions</span></code></dt>
-<dd>Constructs initial monitoring target regions.</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">update_target_regions</span></code></dt>
-<dd>Updates monitoring target regions.</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">prepare_access_checks</span></code></dt>
-<dd>Prepares next access check of target regions.</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">check_accesses</span></code></dt>
-<dd>Checks the access of target regions.</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">target_valid</span></code></dt>
-<dd>Determine if the target is valid.</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">sample_cb</span></code></dt>
-<dd>Called for each sampling interval.</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">aggregate_cb</span></code></dt>
-<dd>Called for each aggregation interval.</dd>
+<dl class="simple">
+<dt><code class="docutils literal notranslate"><span class="pre">sample_interval</span></code></dt><dd><p>The time between access samplings.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">aggr_interval</span></code></dt><dd><p>The time between monitor results aggregations.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">regions_update_interval</span></code></dt><dd><p>The time between monitor regions updates.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">min_nr_regions</span></code></dt><dd><p>The minimum number of monitoring regions.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">max_nr_regions</span></code></dt><dd><p>The maximum number of monitoring regions.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">rbuf</span></code></dt><dd><p>In-memory buffer for monitoring result recording.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">rbuf_len</span></code></dt><dd><p>The length of <strong>rbuf</strong>.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">rbuf_offset</span></code></dt><dd><p>The offset for next write to <strong>rbuf</strong>.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">rfile_path</span></code></dt><dd><p>Record file path.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">kdamond</span></code></dt><dd><p>Kernel thread who does the monitoring.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">kdamond_stop</span></code></dt><dd><p>Notifies whether kdamond should stop.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">kdamond_lock</span></code></dt><dd><p>Mutex for the synchronizations with <strong>kdamond</strong>.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">targets_list</span></code></dt><dd><p>Head of monitoring targets (<a class="reference internal" href="#c.damon_target" title="damon_target"><code class="xref c c-type docutils literal notranslate"><span class="pre">damon_target</span></code></a>) list.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">schemes_list</span></code></dt><dd><p>Head of schemes (<a class="reference internal" href="#c.damos" title="damos"><code class="xref c c-type docutils literal notranslate"><span class="pre">damos</span></code></a>) list.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">init_target_regions</span></code></dt><dd><p>Constructs initial monitoring target regions.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">update_target_regions</span></code></dt><dd><p>Updates monitoring target regions.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">prepare_access_checks</span></code></dt><dd><p>Prepares next access check of target regions.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">check_accesses</span></code></dt><dd><p>Checks the access of target regions.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">target_valid</span></code></dt><dd><p>Determine if the target is valid.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">cleanup</span></code></dt><dd><p>Cleans up the context.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">sample_cb</span></code></dt><dd><p>Called for each sampling interval.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">aggregate_cb</span></code></dt><dd><p>Called for each aggregation interval.</p>
+</dd>
 </dl>
 <p><strong>Description</strong></p>
 <p>For each <strong>sample_interval</strong>, DAMON checks whether each region is accessed or
@@ -424,8 +421,8 @@ in case of virtual memory monitoring) and applies the changes for each
 <strong>regions_update_interval</strong>.  All time intervals are in micro-seconds.</p>
 <p>If <strong>rbuf</strong>, <strong>rbuf_len</strong>, and <strong>rfile_path</strong> are set, the monitored results are
 automatically stored in <strong>rfile_path</strong> file.</p>
-<p>For each monitoring request (<a class="reference internal" href="#c.damon_start" title="damon_start"><code class="xref c c-func docutils literal notranslate"><span class="pre">damon_start()</span></code></a>), a kernel thread for the
-monitoring is created.  The pointer to the thread is stored in <strong>kdamond</strong>.</p>
+<p>For each monitoring context, one kernel thread for the monitoring is
+created.  The pointer to the thread is stored in <strong>kdamond</strong>.</p>
 <p>Once started, the monitoring thread runs until explicitly required to be
 terminated or every monitoring target is invalid.  The validity of the
 targets is checked via the <strong>target_valid</strong> callback.  The termination can also
@@ -452,7 +449,9 @@ prepare for the next access check.
 <strong>check_accesses</strong> should check the accesses to each region that made after the
 last preparation and update the <cite>-&gt;nr_accesses</cite> of each region.
 <strong>target_valid</strong> should check whether the target is still valid for the
-monitoring.</p>
+monitoring.
+<strong>cleanup</strong> is called from <strong>kdamond</strong> just before its termination.  After this
+call, only <strong>kdamond_lock</strong> and <strong>kdamond</strong> will be touched.</p>
 <p><strong>sample_cb</strong> and <strong>aggregate_cb</strong> are called from <strong>kdamond</strong> for each of the
 sampling intervals and aggregation intervals, respectively.  Therefore,
 users can safely access to the monitoring results via <strong>targets_list</strong> without
@@ -463,44 +462,54 @@ recommended to use these callback for the accesses to the results.</p>
 <h2>Functions<a class="headerlink" href="#functions" title="Permalink to this headline">¶</a></h2>
 <dl class="function">
 <dt id="c.damon_start">
-int <code class="descname">damon_start</code><span class="sig-paren">(</span>struct <a class="reference internal" href="#c.damon_ctx" title="damon_ctx">damon_ctx</a> *<em>&nbsp;ctx</em><span class="sig-paren">)</span><a class="headerlink" href="#c.damon_start" title="Permalink to this definition">¶</a></dt>
-<dd><p>Starts monitoring with given context.</p>
+int <code class="sig-name descname">damon_start</code><span class="sig-paren">(</span>struct <a class="reference internal" href="#c.damon_ctx" title="damon_ctx">damon_ctx</a> *<em> ctxs</em>, int<em> nr_ctxs</em><span class="sig-paren">)</span><a class="headerlink" href="#c.damon_start" title="Permalink to this definition">¶</a></dt>
+<dd><p>Starts the monitorings for a given group of contexts.</p>
 </dd></dl>
 
 <p><strong>Parameters</strong></p>
-<dl class="docutils">
-<dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">damon_ctx</span> <span class="pre">*</span> <span class="pre">ctx</span></code></dt>
-<dd>monitoring context</dd>
+<dl class="simple">
+<dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">damon_ctx</span> <span class="pre">*</span> <span class="pre">ctxs</span></code></dt><dd><p>an array of the contexts to start monitoring</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">int</span> <span class="pre">nr_ctxs</span></code></dt><dd><p>size of <strong>ctxs</strong></p>
+</dd>
 </dl>
+<p><strong>Description</strong></p>
+<p>This function starts a group of monitoring threads for a group of monitoring
+contexts.  One thread per each context is created and run concurrently.  The
+caller should handle synchronization between the threads by itself.  If a
+group of threads that created by other ‘<a class="reference internal" href="#c.damon_start" title="damon_start"><code class="xref c c-func docutils literal notranslate"><span class="pre">damon_start()</span></code></a>’ call is currently
+running, this function does nothing but returns -EBUSY.</p>
 <p><strong>Return</strong></p>
 <p>0 on success, negative error code otherwise.</p>
 <dl class="function">
 <dt id="c.damon_stop">
-int <code class="descname">damon_stop</code><span class="sig-paren">(</span>struct <a class="reference internal" href="#c.damon_ctx" title="damon_ctx">damon_ctx</a> *<em>&nbsp;ctx</em><span class="sig-paren">)</span><a class="headerlink" href="#c.damon_stop" title="Permalink to this definition">¶</a></dt>
-<dd><p>Stops monitoring of given context.</p>
+int <code class="sig-name descname">damon_stop</code><span class="sig-paren">(</span>struct <a class="reference internal" href="#c.damon_ctx" title="damon_ctx">damon_ctx</a> *<em> ctxs</em>, int<em> nr_ctxs</em><span class="sig-paren">)</span><a class="headerlink" href="#c.damon_stop" title="Permalink to this definition">¶</a></dt>
+<dd><p>Stops the monitorings for a given group of contexts.</p>
 </dd></dl>
 
 <p><strong>Parameters</strong></p>
-<dl class="docutils">
-<dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">damon_ctx</span> <span class="pre">*</span> <span class="pre">ctx</span></code></dt>
-<dd>monitoring context</dd>
+<dl class="simple">
+<dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">damon_ctx</span> <span class="pre">*</span> <span class="pre">ctxs</span></code></dt><dd><p>an array of the contexts to stop monitoring</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">int</span> <span class="pre">nr_ctxs</span></code></dt><dd><p>size of <strong>ctxs</strong></p>
+</dd>
 </dl>
 <p><strong>Return</strong></p>
 <p>0 on success, negative error code otherwise.</p>
 <dl class="function">
 <dt id="c.damon_set_schemes">
-int <code class="descname">damon_set_schemes</code><span class="sig-paren">(</span>struct <a class="reference internal" href="#c.damon_ctx" title="damon_ctx">damon_ctx</a> *<em>&nbsp;ctx</em>, struct <a class="reference internal" href="#c.damos" title="damos">damos</a> **<em>&nbsp;schemes</em>, ssize_t<em>&nbsp;nr_schemes</em><span class="sig-paren">)</span><a class="headerlink" href="#c.damon_set_schemes" title="Permalink to this definition">¶</a></dt>
+int <code class="sig-name descname">damon_set_schemes</code><span class="sig-paren">(</span>struct <a class="reference internal" href="#c.damon_ctx" title="damon_ctx">damon_ctx</a> *<em> ctx</em>, struct <a class="reference internal" href="#c.damos" title="damos">damos</a> **<em> schemes</em>, ssize_t<em> nr_schemes</em><span class="sig-paren">)</span><a class="headerlink" href="#c.damon_set_schemes" title="Permalink to this definition">¶</a></dt>
 <dd><p>Set data access monitoring based operation schemes.</p>
 </dd></dl>
 
 <p><strong>Parameters</strong></p>
-<dl class="docutils">
-<dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">damon_ctx</span> <span class="pre">*</span> <span class="pre">ctx</span></code></dt>
-<dd>monitoring context</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">damos</span> <span class="pre">**</span> <span class="pre">schemes</span></code></dt>
-<dd>array of the schemes</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">ssize_t</span> <span class="pre">nr_schemes</span></code></dt>
-<dd>number of entries in <strong>schemes</strong></dd>
+<dl class="simple">
+<dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">damon_ctx</span> <span class="pre">*</span> <span class="pre">ctx</span></code></dt><dd><p>monitoring context</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">damos</span> <span class="pre">**</span> <span class="pre">schemes</span></code></dt><dd><p>array of the schemes</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">ssize_t</span> <span class="pre">nr_schemes</span></code></dt><dd><p>number of entries in <strong>schemes</strong></p>
+</dd>
 </dl>
 <p><strong>Description</strong></p>
 <p>This function should not be called while the kdamond of the context is
@@ -509,18 +518,18 @@ running.</p>
 <p>0 if success, or negative error code otherwise.</p>
 <dl class="function">
 <dt id="c.damon_set_targets">
-int <code class="descname">damon_set_targets</code><span class="sig-paren">(</span>struct <a class="reference internal" href="#c.damon_ctx" title="damon_ctx">damon_ctx</a> *<em>&nbsp;ctx</em>, unsigned long *<em>&nbsp;ids</em>, ssize_t<em>&nbsp;nr_ids</em><span class="sig-paren">)</span><a class="headerlink" href="#c.damon_set_targets" title="Permalink to this definition">¶</a></dt>
+int <code class="sig-name descname">damon_set_targets</code><span class="sig-paren">(</span>struct <a class="reference internal" href="#c.damon_ctx" title="damon_ctx">damon_ctx</a> *<em> ctx</em>, unsigned long *<em> ids</em>, ssize_t<em> nr_ids</em><span class="sig-paren">)</span><a class="headerlink" href="#c.damon_set_targets" title="Permalink to this definition">¶</a></dt>
 <dd><p>Set monitoring targets.</p>
 </dd></dl>
 
 <p><strong>Parameters</strong></p>
-<dl class="docutils">
-<dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">damon_ctx</span> <span class="pre">*</span> <span class="pre">ctx</span></code></dt>
-<dd>monitoring context</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">unsigned</span> <span class="pre">long</span> <span class="pre">*</span> <span class="pre">ids</span></code></dt>
-<dd>array of target ids</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">ssize_t</span> <span class="pre">nr_ids</span></code></dt>
-<dd>number of entries in <strong>ids</strong></dd>
+<dl class="simple">
+<dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">damon_ctx</span> <span class="pre">*</span> <span class="pre">ctx</span></code></dt><dd><p>monitoring context</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">unsigned</span> <span class="pre">long</span> <span class="pre">*</span> <span class="pre">ids</span></code></dt><dd><p>array of target ids</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">ssize_t</span> <span class="pre">nr_ids</span></code></dt><dd><p>number of entries in <strong>ids</strong></p>
+</dd>
 </dl>
 <p><strong>Description</strong></p>
 <p>This function should not be called while the kdamond is running.</p>
@@ -528,18 +537,18 @@ int <code class="descname">damon_set_targets</code><span class="sig-paren">(</sp
 <p>0 on success, negative error code otherwise.</p>
 <dl class="function">
 <dt id="c.damon_set_recording">
-int <code class="descname">damon_set_recording</code><span class="sig-paren">(</span>struct <a class="reference internal" href="#c.damon_ctx" title="damon_ctx">damon_ctx</a> *<em>&nbsp;ctx</em>, unsigned int<em>&nbsp;rbuf_len</em>, char *<em>&nbsp;rfile_path</em><span class="sig-paren">)</span><a class="headerlink" href="#c.damon_set_recording" title="Permalink to this definition">¶</a></dt>
+int <code class="sig-name descname">damon_set_recording</code><span class="sig-paren">(</span>struct <a class="reference internal" href="#c.damon_ctx" title="damon_ctx">damon_ctx</a> *<em> ctx</em>, unsigned int<em> rbuf_len</em>, char *<em> rfile_path</em><span class="sig-paren">)</span><a class="headerlink" href="#c.damon_set_recording" title="Permalink to this definition">¶</a></dt>
 <dd><p>Set attributes for the recording.</p>
 </dd></dl>
 
 <p><strong>Parameters</strong></p>
-<dl class="docutils">
-<dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">damon_ctx</span> <span class="pre">*</span> <span class="pre">ctx</span></code></dt>
-<dd>target kdamond context</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">unsigned</span> <span class="pre">int</span> <span class="pre">rbuf_len</span></code></dt>
-<dd>length of the result buffer</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">char</span> <span class="pre">*</span> <span class="pre">rfile_path</span></code></dt>
-<dd>path to the monitor result files</dd>
+<dl class="simple">
+<dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">damon_ctx</span> <span class="pre">*</span> <span class="pre">ctx</span></code></dt><dd><p>target kdamond context</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">unsigned</span> <span class="pre">int</span> <span class="pre">rbuf_len</span></code></dt><dd><p>length of the result buffer</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">char</span> <span class="pre">*</span> <span class="pre">rfile_path</span></code></dt><dd><p>path to the monitor result files</p>
+</dd>
 </dl>
 <p><strong>Description</strong></p>
 <p>Setting ‘rbuf_len’ 0 disables recording.</p>
@@ -548,24 +557,24 @@ int <code class="descname">damon_set_recording</code><span class="sig-paren">(</
 <p>0 on success, negative error code otherwise.</p>
 <dl class="function">
 <dt id="c.damon_set_attrs">
-int <code class="descname">damon_set_attrs</code><span class="sig-paren">(</span>struct <a class="reference internal" href="#c.damon_ctx" title="damon_ctx">damon_ctx</a> *<em>&nbsp;ctx</em>, unsigned long<em>&nbsp;sample_int</em>, unsigned long<em>&nbsp;aggr_int</em>, unsigned long<em>&nbsp;regions_update_int</em>, unsigned long<em>&nbsp;min_nr_reg</em>, unsigned long<em>&nbsp;max_nr_reg</em><span class="sig-paren">)</span><a class="headerlink" href="#c.damon_set_attrs" title="Permalink to this definition">¶</a></dt>
+int <code class="sig-name descname">damon_set_attrs</code><span class="sig-paren">(</span>struct <a class="reference internal" href="#c.damon_ctx" title="damon_ctx">damon_ctx</a> *<em> ctx</em>, unsigned long<em> sample_int</em>, unsigned long<em> aggr_int</em>, unsigned long<em> regions_update_int</em>, unsigned long<em> min_nr_reg</em>, unsigned long<em> max_nr_reg</em><span class="sig-paren">)</span><a class="headerlink" href="#c.damon_set_attrs" title="Permalink to this definition">¶</a></dt>
 <dd><p>Set attributes for the monitoring.</p>
 </dd></dl>
 
 <p><strong>Parameters</strong></p>
-<dl class="docutils">
-<dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">damon_ctx</span> <span class="pre">*</span> <span class="pre">ctx</span></code></dt>
-<dd>monitoring context</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">unsigned</span> <span class="pre">long</span> <span class="pre">sample_int</span></code></dt>
-<dd>time interval between samplings</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">unsigned</span> <span class="pre">long</span> <span class="pre">aggr_int</span></code></dt>
-<dd>time interval between aggregations</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">unsigned</span> <span class="pre">long</span> <span class="pre">regions_update_int</span></code></dt>
-<dd>time interval between target regions update</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">unsigned</span> <span class="pre">long</span> <span class="pre">min_nr_reg</span></code></dt>
-<dd>minimal number of regions</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">unsigned</span> <span class="pre">long</span> <span class="pre">max_nr_reg</span></code></dt>
-<dd>maximum number of regions</dd>
+<dl class="simple">
+<dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">damon_ctx</span> <span class="pre">*</span> <span class="pre">ctx</span></code></dt><dd><p>monitoring context</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">unsigned</span> <span class="pre">long</span> <span class="pre">sample_int</span></code></dt><dd><p>time interval between samplings</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">unsigned</span> <span class="pre">long</span> <span class="pre">aggr_int</span></code></dt><dd><p>time interval between aggregations</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">unsigned</span> <span class="pre">long</span> <span class="pre">regions_update_int</span></code></dt><dd><p>time interval between target regions update</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">unsigned</span> <span class="pre">long</span> <span class="pre">min_nr_reg</span></code></dt><dd><p>minimal number of regions</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">unsigned</span> <span class="pre">long</span> <span class="pre">max_nr_reg</span></code></dt><dd><p>maximum number of regions</p>
+</dd>
 </dl>
 <p><strong>Description</strong></p>
 <p>This function should not be called while the kdamond is running.
@@ -593,11 +602,19 @@ Every time interval is in micro-seconds.</p>
 
   <div role="contentinfo">
     <p>
+        
         &copy; Copyright The kernel development community
 
     </p>
   </div>
-  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
 
 </footer>
 
@@ -608,7 +625,6 @@ Every time interval is in micro-seconds.</p>
 
   </div>
   
-
 
   <script type="text/javascript">
       jQuery(function () {

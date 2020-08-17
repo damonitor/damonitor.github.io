@@ -1,8 +1,7 @@
 
 
 <!DOCTYPE html>
-<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
-<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<html class="writer-html5" lang="en" >
 <head>
   <meta charset="utf-8">
   
@@ -12,37 +11,30 @@
   
 
   
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/theme_overrides.css" type="text/css" />
+
+  
   
   
   
 
   
-  <script type="text/javascript" src="../../../_static/js/modernizr.min.js"></script>
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
   
     
-      <script type="text/javascript">
-          var DOCUMENTATION_OPTIONS = {
-              URL_ROOT:'../../../',
-              VERSION:'',
-              LANGUAGE:'None',
-              COLLAPSE_INDEX:false,
-              FILE_SUFFIX:'.html',
-              HAS_SOURCE:  true,
-              SOURCELINK_SUFFIX: '.txt'
-          };
-      </script>
-        <script type="text/javascript" src="../../../_static/jquery.js"></script>
-        <script type="text/javascript" src="../../../_static/underscore.js"></script>
-        <script type="text/javascript" src="../../../_static/doctools.js"></script>
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+        <script src="../../../_static/language_data.js"></script>
     
     <script type="text/javascript" src="../../../_static/js/theme.js"></script>
 
     
-
-  
-  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
-  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="../../../_static/theme_overrides.css" type="text/css" />
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" />
     <link rel="next" title="Detailed Usages" href="usage.html" />
@@ -60,7 +52,7 @@
           
 
           
-            <a href="../../../index.html" class="icon icon-home"> The Linux Kernel
+            <a href="../../../index.html" class="icon icon-home" alt="Documentation Home"> The Linux Kernel
           
 
           
@@ -87,6 +79,7 @@
           
         </div>
 
+        
         <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
           
             
@@ -120,6 +113,7 @@
             
           
         </div>
+        
       </div>
     </nav>
 
@@ -158,7 +152,7 @@
 
   <ul class="wy-breadcrumbs">
     
-      <li><a href="../../../index.html">Docs</a> &raquo;</li>
+      <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
         
           <li><a href="index.html">Monitoring Data Accesses</a> &raquo;</li>
         
@@ -192,24 +186,24 @@ are assumed to already read <a class="reference internal" href="start.html"><spa
 you should first guess how much improvements you could get using DAMON.  If
 some of below conditions match your situation, you could consider using DAMON.</p>
 <ul class="simple">
-<li><em>Low IPC and High Cache Miss Ratios.</em>  Low IPC means most of the CPU time is
+<li><p><em>Low IPC and High Cache Miss Ratios.</em>  Low IPC means most of the CPU time is
 spent waiting for the completion of time-consuming operations such as memory
 access, while high cache miss ratios mean the caches don’t help it well.
 DAMON is not for cache level optimization, but DRAM level.  However,
 improving DRAM management will also help this case by reducing the memory
-operation latency.</li>
-<li><em>Memory Over-commitment and Unknown Users.</em>  If you are doing memory
+operation latency.</p></li>
+<li><p><em>Memory Over-commitment and Unknown Users.</em>  If you are doing memory
 overcommitment and you cannot control every user of your system, a memory
 bank run could happen at any time.  You can estimate when it will happen
 based on DAMON’s monitoring results and act earlier to avoid or deal better
-with the crisis.</li>
-<li><em>Frequent Memory Pressure.</em>  Frequent memory pressure means your system has
+with the crisis.</p></li>
+<li><p><em>Frequent Memory Pressure.</em>  Frequent memory pressure means your system has
 wrong configurations or memory hogs.  DAMON will help you find the right
-configuration and/or the criminals.</li>
-<li><em>Heterogeneous Memory System.</em>  If your system is utilizing memory devices
+configuration and/or the criminals.</p></li>
+<li><p><em>Heterogeneous Memory System.</em>  If your system is utilizing memory devices
 that placed between DRAM and traditional hard disks, such as non-volatile
 memory or fast SSDs, DAMON could help you utilizing the devices more
-efficiently.</li>
+efficiently.</p></li>
 </ul>
 </div>
 <div class="section" id="profile">
@@ -256,26 +250,26 @@ working set size spikes up to 180 MiB, but keeps smaller than 50 MiB for more
 than 95% of the time.  Even though you give only 50 MiB of memory space to the
 workload, it will work well for 95% of the time.  Meanwhile, you can save the
 130 MiB of memory space.</p>
-<table border="1" class="docutils">
+<table class="docutils align-default">
 <colgroup>
-<col width="33%" />
-<col width="33%" />
-<col width="33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
 </colgroup>
-<tbody valign="top">
+<tbody>
 <tr class="row-odd"><td><div class="figure align-center" id="id12">
 <img alt="the access pattern in heatmap format" src="../../../_images/freqmine_heatmap.png" />
-<p class="caption"><span class="caption-text">The access pattern in heatmap format.</span></p>
+<p class="caption"><span class="caption-text">The access pattern in heatmap format.</span><a class="headerlink" href="#id12" title="Permalink to this image">¶</a></p>
 </div>
 </td>
 <td><div class="figure align-center" id="id13">
 <img alt="the distribution of working set size" src="../../../_images/freqmine_wss_sz.png" />
-<p class="caption"><span class="caption-text">The distribution of working set size.</span></p>
+<p class="caption"><span class="caption-text">The distribution of working set size.</span><a class="headerlink" href="#id13" title="Permalink to this image">¶</a></p>
 </div>
 </td>
 <td><div class="figure align-center" id="id14">
 <img alt="the chronological changes of working set size" src="../../../_images/freqmine_wss_time.png" />
-<p class="caption"><span class="caption-text">The chronological changes of working set size.</span></p>
+<p class="caption"><span class="caption-text">The chronological changes of working set size.</span><a class="headerlink" href="#id14" title="Permalink to this image">¶</a></p>
 </div>
 </td>
 </tr>
@@ -294,32 +288,32 @@ object in the main memory by invoking <code class="docutils literal notranslate"
 <code class="docutils literal notranslate"><span class="pre">MADV_WILLNEED</span></code>.  Or, you could proactively evict the cold object using
 <code class="docutils literal notranslate"><span class="pre">madvise()</span></code> with <code class="docutils literal notranslate"><span class="pre">MADV_COLD</span></code> or <code class="docutils literal notranslate"><span class="pre">MADV_PAGEOUT</span></code>.  Using both together
 would be also worthy.</p>
-<p>A research work <a class="footnote-reference" href="#id7" id="id1">[1]</a> using the <code class="docutils literal notranslate"><span class="pre">mlock()</span></code> achieved up to 2.55x performance
+<p>A research work <a class="footnote-reference brackets" href="#id7" id="id1">1</a> using the <code class="docutils literal notranslate"><span class="pre">mlock()</span></code> achieved up to 2.55x performance
 speedup.</p>
 <p>Let’s see another realistic example access pattern for this kind of
 optimizations.  Below are the visualized access patterns of streamcluster
 workload in PARSEC3 benchmark suite.  We can easily identify the 100 MiB sized
 hot object.</p>
-<table border="1" class="docutils">
+<table class="docutils align-default">
 <colgroup>
-<col width="33%" />
-<col width="33%" />
-<col width="33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
 </colgroup>
-<tbody valign="top">
+<tbody>
 <tr class="row-odd"><td><div class="figure align-center" id="id15">
 <img alt="the access pattern in heatmap format" src="../../../_images/streamcluster_heatmap.png" />
-<p class="caption"><span class="caption-text">The access pattern in heatmap format.</span></p>
+<p class="caption"><span class="caption-text">The access pattern in heatmap format.</span><a class="headerlink" href="#id15" title="Permalink to this image">¶</a></p>
 </div>
 </td>
 <td><div class="figure align-center" id="id16">
 <img alt="the distribution of working set size" src="../../../_images/streamcluster_wss_sz.png" />
-<p class="caption"><span class="caption-text">The distribution of working set size.</span></p>
+<p class="caption"><span class="caption-text">The distribution of working set size.</span><a class="headerlink" href="#id16" title="Permalink to this image">¶</a></p>
 </div>
 </td>
 <td><div class="figure align-center" id="id17">
 <img alt="the chronological changes of working set size" src="../../../_images/streamcluster_wss_time.png" />
-<p class="caption"><span class="caption-text">The chronological changes of working set size.</span></p>
+<p class="caption"><span class="caption-text">The chronological changes of working set size.</span><a class="headerlink" href="#id17" title="Permalink to this image">¶</a></p>
 </div>
 </td>
 </tr>
@@ -345,42 +339,29 @@ option.</p>
 <div class="section" id="reference-practices">
 <h2>Reference Practices<a class="headerlink" href="#reference-practices" title="Permalink to this headline">¶</a></h2>
 <p>Referencing previously done successful practices could help you getting the
-sense for this kind of optimizations.  There is an academic paper <a class="footnote-reference" href="#id7" id="id2">[1]</a>
+sense for this kind of optimizations.  There is an academic paper <a class="footnote-reference brackets" href="#id7" id="id2">1</a>
 reporting the visualized access pattern and manual <a class="reference internal" href="#program-modification">Program
 Modification</a> results for a number of realistic workloads.  You can also get
-the visualized access patterns <a class="footnote-reference" href="#id9" id="id3">[3]</a> <a class="footnote-reference" href="#id10" id="id4">[4]</a> <a class="footnote-reference" href="#id11" id="id5">[5]</a> and automated DAMON-based memory
+the visualized access patterns <a class="footnote-reference brackets" href="#id9" id="id3">3</a> <a class="footnote-reference brackets" href="#id10" id="id4">4</a> <a class="footnote-reference brackets" href="#id11" id="id5">5</a> and automated DAMON-based memory
 operations results for other realistic workloads that collected with latest
-version of DAMON <a class="footnote-reference" href="#id8" id="id6">[2]</a> .</p>
-<table class="docutils footnote" frame="void" id="id7" rules="none">
-<colgroup><col class="label" /><col /></colgroup>
-<tbody valign="top">
-<tr><td class="label">[1]</td><td><em>(<a class="fn-backref" href="#id1">1</a>, <a class="fn-backref" href="#id2">2</a>)</em> <a class="reference external" href="https://dl.acm.org/doi/10.1145/3366626.3368125">https://dl.acm.org/doi/10.1145/3366626.3368125</a></td></tr>
-</tbody>
-</table>
-<table class="docutils footnote" frame="void" id="id8" rules="none">
-<colgroup><col class="label" /><col /></colgroup>
-<tbody valign="top">
-<tr><td class="label"><a class="fn-backref" href="#id6">[2]</a></td><td><a class="reference external" href="https://damonitor.github.io/test/result/perf/latest/html/">https://damonitor.github.io/test/result/perf/latest/html/</a></td></tr>
-</tbody>
-</table>
-<table class="docutils footnote" frame="void" id="id9" rules="none">
-<colgroup><col class="label" /><col /></colgroup>
-<tbody valign="top">
-<tr><td class="label"><a class="fn-backref" href="#id3">[3]</a></td><td><a class="reference external" href="https://damonitor.github.io/test/result/visual/latest/rec.heatmap.1.png.html">https://damonitor.github.io/test/result/visual/latest/rec.heatmap.1.png.html</a></td></tr>
-</tbody>
-</table>
-<table class="docutils footnote" frame="void" id="id10" rules="none">
-<colgroup><col class="label" /><col /></colgroup>
-<tbody valign="top">
-<tr><td class="label"><a class="fn-backref" href="#id4">[4]</a></td><td><a class="reference external" href="https://damonitor.github.io/test/result/visual/latest/rec.wss_sz.png.html">https://damonitor.github.io/test/result/visual/latest/rec.wss_sz.png.html</a></td></tr>
-</tbody>
-</table>
-<table class="docutils footnote" frame="void" id="id11" rules="none">
-<colgroup><col class="label" /><col /></colgroup>
-<tbody valign="top">
-<tr><td class="label"><a class="fn-backref" href="#id5">[5]</a></td><td><a class="reference external" href="https://damonitor.github.io/test/result/visual/latest/rec.wss_time.png.html">https://damonitor.github.io/test/result/visual/latest/rec.wss_time.png.html</a></td></tr>
-</tbody>
-</table>
+version of DAMON <a class="footnote-reference brackets" href="#id8" id="id6">2</a> .</p>
+<dl class="footnote brackets">
+<dt class="label" id="id7"><span class="brackets">1</span><span class="fn-backref">(<a href="#id1">1</a>,<a href="#id2">2</a>)</span></dt>
+<dd><p><a class="reference external" href="https://dl.acm.org/doi/10.1145/3366626.3368125">https://dl.acm.org/doi/10.1145/3366626.3368125</a></p>
+</dd>
+<dt class="label" id="id8"><span class="brackets"><a class="fn-backref" href="#id6">2</a></span></dt>
+<dd><p><a class="reference external" href="https://damonitor.github.io/test/result/perf/latest/html/">https://damonitor.github.io/test/result/perf/latest/html/</a></p>
+</dd>
+<dt class="label" id="id9"><span class="brackets"><a class="fn-backref" href="#id3">3</a></span></dt>
+<dd><p><a class="reference external" href="https://damonitor.github.io/test/result/visual/latest/rec.heatmap.1.png.html">https://damonitor.github.io/test/result/visual/latest/rec.heatmap.1.png.html</a></p>
+</dd>
+<dt class="label" id="id10"><span class="brackets"><a class="fn-backref" href="#id4">4</a></span></dt>
+<dd><p><a class="reference external" href="https://damonitor.github.io/test/result/visual/latest/rec.wss_sz.png.html">https://damonitor.github.io/test/result/visual/latest/rec.wss_sz.png.html</a></p>
+</dd>
+<dt class="label" id="id11"><span class="brackets"><a class="fn-backref" href="#id5">5</a></span></dt>
+<dd><p><a class="reference external" href="https://damonitor.github.io/test/result/visual/latest/rec.wss_time.png.html">https://damonitor.github.io/test/result/visual/latest/rec.wss_time.png.html</a></p>
+</dd>
+</dl>
 </div>
 </div>
 
@@ -404,11 +385,19 @@ version of DAMON <a class="footnote-reference" href="#id8" id="id6">[2]</a> .</p
 
   <div role="contentinfo">
     <p>
+        
         &copy; Copyright The kernel development community
 
     </p>
   </div>
-  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
 
 </footer>
 
@@ -419,7 +408,6 @@ version of DAMON <a class="footnote-reference" href="#id8" id="id6">[2]</a> .</p
 
   </div>
   
-
 
   <script type="text/javascript">
       jQuery(function () {
