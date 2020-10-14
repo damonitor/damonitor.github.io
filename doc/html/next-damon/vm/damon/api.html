@@ -61,7 +61,7 @@
             
             
               <div class="version">
-                5.8.0
+                5.9.0
               </div>
             
           
@@ -251,6 +251,59 @@ for virtual memory address spaces could have multiple target processes.  The
 example, in the virtual address monitoring context, it could be a pidfd or
 an address of an mm_struct.</p>
 <dl class="type">
+<dt id="c.damon_primitive">
+struct <code class="sig-name descname">damon_primitive</code><a class="headerlink" href="#c.damon_primitive" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p><strong>Definition</strong></p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>struct damon_primitive {
+  void (*init_target_regions)(struct damon_ctx *context);
+  void (*update_target_regions)(struct damon_ctx *context);
+  void (*prepare_access_checks)(struct damon_ctx *context);
+  unsigned int (*check_accesses)(struct damon_ctx *context);
+  bool (*target_valid)(struct damon_target *target);
+  void (*cleanup)(struct damon_ctx *context);
+};
+</pre></div>
+</div>
+<p><strong>Members</strong></p>
+<dl class="simple">
+<dt><code class="docutils literal notranslate"><span class="pre">init_target_regions</span></code></dt><dd><p>Constructs initial monitoring target regions.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">update_target_regions</span></code></dt><dd><p>Updates monitoring target regions.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">prepare_access_checks</span></code></dt><dd><p>Prepares next access check of target regions.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">check_accesses</span></code></dt><dd><p>Checks the access of target regions.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">target_valid</span></code></dt><dd><p>Determine if the target is valid.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">cleanup</span></code></dt><dd><p>Cleans up the context.</p>
+</dd>
+</dl>
+<p><strong>Description</strong></p>
+<p>DAMON can be extended for various address spaces and usages.  For this,
+users should register the low level primitives for their target address
+space and usecase via the <a class="reference internal" href="#c.damon_ctx" title="damon_ctx"><code class="xref c c-type docutils literal notranslate"><span class="pre">damon_ctx.primitive</span></code></a>.  Then, the monitoring thread
+calls <strong>init_target_regions</strong> before starting the monitoring,
+<strong>update_target_regions</strong> for each <strong>regions_update_interval</strong>, and
+<strong>prepare_access_checks</strong>, <strong>check_accesses</strong>, and <strong>target_valid</strong> for each
+<strong>sample_interval</strong>.</p>
+<p><strong>init_target_regions</strong> should construct proper monitoring target regions and
+link those to the DAMON context struct.
+<strong>update_target_regions</strong> should update the monitoring target regions for
+current status.
+<strong>prepare_access_checks</strong> should manipulate the monitoring regions to be
+prepare for the next access check.
+<strong>check_accesses</strong> should check the accesses to each region that made after the
+last preparation and update the <cite>-&gt;nr_accesses</cite> of each region.  It should
+also return max <a class="reference internal" href="#c.damon_region" title="damon_region"><code class="xref c c-type docutils literal notranslate"><span class="pre">damon_region.nr_accesses</span></code></a> that made as a result of its
+update.
+<strong>target_valid</strong> should check whether the target is still valid for the
+monitoring.
+<strong>cleanup</strong> is called from <strong>kdamond</strong> just before its termination.  After this
+call, only <strong>kdamond_lock</strong> and <strong>kdamond</strong> will be touched.</p>
+<dl class="type">
 <dt id="c.damon_ctx">
 struct <code class="sig-name descname">damon_ctx</code><a class="headerlink" href="#c.damon_ctx" title="Permalink to this definition">¶</a></dt>
 <dd><p>Represents a context for each monitoring. This is the main interface that allows users to set the attributes and get the results of the monitoring.</p>
@@ -265,22 +318,12 @@ struct <code class="sig-name descname">damon_ctx</code><a class="headerlink" hre
   unsigned long max_nr_regions;
   struct timespec64 last_aggregation;
   struct timespec64 last_regions_update;
-  unsigned char *rbuf;
-  unsigned int rbuf_len;
-  unsigned int rbuf_offset;
-  char *rfile_path;
   struct task_struct *kdamond;
   bool kdamond_stop;
   struct mutex kdamond_lock;
   struct list_head targets_list;
-  void (*init_target_regions)(struct damon_ctx *context);
-  void (*update_target_regions)(struct damon_ctx *context);
-  void (*prepare_access_checks)(struct damon_ctx *context);
-  unsigned int (*check_accesses)(struct damon_ctx *context);
-  bool (*target_valid)(struct damon_target *target);
-  void (*cleanup)(struct damon_ctx *context);
-  void (*sample_cb)(struct damon_ctx *context);
-  void (*aggregate_cb)(struct damon_ctx *context);
+  struct damon_primitive primitive;
+  struct damon_callback callback;
 };
 </pre></div>
 </div>
@@ -296,14 +339,6 @@ struct <code class="sig-name descname">damon_ctx</code><a class="headerlink" hre
 </dd>
 <dt><code class="docutils literal notranslate"><span class="pre">max_nr_regions</span></code></dt><dd><p>The maximum number of monitoring regions.</p>
 </dd>
-<dt><code class="docutils literal notranslate"><span class="pre">rbuf</span></code></dt><dd><p>In-memory buffer for monitoring result recording.</p>
-</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">rbuf_len</span></code></dt><dd><p>The length of <strong>rbuf</strong>.</p>
-</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">rbuf_offset</span></code></dt><dd><p>The offset for next write to <strong>rbuf</strong>.</p>
-</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">rfile_path</span></code></dt><dd><p>Record file path.</p>
-</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">kdamond</span></code></dt><dd><p>Kernel thread who does the monitoring.</p>
 </dd>
 <dt><code class="docutils literal notranslate"><span class="pre">kdamond_stop</span></code></dt><dd><p>Notifies whether kdamond should stop.</p>
@@ -312,21 +347,9 @@ struct <code class="sig-name descname">damon_ctx</code><a class="headerlink" hre
 </dd>
 <dt><code class="docutils literal notranslate"><span class="pre">targets_list</span></code></dt><dd><p>Head of monitoring targets (<a class="reference internal" href="#c.damon_target" title="damon_target"><code class="xref c c-type docutils literal notranslate"><span class="pre">damon_target</span></code></a>) list.</p>
 </dd>
-<dt><code class="docutils literal notranslate"><span class="pre">init_target_regions</span></code></dt><dd><p>Constructs initial monitoring target regions.</p>
+<dt><code class="docutils literal notranslate"><span class="pre">primitive</span></code></dt><dd><p>Set of monitoring primitives for given use cases.</p>
 </dd>
-<dt><code class="docutils literal notranslate"><span class="pre">update_target_regions</span></code></dt><dd><p>Updates monitoring target regions.</p>
-</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">prepare_access_checks</span></code></dt><dd><p>Prepares next access check of target regions.</p>
-</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">check_accesses</span></code></dt><dd><p>Checks the access of target regions.</p>
-</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">target_valid</span></code></dt><dd><p>Determine if the target is valid.</p>
-</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">cleanup</span></code></dt><dd><p>Cleans up the context.</p>
-</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">sample_cb</span></code></dt><dd><p>Called for each sampling interval.</p>
-</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">aggregate_cb</span></code></dt><dd><p>Called for each aggregation interval.</p>
+<dt><code class="docutils literal notranslate"><span class="pre">callback</span></code></dt><dd><p>Set of callbacks for monitoring events notifications.</p>
 </dd>
 </dl>
 <p><strong>Description</strong></p>
@@ -336,8 +359,6 @@ each region) for <strong>aggr_interval</strong> time.  DAMON also checks whether
 memory regions need update (e.g., by <code class="docutils literal notranslate"><span class="pre">mmap()</span></code> calls from the application,
 in case of virtual memory monitoring) and applies the changes for each
 <strong>regions_update_interval</strong>.  All time intervals are in micro-seconds.</p>
-<p>If <strong>rbuf</strong>, <strong>rbuf_len</strong>, and <strong>rfile_path</strong> are set, the monitored results are
-automatically stored in <strong>rfile_path</strong> file.</p>
 <p>For each monitoring context, one kernel thread for the monitoring is
 created.  The pointer to the thread is stored in <strong>kdamond</strong>.</p>
 <p>Once started, the monitoring thread runs until explicitly required to be
@@ -350,69 +371,9 @@ writes to <strong>kdamond</strong> and <strong>kdamond_stop</strong> from outsid
 must be protected by <strong>kdamond_lock</strong>.</p>
 <p>Note that the monitoring thread protects only <strong>kdamond</strong> and <strong>kdamond_stop</strong> via
 <strong>kdamond_lock</strong>.  Accesses to other fields must be protected by themselves.</p>
-<p>DAMON can be extended for various address spaces by users.  For this, users
-can register the target address space dependent low level functions for
-their usecases via the callback pointers of the context.  The monitoring
-thread calls <strong>init_target_regions</strong> before starting the monitoring,
-<strong>update_target_regions</strong> for each <strong>regions_update_interval</strong>, and
-<strong>prepare_access_checks</strong>, <strong>check_accesses</strong>, and <strong>target_valid</strong> for each
-<strong>sample_interval</strong>.</p>
-<p><strong>init_target_regions</strong> should construct proper monitoring target regions and
-link those to the DAMON context struct.
-<strong>update_target_regions</strong> should update the monitoring target regions for
-current status.
-<strong>prepare_access_checks</strong> should manipulate the monitoring regions to be
-prepare for the next access check.
-<strong>check_accesses</strong> should check the accesses to each region that made after the
-last preparation and update the <cite>-&gt;nr_accesses</cite> of each region.
-<strong>target_valid</strong> should check whether the target is still valid for the
-monitoring.
-<strong>cleanup</strong> is called from <strong>kdamond</strong> just before its termination.  After this
-call, only <strong>kdamond_lock</strong> and <strong>kdamond</strong> will be touched.</p>
-<p><strong>sample_cb</strong> and <strong>aggregate_cb</strong> are called from <strong>kdamond</strong> for each of the
-sampling intervals and aggregation intervals, respectively.  Therefore,
-users can safely access to the monitoring results via <strong>targets_list</strong> without
-additional protection of <strong>kdamond_lock</strong>.  For the reason, users are
-recommended to use these callback for the accesses to the results.</p>
 </div>
 <div class="section" id="functions">
 <h2>Functions<a class="headerlink" href="#functions" title="Permalink to this headline">¶</a></h2>
-<dl class="function">
-<dt id="c.damon_start">
-int <code class="sig-name descname">damon_start</code><span class="sig-paren">(</span>struct <a class="reference internal" href="#c.damon_ctx" title="damon_ctx">damon_ctx</a> *<em> ctxs</em>, int<em> nr_ctxs</em><span class="sig-paren">)</span><a class="headerlink" href="#c.damon_start" title="Permalink to this definition">¶</a></dt>
-<dd><p>Starts the monitorings for a given group of contexts.</p>
-</dd></dl>
-
-<p><strong>Parameters</strong></p>
-<dl class="simple">
-<dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">damon_ctx</span> <span class="pre">*</span> <span class="pre">ctxs</span></code></dt><dd><p>an array of the contexts to start monitoring</p>
-</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">int</span> <span class="pre">nr_ctxs</span></code></dt><dd><p>size of <strong>ctxs</strong></p>
-</dd>
-</dl>
-<p><strong>Description</strong></p>
-<p>This function starts a group of monitoring threads for a group of monitoring
-contexts.  One thread per each context is created and run concurrently.  The
-caller should handle synchronization between the threads by itself.  If a
-group of threads that created by other ‘<a class="reference internal" href="#c.damon_start" title="damon_start"><code class="xref c c-func docutils literal notranslate"><span class="pre">damon_start()</span></code></a>’ call is currently
-running, this function does nothing but returns -EBUSY.</p>
-<p><strong>Return</strong></p>
-<p>0 on success, negative error code otherwise.</p>
-<dl class="function">
-<dt id="c.damon_stop">
-int <code class="sig-name descname">damon_stop</code><span class="sig-paren">(</span>struct <a class="reference internal" href="#c.damon_ctx" title="damon_ctx">damon_ctx</a> *<em> ctxs</em>, int<em> nr_ctxs</em><span class="sig-paren">)</span><a class="headerlink" href="#c.damon_stop" title="Permalink to this definition">¶</a></dt>
-<dd><p>Stops the monitorings for a given group of contexts.</p>
-</dd></dl>
-
-<p><strong>Parameters</strong></p>
-<dl class="simple">
-<dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">damon_ctx</span> <span class="pre">*</span> <span class="pre">ctxs</span></code></dt><dd><p>an array of the contexts to stop monitoring</p>
-</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">int</span> <span class="pre">nr_ctxs</span></code></dt><dd><p>size of <strong>ctxs</strong></p>
-</dd>
-</dl>
-<p><strong>Return</strong></p>
-<p>0 on success, negative error code otherwise.</p>
 <dl class="function">
 <dt id="c.damon_set_targets">
 int <code class="sig-name descname">damon_set_targets</code><span class="sig-paren">(</span>struct <a class="reference internal" href="#c.damon_ctx" title="damon_ctx">damon_ctx</a> *<em> ctx</em>, unsigned long *<em> ids</em>, ssize_t<em> nr_ids</em><span class="sig-paren">)</span><a class="headerlink" href="#c.damon_set_targets" title="Permalink to this definition">¶</a></dt>
@@ -429,26 +390,6 @@ int <code class="sig-name descname">damon_set_targets</code><span class="sig-par
 </dd>
 </dl>
 <p><strong>Description</strong></p>
-<p>This function should not be called while the kdamond is running.</p>
-<p><strong>Return</strong></p>
-<p>0 on success, negative error code otherwise.</p>
-<dl class="function">
-<dt id="c.damon_set_recording">
-int <code class="sig-name descname">damon_set_recording</code><span class="sig-paren">(</span>struct <a class="reference internal" href="#c.damon_ctx" title="damon_ctx">damon_ctx</a> *<em> ctx</em>, unsigned int<em> rbuf_len</em>, char *<em> rfile_path</em><span class="sig-paren">)</span><a class="headerlink" href="#c.damon_set_recording" title="Permalink to this definition">¶</a></dt>
-<dd><p>Set attributes for the recording.</p>
-</dd></dl>
-
-<p><strong>Parameters</strong></p>
-<dl class="simple">
-<dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">damon_ctx</span> <span class="pre">*</span> <span class="pre">ctx</span></code></dt><dd><p>target kdamond context</p>
-</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">unsigned</span> <span class="pre">int</span> <span class="pre">rbuf_len</span></code></dt><dd><p>length of the result buffer</p>
-</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">char</span> <span class="pre">*</span> <span class="pre">rfile_path</span></code></dt><dd><p>path to the monitor result files</p>
-</dd>
-</dl>
-<p><strong>Description</strong></p>
-<p>Setting ‘rbuf_len’ 0 disables recording.</p>
 <p>This function should not be called while the kdamond is running.</p>
 <p><strong>Return</strong></p>
 <p>0 on success, negative error code otherwise.</p>
@@ -476,6 +417,53 @@ int <code class="sig-name descname">damon_set_attrs</code><span class="sig-paren
 <p><strong>Description</strong></p>
 <p>This function should not be called while the kdamond is running.
 Every time interval is in micro-seconds.</p>
+<p><strong>Return</strong></p>
+<p>0 on success, negative error code otherwise.</p>
+<dl class="function">
+<dt id="c.damon_nr_running_ctxs">
+int <code class="sig-name descname">damon_nr_running_ctxs</code><span class="sig-paren">(</span>void<span class="sig-paren">)</span><a class="headerlink" href="#c.damon_nr_running_ctxs" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return number of currently running contexts.</p>
+</dd></dl>
+
+<p><strong>Parameters</strong></p>
+<dl class="simple">
+<dt><code class="docutils literal notranslate"><span class="pre">void</span></code></dt><dd><p>no arguments</p>
+</dd>
+</dl>
+<dl class="function">
+<dt id="c.damon_start">
+int <code class="sig-name descname">damon_start</code><span class="sig-paren">(</span>struct <a class="reference internal" href="#c.damon_ctx" title="damon_ctx">damon_ctx</a> **<em> ctxs</em>, int<em> nr_ctxs</em><span class="sig-paren">)</span><a class="headerlink" href="#c.damon_start" title="Permalink to this definition">¶</a></dt>
+<dd><p>Starts the monitorings for a given group of contexts.</p>
+</dd></dl>
+
+<p><strong>Parameters</strong></p>
+<dl class="simple">
+<dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">damon_ctx</span> <span class="pre">**</span> <span class="pre">ctxs</span></code></dt><dd><p>an array of the pointers for contexts to start monitoring</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">int</span> <span class="pre">nr_ctxs</span></code></dt><dd><p>size of <strong>ctxs</strong></p>
+</dd>
+</dl>
+<p><strong>Description</strong></p>
+<p>This function starts a group of monitoring threads for a group of monitoring
+contexts.  One thread per each context is created and run in parallel.  The
+caller should handle synchronization between the threads by itself.  If a
+group of threads that created by other ‘<a class="reference internal" href="#c.damon_start" title="damon_start"><code class="xref c c-func docutils literal notranslate"><span class="pre">damon_start()</span></code></a>’ call is currently
+running, this function does nothing but returns -EBUSY.</p>
+<p><strong>Return</strong></p>
+<p>0 on success, negative error code otherwise.</p>
+<dl class="function">
+<dt id="c.damon_stop">
+int <code class="sig-name descname">damon_stop</code><span class="sig-paren">(</span>struct <a class="reference internal" href="#c.damon_ctx" title="damon_ctx">damon_ctx</a> **<em> ctxs</em>, int<em> nr_ctxs</em><span class="sig-paren">)</span><a class="headerlink" href="#c.damon_stop" title="Permalink to this definition">¶</a></dt>
+<dd><p>Stops the monitorings for a given group of contexts.</p>
+</dd></dl>
+
+<p><strong>Parameters</strong></p>
+<dl class="simple">
+<dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">damon_ctx</span> <span class="pre">**</span> <span class="pre">ctxs</span></code></dt><dd><p>an array of the pointers for contexts to stop monitoring</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">int</span> <span class="pre">nr_ctxs</span></code></dt><dd><p>size of <strong>ctxs</strong></p>
+</dd>
+</dl>
 <p><strong>Return</strong></p>
 <p>0 on success, negative error code otherwise.</p>
 </div>

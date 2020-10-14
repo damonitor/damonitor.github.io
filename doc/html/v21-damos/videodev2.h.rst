@@ -178,6 +178,8 @@ videodev2.h
              \|\| (type) == :c:type:`V4L2_BUF_TYPE_SDR_OUTPUT <v4l2_buf_type>`                  \\
              \|\| (type) == :c:type:`V4L2_BUF_TYPE_META_OUTPUT <v4l2_buf_type>`)
 
+    \#define V4L2\_TYPE\_IS\_CAPTURE(type) (!V4L2\_TYPE\_IS\_OUTPUT(type))
+
     enum :c:type:`v4l2_tuner_type` \{
             :c:type:`V4L2_TUNER_RADIO <v4l2_tuner_type>`             = 1,
             :c:type:`V4L2_TUNER_ANALOG_TV <v4l2_tuner_type>`         = 2,
@@ -799,6 +801,7 @@ videodev2.h
     \#define :ref:`V4L2_FMT_FLAG_EMULATED <fmtdesc-flags>`                  0x0002
     \#define :ref:`V4L2_FMT_FLAG_CONTINUOUS_BYTESTREAM <fmtdesc-flags>`     0x0004
     \#define :ref:`V4L2_FMT_FLAG_DYN_RESOLUTION <fmtdesc-flags>`            0x0008
+    \#define :ref:`V4L2_FMT_FLAG_ENC_CAP_FRAME_INTERVAL <fmtdesc-flags>`    0x0010
 
             \/\* Frame Size and frame rate enumeration \*\/
     \/\*
@@ -961,6 +964,7 @@ videodev2.h
     \#define \ :ref:`V4L2_BUF_CAP_SUPPORTS_REQUESTS <v4l2-buf-cap-supports-requests>`                  (1 \<\< 3)
     \#define \ :ref:`V4L2_BUF_CAP_SUPPORTS_ORPHANED_BUFS <v4l2-buf-cap-supports-orphaned-bufs>`             (1 \<\< 4)
     \#define \ :ref:`V4L2_BUF_CAP_SUPPORTS_M2M_HOLD_CAPTURE_BUF <v4l2-buf-cap-supports-m2m-hold-capture-buf>`      (1 \<\< 5)
+    \#define \ :ref:`V4L2_BUF_CAP_SUPPORTS_MMAP_CACHE_HINTS <v4l2-buf-cap-supports-mmap-cache-hints>`          (1 \<\< 6)
 
     \/\*\*
      \* struct :c:type:`v4l2_plane` - plane info for multi-planar buffers
