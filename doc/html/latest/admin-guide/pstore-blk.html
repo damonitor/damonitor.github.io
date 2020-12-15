@@ -60,7 +60,7 @@
             
             
               <div class="version">
-                5.9.0
+                5.10.0
               </div>
             
           
@@ -286,33 +286,17 @@ otherwise KMSG_DUMP_MAX.</p>
 <h2>Configurations for driver<a class="headerlink" href="#configurations-for-driver" title="Permalink to this headline">¶</a></h2>
 <p>Only a block device driver cares about these configurations. A block device
 driver uses <code class="docutils literal notranslate"><span class="pre">register_pstore_blk</span></code> to register to pstore/blk.</p>
-<dl class="function">
-<dt id="c.register_pstore_blk">
-int <code class="sig-name descname">register_pstore_blk</code><span class="sig-paren">(</span>struct <a class="reference internal" href="#c.pstore_blk_info" title="pstore_blk_info">pstore_blk_info</a> *<em> info</em><span class="sig-paren">)</span><a class="headerlink" href="#c.register_pstore_blk" title="Permalink to this definition">¶</a></dt>
-<dd><p>register block device to pstore/blk</p>
-</dd></dl>
-
-<p><strong>Parameters</strong></p>
-<dl class="simple">
-<dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">pstore_blk_info</span> <span class="pre">*</span> <span class="pre">info</span></code></dt><dd><p>details on the desired block device interface</p>
-</dd>
-</dl>
-<p><strong>Return</strong></p>
-<ul class="simple">
-<li><p>0          - OK</p></li>
-<li><p>Others     - something error.</p></li>
-</ul>
 <p>A non-block device driver uses <code class="docutils literal notranslate"><span class="pre">register_pstore_device</span></code> with
 <code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">pstore_device_info</span></code> to register to pstore/blk.</p>
 <dl class="function">
 <dt id="c.register_pstore_device">
-int <code class="sig-name descname">register_pstore_device</code><span class="sig-paren">(</span>struct <a class="reference internal" href="#c.pstore_device_info" title="pstore_device_info">pstore_device_info</a> *<em> dev</em><span class="sig-paren">)</span><a class="headerlink" href="#c.register_pstore_device" title="Permalink to this definition">¶</a></dt>
+int <code class="sig-name descname">register_pstore_device</code><span class="sig-paren">(</span>struct <a class="reference internal" href="#c.pstore_device_info" title="pstore_device_info">pstore_device_info</a><em> *dev</em><span class="sig-paren">)</span><a class="headerlink" href="#c.register_pstore_device" title="Permalink to this definition">¶</a></dt>
 <dd><p>register non-block device to pstore/blk</p>
 </dd></dl>
 
 <p><strong>Parameters</strong></p>
 <dl class="simple">
-<dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">pstore_device_info</span> <span class="pre">*</span> <span class="pre">dev</span></code></dt><dd><p>non-block device information</p>
+<dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">pstore_device_info</span> <span class="pre">*dev</span></code></dt><dd><p>non-block device information</p>
 </dd>
 </dl>
 <p><strong>Return</strong></p>
@@ -320,52 +304,42 @@ int <code class="sig-name descname">register_pstore_device</code><span class="si
 <li><p>0          - OK</p></li>
 <li><p>Others     - something error.</p></li>
 </ul>
-<dl class="type">
-<dt id="c.pstore_device_info">
-struct <code class="sig-name descname">pstore_device_info</code><a class="headerlink" href="#c.pstore_device_info" title="Permalink to this definition">¶</a></dt>
-<dd><p>back-end pstore/blk driver structure.</p>
+<dl class="function">
+<dt id="c.unregister_pstore_device">
+void <code class="sig-name descname">unregister_pstore_device</code><span class="sig-paren">(</span>struct <a class="reference internal" href="#c.pstore_device_info" title="pstore_device_info">pstore_device_info</a><em> *dev</em><span class="sig-paren">)</span><a class="headerlink" href="#c.unregister_pstore_device" title="Permalink to this definition">¶</a></dt>
+<dd><p>unregister non-block device from pstore/blk</p>
 </dd></dl>
 
-<p><strong>Definition</strong></p>
-<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>struct pstore_device_info {
-  unsigned long total_size;
-  unsigned int flags;
-  pstore_zone_read_op read;
-  pstore_zone_write_op write;
-  pstore_zone_erase_op erase;
-  pstore_zone_write_op panic_write;
-};
-</pre></div>
-</div>
-<p><strong>Members</strong></p>
+<p><strong>Parameters</strong></p>
 <dl class="simple">
-<dt><code class="docutils literal notranslate"><span class="pre">total_size</span></code></dt><dd><p>The total size in bytes pstore/blk can use. It must be greater
-than 4096 and be multiple of 4096.</p>
+<dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">pstore_device_info</span> <span class="pre">*dev</span></code></dt><dd><p>non-block device information</p>
 </dd>
-<dt><code class="docutils literal notranslate"><span class="pre">flags</span></code></dt><dd><p>Refer to macro starting with PSTORE_FLAGS defined in
-linux/pstore.h. It means what front-ends this device support.
-Zero means all backends for compatible.</p>
+</dl>
+<dl class="function">
+<dt id="c.register_pstore_blk">
+int <code class="sig-name descname">register_pstore_blk</code><span class="sig-paren">(</span>struct <a class="reference internal" href="#c.pstore_blk_info" title="pstore_blk_info">pstore_blk_info</a><em> *info</em><span class="sig-paren">)</span><a class="headerlink" href="#c.register_pstore_blk" title="Permalink to this definition">¶</a></dt>
+<dd><p>register block device to pstore/blk</p>
+</dd></dl>
+
+<p><strong>Parameters</strong></p>
+<dl class="simple">
+<dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">pstore_blk_info</span> <span class="pre">*info</span></code></dt><dd><p>details on the desired block device interface</p>
 </dd>
-<dt><code class="docutils literal notranslate"><span class="pre">read</span></code></dt><dd><p>The general read operation. Both of the function parameters
-<strong>size</strong> and <strong>offset</strong> are relative value to bock device (not the
-whole disk).
-On success, the number of bytes should be returned, others
-means error.</p>
-</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">write</span></code></dt><dd><p>The same as <strong>read</strong>, but the following error number:
--EBUSY means try to write again later.
--ENOMSG means to try next zone.</p>
-</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">erase</span></code></dt><dd><p>The general erase operation for device with special removing
-job. Both of the function parameters <strong>size</strong> and <strong>offset</strong> are
-relative value to storage.
-Return 0 on success and others on failure.</p>
-</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">panic_write</span></code></dt><dd><p>The write operation only used for panic case. It’s optional
-if you do not care panic log. The parameters are relative
-value to storage.
-On success, the number of bytes should be returned, others
-excluding -ENOMSG mean error. -ENOMSG means to try next zone.</p>
+</dl>
+<p><strong>Return</strong></p>
+<ul class="simple">
+<li><p>0          - OK</p></li>
+<li><p>Others     - something error.</p></li>
+</ul>
+<dl class="function">
+<dt id="c.unregister_pstore_blk">
+void <code class="sig-name descname">unregister_pstore_blk</code><span class="sig-paren">(</span>unsigned int<em> major</em><span class="sig-paren">)</span><a class="headerlink" href="#c.unregister_pstore_blk" title="Permalink to this definition">¶</a></dt>
+<dd><p>unregister block device from pstore/blk</p>
+</dd></dl>
+
+<p><strong>Parameters</strong></p>
+<dl class="simple">
+<dt><code class="docutils literal notranslate"><span class="pre">unsigned</span> <span class="pre">int</span> <span class="pre">major</span></code></dt><dd><p>the major device number of device</p>
 </dd>
 </dl>
 </div>
@@ -615,13 +589,13 @@ enum <code class="sig-name descname">psz_flush_mode</code><a class="headerlink" 
 </dl>
 <dl class="function">
 <dt id="c.psz_recovery">
-int <code class="sig-name descname">psz_recovery</code><span class="sig-paren">(</span>struct <a class="reference internal" href="#c.psz_context" title="psz_context">psz_context</a> *<em> cxt</em><span class="sig-paren">)</span><a class="headerlink" href="#c.psz_recovery" title="Permalink to this definition">¶</a></dt>
+int <code class="sig-name descname">psz_recovery</code><span class="sig-paren">(</span>struct <a class="reference internal" href="#c.psz_context" title="psz_context">psz_context</a><em> *cxt</em><span class="sig-paren">)</span><a class="headerlink" href="#c.psz_recovery" title="Permalink to this definition">¶</a></dt>
 <dd><p>recover data from storage</p>
 </dd></dl>
 
 <p><strong>Parameters</strong></p>
 <dl class="simple">
-<dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">psz_context</span> <span class="pre">*</span> <span class="pre">cxt</span></code></dt><dd><p>the context of pstore/zone</p>
+<dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">psz_context</span> <span class="pre">*cxt</span></code></dt><dd><p>the context of pstore/zone</p>
 </dd>
 </dl>
 <p><strong>Description</strong></p>
@@ -693,59 +667,22 @@ excluding -ENOMSG mean error. -ENOMSG means to try next zone.</p>
 </dd>
 </dl>
 <dl class="function">
-<dt>
-int <code class="sig-name descname">register_pstore_device</code><span class="sig-paren">(</span>struct <a class="reference internal" href="#c.pstore_device_info" title="pstore_device_info">pstore_device_info</a> *<em> dev</em><span class="sig-paren">)</span></dt>
-<dd><p>register non-block device to pstore/blk</p>
+<dt id="c.psblk_get_bdev">
+struct block_device * <code class="sig-name descname">psblk_get_bdev</code><span class="sig-paren">(</span>void<em> *holder</em>, struct bdev_info<em> *info</em><span class="sig-paren">)</span><a class="headerlink" href="#c.psblk_get_bdev" title="Permalink to this definition">¶</a></dt>
+<dd><p>open block device</p>
 </dd></dl>
 
 <p><strong>Parameters</strong></p>
 <dl class="simple">
-<dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">pstore_device_info</span> <span class="pre">*</span> <span class="pre">dev</span></code></dt><dd><p>non-block device information</p>
+<dt><code class="docutils literal notranslate"><span class="pre">void</span> <span class="pre">*holder</span></code></dt><dd><p>Exclusive holder identifier</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">bdev_info</span> <span class="pre">*info</span></code></dt><dd><p>Information about bdev to fill in</p>
 </dd>
 </dl>
 <p><strong>Return</strong></p>
-<ul class="simple">
-<li><p>0          - OK</p></li>
-<li><p>Others     - something error.</p></li>
-</ul>
-<dl class="function">
-<dt id="c.unregister_pstore_device">
-void <code class="sig-name descname">unregister_pstore_device</code><span class="sig-paren">(</span>struct <a class="reference internal" href="#c.pstore_device_info" title="pstore_device_info">pstore_device_info</a> *<em> dev</em><span class="sig-paren">)</span><a class="headerlink" href="#c.unregister_pstore_device" title="Permalink to this definition">¶</a></dt>
-<dd><p>unregister non-block device from pstore/blk</p>
-</dd></dl>
-
-<p><strong>Parameters</strong></p>
-<dl class="simple">
-<dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">pstore_device_info</span> <span class="pre">*</span> <span class="pre">dev</span></code></dt><dd><p>non-block device information</p>
-</dd>
-</dl>
-<dl class="function">
-<dt>
-int <code class="sig-name descname">register_pstore_blk</code><span class="sig-paren">(</span>struct <a class="reference internal" href="#c.pstore_blk_info" title="pstore_blk_info">pstore_blk_info</a> *<em> info</em><span class="sig-paren">)</span></dt>
-<dd><p>register block device to pstore/blk</p>
-</dd></dl>
-
-<p><strong>Parameters</strong></p>
-<dl class="simple">
-<dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">pstore_blk_info</span> <span class="pre">*</span> <span class="pre">info</span></code></dt><dd><p>details on the desired block device interface</p>
-</dd>
-</dl>
-<p><strong>Return</strong></p>
-<ul class="simple">
-<li><p>0          - OK</p></li>
-<li><p>Others     - something error.</p></li>
-</ul>
-<dl class="function">
-<dt id="c.unregister_pstore_blk">
-void <code class="sig-name descname">unregister_pstore_blk</code><span class="sig-paren">(</span>unsigned int<em> major</em><span class="sig-paren">)</span><a class="headerlink" href="#c.unregister_pstore_blk" title="Permalink to this definition">¶</a></dt>
-<dd><p>unregister block device from pstore/blk</p>
-</dd></dl>
-
-<p><strong>Parameters</strong></p>
-<dl class="simple">
-<dt><code class="docutils literal notranslate"><span class="pre">unsigned</span> <span class="pre">int</span> <span class="pre">major</span></code></dt><dd><p>the major device number of device</p>
-</dd>
-</dl>
+<p>pointer to block device on success and others on error.</p>
+<p><strong>Description</strong></p>
+<p>On success, the returned block_device has reference count of one.</p>
 <dl class="type">
 <dt id="c.pstore_blk_panic_write_op">
 <code class="sig-name descname">pstore_blk_panic_write_op</code><a class="headerlink" href="#c.pstore_blk_panic_write_op" title="Permalink to this definition">¶</a></dt>
@@ -754,11 +691,11 @@ void <code class="sig-name descname">unregister_pstore_blk</code><span class="si
 
 <p><strong>Syntax</strong></p>
 <blockquote>
-<div><p><code class="docutils literal notranslate"><span class="pre">int</span> <span class="pre">pstore_blk_panic_write_op</span> <span class="pre">(const</span> <span class="pre">char</span> <span class="pre">*</span> <span class="pre">buf,</span> <span class="pre">sector_t</span> <span class="pre">start_sect,</span> <span class="pre">sector_t</span> <span class="pre">sects);</span></code></p>
+<div><p><code class="docutils literal notranslate"><span class="pre">int</span> <span class="pre">pstore_blk_panic_write_op</span> <span class="pre">(const</span> <span class="pre">char</span> <span class="pre">*buf,</span> <span class="pre">sector_t</span> <span class="pre">start_sect,</span> <span class="pre">sector_t</span> <span class="pre">sects)</span></code></p>
 </div></blockquote>
 <p><strong>Parameters</strong></p>
 <dl class="simple">
-<dt><code class="docutils literal notranslate"><span class="pre">const</span> <span class="pre">char</span> <span class="pre">*</span> <span class="pre">buf</span></code></dt><dd><p>the data to write</p>
+<dt><code class="docutils literal notranslate"><span class="pre">const</span> <span class="pre">char</span> <span class="pre">*buf</span></code></dt><dd><p>the data to write</p>
 </dd>
 <dt><code class="docutils literal notranslate"><span class="pre">sector_t</span> <span class="pre">start_sect</span></code></dt><dd><p>start sector to block device</p>
 </dd>
@@ -806,8 +743,8 @@ broken during a panic.</p>
 </dd>
 </dl>
 <dl class="type">
-<dt>
-struct <code class="sig-name descname">pstore_device_info</code></dt>
+<dt id="c.pstore_device_info">
+struct <code class="sig-name descname">pstore_device_info</code><a class="headerlink" href="#c.pstore_device_info" title="Permalink to this definition">¶</a></dt>
 <dd><p>back-end pstore/blk driver structure.</p>
 </dd></dl>
 
@@ -887,13 +824,13 @@ struct <code class="sig-name descname">pstore_blk_config</code><a class="headerl
 </dl>
 <dl class="function">
 <dt id="c.pstore_blk_get_config">
-int <code class="sig-name descname">pstore_blk_get_config</code><span class="sig-paren">(</span>struct <a class="reference internal" href="#c.pstore_blk_config" title="pstore_blk_config">pstore_blk_config</a> *<em> info</em><span class="sig-paren">)</span><a class="headerlink" href="#c.pstore_blk_get_config" title="Permalink to this definition">¶</a></dt>
+int <code class="sig-name descname">pstore_blk_get_config</code><span class="sig-paren">(</span>struct <a class="reference internal" href="#c.pstore_blk_config" title="pstore_blk_config">pstore_blk_config</a><em> *info</em><span class="sig-paren">)</span><a class="headerlink" href="#c.pstore_blk_get_config" title="Permalink to this definition">¶</a></dt>
 <dd><p>get a copy of the pstore_blk backend configuration</p>
 </dd></dl>
 
 <p><strong>Parameters</strong></p>
 <dl class="simple">
-<dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">pstore_blk_config</span> <span class="pre">*</span> <span class="pre">info</span></code></dt><dd><p>The sturct pstore_blk_config to be filled in</p>
+<dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">pstore_blk_config</span> <span class="pre">*info</span></code></dt><dd><p>The sturct pstore_blk_config to be filled in</p>
 </dd>
 </dl>
 <p><strong>Description</strong></p>

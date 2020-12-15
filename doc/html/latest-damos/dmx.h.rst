@@ -140,7 +140,7 @@ dmx.h
     \#define DMX\_PES\_PCR      :c:type:`DMX_PES_PCR0 <dmx_pes_type>`
 
     \/\*\*
-     \* struct :c:type:`dmx_filter` - Specifies a section header filter.
+     \* struct dmx_filter - Specifies a section header filter.
      \*
      \* @filter\: bit array with bits to be matched at the section header.
      \* @mask\: bits that are valid at the filter bit array.
@@ -149,14 +149,14 @@ dmx.h
      \*
      \* Note\: All arrays in this struct have a size of DMX\_FILTER\_SIZE (16 bytes).
      \*\/
-    struct :c:type:`dmx_filter` \{
+    struct dmx_filter \{
             \_\_u8  filter[DMX\_FILTER\_SIZE];
             \_\_u8  mask[DMX\_FILTER\_SIZE];
             \_\_u8  mode[DMX\_FILTER\_SIZE];
     \};
 
     \/\*\*
-     \* struct :c:type:`dmx_sct_filter_params` - Specifies a section filter.
+     \* struct dmx_sct_filter_params - Specifies a section filter.
      \*
      \* @pid\: PID to be filtered.
      \* @filter\: section header filter, as defined by \&struct dmx\_filter.
@@ -173,9 +173,9 @@ dmx.h
      \*      - \%DMX\_IMMEDIATE\_START - Start filter immediately without requiring a
      \*        \:ref\:\`DMX\_START\`.
      \*\/
-    struct :c:type:`dmx_sct_filter_params` \{
+    struct dmx_sct_filter_params \{
             \_\_u16             pid;
-            struct :c:type:`dmx_filter` filter;
+            struct dmx_filter filter;
             \_\_u32             timeout;
             \_\_u32             flags;
     \#define :c:type:`DMX_CHECK_CRC <dmx_sct_filter_params>`       1
@@ -184,7 +184,7 @@ dmx.h
     \};
 
     \/\*\*
-     \* struct :c:type:`dmx_pes_filter_params` - Specifies Packetized Elementary Stream (PES)
+     \* struct dmx_pes_filter_params - Specifies Packetized Elementary Stream (PES)
      \*      filter parameters.
      \*
      \* @pid\:        PID to be filtered.
@@ -193,7 +193,7 @@ dmx.h
      \* @pes\_type\:   Type of the pes filter, as specified by \&enum dmx\_pes\_type.
      \* @flags\:      Demux PES flags.
      \*\/
-    struct :c:type:`dmx_pes_filter_params` \{
+    struct dmx_pes_filter_params \{
             \_\_u16           pid;
             :c:type:`dmx_input <dmx_input>`  input;
             enum :c:type:`dmx_output` output;
@@ -202,13 +202,13 @@ dmx.h
     \};
 
     \/\*\*
-     \* struct :c:type:`dmx_stc` - Stores System Time Counter (STC) information.
+     \* struct dmx_stc - Stores System Time Counter (STC) information.
      \*
      \* @num\: input data\: number of the STC, from 0 to N.
      \* @base\: output\: divisor for STC to get 90 kHz clock.
      \* @stc\: output\: stc in @base \* 90 kHz units.
      \*\/
-    struct :c:type:`dmx_stc` \{
+    struct dmx_stc \{
             unsigned int num;
             unsigned int base;
             \_\_u64 stc;
@@ -241,7 +241,7 @@ dmx.h
     \};
 
     \/\*\*
-     \* struct :c:type:`dmx_buffer` - dmx buffer info
+     \* struct dmx_buffer - dmx buffer info
      \*
      \* @index\:      id number of the buffer
      \* @bytesused\:  number of bytes occupied by data in the buffer (payload);
@@ -260,7 +260,7 @@ dmx.h
      \* Please notice that, for \&DMX\_QBUF, only @index should be filled.
      \* On \&DMX\_DQBUF calls, all fields will be filled by the Kernel.
      \*\/
-    struct :c:type:`dmx_buffer` \{
+    struct dmx_buffer \{
             \_\_u32                   index;
             \_\_u32                   bytesused;
             \_\_u32                   offset;
@@ -270,7 +270,7 @@ dmx.h
     \};
 
     \/\*\*
-     \* struct :c:type:`dmx_requestbuffers` - request dmx buffer information
+     \* struct dmx_requestbuffers - request dmx buffer information
      \*
      \* @count\:      number of requested buffers,
      \* @size\:       size in bytes of the requested buffer
@@ -278,13 +278,13 @@ dmx.h
      \* Contains data used for requesting a dmx buffer.
      \* All reserved fields must be set to zero.
      \*\/
-    struct :c:type:`dmx_requestbuffers` \{
+    struct dmx_requestbuffers \{
             \_\_u32                   count;
             \_\_u32                   size;
     \};
 
     \/\*\*
-     \* struct :c:type:`dmx_exportbuffer` - export of dmx buffer as DMABUF file descriptor
+     \* struct dmx_exportbuffer - export of dmx buffer as DMABUF file descriptor
      \*
      \* @index\:      id number of the buffer
      \* @flags\:      flags for newly created file, currently only O\_CLOEXEC is
@@ -298,7 +298,7 @@ dmx.h
      \* become a structure 'type' allowing an alternative layout of the structure
      \* content. Therefore this field should not be used for any other extensions.
      \*\/
-    struct :c:type:`dmx_exportbuffer` \{
+    struct dmx_exportbuffer \{
             \_\_u32           index;
             \_\_u32           flags;
             \_\_s32           fd;
@@ -306,11 +306,11 @@ dmx.h
 
     \#define \ :ref:`DMX_START <dmx_start>`                \_IO('o', 41)
     \#define \ :ref:`DMX_STOP <dmx_stop>`                 \_IO('o', 42)
-    \#define \ :ref:`DMX_SET_FILTER <dmx_set_filter>`           \_IOW('o', 43, struct :c:type:`dmx_sct_filter_params`\ )
-    \#define \ :ref:`DMX_SET_PES_FILTER <dmx_set_pes_filter>`       \_IOW('o', 44, struct :c:type:`dmx_pes_filter_params`\ )
+    \#define \ :ref:`DMX_SET_FILTER <dmx_set_filter>`           \_IOW('o', 43, struct dmx_sct_filter_params\ )
+    \#define \ :ref:`DMX_SET_PES_FILTER <dmx_set_pes_filter>`       \_IOW('o', 44, struct dmx_pes_filter_params\ )
     \#define \ :ref:`DMX_SET_BUFFER_SIZE <dmx_set_buffer_size>`      \_IO('o', 45)
     \#define \ :ref:`DMX_GET_PES_PIDS <dmx_get_pes_pids>`         \_IOR('o', 47, \_\_u16[5])
-    \#define \ :ref:`DMX_GET_STC <dmx_get_stc>`              \_IOWR('o', 50, struct :c:type:`dmx_stc`\ )
+    \#define \ :ref:`DMX_GET_STC <dmx_get_stc>`              \_IOWR('o', 50, struct dmx_stc\ )
     \#define \ :ref:`DMX_ADD_PID <dmx_add_pid>`              \_IOW('o', 51, \_\_u16)
     \#define \ :ref:`DMX_REMOVE_PID <dmx_remove_pid>`           \_IOW('o', 52, \_\_u16)
 
@@ -320,14 +320,14 @@ dmx.h
     typedef enum :c:type:`dmx_output` \ :c:type:`dmx_output_t <dmx_output>`\ ;
     typedef :c:type:`dmx_input <dmx_input>` :c:type:`dmx_input_t <dmx_input>`;
     typedef :c:type:`dmx_ts_pes <dmx_pes_type>` :c:type:`dmx_pes_type_t <dmx_pes_type>`;
-    typedef struct :c:type:`dmx_filter` :c:type:`dmx_filter_t <dmx_filter>`;
+    typedef struct dmx_filter :c:type:`dmx_filter_t <dmx_filter>`;
 
     \#endif
 
-    \#define \ :ref:`DMX_REQBUFS <dmx_reqbufs>`              \_IOWR('o', 60, struct :c:type:`dmx_requestbuffers`\ )
-    \#define \ :ref:`DMX_QUERYBUF <dmx_querybuf>`             \_IOWR('o', 61, struct :c:type:`dmx_buffer`\ )
-    \#define \ :ref:`DMX_EXPBUF <dmx_expbuf>`               \_IOWR('o', 62, struct :c:type:`dmx_exportbuffer`\ )
-    \#define \ :ref:`DMX_QBUF <dmx_qbuf>`                 \_IOWR('o', 63, struct :c:type:`dmx_buffer`\ )
-    \#define :ref:`DMX_DQBUF <dmx_qbuf>`                \_IOWR('o', 64, struct :c:type:`dmx_buffer`\ )
+    \#define \ :ref:`DMX_REQBUFS <dmx_reqbufs>`              \_IOWR('o', 60, struct dmx_requestbuffers\ )
+    \#define \ :ref:`DMX_QUERYBUF <dmx_querybuf>`             \_IOWR('o', 61, struct dmx_buffer\ )
+    \#define \ :ref:`DMX_EXPBUF <dmx_expbuf>`               \_IOWR('o', 62, struct dmx_exportbuffer\ )
+    \#define \ :ref:`DMX_QBUF <dmx_qbuf>`                 \_IOWR('o', 63, struct dmx_buffer\ )
+    \#define :ref:`DMX_DQBUF <dmx_qbuf>`                \_IOWR('o', 64, struct dmx_buffer\ )
 
     \#endif \/\* \_DVBDMX\_H\_ \*\/

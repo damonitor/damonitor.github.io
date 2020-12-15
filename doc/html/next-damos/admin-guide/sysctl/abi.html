@@ -60,7 +60,7 @@
             
             
               <div class="version">
-                5.9.0
+                5.10.0
               </div>
             
           
@@ -157,70 +157,25 @@
             
   <div class="section" id="documentation-for-proc-sys-abi">
 <h1>Documentation for /proc/sys/abi/<a class="headerlink" href="#documentation-for-proc-sys-abi" title="Permalink to this headline">¶</a></h1>
-<p>kernel version 2.6.0.test2</p>
-<p>Copyright (c) 2003,  Fabian Frederick &lt;<a class="reference external" href="mailto:ffrederick&#37;&#52;&#48;users&#46;sourceforge&#46;net">ffrederick<span>&#64;</span>users<span>&#46;</span>sourceforge<span>&#46;</span>net</a>&gt;</p>
-<p>For general info: index.rst.</p>
+<p>Copyright (c) 2020, Stephen Kitt</p>
+<p>For general info, see <a class="reference internal" href="index.html"><span class="doc">Documentation for /proc/sys</span></a>.</p>
 <hr class="docutils" />
-<p>This path is binary emulation relevant aka personality types aka abi.
-When a process is executed, it’s linked to an exec_domain whose
-personality is defined using values available from /proc/sys/abi.
-You can find further details about abi in include/linux/personality.h.</p>
-<p>Here are the files featuring in 2.6 kernel:</p>
+<p>The files in <code class="docutils literal notranslate"><span class="pre">/proc/sys/abi</span></code> can be used to see and modify
+ABI-related settings.</p>
+<p>Currently, these files might (depending on your configuration)
+show up in <code class="docutils literal notranslate"><span class="pre">/proc/sys/kernel</span></code>:</p>
+<div class="contents local topic" id="contents">
 <ul class="simple">
-<li><p>defhandler_coff</p></li>
-<li><p>defhandler_elf</p></li>
-<li><p>defhandler_lcall7</p></li>
-<li><p>defhandler_libcso</p></li>
-<li><p>fake_utsname</p></li>
-<li><p>trace</p></li>
+<li><p><a class="reference internal" href="#vsyscall32-x86" id="id1">vsyscall32 (x86)</a></p></li>
 </ul>
-<div class="section" id="defhandler-coff">
-<h2>defhandler_coff<a class="headerlink" href="#defhandler-coff" title="Permalink to this headline">¶</a></h2>
-<dl>
-<dt>defined value:</dt><dd><p>PER_SCOSVR3:</p>
-<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>0x0003 | STICKY_TIMEOUTS | WHOLE_SECONDS | SHORT_INODE
-</pre></div>
 </div>
-</dd>
-</dl>
-</div>
-<div class="section" id="defhandler-elf">
-<h2>defhandler_elf<a class="headerlink" href="#defhandler-elf" title="Permalink to this headline">¶</a></h2>
-<dl>
-<dt>defined value:</dt><dd><p>PER_LINUX:</p>
-<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>0
-</pre></div>
-</div>
-</dd>
-</dl>
-</div>
-<div class="section" id="defhandler-lcall7">
-<h2>defhandler_lcall7<a class="headerlink" href="#defhandler-lcall7" title="Permalink to this headline">¶</a></h2>
-<dl>
-<dt>defined value :</dt><dd><p>PER_SVR4:</p>
-<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>0x0001 | STICKY_TIMEOUTS | MMAP_PAGE_ZERO,
-</pre></div>
-</div>
-</dd>
-</dl>
-</div>
-<div class="section" id="defhandler-libsco">
-<h2>defhandler_libsco<a class="headerlink" href="#defhandler-libsco" title="Permalink to this headline">¶</a></h2>
-<dl>
-<dt>defined value:</dt><dd><p>PER_SVR4:</p>
-<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>0x0001 | STICKY_TIMEOUTS | MMAP_PAGE_ZERO,
-</pre></div>
-</div>
-</dd>
-</dl>
-</div>
-<div class="section" id="fake-utsname">
-<h2>fake_utsname<a class="headerlink" href="#fake-utsname" title="Permalink to this headline">¶</a></h2>
-<p>Unused</p>
-</div>
-<div class="section" id="trace">
-<h2>trace<a class="headerlink" href="#trace" title="Permalink to this headline">¶</a></h2>
-<p>Unused</p>
+<div class="section" id="vsyscall32-x86">
+<h2><a class="toc-backref" href="#id1">vsyscall32 (x86)</a><a class="headerlink" href="#vsyscall32-x86" title="Permalink to this headline">¶</a></h2>
+<p>Determines whether the kernels maps a vDSO page into 32-bit processes;
+can be set to 1 to enable, or 0 to disable. Defaults to enabled if
+<code class="docutils literal notranslate"><span class="pre">CONFIG_COMPAT_VDSO</span></code> is set, disabled otherwide.</p>
+<p>This controls the same setting as the <code class="docutils literal notranslate"><span class="pre">vdso32</span></code> kernel boot
+parameter.</p>
 </div>
 </div>
 

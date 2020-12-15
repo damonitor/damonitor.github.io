@@ -55,13 +55,13 @@ audio.h
             AUDIO\_STEREO\_SWAPPED
     \} audio\_channel\_select\_t;
 
-    typedef struct :c:type:`audio_mixer` \{
+    typedef struct audio_mixer \{
             unsigned int volume\_left;
             unsigned int volume\_right;
       \/\* what else do we need? bass, pass-through, ... \*\/
     \} :c:type:`audio_mixer_t <audio_mixer>`;
 
-    typedef struct :c:type:`audio_status` \{
+    typedef struct audio_status \{
             int                    AV\_sync\_state;  \/\* sync audio and video? \*\/
             int                    mute\_state;     \/\* audio is muted \*\/
             audio\_play\_state\_t     play\_state;     \/\* current playback state \*\/

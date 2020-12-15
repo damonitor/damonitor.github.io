@@ -60,7 +60,7 @@
             
             
               <div class="version">
-                5.9.0
+                5.10.0
               </div>
             
           
@@ -167,7 +167,8 @@
 <p>This small document describes the “Video Mode Selection” feature which
 allows the use of various special video modes supported by the video BIOS. Due
 to usage of the BIOS, the selection is limited to boot time (before the
-kernel decompression starts) and works only on 80X86 machines.</p>
+kernel decompression starts) and works only on 80X86 machines that are
+booted through BIOS firmware (as opposed to through UEFI, kexec, etc.).</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <p>Short intro for the impatient: Just use vga=ask for the first time,
@@ -177,7 +178,7 @@ set the vga parameter to this number (converted to decimal first).</p>
 </div>
 <p>The video mode to be used is selected by a kernel parameter which can be
 specified in the kernel Makefile (the SVGA_MODE=… line) or by the “vga=…”
-option of LILO (or some other boot loader you use) or by the “vidmode” utility
+option of LILO (or some other boot loader you use) or by the “xrandr” utility
 (present in standard Linux utility packages). You can use the following values
 of this parameter:</p>
 <div class="highlight-none notranslate"><div class="highlight"><pre><span></span>NORMAL_VGA - Standard 80x25 mode available on all display adapters.
@@ -194,7 +195,7 @@ ASK_VGA - Display a video mode menu upon startup (see below).
    better to use absolute mode numbers instead.
 
 0x.... - Hexadecimal video mode ID (also displayed on the menu, see below
-   for exact meaning of the ID). Warning: rdev and LILO don&#39;t support
+   for exact meaning of the ID). Warning: LILO doesn&#39;t support
    hexadecimal numbers -- you have to convert it to decimal manually.
 </pre></div>
 </div>

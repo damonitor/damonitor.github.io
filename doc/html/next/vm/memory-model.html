@@ -60,7 +60,7 @@
             
             
               <div class="version">
-                5.9.0
+                5.10.0
               </div>
             
           
@@ -174,7 +174,7 @@ whether it is possible to manually override that default.</p>
 although it is still in use by several architectures.</p>
 </div>
 <p>All the memory models track the status of physical page frames using
-<code class="xref c c-type docutils literal notranslate"><span class="pre">struct</span> <span class="pre">page</span></code> arranged in one or more arrays.</p>
+struct page arranged in one or more arrays.</p>
 <p>Regardless of the selected memory model, there exists one-to-one
 mapping between the physical page frame number (PFN) and the
 corresponding <cite>struct page</cite>.</p>
@@ -244,7 +244,7 @@ as hot-plug and hot-remove of the physical memory, alternative memory
 maps for non-volatile memory devices and deferred initialization of
 the memory map for larger systems.</p>
 <p>The SPARSEMEM model presents the physical memory as a collection of
-sections. A section is represented with <code class="xref c c-type docutils literal notranslate"><span class="pre">struct</span> <span class="pre">mem_section</span></code>
+sections. A section is represented with struct mem_section
 that contains <cite>section_mem_map</cite> that is, logically, a pointer to an
 array of struct pages. However, it is stored with some other magic
 that aids the sections management. The section size and maximal number
@@ -296,7 +296,7 @@ requirements for the vmemmap mappings, it can use default
 management.</p>
 <p>The virtually mapped memory map allows storing <cite>struct page</cite> objects
 for persistent memory devices in pre-allocated storage on those
-devices. This storage is represented with <code class="xref c c-type docutils literal notranslate"><span class="pre">struct</span> <span class="pre">vmem_altmap</span></code>
+devices. This storage is represented with struct vmem_altmap
 that is eventually passed to vmemmap_populate() through a long chain
 of function calls. The vmemmap_populate() implementation may use the
 <cite>vmem_altmap</cite> along with <code class="xref c c-func docutils literal notranslate"><span class="pre">vmemmap_alloc_block_buf()</span></code> helper to
@@ -333,7 +333,7 @@ via DAX mappings.</p></li>
 <li><p>hmm: Extend <cite>ZONE_DEVICE</cite> with <cite>-&gt;page_fault()</cite> and <cite>-&gt;page_free()</cite>
 event callbacks to allow a device-driver to coordinate memory management
 events related to device-memory, typically GPU memory. See
-Documentation/vm/hmm.rst.</p></li>
+<a class="reference internal" href="hmm.html"><span class="doc">Heterogeneous Memory Management (HMM)</span></a>.</p></li>
 <li><p>p2pdma: Create <cite>struct page</cite> objects to allow peer devices in a
 PCI/-E topology to coordinate direct-DMA operations between themselves,
 i.e. bypass host memory.</p></li>

@@ -91,7 +91,7 @@ video.h
 
     \/\* The structure must be zeroed before use by the application
        This ensures it can be extended safely in the future. \*\/
-    struct :c:type:`video_command` \{
+    struct video_command \{
             \_\_u32 cmd;
             \_\_u32 flags;
             union \{
@@ -123,7 +123,7 @@ video.h
     \#define VIDEO\_VSYNC\_FIELD\_EVEN          (2)
     \#define VIDEO\_VSYNC\_FIELD\_PROGRESSIVE   (3)
 
-    struct :c:type:`video_event` \{
+    struct video_event \{
             \_\_s32 type;
     \#define VIDEO\_EVENT\_SIZE\_CHANGED        1
     \#define VIDEO\_EVENT\_FRAME\_RATE\_CHANGED  2
@@ -138,7 +138,7 @@ video.h
             \} u;
     \};
 
-    struct :c:type:`video_status` \{
+    struct video_status \{
             int                   video\_blank;   \/\* blank video on freeze? \*\/
             video\_play\_state\_t    play\_state;    \/\* current state of playback \*\/
             video\_stream\_source\_t stream\_source; \/\* current source (demux\/memory) \*\/
@@ -146,7 +146,7 @@ video.h
             video\_displayformat\_t display\_format;\/\* selected cropping mode \*\/
     \};
 
-    struct :c:type:`video_still_picture` \{
+    struct video_still_picture \{
             char \_\_user \*iFrame;        \/\* pointer to a single iframe in memory \*\/
             \_\_s32 size;
     \};
@@ -185,10 +185,10 @@ video.h
     \#define \ :ref:`VIDEO_CONTINUE <video_continue>`             \_IO('o', 24)
     \#define \ :ref:`VIDEO_SELECT_SOURCE <video_select_source>`        \_IO('o', 25)
     \#define \ :ref:`VIDEO_SET_BLANK <video_set_blank>`            \_IO('o', 26)
-    \#define \ :ref:`VIDEO_GET_STATUS <video_get_status>`           \_IOR('o', 27, struct :c:type:`video_status`\ )
-    \#define \ :ref:`VIDEO_GET_EVENT <video_get_event>`            \_IOR('o', 28, struct :c:type:`video_event`\ )
+    \#define \ :ref:`VIDEO_GET_STATUS <video_get_status>`           \_IOR('o', 27, struct video_status\ )
+    \#define \ :ref:`VIDEO_GET_EVENT <video_get_event>`            \_IOR('o', 28, struct video_event\ )
     \#define \ :ref:`VIDEO_SET_DISPLAY_FORMAT <video_set_display_format>`   \_IO('o', 29)
-    \#define \ :ref:`VIDEO_STILLPICTURE <video_stillpicture>`         \_IOW('o', 30, struct :c:type:`video_still_picture`\ )
+    \#define \ :ref:`VIDEO_STILLPICTURE <video_stillpicture>`         \_IOW('o', 30, struct video_still_picture\ )
     \#define \ :ref:`VIDEO_FAST_FORWARD <video_fast_forward>`         \_IO('o', 31)
     \#define \ :ref:`VIDEO_SLOWMOTION <video_slowmotion>`           \_IO('o', 32)
     \#define \ :ref:`VIDEO_GET_CAPABILITIES <video_get_capabilities>`     \_IOR('o', 33, unsigned int)
@@ -213,7 +213,7 @@ video.h
     \/\* Read the number of displayed frames since the decoder was started \*\/
     \#define \ :ref:`VIDEO_GET_FRAME_COUNT <video_get_frame_count>`      \_IOR('o', 58, \_\_u64)
 
-    \#define \ :ref:`VIDEO_COMMAND <video_command>`              \_IOWR('o', 59, struct :c:type:`video_command`\ )
-    \#define \ :ref:`VIDEO_TRY_COMMAND <video_try_command>`          \_IOWR('o', 60, struct :c:type:`video_command`\ )
+    \#define \ :ref:`VIDEO_COMMAND <video_command>`              \_IOWR('o', 59, struct video_command\ )
+    \#define \ :ref:`VIDEO_TRY_COMMAND <video_try_command>`          \_IOWR('o', 60, struct video_command\ )
 
     \#endif \/\* \_UAPI\_DVBVIDEO\_H\_ \*\/

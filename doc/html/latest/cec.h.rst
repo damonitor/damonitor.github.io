@@ -21,7 +21,7 @@ cec.h
     \#define CEC\_MAX\_MSG\_SIZE        16
 
     \/\*\*
-     \* struct :c:type:`cec_msg` - CEC message structure.
+     \* struct cec_msg - CEC message structure.
      \* @tx\_ts\:      Timestamp in nanoseconds using CLOCK\_MONOTONIC. Set by the
      \*              driver when the message transmission has finished.
      \* @rx\_ts\:      Timestamp in nanoseconds using CLOCK\_MONOTONIC. Set by the
@@ -61,7 +61,7 @@ cec.h
      \*              driver.
      \* @tx\_error\_cnt\: The number of 'Error' events. Set by the driver.
      \*\/
-    struct :c:type:`cec_msg` \{
+    struct cec_msg \{
             \_\_u64 tx\_ts;
             \_\_u64 rx\_ts;
             \_\_u32 len;
@@ -82,7 +82,7 @@ cec.h
      \* cec\_msg\_initiator - return the initiator's logical address.
      \* @msg\:        the message structure
      \*\/
-    static inline \_\_u8 cec\_msg\_initiator(const struct :c:type:`cec_msg` \*msg)
+    static inline \_\_u8 cec\_msg\_initiator(const struct cec_msg \*msg)
     \{
             return msg-\>msg[0] \>\> 4;
     \}
@@ -91,7 +91,7 @@ cec.h
      \* cec\_msg\_destination - return the destination's logical address.
      \* @msg\:        the message structure
      \*\/
-    static inline \_\_u8 cec\_msg\_destination(const struct :c:type:`cec_msg` \*msg)
+    static inline \_\_u8 cec\_msg\_destination(const struct cec_msg \*msg)
     \{
             return msg-\>msg[0] \& 0xf;
     \}
@@ -100,7 +100,7 @@ cec.h
      \* cec\_msg\_opcode - return the opcode of the message, -1 for poll
      \* @msg\:        the message structure
      \*\/
-    static inline int cec\_msg\_opcode(const struct :c:type:`cec_msg` \*msg)
+    static inline int cec\_msg\_opcode(const struct cec_msg \*msg)
     \{
             return msg-\>len \> 1 ? msg-\>msg[1] \: -1;
     \}
@@ -109,7 +109,7 @@ cec.h
      \* cec\_msg\_is\_broadcast - return true if this is a broadcast message.
      \* @msg\:        the message structure
      \*\/
-    static inline int cec\_msg\_is\_broadcast(const struct :c:type:`cec_msg` \*msg)
+    static inline int cec\_msg\_is\_broadcast(const struct cec_msg \*msg)
     \{
             return (msg-\>msg[0] \& 0xf) == 0xf;
     \}
@@ -123,7 +123,7 @@ cec.h
      \* The whole structure is zeroed, the len field is set to 1 (i.e. a poll
      \* message) and the initiator and destination are filled in.
      \*\/
-    static inline void cec\_msg\_init(struct :c:type:`cec_msg` \*msg,
+    static inline void cec\_msg\_init(struct cec_msg \*msg,
                                     \_\_u8 initiator, \_\_u8 destination)
     \{
             memset(msg, 0, sizeof(\*msg));
@@ -140,8 +140,8 @@ cec.h
      \* orig destination. Note that msg and orig may be the same pointer, in which
      \* case the change is done in place.
      \*\/
-    static inline void cec\_msg\_set\_reply\_to(struct :c:type:`cec_msg` \*msg,
-                                            struct :c:type:`cec_msg` \*orig)
+    static inline void cec\_msg\_set\_reply\_to(struct cec_msg \*msg,
+                                            struct cec_msg \*orig)
     \{
             \/\* The destination becomes the initiator and vice versa \*\/
             msg-\>msg[0] = (cec\_msg\_destination(orig) \<\< 4) \|
@@ -168,7 +168,7 @@ cec.h
     \#define \ :ref:`CEC_RX_STATUS_FEATURE_ABORT <cec-rx-status-feature-abort>`     (1 \<\< 2)
     \#define \ :ref:`CEC_RX_STATUS_ABORTED <cec-rx-status-aborted>`           (1 \<\< 3)
 
-    static inline int cec\_msg\_status\_is\_ok(const struct :c:type:`cec_msg` \*msg)
+    static inline int cec\_msg\_status\_is\_ok(const struct cec_msg \*msg)
     \{
             if (msg-\>tx\_status \&\& !(msg-\>tx\_status \& \ :ref:`CEC_TX_STATUS_OK <cec-tx-status-ok>`\ ))
                     return 0;
@@ -328,14 +328,14 @@ cec.h
     \#define \ :ref:`CEC_CAP_CONNECTOR_INFO <cec-cap-connector-info>`  (1 \<\< 8)
 
     \/\*\*
-     \* struct :c:type:`cec_caps` - CEC capabilities structure.
+     \* struct cec_caps - CEC capabilities structure.
      \* @driver\: name of the CEC device driver.
      \* @name\: name of the CEC device. @driver + @name must be unique.
      \* @available\_log\_addrs\: number of available logical addresses.
      \* @capabilities\: capabilities of the CEC adapter.
      \* @version\: version of the CEC adapter framework.
      \*\/
-    struct :c:type:`cec_caps` \{
+    struct cec_caps \{
             char driver[32];
             char name[32];
             \_\_u32 available\_log\_addrs;
@@ -344,7 +344,7 @@ cec.h
     \};
 
     \/\*\*
-     \* struct :c:type:`cec_log_addrs` - CEC logical addresses structure.
+     \* struct cec_log_addrs - CEC logical addresses structure.
      \* @log\_addr\: the claimed logical addresses. Set by the driver.
      \* @log\_addr\_mask\: current logical address mask. Set by the driver.
      \* @cec\_version\: the CEC version that the adapter should implement. Set by the
@@ -361,7 +361,7 @@ cec.h
      \*      address. Set by the caller.
      \* @features\:   CEC 2.0\: The logical address features. Set by the caller.
      \*\/
-    struct :c:type:`cec_log_addrs` \{
+    struct cec_log_addrs \{
             \_\_u8 log\_addr[CEC\_MAX\_LOG\_ADDRS];
             \_\_u16 log\_addr\_mask;
             \_\_u8 cec\_version;
@@ -385,12 +385,12 @@ cec.h
     \#define \ :ref:`CEC_LOG_ADDRS_FL_CDC_ONLY <cec-log-addrs-fl-cdc-only>`               (1 \<\< 2)
 
     \/\*\*
-     \* struct :c:type:`cec_drm_connector_info` - tells which drm connector is
+     \* struct cec_drm_connector_info - tells which drm connector is
      \* associated with the CEC adapter.
      \* @card\_no\: drm card number
      \* @connector\_id\: drm connector ID
      \*\/
-    struct :c:type:`cec_drm_connector_info` \{
+    struct cec_drm_connector_info \{
             \_\_u32 card\_no;
             \_\_u32 connector\_id;
     \};
@@ -399,15 +399,15 @@ cec.h
     \#define \ :ref:`CEC_CONNECTOR_TYPE_DRM <cec-connector-type-drm>`          1
 
     \/\*\*
-     \* struct :c:type:`cec_connector_info` - tells if and which connector is
+     \* struct cec_connector_info - tells if and which connector is
      \* associated with the CEC adapter.
      \* @type\: connector type (if any)
      \* @drm\: drm connector info
      \*\/
-    struct :c:type:`cec_connector_info` \{
+    struct cec_connector_info \{
             \_\_u32 type;
             union \{
-                    struct :c:type:`cec_drm_connector_info` drm;
+                    struct cec_drm_connector_info drm;
                     \_\_u32 raw[16];
             \};
     \};
@@ -432,7 +432,7 @@ cec.h
     \#define \ :ref:`CEC_EVENT_FL_DROPPED_EVENTS <cec-event-fl-dropped-events>`     (1 \<\< 1)
 
     \/\*\*
-     \* struct :c:type:`cec_event_state_change` - used when the CEC adapter changes state.
+     \* struct cec_event_state_change - used when the CEC adapter changes state.
      \* @phys\_addr\: the current physical address
      \* @log\_addr\_mask\: the current logical address mask
      \* @have\_conn\_info\: if non-zero, then HDMI connector information is available.
@@ -442,22 +442,22 @@ cec.h
      \*      the HDMI driver is still configuring the device or because the HDMI
      \*      device was unbound.
      \*\/
-    struct :c:type:`cec_event_state_change` \{
+    struct cec_event_state_change \{
             \_\_u16 phys\_addr;
             \_\_u16 log\_addr\_mask;
             \_\_u16 have\_conn\_info;
     \};
 
     \/\*\*
-     \* struct :c:type:`cec_event_lost_msgs` - tells you how many messages were lost.
+     \* struct cec_event_lost_msgs - tells you how many messages were lost.
      \* @lost\_msgs\: how many messages were lost.
      \*\/
-    struct :c:type:`cec_event_lost_msgs` \{
+    struct cec_event_lost_msgs \{
             \_\_u32 lost\_msgs;
     \};
 
     \/\*\*
-     \* struct :c:type:`cec_event` - CEC event structure
+     \* struct cec_event - CEC event structure
      \* @ts\: the timestamp of when the event was sent.
      \* @event\: the event.
      \* array.
@@ -465,13 +465,13 @@ cec.h
      \* @lost\_msgs\: the event payload for CEC\_EVENT\_LOST\_MSGS.
      \* @raw\: array to pad the union.
      \*\/
-    struct :c:type:`cec_event` \{
+    struct cec_event \{
             \_\_u64 ts;
             \_\_u32 event;
             \_\_u32 flags;
             union \{
-                    struct :c:type:`cec_event_state_change` state\_change;
-                    struct :c:type:`cec_event_lost_msgs` lost\_msgs;
+                    struct cec_event_state_change state\_change;
+                    struct cec_event_lost_msgs lost\_msgs;
                     \_\_u32 raw[16];
             \};
     \};
@@ -479,7 +479,7 @@ cec.h
     \/\* ioctls \*\/
 
     \/\* Adapter capabilities \*\/
-    \#define \ :ref:`CEC_ADAP_G_CAPS <cec_adap_g_caps>`         \_IOWR('a',  0, struct :c:type:`cec_caps`\ )
+    \#define \ :ref:`CEC_ADAP_G_CAPS <cec_adap_g_caps>`         \_IOWR('a',  0, struct cec_caps\ )
 
     \/\*
      \* phys\_addr is either 0 (if this is the CEC root device)
@@ -504,15 +504,15 @@ cec.h
      \* is no physical address assigned.
      \*\/
 
-    \#define \ :ref:`CEC_ADAP_G_LOG_ADDRS <cec_adap_g_log_addrs>`    \_IOR('a',  3, struct :c:type:`cec_log_addrs`\ )
-    \#define \ :ref:`CEC_ADAP_S_LOG_ADDRS <cec_adap_s_log_addrs>`    \_IOWR('a',  4, struct :c:type:`cec_log_addrs`\ )
+    \#define \ :ref:`CEC_ADAP_G_LOG_ADDRS <cec_adap_g_log_addrs>`    \_IOR('a',  3, struct cec_log_addrs\ )
+    \#define \ :ref:`CEC_ADAP_S_LOG_ADDRS <cec_adap_s_log_addrs>`    \_IOWR('a',  4, struct cec_log_addrs\ )
 
     \/\* Transmit\/receive a CEC command \*\/
-    \#define \ :ref:`CEC_TRANSMIT <cec_transmit>`            \_IOWR('a',  5, struct :c:type:`cec_msg`\ )
-    \#define \ :ref:`CEC_RECEIVE <cec_receive>`             \_IOWR('a',  6, struct :c:type:`cec_msg`\ )
+    \#define \ :ref:`CEC_TRANSMIT <cec_transmit>`            \_IOWR('a',  5, struct cec_msg\ )
+    \#define \ :ref:`CEC_RECEIVE <cec_receive>`             \_IOWR('a',  6, struct cec_msg\ )
 
     \/\* Dequeue CEC events \*\/
-    \#define \ :ref:`CEC_DQEVENT <cec_dqevent>`             \_IOWR('a',  7, struct :c:type:`cec_event`\ )
+    \#define \ :ref:`CEC_DQEVENT <cec_dqevent>`             \_IOWR('a',  7, struct cec_event\ )
 
     \/\*
      \* Get and set the message handling mode for this filehandle.
@@ -521,7 +521,7 @@ cec.h
     \#define \ :ref:`CEC_S_MODE <cec_s_mode>`              \_IOW('a',  9, \_\_u32)
 
     \/\* Get the connector info \*\/
-    \#define \ :ref:`CEC_ADAP_G_CONNECTOR_INFO <cec_adap_g_connector_info>` \_IOR('a',  10, struct :c:type:`cec_connector_info`\ )
+    \#define \ :ref:`CEC_ADAP_G_CONNECTOR_INFO <cec_adap_g_connector_info>` \_IOR('a',  10, struct cec_connector_info\ )
 
     \/\*
      \* The remainder of this header defines all CEC messages and operands.
@@ -1122,7 +1122,7 @@ cec.h
 
     \/\* Helper functions to identify the 'special' CEC devices \*\/
 
-    static inline int cec\_is\_2nd\_tv(const struct :c:type:`cec_log_addrs` \*las)
+    static inline int cec\_is\_2nd\_tv(const struct cec_log_addrs \*las)
     \{
             \/\*
              \* It is a second TV if the logical address is 14 or 15 and the
@@ -1133,7 +1133,7 @@ cec.h
                    las-\>primary\_device\_type[0] == CEC\_OP\_PRIM\_DEVTYPE\_TV;
     \}
 
-    static inline int cec\_is\_processor(const struct :c:type:`cec_log_addrs` \*las)
+    static inline int cec\_is\_processor(const struct cec_log_addrs \*las)
     \{
             \/\*
              \* It is a processor if the logical address is 12-15 and the
@@ -1144,7 +1144,7 @@ cec.h
                    las-\>primary\_device\_type[0] == CEC\_OP\_PRIM\_DEVTYPE\_PROCESSOR;
     \}
 
-    static inline int cec\_is\_switch(const struct :c:type:`cec_log_addrs` \*las)
+    static inline int cec\_is\_switch(const struct cec_log_addrs \*las)
     \{
             \/\*
              \* It is a switch if the logical address is 15 and the
@@ -1156,7 +1156,7 @@ cec.h
                    !(las-\>flags \& \ :ref:`CEC_LOG_ADDRS_FL_CDC_ONLY <cec-log-addrs-fl-cdc-only>`\ );
     \}
 
-    static inline int cec\_is\_cdc\_only(const struct :c:type:`cec_log_addrs` \*las)
+    static inline int cec\_is\_cdc\_only(const struct cec_log_addrs \*las)
     \{
             \/\*
              \* It is a CDC-only device if the logical address is 15 and the

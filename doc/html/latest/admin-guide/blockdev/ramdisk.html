@@ -60,7 +60,7 @@
             
             
               <div class="version">
-                5.9.0
+                5.10.0
               </div>
             
           
@@ -161,7 +161,7 @@
 <h2>1) Overview<a class="headerlink" href="#overview" title="Permalink to this headline">¶</a></h2>
 <p>The RAM disk driver is a way to use main system memory as a block device.  It
 is required for initrd, an initial filesystem used if you need to load modules
-in order to access the root filesystem (see Documentation/admin-guide/initrd.rst).  It can
+in order to access the root filesystem (see <a class="reference internal" href="../initrd.html"><span class="doc">Using the initial RAM disk (initrd)</span></a>).  It can
 also be used for a temporary filesystem for crypto work, since the contents
 are erased on reboot.</p>
 <p>The RAM disk dynamically grows as more space is required. It does this by using
@@ -201,44 +201,22 @@ default is 4096 (4 MB).</p>
 </dl>
 </div></blockquote>
 </div>
-<div class="section" id="using-rdev-r">
-<h2>3) Using “rdev -r”<a class="headerlink" href="#using-rdev-r" title="Permalink to this headline">¶</a></h2>
-<p>The usage of the word (two bytes) that “rdev -r” sets in the kernel image is
-as follows. The low 11 bits (0 -&gt; 10) specify an offset (in 1 k blocks) of up
-to 2 MB (2^11) of where to find the RAM disk (this used to be the size). Bit
-14 indicates that a RAM disk is to be loaded, and bit 15 indicates whether a
-prompt/wait sequence is to be given before trying to read the RAM disk. Since
-the RAM disk dynamically grows as data is being written into it, a size field
-is not required. Bits 11 to 13 are not currently used and may as well be zero.
-These numbers are no magical secrets, as seen below:</p>
-<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>./arch/x86/kernel/setup.c:#define RAMDISK_IMAGE_START_MASK     0x07FF
-./arch/x86/kernel/setup.c:#define RAMDISK_PROMPT_FLAG          0x8000
-./arch/x86/kernel/setup.c:#define RAMDISK_LOAD_FLAG            0x4000
-</pre></div>
-</div>
-<p>Consider a typical two floppy disk setup, where you will have the
-kernel on disk one, and have already put a RAM disk image onto disk #2.</p>
-<p>Hence you want to set bits 0 to 13 as 0, meaning that your RAM disk
-starts at an offset of 0 kB from the beginning of the floppy.
-The command line equivalent is: “ramdisk_start=0”</p>
-<p>You want bit 14 as one, indicating that a RAM disk is to be loaded.
-The command line equivalent is: “load_ramdisk=1”</p>
-<p>You want bit 15 as one, indicating that you want a prompt/keypress
-sequence so that you have a chance to switch floppy disks.
-The command line equivalent is: “prompt_ramdisk=1”</p>
-<p>Putting that together gives 2^15 + 2^14 + 0 = 49152 for an rdev word.
-So to create disk one of the set, you would do:</p>
-<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>/usr/src/linux# cat arch/x86/boot/zImage &gt; /dev/fd0
-/usr/src/linux# rdev /dev/fd0 /dev/fd0
-/usr/src/linux# rdev -r /dev/fd0 49152
+<div class="section" id="using-rdev">
+<h2>3) Using “rdev”<a class="headerlink" href="#using-rdev" title="Permalink to this headline">¶</a></h2>
+<p>“rdev” is an obsolete, deprecated, antiquated utility that could be used
+to set the boot device in a Linux kernel image.</p>
+<p>Instead of using rdev, just place the boot device information on the
+kernel command line and pass it to the kernel from the bootloader.</p>
+<p>You can also pass arguments to the kernel by setting FDARGS in
+arch/x86/boot/Makefile and specify in initrd image by setting FDINITRD in
+arch/x86/boot/Makefile.</p>
+<p>Some of the kernel command line boot options that may apply here are:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>ramdisk_start=N
+ramdisk_size=M
 </pre></div>
 </div>
 <p>If you make a boot disk that has LILO, then for the above, you would use:</p>
-<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>append = &quot;ramdisk_start=0 load_ramdisk=1 prompt_ramdisk=1&quot;
-</pre></div>
-</div>
-<p>Since the default start = 0 and the default prompt = 1, you could use:</p>
-<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>append = &quot;load_ramdisk=1&quot;
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>append = &quot;ramdisk_start=N ramdisk_size=M&quot;
 </pre></div>
 </div>
 </div>
@@ -290,14 +268,9 @@ not larger than the total space on your floppy (usually 1440 kB):</p>
 </pre></div>
 </div>
 </li>
-<li><p>Use “rdev” to set the boot device, RAM disk offset, prompt flag, etc.
-For prompt_ramdisk=1, load_ramdisk=1, ramdisk_start=400, one would
-have 2^15 + 2^14 + 400 = 49552:</p>
-<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>rdev /dev/fd0 /dev/fd0
-rdev -r /dev/fd0 49552
-</pre></div>
-</div>
-</li>
+<li><p>Make sure that you have already specified the boot information in
+FDARGS and FDINITRD or that you use a bootloader to pass kernel
+command line boot options to the kernel.</p></li>
 </ol>
 <p>That is it. You now have your boot/root compressed RAM disk floppy. Some
 users may wish to combine steps (d) and (f) by using a pipe.</p>
@@ -307,6 +280,10 @@ users may wish to combine steps (d) and (f) by using a pipe.</p>
 </div>
 <div class="section" id="changelog">
 <h2>Changelog:<a class="headerlink" href="#changelog" title="Permalink to this headline">¶</a></h2>
+<p>SEPT-2020 :</p>
+<blockquote>
+<div><p>Removed usage of “rdev”</p>
+</div></blockquote>
 <dl class="simple">
 <dt>10-22-04 :</dt><dd><p>Updated to reflect changes in command line options, remove
 obsolete references, general cleanup.

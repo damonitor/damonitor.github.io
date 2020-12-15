@@ -60,7 +60,7 @@
             
             
               <div class="version">
-                5.9.0
+                5.10.0
               </div>
             
           
@@ -205,6 +205,10 @@ class. The target memory’s initiators in a given class indicate the
 nodes’ access characteristics share the same performance relative to other
 linked initiator nodes. Each target within an initiator’s access class,
 though, do not necessarily perform the same as each other.</p>
+<p>The access class “1” is used to allow differentiation between initiators
+that are CPUs and hence suitable for generic task scheduling, and
+IO initiators such as GPUs and NICs.  Unlike access class 0, only
+nodes containing CPUs are considered.</p>
 </div>
 <div class="section" id="numa-performance">
 <h1>NUMA Performance<a class="headerlink" href="#numa-performance" title="Permalink to this headline">¶</a></h1>
@@ -232,6 +236,8 @@ are exported are as follows:</p>
 <p>The latency attributes are provided in nanoseconds.</p>
 <p>The values reported here correspond to the rated latency and bandwidth
 for the platform.</p>
+<p>Access class 1 takes the same form but only includes values for CPU to
+memory activity.</p>
 </div>
 <div class="section" id="numa-cache">
 <h1>NUMA Cache<a class="headerlink" href="#numa-cache" title="Permalink to this headline">¶</a></h1>

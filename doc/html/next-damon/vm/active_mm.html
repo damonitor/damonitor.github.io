@@ -60,7 +60,7 @@
             
             
               <div class="version">
-                5.9.0
+                5.10.0
               </div>
             
           
@@ -215,7 +215,7 @@ user exited on another CPU while a lazy user was still active, so you do
 actually get cases where you have a address space that is _only_ used by
 lazy users. That is often a short-lived state, because once that thread
 gets scheduled away in favour of a real thread, the &quot;zombie&quot; mm gets
-released because &quot;mm_users&quot; becomes zero.
+released because &quot;mm_count&quot; becomes zero.
 
 Also, a new rule is that _nobody_ ever has &quot;init_mm&quot; as a real MM any
 more. &quot;init_mm&quot; should be considered just a &quot;lazy context when no other

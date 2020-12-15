@@ -60,7 +60,7 @@
             
             
               <div class="version">
-                5.9.0
+                5.10.0
               </div>
             
           
@@ -330,6 +330,25 @@ failover event.</p>
 </dl>
 </div></blockquote>
 </div>
+<div class="section" id="deprecation-of-v4-format">
+<h2>Deprecation of V4 Format<a class="headerlink" href="#deprecation-of-v4-format" title="Permalink to this headline">¶</a></h2>
+<p>The V4 filesystem format lacks certain features that are supported by
+the V5 format, such as metadata checksumming, strengthened metadata
+verification, and the ability to store timestamps past the year 2038.
+Because of this, the V4 format is deprecated.  All users should upgrade
+by backing up their files, reformatting, and restoring from the backup.</p>
+<p>Administrators and users can detect a V4 filesystem by running xfs_info
+against a filesystem mountpoint and checking for a string containing
+“crc=”.  If no such string is found, please upgrade xfsprogs to the
+latest version and try again.</p>
+<p>The deprecation will take place in two parts.  Support for mounting V4
+filesystems can now be disabled at kernel build time via Kconfig option.
+The option will default to yes until September 2025, at which time it
+will be changed to default to no.  In September 2030, support will be
+removed from the codebase entirely.</p>
+<p>Note: Distributors may choose to withdraw V4 format support earlier than
+the dates listed above.</p>
+</div>
 <div class="section" id="deprecated-mount-options">
 <h2>Deprecated Mount Options<a class="headerlink" href="#deprecated-mount-options" title="Permalink to this headline">¶</a></h2>
 <table class="docutils align-default">
@@ -343,8 +362,14 @@ failover event.</p>
 </tr>
 </thead>
 <tbody>
-<tr class="row-even"><td></td>
-<td></td>
+<tr class="row-even"><td><p>Mounting with V4 filesystem</p></td>
+<td><p>September 2030</p></td>
+</tr>
+<tr class="row-odd"><td><p>ikeep/noikeep</p></td>
+<td><p>September 2025</p></td>
+</tr>
+<tr class="row-even"><td><p>attr2/noattr2</p></td>
+<td><p>September 2025</p></td>
 </tr>
 </tbody>
 </table>
@@ -469,7 +494,25 @@ allocation groups when allocating extents for new files.</p>
 </div>
 <div class="section" id="deprecated-sysctls">
 <h2>Deprecated Sysctls<a class="headerlink" href="#deprecated-sysctls" title="Permalink to this headline">¶</a></h2>
-<p>None at present.</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 63%" />
+<col style="width: 37%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Name</p></th>
+<th class="head"><p>Removal Schedule</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>fs.xfs.irix_sgid_inherit</p></td>
+<td><p>September 2025</p></td>
+</tr>
+<tr class="row-odd"><td><p>fs.xfs.irix_symlink_mode</p></td>
+<td><p>September 2025</p></td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="section" id="removed-sysctls">
 <h2>Removed Sysctls<a class="headerlink" href="#removed-sysctls" title="Permalink to this headline">¶</a></h2>

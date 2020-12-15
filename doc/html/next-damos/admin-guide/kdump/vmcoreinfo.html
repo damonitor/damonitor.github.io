@@ -60,7 +60,7 @@
             
             
               <div class="version">
-                5.9.0
+                5.10.0
               </div>
             
           
@@ -311,43 +311,106 @@ from this.</p>
 <p>Free areas descriptor. User-space tools use this value to iterate the
 free_area ranges. MAX_ORDER is used by the zone buddy allocator.</p>
 </div>
-<div class="section" id="log-first-idx">
-<h3>log_first_idx<a class="headerlink" href="#log-first-idx" title="Permalink to this headline">¶</a></h3>
-<p>Index of the first record stored in the buffer log_buf. Used by
-user-space tools to read the strings in the log_buf.</p>
+<div class="section" id="prb">
+<h3>prb<a class="headerlink" href="#prb" title="Permalink to this headline">¶</a></h3>
+<p>A pointer to the printk ringbuffer (struct printk_ringbuffer). This
+may be pointing to the static boot ringbuffer or the dynamically
+allocated ringbuffer, depending on when the the core dump occurred.
+Used by user-space tools to read the active kernel log buffer.</p>
 </div>
-<div class="section" id="log-buf">
-<h3>log_buf<a class="headerlink" href="#log-buf" title="Permalink to this headline">¶</a></h3>
-<p>Console output is written to the ring buffer log_buf at index
-log_first_idx. Used to get the kernel log.</p>
+<div class="section" id="printk-rb-static">
+<h3>printk_rb_static<a class="headerlink" href="#printk-rb-static" title="Permalink to this headline">¶</a></h3>
+<p>A pointer to the static boot printk ringbuffer. If &#64;prb has a
+different value, this is useful for viewing the initial boot messages,
+which may have been overwritten in the dynamically allocated
+ringbuffer.</p>
 </div>
-<div class="section" id="log-buf-len">
-<h3>log_buf_len<a class="headerlink" href="#log-buf-len" title="Permalink to this headline">¶</a></h3>
-<p>log_buf’s length.</p>
+<div class="section" id="clear-seq">
+<h3>clear_seq<a class="headerlink" href="#clear-seq" title="Permalink to this headline">¶</a></h3>
+<p>The sequence number of the <a class="reference internal" href="../../core-api/printk-basics.html#c.printk" title="printk"><code class="xref c c-func docutils literal notranslate"><span class="pre">printk()</span></code></a> record after the last clear
+command. It indicates the first record after the last
+SYSLOG_ACTION_CLEAR, like issued by ‘dmesg -c’. Used by user-space
+tools to dump a subset of the dmesg log.</p>
 </div>
-<div class="section" id="clear-idx">
-<h3>clear_idx<a class="headerlink" href="#clear-idx" title="Permalink to this headline">¶</a></h3>
-<p>The index that the next <a class="reference internal" href="../../driver-api/basics.html#c.printk" title="printk"><code class="xref c c-func docutils literal notranslate"><span class="pre">printk()</span></code></a> record to read after the last clear
-command. It indicates the first record after the last SYSLOG_ACTION
-_CLEAR, like issued by ‘dmesg -c’. Used by user-space tools to dump
-the dmesg log.</p>
+<div class="section" id="printk-ringbuffer">
+<h3>printk_ringbuffer<a class="headerlink" href="#printk-ringbuffer" title="Permalink to this headline">¶</a></h3>
+<p>The size of a printk_ringbuffer structure. This structure contains all
+information required for accessing the various components of the
+kernel log buffer.</p>
 </div>
-<div class="section" id="log-next-idx">
-<h3>log_next_idx<a class="headerlink" href="#log-next-idx" title="Permalink to this headline">¶</a></h3>
-<p>The index of the next record to store in the buffer log_buf. Used to
-compute the index of the current buffer position.</p>
+<div class="section" id="printk-ringbuffer-desc-ring-text-data-ring-dict-data-ring-fail">
+<h3>(printk_ringbuffer, desc_ring|text_data_ring|dict_data_ring|fail)<a class="headerlink" href="#printk-ringbuffer-desc-ring-text-data-ring-dict-data-ring-fail" title="Permalink to this headline">¶</a></h3>
+<p>Offsets for the various components of the printk ringbuffer. Used by
+user-space tools to view the kernel log buffer without requiring the
+declaration of the structure.</p>
 </div>
-<div class="section" id="printk-log">
-<h3>printk_log<a class="headerlink" href="#printk-log" title="Permalink to this headline">¶</a></h3>
-<p>The size of a structure printk_log. Used to compute the size of
-messages, and extract dmesg log. It encapsulates header information for
-log_buf, such as timestamp, syslog level, etc.</p>
+<div class="section" id="prb-desc-ring">
+<h3>prb_desc_ring<a class="headerlink" href="#prb-desc-ring" title="Permalink to this headline">¶</a></h3>
+<p>The size of the prb_desc_ring structure. This structure contains
+information about the set of record descriptors.</p>
 </div>
-<div class="section" id="printk-log-ts-nsec-len-text-len-dict-len">
-<h3>(printk_log, ts_nsec|len|text_len|dict_len)<a class="headerlink" href="#printk-log-ts-nsec-len-text-len-dict-len" title="Permalink to this headline">¶</a></h3>
-<p>It represents field offsets in struct printk_log. User space tools
-parse it and check whether the values of printk_log’s members have been
-changed.</p>
+<div class="section" id="prb-desc-ring-count-bits-descs-head-id-tail-id">
+<h3>(prb_desc_ring, count_bits|descs|head_id|tail_id)<a class="headerlink" href="#prb-desc-ring-count-bits-descs-head-id-tail-id" title="Permalink to this headline">¶</a></h3>
+<p>Offsets for the fields describing the set of record descriptors. Used
+by user-space tools to be able to traverse the descriptors without
+requiring the declaration of the structure.</p>
+</div>
+<div class="section" id="prb-desc">
+<h3>prb_desc<a class="headerlink" href="#prb-desc" title="Permalink to this headline">¶</a></h3>
+<p>The size of the prb_desc structure. This structure contains
+information about a single record descriptor.</p>
+</div>
+<div class="section" id="prb-desc-info-state-var-text-blk-lpos-dict-blk-lpos">
+<h3>(prb_desc, info|state_var|text_blk_lpos|dict_blk_lpos)<a class="headerlink" href="#prb-desc-info-state-var-text-blk-lpos-dict-blk-lpos" title="Permalink to this headline">¶</a></h3>
+<p>Offsets for the fields describing a record descriptors. Used by
+user-space tools to be able to read descriptors without requiring
+the declaration of the structure.</p>
+</div>
+<div class="section" id="prb-data-blk-lpos">
+<h3>prb_data_blk_lpos<a class="headerlink" href="#prb-data-blk-lpos" title="Permalink to this headline">¶</a></h3>
+<p>The size of the prb_data_blk_lpos structure. This structure contains
+information about where the text or dictionary data (data block) is
+located within the respective data ring.</p>
+</div>
+<div class="section" id="prb-data-blk-lpos-begin-next">
+<h3>(prb_data_blk_lpos, begin|next)<a class="headerlink" href="#prb-data-blk-lpos-begin-next" title="Permalink to this headline">¶</a></h3>
+<p>Offsets for the fields describing the location of a data block. Used
+by user-space tools to be able to locate data blocks without
+requiring the declaration of the structure.</p>
+</div>
+<div class="section" id="printk-info">
+<h3>printk_info<a class="headerlink" href="#printk-info" title="Permalink to this headline">¶</a></h3>
+<p>The size of the printk_info structure. This structure contains all
+the meta-data for a record.</p>
+</div>
+<div class="section" id="printk-info-seq-ts-nsec-text-len-dict-len-caller-id">
+<h3>(printk_info, seq|ts_nsec|text_len|dict_len|caller_id)<a class="headerlink" href="#printk-info-seq-ts-nsec-text-len-dict-len-caller-id" title="Permalink to this headline">¶</a></h3>
+<p>Offsets for the fields providing the meta-data for a record. Used by
+user-space tools to be able to read the information without requiring
+the declaration of the structure.</p>
+</div>
+<div class="section" id="prb-data-ring">
+<h3>prb_data_ring<a class="headerlink" href="#prb-data-ring" title="Permalink to this headline">¶</a></h3>
+<p>The size of the prb_data_ring structure. This structure contains
+information about a set of data blocks.</p>
+</div>
+<div class="section" id="prb-data-ring-size-bits-data-head-lpos-tail-lpos">
+<h3>(prb_data_ring, size_bits|data|head_lpos|tail_lpos)<a class="headerlink" href="#prb-data-ring-size-bits-data-head-lpos-tail-lpos" title="Permalink to this headline">¶</a></h3>
+<p>Offsets for the fields describing a set of data blocks. Used by
+user-space tools to be able to access the data blocks without
+requiring the declaration of the structure.</p>
+</div>
+<div class="section" id="atomic-long-t">
+<h3>atomic_long_t<a class="headerlink" href="#atomic-long-t" title="Permalink to this headline">¶</a></h3>
+<p>The size of the atomic_long_t structure. Used by user-space tools to
+be able to copy the full structure, regardless of its
+architecture-specific implementation.</p>
+</div>
+<div class="section" id="atomic-long-t-counter">
+<h3>(atomic_long_t, counter)<a class="headerlink" href="#atomic-long-t-counter" title="Permalink to this headline">¶</a></h3>
+<p>Offset for the long value of an atomic_long_t variable. Used by
+user-space tools to access the long value without requiring the
+architecture-specific declaration.</p>
 </div>
 <div class="section" id="free-area-free-list-migrate-types">
 <h3>(free_area.free_list, MIGRATE_TYPES)<a class="headerlink" href="#free-area-free-list-migrate-types" title="Permalink to this headline">¶</a></h3>

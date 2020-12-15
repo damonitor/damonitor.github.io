@@ -146,7 +146,7 @@ lirc.h
     \#define \ :ref:`LIRC_GET_REC_TIMEOUT <lirc_get_rec_timeout>`           \_IOR('i', 0x00000024, \_\_u32)
 
     \/\*
-     \* struct :c:type:`lirc_scancode` - decoded scancode with protocol for use with
+     \* struct lirc_scancode - decoded scancode with protocol for use with
      \*      \ :ref:`LIRC_MODE_SCANCODE <lirc-mode-scancode>`
      \*
      \* @timestamp\: Timestamp in nanoseconds using CLOCK\_MONOTONIC when IR
@@ -158,7 +158,7 @@ lirc.h
      \* @keycode\: the translated keycode. Set to 0 for transmit.
      \* @scancode\: the scancode received or to be sent
      \*\/
-    struct :c:type:`lirc_scancode` \{
+    struct lirc_scancode \{
             \_\_u64   timestamp;
             \_\_u16   flags;
             \_\_u16   rc\_proto;

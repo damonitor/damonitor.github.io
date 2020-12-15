@@ -60,7 +60,7 @@
             
             
               <div class="version">
-                5.9.0
+                5.10.0
               </div>
             
           
@@ -159,14 +159,14 @@
 <h1>A block layer cache (bcache)<a class="headerlink" href="#a-block-layer-cache-bcache" title="Permalink to this headline">¶</a></h1>
 <p>Say you’ve got a big slow raid 6, and an ssd or three. Wouldn’t it be
 nice if you could use them as cache… Hence bcache.</p>
-<p>Wiki and git repositories are at:</p>
-<blockquote>
-<div><ul class="simple">
-<li><p><a class="reference external" href="https://bcache.evilpiepirate.org">https://bcache.evilpiepirate.org</a></p></li>
-<li><p><a class="reference external" href="http://evilpiepirate.org/git/linux-bcache.git">http://evilpiepirate.org/git/linux-bcache.git</a></p></li>
-<li><p><a class="reference external" href="https://evilpiepirate.org/git/bcache-tools.git">https://evilpiepirate.org/git/bcache-tools.git</a></p></li>
-</ul>
-</div></blockquote>
+<dl class="simple">
+<dt>The bcache wiki can be found at:</dt><dd><p><a class="reference external" href="https://bcache.evilpiepirate.org">https://bcache.evilpiepirate.org</a></p>
+</dd>
+<dt>This is the git repository of bcache-tools:</dt><dd><p><a class="reference external" href="https://git.kernel.org/pub/scm/linux/kernel/git/colyli/bcache-tools.git/">https://git.kernel.org/pub/scm/linux/kernel/git/colyli/bcache-tools.git/</a></p>
+</dd>
+<dt>The latest bcache kernel code can be found from mainline Linux kernel:</dt><dd><p><a class="reference external" href="https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/">https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/</a></p>
+</dd>
+</dl>
 <p>It’s designed around the performance characteristics of SSDs - it only allocates
 in erase block sized buckets, and it uses a hybrid btree/log to track cached
 extents (which can be anywhere from a single sector to the bucket size). It’s
@@ -192,18 +192,21 @@ or dirty data), caching is automatically disabled; if dirty data was present
 in the cache it first disables writeback caching and waits for all dirty data
 to be flushed.</p>
 <p>Getting started:
-You’ll need make-bcache from the bcache-tools repository. Both the cache device
+You’ll need bcache util from the bcache-tools repository. Both the cache device
 and backing device must be formatted before use:</p>
-<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>make-bcache -B /dev/sdb
-make-bcache -C /dev/sdc
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>bcache make -B /dev/sdb
+bcache make -C /dev/sdc
 </pre></div>
 </div>
-<p>make-bcache has the ability to format multiple devices at the same time - if
+<p><cite>bcache make</cite> has the ability to format multiple devices at the same time - if
 you format your backing devices and cache device at the same time, you won’t
 have to manually attach:</p>
-<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>make-bcache -B /dev/sda /dev/sdb -C /dev/sdc
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>bcache make -B /dev/sda /dev/sdb -C /dev/sdc
 </pre></div>
 </div>
+<p>If your bcache-tools is not updated to latest version and does not have the
+unified <cite>bcache</cite> utility, you may use the legacy <cite>make-bcache</cite> utility to format
+bcache device with same -B and -C parameters.</p>
 <p>bcache-tools now ships udev rules, and bcache devices are known to the kernel
 immediately.  Without udev, you can manually register devices like this:</p>
 <div class="highlight-none notranslate"><div class="highlight"><pre><span></span>echo /dev/sdb &gt; /sys/fs/bcache/register
@@ -330,7 +333,7 @@ output if available so that we may assist.</p>
 <p>If bcache is not available in the kernel, a filesystem on the backing
 device is still available at an 8KiB offset. So either via a loopdev
 of the backing device created with –offset 8K, or any value defined by
-–data-offset when you originally formatted bcache with <cite>make-bcache</cite>.</p>
+–data-offset when you originally formatted bcache with <cite>bcache make</cite>.</p>
 <p>For example:</p>
 <div class="highlight-none notranslate"><div class="highlight"><pre><span></span>losetup -o 8192 /dev/loop0 /dev/your_bcache_backing_dev
 </pre></div>
@@ -347,7 +350,7 @@ they were: c6 85 73 f6 4e 1a 45 ca 82 65 f5 7f 48 ba 6d 81
 </pre></div>
 </div>
 <p>After you boot back with bcache enabled, you recreate the cache and attach it:</p>
-<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>host:~# make-bcache -C /dev/sdh2
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>host:~# bcache make -C /dev/sdh2
 UUID:                   7be7e175-8f4c-4f99-94b2-9c904d227045
 Set UUID:               5bc072a8-ab17-446d-9744-e247949913c1
 version:                0
@@ -456,7 +459,7 @@ want for getting the best possible numbers when benchmarking.</p>
 <li><p>Backing device alignment</p>
 <p>The default metadata size in bcache is 8k.  If your backing device is
 RAID based, then be sure to align this by a multiple of your stride
-width using <cite>make-bcache –data-offset</cite>. If you intend to expand your
+width using <cite>bcache make –data-offset</cite>. If you intend to expand your
 disk array in the future, then multiply a series of primes by your
 raid stripe size to get the disk multiples that you would like.</p>
 <p>For example:  If you have a 64k stripe size, then the following offset

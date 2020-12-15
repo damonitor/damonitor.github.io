@@ -60,7 +60,7 @@
             
             
               <div class="version">
-                5.9.0
+                5.10.0
               </div>
             
           
@@ -169,7 +169,7 @@
 conventions of cgroup v2.  It describes all userland-visible aspects
 of cgroup including core and specific controller behaviors.  All
 future changes must be reflected in this document.  Documentation for
-v1 is available under <a class="reference internal" href="cgroup-v1/index.html#cgroup-v1"><span class="std std-ref">Documentation/admin-guide/cgroup-v1/index.rst</span></a>.</p>
+v1 is available under <a class="reference internal" href="cgroup-v1/index.html#cgroup-v1"><span class="std std-ref"><a class="reference internal" href="cgroup-v1/index.html"><span class="doc">Control Groups version 1</span></a></span></a>.</p>
 <div class="section" id="introduction">
 <h2>Introduction<a class="headerlink" href="#introduction" title="Permalink to this headline">¶</a></h2>
 <div class="section" id="terminology">
@@ -984,7 +984,7 @@ one number is written, $MAX is updated.</p>
 </dd>
 <dt>cpu.pressure</dt><dd><p>A read-only nested-key file which exists on non-root cgroups.</p>
 <p>Shows pressure stall information for CPU. See
-<a class="reference internal" href="../accounting/psi.html#psi"><span class="std std-ref">Documentation/accounting/psi.rst</span></a> for details.</p>
+<a class="reference internal" href="../accounting/psi.html#psi"><span class="std std-ref"><a class="reference internal" href="../accounting/psi.html"><span class="doc">PSI - Pressure Stall Information</span></a></span></a> for details.</p>
 </dd>
 <dt>cpu.uclamp.min</dt><dd><p>A read-write single value file which exists on non-root cgroups.
 The default is “0”, i.e. no utilization boosting.</p>
@@ -1167,6 +1167,9 @@ on the state and past events of the memory management system.</p>
 <p>The entries are ordered to be human readable, and new entries
 can show up in the middle. Don’t rely on items remaining in a
 fixed position; use the keys to look up specific values!</p>
+<p>If the entry has no per-node counter(or not show in the
+mempry.numa_stat). We use ‘npn’(non-per-node) as the tag
+to indicate that it will not show in the mempry.numa_stat.</p>
 <blockquote>
 <div><dl>
 <dt>anon</dt><dd><p>Amount of memory used in anonymous mappings such as
@@ -1177,13 +1180,10 @@ including tmpfs and shared memory.</p>
 </dd>
 <dt>kernel_stack</dt><dd><p>Amount of memory allocated to kernel stacks.</p>
 </dd>
-<dt>slab</dt><dd><p>Amount of memory used for storing in-kernel data
-structures.</p>
-</dd>
-<dt>percpu</dt><dd><p>Amount of memory used for storing per-cpu kernel
+<dt>percpu(npn)</dt><dd><p>Amount of memory used for storing per-cpu kernel
 data structures.</p>
 </dd>
-<dt>sock</dt><dd><p>Amount of memory used in network transmission buffers</p>
+<dt>sock(npn)</dt><dd><p>Amount of memory used in network transmission buffers</p>
 </dd>
 <dt>shmem</dt><dd><p>Amount of cached filesystem data that is swap-backed,
 such as tmpfs, shm segments, shared anonymous mmap()s</p>
@@ -1213,9 +1213,8 @@ dentries and inodes.</p>
 <dt>slab_unreclaimable</dt><dd><p>Part of “slab” that cannot be reclaimed on memory
 pressure.</p>
 </dd>
-<dt>pgfault</dt><dd><p>Total number of page faults incurred</p>
-</dd>
-<dt>pgmajfault</dt><dd><p>Number of major page faults incurred</p>
+<dt>slab(npn)</dt><dd><p>Amount of memory used for storing in-kernel data
+structures.</p>
 </dd>
 <dt>workingset_refault_anon</dt><dd><p>Number of refaults of previously evicted anonymous pages.</p>
 </dd>
@@ -1234,30 +1233,53 @@ active workingset before they got reclaimed.</p>
 </dd>
 <dt>workingset_nodereclaim</dt><dd><p>Number of times a shadow node has been reclaimed</p>
 </dd>
-<dt>pgrefill</dt><dd><p>Amount of scanned pages (in an active LRU list)</p>
+<dt>pgfault(npn)</dt><dd><p>Total number of page faults incurred</p>
 </dd>
-<dt>pgscan</dt><dd><p>Amount of scanned pages (in an inactive LRU list)</p>
+<dt>pgmajfault(npn)</dt><dd><p>Number of major page faults incurred</p>
 </dd>
-<dt>pgsteal</dt><dd><p>Amount of reclaimed pages</p>
+<dt>pgrefill(npn)</dt><dd><p>Amount of scanned pages (in an active LRU list)</p>
 </dd>
-<dt>pgactivate</dt><dd><p>Amount of pages moved to the active LRU list</p>
+<dt>pgscan(npn)</dt><dd><p>Amount of scanned pages (in an inactive LRU list)</p>
 </dd>
-<dt>pgdeactivate</dt><dd><p>Amount of pages moved to the inactive LRU list</p>
+<dt>pgsteal(npn)</dt><dd><p>Amount of reclaimed pages</p>
 </dd>
-<dt>pglazyfree</dt><dd><p>Amount of pages postponed to be freed under memory pressure</p>
+<dt>pgactivate(npn)</dt><dd><p>Amount of pages moved to the active LRU list</p>
 </dd>
-<dt>pglazyfreed</dt><dd><p>Amount of reclaimed lazyfree pages</p>
+<dt>pgdeactivate(npn)</dt><dd><p>Amount of pages moved to the inactive LRU list</p>
 </dd>
-<dt>thp_fault_alloc</dt><dd><p>Number of transparent hugepages which were allocated to satisfy
+<dt>pglazyfree(npn)</dt><dd><p>Amount of pages postponed to be freed under memory pressure</p>
+</dd>
+<dt>pglazyfreed(npn)</dt><dd><p>Amount of reclaimed lazyfree pages</p>
+</dd>
+<dt>thp_fault_alloc(npn)</dt><dd><p>Number of transparent hugepages which were allocated to satisfy
 a page fault. This counter is not present when CONFIG_TRANSPARENT_HUGEPAGE
 is not set.</p>
 </dd>
-<dt>thp_collapse_alloc</dt><dd><p>Number of transparent hugepages which were allocated to allow
+<dt>thp_collapse_alloc(npn)</dt><dd><p>Number of transparent hugepages which were allocated to allow
 collapsing an existing range of pages. This counter is not
 present when CONFIG_TRANSPARENT_HUGEPAGE is not set.</p>
 </dd>
 </dl>
 </div></blockquote>
+</dd>
+<dt>memory.numa_stat</dt><dd><p>A read-only nested-keyed file which exists on non-root cgroups.</p>
+<p>This breaks down the cgroup’s memory footprint into different
+types of memory, type-specific details, and other information
+per node on the state of the memory management system.</p>
+<p>This is useful for providing visibility into the NUMA locality
+information within an memcg since the pages are allowed to be
+allocated from any physical node. One of the use case is evaluating
+application performance by combining this information with the
+application’s CPU allocation.</p>
+<p>All memory amounts are in bytes.</p>
+<p>The output format of memory.numa_stat is:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>type N0=&lt;bytes in node 0&gt; N1=&lt;bytes in node 1&gt; ...
+</pre></div>
+</div>
+<p>The entries are ordered to be human readable, and new entries
+can show up in the middle. Don’t rely on items remaining in a
+fixed position; use the keys to look up specific values!</p>
+<p>The entries can refer to the memory.stat.</p>
 </dd>
 <dt>memory.swap.current</dt><dd><p>A read-only single value file which exists on non-root
 cgroups.</p>
@@ -1307,7 +1329,7 @@ reduces the impact on the workload and memory management.</p>
 </dd>
 <dt>memory.pressure</dt><dd><p>A read-only nested-key file which exists on non-root cgroups.</p>
 <p>Shows pressure stall information for memory. See
-<a class="reference internal" href="../accounting/psi.html#psi"><span class="std std-ref">Documentation/accounting/psi.rst</span></a> for details.</p>
+<a class="reference internal" href="../accounting/psi.html#psi"><span class="std std-ref"><a class="reference internal" href="../accounting/psi.html"><span class="doc">PSI - Pressure Stall Information</span></a></span></a> for details.</p>
 </dd>
 </dl>
 </div></blockquote>
@@ -1596,7 +1618,7 @@ delayed if limit is reached.  Temporary bursts are allowed.</p>
 </dd>
 <dt>io.pressure</dt><dd><p>A read-only nested-key file which exists on non-root cgroups.</p>
 <p>Shows pressure stall information for IO. See
-<a class="reference internal" href="../accounting/psi.html#psi"><span class="std std-ref">Documentation/accounting/psi.rst</span></a> for details.</p>
+<a class="reference internal" href="../accounting/psi.html#psi"><span class="std std-ref"><a class="reference internal" href="../accounting/psi.html"><span class="doc">PSI - Pressure Stall Information</span></a></span></a> for details.</p>
 </dd>
 </dl>
 </div></blockquote>

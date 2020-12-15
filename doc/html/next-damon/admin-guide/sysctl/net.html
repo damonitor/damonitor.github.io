@@ -60,7 +60,7 @@
             
             
               <div class="version">
-                5.9.0
+                5.10.0
               </div>
             
           
@@ -497,11 +497,19 @@ of struct cmsghdr structures with appended data.</p>
 <div class="section" id="fb-tunnels-only-for-init-net">
 <h3>fb_tunnels_only_for_init_net<a class="headerlink" href="#fb-tunnels-only-for-init-net" title="Permalink to this headline">¶</a></h3>
 <p>Controls if fallback tunnels (like tunl0, gre0, gretap0, erspan0,
-sit0, ip6tnl0, ip6gre0) are automatically created when a new
-network namespace is created, if corresponding tunnel is present
-in initial network namespace.
-If set to 1, these devices are not automatically created, and
-user space is responsible for creating them if needed.</p>
+sit0, ip6tnl0, ip6gre0) are automatically created. There are 3 possibilities
+(a) value = 0; respective fallback tunnels are created when module is
+loaded in every net namespaces (backward compatible behavior).
+(b) value = 1; [kcmd value: initns] respective fallback tunnels are
+created only in init net namespace and every other net namespace will
+not have them.
+(c) value = 2; [kcmd value: none] fallback tunnels are not created
+when a module is loaded in any of the net namespace. Setting value to
+“2” is pointless after boot if these modules are built-in, so there is
+a kernel command-line option that can change this default. Please refer to
+<a class="reference internal" href="../kernel-parameters.html"><span class="doc">The kernel’s command-line parameters</span></a> for additional details.</p>
+<p>Not creating fallback tunnels gives control to userspace to create
+whatever is needed only and avoid creating devices which are redundant.</p>
 <p>Default : 0  (for compatibility reasons)</p>
 </div>
 <div class="section" id="devconf-inherit-init-net">
@@ -525,8 +533,8 @@ socket’s buffer. It will not take effect unless PF_UNIX flag is specified.</p>
 </div>
 <div class="section" id="proc-sys-net-ipv4-ipv4-settings">
 <h3>3. /proc/sys/net/ipv4 - IPV4 settings<a class="headerlink" href="#proc-sys-net-ipv4-ipv4-settings" title="Permalink to this headline">¶</a></h3>
-<p>Please see: Documentation/networking/ip-sysctl.rst and
-Documentation/admin-guide/sysctl/net.rst for descriptions of these entries.</p>
+<p>Please see: <a class="reference internal" href="../../networking/ip-sysctl.html"><span class="doc">IP Sysctl</span></a> and
+<a class="reference internal" href="#"><span class="doc">Documentation for /proc/sys/net/</span></a> for descriptions of these entries.</p>
 </div>
 <div class="section" id="appletalk">
 <h3>4. Appletalk<a class="headerlink" href="#appletalk" title="Permalink to this headline">¶</a></h3>

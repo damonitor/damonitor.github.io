@@ -33,7 +33,7 @@ media.h
     \#include \<linux\/ioctl.h\>
     \#include \<linux\/types.h\>
 
-    struct :c:type:`media_device_info` \{
+    struct media_device_info \{
             char driver[16];
             char model[32];
             char serial[40];
@@ -155,7 +155,7 @@ media.h
     \/\* OR with the entity id value to find the next entity \*\/
     \#define \ :ref:`MEDIA_ENT_ID_FLAG_NEXT <media-ent-id-flag-next>`                  (1U \<\< 31)
 
-    struct :c:type:`media_entity_desc` \{
+    struct media_entity_desc \{
             \_\_u32 id;
             char name[32];
             \_\_u32 type;
@@ -218,7 +218,7 @@ media.h
     \#define \ :ref:`MEDIA_PAD_FL_SOURCE <media-pad-fl-source>`                     (1 \<\< 1)
     \#define \ :ref:`MEDIA_PAD_FL_MUST_CONNECT <media-pad-fl-must-connect>`               (1 \<\< 2)
 
-    struct :c:type:`media_pad_desc` \{
+    struct media_pad_desc \{
             \_\_u32 entity;           \/\* entity ID \*\/
             \_\_u16 index;            \/\* pad index \*\/
             \_\_u32 flags;            \/\* pad flags \*\/
@@ -233,19 +233,19 @@ media.h
     \#  define \ :ref:`MEDIA_LNK_FL_DATA_LINK <media-lnk-fl-data-link>`                (0 \<\< 28)
     \#  define \ :ref:`MEDIA_LNK_FL_INTERFACE_LINK <media-lnk-fl-interface-link>`           (1 \<\< 28)
 
-    struct :c:type:`media_link_desc` \{
-            struct :c:type:`media_pad_desc` source;
-            struct :c:type:`media_pad_desc` sink;
+    struct media_link_desc \{
+            struct media_pad_desc source;
+            struct media_pad_desc sink;
             \_\_u32 flags;
             \_\_u32 reserved[2];
     \};
 
-    struct :c:type:`media_links_enum` \{
+    struct media_links_enum \{
             \_\_u32 entity;
             \/\* Should have enough room for pads elements \*\/
-            struct :c:type:`media_pad_desc` \_\_user \*pads;
+            struct media_pad_desc \_\_user \*pads;
             \/\* Should have enough room for links elements \*\/
-            struct :c:type:`media_link_desc` \_\_user \*links;
+            struct media_link_desc \_\_user \*links;
             \_\_u32 reserved[4];
     \};
 
@@ -303,7 +303,7 @@ media.h
     \#define MEDIA\_V2\_ENTITY\_HAS\_FLAGS(media\_version) \\
             ((media\_version) \>= ((4 \<\< 16) \| (19 \<\< 8) \| 0))
 
-    struct :c:type:`media_v2_entity` \{
+    struct media_v2_entity \{
             \_\_u32 id;
             char name[64];
             \_\_u32 function;         \/\* Main function of the entity \*\/
@@ -312,19 +312,19 @@ media.h
     \} \_\_attribute\_\_ ((packed));
 
     \/\* Should match the specific fields at media\_intf\_devnode \*\/
-    struct :c:type:`media_v2_intf_devnode` \{
+    struct media_v2_intf_devnode \{
             \_\_u32 major;
             \_\_u32 minor;
     \} \_\_attribute\_\_ ((packed));
 
-    struct :c:type:`media_v2_interface` \{
+    struct media_v2_interface \{
             \_\_u32 id;
             \_\_u32 intf\_type;
             \_\_u32 flags;
             \_\_u32 reserved[9];
 
             union \{
-                    struct :c:type:`media_v2_intf_devnode` devnode;
+                    struct media_v2_intf_devnode devnode;
                     \_\_u32 raw[16];
             \};
     \} \_\_attribute\_\_ ((packed));
@@ -338,7 +338,7 @@ media.h
     \#define MEDIA\_V2\_PAD\_HAS\_INDEX(media\_version) \\
             ((media\_version) \>= ((4 \<\< 16) \| (19 \<\< 8) \| 0))
 
-    struct :c:type:`media_v2_pad` \{
+    struct media_v2_pad \{
             \_\_u32 id;
             \_\_u32 entity\_id;
             \_\_u32 flags;
@@ -346,7 +346,7 @@ media.h
             \_\_u32 reserved[4];
     \} \_\_attribute\_\_ ((packed));
 
-    struct :c:type:`media_v2_link` \{
+    struct media_v2_link \{
             \_\_u32 id;
             \_\_u32 source\_id;
             \_\_u32 sink\_id;
@@ -354,7 +354,7 @@ media.h
             \_\_u32 reserved[6];
     \} \_\_attribute\_\_ ((packed));
 
-    struct :c:type:`media_v2_topology` \{
+    struct media_v2_topology \{
             \_\_u64 topology\_version;
 
             \_\_u32 num\_entities;
@@ -376,11 +376,11 @@ media.h
 
     \/\* ioctls \*\/
 
-    \#define \ :ref:`MEDIA_IOC_DEVICE_INFO <media_ioc_device_info>`   \_IOWR('\|', 0x00, struct :c:type:`media_device_info`\ )
-    \#define \ :ref:`MEDIA_IOC_ENUM_ENTITIES <media_ioc_enum_entities>` \_IOWR('\|', 0x01, struct :c:type:`media_entity_desc`\ )
-    \#define \ :ref:`MEDIA_IOC_ENUM_LINKS <media_ioc_enum_links>`    \_IOWR('\|', 0x02, struct :c:type:`media_links_enum`\ )
-    \#define \ :ref:`MEDIA_IOC_SETUP_LINK <media_ioc_setup_link>`    \_IOWR('\|', 0x03, struct :c:type:`media_link_desc`\ )
-    \#define \ :ref:`MEDIA_IOC_G_TOPOLOGY <media_ioc_g_topology>`    \_IOWR('\|', 0x04, struct :c:type:`media_v2_topology`\ )
+    \#define \ :ref:`MEDIA_IOC_DEVICE_INFO <media_ioc_device_info>`   \_IOWR('\|', 0x00, struct media_device_info\ )
+    \#define \ :ref:`MEDIA_IOC_ENUM_ENTITIES <media_ioc_enum_entities>` \_IOWR('\|', 0x01, struct media_entity_desc\ )
+    \#define \ :ref:`MEDIA_IOC_ENUM_LINKS <media_ioc_enum_links>`    \_IOWR('\|', 0x02, struct media_links_enum\ )
+    \#define \ :ref:`MEDIA_IOC_SETUP_LINK <media_ioc_setup_link>`    \_IOWR('\|', 0x03, struct media_link_desc\ )
+    \#define \ :ref:`MEDIA_IOC_G_TOPOLOGY <media_ioc_g_topology>`    \_IOWR('\|', 0x04, struct media_v2_topology\ )
     \#define \ :ref:`MEDIA_IOC_REQUEST_ALLOC <media_ioc_request_alloc>` \_IOR ('\|', 0x05, int)
 
     \/\*

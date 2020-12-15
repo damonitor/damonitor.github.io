@@ -35,7 +35,7 @@ net.h
     \#include \<linux\/types.h\>
 
     \/\*\*
-     \* struct :c:type:`dvb_net_if` - describes a DVB network interface
+     \* struct dvb_net_if - describes a DVB network interface
      \*
      \* @pid\: Packet ID (PID) of the MPEG-TS that contains data
      \* @if\_num\: number of the Digital TV interface.
@@ -49,7 +49,7 @@ net.h
      \*      - \%DVB\_NET\_FEEDTYPE\_MPE for MPE encoding
      \*      - \%DVB\_NET\_FEEDTYPE\_ULE for ULE encoding.
      \*\/
-    struct :c:type:`dvb_net_if` \{
+    struct dvb_net_if \{
             \_\_u16 pid;
             \_\_u16 if\_num;
             \_\_u8  feedtype;
@@ -57,9 +57,9 @@ net.h
     \#define :c:type:`DVB_NET_FEEDTYPE_ULE <dvb_net_if>` 1  \/\* ultra lightweight encapsulation \*\/
     \};
 
-    \#define \ :ref:`NET_ADD_IF <net_add_if>`    \_IOWR('o', 52, struct :c:type:`dvb_net_if`\ )
+    \#define \ :ref:`NET_ADD_IF <net_add_if>`    \_IOWR('o', 52, struct dvb_net_if\ )
     \#define \ :ref:`NET_REMOVE_IF <net_remove_if>` \_IO('o', 53)
-    \#define \ :ref:`NET_GET_IF <net_get_if>`    \_IOWR('o', 54, struct :c:type:`dvb_net_if`\ )
+    \#define \ :ref:`NET_GET_IF <net_get_if>`    \_IOWR('o', 54, struct dvb_net_if\ )
 
     \/\* binary compatibility cruft\: \*\/
     struct \_\_dvb\_net\_if\_old \{

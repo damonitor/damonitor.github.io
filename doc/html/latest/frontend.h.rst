@@ -121,7 +121,7 @@ frontend.h
     \};
 
     \/\*\*
-     \* struct :c:type:`dvb_frontend_info` - Frontend properties and capabilities
+     \* struct dvb_frontend_info - Frontend properties and capabilities
      \*
      \* @name\:                       Name of the frontend
      \* @type\:                       \*\***DEPRECATED**\*\*.
@@ -150,7 +150,7 @@ frontend.h
      \*       systems.
      \*    \#. The frequencies are specified in kHz for Satellite systems.
      \*\/
-    struct :c:type:`dvb_frontend_info` \{
+    struct dvb_frontend_info \{
             char       name[128];
             enum :c:type:`fe_type` type;      \/\* **DEPRECATED**. Use \ :ref:`DTV_ENUM_DELSYS <dtv-enum-delsys>` instead \*\/
             \_\_u32      frequency\_min;
@@ -165,7 +165,7 @@ frontend.h
     \};
 
     \/\*\*
-     \* struct :c:type:`dvb_diseqc_master_cmd` - DiSEqC master command
+     \* struct dvb_diseqc_master_cmd - DiSEqC master command
      \*
      \* @msg\:
      \*      DiSEqC message to be sent. It contains a 3 bytes header with\:
@@ -177,13 +177,13 @@ frontend.h
      \* Check out the DiSEqC bus spec available on http\:\/\/www.eutelsat.org\/ for
      \* the possible messages that can be used.
      \*\/
-    struct :c:type:`dvb_diseqc_master_cmd` \{
+    struct dvb_diseqc_master_cmd \{
             \_\_u8 msg[6];
             \_\_u8 msg\_len;
     \};
 
     \/\*\*
-     \* struct :c:type:`dvb_diseqc_slave_reply` - DiSEqC received data
+     \* struct dvb_diseqc_slave_reply - DiSEqC received data
      \*
      \* @msg\:
      \*      DiSEqC message buffer to store a message received via DiSEqC.
@@ -199,7 +199,7 @@ frontend.h
      \* Check out the DiSEqC bus spec available on http\:\/\/www.eutelsat.org\/ for
      \* the possible messages that can be used.
      \*\/
-    struct :c:type:`dvb_diseqc_slave_reply` \{
+    struct dvb_diseqc_slave_reply \{
             \_\_u8 msg[4];
             \_\_u8 msg\_len;
             int  timeout;
@@ -764,7 +764,7 @@ frontend.h
     \};
 
     \/\*\*
-     \* struct :c:type:`dtv_stats` - Used for reading a DTV status property
+     \* struct dtv_stats - Used for reading a DTV status property
      \*
      \* @scale\:
      \*      Filled with enum :c:type:`fecap_scale_params` - the scale in usage
@@ -807,7 +807,7 @@ frontend.h
      \*      u.st.stat.scale[3] = FE\_SCALE\_DECIBEL;
      \*      u.st.len = 4;
      \*\/
-    struct :c:type:`dtv_stats` \{
+    struct dtv_stats \{
             \_\_u8 scale;     \/\* enum :c:type:`fecap_scale_params` type \*\/
             union \{
                     \_\_u64 uvalue;   \/\* for counters and relative scales \*\/
@@ -818,7 +818,7 @@ frontend.h
     \#define MAX\_DTV\_STATS   4
 
     \/\*\*
-     \* struct :c:type:`dtv_fe_stats` - store Digital TV frontend statistics
+     \* struct dtv_fe_stats - store Digital TV frontend statistics
      \*
      \* @len\:        length of the statistics - if zero, stats is disabled.
      \* @stat\:       array with digital TV statistics.
@@ -828,13 +828,13 @@ frontend.h
      \* of statistics. If so, stat[0] carries on a global value for the property.
      \* Indexes 1 to 3 means layer A to B.
      \*\/
-    struct :c:type:`dtv_fe_stats` \{
+    struct dtv_fe_stats \{
             \_\_u8 len;
-            struct :c:type:`dtv_stats` stat[MAX\_DTV\_STATS];
+            struct dtv_stats stat[MAX\_DTV\_STATS];
     \} \_\_attribute\_\_ ((packed));
 
     \/\*\*
-     \* struct :c:type:`dtv_property` - store one of frontend command and its value
+     \* struct dtv_property - store one of frontend command and its value
      \*
      \* @cmd\:                Digital TV command.
      \* @reserved\:           Not used.
@@ -846,16 +846,16 @@ frontend.h
      \* @u.buffer.len\:       number of elements of the buffer.
      \* @u.buffer.reserved1\: Reserved.
      \* @u.buffer.reserved2\: Reserved.
-     \* @u.st\:               a \&struct :c:type:`dtv_fe_stats` array of statistics.
+     \* @u.st\:               a \&struct dtv_fe_stats array of statistics.
      \* @result\:             Currently unused.
      \*
      \*\/
-    struct :c:type:`dtv_property` \{
+    struct dtv_property \{
             \_\_u32 cmd;
             \_\_u32 reserved[3];
             union \{
                     \_\_u32 data;
-                    struct :c:type:`dtv_fe_stats` st;
+                    struct dtv_fe_stats st;
                     struct \{
                             \_\_u8 data[32];
                             \_\_u32 len;
@@ -870,14 +870,14 @@ frontend.h
     \#define DTV\_IOCTL\_MAX\_MSGS 64
 
     \/\*\*
-     \* struct :c:type:`dtv_properties` - a set of command\/value pairs.
+     \* struct dtv_properties - a set of command\/value pairs.
      \*
      \* @num\:        amount of commands stored at the struct.
      \* @props\:      a pointer to \&struct dtv\_property.
      \*\/
-    struct :c:type:`dtv_properties` \{
+    struct dtv_properties \{
             \_\_u32 num;
-            struct :c:type:`dtv_property` \*props;
+            struct dtv_property \*props;
     \};
 
     \/\*
@@ -891,11 +891,11 @@ frontend.h
 
     \/\* Digital TV Frontend API calls \*\/
 
-    \#define \ :ref:`FE_GET_INFO <fe_get_info>`                \_IOR('o', 61, struct :c:type:`dvb_frontend_info`\ )
+    \#define \ :ref:`FE_GET_INFO <fe_get_info>`                \_IOR('o', 61, struct dvb_frontend_info\ )
 
     \#define \ :ref:`FE_DISEQC_RESET_OVERLOAD <fe_diseqc_reset_overload>`   \_IO('o', 62)
-    \#define \ :ref:`FE_DISEQC_SEND_MASTER_CMD <fe_diseqc_send_master_cmd>`  \_IOW('o', 63, struct :c:type:`dvb_diseqc_master_cmd`\ )
-    \#define \ :ref:`FE_DISEQC_RECV_SLAVE_REPLY <fe_diseqc_recv_slave_reply>` \_IOR('o', 64, struct :c:type:`dvb_diseqc_slave_reply`\ )
+    \#define \ :ref:`FE_DISEQC_SEND_MASTER_CMD <fe_diseqc_send_master_cmd>`  \_IOW('o', 63, struct dvb_diseqc_master_cmd\ )
+    \#define \ :ref:`FE_DISEQC_RECV_SLAVE_REPLY <fe_diseqc_recv_slave_reply>` \_IOR('o', 64, struct dvb_diseqc_slave_reply\ )
     \#define \ :ref:`FE_DISEQC_SEND_BURST <fe_diseqc_send_burst>`       \_IO('o', 65)  \/\* \ :c:type:`fe_sec_mini_cmd_t <fe_sec_mini_cmd>` \*\/
 
     \#define \ :ref:`FE_SET_TONE <fe_set_tone>`                \_IO('o', 66)  \/\* \ :c:type:`fe_sec_tone_mode_t <fe_sec_tone_mode>` \*\/
@@ -909,12 +909,12 @@ frontend.h
     \#define \ :ref:`FE_READ_UNCORRECTED_BLOCKS <fe_read_uncorrected_blocks>` \_IOR('o', 73, \_\_u32)
 
     \#define \ :ref:`FE_SET_FRONTEND_TUNE_MODE <fe_set_frontend_tune_mode>`  \_IO('o', 81) \/\* unsigned int \*\/
-    \#define \ :ref:`FE_GET_EVENT <fe_get_event>`               \_IOR('o', 78, struct :c:type:`dvb_frontend_event`\ )
+    \#define \ :ref:`FE_GET_EVENT <fe_get_event>`               \_IOR('o', 78, struct dvb_frontend_event\ )
 
     \#define \ :ref:`FE_DISHNETWORK_SEND_LEGACY_CMD <fe_dishnetwork_send_legacy_cmd>` \_IO('o', 80) \/\* unsigned int \*\/
 
-    \#define :c:type:`FE_SET_PROPERTY <FE_GET_PROPERTY>`            \_IOW('o', 82, struct :c:type:`dtv_properties`\ )
-    \#define \ :ref:`FE_GET_PROPERTY <fe_get_property>`            \_IOR('o', 83, struct :c:type:`dtv_properties`\ )
+    \#define :c:type:`FE_SET_PROPERTY <FE_GET_PROPERTY>`            \_IOW('o', 82, struct dtv_properties\ )
+    \#define \ :ref:`FE_GET_PROPERTY <fe_get_property>`            \_IOR('o', 83, struct dtv_properties\ )
 
     \#if defined(\_\_DVB\_CORE\_\_) \|\| !defined(\_\_KERNEL\_\_)
 
@@ -965,22 +965,22 @@ frontend.h
 
     \/\* DVBv3 structs \*\/
 
-    struct :c:type:`dvb_qpsk_parameters` \{
+    struct dvb_qpsk_parameters \{
             \_\_u32           symbol\_rate;  \/\* symbol rate in Symbols per second \*\/
             \ :c:type:`fe_code_rate_t <fe_code_rate>`  fec\_inner;    \/\* forward error correction (see above) \*\/
     \};
 
-    struct :c:type:`dvb_qam_parameters` \{
+    struct dvb_qam_parameters \{
             \_\_u32           symbol\_rate; \/\* symbol rate in Symbols per second \*\/
             \ :c:type:`fe_code_rate_t <fe_code_rate>`  fec\_inner;   \/\* forward error correction (see above) \*\/
             \ :c:type:`fe_modulation_t <fe_modulation>` modulation;  \/\* modulation type (see above) \*\/
     \};
 
-    struct :c:type:`dvb_vsb_parameters` \{
+    struct dvb_vsb_parameters \{
             \ :c:type:`fe_modulation_t <fe_modulation>` modulation;  \/\* modulation type (see above) \*\/
     \};
 
-    struct :c:type:`dvb_ofdm_parameters` \{
+    struct dvb_ofdm_parameters \{
             \ :c:type:`fe_bandwidth_t <fe_bandwidth>`      bandwidth;
             \ :c:type:`fe_code_rate_t <fe_code_rate>`      code\_rate\_HP;  \/\* high priority stream code rate \*\/
             \ :c:type:`fe_code_rate_t <fe_code_rate>`      code\_rate\_LP;  \/\* low priority stream code rate \*\/
@@ -990,27 +990,27 @@ frontend.h
             \ :c:type:`fe_hierarchy_t <fe_hierarchy>`      hierarchy\_information;
     \};
 
-    struct :c:type:`dvb_frontend_parameters` \{
+    struct dvb_frontend_parameters \{
             \_\_u32 frequency;  \/\* (absolute) frequency in Hz for DVB-C\/DVB-T\/ATSC \*\/
                               \/\* intermediate frequency in kHz for DVB-S \*\/
             \ :c:type:`fe_spectral_inversion_t <fe_spectral_inversion>` inversion;
             union \{
-                    struct :c:type:`dvb_qpsk_parameters` qpsk;        \/\* DVB-S \*\/
-                    struct :c:type:`dvb_qam_parameters`  qam;         \/\* DVB-C \*\/
-                    struct :c:type:`dvb_ofdm_parameters` ofdm;        \/\* DVB-T \*\/
-                    struct :c:type:`dvb_vsb_parameters` vsb;          \/\* ATSC \*\/
+                    struct dvb_qpsk_parameters qpsk;        \/\* DVB-S \*\/
+                    struct dvb_qam_parameters  qam;         \/\* DVB-C \*\/
+                    struct dvb_ofdm_parameters ofdm;        \/\* DVB-T \*\/
+                    struct dvb_vsb_parameters vsb;          \/\* ATSC \*\/
             \} u;
     \};
 
-    struct :c:type:`dvb_frontend_event` \{
+    struct dvb_frontend_event \{
             \ :c:type:`fe_status_t <fe_status>` status;
-            struct :c:type:`dvb_frontend_parameters` parameters;
+            struct dvb_frontend_parameters parameters;
     \};
 
     \/\* DVBv3 API calls \*\/
 
-    \#define \ :ref:`FE_SET_FRONTEND <fe_set_frontend>`            \_IOW('o', 76, struct :c:type:`dvb_frontend_parameters`\ )
-    \#define \ :ref:`FE_GET_FRONTEND <fe_get_frontend>`            \_IOR('o', 77, struct :c:type:`dvb_frontend_parameters`\ )
+    \#define \ :ref:`FE_SET_FRONTEND <fe_set_frontend>`            \_IOW('o', 76, struct dvb_frontend_parameters\ )
+    \#define \ :ref:`FE_GET_FRONTEND <fe_get_frontend>`            \_IOR('o', 77, struct dvb_frontend_parameters\ )
 
     \#endif
 

@@ -33,7 +33,7 @@ ca.h
     \#define \_DVBCA\_H\_
 
     \/\*\*
-     \* struct :c:type:`ca_slot_info` - CA slot interface types and info.
+     \* struct ca_slot_info - CA slot interface types and info.
      \*
      \* @num\:        slot number.
      \* @type\:       slot type.
@@ -55,7 +55,7 @@ ca.h
      \*      - \%CA\_CI\_MODULE\_READY - module is ready for usage.
      \*\/
 
-    struct :c:type:`ca_slot_info` \{
+    struct ca_slot_info \{
             int num;
             int type;
     \#define :c:type:`CA_CI <ca_slot_info>`            1
@@ -70,7 +70,7 @@ ca.h
     \};
 
     \/\*\*
-     \* struct :c:type:`ca_descr_info` - descrambler types and info.
+     \* struct ca_descr_info - descrambler types and info.
      \*
      \* @num\:        number of available descramblers (keys).
      \* @type\:       type of supported scrambling system.
@@ -83,7 +83,7 @@ ca.h
      \*      - \%CA\_NDS - Videoguard (NDS) hardware;
      \*      - \%CA\_DSS - Distributed Sample Scrambling (DSS) hardware.
      \*\/
-    struct :c:type:`ca_descr_info` \{
+    struct ca_descr_info \{
             unsigned int num;
             unsigned int type;
     \#define :c:type:`CA_ECD <ca_descr_info>`           1
@@ -92,16 +92,16 @@ ca.h
     \};
 
     \/\*\*
-     \* struct :c:type:`ca_caps` - CA slot interface capabilities.
+     \* struct ca_caps - CA slot interface capabilities.
      \*
      \* @slot\_num\:   total number of CA card and module slots.
      \* @slot\_type\:  bitmap with all supported types as defined at
-     \*              \&struct :c:type:`ca_slot_info` (e. g. \%CA\_CI, \%CA\_CI\_LINK, etc).
+     \*              \&struct ca_slot_info (e. g. \%CA\_CI, \%CA\_CI\_LINK, etc).
      \* @descr\_num\:  total number of descrambler slots (keys)
      \* @descr\_type\: bitmap with all supported types as defined at
-     \*              \&struct :c:type:`ca_descr_info` (e. g. \%CA\_ECD, \%CA\_NDS, etc).
+     \*              \&struct ca_descr_info (e. g. \%CA\_ECD, \%CA\_NDS, etc).
      \*\/
-    struct :c:type:`ca_caps` \{
+    struct ca_caps \{
             unsigned int slot\_num;
             unsigned int slot\_type;
             unsigned int descr\_num;
@@ -109,7 +109,7 @@ ca.h
     \};
 
     \/\*\*
-     \* struct :c:type:`ca_msg` - a message to\/from a CI-CAM
+     \* struct ca_msg - a message to\/from a CI-CAM
      \*
      \* @index\:      unused
      \* @type\:       unused
@@ -118,7 +118,7 @@ ca.h
      \*
      \* This struct carries a message to be send\/received from a CI CA module.
      \*\/
-    struct :c:type:`ca_msg` \{
+    struct ca_msg \{
             unsigned int index;
             unsigned int type;
             unsigned int length;
@@ -126,34 +126,34 @@ ca.h
     \};
 
     \/\*\*
-     \* struct :c:type:`ca_descr` - CA descrambler control words info
+     \* struct ca_descr - CA descrambler control words info
      \*
      \* @index\: CA Descrambler slot
      \* @parity\: control words parity, where 0 means even and 1 means odd
      \* @cw\: CA Descrambler control words
      \*\/
-    struct :c:type:`ca_descr` \{
+    struct ca_descr \{
             unsigned int index;
             unsigned int parity;
             unsigned char cw[8];
     \};
 
     \#define \ :ref:`CA_RESET <ca_reset>`          \_IO('o', 128)
-    \#define \ :ref:`CA_GET_CAP <ca_get_cap>`        \_IOR('o', 129, struct :c:type:`ca_caps`\ )
-    \#define \ :ref:`CA_GET_SLOT_INFO <ca_get_slot_info>`  \_IOR('o', 130, struct :c:type:`ca_slot_info`\ )
-    \#define \ :ref:`CA_GET_DESCR_INFO <ca_get_descr_info>` \_IOR('o', 131, struct :c:type:`ca_descr_info`\ )
-    \#define \ :ref:`CA_GET_MSG <ca_get_msg>`        \_IOR('o', 132, struct :c:type:`ca_msg`\ )
-    \#define \ :ref:`CA_SEND_MSG <ca_send_msg>`       \_IOW('o', 133, struct :c:type:`ca_msg`\ )
-    \#define \ :ref:`CA_SET_DESCR <ca_set_descr>`      \_IOW('o', 134, struct :c:type:`ca_descr`\ )
+    \#define \ :ref:`CA_GET_CAP <ca_get_cap>`        \_IOR('o', 129, struct ca_caps\ )
+    \#define \ :ref:`CA_GET_SLOT_INFO <ca_get_slot_info>`  \_IOR('o', 130, struct ca_slot_info\ )
+    \#define \ :ref:`CA_GET_DESCR_INFO <ca_get_descr_info>` \_IOR('o', 131, struct ca_descr_info\ )
+    \#define \ :ref:`CA_GET_MSG <ca_get_msg>`        \_IOR('o', 132, struct ca_msg\ )
+    \#define \ :ref:`CA_SEND_MSG <ca_send_msg>`       \_IOW('o', 133, struct ca_msg\ )
+    \#define \ :ref:`CA_SET_DESCR <ca_set_descr>`      \_IOW('o', 134, struct ca_descr\ )
 
     \#if !defined(\_\_KERNEL\_\_)
 
     \/\* This is needed for legacy userspace support \*\/
-    typedef struct :c:type:`ca_slot_info` :c:type:`ca_slot_info_t <ca_slot_info>`;
-    typedef struct :c:type:`ca_descr_info`  :c:type:`ca_descr_info_t <ca_descr_info>`;
-    typedef struct :c:type:`ca_caps`  :c:type:`ca_caps_t <ca_caps>`;
-    typedef struct :c:type:`ca_msg` :c:type:`ca_msg_t <ca_msg>`;
-    typedef struct :c:type:`ca_descr` :c:type:`ca_descr_t <ca_descr>`;
+    typedef struct ca_slot_info :c:type:`ca_slot_info_t <ca_slot_info>`;
+    typedef struct ca_descr_info  :c:type:`ca_descr_info_t <ca_descr_info>`;
+    typedef struct ca_caps  :c:type:`ca_caps_t <ca_caps>`;
+    typedef struct ca_msg :c:type:`ca_msg_t <ca_msg>`;
+    typedef struct ca_descr :c:type:`ca_descr_t <ca_descr>`;
 
     \#endif
 

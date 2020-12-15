@@ -380,9 +380,9 @@ videodev2.h
 
     enum :c:type:`v4l2_quantization` \{
             \/\*
-             \* The default for R'G'B' quantization is always full range, except
-             \* for the BT2020 colorspace. For Y'CbCr the quantization is always
-             \* limited range, except for COLORSPACE\_JPEG\: this is full range.
+             \* The default for R'G'B' quantization is always full range.
+             \* For Y'CbCr the quantization is always limited range, except
+             \* for COLORSPACE\_JPEG\: this is full range.
              \*\/
             :c:type:`V4L2_QUANTIZATION_DEFAULT <v4l2_quantization>`     = 0,
             :c:type:`V4L2_QUANTIZATION_FULL_RANGE <v4l2_quantization>`  = 1,
@@ -391,14 +391,13 @@ videodev2.h
 
     \/\*
      \* Determine how QUANTIZATION\_DEFAULT should map to a proper quantization.
-     \* This depends on whether the image is RGB or not, the colorspace and the
-     \* Y'CbCr encoding.
+     \* This depends on whether the image is RGB or not, the colorspace.
+     \* The Y'CbCr encoding is not used anymore, but is still there for backwards
+     \* compatibility.
      \*\/
     \#define V4L2\_MAP\_QUANTIZATION\_DEFAULT(is\_rgb\_or\_hsv, colsp, ycbcr\_enc) \\
-            (((is\_rgb\_or\_hsv) \&\& (colsp) == :c:type:`V4L2_COLORSPACE_BT2020 <v4l2_colorspace>`) ? \\
-             :c:type:`V4L2_QUANTIZATION_LIM_RANGE <v4l2_quantization>` \: \\
-             (((is\_rgb\_or\_hsv) \|\| (colsp) == :c:type:`V4L2_COLORSPACE_JPEG <v4l2_colorspace>`) ? \\
-             :c:type:`V4L2_QUANTIZATION_FULL_RANGE <v4l2_quantization>` \: :c:type:`V4L2_QUANTIZATION_LIM_RANGE <v4l2_quantization>`))
+            (((is\_rgb\_or\_hsv) \|\| (colsp) == :c:type:`V4L2_COLORSPACE_JPEG <v4l2_colorspace>`) ? \\
+             :c:type:`V4L2_QUANTIZATION_FULL_RANGE <v4l2_quantization>` \: :c:type:`V4L2_QUANTIZATION_LIM_RANGE <v4l2_quantization>`)
 
     \/\*
      \* Deprecated names for opRGB colorspace (IEC 61966-2-5)
@@ -419,25 +418,25 @@ videodev2.h
             :c:type:`V4L2_PRIORITY_DEFAULT <v4l2_priority>`     = :c:type:`V4L2_PRIORITY_INTERACTIVE <v4l2_priority>`,
     \};
 
-    struct :c:type:`v4l2_rect` \{
+    struct v4l2_rect \{
             \_\_s32   left;
             \_\_s32   top;
             \_\_u32   width;
             \_\_u32   height;
     \};
 
-    struct :c:type:`v4l2_fract` \{
+    struct v4l2_fract \{
             \_\_u32   numerator;
             \_\_u32   denominator;
     \};
 
-    struct :c:type:`v4l2_area` \{
+    struct v4l2_area \{
             \_\_u32   width;
             \_\_u32   height;
     \};
 
     \/\*\*
-      \* struct :c:type:`v4l2_capability` - Describes V4L2 device caps returned by \ :ref:`VIDIOC_QUERYCAP <vidioc_querycap>`
+      \* struct v4l2_capability - Describes V4L2 device caps returned by \ :ref:`VIDIOC_QUERYCAP <vidioc_querycap>`
       \*
       \* @driver\:       name of the driver module (e.g. "bttv")
       \* @card\:         name of the card (e.g. "Hauppauge WinTV")
@@ -447,7 +446,7 @@ videodev2.h
       \* @device\_caps\:  capabilities accessed via this particular device (node)
       \* @reserved\:     reserved fields for future extensions
       \*\/
-    struct :c:type:`v4l2_capability` \{
+    struct v4l2_capability \{
             \_\_u8    driver[16];
             \_\_u8    card[32];
             \_\_u8    bus\_info[32];
@@ -503,7 +502,7 @@ videodev2.h
     \/\*
      \*      V I D E O   I M A G E   F O R M A T
      \*\/
-    struct :c:type:`v4l2_pix_format` \{
+    struct v4l2_pix_format \{
             \_\_u32                   width;
             \_\_u32                   height;
             \_\_u32                   pixelformat;
@@ -782,12 +781,13 @@ videodev2.h
     \#define :c:type:`V4L2_PIX_FMT_PRIV_MAGIC <v4l2_pix_format>`         0xfeedcafe
 
     \/\* Flags \*\/
-    \#define :ref:`V4L2_PIX_FMT_FLAG_PREMUL_ALPHA <reserved-formats>`  0x00000001
+    \#define :ref:`V4L2_PIX_FMT_FLAG_PREMUL_ALPHA <format-flags>`  0x00000001
+    \#define \ :ref:`V4L2_PIX_FMT_FLAG_SET_CSC <v4l2-pix-fmt-flag-set-csc>`       0x00000002
 
     \/\*
      \*      F O R M A T   E N U M E R A T I O N
      \*\/
-    struct :c:type:`v4l2_fmtdesc` \{
+    struct v4l2_fmtdesc \{
             \_\_u32               index;             \/\* Format number      \*\/
             \_\_u32               type;              \/\* enum :c:type:`v4l2_buf_type` \*\/
             \_\_u32               flags;
@@ -802,6 +802,11 @@ videodev2.h
     \#define :ref:`V4L2_FMT_FLAG_CONTINUOUS_BYTESTREAM <fmtdesc-flags>`     0x0004
     \#define :ref:`V4L2_FMT_FLAG_DYN_RESOLUTION <fmtdesc-flags>`            0x0008
     \#define :ref:`V4L2_FMT_FLAG_ENC_CAP_FRAME_INTERVAL <fmtdesc-flags>`    0x0010
+    \#define :ref:`V4L2_FMT_FLAG_CSC_COLORSPACE <fmtdesc-flags>`            0x0020
+    \#define :ref:`V4L2_FMT_FLAG_CSC_XFER_FUNC <fmtdesc-flags>`             0x0040
+    \#define :ref:`V4L2_FMT_FLAG_CSC_YCBCR_ENC <fmtdesc-flags>`             0x0080
+    \#define :ref:`V4L2_FMT_FLAG_CSC_HSV_ENC <fmtdesc-flags>`               :ref:`V4L2_FMT_FLAG_CSC_YCBCR_ENC <fmtdesc-flags>`
+    \#define :ref:`V4L2_FMT_FLAG_CSC_QUANTIZATION <fmtdesc-flags>`          0x0100
 
             \/\* Frame Size and frame rate enumeration \*\/
     \/\*
@@ -813,12 +818,12 @@ videodev2.h
             :c:type:`V4L2_FRMSIZE_TYPE_STEPWISE <v4l2_frmsizetypes>`      = 3,
     \};
 
-    struct :c:type:`v4l2_frmsize_discrete` \{
+    struct v4l2_frmsize_discrete \{
             \_\_u32                   width;          \/\* Frame width [pixel] \*\/
             \_\_u32                   height;         \/\* Frame height [pixel] \*\/
     \};
 
-    struct :c:type:`v4l2_frmsize_stepwise` \{
+    struct v4l2_frmsize_stepwise \{
             \_\_u32                   min\_width;      \/\* Minimum frame width [pixel] \*\/
             \_\_u32                   max\_width;      \/\* Maximum frame width [pixel] \*\/
             \_\_u32                   step\_width;     \/\* Frame width step size [pixel] \*\/
@@ -827,14 +832,14 @@ videodev2.h
             \_\_u32                   step\_height;    \/\* Frame height step size [pixel] \*\/
     \};
 
-    struct :c:type:`v4l2_frmsizeenum` \{
+    struct v4l2_frmsizeenum \{
             \_\_u32                   index;          \/\* Frame size number \*\/
             \_\_u32                   pixel\_format;   \/\* Pixel format \*\/
             \_\_u32                   type;           \/\* Frame size type the device supports. \*\/
 
             union \{                                 \/\* Frame size \*\/
-                    struct :c:type:`v4l2_frmsize_discrete`    discrete;
-                    struct :c:type:`v4l2_frmsize_stepwise`    stepwise;
+                    struct v4l2_frmsize_discrete    discrete;
+                    struct v4l2_frmsize_stepwise    stepwise;
             \};
 
             \_\_u32   reserved[2];                    \/\* Reserved space for future use \*\/
@@ -849,13 +854,13 @@ videodev2.h
             :c:type:`V4L2_FRMIVAL_TYPE_STEPWISE <v4l2_frmivaltypes>`      = 3,
     \};
 
-    struct :c:type:`v4l2_frmival_stepwise` \{
-            struct :c:type:`v4l2_fract`       min;            \/\* Minimum frame interval [s] \*\/
-            struct :c:type:`v4l2_fract`       max;            \/\* Maximum frame interval [s] \*\/
-            struct :c:type:`v4l2_fract`       step;           \/\* Frame interval step size [s] \*\/
+    struct v4l2_frmival_stepwise \{
+            struct v4l2_fract       min;            \/\* Minimum frame interval [s] \*\/
+            struct v4l2_fract       max;            \/\* Maximum frame interval [s] \*\/
+            struct v4l2_fract       step;           \/\* Frame interval step size [s] \*\/
     \};
 
-    struct :c:type:`v4l2_frmivalenum` \{
+    struct v4l2_frmivalenum \{
             \_\_u32                   index;          \/\* Frame format index \*\/
             \_\_u32                   pixel\_format;   \/\* Pixel format \*\/
             \_\_u32                   width;          \/\* Frame width \*\/
@@ -863,8 +868,8 @@ videodev2.h
             \_\_u32                   type;           \/\* Frame interval type the device supports. \*\/
 
             union \{                                 \/\* Frame interval \*\/
-                    struct :c:type:`v4l2_fract`               discrete;
-                    struct :c:type:`v4l2_frmival_stepwise`    stepwise;
+                    struct v4l2_fract               discrete;
+                    struct v4l2_frmival_stepwise    stepwise;
             \};
 
             \_\_u32   reserved[2];                    \/\* Reserved space for future use \*\/
@@ -873,7 +878,7 @@ videodev2.h
     \/\*
      \*      T I M E C O D E
      \*\/
-    struct :c:type:`v4l2_timecode` \{
+    struct v4l2_timecode \{
             \_\_u32   type;
             \_\_u32   flags;
             \_\_u8    frames;
@@ -898,7 +903,7 @@ videodev2.h
     \#define :ref:`V4L2_TC_USERBITS_8BITCHARS <timecode-flags>`      0x0008
     \/\* The above is based on SMPTE timecodes \*\/
 
-    struct :c:type:`v4l2_jpegcompression` \{
+    struct v4l2_jpegcompression \{
             int quality;
 
             int  APPn;              \/\* Number of APP segment to be written,
@@ -938,7 +943,7 @@ videodev2.h
      \* else, using the microseconds in the wrong half of the
      \* second 64-bit word.
      \*\/
-    struct :c:type:`__kernel_v4l2_timeval` \{
+    struct __kernel_v4l2_timeval \{
             long long       tv\_sec;
     \#if defined(\_\_sparc\_\_) \&\& defined(\_\_arch64\_\_)
             int             tv\_usec;
@@ -949,7 +954,7 @@ videodev2.h
     \};
     \#endif
 
-    struct :c:type:`v4l2_requestbuffers` \{
+    struct v4l2_requestbuffers \{
             \_\_u32                   count;
             \_\_u32                   type;           \/\* enum :c:type:`v4l2_buf_type` \*\/
             \_\_u32                   memory;         \/\* enum :c:type:`v4l2_memory` \*\/
@@ -957,7 +962,7 @@ videodev2.h
             \_\_u32                   reserved[1];
     \};
 
-    \/\* capabilities for struct :c:type:`v4l2_requestbuffers` and v4l2\_create\_buffers \*\/
+    \/\* capabilities for struct v4l2_requestbuffers and v4l2\_create\_buffers \*\/
     \#define \ :ref:`V4L2_BUF_CAP_SUPPORTS_MMAP <v4l2-buf-cap-supports-mmap>`                      (1 \<\< 0)
     \#define \ :ref:`V4L2_BUF_CAP_SUPPORTS_USERPTR <v4l2-buf-cap-supports-userptr>`                   (1 \<\< 1)
     \#define \ :ref:`V4L2_BUF_CAP_SUPPORTS_DMABUF <v4l2-buf-cap-supports-dmabuf>`                    (1 \<\< 2)
@@ -967,10 +972,10 @@ videodev2.h
     \#define \ :ref:`V4L2_BUF_CAP_SUPPORTS_MMAP_CACHE_HINTS <v4l2-buf-cap-supports-mmap-cache-hints>`          (1 \<\< 6)
 
     \/\*\*
-     \* struct :c:type:`v4l2_plane` - plane info for multi-planar buffers
+     \* struct v4l2_plane - plane info for multi-planar buffers
      \* @bytesused\:          number of bytes occupied by data in the plane (payload)
      \* @length\:             size of this plane (NOT the payload) in bytes
-     \* @mem\_offset\:         when memory in the associated struct :c:type:`v4l2_buffer` is
+     \* @mem\_offset\:         when memory in the associated struct v4l2_buffer is
      \*                      :c:type:`V4L2_MEMORY_MMAP <v4l2_memory>`, equals the offset from the start of
      \*                      the device memory for this plane (or is a "cookie" that
      \*                      should be passed to mmap() called on the video node)
@@ -986,7 +991,7 @@ videodev2.h
      \* components. Each plane can reside in a separate memory buffer, or even in
      \* a completely separate memory node (e.g. in embedded devices).
      \*\/
-    struct :c:type:`v4l2_plane` \{
+    struct v4l2_plane \{
             \_\_u32                   bytesused;
             \_\_u32                   length;
             union \{
@@ -999,7 +1004,7 @@ videodev2.h
     \};
 
     \/\*\*
-     \* struct :c:type:`v4l2_buffer` - video buffer info
+     \* struct v4l2_buffer - video buffer info
      \* @index\:      id number of the buffer
      \* @type\:       enum :c:type:`v4l2_buf_type`\ ; buffer type (type == \*\_MPLANE for
      \*              multiplanar buffers);
@@ -1029,18 +1034,18 @@ videodev2.h
      \* Contains data exchanged by application and driver using one of the Streaming
      \* I\/O methods.
      \*\/
-    struct :c:type:`v4l2_buffer` \{
+    struct v4l2_buffer \{
             \_\_u32                   index;
             \_\_u32                   type;
             \_\_u32                   bytesused;
             \_\_u32                   flags;
             \_\_u32                   field;
     \#ifdef \_\_KERNEL\_\_
-            struct :c:type:`__kernel_v4l2_timeval` timestamp;
+            struct __kernel_v4l2_timeval timestamp;
     \#else
             struct timeval          timestamp;
     \#endif
-            struct :c:type:`v4l2_timecode`    timecode;
+            struct v4l2_timecode    timecode;
             \_\_u32                   sequence;
 
             \/\* memory location \*\/
@@ -1048,7 +1053,7 @@ videodev2.h
             union \{
                     \_\_u32           offset;
                     unsigned long   userptr;
-                    struct :c:type:`v4l2_plane` \*planes;
+                    struct v4l2_plane \*planes;
                     \_\_s32           fd;
             \} m;
             \_\_u32                   length;
@@ -1114,7 +1119,7 @@ videodev2.h
     \#define \ :ref:`V4L2_BUF_FLAG_REQUEST_FD <v4l2-buf-flag-request-fd>`                0x00800000
 
     \/\*\*
-     \* struct :c:type:`v4l2_exportbuffer` - export of video buffer as DMABUF file descriptor
+     \* struct v4l2_exportbuffer - export of video buffer as DMABUF file descriptor
      \*
      \* @index\:      id number of the buffer
      \* @type\:       enum :c:type:`v4l2_buf_type`\ ; buffer type (type == \*\_MPLANE for
@@ -1131,7 +1136,7 @@ videodev2.h
      \* become a structure 'type' allowing an alternative layout of the structure
      \* content. Therefore this field should not be used for any other extensions.
      \*\/
-    struct :c:type:`v4l2_exportbuffer` \{
+    struct v4l2_exportbuffer \{
             \_\_u32           type; \/\* enum :c:type:`v4l2_buf_type` \*\/
             \_\_u32           index;
             \_\_u32           plane;
@@ -1143,7 +1148,7 @@ videodev2.h
     \/\*
      \*      O V E R L A Y   P R E V I E W
      \*\/
-    struct :c:type:`v4l2_framebuffer` \{
+    struct v4l2_framebuffer \{
             \_\_u32                   capability;
             \_\_u32                   flags;
     \/\* FIXME\: in theory we should pass something like PCI device + memory
@@ -1178,16 +1183,16 @@ videodev2.h
     \#define :ref:`V4L2_FBUF_FLAG_LOCAL_INV_ALPHA <framebuffer-flags>`  0x0020
     \#define :ref:`V4L2_FBUF_FLAG_SRC_CHROMAKEY <framebuffer-flags>`    0x0040
 
-    struct :c:type:`v4l2_clip` \{
-            struct :c:type:`v4l2_rect`        c;
-            struct :c:type:`v4l2_clip`        \_\_user \*next;
+    struct v4l2_clip \{
+            struct v4l2_rect        c;
+            struct v4l2_clip        \_\_user \*next;
     \};
 
-    struct :c:type:`v4l2_window` \{
-            struct :c:type:`v4l2_rect`        w;
+    struct v4l2_window \{
+            struct v4l2_rect        w;
             \_\_u32                   field;   \/\* enum :c:type:`v4l2_field` \*\/
             \_\_u32                   chromakey;
-            struct :c:type:`v4l2_clip`        \_\_user \*clips;
+            struct v4l2_clip        \_\_user \*clips;
             \_\_u32                   clipcount;
             void                    \_\_user \*bitmap;
             \_\_u8                    global\_alpha;
@@ -1196,10 +1201,10 @@ videodev2.h
     \/\*
      \*      C A P T U R E   P A R A M E T E R S
      \*\/
-    struct :c:type:`v4l2_captureparm` \{
+    struct v4l2_captureparm \{
             \_\_u32              capability;    \/\*  Supported modes \*\/
             \_\_u32              capturemode;   \/\*  Current mode \*\/
-            struct :c:type:`v4l2_fract`  timeperframe;  \/\*  Time per frame in seconds \*\/
+            struct v4l2_fract  timeperframe;  \/\*  Time per frame in seconds \*\/
             \_\_u32              extendedmode;  \/\*  Driver-specific extensions \*\/
             \_\_u32              readbuffers;   \/\*  \# of buffers for read \*\/
             \_\_u32              reserved[4];
@@ -1209,10 +1214,10 @@ videodev2.h
     \#define :ref:`V4L2_MODE_HIGHQUALITY <parm-flags>`   0x0001  \/\*  High quality imaging mode \*\/
     \#define :c:type:`V4L2_CAP_TIMEPERFRAME <v4l2_captureparm>`   0x1000  \/\*  timeperframe field is supported \*\/
 
-    struct :c:type:`v4l2_outputparm` \{
+    struct v4l2_outputparm \{
             \_\_u32              capability;   \/\*  Supported modes \*\/
             \_\_u32              outputmode;   \/\*  Current mode \*\/
-            struct :c:type:`v4l2_fract`  timeperframe; \/\*  Time per frame in seconds \*\/
+            struct v4l2_fract  timeperframe; \/\*  Time per frame in seconds \*\/
             \_\_u32              extendedmode; \/\*  Driver-specific extensions \*\/
             \_\_u32              writebuffers; \/\*  \# of buffers for write \*\/
             \_\_u32              reserved[4];
@@ -1221,20 +1226,20 @@ videodev2.h
     \/\*
      \*      I N P U T   I M A G E   C R O P P I N G
      \*\/
-    struct :c:type:`v4l2_cropcap` \{
+    struct v4l2_cropcap \{
             \_\_u32                   type;   \/\* enum :c:type:`v4l2_buf_type` \*\/
-            struct :c:type:`v4l2_rect`        bounds;
-            struct :c:type:`v4l2_rect`        defrect;
-            struct :c:type:`v4l2_fract`       pixelaspect;
+            struct v4l2_rect        bounds;
+            struct v4l2_rect        defrect;
+            struct v4l2_fract       pixelaspect;
     \};
 
-    struct :c:type:`v4l2_crop` \{
+    struct v4l2_crop \{
             \_\_u32                   type;   \/\* enum :c:type:`v4l2_buf_type` \*\/
-            struct :c:type:`v4l2_rect`        c;
+            struct v4l2_rect        c;
     \};
 
     \/\*\*
-     \* struct :c:type:`v4l2_selection` - selection info
+     \* struct v4l2_selection - selection info
      \* @type\:       buffer type (do not use \*\_MPLANE types)
      \* @target\:     Selection target, used to choose one of possible rectangles;
      \*              defined in v4l2-common.h; V4L2\_SEL\_TGT\_\* .
@@ -1246,11 +1251,11 @@ videodev2.h
      \* The structure is used to exchange this selection areas between
      \* an application and a driver.
      \*\/
-    struct :c:type:`v4l2_selection` \{
+    struct v4l2_selection \{
             \_\_u32                   type;
             \_\_u32                   target;
             \_\_u32                   flags;
-            struct :c:type:`v4l2_rect`        r;
+            struct v4l2_rect        r;
             \_\_u32                   reserved[9];
     \};
 
@@ -1390,11 +1395,11 @@ videodev2.h
     \#define :ref:`V4L2_STD_ALL <v4l2-std-id>`            (:ref:`V4L2_STD_525_60 <v4l2-std-id>`        \|\\
                                      :ref:`V4L2_STD_625_50 <v4l2-std-id>`)
 
-    struct :c:type:`v4l2_standard` \{
+    struct v4l2_standard \{
             \_\_u32                index;
             v4l2\_std\_id          id;
             \_\_u8                 name[24];
-            struct :c:type:`v4l2_fract`    frameperiod; \/\* Frames, not fields \*\/
+            struct v4l2_fract    frameperiod; \/\* Frames, not fields \*\/
             \_\_u32                framelines;
             \_\_u32                reserved[4];
     \};
@@ -1403,7 +1408,7 @@ videodev2.h
      \*      D V     B T     T I M I N G S
      \*\/
 
-    \/\*\* struct :c:type:`v4l2_bt_timings` - BT.656\/BT.1120 timing data
+    \/\*\* struct v4l2_bt_timings - BT.656\/BT.1120 timing data
      \* @width\:      total width of the active video in pixels
      \* @height\:     total height of the active video in lines
      \* @interlaced\: Interlaced or progressive
@@ -1438,7 +1443,7 @@ videodev2.h
      \*
      \* The active height of each field is height \/ 2.
      \*\/
-    struct :c:type:`v4l2_bt_timings` \{
+    struct v4l2_bt_timings \{
             \_\_u32   width;
             \_\_u32   height;
             \_\_u32   interlaced;
@@ -1455,7 +1460,7 @@ videodev2.h
             \_\_u32   il\_vbackporch;
             \_\_u32   standards;
             \_\_u32   flags;
-            struct :c:type:`v4l2_fract` picture\_aspect;
+            struct v4l2_fract picture\_aspect;
             \_\_u8    cea861\_vic;
             \_\_u8    hdmi\_vic;
             \_\_u8    reserved[46];
@@ -1557,14 +1562,14 @@ videodev2.h
     \#define V4L2\_DV\_BT\_FRAME\_HEIGHT(bt) \\
             ((bt)-\>height + V4L2\_DV\_BT\_BLANKING\_HEIGHT(bt))
 
-    \/\*\* struct :c:type:`v4l2_dv_timings` - DV timings
+    \/\*\* struct v4l2_dv_timings - DV timings
      \* @type\:       the type of the timings
      \* @bt\: BT656\/1120 timings
      \*\/
-    struct :c:type:`v4l2_dv_timings` \{
+    struct v4l2_dv_timings \{
             \_\_u32 type;
             union \{
-                    struct :c:type:`v4l2_bt_timings`  bt;
+                    struct v4l2_bt_timings  bt;
                     \_\_u32   reserved[32];
             \};
     \} \_\_attribute\_\_ ((packed));
@@ -1572,21 +1577,21 @@ videodev2.h
     \/\* Values for the type field \*\/
     \#define :ref:`V4L2_DV_BT_656_1120 <dv-timing-types>`     0       \/\* BT.656\/1120 timing type \*\/
 
-    \/\*\* struct :c:type:`v4l2_enum_dv_timings` - DV timings enumeration
+    \/\*\* struct v4l2_enum_dv_timings - DV timings enumeration
      \* @index\:      enumeration index
      \* @pad\:        the pad number for which to enumerate timings (used with
      \*              v4l-subdev nodes only)
      \* @reserved\:   must be zeroed
      \* @timings\:    the timings for the given index
      \*\/
-    struct :c:type:`v4l2_enum_dv_timings` \{
+    struct v4l2_enum_dv_timings \{
             \_\_u32 index;
             \_\_u32 pad;
             \_\_u32 reserved[2];
-            struct :c:type:`v4l2_dv_timings` timings;
+            struct v4l2_dv_timings timings;
     \};
 
-    \/\*\* struct :c:type:`v4l2_bt_timings_cap` - BT.656\/BT.1120 timing capabilities
+    \/\*\* struct v4l2_bt_timings_cap - BT.656\/BT.1120 timing capabilities
      \* @min\_width\:          width in pixels
      \* @max\_width\:          width in pixels
      \* @min\_height\:         height in lines
@@ -1597,7 +1602,7 @@ videodev2.h
      \* @capabilities\:       Supported capabilities
      \* @reserved\:           Must be zeroed
      \*\/
-    struct :c:type:`v4l2_bt_timings_cap` \{
+    struct v4l2_bt_timings_cap \{
             \_\_u32   min\_width;
             \_\_u32   max\_width;
             \_\_u32   min\_height;
@@ -1618,18 +1623,18 @@ videodev2.h
     \/\* Supports custom formats \*\/
     \#define :ref:`V4L2_DV_BT_CAP_CUSTOM <framebuffer-cap>`           (1 \<\< 3)
 
-    \/\*\* struct :c:type:`v4l2_dv_timings_cap` - DV timings capabilities
-     \* @type\:       the type of the timings (same as in struct :c:type:`v4l2_dv_timings`\ )
+    \/\*\* struct v4l2_dv_timings_cap - DV timings capabilities
+     \* @type\:       the type of the timings (same as in struct v4l2_dv_timings\ )
      \* @pad\:        the pad number for which to query capabilities (used with
      \*              v4l-subdev nodes only)
      \* @bt\:         the BT656\/1120 timings capabilities
      \*\/
-    struct :c:type:`v4l2_dv_timings_cap` \{
+    struct v4l2_dv_timings_cap \{
             \_\_u32 type;
             \_\_u32 pad;
             \_\_u32 reserved[2];
             union \{
-                    struct :c:type:`v4l2_bt_timings_cap` bt;
+                    struct v4l2_bt_timings_cap bt;
                     \_\_u32 raw\_data[32];
             \};
     \};
@@ -1637,7 +1642,7 @@ videodev2.h
     \/\*
      \*      V I D E O   I N P U T S
      \*\/
-    struct :c:type:`v4l2_input` \{
+    struct v4l2_input \{
             \_\_u32        index;             \/\*  Which input \*\/
             \_\_u8         name[32];          \/\*  Label \*\/
             \_\_u32        type;              \/\*  Type of input \*\/
@@ -1689,7 +1694,7 @@ videodev2.h
     \/\*
      \*      V I D E O   O U T P U T S
      \*\/
-    struct :c:type:`v4l2_output` \{
+    struct v4l2_output \{
             \_\_u32        index;             \/\*  Which output \*\/
             \_\_u8         name[32];          \/\*  Label \*\/
             \_\_u32        type;              \/\*  Type of output \*\/
@@ -1713,12 +1718,12 @@ videodev2.h
     \/\*
      \*      C O N T R O L S
      \*\/
-    struct :c:type:`v4l2_control` \{
+    struct v4l2_control \{
             \_\_u32                id;
             \_\_s32                value;
     \};
 
-    struct :c:type:`v4l2_ext_control` \{
+    struct v4l2_ext_control \{
             \_\_u32 id;
             \_\_u32 size;
             \_\_u32 reserved2[1];
@@ -1729,12 +1734,12 @@ videodev2.h
                     \_\_u8 \_\_user \*p\_u8;
                     \_\_u16 \_\_user \*p\_u16;
                     \_\_u32 \_\_user \*p\_u32;
-                    struct :c:type:`v4l2_area` \_\_user \*p\_area;
+                    struct v4l2_area \_\_user \*p\_area;
                     void \_\_user \*ptr;
             \};
     \} \_\_attribute\_\_ ((packed));
 
-    struct :c:type:`v4l2_ext_controls` \{
+    struct v4l2_ext_controls \{
             union \{
     \#ifndef \_\_KERNEL\_\_
                     \_\_u32 ctrl\_class;
@@ -1745,7 +1750,7 @@ videodev2.h
             \_\_u32 error\_idx;
             \_\_s32 request\_fd;
             \_\_u32 reserved[1];
-            struct :c:type:`v4l2_ext_control` \*controls;
+            struct v4l2_ext_control \*controls;
     \};
 
     \#define V4L2\_CTRL\_ID\_MASK         (0x0fffffff)
@@ -1779,7 +1784,7 @@ videodev2.h
     \};
 
     \/\*  Used in the \ :ref:`VIDIOC_QUERYCTRL <vidioc_queryctrl>` ioctl for querying controls \*\/
-    struct :c:type:`v4l2_queryctrl` \{
+    struct v4l2_queryctrl \{
             \_\_u32                id;
             \_\_u32                type;      \/\* enum :c:type:`v4l2_ctrl_type` \*\/
             \_\_u8                 name[32];  \/\* Whatever \*\/
@@ -1792,7 +1797,7 @@ videodev2.h
     \};
 
     \/\*  Used in the :ref:`VIDIOC_QUERY_EXT_CTRL <vidioc_queryctrl>` ioctl for querying extended controls \*\/
-    struct :c:type:`v4l2_query_ext_ctrl` \{
+    struct v4l2_query_ext_ctrl \{
             \_\_u32                id;
             \_\_u32                type;
             char                 name[32];
@@ -1809,7 +1814,7 @@ videodev2.h
     \};
 
     \/\*  Used in the :ref:`VIDIOC_QUERYMENU <vidioc_queryctrl>` ioctl for querying menu items \*\/
-    struct :c:type:`v4l2_querymenu` \{
+    struct v4l2_querymenu \{
             \_\_u32           id;
             \_\_u32           index;
             union \{
@@ -1844,7 +1849,7 @@ videodev2.h
     \/\*
      \*      T U N I N G
      \*\/
-    struct :c:type:`v4l2_tuner` \{
+    struct v4l2_tuner \{
             \_\_u32                   index;
             \_\_u8                    name[32];
             \_\_u32                   type;   \/\* enum :c:type:`v4l2_tuner_type` \*\/
@@ -1858,7 +1863,7 @@ videodev2.h
             \_\_u32                   reserved[4];
     \};
 
-    struct :c:type:`v4l2_modulator` \{
+    struct v4l2_modulator \{
             \_\_u32                   index;
             \_\_u8                    name[32];
             \_\_u32                   capability;
@@ -1901,7 +1906,7 @@ videodev2.h
     \#define :ref:`V4L2_TUNER_MODE_LANG1 <tuner-audmode>`           0x0003
     \#define :ref:`V4L2_TUNER_MODE_LANG1_LANG2 <tuner-audmode>`     0x0004
 
-    struct :c:type:`v4l2_frequency` \{
+    struct v4l2_frequency \{
             \_\_u32   tuner;
             \_\_u32   type;   \/\* enum :c:type:`v4l2_tuner_type` \*\/
             \_\_u32   frequency;
@@ -1912,7 +1917,7 @@ videodev2.h
     \#define :ref:`V4L2_BAND_MODULATION_FM <band-modulation>`         (1 \<\< 2)
     \#define :ref:`V4L2_BAND_MODULATION_AM <band-modulation>`         (1 \<\< 3)
 
-    struct :c:type:`v4l2_frequency_band` \{
+    struct v4l2_frequency_band \{
             \_\_u32   tuner;
             \_\_u32   type;   \/\* enum :c:type:`v4l2_tuner_type` \*\/
             \_\_u32   index;
@@ -1923,7 +1928,7 @@ videodev2.h
             \_\_u32   reserved[9];
     \};
 
-    struct :c:type:`v4l2_hw_freq_seek` \{
+    struct v4l2_hw_freq_seek \{
             \_\_u32   tuner;
             \_\_u32   type;   \/\* enum :c:type:`v4l2_tuner_type` \*\/
             \_\_u32   seek\_upward;
@@ -1938,7 +1943,7 @@ videodev2.h
      \*      R D S
      \*\/
 
-    struct :c:type:`v4l2_rds_data` \{
+    struct v4l2_rds_data \{
             \_\_u8    lsb;
             \_\_u8    msb;
             \_\_u8    block;
@@ -1958,7 +1963,7 @@ videodev2.h
     \/\*
      \*      A U D I O
      \*\/
-    struct :c:type:`v4l2_audio` \{
+    struct v4l2_audio \{
             \_\_u32   index;
             \_\_u8    name[32];
             \_\_u32   capability;
@@ -1973,7 +1978,7 @@ videodev2.h
     \/\*  Flags for the 'mode' field \*\/
     \#define :ref:`V4L2_AUDMODE_AVL <audio-mode>`                0x00001
 
-    struct :c:type:`v4l2_audioout` \{
+    struct v4l2_audioout \{
             \_\_u32   index;
             \_\_u8    name[32];
             \_\_u32   capability;
@@ -1990,7 +1995,7 @@ videodev2.h
     \#define :c:type:`V4L2_ENC_IDX_FRAME_B <v4l2_enc_idx>`    (2)
     \#define :c:type:`V4L2_ENC_IDX_FRAME_MASK <v4l2_enc_idx>` (0xf)
 
-    struct :c:type:`v4l2_enc_idx_entry` \{
+    struct v4l2_enc_idx_entry \{
             \_\_u64 offset;
             \_\_u64 pts;
             \_\_u32 length;
@@ -1999,11 +2004,11 @@ videodev2.h
     \};
 
     \#define :c:type:`V4L2_ENC_IDX_ENTRIES <v4l2_enc_idx>` (64)
-    struct :c:type:`v4l2_enc_idx` \{
+    struct v4l2_enc_idx \{
             \_\_u32 entries;
             \_\_u32 entries\_cap;
             \_\_u32 reserved[4];
-            struct :c:type:`v4l2_enc_idx_entry` entry[V4L2\_ENC\_IDX\_ENTRIES];
+            struct v4l2_enc_idx_entry entry[V4L2\_ENC\_IDX\_ENTRIES];
     \};
 
     \#define :ref:`V4L2_ENC_CMD_START <encoder-cmds>`      (0)
@@ -2014,7 +2019,7 @@ videodev2.h
     \/\* Flags for :ref:`V4L2_ENC_CMD_STOP <encoder-cmds>` \*\/
     \#define :ref:`V4L2_ENC_CMD_STOP_AT_GOP_END <encoder-flags>`    (1 \<\< 0)
 
-    struct :c:type:`v4l2_encoder_cmd` \{
+    struct v4l2_encoder_cmd \{
             \_\_u32 cmd;
             \_\_u32 flags;
             union \{
@@ -2050,7 +2055,7 @@ videodev2.h
 
     \/\* The structure must be zeroed before use by the application
        This ensures it can be extended safely in the future. \*\/
-    struct :c:type:`v4l2_decoder_cmd` \{
+    struct v4l2_decoder_cmd \{
             \_\_u32 cmd;
             \_\_u32 flags;
             union \{
@@ -2082,7 +2087,7 @@ videodev2.h
      \*\/
 
     \/\* Raw VBI \*\/
-    struct :c:type:`v4l2_vbi_format` \{
+    struct v4l2_vbi_format \{
             \_\_u32   sampling\_rate;          \/\* in 1 Hz \*\/
             \_\_u32   offset;
             \_\_u32   samples\_per\_line;
@@ -2110,7 +2115,7 @@ videodev2.h
      \* notice in the definitive implementation.
      \*\/
 
-    struct :c:type:`v4l2_sliced_vbi_format` \{
+    struct v4l2_sliced_vbi_format \{
             \_\_u16   service\_set;
             \/\* service\_lines[0][...] specifies lines 0-23 (1-23 used) of the first field
                service\_lines[1][...] specifies lines 0-23 (1-23 used) of the second field
@@ -2134,7 +2139,7 @@ videodev2.h
     \#define :ref:`V4L2_SLICED_VBI_525 <vbi-services>`             (:ref:`V4L2_SLICED_CAPTION_525 <vbi-services>`)
     \#define :ref:`V4L2_SLICED_VBI_625 <vbi-services>`             (:ref:`V4L2_SLICED_TELETEXT_B <vbi-services>` \| :ref:`V4L2_SLICED_VPS <vbi-services>` \| :ref:`V4L2_SLICED_WSS_625 <vbi-services>`)
 
-    struct :c:type:`v4l2_sliced_vbi_cap` \{
+    struct v4l2_sliced_vbi_cap \{
             \_\_u16   service\_set;
             \/\* service\_lines[0][...] specifies lines 0-23 (1-23 used) of the first field
                service\_lines[1][...] specifies lines 0-23 (1-23 used) of the second field
@@ -2145,7 +2150,7 @@ videodev2.h
             \_\_u32   reserved[3];    \/\* must be 0 \*\/
     \};
 
-    struct :c:type:`v4l2_sliced_vbi_data` \{
+    struct v4l2_sliced_vbi_data \{
             \_\_u32   id;
             \_\_u32   field;          \/\* 0\: first field, 1\: second field \*\/
             \_\_u32   line;           \/\* 1-23 \*\/
@@ -2175,28 +2180,28 @@ videodev2.h
     \#define :ref:`V4L2_MPEG_VBI_IVTV_WSS_625 <ITV0-Line-Identifier-Constants>`        (5)
     \#define :ref:`V4L2_MPEG_VBI_IVTV_VPS <ITV0-Line-Identifier-Constants>`            (7)
 
-    struct :c:type:`v4l2_mpeg_vbi_itv0_line` \{
+    struct v4l2_mpeg_vbi_itv0_line \{
             \_\_u8 id;        \/\* One of V4L2\_MPEG\_VBI\_IVTV\_\* above \*\/
             \_\_u8 data[42];  \/\* Sliced VBI data for the line \*\/
     \} \_\_attribute\_\_ ((packed));
 
-    struct :c:type:`v4l2_mpeg_vbi_itv0` \{
+    struct v4l2_mpeg_vbi_itv0 \{
             \_\_le32 linemask[2]; \/\* Bitmasks of VBI service lines present \*\/
-            struct :c:type:`v4l2_mpeg_vbi_itv0_line` line[35];
+            struct v4l2_mpeg_vbi_itv0_line line[35];
     \} \_\_attribute\_\_ ((packed));
 
-    struct :c:type:`v4l2_mpeg_vbi_ITV0` \{
-            struct :c:type:`v4l2_mpeg_vbi_itv0_line` line[36];
+    struct v4l2_mpeg_vbi_ITV0 \{
+            struct v4l2_mpeg_vbi_itv0_line line[36];
     \} \_\_attribute\_\_ ((packed));
 
     \#define :ref:`V4L2_MPEG_VBI_IVTV_MAGIC0 <v4l2-mpeg-vbi-fmt-ivtv-magic>`       "itv0"
     \#define :ref:`V4L2_MPEG_VBI_IVTV_MAGIC1 <v4l2-mpeg-vbi-fmt-ivtv-magic>`       "ITV0"
 
-    struct :c:type:`v4l2_mpeg_vbi_fmt_ivtv` \{
+    struct v4l2_mpeg_vbi_fmt_ivtv \{
             \_\_u8 magic[4];
             union \{
-                    struct :c:type:`v4l2_mpeg_vbi_itv0` itv0;
-                    struct :c:type:`v4l2_mpeg_vbi_ITV0` ITV0;
+                    struct v4l2_mpeg_vbi_itv0 itv0;
+                    struct v4l2_mpeg_vbi_ITV0 ITV0;
             \};
     \} \_\_attribute\_\_ ((packed));
 
@@ -2205,20 +2210,20 @@ videodev2.h
      \*\/
 
     \/\*\*
-     \* struct :c:type:`v4l2_plane_pix_format` - additional, per-plane format definition
+     \* struct v4l2_plane_pix_format - additional, per-plane format definition
      \* @sizeimage\:          maximum size in bytes required for data, for which
      \*                      this plane will be used
      \* @bytesperline\:       distance in bytes between the leftmost pixels in two
      \*                      adjacent lines
      \*\/
-    struct :c:type:`v4l2_plane_pix_format` \{
+    struct v4l2_plane_pix_format \{
             \_\_u32           sizeimage;
             \_\_u32           bytesperline;
             \_\_u16           reserved[6];
     \} \_\_attribute\_\_ ((packed));
 
     \/\*\*
-     \* struct :c:type:`v4l2_pix_format_mplane` - multiplanar format definition
+     \* struct v4l2_pix_format_mplane - multiplanar format definition
      \* @width\:              image width in pixels
      \* @height\:             image height in pixels
      \* @pixelformat\:        little endian four character code (fourcc)
@@ -2231,14 +2236,14 @@ videodev2.h
      \* @quantization\:       enum :c:type:`v4l2_quantization`\ , colorspace quantization
      \* @xfer\_func\:          enum :c:type:`v4l2_xfer_func`\ , colorspace transfer function
      \*\/
-    struct :c:type:`v4l2_pix_format_mplane` \{
+    struct v4l2_pix_format_mplane \{
             \_\_u32                           width;
             \_\_u32                           height;
             \_\_u32                           pixelformat;
             \_\_u32                           field;
             \_\_u32                           colorspace;
 
-            struct :c:type:`v4l2_plane_pix_format`    plane\_fmt[VIDEO\_MAX\_PLANES];
+            struct v4l2_plane_pix_format    plane\_fmt[VIDEO\_MAX\_PLANES];
             \_\_u8                            num\_planes;
             \_\_u8                            flags;
              union \{
@@ -2251,28 +2256,28 @@ videodev2.h
     \} \_\_attribute\_\_ ((packed));
 
     \/\*\*
-     \* struct :c:type:`v4l2_sdr_format` - SDR format definition
+     \* struct v4l2_sdr_format - SDR format definition
      \* @pixelformat\:        little endian four character code (fourcc)
      \* @buffersize\:         maximum size in bytes required for data
      \*\/
-    struct :c:type:`v4l2_sdr_format` \{
+    struct v4l2_sdr_format \{
             \_\_u32                           pixelformat;
             \_\_u32                           buffersize;
             \_\_u8                            reserved[24];
     \} \_\_attribute\_\_ ((packed));
 
     \/\*\*
-     \* struct :c:type:`v4l2_meta_format` - metadata format definition
+     \* struct v4l2_meta_format - metadata format definition
      \* @dataformat\:         little endian four character code (fourcc)
      \* @buffersize\:         maximum size in bytes required for data
      \*\/
-    struct :c:type:`v4l2_meta_format` \{
+    struct v4l2_meta_format \{
             \_\_u32                           dataformat;
             \_\_u32                           buffersize;
     \} \_\_attribute\_\_ ((packed));
 
     \/\*\*
-     \* struct :c:type:`v4l2_format` - stream data format
+     \* struct v4l2_format - stream data format
      \* @type\:       enum :c:type:`v4l2_buf_type`\ ; type of the data stream
      \* @pix\:        definition of an image format
      \* @pix\_mp\:     definition of a multiplanar image format
@@ -2281,27 +2286,27 @@ videodev2.h
      \* @sliced\:     sliced VBI capture or output parameters
      \* @raw\_data\:   placeholder for future extensions and custom formats
      \*\/
-    struct :c:type:`v4l2_format` \{
+    struct v4l2_format \{
             \_\_u32    type;
             union \{
-                    struct :c:type:`v4l2_pix_format`          pix;     \/\* :c:type:`V4L2_BUF_TYPE_VIDEO_CAPTURE <v4l2_buf_type>` \*\/
-                    struct :c:type:`v4l2_pix_format_mplane`   pix\_mp;  \/\* :c:type:`V4L2_BUF_TYPE_VIDEO_CAPTURE_MPLANE <v4l2_buf_type>` \*\/
-                    struct :c:type:`v4l2_window`              win;     \/\* :c:type:`V4L2_BUF_TYPE_VIDEO_OVERLAY <v4l2_buf_type>` \*\/
-                    struct :c:type:`v4l2_vbi_format`          vbi;     \/\* :c:type:`V4L2_BUF_TYPE_VBI_CAPTURE <v4l2_buf_type>` \*\/
-                    struct :c:type:`v4l2_sliced_vbi_format`   sliced;  \/\* :c:type:`V4L2_BUF_TYPE_SLICED_VBI_CAPTURE <v4l2_buf_type>` \*\/
-                    struct :c:type:`v4l2_sdr_format`          sdr;     \/\* :c:type:`V4L2_BUF_TYPE_SDR_CAPTURE <v4l2_buf_type>` \*\/
-                    struct :c:type:`v4l2_meta_format`         meta;    \/\* :c:type:`V4L2_BUF_TYPE_META_CAPTURE <v4l2_buf_type>` \*\/
+                    struct v4l2_pix_format          pix;     \/\* :c:type:`V4L2_BUF_TYPE_VIDEO_CAPTURE <v4l2_buf_type>` \*\/
+                    struct v4l2_pix_format_mplane   pix\_mp;  \/\* :c:type:`V4L2_BUF_TYPE_VIDEO_CAPTURE_MPLANE <v4l2_buf_type>` \*\/
+                    struct v4l2_window              win;     \/\* :c:type:`V4L2_BUF_TYPE_VIDEO_OVERLAY <v4l2_buf_type>` \*\/
+                    struct v4l2_vbi_format          vbi;     \/\* :c:type:`V4L2_BUF_TYPE_VBI_CAPTURE <v4l2_buf_type>` \*\/
+                    struct v4l2_sliced_vbi_format   sliced;  \/\* :c:type:`V4L2_BUF_TYPE_SLICED_VBI_CAPTURE <v4l2_buf_type>` \*\/
+                    struct v4l2_sdr_format          sdr;     \/\* :c:type:`V4L2_BUF_TYPE_SDR_CAPTURE <v4l2_buf_type>` \*\/
+                    struct v4l2_meta_format         meta;    \/\* :c:type:`V4L2_BUF_TYPE_META_CAPTURE <v4l2_buf_type>` \*\/
                     \_\_u8    raw\_data[200];                   \/\* user-defined \*\/
             \} fmt;
     \};
 
     \/\*      Stream type-dependent parameters
      \*\/
-    struct :c:type:`v4l2_streamparm` \{
+    struct v4l2_streamparm \{
             \_\_u32    type;                  \/\* enum :c:type:`v4l2_buf_type` \*\/
             union \{
-                    struct :c:type:`v4l2_captureparm` capture;
-                    struct :c:type:`v4l2_outputparm`  output;
+                    struct v4l2_captureparm capture;
+                    struct v4l2_outputparm  output;
                     \_\_u8    raw\_data[200];  \/\* user-defined \*\/
             \} parm;
     \};
@@ -2320,7 +2325,7 @@ videodev2.h
     \#define :ref:`V4L2_EVENT_PRIVATE_START <event-type>`                0x08000000
 
     \/\* Payload for :ref:`V4L2_EVENT_VSYNC <event-type>` \*\/
-    struct :c:type:`v4l2_event_vsync` \{
+    struct v4l2_event_vsync \{
             \/\* Can be :c:type:`V4L2_FIELD_ANY <v4l2_field>`, \_NONE, \_TOP or \_BOTTOM \*\/
             \_\_u8 field;
     \} \_\_attribute\_\_ ((packed));
@@ -2330,7 +2335,7 @@ videodev2.h
     \#define :ref:`V4L2_EVENT_CTRL_CH_FLAGS <ctrl-changes-flags>`                (1 \<\< 1)
     \#define :ref:`V4L2_EVENT_CTRL_CH_RANGE <ctrl-changes-flags>`                (1 \<\< 2)
 
-    struct :c:type:`v4l2_event_ctrl` \{
+    struct v4l2_event_ctrl \{
             \_\_u32 changes;
             \_\_u32 type;
             union \{
@@ -2344,39 +2349,39 @@ videodev2.h
             \_\_s32 default\_value;
     \};
 
-    struct :c:type:`v4l2_event_frame_sync` \{
+    struct v4l2_event_frame_sync \{
             \_\_u32 frame\_sequence;
     \};
 
     \#define :ref:`V4L2_EVENT_SRC_CH_RESOLUTION <src-changes-flags>`            (1 \<\< 0)
 
-    struct :c:type:`v4l2_event_src_change` \{
+    struct v4l2_event_src_change \{
             \_\_u32 changes;
     \};
 
     \#define :c:type:`V4L2_EVENT_MD_FL_HAVE_FRAME_SEQ <v4l2_event_motion_det>` (1 \<\< 0)
 
     \/\*\*
-     \* struct :c:type:`v4l2_event_motion_det` - motion detection event
+     \* struct v4l2_event_motion_det - motion detection event
      \* @flags\:             if :c:type:`V4L2_EVENT_MD_FL_HAVE_FRAME_SEQ <v4l2_event_motion_det>` is set, then the
      \*                     frame\_sequence field is valid.
      \* @frame\_sequence\:    the frame sequence number associated with this event.
      \* @region\_mask\:       which regions detected motion.
      \*\/
-    struct :c:type:`v4l2_event_motion_det` \{
+    struct v4l2_event_motion_det \{
             \_\_u32 flags;
             \_\_u32 frame\_sequence;
             \_\_u32 region\_mask;
     \};
 
-    struct :c:type:`v4l2_event` \{
+    struct v4l2_event \{
             \_\_u32                           type;
             union \{
-                    struct :c:type:`v4l2_event_vsync`         vsync;
-                    struct :c:type:`v4l2_event_ctrl`          ctrl;
-                    struct :c:type:`v4l2_event_frame_sync`    frame\_sync;
-                    struct :c:type:`v4l2_event_src_change`    src\_change;
-                    struct :c:type:`v4l2_event_motion_det`    motion\_det;
+                    struct v4l2_event_vsync         vsync;
+                    struct v4l2_event_ctrl          ctrl;
+                    struct v4l2_event_frame_sync    frame\_sync;
+                    struct v4l2_event_src_change    src\_change;
+                    struct v4l2_event_motion_det    motion\_det;
                     \_\_u8                            data[64];
             \} u;
             \_\_u32                           pending;
@@ -2393,7 +2398,7 @@ videodev2.h
     \#define :ref:`V4L2_EVENT_SUB_FL_SEND_INITIAL <event-flags>`          (1 \<\< 0)
     \#define :ref:`V4L2_EVENT_SUB_FL_ALLOW_FEEDBACK <event-flags>`        (1 \<\< 1)
 
-    struct :c:type:`v4l2_event_subscription` \{
+    struct v4l2_event_subscription \{
             \_\_u32                           type;
             \_\_u32                           id;
             \_\_u32                           flags;
@@ -2418,7 +2423,7 @@ videodev2.h
     \#define :ref:`V4L2_CHIP_MATCH_I2C_ADDR <vidioc_dbg_g_register>`    2  \/\* Match against I2C 7-bit address \*\/
     \#define :ref:`V4L2_CHIP_MATCH_AC97 <vidioc_dbg_g_register>`        3  \/\* Match against ancillary AC97 chip \*\/
 
-    struct :c:type:`v4l2_dbg_match` \{
+    struct v4l2_dbg_match \{
             \_\_u32 type; \/\* Match type \*\/
             union \{     \/\* Match this chip, meaning determined by type \*\/
                     \_\_u32 addr;
@@ -2426,8 +2431,8 @@ videodev2.h
             \};
     \} \_\_attribute\_\_ ((packed));
 
-    struct :c:type:`v4l2_dbg_register` \{
-            struct :c:type:`v4l2_dbg_match` match;
+    struct v4l2_dbg_register \{
+            struct v4l2_dbg_match match;
             \_\_u32 size;     \/\* register size in bytes \*\/
             \_\_u64 reg;
             \_\_u64 val;
@@ -2437,15 +2442,15 @@ videodev2.h
     \#define :ref:`V4L2_CHIP_FL_WRITABLE <vidioc_dbg_g_register>` (1 \<\< 1)
 
     \/\* \ :ref:`VIDIOC_DBG_G_CHIP_INFO <vidioc_dbg_g_chip_info>` \*\/
-    struct :c:type:`v4l2_dbg_chip_info` \{
-            struct :c:type:`v4l2_dbg_match` match;
+    struct v4l2_dbg_chip_info \{
+            struct v4l2_dbg_match match;
             char name[32];
             \_\_u32 flags;
             \_\_u32 reserved[32];
     \} \_\_attribute\_\_ ((packed));
 
     \/\*\*
-     \* struct :c:type:`v4l2_create_buffers` - \ :ref:`VIDIOC_CREATE_BUFS <vidioc_create_bufs>` argument
+     \* struct v4l2_create_buffers - \ :ref:`VIDIOC_CREATE_BUFS <vidioc_create_bufs>` argument
      \* @index\:      on return, index of the first created buffer
      \* @count\:      entry\: number of requested buffers,
      \*              return\: number of created buffers
@@ -2454,11 +2459,11 @@ videodev2.h
      \* @capabilities\: capabilities of this buffer type.
      \* @reserved\:   future extensions
      \*\/
-    struct :c:type:`v4l2_create_buffers` \{
+    struct v4l2_create_buffers \{
             \_\_u32                   index;
             \_\_u32                   count;
             \_\_u32                   memory;
-            struct :c:type:`v4l2_format`      format;
+            struct v4l2_format      format;
             \_\_u32                   capabilities;
             \_\_u32                   reserved[7];
     \};
@@ -2467,101 +2472,101 @@ videodev2.h
      \*      I O C T L   C O D E S   F O R   V I D E O   D E V I C E S
      \*
      \*\/
-    \#define \ :ref:`VIDIOC_QUERYCAP <vidioc_querycap>`          \_IOR('V',  0, struct :c:type:`v4l2_capability`\ )
-    \#define \ :ref:`VIDIOC_ENUM_FMT <vidioc_enum_fmt>`         \_IOWR('V',  2, struct :c:type:`v4l2_fmtdesc`\ )
-    \#define \ :ref:`VIDIOC_G_FMT <vidioc_g_fmt>`            \_IOWR('V',  4, struct :c:type:`v4l2_format`\ )
-    \#define :ref:`VIDIOC_S_FMT <vidioc_g_fmt>`            \_IOWR('V',  5, struct :c:type:`v4l2_format`\ )
-    \#define \ :ref:`VIDIOC_REQBUFS <vidioc_reqbufs>`          \_IOWR('V',  8, struct :c:type:`v4l2_requestbuffers`\ )
-    \#define \ :ref:`VIDIOC_QUERYBUF <vidioc_querybuf>`         \_IOWR('V',  9, struct :c:type:`v4l2_buffer`\ )
-    \#define \ :ref:`VIDIOC_G_FBUF <vidioc_g_fbuf>`            \_IOR('V', 10, struct :c:type:`v4l2_framebuffer`\ )
-    \#define :ref:`VIDIOC_S_FBUF <vidioc_g_fbuf>`            \_IOW('V', 11, struct :c:type:`v4l2_framebuffer`\ )
+    \#define \ :ref:`VIDIOC_QUERYCAP <vidioc_querycap>`          \_IOR('V',  0, struct v4l2_capability\ )
+    \#define \ :ref:`VIDIOC_ENUM_FMT <vidioc_enum_fmt>`         \_IOWR('V',  2, struct v4l2_fmtdesc\ )
+    \#define \ :ref:`VIDIOC_G_FMT <vidioc_g_fmt>`            \_IOWR('V',  4, struct v4l2_format\ )
+    \#define :ref:`VIDIOC_S_FMT <vidioc_g_fmt>`            \_IOWR('V',  5, struct v4l2_format\ )
+    \#define \ :ref:`VIDIOC_REQBUFS <vidioc_reqbufs>`          \_IOWR('V',  8, struct v4l2_requestbuffers\ )
+    \#define \ :ref:`VIDIOC_QUERYBUF <vidioc_querybuf>`         \_IOWR('V',  9, struct v4l2_buffer\ )
+    \#define \ :ref:`VIDIOC_G_FBUF <vidioc_g_fbuf>`            \_IOR('V', 10, struct v4l2_framebuffer\ )
+    \#define :ref:`VIDIOC_S_FBUF <vidioc_g_fbuf>`            \_IOW('V', 11, struct v4l2_framebuffer\ )
     \#define \ :ref:`VIDIOC_OVERLAY <vidioc_overlay>`           \_IOW('V', 14, int)
-    \#define \ :ref:`VIDIOC_QBUF <vidioc_qbuf>`             \_IOWR('V', 15, struct :c:type:`v4l2_buffer`\ )
-    \#define \ :ref:`VIDIOC_EXPBUF <vidioc_expbuf>`           \_IOWR('V', 16, struct :c:type:`v4l2_exportbuffer`\ )
-    \#define :ref:`VIDIOC_DQBUF <vidioc_qbuf>`            \_IOWR('V', 17, struct :c:type:`v4l2_buffer`\ )
+    \#define \ :ref:`VIDIOC_QBUF <vidioc_qbuf>`             \_IOWR('V', 15, struct v4l2_buffer\ )
+    \#define \ :ref:`VIDIOC_EXPBUF <vidioc_expbuf>`           \_IOWR('V', 16, struct v4l2_exportbuffer\ )
+    \#define :ref:`VIDIOC_DQBUF <vidioc_qbuf>`            \_IOWR('V', 17, struct v4l2_buffer\ )
     \#define \ :ref:`VIDIOC_STREAMON <vidioc_streamon>`          \_IOW('V', 18, int)
     \#define :ref:`VIDIOC_STREAMOFF <vidioc_streamon>`         \_IOW('V', 19, int)
-    \#define \ :ref:`VIDIOC_G_PARM <vidioc_g_parm>`           \_IOWR('V', 21, struct :c:type:`v4l2_streamparm`\ )
-    \#define :ref:`VIDIOC_S_PARM <vidioc_g_parm>`           \_IOWR('V', 22, struct :c:type:`v4l2_streamparm`\ )
+    \#define \ :ref:`VIDIOC_G_PARM <vidioc_g_parm>`           \_IOWR('V', 21, struct v4l2_streamparm\ )
+    \#define :ref:`VIDIOC_S_PARM <vidioc_g_parm>`           \_IOWR('V', 22, struct v4l2_streamparm\ )
     \#define \ :ref:`VIDIOC_G_STD <vidioc_g_std>`             \_IOR('V', 23, v4l2\_std\_id)
     \#define :ref:`VIDIOC_S_STD <vidioc_g_std>`             \_IOW('V', 24, v4l2\_std\_id)
-    \#define \ :ref:`VIDIOC_ENUMSTD <vidioc_enumstd>`          \_IOWR('V', 25, struct :c:type:`v4l2_standard`\ )
-    \#define \ :ref:`VIDIOC_ENUMINPUT <vidioc_enuminput>`        \_IOWR('V', 26, struct :c:type:`v4l2_input`\ )
-    \#define \ :ref:`VIDIOC_G_CTRL <vidioc_g_ctrl>`           \_IOWR('V', 27, struct :c:type:`v4l2_control`\ )
-    \#define :ref:`VIDIOC_S_CTRL <vidioc_g_ctrl>`           \_IOWR('V', 28, struct :c:type:`v4l2_control`\ )
-    \#define \ :ref:`VIDIOC_G_TUNER <vidioc_g_tuner>`          \_IOWR('V', 29, struct :c:type:`v4l2_tuner`\ )
-    \#define :ref:`VIDIOC_S_TUNER <vidioc_g_tuner>`           \_IOW('V', 30, struct :c:type:`v4l2_tuner`\ )
-    \#define \ :ref:`VIDIOC_G_AUDIO <vidioc_g_audio>`           \_IOR('V', 33, struct :c:type:`v4l2_audio`\ )
-    \#define :ref:`VIDIOC_S_AUDIO <vidioc_g_audio>`           \_IOW('V', 34, struct :c:type:`v4l2_audio`\ )
-    \#define \ :ref:`VIDIOC_QUERYCTRL <vidioc_queryctrl>`        \_IOWR('V', 36, struct :c:type:`v4l2_queryctrl`\ )
-    \#define :ref:`VIDIOC_QUERYMENU <vidioc_queryctrl>`        \_IOWR('V', 37, struct :c:type:`v4l2_querymenu`\ )
+    \#define \ :ref:`VIDIOC_ENUMSTD <vidioc_enumstd>`          \_IOWR('V', 25, struct v4l2_standard\ )
+    \#define \ :ref:`VIDIOC_ENUMINPUT <vidioc_enuminput>`        \_IOWR('V', 26, struct v4l2_input\ )
+    \#define \ :ref:`VIDIOC_G_CTRL <vidioc_g_ctrl>`           \_IOWR('V', 27, struct v4l2_control\ )
+    \#define :ref:`VIDIOC_S_CTRL <vidioc_g_ctrl>`           \_IOWR('V', 28, struct v4l2_control\ )
+    \#define \ :ref:`VIDIOC_G_TUNER <vidioc_g_tuner>`          \_IOWR('V', 29, struct v4l2_tuner\ )
+    \#define :ref:`VIDIOC_S_TUNER <vidioc_g_tuner>`           \_IOW('V', 30, struct v4l2_tuner\ )
+    \#define \ :ref:`VIDIOC_G_AUDIO <vidioc_g_audio>`           \_IOR('V', 33, struct v4l2_audio\ )
+    \#define :ref:`VIDIOC_S_AUDIO <vidioc_g_audio>`           \_IOW('V', 34, struct v4l2_audio\ )
+    \#define \ :ref:`VIDIOC_QUERYCTRL <vidioc_queryctrl>`        \_IOWR('V', 36, struct v4l2_queryctrl\ )
+    \#define :ref:`VIDIOC_QUERYMENU <vidioc_queryctrl>`        \_IOWR('V', 37, struct v4l2_querymenu\ )
     \#define \ :ref:`VIDIOC_G_INPUT <vidioc_g_input>`           \_IOR('V', 38, int)
     \#define :ref:`VIDIOC_S_INPUT <vidioc_g_input>`          \_IOWR('V', 39, int)
     \#define \ :ref:`VIDIOC_G_EDID <vidioc_g_edid>`           \_IOWR('V', 40, struct v4l2\_edid)
     \#define :ref:`VIDIOC_S_EDID <vidioc_g_edid>`           \_IOWR('V', 41, struct v4l2\_edid)
     \#define \ :ref:`VIDIOC_G_OUTPUT <vidioc_g_output>`          \_IOR('V', 46, int)
     \#define :ref:`VIDIOC_S_OUTPUT <vidioc_g_output>`         \_IOWR('V', 47, int)
-    \#define \ :ref:`VIDIOC_ENUMOUTPUT <vidioc_enumoutput>`       \_IOWR('V', 48, struct :c:type:`v4l2_output`\ )
-    \#define \ :ref:`VIDIOC_G_AUDOUT <vidioc_g_audout>`          \_IOR('V', 49, struct :c:type:`v4l2_audioout`\ )
-    \#define :ref:`VIDIOC_S_AUDOUT <vidioc_g_audout>`          \_IOW('V', 50, struct :c:type:`v4l2_audioout`\ )
-    \#define \ :ref:`VIDIOC_G_MODULATOR <vidioc_g_modulator>`      \_IOWR('V', 54, struct :c:type:`v4l2_modulator`\ )
-    \#define :ref:`VIDIOC_S_MODULATOR <vidioc_g_modulator>`       \_IOW('V', 55, struct :c:type:`v4l2_modulator`\ )
-    \#define \ :ref:`VIDIOC_G_FREQUENCY <vidioc_g_frequency>`      \_IOWR('V', 56, struct :c:type:`v4l2_frequency`\ )
-    \#define :ref:`VIDIOC_S_FREQUENCY <vidioc_g_frequency>`       \_IOW('V', 57, struct :c:type:`v4l2_frequency`\ )
-    \#define \ :ref:`VIDIOC_CROPCAP <vidioc_cropcap>`          \_IOWR('V', 58, struct :c:type:`v4l2_cropcap`\ )
-    \#define \ :ref:`VIDIOC_G_CROP <vidioc_g_crop>`           \_IOWR('V', 59, struct :c:type:`v4l2_crop`\ )
-    \#define :ref:`VIDIOC_S_CROP <vidioc_g_crop>`            \_IOW('V', 60, struct :c:type:`v4l2_crop`\ )
-    \#define \ :ref:`VIDIOC_G_JPEGCOMP <vidioc_g_jpegcomp>`        \_IOR('V', 61, struct :c:type:`v4l2_jpegcompression`\ )
-    \#define :ref:`VIDIOC_S_JPEGCOMP <vidioc_g_jpegcomp>`        \_IOW('V', 62, struct :c:type:`v4l2_jpegcompression`\ )
+    \#define \ :ref:`VIDIOC_ENUMOUTPUT <vidioc_enumoutput>`       \_IOWR('V', 48, struct v4l2_output\ )
+    \#define \ :ref:`VIDIOC_G_AUDOUT <vidioc_g_audout>`          \_IOR('V', 49, struct v4l2_audioout\ )
+    \#define :ref:`VIDIOC_S_AUDOUT <vidioc_g_audout>`          \_IOW('V', 50, struct v4l2_audioout\ )
+    \#define \ :ref:`VIDIOC_G_MODULATOR <vidioc_g_modulator>`      \_IOWR('V', 54, struct v4l2_modulator\ )
+    \#define :ref:`VIDIOC_S_MODULATOR <vidioc_g_modulator>`       \_IOW('V', 55, struct v4l2_modulator\ )
+    \#define \ :ref:`VIDIOC_G_FREQUENCY <vidioc_g_frequency>`      \_IOWR('V', 56, struct v4l2_frequency\ )
+    \#define :ref:`VIDIOC_S_FREQUENCY <vidioc_g_frequency>`       \_IOW('V', 57, struct v4l2_frequency\ )
+    \#define \ :ref:`VIDIOC_CROPCAP <vidioc_cropcap>`          \_IOWR('V', 58, struct v4l2_cropcap\ )
+    \#define \ :ref:`VIDIOC_G_CROP <vidioc_g_crop>`           \_IOWR('V', 59, struct v4l2_crop\ )
+    \#define :ref:`VIDIOC_S_CROP <vidioc_g_crop>`            \_IOW('V', 60, struct v4l2_crop\ )
+    \#define \ :ref:`VIDIOC_G_JPEGCOMP <vidioc_g_jpegcomp>`        \_IOR('V', 61, struct v4l2_jpegcompression\ )
+    \#define :ref:`VIDIOC_S_JPEGCOMP <vidioc_g_jpegcomp>`        \_IOW('V', 62, struct v4l2_jpegcompression\ )
     \#define \ :ref:`VIDIOC_QUERYSTD <vidioc_querystd>`          \_IOR('V', 63, v4l2\_std\_id)
-    \#define :ref:`VIDIOC_TRY_FMT <vidioc_g_fmt>`          \_IOWR('V', 64, struct :c:type:`v4l2_format`\ )
-    \#define \ :ref:`VIDIOC_ENUMAUDIO <vidioc_enumaudio>`        \_IOWR('V', 65, struct :c:type:`v4l2_audio`\ )
-    \#define \ :ref:`VIDIOC_ENUMAUDOUT <vidioc_enumaudout>`       \_IOWR('V', 66, struct :c:type:`v4l2_audioout`\ )
+    \#define :ref:`VIDIOC_TRY_FMT <vidioc_g_fmt>`          \_IOWR('V', 64, struct v4l2_format\ )
+    \#define \ :ref:`VIDIOC_ENUMAUDIO <vidioc_enumaudio>`        \_IOWR('V', 65, struct v4l2_audio\ )
+    \#define \ :ref:`VIDIOC_ENUMAUDOUT <vidioc_enumaudout>`       \_IOWR('V', 66, struct v4l2_audioout\ )
     \#define \ :ref:`VIDIOC_G_PRIORITY <vidioc_g_priority>`        \_IOR('V', 67, \_\_u32) \/\* enum :c:type:`v4l2_priority` \*\/
     \#define :ref:`VIDIOC_S_PRIORITY <vidioc_g_priority>`        \_IOW('V', 68, \_\_u32) \/\* enum :c:type:`v4l2_priority` \*\/
-    \#define \ :ref:`VIDIOC_G_SLICED_VBI_CAP <vidioc_g_sliced_vbi_cap>` \_IOWR('V', 69, struct :c:type:`v4l2_sliced_vbi_cap`\ )
+    \#define \ :ref:`VIDIOC_G_SLICED_VBI_CAP <vidioc_g_sliced_vbi_cap>` \_IOWR('V', 69, struct v4l2_sliced_vbi_cap\ )
     \#define \ :ref:`VIDIOC_LOG_STATUS <vidioc_log_status>`         \_IO('V', 70)
-    \#define \ :ref:`VIDIOC_G_EXT_CTRLS <vidioc_g_ext_ctrls>`      \_IOWR('V', 71, struct :c:type:`v4l2_ext_controls`\ )
-    \#define :ref:`VIDIOC_S_EXT_CTRLS <vidioc_g_ext_ctrls>`      \_IOWR('V', 72, struct :c:type:`v4l2_ext_controls`\ )
-    \#define :ref:`VIDIOC_TRY_EXT_CTRLS <vidioc_g_ext_ctrls>`    \_IOWR('V', 73, struct :c:type:`v4l2_ext_controls`\ )
-    \#define \ :ref:`VIDIOC_ENUM_FRAMESIZES <vidioc_enum_framesizes>`  \_IOWR('V', 74, struct :c:type:`v4l2_frmsizeenum`\ )
-    \#define \ :ref:`VIDIOC_ENUM_FRAMEINTERVALS <vidioc_enum_frameintervals>` \_IOWR('V', 75, struct :c:type:`v4l2_frmivalenum`\ )
-    \#define \ :ref:`VIDIOC_G_ENC_INDEX <vidioc_g_enc_index>`       \_IOR('V', 76, struct :c:type:`v4l2_enc_idx`\ )
-    \#define \ :ref:`VIDIOC_ENCODER_CMD <vidioc_encoder_cmd>`      \_IOWR('V', 77, struct :c:type:`v4l2_encoder_cmd`\ )
-    \#define :ref:`VIDIOC_TRY_ENCODER_CMD <vidioc_encoder_cmd>`  \_IOWR('V', 78, struct :c:type:`v4l2_encoder_cmd`\ )
+    \#define \ :ref:`VIDIOC_G_EXT_CTRLS <vidioc_g_ext_ctrls>`      \_IOWR('V', 71, struct v4l2_ext_controls\ )
+    \#define :ref:`VIDIOC_S_EXT_CTRLS <vidioc_g_ext_ctrls>`      \_IOWR('V', 72, struct v4l2_ext_controls\ )
+    \#define :ref:`VIDIOC_TRY_EXT_CTRLS <vidioc_g_ext_ctrls>`    \_IOWR('V', 73, struct v4l2_ext_controls\ )
+    \#define \ :ref:`VIDIOC_ENUM_FRAMESIZES <vidioc_enum_framesizes>`  \_IOWR('V', 74, struct v4l2_frmsizeenum\ )
+    \#define \ :ref:`VIDIOC_ENUM_FRAMEINTERVALS <vidioc_enum_frameintervals>` \_IOWR('V', 75, struct v4l2_frmivalenum\ )
+    \#define \ :ref:`VIDIOC_G_ENC_INDEX <vidioc_g_enc_index>`       \_IOR('V', 76, struct v4l2_enc_idx\ )
+    \#define \ :ref:`VIDIOC_ENCODER_CMD <vidioc_encoder_cmd>`      \_IOWR('V', 77, struct v4l2_encoder_cmd\ )
+    \#define :ref:`VIDIOC_TRY_ENCODER_CMD <vidioc_encoder_cmd>`  \_IOWR('V', 78, struct v4l2_encoder_cmd\ )
 
     \/\*
      \* Experimental, meant for debugging, testing and internal use.
      \* Only implemented if CONFIG\_VIDEO\_ADV\_DEBUG is defined.
      \* You must be root to use these ioctls. Never use these in applications!
      \*\/
-    \#define :ref:`VIDIOC_DBG_S_REGISTER <vidioc_dbg_g_register>`    \_IOW('V', 79, struct :c:type:`v4l2_dbg_register`\ )
-    \#define \ :ref:`VIDIOC_DBG_G_REGISTER <vidioc_dbg_g_register>`   \_IOWR('V', 80, struct :c:type:`v4l2_dbg_register`\ )
+    \#define :ref:`VIDIOC_DBG_S_REGISTER <vidioc_dbg_g_register>`    \_IOW('V', 79, struct v4l2_dbg_register\ )
+    \#define \ :ref:`VIDIOC_DBG_G_REGISTER <vidioc_dbg_g_register>`   \_IOWR('V', 80, struct v4l2_dbg_register\ )
 
-    \#define \ :ref:`VIDIOC_S_HW_FREQ_SEEK <vidioc_s_hw_freq_seek>`    \_IOW('V', 82, struct :c:type:`v4l2_hw_freq_seek`\ )
-    \#define :ref:`VIDIOC_S_DV_TIMINGS <vidioc_g_dv_timings>`     \_IOWR('V', 87, struct :c:type:`v4l2_dv_timings`\ )
-    \#define \ :ref:`VIDIOC_G_DV_TIMINGS <vidioc_g_dv_timings>`     \_IOWR('V', 88, struct :c:type:`v4l2_dv_timings`\ )
-    \#define \ :ref:`VIDIOC_DQEVENT <vidioc_dqevent>`           \_IOR('V', 89, struct :c:type:`v4l2_event`\ )
-    \#define \ :ref:`VIDIOC_SUBSCRIBE_EVENT <vidioc_subscribe_event>`   \_IOW('V', 90, struct :c:type:`v4l2_event_subscription`\ )
-    \#define \ :ref:`VIDIOC_UNSUBSCRIBE_EVENT <vidioc_unsubscribe_event>` \_IOW('V', 91, struct :c:type:`v4l2_event_subscription`\ )
-    \#define \ :ref:`VIDIOC_CREATE_BUFS <vidioc_create_bufs>`      \_IOWR('V', 92, struct :c:type:`v4l2_create_buffers`\ )
-    \#define \ :ref:`VIDIOC_PREPARE_BUF <vidioc_prepare_buf>`      \_IOWR('V', 93, struct :c:type:`v4l2_buffer`\ )
-    \#define \ :ref:`VIDIOC_G_SELECTION <vidioc_g_selection>`      \_IOWR('V', 94, struct :c:type:`v4l2_selection`\ )
-    \#define :ref:`VIDIOC_S_SELECTION <vidioc_g_selection>`      \_IOWR('V', 95, struct :c:type:`v4l2_selection`\ )
-    \#define \ :ref:`VIDIOC_DECODER_CMD <vidioc_decoder_cmd>`      \_IOWR('V', 96, struct :c:type:`v4l2_decoder_cmd`\ )
-    \#define :ref:`VIDIOC_TRY_DECODER_CMD <vidioc_decoder_cmd>`  \_IOWR('V', 97, struct :c:type:`v4l2_decoder_cmd`\ )
-    \#define \ :ref:`VIDIOC_ENUM_DV_TIMINGS <vidioc_enum_dv_timings>`  \_IOWR('V', 98, struct :c:type:`v4l2_enum_dv_timings`\ )
-    \#define \ :ref:`VIDIOC_QUERY_DV_TIMINGS <vidioc_query_dv_timings>`  \_IOR('V', 99, struct :c:type:`v4l2_dv_timings`\ )
-    \#define \ :ref:`VIDIOC_DV_TIMINGS_CAP <vidioc_dv_timings_cap>`   \_IOWR('V', 100, struct :c:type:`v4l2_dv_timings_cap`\ )
-    \#define \ :ref:`VIDIOC_ENUM_FREQ_BANDS <vidioc_enum_freq_bands>`  \_IOWR('V', 101, struct :c:type:`v4l2_frequency_band`\ )
+    \#define \ :ref:`VIDIOC_S_HW_FREQ_SEEK <vidioc_s_hw_freq_seek>`    \_IOW('V', 82, struct v4l2_hw_freq_seek\ )
+    \#define :ref:`VIDIOC_S_DV_TIMINGS <vidioc_g_dv_timings>`     \_IOWR('V', 87, struct v4l2_dv_timings\ )
+    \#define \ :ref:`VIDIOC_G_DV_TIMINGS <vidioc_g_dv_timings>`     \_IOWR('V', 88, struct v4l2_dv_timings\ )
+    \#define \ :ref:`VIDIOC_DQEVENT <vidioc_dqevent>`           \_IOR('V', 89, struct v4l2_event\ )
+    \#define \ :ref:`VIDIOC_SUBSCRIBE_EVENT <vidioc_subscribe_event>`   \_IOW('V', 90, struct v4l2_event_subscription\ )
+    \#define \ :ref:`VIDIOC_UNSUBSCRIBE_EVENT <vidioc_unsubscribe_event>` \_IOW('V', 91, struct v4l2_event_subscription\ )
+    \#define \ :ref:`VIDIOC_CREATE_BUFS <vidioc_create_bufs>`      \_IOWR('V', 92, struct v4l2_create_buffers\ )
+    \#define \ :ref:`VIDIOC_PREPARE_BUF <vidioc_prepare_buf>`      \_IOWR('V', 93, struct v4l2_buffer\ )
+    \#define \ :ref:`VIDIOC_G_SELECTION <vidioc_g_selection>`      \_IOWR('V', 94, struct v4l2_selection\ )
+    \#define :ref:`VIDIOC_S_SELECTION <vidioc_g_selection>`      \_IOWR('V', 95, struct v4l2_selection\ )
+    \#define \ :ref:`VIDIOC_DECODER_CMD <vidioc_decoder_cmd>`      \_IOWR('V', 96, struct v4l2_decoder_cmd\ )
+    \#define :ref:`VIDIOC_TRY_DECODER_CMD <vidioc_decoder_cmd>`  \_IOWR('V', 97, struct v4l2_decoder_cmd\ )
+    \#define \ :ref:`VIDIOC_ENUM_DV_TIMINGS <vidioc_enum_dv_timings>`  \_IOWR('V', 98, struct v4l2_enum_dv_timings\ )
+    \#define \ :ref:`VIDIOC_QUERY_DV_TIMINGS <vidioc_query_dv_timings>`  \_IOR('V', 99, struct v4l2_dv_timings\ )
+    \#define \ :ref:`VIDIOC_DV_TIMINGS_CAP <vidioc_dv_timings_cap>`   \_IOWR('V', 100, struct v4l2_dv_timings_cap\ )
+    \#define \ :ref:`VIDIOC_ENUM_FREQ_BANDS <vidioc_enum_freq_bands>`  \_IOWR('V', 101, struct v4l2_frequency_band\ )
 
     \/\*
      \* Experimental, meant for debugging, testing and internal use.
      \* Never use this in applications!
      \*\/
-    \#define \ :ref:`VIDIOC_DBG_G_CHIP_INFO <vidioc_dbg_g_chip_info>`  \_IOWR('V', 102, struct :c:type:`v4l2_dbg_chip_info`\ )
+    \#define \ :ref:`VIDIOC_DBG_G_CHIP_INFO <vidioc_dbg_g_chip_info>`  \_IOWR('V', 102, struct v4l2_dbg_chip_info\ )
 
-    \#define :ref:`VIDIOC_QUERY_EXT_CTRL <vidioc_queryctrl>`   \_IOWR('V', 103, struct :c:type:`v4l2_query_ext_ctrl`\ )
+    \#define :ref:`VIDIOC_QUERY_EXT_CTRL <vidioc_queryctrl>`   \_IOWR('V', 103, struct v4l2_query_ext_ctrl\ )
 
     \/\* Reminder\: when adding new ioctls please add support for them to
        drivers\/media\/v4l2-core\/v4l2-compat-ioctl32.c as well! \*\/

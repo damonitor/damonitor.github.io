@@ -60,7 +60,7 @@
             
             
               <div class="version">
-                5.9.0
+                5.10.0
               </div>
             
           
@@ -277,13 +277,20 @@ Each key-value pair is shown in each line with following style:</p>
 <div class="section" id="boot-kernel-with-a-boot-config">
 <h2>Boot Kernel With a Boot Config<a class="headerlink" href="#boot-kernel-with-a-boot-config" title="Permalink to this headline">¶</a></h2>
 <p>Since the boot configuration file is loaded with initrd, it will be added
-to the end of the initrd (initramfs) image file with size, checksum and
-12-byte magic word as below.</p>
-<p>[initrd][bootconfig][size(u32)][checksum(u32)][#BOOTCONFIGn]</p>
+to the end of the initrd (initramfs) image file with padding, size,
+checksum and 12-byte magic word as below.</p>
+<p>[initrd][bootconfig][padding][size(le32)][checksum(le32)][#BOOTCONFIGn]</p>
+<p>The size and checksum fields are unsigned 32bit little endian value.</p>
+<p>When the boot configuration is added to the initrd image, the total
+file size is aligned to 4 bytes. To fill the gap, null characters
+(<code class="docutils literal notranslate"><span class="pre">\0</span></code>) will be added. Thus the <code class="docutils literal notranslate"><span class="pre">size</span></code> is the length of the bootconfig
+file + padding bytes.</p>
 <p>The Linux kernel decodes the last part of the initrd image in memory to
 get the boot configuration data.
 Because of this “piggyback” method, there is no need to change or
-update the boot loader and the kernel image itself.</p>
+update the boot loader and the kernel image itself as long as the boot
+loader passes the correct initrd file size. If by any chance, the boot
+loader passes a longer size, the kernel feils to find the bootconfig data.</p>
 <p>To do this operation, Linux kernel provides “bootconfig” command under
 tools/bootconfig, which allows admin to apply or delete the config file
 to/from initrd image. You can build it by the following command:</p>
@@ -312,7 +319,8 @@ up to 512 key-value pairs. If keys contains 3 words in average, it can
 contain 256 key-value pairs. In most cases, the number of config items
 will be under 100 entries and smaller than 8KB, so it would be enough.
 If the node number exceeds 1024, parser returns an error even if the file
-size is smaller than 32KB.
+size is smaller than 32KB. (Note that this maximum size is not including
+the padding null characters.)
 Anyway, since bootconfig command verifies it when appending a boot config
 to initrd image, user can notice it before boot.</p>
 </div>
@@ -355,52 +363,52 @@ read-only. All data and keys must be copied if you need to modify it.</p>
 <h2>Functions and structures<a class="headerlink" href="#functions-and-structures" title="Permalink to this headline">¶</a></h2>
 <dl class="function">
 <dt id="c.xbc_node_is_value">
-bool <code class="sig-name descname">xbc_node_is_value</code><span class="sig-paren">(</span>struct xbc_node *<em> node</em><span class="sig-paren">)</span><a class="headerlink" href="#c.xbc_node_is_value" title="Permalink to this definition">¶</a></dt>
+bool <code class="sig-name descname">xbc_node_is_value</code><span class="sig-paren">(</span>struct xbc_node<em> *node</em><span class="sig-paren">)</span><a class="headerlink" href="#c.xbc_node_is_value" title="Permalink to this definition">¶</a></dt>
 <dd><p>Test the node is a value node</p>
 </dd></dl>
 
 <p><strong>Parameters</strong></p>
 <dl class="simple">
-<dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">xbc_node</span> <span class="pre">*</span> <span class="pre">node</span></code></dt><dd><p>An XBC node.</p>
+<dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">xbc_node</span> <span class="pre">*node</span></code></dt><dd><p>An XBC node.</p>
 </dd>
 </dl>
 <p><strong>Description</strong></p>
 <p>Test the <strong>node</strong> is a value node and return true if a value node, false if not.</p>
 <dl class="function">
 <dt id="c.xbc_node_is_key">
-bool <code class="sig-name descname">xbc_node_is_key</code><span class="sig-paren">(</span>struct xbc_node *<em> node</em><span class="sig-paren">)</span><a class="headerlink" href="#c.xbc_node_is_key" title="Permalink to this definition">¶</a></dt>
+bool <code class="sig-name descname">xbc_node_is_key</code><span class="sig-paren">(</span>struct xbc_node<em> *node</em><span class="sig-paren">)</span><a class="headerlink" href="#c.xbc_node_is_key" title="Permalink to this definition">¶</a></dt>
 <dd><p>Test the node is a key node</p>
 </dd></dl>
 
 <p><strong>Parameters</strong></p>
 <dl class="simple">
-<dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">xbc_node</span> <span class="pre">*</span> <span class="pre">node</span></code></dt><dd><p>An XBC node.</p>
+<dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">xbc_node</span> <span class="pre">*node</span></code></dt><dd><p>An XBC node.</p>
 </dd>
 </dl>
 <p><strong>Description</strong></p>
 <p>Test the <strong>node</strong> is a key node and return true if a key node, false if not.</p>
 <dl class="function">
 <dt id="c.xbc_node_is_array">
-bool <code class="sig-name descname">xbc_node_is_array</code><span class="sig-paren">(</span>struct xbc_node *<em> node</em><span class="sig-paren">)</span><a class="headerlink" href="#c.xbc_node_is_array" title="Permalink to this definition">¶</a></dt>
+bool <code class="sig-name descname">xbc_node_is_array</code><span class="sig-paren">(</span>struct xbc_node<em> *node</em><span class="sig-paren">)</span><a class="headerlink" href="#c.xbc_node_is_array" title="Permalink to this definition">¶</a></dt>
 <dd><p>Test the node is an arraied value node</p>
 </dd></dl>
 
 <p><strong>Parameters</strong></p>
 <dl class="simple">
-<dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">xbc_node</span> <span class="pre">*</span> <span class="pre">node</span></code></dt><dd><p>An XBC node.</p>
+<dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">xbc_node</span> <span class="pre">*node</span></code></dt><dd><p>An XBC node.</p>
 </dd>
 </dl>
 <p><strong>Description</strong></p>
 <p>Test the <strong>node</strong> is an arraied value node.</p>
 <dl class="function">
 <dt id="c.xbc_node_is_leaf">
-bool <code class="sig-name descname">xbc_node_is_leaf</code><span class="sig-paren">(</span>struct xbc_node *<em> node</em><span class="sig-paren">)</span><a class="headerlink" href="#c.xbc_node_is_leaf" title="Permalink to this definition">¶</a></dt>
+bool <code class="sig-name descname">xbc_node_is_leaf</code><span class="sig-paren">(</span>struct xbc_node<em> *node</em><span class="sig-paren">)</span><a class="headerlink" href="#c.xbc_node_is_leaf" title="Permalink to this definition">¶</a></dt>
 <dd><p>Test the node is a leaf key node</p>
 </dd></dl>
 
 <p><strong>Parameters</strong></p>
 <dl class="simple">
-<dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">xbc_node</span> <span class="pre">*</span> <span class="pre">node</span></code></dt><dd><p>An XBC node.</p>
+<dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">xbc_node</span> <span class="pre">*node</span></code></dt><dd><p>An XBC node.</p>
 </dd>
 </dl>
 <p><strong>Description</strong></p>
@@ -408,15 +416,15 @@ bool <code class="sig-name descname">xbc_node_is_leaf</code><span class="sig-par
 or no child. Returns true if it is a leaf node, or false if not.</p>
 <dl class="function">
 <dt id="c.xbc_find_value">
-const char * <code class="sig-name descname">xbc_find_value</code><span class="sig-paren">(</span>const char *<em> key</em>, struct xbc_node **<em> vnode</em><span class="sig-paren">)</span><a class="headerlink" href="#c.xbc_find_value" title="Permalink to this definition">¶</a></dt>
+const char * <code class="sig-name descname">xbc_find_value</code><span class="sig-paren">(</span>const char<em> *key</em>, struct xbc_node<em> **vnode</em><span class="sig-paren">)</span><a class="headerlink" href="#c.xbc_find_value" title="Permalink to this definition">¶</a></dt>
 <dd><p>Find a value which matches the key</p>
 </dd></dl>
 
 <p><strong>Parameters</strong></p>
 <dl class="simple">
-<dt><code class="docutils literal notranslate"><span class="pre">const</span> <span class="pre">char</span> <span class="pre">*</span> <span class="pre">key</span></code></dt><dd><p>Search key</p>
+<dt><code class="docutils literal notranslate"><span class="pre">const</span> <span class="pre">char</span> <span class="pre">*key</span></code></dt><dd><p>Search key</p>
 </dd>
-<dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">xbc_node</span> <span class="pre">**</span> <span class="pre">vnode</span></code></dt><dd><p>A container pointer of XBC value node.</p>
+<dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">xbc_node</span> <span class="pre">**vnode</span></code></dt><dd><p>A container pointer of XBC value node.</p>
 </dd>
 </dl>
 <p><strong>Description</strong></p>
@@ -426,13 +434,13 @@ Note that this can return 0-length string and store NULL in <strong>*vnode</stro
 key-only (non-value) entry.</p>
 <dl class="function">
 <dt id="c.xbc_find_node">
-struct xbc_node * <code class="sig-name descname">xbc_find_node</code><span class="sig-paren">(</span>const char *<em> key</em><span class="sig-paren">)</span><a class="headerlink" href="#c.xbc_find_node" title="Permalink to this definition">¶</a></dt>
+struct xbc_node * <code class="sig-name descname">xbc_find_node</code><span class="sig-paren">(</span>const char<em> *key</em><span class="sig-paren">)</span><a class="headerlink" href="#c.xbc_find_node" title="Permalink to this definition">¶</a></dt>
 <dd><p>Find a node which matches the key</p>
 </dd></dl>
 
 <p><strong>Parameters</strong></p>
 <dl class="simple">
-<dt><code class="docutils literal notranslate"><span class="pre">const</span> <span class="pre">char</span> <span class="pre">*</span> <span class="pre">key</span></code></dt><dd><p>Search key</p>
+<dt><code class="docutils literal notranslate"><span class="pre">const</span> <span class="pre">char</span> <span class="pre">*key</span></code></dt><dd><p>Search key</p>
 </dd>
 </dl>
 <p><strong>Description</strong></p>
@@ -531,15 +539,15 @@ stored in <strong>knode</strong> and <strong>value</strong> respectively.</p>
 are stored in <strong>knode</strong> and <strong>value</strong> respectively.</p>
 <dl class="function">
 <dt id="c.xbc_node_compose_key">
-int <code class="sig-name descname">xbc_node_compose_key</code><span class="sig-paren">(</span>struct xbc_node *<em> node</em>, char *<em> buf</em>, size_t<em> size</em><span class="sig-paren">)</span><a class="headerlink" href="#c.xbc_node_compose_key" title="Permalink to this definition">¶</a></dt>
+int <code class="sig-name descname">xbc_node_compose_key</code><span class="sig-paren">(</span>struct xbc_node<em> *node</em>, char<em> *buf</em>, size_t<em> size</em><span class="sig-paren">)</span><a class="headerlink" href="#c.xbc_node_compose_key" title="Permalink to this definition">¶</a></dt>
 <dd><p>Compose full key string of the XBC node</p>
 </dd></dl>
 
 <p><strong>Parameters</strong></p>
 <dl class="simple">
-<dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">xbc_node</span> <span class="pre">*</span> <span class="pre">node</span></code></dt><dd><p>An XBC node.</p>
+<dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">xbc_node</span> <span class="pre">*node</span></code></dt><dd><p>An XBC node.</p>
 </dd>
-<dt><code class="docutils literal notranslate"><span class="pre">char</span> <span class="pre">*</span> <span class="pre">buf</span></code></dt><dd><p>A buffer to store the key.</p>
+<dt><code class="docutils literal notranslate"><span class="pre">char</span> <span class="pre">*buf</span></code></dt><dd><p>A buffer to store the key.</p>
 </dd>
 <dt><code class="docutils literal notranslate"><span class="pre">size_t</span> <span class="pre">size</span></code></dt><dd><p>The size of the <strong>buf</strong>.</p>
 </dd>
@@ -564,26 +572,26 @@ struct xbc_node * <code class="sig-name descname">xbc_root_node</code><span clas
 extended boot config is not initiized, return NULL.</p>
 <dl class="function">
 <dt id="c.xbc_node_index">
-int <code class="sig-name descname">xbc_node_index</code><span class="sig-paren">(</span>struct xbc_node *<em> node</em><span class="sig-paren">)</span><a class="headerlink" href="#c.xbc_node_index" title="Permalink to this definition">¶</a></dt>
+int <code class="sig-name descname">xbc_node_index</code><span class="sig-paren">(</span>struct xbc_node<em> *node</em><span class="sig-paren">)</span><a class="headerlink" href="#c.xbc_node_index" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get the index of XBC node</p>
 </dd></dl>
 
 <p><strong>Parameters</strong></p>
 <dl class="simple">
-<dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">xbc_node</span> <span class="pre">*</span> <span class="pre">node</span></code></dt><dd><p>A target node of getting index.</p>
+<dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">xbc_node</span> <span class="pre">*node</span></code></dt><dd><p>A target node of getting index.</p>
 </dd>
 </dl>
 <p><strong>Description</strong></p>
 <p>Return the index number of <strong>node</strong> in XBC node list.</p>
 <dl class="function">
 <dt id="c.xbc_node_get_parent">
-struct xbc_node * <code class="sig-name descname">xbc_node_get_parent</code><span class="sig-paren">(</span>struct xbc_node *<em> node</em><span class="sig-paren">)</span><a class="headerlink" href="#c.xbc_node_get_parent" title="Permalink to this definition">¶</a></dt>
+struct xbc_node * <code class="sig-name descname">xbc_node_get_parent</code><span class="sig-paren">(</span>struct xbc_node<em> *node</em><span class="sig-paren">)</span><a class="headerlink" href="#c.xbc_node_get_parent" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get the parent XBC node</p>
 </dd></dl>
 
 <p><strong>Parameters</strong></p>
 <dl class="simple">
-<dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">xbc_node</span> <span class="pre">*</span> <span class="pre">node</span></code></dt><dd><p>An XBC node.</p>
+<dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">xbc_node</span> <span class="pre">*node</span></code></dt><dd><p>An XBC node.</p>
 </dd>
 </dl>
 <p><strong>Description</strong></p>
@@ -591,13 +599,13 @@ struct xbc_node * <code class="sig-name descname">xbc_node_get_parent</code><spa
 return NULL.</p>
 <dl class="function">
 <dt id="c.xbc_node_get_child">
-struct xbc_node * <code class="sig-name descname">xbc_node_get_child</code><span class="sig-paren">(</span>struct xbc_node *<em> node</em><span class="sig-paren">)</span><a class="headerlink" href="#c.xbc_node_get_child" title="Permalink to this definition">¶</a></dt>
+struct xbc_node * <code class="sig-name descname">xbc_node_get_child</code><span class="sig-paren">(</span>struct xbc_node<em> *node</em><span class="sig-paren">)</span><a class="headerlink" href="#c.xbc_node_get_child" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get the child XBC node</p>
 </dd></dl>
 
 <p><strong>Parameters</strong></p>
 <dl class="simple">
-<dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">xbc_node</span> <span class="pre">*</span> <span class="pre">node</span></code></dt><dd><p>An XBC node.</p>
+<dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">xbc_node</span> <span class="pre">*node</span></code></dt><dd><p>An XBC node.</p>
 </dd>
 </dl>
 <p><strong>Description</strong></p>
@@ -605,13 +613,13 @@ struct xbc_node * <code class="sig-name descname">xbc_node_get_child</code><span
 NULL.</p>
 <dl class="function">
 <dt id="c.xbc_node_get_next">
-struct xbc_node * <code class="sig-name descname">xbc_node_get_next</code><span class="sig-paren">(</span>struct xbc_node *<em> node</em><span class="sig-paren">)</span><a class="headerlink" href="#c.xbc_node_get_next" title="Permalink to this definition">¶</a></dt>
+struct xbc_node * <code class="sig-name descname">xbc_node_get_next</code><span class="sig-paren">(</span>struct xbc_node<em> *node</em><span class="sig-paren">)</span><a class="headerlink" href="#c.xbc_node_get_next" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get the next sibling XBC node</p>
 </dd></dl>
 
 <p><strong>Parameters</strong></p>
 <dl class="simple">
-<dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">xbc_node</span> <span class="pre">*</span> <span class="pre">node</span></code></dt><dd><p>An XBC node.</p>
+<dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">xbc_node</span> <span class="pre">*node</span></code></dt><dd><p>An XBC node.</p>
 </dd>
 </dl>
 <p><strong>Description</strong></p>
@@ -621,13 +629,13 @@ has no siblings. (You also has to check whether the parent’s child node
 is <strong>node</strong> or not.)</p>
 <dl class="function">
 <dt id="c.xbc_node_get_data">
-const char * <code class="sig-name descname">xbc_node_get_data</code><span class="sig-paren">(</span>struct xbc_node *<em> node</em><span class="sig-paren">)</span><a class="headerlink" href="#c.xbc_node_get_data" title="Permalink to this definition">¶</a></dt>
+const char * <code class="sig-name descname">xbc_node_get_data</code><span class="sig-paren">(</span>struct xbc_node<em> *node</em><span class="sig-paren">)</span><a class="headerlink" href="#c.xbc_node_get_data" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get the data of XBC node</p>
 </dd></dl>
 
 <p><strong>Parameters</strong></p>
 <dl class="simple">
-<dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">xbc_node</span> <span class="pre">*</span> <span class="pre">node</span></code></dt><dd><p>An XBC node.</p>
+<dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">xbc_node</span> <span class="pre">*node</span></code></dt><dd><p>An XBC node.</p>
 </dd>
 </dl>
 <p><strong>Description</strong></p>
@@ -635,15 +643,15 @@ const char * <code class="sig-name descname">xbc_node_get_data</code><span class
 If the node has invalid data, warn and return NULL.</p>
 <dl class="function">
 <dt id="c.xbc_node_find_child">
-struct xbc_node * <code class="sig-name descname">xbc_node_find_child</code><span class="sig-paren">(</span>struct xbc_node *<em> parent</em>, const char *<em> key</em><span class="sig-paren">)</span><a class="headerlink" href="#c.xbc_node_find_child" title="Permalink to this definition">¶</a></dt>
+struct xbc_node * <code class="sig-name descname">xbc_node_find_child</code><span class="sig-paren">(</span>struct xbc_node<em> *parent</em>, const char<em> *key</em><span class="sig-paren">)</span><a class="headerlink" href="#c.xbc_node_find_child" title="Permalink to this definition">¶</a></dt>
 <dd><p>Find a child node which matches given key</p>
 </dd></dl>
 
 <p><strong>Parameters</strong></p>
 <dl class="simple">
-<dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">xbc_node</span> <span class="pre">*</span> <span class="pre">parent</span></code></dt><dd><p>An XBC node.</p>
+<dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">xbc_node</span> <span class="pre">*parent</span></code></dt><dd><p>An XBC node.</p>
 </dd>
-<dt><code class="docutils literal notranslate"><span class="pre">const</span> <span class="pre">char</span> <span class="pre">*</span> <span class="pre">key</span></code></dt><dd><p>A key string.</p>
+<dt><code class="docutils literal notranslate"><span class="pre">const</span> <span class="pre">char</span> <span class="pre">*key</span></code></dt><dd><p>A key string.</p>
 </dd>
 </dl>
 <p><strong>Description</strong></p>
@@ -652,17 +660,17 @@ several words jointed with ‘.’. If <strong>parent</strong> is NULL, this sea
 node from whole tree. Return NULL if no node is matched.</p>
 <dl class="function">
 <dt id="c.xbc_node_find_value">
-const char * <code class="sig-name descname">xbc_node_find_value</code><span class="sig-paren">(</span>struct xbc_node *<em> parent</em>, const char *<em> key</em>, struct xbc_node **<em> vnode</em><span class="sig-paren">)</span><a class="headerlink" href="#c.xbc_node_find_value" title="Permalink to this definition">¶</a></dt>
+const char * <code class="sig-name descname">xbc_node_find_value</code><span class="sig-paren">(</span>struct xbc_node<em> *parent</em>, const char<em> *key</em>, struct xbc_node<em> **vnode</em><span class="sig-paren">)</span><a class="headerlink" href="#c.xbc_node_find_value" title="Permalink to this definition">¶</a></dt>
 <dd><p>Find a value node which matches given key</p>
 </dd></dl>
 
 <p><strong>Parameters</strong></p>
 <dl class="simple">
-<dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">xbc_node</span> <span class="pre">*</span> <span class="pre">parent</span></code></dt><dd><p>An XBC node.</p>
+<dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">xbc_node</span> <span class="pre">*parent</span></code></dt><dd><p>An XBC node.</p>
 </dd>
-<dt><code class="docutils literal notranslate"><span class="pre">const</span> <span class="pre">char</span> <span class="pre">*</span> <span class="pre">key</span></code></dt><dd><p>A key string.</p>
+<dt><code class="docutils literal notranslate"><span class="pre">const</span> <span class="pre">char</span> <span class="pre">*key</span></code></dt><dd><p>A key string.</p>
 </dd>
-<dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">xbc_node</span> <span class="pre">**</span> <span class="pre">vnode</span></code></dt><dd><p>A container pointer of found XBC node.</p>
+<dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">xbc_node</span> <span class="pre">**vnode</span></code></dt><dd><p>A container pointer of found XBC node.</p>
 </dd>
 </dl>
 <p><strong>Description</strong></p>
@@ -676,17 +684,17 @@ key has no value. And also it will return the value of the first entry if
 the value is an array.</p>
 <dl class="function">
 <dt id="c.xbc_node_compose_key_after">
-int <code class="sig-name descname">xbc_node_compose_key_after</code><span class="sig-paren">(</span>struct xbc_node *<em> root</em>, struct xbc_node *<em> node</em>, char *<em> buf</em>, size_t<em> size</em><span class="sig-paren">)</span><a class="headerlink" href="#c.xbc_node_compose_key_after" title="Permalink to this definition">¶</a></dt>
+int <code class="sig-name descname">xbc_node_compose_key_after</code><span class="sig-paren">(</span>struct xbc_node<em> *root</em>, struct xbc_node<em> *node</em>, char<em> *buf</em>, size_t<em> size</em><span class="sig-paren">)</span><a class="headerlink" href="#c.xbc_node_compose_key_after" title="Permalink to this definition">¶</a></dt>
 <dd><p>Compose partial key string of the XBC node</p>
 </dd></dl>
 
 <p><strong>Parameters</strong></p>
 <dl class="simple">
-<dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">xbc_node</span> <span class="pre">*</span> <span class="pre">root</span></code></dt><dd><p>Root XBC node</p>
+<dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">xbc_node</span> <span class="pre">*root</span></code></dt><dd><p>Root XBC node</p>
 </dd>
-<dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">xbc_node</span> <span class="pre">*</span> <span class="pre">node</span></code></dt><dd><p>Target XBC node.</p>
+<dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">xbc_node</span> <span class="pre">*node</span></code></dt><dd><p>Target XBC node.</p>
 </dd>
-<dt><code class="docutils literal notranslate"><span class="pre">char</span> <span class="pre">*</span> <span class="pre">buf</span></code></dt><dd><p>A buffer to store the key.</p>
+<dt><code class="docutils literal notranslate"><span class="pre">char</span> <span class="pre">*buf</span></code></dt><dd><p>A buffer to store the key.</p>
 </dd>
 <dt><code class="docutils literal notranslate"><span class="pre">size_t</span> <span class="pre">size</span></code></dt><dd><p>The size of the <strong>buf</strong>.</p>
 </dd>
@@ -702,15 +710,15 @@ This is expected to be used with <a class="reference internal" href="#c.xbc_find
 keys under given key.</p>
 <dl class="function">
 <dt id="c.xbc_node_find_next_leaf">
-struct xbc_node * <code class="sig-name descname">xbc_node_find_next_leaf</code><span class="sig-paren">(</span>struct xbc_node *<em> root</em>, struct xbc_node *<em> node</em><span class="sig-paren">)</span><a class="headerlink" href="#c.xbc_node_find_next_leaf" title="Permalink to this definition">¶</a></dt>
+struct xbc_node * <code class="sig-name descname">xbc_node_find_next_leaf</code><span class="sig-paren">(</span>struct xbc_node<em> *root</em>, struct xbc_node<em> *node</em><span class="sig-paren">)</span><a class="headerlink" href="#c.xbc_node_find_next_leaf" title="Permalink to this definition">¶</a></dt>
 <dd><p>Find the next leaf node under given node</p>
 </dd></dl>
 
 <p><strong>Parameters</strong></p>
 <dl class="simple">
-<dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">xbc_node</span> <span class="pre">*</span> <span class="pre">root</span></code></dt><dd><p>An XBC root node</p>
+<dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">xbc_node</span> <span class="pre">*root</span></code></dt><dd><p>An XBC root node</p>
 </dd>
-<dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">xbc_node</span> <span class="pre">*</span> <span class="pre">node</span></code></dt><dd><p>An XBC node which starts from.</p>
+<dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">xbc_node</span> <span class="pre">*node</span></code></dt><dd><p>An XBC node which starts from.</p>
 </dd>
 </dl>
 <p><strong>Description</strong></p>
@@ -719,15 +727,15 @@ under <strong>root</strong> node (including <strong>root</strong> node itself).
 Return the next node or NULL if next leaf node is not found.</p>
 <dl class="function">
 <dt id="c.xbc_node_find_next_key_value">
-const char * <code class="sig-name descname">xbc_node_find_next_key_value</code><span class="sig-paren">(</span>struct xbc_node *<em> root</em>, struct xbc_node **<em> leaf</em><span class="sig-paren">)</span><a class="headerlink" href="#c.xbc_node_find_next_key_value" title="Permalink to this definition">¶</a></dt>
+const char * <code class="sig-name descname">xbc_node_find_next_key_value</code><span class="sig-paren">(</span>struct xbc_node<em> *root</em>, struct xbc_node<em> **leaf</em><span class="sig-paren">)</span><a class="headerlink" href="#c.xbc_node_find_next_key_value" title="Permalink to this definition">¶</a></dt>
 <dd><p>Find the next key-value pair nodes</p>
 </dd></dl>
 
 <p><strong>Parameters</strong></p>
 <dl class="simple">
-<dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">xbc_node</span> <span class="pre">*</span> <span class="pre">root</span></code></dt><dd><p>An XBC root node</p>
+<dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">xbc_node</span> <span class="pre">*root</span></code></dt><dd><p>An XBC root node</p>
 </dd>
-<dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">xbc_node</span> <span class="pre">**</span> <span class="pre">leaf</span></code></dt><dd><p>A container pointer of XBC node which starts from.</p>
+<dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">xbc_node</span> <span class="pre">**leaf</span></code></dt><dd><p>A container pointer of XBC node which starts from.</p>
 </dd>
 </dl>
 <p><strong>Description</strong></p>
@@ -753,17 +761,17 @@ If you need to reuse <a class="reference internal" href="#c.xbc_init" title="xbc
 use this.</p>
 <dl class="function">
 <dt id="c.xbc_init">
-int <code class="sig-name descname">xbc_init</code><span class="sig-paren">(</span>char *<em> buf</em>, const char **<em> emsg</em>, int *<em> epos</em><span class="sig-paren">)</span><a class="headerlink" href="#c.xbc_init" title="Permalink to this definition">¶</a></dt>
+int <code class="sig-name descname">xbc_init</code><span class="sig-paren">(</span>char<em> *buf</em>, const char<em> **emsg</em>, int<em> *epos</em><span class="sig-paren">)</span><a class="headerlink" href="#c.xbc_init" title="Permalink to this definition">¶</a></dt>
 <dd><p>Parse given XBC file and build XBC internal tree</p>
 </dd></dl>
 
 <p><strong>Parameters</strong></p>
 <dl class="simple">
-<dt><code class="docutils literal notranslate"><span class="pre">char</span> <span class="pre">*</span> <span class="pre">buf</span></code></dt><dd><p>boot config text</p>
+<dt><code class="docutils literal notranslate"><span class="pre">char</span> <span class="pre">*buf</span></code></dt><dd><p>boot config text</p>
 </dd>
-<dt><code class="docutils literal notranslate"><span class="pre">const</span> <span class="pre">char</span> <span class="pre">**</span> <span class="pre">emsg</span></code></dt><dd><p>A pointer of const char * to store the error message</p>
+<dt><code class="docutils literal notranslate"><span class="pre">const</span> <span class="pre">char</span> <span class="pre">**emsg</span></code></dt><dd><p>A pointer of const char * to store the error message</p>
 </dd>
-<dt><code class="docutils literal notranslate"><span class="pre">int</span> <span class="pre">*</span> <span class="pre">epos</span></code></dt><dd><p>A pointer of int to store the error position</p>
+<dt><code class="docutils literal notranslate"><span class="pre">int</span> <span class="pre">*epos</span></code></dt><dd><p>A pointer of int to store the error position</p>
 </dd>
 </dl>
 <p><strong>Description</strong></p>
