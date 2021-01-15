@@ -101,7 +101,6 @@
 <li class="toctree-l3"><a class="reference internal" href="#debugfs-interface">debugfs Interface</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#attributes">Attributes</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#target-ids">Target IDs</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#initial-monitoring-target-regions">Initial Monitoring Target Regions</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#record">Record</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#schemes">Schemes</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#turning-on-off">Turning On/Off</a></li>
@@ -189,16 +188,15 @@
 This is for privileged people such as system administrators who want a
 just-working human-friendly interface.  Using this, users can use the DAMON’s
 major features in a human-friendly way.  It may not be highly tuned for
-special cases, though.  It supports both virtual and physical address spaces
-monitoring.</p></li>
+special cases, though.  It supports only virtual address spaces monitoring.</p></li>
 <li><p><em>debugfs interface.</em>
 This is for privileged user space programmers who want more optimized use of
 DAMON.  Using this, users can use DAMON’s major features by reading
 from and writing to special debugfs files.  Therefore, you can write and use
 your personalized DAMON debugfs wrapper programs that reads/writes the
 debugfs files instead of you.  The DAMON user space tool is also a reference
-implementation of such programs.  It supports both virtual and physical
-address spaces monitoring.</p></li>
+implementation of such programs.  It supports only virtual address spaces
+monitoring.</p></li>
 <li><p><em>Kernel Space Programming Interface.</em>
 This is for kernel space programmers.  Using this, users can utilize every
 feature of DAMON most flexibly and efficiently by writing kernel space
@@ -223,10 +221,8 @@ though.</p>
 <h3>Recording Data Access Pattern<a class="headerlink" href="#recording-data-access-pattern" title="Permalink to this headline">¶</a></h3>
 <p>The <code class="docutils literal notranslate"><span class="pre">record</span></code> subcommand records the data access pattern of target workloads
 in a file (<code class="docutils literal notranslate"><span class="pre">./damon.data</span></code> by default).  You can specify the target with 1)
-the command for execution of the monitoring target process, 2) pid of running
-target process, or 3) the special keyword, ‘paddr’, if you want to monitor the
-system’s physical memory address space.  Below example shows a command target
-usage:</p>
+the command for execution of the monitoring target process, or 2) pid of
+running target process.  Below example shows a command target usage:</p>
 <div class="highlight-none notranslate"><div class="highlight"><pre><span></span># cd &lt;kernel&gt;/tools/damon/
 # damo record &quot;sleep 5&quot;
 </pre></div>
@@ -237,14 +233,6 @@ of the process.  Below example shows a pid target usage:</p>
 # damo record `pidof sleep`
 </pre></div>
 </div>
-<p>Finally, below example shows the use of the special keyword, ‘paddr’:</p>
-<div class="highlight-none notranslate"><div class="highlight"><pre><span></span># damo record paddr
-</pre></div>
-</div>
-<p>In this case, the monitoring target regions defaults to the largetst ‘System
-RAM’ region specified in ‘/proc/iomem’ file.  Note that the initial monitoring
-target region is maintained rather than dynamically updated like the virtual
-memory address spaces monitoring case.</p>
 <p>The location of the recorded file can be explicitly set using <code class="docutils literal notranslate"><span class="pre">-o</span></code> option.
 You can further tune this by setting the monitoring attributes.  To know about
 the monitoring attributes in detail, please refer to the
@@ -450,9 +438,8 @@ $ ./damo schemes --schemes my_thp_scheme `pidof foo`
 </div>
 <div class="section" id="debugfs-interface">
 <h2>debugfs Interface<a class="headerlink" href="#debugfs-interface" title="Permalink to this headline">¶</a></h2>
-<p>DAMON exports six files, <code class="docutils literal notranslate"><span class="pre">attrs</span></code>, <code class="docutils literal notranslate"><span class="pre">target_ids</span></code>, <code class="docutils literal notranslate"><span class="pre">init_regions</span></code>,
-<code class="docutils literal notranslate"><span class="pre">record</span></code>, <code class="docutils literal notranslate"><span class="pre">schemes</span></code> and <code class="docutils literal notranslate"><span class="pre">monitor_on</span></code> under its debugfs directory,
-<code class="docutils literal notranslate"><span class="pre">&lt;debugfs&gt;/damon/</span></code>.</p>
+<p>DAMON exports five files, <code class="docutils literal notranslate"><span class="pre">attrs</span></code>, <code class="docutils literal notranslate"><span class="pre">target_ids</span></code>, <code class="docutils literal notranslate"><span class="pre">record</span></code>, <code class="docutils literal notranslate"><span class="pre">schemes</span></code>
+and <code class="docutils literal notranslate"><span class="pre">monitor_on</span></code> under its debugfs directory, <code class="docutils literal notranslate"><span class="pre">&lt;debugfs&gt;/damon/</span></code>.</p>
 <div class="section" id="attributes">
 <h3>Attributes<a class="headerlink" href="#attributes" title="Permalink to this headline">¶</a></h3>
 <p>Users can get and set the <code class="docutils literal notranslate"><span class="pre">sampling</span> <span class="pre">interval</span></code>, <code class="docutils literal notranslate"><span class="pre">aggregation</span> <span class="pre">interval</span></code>,
@@ -484,53 +471,7 @@ check it again:</p>
 42 4242
 </pre></div>
 </div>
-<p>Users can also monitor the physical memory address space of the system by
-writing a special keyword, “<code class="docutils literal notranslate"><span class="pre">paddr\n</span></code>” to the file.  Because physical address
-space monitoring doesn’t support multiple targets, reading the file will show a
-fake value, <code class="docutils literal notranslate"><span class="pre">42</span></code>, as below:</p>
-<div class="highlight-none notranslate"><div class="highlight"><pre><span></span># cd &lt;debugfs&gt;/damon
-# echo paddr &gt; target_ids
-# cat target_ids
-42
-</pre></div>
-</div>
 <p>Note that setting the target ids doesn’t start the monitoring.</p>
-</div>
-<div class="section" id="initial-monitoring-target-regions">
-<h3>Initial Monitoring Target Regions<a class="headerlink" href="#initial-monitoring-target-regions" title="Permalink to this headline">¶</a></h3>
-<p>In case of the virtual address space monitoring, DAMON automatically sets and
-updates the monitoring target regions so that entire memory mappings of target
-processes can be covered.  However, users might want to limit the monitoring
-region to specific address ranges, such as the heap, the stack, or specific
-file-mapped area.  Or, some users might know the initial access pattern of
-their workloads and therefore want to set optimal initial regions for the
-‘adaptive regions adjustment’.</p>
-<p>In contrast, DAMON do not automatically sets and updates the monitoring target
-regions in case of physical memory monitoring.  Therefore, users should set the
-monitoring target regions by themselves.</p>
-<p>In such cases, users can explicitly set the initial monitoring target regions
-as they want, by writing proper values to the <code class="docutils literal notranslate"><span class="pre">init_regions</span></code> file.  Each line
-of the input should represent one region in below form.:</p>
-<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>&lt;target id&gt; &lt;start address&gt; &lt;end address&gt;
-</pre></div>
-</div>
-<p>The <code class="docutils literal notranslate"><span class="pre">target</span> <span class="pre">id</span></code> should already in <code class="docutils literal notranslate"><span class="pre">target_ids</span></code> file, and the regions should
-be passed in address order.  For example, below commands will set a couple of
-address ranges, <code class="docutils literal notranslate"><span class="pre">1-100</span></code> and <code class="docutils literal notranslate"><span class="pre">100-200</span></code> as the initial monitoring target
-region of process 42, and another couple of address ranges, <code class="docutils literal notranslate"><span class="pre">20-40</span></code> and
-<code class="docutils literal notranslate"><span class="pre">50-100</span></code> as that of process 4242.:</p>
-<div class="highlight-none notranslate"><div class="highlight"><pre><span></span># cd &lt;debugfs&gt;/damon
-# echo &quot;42   1       100
-        42   100     200
-        4242 20      40
-        4242 50      100&quot; &gt; init_regions
-</pre></div>
-</div>
-<p>Note that this sets the initial monitoring target regions only.  In case of
-virtual memory monitoring, DAMON will automatically updates the boundary of the
-regions after one <code class="docutils literal notranslate"><span class="pre">regions</span> <span class="pre">update</span> <span class="pre">interval</span></code>.  Therefore, users should set the
-<code class="docutils literal notranslate"><span class="pre">regions</span> <span class="pre">update</span> <span class="pre">interval</span></code> large enough in this case, if they don’t want the
-update.</p>
 </div>
 <div class="section" id="record">
 <h3>Record<a class="headerlink" href="#record" title="Permalink to this headline">¶</a></h3>
