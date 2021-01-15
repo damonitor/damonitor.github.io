@@ -337,8 +337,8 @@ struct <code class="sig-name descname">damon_primitive</code><a class="headerlin
 
 <p><strong>Definition</strong></p>
 <div class="highlight-none notranslate"><div class="highlight"><pre><span></span>struct damon_primitive {
-  void (*init_target_regions)(struct damon_ctx *context);
-  void (*update_target_regions)(struct damon_ctx *context);
+  void (*init)(struct damon_ctx *context);
+  void (*update)(struct damon_ctx *context);
   void (*prepare_access_checks)(struct damon_ctx *context);
   unsigned int (*check_accesses)(struct damon_ctx *context);
   void (*reset_aggregated)(struct damon_ctx *context);
@@ -350,38 +350,38 @@ struct <code class="sig-name descname">damon_primitive</code><a class="headerlin
 </div>
 <p><strong>Members</strong></p>
 <dl class="simple">
-<dt><code class="docutils literal notranslate"><span class="pre">init_target_regions</span></code></dt><dd><p>Constructs initial monitoring target regions.</p>
+<dt><code class="docutils literal notranslate"><span class="pre">init</span></code></dt><dd><p>Initialize primitive-internal data structures.</p>
 </dd>
-<dt><code class="docutils literal notranslate"><span class="pre">update_target_regions</span></code></dt><dd><p>Updates monitoring target regions.</p>
+<dt><code class="docutils literal notranslate"><span class="pre">update</span></code></dt><dd><p>Update primitive-internal data structures.</p>
 </dd>
-<dt><code class="docutils literal notranslate"><span class="pre">prepare_access_checks</span></code></dt><dd><p>Prepares next access check of target regions.</p>
+<dt><code class="docutils literal notranslate"><span class="pre">prepare_access_checks</span></code></dt><dd><p>Prepare next access check of target regions.</p>
 </dd>
-<dt><code class="docutils literal notranslate"><span class="pre">check_accesses</span></code></dt><dd><p>Checks the access of target regions.</p>
+<dt><code class="docutils literal notranslate"><span class="pre">check_accesses</span></code></dt><dd><p>Check the accesses to target regions.</p>
 </dd>
-<dt><code class="docutils literal notranslate"><span class="pre">reset_aggregated</span></code></dt><dd><p>Resets aggregated accesses monitoring results.</p>
+<dt><code class="docutils literal notranslate"><span class="pre">reset_aggregated</span></code></dt><dd><p>Reset aggregated accesses monitoring results.</p>
 </dd>
 <dt><code class="docutils literal notranslate"><span class="pre">apply_scheme</span></code></dt><dd><p>Apply a DAMON-based operation scheme.</p>
 </dd>
 <dt><code class="docutils literal notranslate"><span class="pre">target_valid</span></code></dt><dd><p>Determine if the target is valid.</p>
 </dd>
-<dt><code class="docutils literal notranslate"><span class="pre">cleanup</span></code></dt><dd><p>Cleans up the context.</p>
+<dt><code class="docutils literal notranslate"><span class="pre">cleanup</span></code></dt><dd><p>Clean up the context.</p>
 </dd>
 </dl>
 <p><strong>Description</strong></p>
 <p>DAMON can be extended for various address spaces and usages.  For this,
 users should register the low level primitives for their target address
 space and usecase via the <a class="reference internal" href="#c.damon_ctx" title="damon_ctx"><code class="xref c c-type docutils literal notranslate"><span class="pre">damon_ctx.primitive</span></code></a>.  Then, the monitoring thread
-calls <strong>init_target_regions</strong> and <strong>prepare_access_checks</strong> before starting the
-monitoring, <strong>update_target_regions</strong> after each
-<a class="reference internal" href="#c.damon_ctx" title="damon_ctx"><code class="xref c c-type docutils literal notranslate"><span class="pre">damon_ctx.regions_update_interval</span></code></a>, and <strong>check_accesses</strong>, <strong>target_valid</strong> and
-<strong>prepare_access_checks</strong> after each <a class="reference internal" href="#c.damon_ctx" title="damon_ctx"><code class="xref c c-type docutils literal notranslate"><span class="pre">damon_ctx.sample_interval</span></code></a>.  Finally,
-<strong>reset_aggregated</strong> is called after each <a class="reference internal" href="#c.damon_ctx" title="damon_ctx"><code class="xref c c-type docutils literal notranslate"><span class="pre">damon_ctx.aggr_interval</span></code></a>.</p>
-<p><strong>init_target_regions</strong> should construct proper monitoring target regions and
-link those to the DAMON context struct.  The regions should be defined by
-user and saved in <strong>damon_ctx.arbitrary_target</strong> if <strong>damon_ctx.target_type</strong> is
+(<a class="reference internal" href="#c.damon_ctx" title="damon_ctx"><code class="xref c c-type docutils literal notranslate"><span class="pre">damon_ctx.kdamond</span></code></a>) calls <strong>init</strong> and <strong>prepare_access_checks</strong> before starting
+the monitoring, <strong>update</strong> after each <a class="reference internal" href="#c.damon_ctx" title="damon_ctx"><code class="xref c c-type docutils literal notranslate"><span class="pre">damon_ctx.primitive_update_interval</span></code></a>, and
+<strong>check_accesses</strong>, <strong>target_valid</strong> and <strong>prepare_access_checks</strong> after each
+<a class="reference internal" href="#c.damon_ctx" title="damon_ctx"><code class="xref c c-type docutils literal notranslate"><span class="pre">damon_ctx.sample_interval</span></code></a>.  Finally, <strong>reset_aggregated</strong> is called after each
+<a class="reference internal" href="#c.damon_ctx" title="damon_ctx"><code class="xref c c-type docutils literal notranslate"><span class="pre">damon_ctx.aggr_interval</span></code></a>.</p>
+<p><strong>init</strong> should initialize primitive-internal data structures.  For example,
+this could be used to construct proper monitoring target regions and link
+those to <strong>damon_ctx.target</strong> if <strong>damon_ctx.target_type</strong> is
 <code class="xref c c-type docutils literal notranslate"><span class="pre">DAMON_ARBITRARY_TARGET</span></code>.  Otherwise, <a class="reference internal" href="#c.damon_region" title="damon_region"><code class="xref c c-type docutils literal notranslate"><span class="pre">struct</span> <span class="pre">damon_region</span></code></a> should be used.
-<strong>update_target_regions</strong> should update the monitoring target regions for
-current status.
+<strong>update</strong> should update the primitive-internal data structures.  For example,
+this could be used to update monitoring target regions for current status.
 <strong>prepare_access_checks</strong> should manipulate the monitoring regions to be
 prepared for the next access check.
 <strong>check_accesses</strong> should check the accesses to each region that made after the
@@ -396,8 +396,7 @@ to the region.  This is not used for <code class="xref c c-type docutils literal
 <strong>target_valid</strong> should check whether the target is still valid for the
 monitoring.  It receives <a class="reference internal" href="#c.damon_ctx" title="damon_ctx"><code class="xref c c-type docutils literal notranslate"><span class="pre">damon_ctx.arbitrary_target</span></code></a> or <a class="reference internal" href="#c.damon_target" title="damon_target"><code class="xref c c-type docutils literal notranslate"><span class="pre">struct</span> <span class="pre">damon_target</span></code></a>
 pointer depends on <a class="reference internal" href="#c.damon_ctx" title="damon_ctx"><code class="xref c c-type docutils literal notranslate"><span class="pre">damon_ctx.target_type</span></code></a>.
-<strong>cleanup</strong> is called from <strong>kdamond</strong> just before its termination.  After this
-call, only <strong>kdamond_lock</strong> and <strong>kdamond</strong> will be touched.</p>
+<strong>cleanup</strong> is called from <strong>kdamond</strong> just before its termination.</p>
 <dl class="type">
 <dt id="c.damon_target_type">
 enum <code class="sig-name descname">damon_target_type</code><a class="headerlink" href="#c.damon_target_type" title="Permalink to this definition">¶</a></dt>
@@ -421,9 +420,7 @@ struct <code class="sig-name descname">damon_ctx</code><a class="headerlink" hre
 <div class="highlight-none notranslate"><div class="highlight"><pre><span></span>struct damon_ctx {
   unsigned long sample_interval;
   unsigned long aggr_interval;
-  unsigned long regions_update_interval;
-  struct timespec64 last_aggregation;
-  struct timespec64 last_regions_update;
+  unsigned long primitive_update_interval;
   struct task_struct *kdamond;
   bool kdamond_stop;
   struct mutex kdamond_lock;
@@ -448,7 +445,7 @@ struct <code class="sig-name descname">damon_ctx</code><a class="headerlink" hre
 </dd>
 <dt><code class="docutils literal notranslate"><span class="pre">aggr_interval</span></code></dt><dd><p>The time between monitor results aggregations.</p>
 </dd>
-<dt><code class="docutils literal notranslate"><span class="pre">regions_update_interval</span></code></dt><dd><p>The time between monitor regions updates.</p>
+<dt><code class="docutils literal notranslate"><span class="pre">primitive_update_interval</span></code></dt><dd><p>The time between monitoring primitive updates.</p>
 </dd>
 <dt><code class="docutils literal notranslate"><span class="pre">kdamond</span></code></dt><dd><p>Kernel thread who does the monitoring.</p>
 </dd>
@@ -483,8 +480,9 @@ not.  It aggregates and keeps the access information (number of accesses to
 each region) for <strong>aggr_interval</strong> time.  DAMON also checks whether the target
 memory regions need update (e.g., by <code class="docutils literal notranslate"><span class="pre">mmap()</span></code> calls from the application,
 in case of virtual memory monitoring) and applies the changes for each
-<strong>regions_update_interval</strong>.  All time intervals are in micro-seconds.  Please
-refer to <a class="reference internal" href="#c.damon_primitive" title="damon_primitive"><code class="xref c c-type docutils literal notranslate"><span class="pre">struct</span> <span class="pre">damon_primitive</span></code></a> and <code class="xref c c-type docutils literal notranslate"><span class="pre">struct</span> <span class="pre">damon_callback</span></code> for more detail.</p>
+<strong>primitive_update_interval</strong>.  All time intervals are in micro-seconds.
+Please refer to <a class="reference internal" href="#c.damon_primitive" title="damon_primitive"><code class="xref c c-type docutils literal notranslate"><span class="pre">struct</span> <span class="pre">damon_primitive</span></code></a> and <code class="xref c c-type docutils literal notranslate"><span class="pre">struct</span> <span class="pre">damon_callback</span></code> for more
+detail.</p>
 <p>For each monitoring context, one kernel thread for the monitoring is
 created.  The pointer to the thread is stored in <strong>kdamond</strong>.</p>
 <p>Once started, the monitoring thread runs until explicitly required to be
@@ -524,7 +522,7 @@ int <code class="sig-name descname">damon_set_targets</code><span class="sig-par
 <p>0 on success, negative error code otherwise.</p>
 <dl class="function">
 <dt id="c.damon_set_attrs">
-int <code class="sig-name descname">damon_set_attrs</code><span class="sig-paren">(</span>struct <a class="reference internal" href="#c.damon_ctx" title="damon_ctx">damon_ctx</a><em> *ctx</em>, unsigned long<em> sample_int</em>, unsigned long<em> aggr_int</em>, unsigned long<em> regions_update_int</em>, unsigned long<em> min_nr_reg</em>, unsigned long<em> max_nr_reg</em><span class="sig-paren">)</span><a class="headerlink" href="#c.damon_set_attrs" title="Permalink to this definition">¶</a></dt>
+int <code class="sig-name descname">damon_set_attrs</code><span class="sig-paren">(</span>struct <a class="reference internal" href="#c.damon_ctx" title="damon_ctx">damon_ctx</a><em> *ctx</em>, unsigned long<em> sample_int</em>, unsigned long<em> aggr_int</em>, unsigned long<em> primitive_upd_int</em>, unsigned long<em> min_nr_reg</em>, unsigned long<em> max_nr_reg</em><span class="sig-paren">)</span><a class="headerlink" href="#c.damon_set_attrs" title="Permalink to this definition">¶</a></dt>
 <dd><p>Set attributes for the monitoring.</p>
 </dd></dl>
 
@@ -536,7 +534,7 @@ int <code class="sig-name descname">damon_set_attrs</code><span class="sig-paren
 </dd>
 <dt><code class="docutils literal notranslate"><span class="pre">unsigned</span> <span class="pre">long</span> <span class="pre">aggr_int</span></code></dt><dd><p>time interval between aggregations</p>
 </dd>
-<dt><code class="docutils literal notranslate"><span class="pre">unsigned</span> <span class="pre">long</span> <span class="pre">regions_update_int</span></code></dt><dd><p>time interval between target regions update</p>
+<dt><code class="docutils literal notranslate"><span class="pre">unsigned</span> <span class="pre">long</span> <span class="pre">primitive_upd_int</span></code></dt><dd><p>time interval between monitoring primitive updates</p>
 </dd>
 <dt><code class="docutils literal notranslate"><span class="pre">unsigned</span> <span class="pre">long</span> <span class="pre">min_nr_reg</span></code></dt><dd><p>minimal number of regions</p>
 </dd>
