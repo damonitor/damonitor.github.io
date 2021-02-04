@@ -295,8 +295,7 @@ the monitoring, <strong>update</strong> after each <a class="reference internal"
 <a class="reference internal" href="#c.damon_ctx" title="damon_ctx"><code class="xref c c-type docutils literal notranslate"><span class="pre">damon_ctx.aggr_interval</span></code></a>.</p>
 <p><strong>init</strong> should initialize primitive-internal data structures.  For example,
 this could be used to construct proper monitoring target regions and link
-those to <strong>damon_ctx.target</strong> if <strong>damon_ctx.target_type</strong> is
-<code class="xref c c-type docutils literal notranslate"><span class="pre">DAMON_ARBITRARY_TARGET</span></code>.  Otherwise, <a class="reference internal" href="#c.damon_region" title="damon_region"><code class="xref c c-type docutils literal notranslate"><span class="pre">struct</span> <span class="pre">damon_region</span></code></a> should be used.
+those to <strong>damon_ctx.adaptive_targets</strong>.
 <strong>update</strong> should update the primitive-internal data structures.  For example,
 this could be used to update monitoring target regions for current status.
 <strong>prepare_access_checks</strong> should manipulate the monitoring regions to be
@@ -304,26 +303,12 @@ prepared for the next access check.
 <strong>check_accesses</strong> should check the accesses to each region that made after the
 last preparation and update the number of observed accesses of each region.
 It should also return max number of observed accesses that made as a result
-of its update.
+of its update.  The value will be used for regions adjustment threshold.
 <strong>reset_aggregated</strong> should reset the access monitoring results that aggregated
 by <strong>check_accesses</strong>.
 <strong>target_valid</strong> should check whether the target is still valid for the
-monitoring.  It receives <a class="reference internal" href="#c.damon_ctx" title="damon_ctx"><code class="xref c c-type docutils literal notranslate"><span class="pre">damon_ctx.arbitrary_target</span></code></a> or <a class="reference internal" href="#c.damon_target" title="damon_target"><code class="xref c c-type docutils literal notranslate"><span class="pre">struct</span> <span class="pre">damon_target</span></code></a>
-pointer depends on <a class="reference internal" href="#c.damon_ctx" title="damon_ctx"><code class="xref c c-type docutils literal notranslate"><span class="pre">damon_ctx.target_type</span></code></a>.
+monitoring.
 <strong>cleanup</strong> is called from <strong>kdamond</strong> just before its termination.</p>
-<dl class="type">
-<dt id="c.damon_target_type">
-enum <code class="sig-name descname">damon_target_type</code><a class="headerlink" href="#c.damon_target_type" title="Permalink to this definition">¶</a></dt>
-<dd><p>Represents the type of the monitoring target.</p>
-</dd></dl>
-
-<p><strong>Constants</strong></p>
-<dl class="simple">
-<dt><code class="docutils literal notranslate"><span class="pre">DAMON_ADAPTIVE_TARGET</span></code></dt><dd><p>Adaptive regions adjustment applied target.</p>
-</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">DAMON_ARBITRARY_TARGET</span></code></dt><dd><p>User-defined arbitrary type target.</p>
-</dd>
-</dl>
 <dl class="type">
 <dt id="c.damon_ctx">
 struct <code class="sig-name descname">damon_ctx</code><a class="headerlink" href="#c.damon_ctx" title="Permalink to this definition">¶</a></dt>
@@ -340,15 +325,9 @@ struct <code class="sig-name descname">damon_ctx</code><a class="headerlink" hre
   struct mutex kdamond_lock;
   struct damon_primitive primitive;
   struct damon_callback callback;
-  enum damon_target_type target_type;
-  union {
-    struct {
-      unsigned long min_nr_regions;
-      unsigned long max_nr_regions;
-      struct list_head adaptive_targets;
-    };
-    void *arbitrary_target;
-  };
+  unsigned long min_nr_regions;
+  unsigned long max_nr_regions;
+  struct list_head adaptive_targets;
 };
 </pre></div>
 </div>
@@ -370,19 +349,11 @@ struct <code class="sig-name descname">damon_ctx</code><a class="headerlink" hre
 </dd>
 <dt><code class="docutils literal notranslate"><span class="pre">callback</span></code></dt><dd><p>Set of callbacks for monitoring events notifications.</p>
 </dd>
-<dt><code class="docutils literal notranslate"><span class="pre">target_type</span></code></dt><dd><p>Type of the monitoring target.</p>
-</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">{unnamed_union}</span></code></dt><dd><p>anonymous</p>
-</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">{unnamed_struct}</span></code></dt><dd><p>anonymous</p>
-</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">min_nr_regions</span></code></dt><dd><p>The minimum number of adaptive monitoring regions.</p>
 </dd>
 <dt><code class="docutils literal notranslate"><span class="pre">max_nr_regions</span></code></dt><dd><p>The maximum number of adaptive monitoring regions.</p>
 </dd>
 <dt><code class="docutils literal notranslate"><span class="pre">adaptive_targets</span></code></dt><dd><p>Head of monitoring targets (<a class="reference internal" href="#c.damon_target" title="damon_target"><code class="xref c c-type docutils literal notranslate"><span class="pre">damon_target</span></code></a>) list.</p>
-</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">arbitrary_target</span></code></dt><dd><p>Pointer to arbitrary type target.</p>
 </dd>
 </dl>
 <p><strong>Description</strong></p>
@@ -406,9 +377,6 @@ reading <strong>kdamond</strong>.  Reads and writes to <strong>kdamond</strong> 
 outside of the monitoring thread must be protected by <strong>kdamond_lock</strong>.</p>
 <p>Note that the monitoring thread protects only <strong>kdamond</strong> and <strong>kdamond_stop</strong> via
 <strong>kdamond_lock</strong>.  Accesses to other fields must be protected by themselves.</p>
-<p><strong>min_nr_regions</strong>, <strong>max_nr_regions</strong> and <strong>adaptive_targets</strong> are valid only if
-<strong>target_type</strong> is <code class="xref c c-type docutils literal notranslate"><span class="pre">DAMON_ADAPTIVE_TARGET</span></code>.  <strong>arbitrary_target</strong> is valid only if
-<strong>target_type</strong> is <code class="xref c c-type docutils literal notranslate"><span class="pre">DAMON_ARBITRARY_TARGET</span></code>.</p>
 </div>
 <div class="section" id="functions">
 <h2>Functions<a class="headerlink" href="#functions" title="Permalink to this headline">¶</a></h2>
