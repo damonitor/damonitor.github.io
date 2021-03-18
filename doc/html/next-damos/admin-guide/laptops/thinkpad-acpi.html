@@ -60,7 +60,7 @@
             
             
               <div class="version">
-                5.10.0
+                5.12.0-rc3-mm1
               </div>
             
           
@@ -200,6 +200,7 @@ detailed description):</p>
 <li><p>UWB enable and disable</p></li>
 <li><p>LCD Shadow (PrivacyGuard) enable and disable</p></li>
 <li><p>Lap mode sensor</p></li>
+<li><p>Setting keyboard language</p></li>
 </ul>
 </div></blockquote>
 <p>A compatibility table by model and feature is maintained on the web
@@ -1662,6 +1663,25 @@ present and enabled in the BIOS.</p>
 <a class="reference internal" href="../../driver-api/rfkill.html"><span class="doc">rfkill - RF kill switch support</span></a> for details.</p>
 </div></blockquote>
 </div>
+</div>
+<div class="section" id="setting-keyboard-language">
+<h2>Setting keyboard language<a class="headerlink" href="#setting-keyboard-language" title="Permalink to this headline">¶</a></h2>
+<p>sysfs: keyboard_lang</p>
+<p>This feature is used to set keyboard language to ECFW using ASL interface.
+Fewer thinkpads models like T580 , T590 , T15 Gen 1 etc.. has “=”, “(‘,
+“)” numeric keys, which are not displaying correctly, when keyboard language
+is other than “english”. This is because the default keyboard language in ECFW
+is set as “english”. Hence using this sysfs, user can set the correct keyboard
+language to ECFW and then these key’s will work correctly.</p>
+<p>Example of command to set keyboard language is mentioned below:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>echo jp &gt; /sys/devices/platform/thinkpad_acpi/keyboard_lang
+</pre></div>
+</div>
+<p>Text corresponding to keyboard layout to be set in sysfs are: be(Belgian),
+cz(Czech), da(Danish), de(German), en(English), es(Spain), et(Estonian),
+fr(French), fr-ch(French(Switzerland)), hu(Hungarian), it(Italy), jp (Japan),
+nl(Dutch), nn(Norway), pl(Polish), pt(portugese), sl(Slovenian), sv(Sweden),
+tr(Turkey)</p>
 </div>
 <div class="section" id="adaptive-keyboard">
 <h2>Adaptive keyboard<a class="headerlink" href="#adaptive-keyboard" title="Permalink to this headline">¶</a></h2>

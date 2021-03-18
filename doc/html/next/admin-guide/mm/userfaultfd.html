@@ -60,7 +60,7 @@
             
             
               <div class="version">
-                5.10.0
+                5.12.0-rc3-mm1
               </div>
             
           
@@ -207,63 +207,85 @@ respectively all the available features of the read(2) protocol and
 the generic ioctl available.</p>
 <p>The <code class="docutils literal notranslate"><span class="pre">uffdio_api.features</span></code> bitmask returned by the <code class="docutils literal notranslate"><span class="pre">UFFDIO_API</span></code> ioctl
 defines what memory types are supported by the <code class="docutils literal notranslate"><span class="pre">userfaultfd</span></code> and what
-events, except page fault notifications, may be generated.</p>
-<p>If the kernel supports registering <code class="docutils literal notranslate"><span class="pre">userfaultfd</span></code> ranges on hugetlbfs
-virtual memory areas, <code class="docutils literal notranslate"><span class="pre">UFFD_FEATURE_MISSING_HUGETLBFS</span></code> will be set in
-<code class="docutils literal notranslate"><span class="pre">uffdio_api.features</span></code>. Similarly, <code class="docutils literal notranslate"><span class="pre">UFFD_FEATURE_MISSING_SHMEM</span></code> will be
-set if the kernel supports registering <code class="docutils literal notranslate"><span class="pre">userfaultfd</span></code> ranges on shared
-memory (covering all shmem APIs, i.e. tmpfs, <code class="docutils literal notranslate"><span class="pre">IPCSHM</span></code>, <code class="docutils literal notranslate"><span class="pre">/dev/zero</span></code>,
-<code class="docutils literal notranslate"><span class="pre">MAP_SHARED</span></code>, <code class="docutils literal notranslate"><span class="pre">memfd_create</span></code>, etc).</p>
-<p>The userland application that wants to use <code class="docutils literal notranslate"><span class="pre">userfaultfd</span></code> with hugetlbfs
-or shared memory need to set the corresponding flag in
-<code class="docutils literal notranslate"><span class="pre">uffdio_api.features</span></code> to enable those features.</p>
-<p>If the userland desires to receive notifications for events other than
-page faults, it has to verify that <code class="docutils literal notranslate"><span class="pre">uffdio_api.features</span></code> has appropriate
-<code class="docutils literal notranslate"><span class="pre">UFFD_FEATURE_EVENT_*</span></code> bits set. These events are described in more
-detail below in <a class="reference internal" href="#non-cooperative-userfaultfd">Non-cooperative userfaultfd</a> section.</p>
-<p>Once the <code class="docutils literal notranslate"><span class="pre">userfaultfd</span></code> has been enabled the <code class="docutils literal notranslate"><span class="pre">UFFDIO_REGISTER</span></code> ioctl should
-be invoked (if present in the returned <code class="docutils literal notranslate"><span class="pre">uffdio_api.ioctls</span></code> bitmask) to
-register a memory range in the <code class="docutils literal notranslate"><span class="pre">userfaultfd</span></code> by setting the
+events, except page fault notifications, may be generated:</p>
+<ul class="simple">
+<li><p>The <code class="docutils literal notranslate"><span class="pre">UFFD_FEATURE_EVENT_*</span></code> flags indicate that various other events
+other than page faults are supported. These events are described in more
+detail below in the <a class="reference internal" href="#non-cooperative-userfaultfd">Non-cooperative userfaultfd</a> section.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">UFFD_FEATURE_MISSING_HUGETLBFS</span></code> and <code class="docutils literal notranslate"><span class="pre">UFFD_FEATURE_MISSING_SHMEM</span></code>
+indicate that the kernel supports <code class="docutils literal notranslate"><span class="pre">UFFDIO_REGISTER_MODE_MISSING</span></code>
+registrations for hugetlbfs and shared memory (covering all shmem APIs,
+i.e. tmpfs, <code class="docutils literal notranslate"><span class="pre">IPCSHM</span></code>, <code class="docutils literal notranslate"><span class="pre">/dev/zero</span></code>, <code class="docutils literal notranslate"><span class="pre">MAP_SHARED</span></code>, <code class="docutils literal notranslate"><span class="pre">memfd_create</span></code>,
+etc) virtual memory areas, respectively.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">UFFD_FEATURE_MINOR_HUGETLBFS</span></code> indicates that the kernel supports
+<code class="docutils literal notranslate"><span class="pre">UFFDIO_REGISTER_MODE_MINOR</span></code> registration for hugetlbfs virtual memory
+areas.</p></li>
+</ul>
+<p>The userland application should set the feature flags it intends to use
+when invoking the <code class="docutils literal notranslate"><span class="pre">UFFDIO_API</span></code> ioctl, to request that those features be
+enabled if supported.</p>
+<p>Once the <code class="docutils literal notranslate"><span class="pre">userfaultfd</span></code> API has been enabled the <code class="docutils literal notranslate"><span class="pre">UFFDIO_REGISTER</span></code>
+ioctl should be invoked (if present in the returned <code class="docutils literal notranslate"><span class="pre">uffdio_api.ioctls</span></code>
+bitmask) to register a memory range in the <code class="docutils literal notranslate"><span class="pre">userfaultfd</span></code> by setting the
 uffdio_register structure accordingly. The <code class="docutils literal notranslate"><span class="pre">uffdio_register.mode</span></code>
 bitmask will specify to the kernel which kind of faults to track for
-the range (<code class="docutils literal notranslate"><span class="pre">UFFDIO_REGISTER_MODE_MISSING</span></code> would track missing
-pages). The <code class="docutils literal notranslate"><span class="pre">UFFDIO_REGISTER</span></code> ioctl will return the
+the range. The <code class="docutils literal notranslate"><span class="pre">UFFDIO_REGISTER</span></code> ioctl will return the
 <code class="docutils literal notranslate"><span class="pre">uffdio_register.ioctls</span></code> bitmask of ioctls that are suitable to resolve
 userfaults on the range registered. Not all ioctls will necessarily be
-supported for all memory types depending on the underlying virtual
-memory backend (anonymous memory vs tmpfs vs real filebacked
-mappings).</p>
+supported for all memory types (e.g. anonymous memory vs. shmem vs.
+hugetlbfs), or all types of intercepted faults.</p>
 <p>Userland can use the <code class="docutils literal notranslate"><span class="pre">uffdio_register.ioctls</span></code> to manage the virtual
 address space in the background (to add or potentially also remove
 memory from the <code class="docutils literal notranslate"><span class="pre">userfaultfd</span></code> registered range). This means a userfault
 could be triggering just before userland maps in the background the
 user-faulted page.</p>
-<p>The primary ioctl to resolve userfaults is <code class="docutils literal notranslate"><span class="pre">UFFDIO_COPY</span></code>. That
-atomically copies a page into the userfault registered range and wakes
-up the blocked userfaults
-(unless <code class="docutils literal notranslate"><span class="pre">uffdio_copy.mode</span> <span class="pre">&amp;</span> <span class="pre">UFFDIO_COPY_MODE_DONTWAKE</span></code> is set).
-Other ioctl works similarly to <code class="docutils literal notranslate"><span class="pre">UFFDIO_COPY</span></code>. They’re atomic as in
-guaranteeing that nothing can see an half copied page since it’ll
-keep userfaulting until the copy has finished.</p>
+<div class="section" id="resolving-userfaults">
+<h3>Resolving Userfaults<a class="headerlink" href="#resolving-userfaults" title="Permalink to this headline">¶</a></h3>
+<p>There are three basic ways to resolve userfaults:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">UFFDIO_COPY</span></code> atomically copies some existing page contents from
+userspace.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">UFFDIO_ZEROPAGE</span></code> atomically zeros the new page.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">UFFDIO_CONTINUE</span></code> maps an existing, previously-populated page.</p></li>
+</ul>
+<p>These operations are atomic in the sense that they guarantee nothing can
+see a half-populated page, since readers will keep userfaulting until the
+operation has finished.</p>
+<p>By default, these wake up userfaults blocked on the range in question.
+They support a <code class="docutils literal notranslate"><span class="pre">UFFDIO_*_MODE_DONTWAKE</span></code> <code class="docutils literal notranslate"><span class="pre">mode</span></code> flag, which indicates
+that waking will be done separately at some later time.</p>
+<p>Which ioctl to choose depends on the kind of page fault, and what we’d
+like to do to resolve it:</p>
+<ul class="simple">
+<li><p>For <code class="docutils literal notranslate"><span class="pre">UFFDIO_REGISTER_MODE_MISSING</span></code> faults, the fault needs to be
+resolved by either providing a new page (<code class="docutils literal notranslate"><span class="pre">UFFDIO_COPY</span></code>), or mapping
+the zero page (<code class="docutils literal notranslate"><span class="pre">UFFDIO_ZEROPAGE</span></code>). By default, the kernel would map
+the zero page for a missing fault. With userfaultfd, userspace can
+decide what content to provide before the faulting thread continues.</p></li>
+<li><p>For <code class="docutils literal notranslate"><span class="pre">UFFDIO_REGISTER_MODE_MINOR</span></code> faults, there is an existing page (in
+the page cache). Userspace has the option of modifying the page’s
+contents before resolving the fault. Once the contents are correct
+(modified or not), userspace asks the kernel to map the page and let the
+faulting thread continue with <code class="docutils literal notranslate"><span class="pre">UFFDIO_CONTINUE</span></code>.</p></li>
+</ul>
 <p>Notes:</p>
 <ul class="simple">
-<li><p>If you requested <code class="docutils literal notranslate"><span class="pre">UFFDIO_REGISTER_MODE_MISSING</span></code> when registering then
-you must provide some kind of page in your thread after reading from
-the uffd.  You must provide either <code class="docutils literal notranslate"><span class="pre">UFFDIO_COPY</span></code> or <code class="docutils literal notranslate"><span class="pre">UFFDIO_ZEROPAGE</span></code>.
-The normal behavior of the OS automatically providing a zero page on
-an annonymous mmaping is not in place.</p></li>
+<li><p>You can tell which kind of fault occurred by examining
+<code class="docutils literal notranslate"><span class="pre">pagefault.flags</span></code> within the <code class="docutils literal notranslate"><span class="pre">uffd_msg</span></code>, checking for the
+<code class="docutils literal notranslate"><span class="pre">UFFD_PAGEFAULT_FLAG_*</span></code> flags.</p></li>
 <li><p>None of the page-delivering ioctls default to the range that you
 registered with.  You must fill in all fields for the appropriate
 ioctl struct including the range.</p></li>
 <li><p>You get the address of the access that triggered the missing page
 event out of a struct uffd_msg that you read in the thread from the
-uffd.  You can supply as many pages as you want with <code class="docutils literal notranslate"><span class="pre">UFFDIO_COPY</span></code> or
-<code class="docutils literal notranslate"><span class="pre">UFFDIO_ZEROPAGE</span></code>.  Keep in mind that unless you used DONTWAKE then
-the first of any of those IOCTLs wakes up the faulting thread.</p></li>
+uffd.  You can supply as many pages as you want with these IOCTLs.
+Keep in mind that unless you used DONTWAKE then the first of any of
+those IOCTLs wakes up the faulting thread.</p></li>
 <li><p>Be sure to test for all errors including
 (<code class="docutils literal notranslate"><span class="pre">pollfd[0].revents</span> <span class="pre">&amp;</span> <span class="pre">POLLERR</span></code>).  This can happen, e.g. when ranges
 supplied were incorrect.</p></li>
 </ul>
+</div>
 <div class="section" id="write-protect-notifications">
 <h3>Write Protect Notifications<a class="headerlink" href="#write-protect-notifications" title="Permalink to this headline">¶</a></h3>
 <p>This is equivalent to (but faster than) using mprotect and a SIGSEGV

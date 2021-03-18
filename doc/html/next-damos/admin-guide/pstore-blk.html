@@ -60,7 +60,7 @@
             
             
               <div class="version">
-                5.10.0
+                5.12.0-rc3-mm1
               </div>
             
           
@@ -182,7 +182,7 @@ such as total_size of block device and read/write operations.</p>
 <p>All of these configurations support both Kconfig and module parameters, but
 module parameters have priority over Kconfig.</p>
 <p>Here is an example for module parameters:</p>
-<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>pstore_blk.blkdev=179:7 pstore_blk.kmsg_size=64
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>pstore_blk.blkdev=/dev/mmcblk0p7 pstore_blk.kmsg_size=64 best_effort=y
 </pre></div>
 </div>
 <p>The detail of each configurations may be of interest to you.</p>
@@ -284,9 +284,7 @@ otherwise KMSG_DUMP_MAX.</p>
 </div>
 <div class="section" id="configurations-for-driver">
 <h2>Configurations for driver<a class="headerlink" href="#configurations-for-driver" title="Permalink to this headline">¶</a></h2>
-<p>Only a block device driver cares about these configurations. A block device
-driver uses <code class="docutils literal notranslate"><span class="pre">register_pstore_blk</span></code> to register to pstore/blk.</p>
-<p>A non-block device driver uses <code class="docutils literal notranslate"><span class="pre">register_pstore_device</span></code> with
+<p>A device driver uses <code class="docutils literal notranslate"><span class="pre">register_pstore_device</span></code> with
 <code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">pstore_device_info</span></code> to register to pstore/blk.</p>
 <dl class="function">
 <dt id="c.register_pstore_device">
@@ -313,33 +311,6 @@ void <code class="sig-name descname">unregister_pstore_device</code><span class=
 <p><strong>Parameters</strong></p>
 <dl class="simple">
 <dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">pstore_device_info</span> <span class="pre">*dev</span></code></dt><dd><p>non-block device information</p>
-</dd>
-</dl>
-<dl class="function">
-<dt id="c.register_pstore_blk">
-int <code class="sig-name descname">register_pstore_blk</code><span class="sig-paren">(</span>struct <a class="reference internal" href="#c.pstore_blk_info" title="pstore_blk_info">pstore_blk_info</a><em> *info</em><span class="sig-paren">)</span><a class="headerlink" href="#c.register_pstore_blk" title="Permalink to this definition">¶</a></dt>
-<dd><p>register block device to pstore/blk</p>
-</dd></dl>
-
-<p><strong>Parameters</strong></p>
-<dl class="simple">
-<dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">pstore_blk_info</span> <span class="pre">*info</span></code></dt><dd><p>details on the desired block device interface</p>
-</dd>
-</dl>
-<p><strong>Return</strong></p>
-<ul class="simple">
-<li><p>0          - OK</p></li>
-<li><p>Others     - something error.</p></li>
-</ul>
-<dl class="function">
-<dt id="c.unregister_pstore_blk">
-void <code class="sig-name descname">unregister_pstore_blk</code><span class="sig-paren">(</span>unsigned int<em> major</em><span class="sig-paren">)</span><a class="headerlink" href="#c.unregister_pstore_blk" title="Permalink to this definition">¶</a></dt>
-<dd><p>unregister block device from pstore/blk</p>
-</dd></dl>
-
-<p><strong>Parameters</strong></p>
-<dl class="simple">
-<dt><code class="docutils literal notranslate"><span class="pre">unsigned</span> <span class="pre">int</span> <span class="pre">major</span></code></dt><dd><p>the major device number of device</p>
 </dd>
 </dl>
 </div>
@@ -683,65 +654,6 @@ struct block_device * <code class="sig-name descname">psblk_get_bdev</code><span
 <p>pointer to block device on success and others on error.</p>
 <p><strong>Description</strong></p>
 <p>On success, the returned block_device has reference count of one.</p>
-<dl class="type">
-<dt id="c.pstore_blk_panic_write_op">
-<code class="sig-name descname">pstore_blk_panic_write_op</code><a class="headerlink" href="#c.pstore_blk_panic_write_op" title="Permalink to this definition">¶</a></dt>
-<dd><p><strong>Typedef</strong>: panic write operation to block device</p>
-</dd></dl>
-
-<p><strong>Syntax</strong></p>
-<blockquote>
-<div><p><code class="docutils literal notranslate"><span class="pre">int</span> <span class="pre">pstore_blk_panic_write_op</span> <span class="pre">(const</span> <span class="pre">char</span> <span class="pre">*buf,</span> <span class="pre">sector_t</span> <span class="pre">start_sect,</span> <span class="pre">sector_t</span> <span class="pre">sects)</span></code></p>
-</div></blockquote>
-<p><strong>Parameters</strong></p>
-<dl class="simple">
-<dt><code class="docutils literal notranslate"><span class="pre">const</span> <span class="pre">char</span> <span class="pre">*buf</span></code></dt><dd><p>the data to write</p>
-</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">sector_t</span> <span class="pre">start_sect</span></code></dt><dd><p>start sector to block device</p>
-</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">sector_t</span> <span class="pre">sects</span></code></dt><dd><p>sectors count on buf</p>
-</dd>
-</dl>
-<p><strong>Return</strong></p>
-<p>On success, zero should be returned. Others excluding -ENOMSG
-mean error. -ENOMSG means to try next zone.</p>
-<p><strong>Description</strong></p>
-<p>Panic write to block device must be aligned to SECTOR_SIZE.</p>
-<dl class="type">
-<dt id="c.pstore_blk_info">
-struct <code class="sig-name descname">pstore_blk_info</code><a class="headerlink" href="#c.pstore_blk_info" title="Permalink to this definition">¶</a></dt>
-<dd><p>pstore/blk registration details</p>
-</dd></dl>
-
-<p><strong>Definition</strong></p>
-<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>struct pstore_blk_info {
-  unsigned int major;
-  unsigned int flags;
-  pstore_blk_panic_write_op panic_write;
-  dev_t devt;
-  sector_t nr_sects;
-  sector_t start_sect;
-};
-</pre></div>
-</div>
-<p><strong>Members</strong></p>
-<dl class="simple">
-<dt><code class="docutils literal notranslate"><span class="pre">major</span></code></dt><dd><p>Which major device number to support with pstore/blk</p>
-</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">flags</span></code></dt><dd><p>The supported PSTORE_FLAGS_* from linux/pstore.h.</p>
-</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">panic_write</span></code></dt><dd><p>The write operation only used for the panic case.
-This can be NULL, but is recommended to avoid losing
-crash data if the kernel’s IO path or work queues are
-broken during a panic.</p>
-</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">devt</span></code></dt><dd><p>The dev_t that pstore/blk has attached to.</p>
-</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">nr_sects</span></code></dt><dd><p>Number of sectors on <strong>devt</strong>.</p>
-</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">start_sect</span></code></dt><dd><p>Starting sector on <strong>devt</strong>.</p>
-</dd>
-</dl>
 <dl class="type">
 <dt id="c.pstore_device_info">
 struct <code class="sig-name descname">pstore_device_info</code><a class="headerlink" href="#c.pstore_device_info" title="Permalink to this definition">¶</a></dt>
