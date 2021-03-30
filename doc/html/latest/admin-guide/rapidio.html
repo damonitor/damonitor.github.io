@@ -60,7 +60,7 @@
             
             
               <div class="version">
-                5.10.0
+                5.12.0-rc4-mm1
               </div>
             
           
@@ -1077,12 +1077,13 @@ int <code class="sig-name descname">rio_set_port_lockout</code><span class="sig-
 </dd></dl>
 
 <p><strong>Parameters</strong></p>
-<dl class="simple">
+<dl>
 <dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">rio_dev</span> <span class="pre">*rdev</span></code></dt><dd><p>Pointer to RIO device control structure</p>
 </dd>
 <dt><code class="docutils literal notranslate"><span class="pre">u32</span> <span class="pre">pnum</span></code></dt><dd><p>Switch port number to set LOCKOUT bit</p>
+<p><strong>lock</strong>: Operation : set (=1) or clear (=0)</p>
 </dd>
-<dt><code class="docutils literal notranslate"><span class="pre">int</span> <span class="pre">lock</span></code></dt><dd><p>Operation : set (=1) or clear (=0)</p>
+<dt><code class="docutils literal notranslate"><span class="pre">int</span> <span class="pre">lock</span></code></dt><dd><p><em>undescribed</em></p>
 </dd>
 </dl>
 <dl class="function">
@@ -1145,7 +1146,7 @@ u32 <code class="sig-name descname">rio_mport_get_efb</code><span class="sig-par
 </dd></dl>
 
 <p><strong>Parameters</strong></p>
-<dl class="simple">
+<dl>
 <dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">rio_mport</span> <span class="pre">*port</span></code></dt><dd><p>Master port to issue transaction</p>
 </dd>
 <dt><code class="docutils literal notranslate"><span class="pre">int</span> <span class="pre">local</span></code></dt><dd><p>Indicate a local master port or remote device access</p>
@@ -1154,8 +1155,8 @@ u32 <code class="sig-name descname">rio_mport_get_efb</code><span class="sig-par
 </dd>
 <dt><code class="docutils literal notranslate"><span class="pre">u8</span> <span class="pre">hopcount</span></code></dt><dd><p>Number of switch hops to the device</p>
 </dd>
-<dt><code class="docutils literal notranslate"><span class="pre">u32</span> <span class="pre">from</span></code></dt><dd><p>Offset of  current Extended Feature block header (if 0 starts
-from ExtFeaturePtr)</p>
+<dt><code class="docutils literal notranslate"><span class="pre">u32</span> <span class="pre">from</span></code></dt><dd><p>Offset of  current Extended Feature block header (if 0 starts</p>
+<p>from ExtFeaturePtr)</p>
 </dd>
 </dl>
 <dl class="function">
@@ -1182,57 +1183,6 @@ u32 <code class="sig-name descname">rio_mport_get_feature</code><span class="sig
 Returns the offset of the requested extended feature
 block within the device’s RIO configuration space or
 0 in case the device does not support it.</p>
-<dl class="function">
-<dt id="c.rio_get_asm">
-struct <a class="reference internal" href="#c.rio_dev" title="rio_dev">rio_dev</a> * <code class="sig-name descname">rio_get_asm</code><span class="sig-paren">(</span>u16<em> vid</em>, u16<em> did</em>, u16<em> asm_vid</em>, u16<em> asm_did</em>, struct <a class="reference internal" href="#c.rio_dev" title="rio_dev">rio_dev</a><em> *from</em><span class="sig-paren">)</span><a class="headerlink" href="#c.rio_get_asm" title="Permalink to this definition">¶</a></dt>
-<dd><p>Begin or continue searching for a RIO device by vid/did/asm_vid/asm_did</p>
-</dd></dl>
-
-<p><strong>Parameters</strong></p>
-<dl class="simple">
-<dt><code class="docutils literal notranslate"><span class="pre">u16</span> <span class="pre">vid</span></code></dt><dd><p>RIO vid to match or <code class="docutils literal notranslate"><span class="pre">RIO_ANY_ID</span></code> to match all vids</p>
-</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">u16</span> <span class="pre">did</span></code></dt><dd><p>RIO did to match or <code class="docutils literal notranslate"><span class="pre">RIO_ANY_ID</span></code> to match all dids</p>
-</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">u16</span> <span class="pre">asm_vid</span></code></dt><dd><p>RIO asm_vid to match or <code class="docutils literal notranslate"><span class="pre">RIO_ANY_ID</span></code> to match all asm_vids</p>
-</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">u16</span> <span class="pre">asm_did</span></code></dt><dd><p>RIO asm_did to match or <code class="docutils literal notranslate"><span class="pre">RIO_ANY_ID</span></code> to match all asm_dids</p>
-</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">rio_dev</span> <span class="pre">*from</span></code></dt><dd><p>Previous RIO device found in search, or <code class="docutils literal notranslate"><span class="pre">NULL</span></code> for new search</p>
-</dd>
-</dl>
-<p><strong>Description</strong></p>
-<p>Iterates through the list of known RIO devices. If a RIO device is
-found with a matching <strong>vid</strong>, <strong>did</strong>, <strong>asm_vid</strong>, <strong>asm_did</strong>, the reference
-count to the device is incrememted and a pointer to its device
-structure is returned. Otherwise, <code class="docutils literal notranslate"><span class="pre">NULL</span></code> is returned. A new search
-is initiated by passing <code class="docutils literal notranslate"><span class="pre">NULL</span></code> to the <strong>from</strong> argument. Otherwise, if
-<strong>from</strong> is not <code class="docutils literal notranslate"><span class="pre">NULL</span></code>, searches continue from next device on the global
-list. The reference count for <strong>from</strong> is always decremented if it is
-not <code class="docutils literal notranslate"><span class="pre">NULL</span></code>.</p>
-<dl class="function">
-<dt id="c.rio_get_device">
-struct <a class="reference internal" href="#c.rio_dev" title="rio_dev">rio_dev</a> * <code class="sig-name descname">rio_get_device</code><span class="sig-paren">(</span>u16<em> vid</em>, u16<em> did</em>, struct <a class="reference internal" href="#c.rio_dev" title="rio_dev">rio_dev</a><em> *from</em><span class="sig-paren">)</span><a class="headerlink" href="#c.rio_get_device" title="Permalink to this definition">¶</a></dt>
-<dd><p>Begin or continue searching for a RIO device by vid/did</p>
-</dd></dl>
-
-<p><strong>Parameters</strong></p>
-<dl class="simple">
-<dt><code class="docutils literal notranslate"><span class="pre">u16</span> <span class="pre">vid</span></code></dt><dd><p>RIO vid to match or <code class="docutils literal notranslate"><span class="pre">RIO_ANY_ID</span></code> to match all vids</p>
-</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">u16</span> <span class="pre">did</span></code></dt><dd><p>RIO did to match or <code class="docutils literal notranslate"><span class="pre">RIO_ANY_ID</span></code> to match all dids</p>
-</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">rio_dev</span> <span class="pre">*from</span></code></dt><dd><p>Previous RIO device found in search, or <code class="docutils literal notranslate"><span class="pre">NULL</span></code> for new search</p>
-</dd>
-</dl>
-<p><strong>Description</strong></p>
-<p>Iterates through the list of known RIO devices. If a RIO device is
-found with a matching <strong>vid</strong> and <strong>did</strong>, the reference count to the
-device is incrememted and a pointer to its device structure is returned.
-Otherwise, <code class="docutils literal notranslate"><span class="pre">NULL</span></code> is returned. A new search is initiated by passing <code class="docutils literal notranslate"><span class="pre">NULL</span></code>
-to the <strong>from</strong> argument. Otherwise, if <strong>from</strong> is not <code class="docutils literal notranslate"><span class="pre">NULL</span></code>, searches
-continue from next device on the global list. The reference count for
-<strong>from</strong> is always decremented if it is not <code class="docutils literal notranslate"><span class="pre">NULL</span></code>.</p>
 <dl class="function">
 <dt id="c.rio_lock_device">
 int <code class="sig-name descname">rio_lock_device</code><span class="sig-paren">(</span>struct <a class="reference internal" href="#c.rio_mport" title="rio_mport">rio_mport</a><em> *port</em>, u16<em> destid</em>, u8<em> hopcount</em>, int<em> wait_ms</em><span class="sig-paren">)</span><a class="headerlink" href="#c.rio_lock_device" title="Permalink to this definition">¶</a></dt>
@@ -1407,10 +1357,10 @@ struct dma_async_tx_descriptor * <code class="sig-name descname">rio_dma_prep_xf
 Uses DMA channel private extension to pass information related to remote
 target RIO device.</p>
 <p><strong>Return</strong></p>
-<dl class="simple">
-<dt>pointer to DMA transaction descriptor if successful,</dt><dd><p>error-valued pointer or NULL if failed.</p>
-</dd>
-</dl>
+<p>pointer to DMA transaction descriptor if successful,</p>
+<blockquote>
+<div><p>error-valued pointer or NULL if failed.</p>
+</div></blockquote>
 <dl class="function">
 <dt id="c.rio_dma_prep_slave_sg">
 struct dma_async_tx_descriptor * <code class="sig-name descname">rio_dma_prep_slave_sg</code><span class="sig-paren">(</span>struct <a class="reference internal" href="#c.rio_dev" title="rio_dev">rio_dev</a><em> *rdev</em>, struct dma_chan<em> *dchan</em>, struct rio_dma_data<em> *data</em>, enum dma_transfer_direction<em> direction</em>, unsigned long<em> flags</em><span class="sig-paren">)</span><a class="headerlink" href="#c.rio_dma_prep_slave_sg" title="Permalink to this definition">¶</a></dt>
@@ -1435,10 +1385,10 @@ struct dma_async_tx_descriptor * <code class="sig-name descname">rio_dma_prep_sl
 Uses DMA channel private extension to pass information related to remote
 target RIO device.</p>
 <p><strong>Return</strong></p>
-<dl class="simple">
-<dt>pointer to DMA transaction descriptor if successful,</dt><dd><p>error-valued pointer or NULL if failed.</p>
-</dd>
-</dl>
+<p>pointer to DMA transaction descriptor if successful,</p>
+<blockquote>
+<div><p>error-valued pointer or NULL if failed.</p>
+</div></blockquote>
 <dl class="function">
 <dt id="c.rio_register_scan">
 int <code class="sig-name descname">rio_register_scan</code><span class="sig-paren">(</span>int<em> mport_id</em>, struct <a class="reference internal" href="#c.rio_scan" title="rio_scan">rio_scan</a><em> *scan_ops</em><span class="sig-paren">)</span><a class="headerlink" href="#c.rio_register_scan" title="Permalink to this definition">¶</a></dt>
@@ -1446,9 +1396,9 @@ int <code class="sig-name descname">rio_register_scan</code><span class="sig-par
 </dd></dl>
 
 <p><strong>Parameters</strong></p>
-<dl class="simple">
-<dt><code class="docutils literal notranslate"><span class="pre">int</span> <span class="pre">mport_id</span></code></dt><dd><p>mport device ID for which fabric scan routine has to be set
-(RIO_MPORT_ANY = set for all available mports)</p>
+<dl>
+<dt><code class="docutils literal notranslate"><span class="pre">int</span> <span class="pre">mport_id</span></code></dt><dd><p>mport device ID for which fabric scan routine has to be set</p>
+<p>(RIO_MPORT_ANY = set for all available mports)</p>
 </dd>
 <dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">rio_scan</span> <span class="pre">*scan_ops</span></code></dt><dd><p>enumeration/discovery operations structure</p>
 </dd>
@@ -1466,9 +1416,9 @@ int <code class="sig-name descname">rio_unregister_scan</code><span class="sig-p
 </dd></dl>
 
 <p><strong>Parameters</strong></p>
-<dl class="simple">
-<dt><code class="docutils literal notranslate"><span class="pre">int</span> <span class="pre">mport_id</span></code></dt><dd><p>mport device ID for which fabric scan routine has to be
-unregistered (RIO_MPORT_ANY = apply to all mports that use
+<dl>
+<dt><code class="docutils literal notranslate"><span class="pre">int</span> <span class="pre">mport_id</span></code></dt><dd><p>mport device ID for which fabric scan routine has to be</p>
+<p>unregistered (RIO_MPORT_ANY = apply to all mports that use
 the specified scan_ops)</p>
 </dd>
 <dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">rio_scan</span> <span class="pre">*scan_ops</span></code></dt><dd><p>enumeration/discovery operations structure</p>

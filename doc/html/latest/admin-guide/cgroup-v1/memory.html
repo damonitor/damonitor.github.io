@@ -60,7 +60,7 @@
             
             
               <div class="version">
-                5.10.0
+                5.12.0-rc4-mm1
               </div>
             
           
@@ -260,7 +260,9 @@ threads</p></td>
 <td><p>show various statistics</p></td>
 </tr>
 <tr class="row-even"><td><p>memory.use_hierarchy</p></td>
-<td><p>set/show hierarchical account enabled</p></td>
+<td><p>set/show hierarchical account enabled
+This knob is deprecated and shouldn’t be
+used.</p></td>
 </tr>
 <tr class="row-odd"><td><p>memory.force_empty</p></td>
 <td><p>trigger forced page reclaim</p></td>
@@ -473,15 +475,15 @@ limits on the root cgroup.</p>
 </div>
 <div class="section" id="locking">
 <h3>2.6 Locking<a class="headerlink" href="#locking" title="Permalink to this headline">¶</a></h3>
+<p>Lock order is as follows:</p>
 <blockquote>
-<div><blockquote>
-<div><p>lock_page_cgroup()/unlock_page_cgroup() should not be called under
-the i_pages lock.</p>
-<p>Other lock order is following:</p>
-<dl class="simple">
-<dt>PG_locked.</dt><dd><dl class="simple">
-<dt>mm-&gt;page_table_lock</dt><dd><dl class="simple">
-<dt>pgdat-&gt;lru_lock</dt><dd><p>lock_page_cgroup.</p>
+<div><dl class="simple">
+<dt>Page lock (PG_locked bit of page-&gt;flags)</dt><dd><dl class="simple">
+<dt>mm-&gt;page_table_lock or split pte_lock</dt><dd><dl class="simple">
+<dt>lock_page_memcg (memcg-&gt;move_lock)</dt><dd><dl class="simple">
+<dt>mapping-&gt;i_pages lock</dt><dd><p>lruvec-&gt;lru_lock.</p>
+</dd>
+</dl>
 </dd>
 </dl>
 </dd>
@@ -489,10 +491,9 @@ the i_pages lock.</p>
 </dd>
 </dl>
 </div></blockquote>
-<p>In many cases, just lock_page_cgroup() is called.</p>
-<p>per-zone-per-cgroup LRU (cgroup’s private LRU) is just guarded by
-pgdat-&gt;lru_lock, it has no lock of its own.</p>
-</div></blockquote>
+<p>Per-node-per-memcgroup LRU (cgroup’s private LRU) is guarded by
+lruvec-&gt;lru_lock; PG_lru bit of page-&gt;flags is cleared before
+isolating a page from its LRU under lruvec-&gt;lru_lock.</p>
 </div>
 <div class="section" id="kernel-memory-extension-config-memcg-kmem">
 <h3>2.7 Kernel Memory Extension (CONFIG_MEMCG_KMEM)<a class="headerlink" href="#kernel-memory-extension-config-memcg-kmem" title="Permalink to this headline">¶</a></h3>
@@ -545,8 +546,8 @@ set:</p>
 accounting. Kernel memory is completely ignored.</p>
 </dd>
 <dt>U != 0, K &lt; U:</dt><dd><p>Kernel memory is a subset of the user memory. This setup is useful in
-deployments where the total amount of memory per-cgroup is overcommited.
-Overcommiting kernel memory limits is definitely not recommended, since the
+deployments where the total amount of memory per-cgroup is overcommitted.
+Overcommitting kernel memory limits is definitely not recommended, since the
 box can still run out of non-reclaimable memory.
 In this case, the admin could set up K so that the sum of all groups is
 never greater than the total memory, and freely set U at the cost of his
@@ -628,7 +629,7 @@ caches, RSS and Active pages/Inactive pages are shown.</p>
 </div>
 <div class="section" id="testing">
 <h2>4. Testing<a class="headerlink" href="#testing" title="Permalink to this headline">¶</a></h2>
-<p>For testing features and implementation, see memcg_test.txt.</p>
+<p>For testing features and implementation, see <a class="reference internal" href="memcg_test.html"><span class="doc">Memory Resource Controller(Memcg) Implementation Memo</span></a>.</p>
 <p>Performance test is also important. To see pure memory controller’s overhead,
 testing on tmpfs will give you good numbers of small overheads.
 Example: do kernel make on tmpfs.</p>
@@ -665,13 +666,11 @@ See 8. “Move charges at task migration”</p>
 cgroup might have some charge associated with it, even though all
 tasks have migrated away from it. (because we charge against pages, not
 against tasks.)</p>
-<p>We move the stats to root (if use_hierarchy==0) or parent (if
-use_hierarchy==1), and no change on the charge except uncharging
+<p>We move the stats to parent, and no change on the charge except uncharging
 from the child.</p>
 <p>Charges recorded in swap information is not updated at removal of cgroup.
 Recorded information is discarded and a cgroup which uses swap (swapcache)
 will be charged as a new owner of it.</p>
-<p>About use_hierarchy, see Section 6.</p>
 </div>
 </div>
 <div class="section" id="misc-interfaces">
@@ -693,7 +692,6 @@ memory pressure happens. If you want to avoid that, force_empty will be useful.<
 kernel pages will still be seen. This is not considered a failure and the
 write will still return success. In this case, it is expected that
 memory.kmem.usage_in_bytes == memory.usage_in_bytes.</p>
-<p>About use_hierarchy, see Section 6.</p>
 </div></blockquote>
 </div>
 <div class="section" id="stat-file">
@@ -888,30 +886,18 @@ a    b     c
 </pre></div>
 </div>
 <p>In the diagram above, with hierarchical accounting enabled, all memory
-usage of e, is accounted to its ancestors up until the root (i.e, c and root),
-that has memory.use_hierarchy enabled. If one of the ancestors goes over its
-limit, the reclaim algorithm reclaims from the tasks in the ancestor and the
-children of the ancestor.</p>
-<div class="section" id="enabling-hierarchical-accounting-and-reclaim">
-<h3>6.1 Enabling hierarchical accounting and reclaim<a class="headerlink" href="#enabling-hierarchical-accounting-and-reclaim" title="Permalink to this headline">¶</a></h3>
-<p>A memory cgroup by default disables the hierarchy feature. Support
-can be enabled by writing 1 to memory.use_hierarchy file of the root cgroup:</p>
+usage of e, is accounted to its ancestors up until the root (i.e, c and root).
+If one of the ancestors goes over its limit, the reclaim algorithm reclaims
+from the tasks in the ancestor and the children of the ancestor.</p>
+<div class="section" id="hierarchical-accounting-and-reclaim">
+<h3>6.1 Hierarchical accounting and reclaim<a class="headerlink" href="#hierarchical-accounting-and-reclaim" title="Permalink to this headline">¶</a></h3>
+<p>Hierarchical accounting is enabled by default. Disabling the hierarchical
+accounting is deprecated. An attempt to do it will result in a failure
+and a warning printed to dmesg.</p>
+<p>For compatibility reasons writing 1 to memory.use_hierarchy will always pass:</p>
 <div class="highlight-none notranslate"><div class="highlight"><pre><span></span># echo 1 &gt; memory.use_hierarchy
 </pre></div>
 </div>
-<p>The feature can be disabled by:</p>
-<div class="highlight-none notranslate"><div class="highlight"><pre><span></span># echo 0 &gt; memory.use_hierarchy
-</pre></div>
-</div>
-<dl class="simple">
-<dt>NOTE1:</dt><dd><p>Enabling/disabling will fail if either the cgroup already has other
-cgroups created below it, or if the parent cgroup has use_hierarchy
-enabled.</p>
-</dd>
-<dt>NOTE2:</dt><dd><p>When panic_on_oom is set to “2”, the whole system will panic in
-case of an OOM event in any cgroup.</p>
-</dd>
-</dl>
 </div>
 </div>
 <div class="section" id="soft-limits">
@@ -1030,7 +1016,7 @@ behavior to hold the mutex too long, so we may need some trick.</p></li>
 <div class="section" id="memory-thresholds">
 <h2>9. Memory thresholds<a class="headerlink" href="#memory-thresholds" title="Permalink to this headline">¶</a></h2>
 <p>Memory cgroup implements memory thresholds using the cgroups notification
-API (see cgroups.txt). It allows to register multiple memory and memsw
+API (see <a class="reference internal" href="cgroups.html"><span class="doc">Control Groups</span></a>). It allows to register multiple memory and memsw
 thresholds and gets notifications when it crosses.</p>
 <p>To register a threshold, an application must:</p>
 <ul class="simple">
@@ -1047,7 +1033,7 @@ threshold in any direction.</p>
 <h2>10. OOM Control<a class="headerlink" href="#oom-control" title="Permalink to this headline">¶</a></h2>
 <p>memory.oom_control file is for OOM notification and other controls.</p>
 <p>Memory cgroup implements OOM notifier using the cgroup notification
-API (See cgroups.txt). It allows to register multiple OOM notification
+API (See <a class="reference internal" href="cgroups.html"><span class="doc">Control Groups</span></a>). It allows to register multiple OOM notification
 delivery and gets notification when OOM happens.</p>
 <p>To register a notifier, an application must:</p>
 <blockquote>
@@ -1088,6 +1074,9 @@ in memory cgroup’s OOM-waitqueue when they request accountable memory.</p>
 (if 1, oom-killer is disabled)</p></li>
 <li><p>under_oom        0 or 1
 (if 1, the memory cgroup is under OOM, tasks may be stopped.)</p></li>
+<li><p>oom_kill         integer counter
+The number of processes belonging to this cgroup killed by any
+kind of OOM killer.</p></li>
 </ul>
 </div></blockquote>
 </div>
@@ -1195,22 +1184,22 @@ commented and discussed quite extensively in the community.</p>
 <li><p>Singh, Balbir. Memory Controller (RSS Control),
 <a class="reference external" href="http://lwn.net/Articles/222762/">http://lwn.net/Articles/222762/</a></p></li>
 <li><p>Emelianov, Pavel. Resource controllers based on process cgroups
-<a class="reference external" href="http://lkml.org/lkml/2007/3/6/198">http://lkml.org/lkml/2007/3/6/198</a></p></li>
+<a class="reference external" href="https://lore.kernel.org/r/45ED7DEC.7010403&#64;sw.ru">https://lore.kernel.org/r/45ED7DEC.7010403&#64;sw.ru</a></p></li>
 <li><p>Emelianov, Pavel. RSS controller based on process cgroups (v2)
-<a class="reference external" href="http://lkml.org/lkml/2007/4/9/78">http://lkml.org/lkml/2007/4/9/78</a></p></li>
+<a class="reference external" href="https://lore.kernel.org/r/461A3010.90403&#64;sw.ru">https://lore.kernel.org/r/461A3010.90403&#64;sw.ru</a></p></li>
 <li><p>Emelianov, Pavel. RSS controller based on process cgroups (v3)
-<a class="reference external" href="http://lkml.org/lkml/2007/5/30/244">http://lkml.org/lkml/2007/5/30/244</a></p></li>
+<a class="reference external" href="https://lore.kernel.org/r/465D9739.8070209&#64;openvz.org">https://lore.kernel.org/r/465D9739.8070209&#64;openvz.org</a></p></li>
 <li><p>Menage, Paul. Control Groups v10, <a class="reference external" href="http://lwn.net/Articles/236032/">http://lwn.net/Articles/236032/</a></p></li>
 <li><p>Vaidyanathan, Srinivasan, Control Groups: Pagecache accounting and control
 subsystem (v3), <a class="reference external" href="http://lwn.net/Articles/235534/">http://lwn.net/Articles/235534/</a></p></li>
 <li><p>Singh, Balbir. RSS controller v2 test results (lmbench),
-<a class="reference external" href="http://lkml.org/lkml/2007/5/17/232">http://lkml.org/lkml/2007/5/17/232</a></p></li>
+<a class="reference external" href="https://lore.kernel.org/r/464C95D4.7070806&#64;linux.vnet.ibm.com">https://lore.kernel.org/r/464C95D4.7070806&#64;linux.vnet.ibm.com</a></p></li>
 <li><p>Singh, Balbir. RSS controller v2 AIM9 results
-<a class="reference external" href="http://lkml.org/lkml/2007/5/18/1">http://lkml.org/lkml/2007/5/18/1</a></p></li>
+<a class="reference external" href="https://lore.kernel.org/r/464D267A.50107&#64;linux.vnet.ibm.com">https://lore.kernel.org/r/464D267A.50107&#64;linux.vnet.ibm.com</a></p></li>
 <li><p>Singh, Balbir. Memory controller v6 test results,
-<a class="reference external" href="http://lkml.org/lkml/2007/8/19/36">http://lkml.org/lkml/2007/8/19/36</a></p></li>
+<a class="reference external" href="https://lore.kernel.org/r/20070819094658.654.84837.sendpatchset&#64;balbir-laptop">https://lore.kernel.org/r/20070819094658.654.84837.sendpatchset&#64;balbir-laptop</a></p></li>
 <li><p>Singh, Balbir. Memory controller introduction (v6),
-<a class="reference external" href="http://lkml.org/lkml/2007/8/17/69">http://lkml.org/lkml/2007/8/17/69</a></p></li>
+<a class="reference external" href="https://lore.kernel.org/r/20070817084228.26003.12568.sendpatchset&#64;balbir-laptop">https://lore.kernel.org/r/20070817084228.26003.12568.sendpatchset&#64;balbir-laptop</a></p></li>
 <li><p>Corbet, Jonathan, Controlling memory use in cgroups,
 <a class="reference external" href="http://lwn.net/Articles/243795/">http://lwn.net/Articles/243795/</a></p></li>
 </ol>

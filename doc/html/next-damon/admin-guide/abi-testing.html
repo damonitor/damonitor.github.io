@@ -60,7 +60,7 @@
             
             
               <div class="version">
-                5.12.0-rc3-mm1
+                5.12.0-rc4-mm1
               </div>
             
           
@@ -11408,7 +11408,7 @@ are listed in this attribute.</p>
 <p>Hardware applied calibration offset (assumed to fix production
 inaccuracies). Values represent a real physical offset expressed
 in SI units (m/s^2 for accelerometer and rad/s for gyroscope).</p>
-<table class="docutils align-default" id="abi-sys-bus-iio-devices-iio-devicex-in-accel-x-calibbiasi">
+<table class="docutils align-default" id="abi-sys-bus-iio-devices-iio-devicex-in-accel-x-calibbiase">
 <colgroup>
 <col style="width: 100%" />
 </colgroup>
@@ -20971,6 +20971,18 @@ have this attribute. Writing 32 byte hex string changes
 authorization to use the secure connection method instead.
 Writing an empty string clears the key and regular connection
 method can be used again.</p>
+<table class="docutils align-default" id="abi-sys-bus-thunderbolt-devices-maxhopid">
+<colgroup>
+<col style="width: 100%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><strong>/sys/bus/thunderbolt/devices/…/maxhopid</strong></p></td>
+</tr>
+</tbody>
+</table>
+<p>Defined on file <a class="reference internal" href="#abi-file-testing-sysfs-bus-thunderbolt"><span class="std std-ref">sysfs-bus-thunderbolt</span></a></p>
+<p>Only set for XDomains. The maximum HopID the other host
+supports as its input HopID.</p>
 <table class="docutils align-default" id="abi-sys-bus-thunderbolt-devices-nvm-authenticate">
 <colgroup>
 <col style="width: 100%" />
@@ -21262,54 +21274,6 @@ bitmask. Format: %x</p>
 <p>Defined on file <a class="reference internal" href="#abi-file-testing-sysfs-bus-thunderbolt"><span class="std std-ref">sysfs-bus-thunderbolt</span></a></p>
 <p>This contains XDomain protocol version the XDomain
 service supports.</p>
-<table class="docutils align-default" id="abi-sys-bus-thunderbolt-devices-xdomain-rx-lanes">
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<tbody>
-<tr class="row-odd"><td><p><strong>/sys/bus/thunderbolt/devices/&lt;xdomain&gt;/rx_lanes</strong></p></td>
-</tr>
-</tbody>
-</table>
-<p>Defined on file <a class="reference internal" href="#abi-file-testing-sysfs-bus-thunderbolt"><span class="std std-ref">sysfs-bus-thunderbolt</span></a></p>
-<p>This attribute reports the number of RX lanes the XDomain
-is using simultaneously through its upstream port.</p>
-<table class="docutils align-default" id="abi-sys-bus-thunderbolt-devices-xdomain-rx-speed">
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<tbody>
-<tr class="row-odd"><td><p><strong>/sys/bus/thunderbolt/devices/&lt;xdomain&gt;/rx_speed</strong></p></td>
-</tr>
-</tbody>
-</table>
-<p>Defined on file <a class="reference internal" href="#abi-file-testing-sysfs-bus-thunderbolt"><span class="std std-ref">sysfs-bus-thunderbolt</span></a></p>
-<p>This attribute reports the XDomain RX speed per lane.
-All RX lanes run at the same speed.</p>
-<table class="docutils align-default" id="abi-sys-bus-thunderbolt-devices-xdomain-tx-lanes">
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<tbody>
-<tr class="row-odd"><td><p><strong>/sys/bus/thunderbolt/devices/&lt;xdomain&gt;/tx_lanes</strong></p></td>
-</tr>
-</tbody>
-</table>
-<p>Defined on file <a class="reference internal" href="#abi-file-testing-sysfs-bus-thunderbolt"><span class="std std-ref">sysfs-bus-thunderbolt</span></a></p>
-<p>This attribute reports number of TX lanes the XDomain
-is using simultaneously through its upstream port.</p>
-<table class="docutils align-default" id="abi-sys-bus-thunderbolt-devices-xdomain-tx-speed">
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<tbody>
-<tr class="row-odd"><td><p><strong>/sys/bus/thunderbolt/devices/&lt;xdomain&gt;/tx_speed</strong></p></td>
-</tr>
-</tbody>
-</table>
-<p>Defined on file <a class="reference internal" href="#abi-file-testing-sysfs-bus-thunderbolt"><span class="std std-ref">sysfs-bus-thunderbolt</span></a></p>
-<p>This attribute reports the XDomain TX speed per lane.
-All TX lanes run at the same speed.</p>
 <table class="docutils align-default" id="abi-sys-bus-typec-devices-active">
 <colgroup>
 <col style="width: 100%" />
@@ -24961,10 +24925,7 @@ the requested polling interval of the corresponding devfreq
 object. The values are represented in ms. If the value is
 less than 1 jiffy, it is considered to be 0, which means
 no polling. This value is meaningless if the governor is
-not polling; thus. If the governor is not using
-devfreq-provided central polling
-(/sys/class/devfreq/…/central_polling is 0), this value
-may be useless.</p>
+not polling.</p>
 <p>A list of governors that support the node:
 - simple_ondmenad
 - tegra_actmon</p>
@@ -42043,6 +42004,48 @@ Its default value is “be,3”, which means “BE” I/O class and
 I/O priority “3”. We can select the class between “rt” and “be”,
 and set the I/O priority within valid range of it. “,” delimiter
 is necessary in between I/O class and priority number.</p>
+<table class="docutils align-default" id="abi-sys-fs-f2fs-disk-compr-new-inode">
+<colgroup>
+<col style="width: 100%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><strong>/sys/fs/f2fs/&lt;disk&gt;/compr_new_inode</strong></p></td>
+</tr>
+</tbody>
+</table>
+<p>Defined on file <a class="reference internal" href="#abi-file-testing-sysfs-fs-f2fs"><span class="std std-ref">sysfs-fs-f2fs</span></a></p>
+<p>Show the count of inode newly enabled for compression since mount.
+Note that when the compression is disabled for the files, this count
+doesn’t decrease. If you write “0” here, you can initialize
+compr_new_inode to “0”.</p>
+<table class="docutils align-default" id="abi-sys-fs-f2fs-disk-compr-saved-block">
+<colgroup>
+<col style="width: 100%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><strong>/sys/fs/f2fs/&lt;disk&gt;/compr_saved_block</strong></p></td>
+</tr>
+</tbody>
+</table>
+<p>Defined on file <a class="reference internal" href="#abi-file-testing-sysfs-fs-f2fs"><span class="std std-ref">sysfs-fs-f2fs</span></a></p>
+<p>Show the saved block count with compression since mount. Note
+that when the compressed blocks are deleted, this count doesn’t
+decrease. If you write “0” here, you can initialize
+compr_written_block and compr_saved_block to “0”.</p>
+<table class="docutils align-default" id="abi-sys-fs-f2fs-disk-compr-written-block">
+<colgroup>
+<col style="width: 100%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><strong>/sys/fs/f2fs/&lt;disk&gt;/compr_written_block</strong></p></td>
+</tr>
+</tbody>
+</table>
+<p>Defined on file <a class="reference internal" href="#abi-file-testing-sysfs-fs-f2fs"><span class="std std-ref">sysfs-fs-f2fs</span></a></p>
+<p>Show the block count written after compression since mount. Note
+that when the compressed blocks are deleted, this count doesn’t
+decrease. If you write “0” here, you can initialize
+compr_written_block and compr_saved_block to “0”.</p>
 <table class="docutils align-default" id="abi-sys-fs-f2fs-disk-cp-background-calls">
 <colgroup>
 <col style="width: 100%" />
@@ -49475,10 +49478,10 @@ modification.</p>
 <li><p><a class="reference internal" href="#abi-sys-bus-iio-devices-iio-devicex-in-accel-x-calibbias"><span class="std std-ref">/sys/bus/iio/devices/iio:deviceX/in_anglvel_x_calibbias</span></a></p></li>
 <li><p><a class="reference internal" href="#abi-sys-bus-iio-devices-iio-devicex-in-accel-x-calibbias"><span class="std std-ref">/sys/bus/iio/devices/iio:deviceX/in_anglvel_y_calibbias</span></a></p></li>
 <li><p><a class="reference internal" href="#abi-sys-bus-iio-devices-iio-devicex-in-accel-x-calibbias"><span class="std std-ref">/sys/bus/iio/devices/iio:deviceX/in_anglvel_z_calibbias</span></a></p></li>
-<li><p><a class="reference internal" href="#abi-sys-bus-iio-devices-iio-devicex-in-accel-x-calibbiasi"><span class="std std-ref">/sys/bus/iio/devices/iio:deviceX/in_illuminance0_calibbias</span></a></p></li>
-<li><p><a class="reference internal" href="#abi-sys-bus-iio-devices-iio-devicex-in-accel-x-calibbiasi"><span class="std std-ref">/sys/bus/iio/devices/iio:deviceX/in_proximity0_calibbias</span></a></p></li>
-<li><p><a class="reference internal" href="#abi-sys-bus-iio-devices-iio-devicex-in-accel-x-calibbiasi"><span class="std std-ref">/sys/bus/iio/devices/iio:deviceX/in_pressureY_calibbias</span></a></p></li>
-<li><p><a class="reference internal" href="#abi-sys-bus-iio-devices-iio-devicex-in-accel-x-calibbiasi"><span class="std std-ref">/sys/bus/iio/devices/iio:deviceX/in_pressure_calibbias</span></a></p></li>
+<li><p><a class="reference internal" href="#abi-sys-bus-iio-devices-iio-devicex-in-accel-x-calibbiase"><span class="std std-ref">/sys/bus/iio/devices/iio:deviceX/in_illuminance0_calibbias</span></a></p></li>
+<li><p><a class="reference internal" href="#abi-sys-bus-iio-devices-iio-devicex-in-accel-x-calibbiase"><span class="std std-ref">/sys/bus/iio/devices/iio:deviceX/in_proximity0_calibbias</span></a></p></li>
+<li><p><a class="reference internal" href="#abi-sys-bus-iio-devices-iio-devicex-in-accel-x-calibbiase"><span class="std std-ref">/sys/bus/iio/devices/iio:deviceX/in_pressureY_calibbias</span></a></p></li>
+<li><p><a class="reference internal" href="#abi-sys-bus-iio-devices-iio-devicex-in-accel-x-calibbiase"><span class="std std-ref">/sys/bus/iio/devices/iio:deviceX/in_pressure_calibbias</span></a></p></li>
 <li><p><a class="reference internal" href="#abi-sys-bus-iio-devices-iio-devicex-in-voltagey-calibscale"><span class="std std-ref">/sys/bus/iio/devices/iio:deviceX/in_voltageY_calibscale</span></a></p></li>
 <li><p><a class="reference internal" href="#abi-sys-bus-iio-devices-iio-devicex-in-voltagey-calibscale"><span class="std std-ref">/sys/bus/iio/devices/iio:deviceX/in_voltageY_supply_calibscale</span></a></p></li>
 <li><p><a class="reference internal" href="#abi-sys-bus-iio-devices-iio-devicex-in-voltagey-calibscale"><span class="std std-ref">/sys/bus/iio/devices/iio:deviceX/in_voltageY_i_calibscale</span></a></p></li>
@@ -50904,10 +50907,6 @@ saw any problems).</p>
 <span id="abi-file-testing-sysfs-bus-thunderbolt"></span><h2>File /home/ANT.AMAZON.COM/sjpark/linux/testing/sysfs-bus-thunderbolt<a class="headerlink" href="#file-home-ant-amazon-com-sjpark-linux-testing-sysfs-bus-thunderbolt" title="Permalink to this headline">¶</a></h2>
 <p>Has the following ABI:</p>
 <ul class="simple">
-<li><p><a class="reference internal" href="#abi-sys-bus-thunderbolt-devices-xdomain-rx-speed"><span class="std std-ref">/sys/bus/thunderbolt/devices/&lt;xdomain&gt;/rx_speed</span></a></p></li>
-<li><p><a class="reference internal" href="#abi-sys-bus-thunderbolt-devices-xdomain-rx-lanes"><span class="std std-ref">/sys/bus/thunderbolt/devices/&lt;xdomain&gt;/rx_lanes</span></a></p></li>
-<li><p><a class="reference internal" href="#abi-sys-bus-thunderbolt-devices-xdomain-tx-speed"><span class="std std-ref">/sys/bus/thunderbolt/devices/&lt;xdomain&gt;/tx_speed</span></a></p></li>
-<li><p><a class="reference internal" href="#abi-sys-bus-thunderbolt-devices-xdomain-tx-lanes"><span class="std std-ref">/sys/bus/thunderbolt/devices/&lt;xdomain&gt;/tx_lanes</span></a></p></li>
 <li><p><a class="reference internal" href="#abi-sys-bus-thunderbolt-devices-domainx-boot-acl"><span class="std std-ref">/sys/bus/thunderbolt/devices/…/domainX/boot_acl</span></a></p></li>
 <li><p><a class="reference internal" href="#abi-sys-bus-thunderbolt-devices-domainx-deauthorization"><span class="std std-ref">/sys/bus/thunderbolt/devices/…/domainX/deauthorization</span></a></p></li>
 <li><p><a class="reference internal" href="#abi-sys-bus-thunderbolt-devices-domainx-iommu-dma-protection"><span class="std std-ref">/sys/bus/thunderbolt/devices/…/domainX/iommu_dma_protection</span></a></p></li>
@@ -50918,6 +50917,7 @@ saw any problems).</p>
 <li><p><a class="reference internal" href="#abi-sys-bus-thunderbolt-devices-key"><span class="std std-ref">/sys/bus/thunderbolt/devices/…/key</span></a></p></li>
 <li><p><a class="reference internal" href="#abi-sys-bus-thunderbolt-devices-device"><span class="std std-ref">/sys/bus/thunderbolt/devices/…/device</span></a></p></li>
 <li><p><a class="reference internal" href="#abi-sys-bus-thunderbolt-devices-device-name"><span class="std std-ref">/sys/bus/thunderbolt/devices/…/device_name</span></a></p></li>
+<li><p><a class="reference internal" href="#abi-sys-bus-thunderbolt-devices-maxhopid"><span class="std std-ref">/sys/bus/thunderbolt/devices/…/maxhopid</span></a></p></li>
 <li><p><a class="reference internal" href="#abi-sys-bus-thunderbolt-devices-rx-speed"><span class="std std-ref">/sys/bus/thunderbolt/devices/…/rx_speed</span></a></p></li>
 <li><p><a class="reference internal" href="#abi-sys-bus-thunderbolt-devices-rx-lanes"><span class="std std-ref">/sys/bus/thunderbolt/devices/…/rx_lanes</span></a></p></li>
 <li><p><a class="reference internal" href="#abi-sys-bus-thunderbolt-devices-tx-speed"><span class="std std-ref">/sys/bus/thunderbolt/devices/…/tx_speed</span></a></p></li>
@@ -53458,6 +53458,9 @@ sysfs: (&lt;devid&gt; is in the format major:minor)</p>
 <li><p><a class="reference internal" href="#abi-sys-fs-f2fs-disk-stat-sb-status"><span class="std std-ref">/sys/fs/f2fs/&lt;disk&gt;/stat/sb_status</span></a></p></li>
 <li><p><a class="reference internal" href="#abi-sys-fs-f2fs-disk-ckpt-thread-ioprio"><span class="std std-ref">/sys/fs/f2fs/&lt;disk&gt;/ckpt_thread_ioprio</span></a></p></li>
 <li><p><a class="reference internal" href="#abi-sys-fs-f2fs-disk-ovp-segments"><span class="std std-ref">/sys/fs/f2fs/&lt;disk&gt;/ovp_segments</span></a></p></li>
+<li><p><a class="reference internal" href="#abi-sys-fs-f2fs-disk-compr-written-block"><span class="std std-ref">/sys/fs/f2fs/&lt;disk&gt;/compr_written_block</span></a></p></li>
+<li><p><a class="reference internal" href="#abi-sys-fs-f2fs-disk-compr-saved-block"><span class="std std-ref">/sys/fs/f2fs/&lt;disk&gt;/compr_saved_block</span></a></p></li>
+<li><p><a class="reference internal" href="#abi-sys-fs-f2fs-disk-compr-new-inode"><span class="std std-ref">/sys/fs/f2fs/&lt;disk&gt;/compr_new_inode</span></a></p></li>
 </ul>
 </div>
 <div class="section" id="file-home-ant-amazon-com-sjpark-linux-testing-sysfs-fs-nilfs2">

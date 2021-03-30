@@ -60,7 +60,7 @@
             
             
               <div class="version">
-                5.10.0
+                5.12.0-rc4-mm1
               </div>
             
           
@@ -156,7 +156,7 @@
            <div itemprop="articleBody">
             
   <div class="section" id="control-group-v2">
-<h1>Control Group v2<a class="headerlink" href="#control-group-v2" title="Permalink to this headline">¶</a></h1>
+<span id="cgroup-v2"></span><h1>Control Group v2<a class="headerlink" href="#control-group-v2" title="Permalink to this headline">¶</a></h1>
 <dl class="field-list simple">
 <dt class="field-odd">Date</dt>
 <dd class="field-odd"><p>October, 2015</p>
@@ -243,26 +243,21 @@ and experimenting easier, the kernel parameter cgroup_no_v1= allows
 disabling controllers in v1 and make them always available in v2.</p>
 <p>cgroup v2 currently supports the following mount options.</p>
 <blockquote>
-<div><p>nsdelegate</p>
-<blockquote>
-<div><p>Consider cgroup namespaces as delegation boundaries.  This
+<div><dl class="simple">
+<dt>nsdelegate</dt><dd><p>Consider cgroup namespaces as delegation boundaries.  This
 option is system wide and can only be set on mount or modified
 through remount from the init namespace.  The mount option is
 ignored on non-init namespace mounts.  Please refer to the
 Delegation section for details.</p>
-</div></blockquote>
-<p>memory_localevents</p>
-<blockquote>
-<div><p>Only populate memory.events with data for the current cgroup,
+</dd>
+<dt>memory_localevents</dt><dd><p>Only populate memory.events with data for the current cgroup,
 and not any subtrees. This is legacy behaviour, the default
 behaviour without this option is to include subtree counts.
 This option is system wide and can only be set on mount or
 modified through remount from the init namespace. The mount
 option is ignored on non-init namespace mounts.</p>
-</div></blockquote>
-<p>memory_recursiveprot</p>
-<blockquote>
-<div><p>Recursively apply memory.min and memory.low protection to
+</dd>
+<dt>memory_recursiveprot</dt><dd><p>Recursively apply memory.min and memory.low protection to
 entire subtrees, without requiring explicit downward
 propagation into leaf cgroups.  This allows protecting entire
 subtrees from one another, while retaining free competition
@@ -270,7 +265,8 @@ within those subtrees.  This should have been the default
 behavior but is a mount-option to avoid regressing setups
 relying on the original semantics (e.g. specifying bogusly
 high ‘bypass’ protection values at higher tree levels).</p>
-</div></blockquote>
+</dd>
+</dl>
 </div></blockquote>
 </div>
 <div class="section" id="organizing-processes-and-threads">
@@ -775,9 +771,8 @@ generated on the file.</p></li>
 <h3>Core Interface Files<a class="headerlink" href="#core-interface-files" title="Permalink to this headline">¶</a></h3>
 <p>All cgroup core files are prefixed with “cgroup.”</p>
 <blockquote>
-<div><p>cgroup.type</p>
-<blockquote>
-<div><p>A read-write single value file which exists on non-root
+<div><dl>
+<dt>cgroup.type</dt><dd><p>A read-write single value file which exists on non-root
 cgroups.</p>
 <p>When read, it indicates the current type of the cgroup, which
 can be one of the following values.</p>
@@ -793,8 +788,7 @@ threaded subtree.</p></li>
 </ul>
 <p>A cgroup can be turned into a threaded cgroup by writing
 “threaded” to this file.</p>
-</div></blockquote>
-<dl>
+</dd>
 <dt>cgroup.procs</dt><dd><p>A read-write new-line separated values file which exists on
 all cgroups.</p>
 <p>When read, it lists the PIDs of all processes which belong to
@@ -922,7 +916,7 @@ create new sub-cgroups.</p>
 <div class="section" id="controllers">
 <h2>Controllers<a class="headerlink" href="#controllers" title="Permalink to this headline">¶</a></h2>
 <div class="section" id="cpu">
-<h3>CPU<a class="headerlink" href="#cpu" title="Permalink to this headline">¶</a></h3>
+<span id="cgroup-v2-cpu"></span><h3>CPU<a class="headerlink" href="#cpu" title="Permalink to this headline">¶</a></h3>
 <p>The “cpu” controllers regulates distribution of CPU cycles.  This
 controller implements weight and absolute bandwidth limit models for
 normal scheduling policy and absolute bandwidth allocation model for
@@ -982,7 +976,7 @@ The default is “max 100000”.</p>
 $PERIOD duration.  “max” for $MAX indicates no limit.  If only
 one number is written, $MAX is updated.</p>
 </dd>
-<dt>cpu.pressure</dt><dd><p>A read-only nested-key file which exists on non-root cgroups.</p>
+<dt>cpu.pressure</dt><dd><p>A read-write nested-keyed file.</p>
 <p>Shows pressure stall information for CPU. See
 <a class="reference internal" href="../accounting/psi.html#psi"><span class="std std-ref"><a class="reference internal" href="../accounting/psi.html"><span class="doc">PSI - Pressure Stall Information</span></a></span></a> for details.</p>
 </dd>
@@ -1167,9 +1161,9 @@ on the state and past events of the memory management system.</p>
 <p>The entries are ordered to be human readable, and new entries
 can show up in the middle. Don’t rely on items remaining in a
 fixed position; use the keys to look up specific values!</p>
-<p>If the entry has no per-node counter(or not show in the
-mempry.numa_stat). We use ‘npn’(non-per-node) as the tag
-to indicate that it will not show in the mempry.numa_stat.</p>
+<p>If the entry has no per-node counter (or not show in the
+memory.numa_stat). We use ‘npn’ (non-per-node) as the tag
+to indicate that it will not show in the memory.numa_stat.</p>
 <blockquote>
 <div><dl>
 <dt>anon</dt><dd><p>Amount of memory used in anonymous mappings such as
@@ -1180,10 +1174,12 @@ including tmpfs and shared memory.</p>
 </dd>
 <dt>kernel_stack</dt><dd><p>Amount of memory allocated to kernel stacks.</p>
 </dd>
-<dt>percpu(npn)</dt><dd><p>Amount of memory used for storing per-cpu kernel
+<dt>pagetables</dt><dd><p>Amount of memory allocated for page tables.</p>
+</dd>
+<dt>percpu (npn)</dt><dd><p>Amount of memory used for storing per-cpu kernel
 data structures.</p>
 </dd>
-<dt>sock(npn)</dt><dd><p>Amount of memory used in network transmission buffers</p>
+<dt>sock (npn)</dt><dd><p>Amount of memory used in network transmission buffers</p>
 </dd>
 <dt>shmem</dt><dd><p>Amount of cached filesystem data that is swap-backed,
 such as tmpfs, shm segments, shared anonymous mmap()s</p>
@@ -1196,7 +1192,16 @@ not yet written back to disk</p>
 <dt>file_writeback</dt><dd><p>Amount of cached filesystem data that was modified and
 is currently being written back to disk</p>
 </dd>
+<dt>swapcached</dt><dd><p>Amount of swap cached in memory. The swapcache is accounted
+against both memory and swap usage.</p>
+</dd>
 <dt>anon_thp</dt><dd><p>Amount of memory used in anonymous mappings backed by
+transparent hugepages</p>
+</dd>
+<dt>file_thp</dt><dd><p>Amount of cached filesystem data backed by transparent
+hugepages</p>
+</dd>
+<dt>shmem_thp</dt><dd><p>Amount of shm, tmpfs, shared anonymous mmap()s backed by
 transparent hugepages</p>
 </dd>
 <dt>inactive_anon, active_anon, inactive_file, active_file, unevictable</dt><dd><p>Amount of memory, swap-backed and filesystem-backed,
@@ -1213,7 +1218,7 @@ dentries and inodes.</p>
 <dt>slab_unreclaimable</dt><dd><p>Part of “slab” that cannot be reclaimed on memory
 pressure.</p>
 </dd>
-<dt>slab(npn)</dt><dd><p>Amount of memory used for storing in-kernel data
+<dt>slab (npn)</dt><dd><p>Amount of memory used for storing in-kernel data
 structures.</p>
 </dd>
 <dt>workingset_refault_anon</dt><dd><p>Number of refaults of previously evicted anonymous pages.</p>
@@ -1233,29 +1238,29 @@ active workingset before they got reclaimed.</p>
 </dd>
 <dt>workingset_nodereclaim</dt><dd><p>Number of times a shadow node has been reclaimed</p>
 </dd>
-<dt>pgfault(npn)</dt><dd><p>Total number of page faults incurred</p>
+<dt>pgfault (npn)</dt><dd><p>Total number of page faults incurred</p>
 </dd>
-<dt>pgmajfault(npn)</dt><dd><p>Number of major page faults incurred</p>
+<dt>pgmajfault (npn)</dt><dd><p>Number of major page faults incurred</p>
 </dd>
-<dt>pgrefill(npn)</dt><dd><p>Amount of scanned pages (in an active LRU list)</p>
+<dt>pgrefill (npn)</dt><dd><p>Amount of scanned pages (in an active LRU list)</p>
 </dd>
-<dt>pgscan(npn)</dt><dd><p>Amount of scanned pages (in an inactive LRU list)</p>
+<dt>pgscan (npn)</dt><dd><p>Amount of scanned pages (in an inactive LRU list)</p>
 </dd>
-<dt>pgsteal(npn)</dt><dd><p>Amount of reclaimed pages</p>
+<dt>pgsteal (npn)</dt><dd><p>Amount of reclaimed pages</p>
 </dd>
-<dt>pgactivate(npn)</dt><dd><p>Amount of pages moved to the active LRU list</p>
+<dt>pgactivate (npn)</dt><dd><p>Amount of pages moved to the active LRU list</p>
 </dd>
-<dt>pgdeactivate(npn)</dt><dd><p>Amount of pages moved to the inactive LRU list</p>
+<dt>pgdeactivate (npn)</dt><dd><p>Amount of pages moved to the inactive LRU list</p>
 </dd>
-<dt>pglazyfree(npn)</dt><dd><p>Amount of pages postponed to be freed under memory pressure</p>
+<dt>pglazyfree (npn)</dt><dd><p>Amount of pages postponed to be freed under memory pressure</p>
 </dd>
-<dt>pglazyfreed(npn)</dt><dd><p>Amount of reclaimed lazyfree pages</p>
+<dt>pglazyfreed (npn)</dt><dd><p>Amount of reclaimed lazyfree pages</p>
 </dd>
-<dt>thp_fault_alloc(npn)</dt><dd><p>Number of transparent hugepages which were allocated to satisfy
+<dt>thp_fault_alloc (npn)</dt><dd><p>Number of transparent hugepages which were allocated to satisfy
 a page fault. This counter is not present when CONFIG_TRANSPARENT_HUGEPAGE
 is not set.</p>
 </dd>
-<dt>thp_collapse_alloc(npn)</dt><dd><p>Number of transparent hugepages which were allocated to allow
+<dt>thp_collapse_alloc (npn)</dt><dd><p>Number of transparent hugepages which were allocated to allow
 collapsing an existing range of pages. This counter is not
 present when CONFIG_TRANSPARENT_HUGEPAGE is not set.</p>
 </dd>
@@ -1327,7 +1332,7 @@ entries are reclaimed gradually and the swap usage may stay
 higher than the limit for an extended period of time.  This
 reduces the impact on the workload and memory management.</p>
 </dd>
-<dt>memory.pressure</dt><dd><p>A read-only nested-key file which exists on non-root cgroups.</p>
+<dt>memory.pressure</dt><dd><p>A read-only nested-keyed file.</p>
 <p>Shows pressure stall information for memory. See
 <a class="reference internal" href="../accounting/psi.html#psi"><span class="std std-ref"><a class="reference internal" href="../accounting/psi.html"><span class="doc">PSI - Pressure Stall Information</span></a></span></a> for details.</p>
 </dd>
@@ -1418,7 +1423,7 @@ The following nested keys are defined.</p>
 </pre></div>
 </div>
 </dd>
-<dt>io.cost.qos</dt><dd><p>A read-write nested-keyed file with exists only on the root
+<dt>io.cost.qos</dt><dd><p>A read-write nested-keyed file which exists only on the root
 cgroup.</p>
 <p>This file configures the Quality of Service of the IO cost
 model based controller (CONFIG_BLK_CGROUP_IOCOST) which
@@ -1490,7 +1495,7 @@ or setting any of the percentile and latency parameters puts
 it into “user” mode and disables the automatic changes.  The
 automatic mode can be restored by setting “ctrl” to “auto”.</p>
 </dd>
-<dt>io.cost.model</dt><dd><p>A read-write nested-keyed file with exists only on the root
+<dt>io.cost.model</dt><dd><p>A read-write nested-keyed file which exists only on the root
 cgroup.</p>
 <p>This file configures the cost model of the IO cost model based
 controller (CONFIG_BLK_CGROUP_IOCOST) which currently
@@ -1616,7 +1621,7 @@ delayed if limit is reached.  Temporary bursts are allowed.</p>
 </pre></div>
 </div>
 </dd>
-<dt>io.pressure</dt><dd><p>A read-only nested-key file which exists on non-root cgroups.</p>
+<dt>io.pressure</dt><dd><p>A read-only nested-keyed file.</p>
 <p>Shows pressure stall information for IO. See
 <a class="reference internal" href="../accounting/psi.html#psi"><span class="std std-ref"><a class="reference internal" href="../accounting/psi.html"><span class="doc">PSI - Pressure Stall Information</span></a></span></a> for details.</p>
 </dd>
@@ -1871,8 +1876,22 @@ case, it will be treated just like an empty “cpuset.mems”.</p>
 cpuset-enabled cgroups.  This flag is owned by the parent cgroup
 and is not delegatable.</p>
 <p>It accepts only the following input values when written to.</p>
-<p>“root”   - a partition root
-“member” - a non-root member of a partition</p>
+<blockquote>
+<div><table class="docutils align-default">
+<colgroup>
+<col style="width: 20%" />
+<col style="width: 80%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p>“root”</p></td>
+<td><p>a partition root</p></td>
+</tr>
+<tr class="row-even"><td><p>“member”</p></td>
+<td><p>a non-root member of a partition</p></td>
+</tr>
+</tbody>
+</table>
+</div></blockquote>
 <p>When set to be a partition root, the current cgroup is the
 root of a new partition or scheduling domain that comprises
 itself and all its descendants except those that are separate
@@ -1907,9 +1926,25 @@ children’s “cpuset.cpus” values.</p>
 “cpuset.cpus” or cpu hotplug can cause the state of the partition
 root to change.  On read, the “cpuset.sched.partition” file
 can show the following values.</p>
-<p>“member”       Non-root member of a partition
-“root”         Partition root
-“root invalid” Invalid partition root</p>
+<blockquote>
+<div><table class="docutils align-default">
+<colgroup>
+<col style="width: 32%" />
+<col style="width: 68%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p>“member”</p></td>
+<td><p>Non-root member of a partition</p></td>
+</tr>
+<tr class="row-even"><td><p>“root”</p></td>
+<td><p>Partition root</p></td>
+</tr>
+<tr class="row-odd"><td><p>“root invalid”</p></td>
+<td><p>Invalid partition root</p></td>
+</tr>
+</tbody>
+</table>
+</div></blockquote>
 <p>It is a partition root if the first 2 partition root conditions
 above are true and at least one CPU from “cpuset.cpus” is
 granted by the parent cgroup.</p>
@@ -1949,7 +1984,7 @@ structure, which describes the device access attempt: access type
 If the program returns 0, the attempt fails with -EPERM, otherwise
 it succeeds.</p>
 <p>An example of BPF_CGROUP_DEVICE program may be found in the kernel
-source tree in the tools/testing/selftests/bpf/dev_cgroup.c file.</p>
+source tree in the tools/testing/selftests/bpf/progs/dev_cgroup.c file.</p>
 </div>
 <div class="section" id="rdma">
 <h3>RDMA<a class="headerlink" href="#rdma" title="Permalink to this headline">¶</a></h3>
@@ -2078,7 +2113,7 @@ the cgroup namespace.</p>
 complete path of the cgroup of a process.  In a container setup where
 a set of cgroups and namespaces are intended to isolate processes the
 “/proc/$PID/cgroup” file may leak potential system level information
-to the isolated processes.  For Example:</p>
+to the isolated processes.  For example:</p>
 <div class="highlight-none notranslate"><div class="highlight"><pre><span></span># cat /proc/self/cgroup
 0::/batchjobs/container_id1
 </pre></div>

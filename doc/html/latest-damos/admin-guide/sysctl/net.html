@@ -60,7 +60,7 @@
             
             
               <div class="version">
-                5.10.0
+                5.12.0-rc4-mm1
               </div>
             
           
@@ -177,7 +177,7 @@
 <li><p>Shen Feng &lt;<a class="reference external" href="mailto:shen&#37;&#52;&#48;cn&#46;fujitsu&#46;com">shen<span>&#64;</span>cn<span>&#46;</span>fujitsu<span>&#46;</span>com</a>&gt;</p></li>
 </ul>
 </div></blockquote>
-<p>For general info and legal blurb, please look in index.rst.</p>
+<p>For general info and legal blurb, please look in <a class="reference internal" href="index.html"><span class="doc">Documentation for /proc/sys</span></a>.</p>
 <hr class="docutils" />
 <p>This file contains the documentation for the sysctl files in
 /proc/sys/net</p>
@@ -488,6 +488,16 @@ the target CPU processes packets. It might give some delay on timestamps, but
 permit to distribute the load on several cpus.</p>
 <p>If set to 1 (default), timestamps are sampled as soon as possible, before
 queueing.</p>
+</div>
+<div class="section" id="netdev-unregister-timeout-secs">
+<h3>netdev_unregister_timeout_secs<a class="headerlink" href="#netdev-unregister-timeout-secs" title="Permalink to this headline">¶</a></h3>
+<p>Unregister network device timeout in seconds.
+This option controls the timeout (in seconds) used to issue a warning while
+waiting for a network device refcount to drop to 0 during device
+unregistration. A lower value may be useful during bisection to detect
+a leaked reference faster. A larger value may be useful to prevent false
+warnings on slow/loaded systems.
+Default value is 10, minimum 1, maximum 3600.</p>
 </div>
 <div class="section" id="optmem-max">
 <h3>optmem_max<a class="headerlink" href="#optmem-max" title="Permalink to this headline">¶</a></h3>

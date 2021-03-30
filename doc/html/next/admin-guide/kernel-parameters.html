@@ -60,7 +60,7 @@
             
             
               <div class="version">
-                5.12.0-rc3-mm1
+                5.12.0-rc4-mm1
               </div>
             
           
@@ -2248,13 +2248,6 @@ bytes respectively. Such letter suffixes can also be entirely omitted:</p>
                         bypassed by not enabling DMAR with this option. In
                         this case, gfx device will use physical address for
                         DMA.
-                forcedac [X86-64]
-                        With this option iommu will not optimize to look
-                        for io virtual address below 32-bit forcing dual
-                        address cycle on pci bus for cards supporting greater
-                        than 32-bit addressing. The default is to look
-                        for translation below 32-bit and if not available
-                        then look in the higher range.
                 strict [Default Off]
                         With this option on every unmap_single operation will
                         result in a hardware IOTLB flush operation as opposed
@@ -2342,6 +2335,14 @@ bytes respectively. Such letter suffixes can also be entirely omitted:</p>
                 nopt            [X86]
                 nobypass        [PPC/POWERNV]
                         Disable IOMMU bypass, using IOMMU for PCI devices.
+
+        iommu.forcedac= [ARM64, X86] Control IOVA allocation for PCI devices.
+                        Format: { &quot;0&quot; | &quot;1&quot; }
+                        0 - Try to allocate a 32-bit DMA address first, before
+                          falling back to the full range if needed.
+                        1 - Allocate directly from the full usable range,
+                          forcing Dual Address Cycle for PCI cards supporting
+                          greater than 32-bit addressing.
 
         iommu.strict=   [ARM64] Configure TLB invalidation behaviour
                         Format: { &quot;0&quot; | &quot;1&quot; }
@@ -5285,6 +5286,10 @@ bytes respectively. Such letter suffixes can also be entirely omitted:</p>
 
         slram=          [HW,MTD]
 
+        slab_merge      [MM]
+                        Enable merging of slabs with similar size when the
+                        kernel is built without CONFIG_SLAB_MERGE_DEFAULT.
+
         slab_nomerge    [MM]
                         Disable merging of slabs with similar size. May be
                         necessary if there is some reason to distinguish
@@ -5331,6 +5336,9 @@ bytes respectively. Such letter suffixes can also be entirely omitted:</p>
                         Determines the minimum page order for slabs. Must be
                         lower than slub_max_order.
                         For more information see Documentation/vm/slub.rst.
+
+        slub_merge      [MM, SLUB]
+                        Same with slab_merge.
 
         slub_nomerge    [MM, SLUB]
                         Same with slab_nomerge. This is supported for legacy.

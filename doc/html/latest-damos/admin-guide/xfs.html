@@ -60,7 +60,7 @@
             
             
               <div class="version">
-                5.10.0
+                5.12.0-rc4-mm1
               </div>
             
           
@@ -429,6 +429,8 @@ with unused speculative preallocation runs. The scan
 removes unused preallocation from clean inodes and releases
 the unused space back to the free pool.</p>
 </dd>
+<dt>fs.xfs.speculative_cow_prealloc_lifetime</dt><dd><p>This is an alias for speculative_prealloc_lifetime.</p>
+</dd>
 <dt>fs.xfs.error_level            (Min: 0  Default: 3  Max: 11)</dt><dd><p>A volume knob for error reporting when internal errors occur.
 This will generate detailed messages &amp; backtraces for filesystem
 shutdowns, for example.  Current threshold values are:</p>
@@ -496,8 +498,8 @@ allocation groups when allocating extents for new files.</p>
 <h2>Deprecated Sysctls<a class="headerlink" href="#deprecated-sysctls" title="Permalink to this headline">¶</a></h2>
 <table class="docutils align-default">
 <colgroup>
-<col style="width: 63%" />
-<col style="width: 37%" />
+<col style="width: 73%" />
+<col style="width: 27%" />
 </colgroup>
 <thead>
 <tr class="row-odd"><th class="head"><p>Name</p></th>
@@ -509,6 +511,9 @@ allocation groups when allocating extents for new files.</p>
 <td><p>September 2025</p></td>
 </tr>
 <tr class="row-odd"><td><p>fs.xfs.irix_symlink_mode</p></td>
+<td><p>September 2025</p></td>
+</tr>
+<tr class="row-even"><td><p>fs.xfs.speculative_cow_prealloc_lifetime</p></td>
 <td><p>September 2025</p></td>
 </tr>
 </tbody>
@@ -649,6 +654,71 @@ the class and error context. For example, the default values for
 “metadata/ENODEV” are “0” rather than “-1” so that this error handler defaults
 to “fail immediately” behaviour. This is done because ENODEV is a fatal,
 unrecoverable error no matter how many times the metadata IO is retried.</p>
+</div>
+<div class="section" id="workqueue-concurrency">
+<h2>Workqueue Concurrency<a class="headerlink" href="#workqueue-concurrency" title="Permalink to this headline">¶</a></h2>
+<p>XFS uses kernel workqueues to parallelize metadata update processes.  This
+enables it to take advantage of storage hardware that can service many IO
+operations simultaneously.  This interface exposes internal implementation
+details of XFS, and as such is explicitly not part of any userspace API/ABI
+guarantee the kernel may give userspace.  These are undocumented features of
+the generic workqueue implementation XFS uses for concurrency, and they are
+provided here purely for diagnostic and tuning purposes and may change at any
+time in the future.</p>
+<p>The control knobs for a filesystem’s workqueues are organized by task at hand
+and the short name of the data device.  They all can be found in:</p>
+<blockquote>
+<div><p>/sys/bus/workqueue/devices/${task}!${device}</p>
+</div></blockquote>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 22%" />
+<col style="width: 78%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Task</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>xfs_iwalk-$pid</p></td>
+<td><p>Inode scans of the entire filesystem. Currently limited to
+mount time quotacheck.</p></td>
+</tr>
+<tr class="row-odd"><td><p>xfs-blockgc</p></td>
+<td><p>Background garbage collection of disk space that have been
+speculatively allocated beyond EOF or for staging copy on
+write operations.</p></td>
+</tr>
+</tbody>
+</table>
+<p>For example, the knobs for the quotacheck workqueue for /dev/nvme0n1 would be
+found in /sys/bus/workqueue/devices/xfs_iwalk-1111!nvme0n1/.</p>
+<p>The interesting knobs for XFS workqueues are as follows:</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 17%" />
+<col style="width: 83%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Knob</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>max_active</p></td>
+<td><p>Maximum number of background threads that can be started to
+run the work.</p></td>
+</tr>
+<tr class="row-odd"><td><p>cpumask</p></td>
+<td><p>CPUs upon which the threads are allowed to run.</p></td>
+</tr>
+<tr class="row-even"><td><p>nice</p></td>
+<td><p>Relative priority of scheduling the threads.  These are the
+same nice levels that can be applied to userspace processes.</p></td>
+</tr>
+</tbody>
+</table>
 </div>
 </div>
 

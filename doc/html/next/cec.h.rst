@@ -403,6 +403,7 @@ cec.h
      \* associated with the CEC adapter.
      \* @type\: connector type (if any)
      \* @drm\: drm connector info
+     \* @raw\: array to pad the union
      \*\/
     struct cec_connector_info \{
             \_\_u32 type;
@@ -460,7 +461,7 @@ cec.h
      \* struct cec_event - CEC event structure
      \* @ts\: the timestamp of when the event was sent.
      \* @event\: the event.
-     \* array.
+     \* @flags\: event flags.
      \* @state\_change\: the event payload for CEC\_EVENT\_STATE\_CHANGE.
      \* @lost\_msgs\: the event payload for CEC\_EVENT\_LOST\_MSGS.
      \* @raw\: array to pad the union.

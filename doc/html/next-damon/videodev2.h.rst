@@ -593,6 +593,7 @@ videodev2.h
     \#define \ :ref:`V4L2_PIX_FMT_YUV444 <v4l2-pix-fmt-yuv444>`  v4l2\_fourcc('Y', '4', '4', '4') \/\* 16  xxxxyyyy uuuuvvvv \*\/
     \#define \ :ref:`V4L2_PIX_FMT_YUV555 <v4l2-pix-fmt-yuv555>`  v4l2\_fourcc('Y', 'U', 'V', 'O') \/\* 16  YUV-5-5-5     \*\/
     \#define \ :ref:`V4L2_PIX_FMT_YUV565 <v4l2-pix-fmt-yuv565>`  v4l2\_fourcc('Y', 'U', 'V', 'P') \/\* 16  YUV-5-6-5     \*\/
+    \#define \ :ref:`V4L2_PIX_FMT_YUV24 <v4l2-pix-fmt-yuv24>`   v4l2\_fourcc('Y', 'U', 'V', '3') \/\* 24  YUV-8-8-8     \*\/
     \#define \ :ref:`V4L2_PIX_FMT_YUV32 <v4l2-pix-fmt-yuv32>`   v4l2\_fourcc('Y', 'U', 'V', '4') \/\* 32  YUV-8-8-8-8   \*\/
     \#define \ :ref:`V4L2_PIX_FMT_AYUV32 <v4l2-pix-fmt-ayuv32>`  v4l2\_fourcc('A', 'Y', 'U', 'V') \/\* 32  AYUV-8-8-8-8  \*\/
     \#define \ :ref:`V4L2_PIX_FMT_XYUV32 <v4l2-pix-fmt-xyuv32>`  v4l2\_fourcc('X', 'Y', 'U', 'V') \/\* 32  XYUV-8-8-8-8  \*\/
@@ -701,6 +702,7 @@ videodev2.h
     \#define \ :ref:`V4L2_PIX_FMT_VC1_ANNEX_G <v4l2-pix-fmt-vc1-annex-g>` v4l2\_fourcc('V', 'C', '1', 'G') \/\* SMPTE 421M Annex G compliant stream \*\/
     \#define \ :ref:`V4L2_PIX_FMT_VC1_ANNEX_L <v4l2-pix-fmt-vc1-annex-l>` v4l2\_fourcc('V', 'C', '1', 'L') \/\* SMPTE 421M Annex L compliant stream \*\/
     \#define \ :ref:`V4L2_PIX_FMT_VP8 <v4l2-pix-fmt-vp8>`      v4l2\_fourcc('V', 'P', '8', '0') \/\* VP8 \*\/
+    \#define \ :ref:`V4L2_PIX_FMT_VP8_FRAME <v4l2-pix-fmt-vp8-frame>` v4l2\_fourcc('V', 'P', '8', 'F') \/\* VP8 parsed frame \*\/
     \#define \ :ref:`V4L2_PIX_FMT_VP9 <v4l2-pix-fmt-vp9>`      v4l2\_fourcc('V', 'P', '9', '0') \/\* VP9 \*\/
     \#define \ :ref:`V4L2_PIX_FMT_HEVC <v4l2-pix-fmt-hevc>`     v4l2\_fourcc('H', 'E', 'V', 'C') \/\* HEVC aka H.265 \*\/
     \#define \ :ref:`V4L2_PIX_FMT_FWHT <v4l2-pix-fmt-fwht>`     v4l2\_fourcc('F', 'W', 'H', 'T') \/\* Fast Walsh Hadamard Transform (vicodec) \*\/
@@ -982,8 +984,10 @@ videodev2.h
      \*                      pointing to this plane
      \* @fd\:                 when memory is :c:type:`V4L2_MEMORY_DMABUF <v4l2_memory>`, a userspace file
      \*                      descriptor associated with this plane
+     \* @m\:                  union of @mem\_offset, @userptr and @fd
      \* @data\_offset\:        offset in the plane to the start of data; usually 0,
      \*                      unless there is a header in front of the data
+     \* @reserved\:           drivers and applications must zero this array
      \*
      \* Multi-planar buffers consist of one or more planes, e.g. an YCbCr buffer
      \* with two planes can have one plane for Y, and another for interleaved CbCr
@@ -1025,10 +1029,14 @@ videodev2.h
      \*              a userspace file descriptor associated with this buffer
      \* @planes\:     for multiplanar buffers; userspace pointer to the array of plane
      \*              info structs for this buffer
+     \* @m\:          union of @offset, @userptr, @planes and @fd
      \* @length\:     size in bytes of the buffer (NOT its payload) for single-plane
      \*              buffers (when type != \*\_MPLANE); number of elements in the
      \*              planes array for multi-plane buffers
+     \* @reserved2\:  drivers and applications must zero this field
      \* @request\_fd\: fd of the request that this buffer should use
+     \* @reserved\:   for backwards compatibility with applications that do not know
+     \*              about @request\_fd
      \*
      \* Contains data exchanged by application and driver using one of the Streaming
      \* I\/O methods.
@@ -1066,7 +1074,7 @@ videodev2.h
     \#ifndef \_\_KERNEL\_\_
     \/\*\*
      \* v4l2\_timeval\_to\_ns - Convert timeval to nanoseconds
-     \* @ts\:         pointer to the timeval variable to be converted
+     \* @tv\:         pointer to the timeval variable to be converted
      \*
      \* Returns the scalar nanosecond representation of the timeval
      \* parameter.
@@ -1127,6 +1135,7 @@ videodev2.h
      \* @flags\:      flags for newly created file, currently only O\_CLOEXEC is
      \*              supported, refer to manual of open syscall for more details
      \* @fd\:         file descriptor associated with DMABUF (set by driver)
+     \* @reserved\:   drivers and applications must zero this array
      \*
      \* Contains data used for exporting a video buffer as DMABUF file descriptor.
      \* The buffer is identified by a 'cookie' returned by \ :ref:`VIDIOC_QUERYBUF <vidioc_querybuf>`
@@ -1741,6 +1750,7 @@ videodev2.h
                     struct v4l2\_ctrl\_h264\_slice\_params \_\_user \*p\_h264\_slice\_params;
                     struct v4l2\_ctrl\_h264\_decode\_params \_\_user \*p\_h264\_decode\_params;
                     struct v4l2\_ctrl\_fwht\_params \_\_user \*p\_fwht\_params;
+                    struct v4l2\_ctrl\_vp8\_frame \_\_user \*p\_vp8\_frame;
                     void \_\_user \*ptr;
             \};
     \} \_\_attribute\_\_ ((packed));
@@ -1796,6 +1806,8 @@ videodev2.h
             :c:type:`V4L2_CTRL_TYPE_H264_PRED_WEIGHTS <v4l2_ctrl_type>`    = 0x0205,
 
             :c:type:`V4L2_CTRL_TYPE_FWHT_PARAMS <v4l2_ctrl_type>`          = 0x0220,
+
+            :c:type:`V4L2_CTRL_TYPE_VP8_FRAME <v4l2_ctrl_type>`            = 0x0240,
     \};
 
     \/\*  Used in the \ :ref:`VIDIOC_QUERYCTRL <vidioc_queryctrl>` ioctl for querying controls \*\/
@@ -2230,6 +2242,7 @@ videodev2.h
      \*                      this plane will be used
      \* @bytesperline\:       distance in bytes between the leftmost pixels in two
      \*                      adjacent lines
+     \* @reserved\:           drivers and applications must zero this array
      \*\/
     struct v4l2_plane_pix_format \{
             \_\_u32           sizeimage;
@@ -2248,8 +2261,10 @@ videodev2.h
      \* @num\_planes\:         number of planes for this format
      \* @flags\:              format flags (V4L2\_PIX\_FMT\_FLAG\_\*)
      \* @ycbcr\_enc\:          enum :c:type:`v4l2_ycbcr_encoding`\ , Y'CbCr encoding
+     \* @hsv\_enc\:            enum :c:type:`v4l2_hsv_encoding`\ , HSV encoding
      \* @quantization\:       enum :c:type:`v4l2_quantization`\ , colorspace quantization
      \* @xfer\_func\:          enum :c:type:`v4l2_xfer_func`\ , colorspace transfer function
+     \* @reserved\:           drivers and applications must zero this array
      \*\/
     struct v4l2_pix_format_mplane \{
             \_\_u32                           width;
@@ -2274,6 +2289,7 @@ videodev2.h
      \* struct v4l2_sdr_format - SDR format definition
      \* @pixelformat\:        little endian four character code (fourcc)
      \* @buffersize\:         maximum size in bytes required for data
+     \* @reserved\:           drivers and applications must zero this array
      \*\/
     struct v4l2_sdr_format \{
             \_\_u32                           pixelformat;
@@ -2300,6 +2316,8 @@ videodev2.h
      \* @vbi\:        raw VBI capture or output parameters
      \* @sliced\:     sliced VBI capture or output parameters
      \* @raw\_data\:   placeholder for future extensions and custom formats
+     \* @fmt\:        union of @pix, @pix\_mp, @win, @vbi, @sliced, @sdr, @meta
+     \*              and @raw\_data
      \*\/
     struct v4l2_format \{
             \_\_u32    type;

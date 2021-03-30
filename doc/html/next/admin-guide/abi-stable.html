@@ -60,7 +60,7 @@
             
             
               <div class="version">
-                5.12.0-rc3-mm1
+                5.12.0-rc4-mm1
               </div>
             
           
@@ -6677,6 +6677,46 @@ this file will not be present.</p>
 <p>This interface enables notification for thermal related events.
 The notification is in the form of a netlink event.</p>
 </div>
+<div class="section" id="audit-login-session-id">
+<h2>Audit Login Session ID<a class="headerlink" href="#audit-login-session-id" title="Permalink to this headline">¶</a></h2>
+<table class="docutils align-default" id="abi-audit-login-session-id">
+<colgroup>
+<col style="width: 100%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><strong>Audit Login Session ID</strong></p></td>
+</tr>
+</tbody>
+</table>
+<p>Defined on file <a class="reference internal" href="#abi-file-stable-procfs-audit-loginuid"><span class="std std-ref">procfs-audit_loginuid</span></a></p>
+<p>The /proc/$pid/sessionid pseudofile is read to get the
+audit login session ID of process $pid.  It is set
+automatically, serially assigned with each new login.</p>
+<p>Users:
+	audit and login applications</p>
+</div>
+<div class="section" id="audit-login-uid">
+<h2>Audit Login UID<a class="headerlink" href="#audit-login-uid" title="Permalink to this headline">¶</a></h2>
+<table class="docutils align-default" id="abi-audit-login-uid">
+<colgroup>
+<col style="width: 100%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><strong>Audit Login UID</strong></p></td>
+</tr>
+</tbody>
+</table>
+<p>Defined on file <a class="reference internal" href="#abi-file-stable-procfs-audit-loginuid"><span class="std std-ref">procfs-audit_loginuid</span></a></p>
+<p>The /proc/$pid/loginuid pseudofile is written to set and
+read to get the audit login UID of process $pid.  If it is
+unset, permissions are not needed to set it.  The accessor must
+have CAP_AUDIT_CONTROL in the initial user namespace to write
+it if it has been set.  It cannot be written again if
+AUDIT_FEATURE_LOGINUID_IMMUTABLE is enabled.  It cannot be
+unset if AUDIT_FEATURE_ONLY_UNSET_LOGINUID is enabled.</p>
+<p>Users:
+	audit and login applications</p>
+</div>
 <div class="section" id="the-kernel-syscall-interface">
 <h2>The kernel syscall interface<a class="headerlink" href="#the-kernel-syscall-interface" title="Permalink to this headline">¶</a></h2>
 <table class="docutils align-default" id="abi-the-kernel-syscall-interface">
@@ -6747,6 +6787,14 @@ that it is correct for their architecture.</p>
 <p>Has the following ABI:</p>
 <ul class="simple">
 <li><p><a class="reference internal" href="#abi-sys-fs-o2cb-was-sys-o2cb"><span class="std std-ref">/sys/fs/o2cb/ (was /sys/o2cb)</span></a></p></li>
+</ul>
+</div>
+<div class="section" id="file-home-ant-amazon-com-sjpark-linux-stable-procfs-audit-loginuid">
+<span id="abi-file-stable-procfs-audit-loginuid"></span><h2>File /home/ANT.AMAZON.COM/sjpark/linux/stable/procfs-audit_loginuid<a class="headerlink" href="#file-home-ant-amazon-com-sjpark-linux-stable-procfs-audit-loginuid" title="Permalink to this headline">¶</a></h2>
+<p>Has the following ABI:</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="#abi-audit-login-uid"><span class="std std-ref">Audit Login UID</span></a></p></li>
+<li><p><a class="reference internal" href="#abi-audit-login-session-id"><span class="std std-ref">Audit Login Session ID</span></a></p></li>
 </ul>
 </div>
 <div class="section" id="file-home-ant-amazon-com-sjpark-linux-stable-syscalls">

@@ -60,7 +60,7 @@
             
             
               <div class="version">
-                5.10.0
+                5.12.0-rc4-mm1
               </div>
             
           
@@ -297,15 +297,9 @@ and swap-out,</p></li>
 <div class="section" id="lru">
 <h2>8. LRU<a class="headerlink" href="#lru" title="Permalink to this headline">¶</a></h2>
 <blockquote>
-<div><p>Each memcg has its own private LRU. Now, its handling is under global
-VM’s control (means that it’s handled under global pgdat-&gt;lru_lock).
-Almost all routines around memcg’s LRU is called by global LRU’s
-list management functions under pgdat-&gt;lru_lock.</p>
-<p>A special function is mem_cgroup_isolate_pages(). This scans
-memcg’s private LRU and call __isolate_lru_page() to extract a page
-from LRU.</p>
-<p>(By __isolate_lru_page(), the page is removed from both of global and
-private LRU.)</p>
+<div><p>Each memcg has its own vector of LRUs (inactive anon, active anon,
+inactive file, active file, unevictable) of pages from each node,
+each LRU handled under a single lru_lock for that memcg and node.</p>
 </div></blockquote>
 </div>
 <div class="section" id="typical-tests">
@@ -383,13 +377,11 @@ move_task &quot;${G1_TASK}&quot; ${G2} &amp;
 <p>This is an easy way to test page migration, too.</p>
 </div></blockquote>
 </div>
-<div class="section" id="mkdir-rmdir">
-<h3>9.5 mkdir/rmdir<a class="headerlink" href="#mkdir-rmdir" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="nested-cgroups">
+<h3>9.5 nested cgroups<a class="headerlink" href="#nested-cgroups" title="Permalink to this headline">¶</a></h3>
 <blockquote>
-<div><p>When using hierarchy, mkdir/rmdir test should be done.
-Use tests like the following:</p>
-<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>echo 1 &gt;/opt/cgroup/01/memory/use_hierarchy
-mkdir /opt/cgroup/01/child_a
+<div><p>Use tests like the following for testing nested cgroups:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>mkdir /opt/cgroup/01/child_a
 mkdir /opt/cgroup/01/child_b
 
 set limit to 01.

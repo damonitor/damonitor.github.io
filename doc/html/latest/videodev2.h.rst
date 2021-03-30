@@ -228,9 +228,7 @@ videodev2.h
             :c:type:`V4L2_COLORSPACE_470_SYSTEM_M <v4l2_colorspace>`  = 5,
 
             \/\*
-             \* EBU Tech 3213 PAL\/SECAM colorspace. This only makes sense when
-             \* dealing with really old PAL\/SECAM recordings. Superseded by
-             \* SMPTE 170M.
+             \* EBU Tech 3213 PAL\/SECAM colorspace.
              \*\/
             :c:type:`V4L2_COLORSPACE_470_SYSTEM_BG <v4l2_colorspace>` = 6,
 
@@ -524,7 +522,7 @@ videodev2.h
 
     \/\*      Pixel format         FOURCC                          depth  Description  \*\/
 
-    \/\* RGB formats \*\/
+    \/\* RGB formats (1 or 2 bytes per pixel) \*\/
     \#define \ :ref:`V4L2_PIX_FMT_RGB332 <v4l2-pix-fmt-rgb332>`  v4l2\_fourcc('R', 'G', 'B', '1') \/\*  8  RGB-3-3-2     \*\/
     \#define \ :ref:`V4L2_PIX_FMT_RGB444 <v4l2-pix-fmt-rgb444>`  v4l2\_fourcc('R', '4', '4', '4') \/\* 16  xxxxrrrr ggggbbbb \*\/
     \#define \ :ref:`V4L2_PIX_FMT_ARGB444 <v4l2-pix-fmt-argb444>` v4l2\_fourcc('A', 'R', '1', '2') \/\* 16  aaaarrrr ggggbbbb \*\/
@@ -533,12 +531,6 @@ videodev2.h
     \#define \ :ref:`V4L2_PIX_FMT_RGBX444 <v4l2-pix-fmt-rgbx444>` v4l2\_fourcc('R', 'X', '1', '2') \/\* 16  rrrrgggg bbbbxxxx \*\/
     \#define \ :ref:`V4L2_PIX_FMT_ABGR444 <v4l2-pix-fmt-abgr444>` v4l2\_fourcc('A', 'B', '1', '2') \/\* 16  aaaabbbb ggggrrrr \*\/
     \#define \ :ref:`V4L2_PIX_FMT_XBGR444 <v4l2-pix-fmt-xbgr444>` v4l2\_fourcc('X', 'B', '1', '2') \/\* 16  xxxxbbbb ggggrrrr \*\/
-
-    \/\*
-     \* Originally this had 'BA12' as fourcc, but this clashed with the older
-     \* \ :ref:`V4L2_PIX_FMT_SGRBG12 <v4l2-pix-fmt-sgrbg12>` which inexplicably used that same fourcc.
-     \* So use 'GA12' instead for V4L2\_PIX\_FMT\_BGRA444.
-     \*\/
     \#define \ :ref:`V4L2_PIX_FMT_BGRA444 <v4l2-pix-fmt-bgra444>` v4l2\_fourcc('G', 'A', '1', '2') \/\* 16  bbbbgggg rrrraaaa \*\/
     \#define \ :ref:`V4L2_PIX_FMT_BGRX444 <v4l2-pix-fmt-bgrx444>` v4l2\_fourcc('B', 'X', '1', '2') \/\* 16  bbbbgggg rrrrxxxx \*\/
     \#define \ :ref:`V4L2_PIX_FMT_RGB555 <v4l2-pix-fmt-rgb555>`  v4l2\_fourcc('R', 'G', 'B', 'O') \/\* 16  RGB-5-5-5     \*\/
@@ -555,6 +547,8 @@ videodev2.h
     \#define \ :ref:`V4L2_PIX_FMT_ARGB555X <v4l2-pix-fmt-argb555x>` v4l2\_fourcc\_be('A', 'R', '1', '5') \/\* 16  ARGB-5-5-5 BE \*\/
     \#define \ :ref:`V4L2_PIX_FMT_XRGB555X <v4l2-pix-fmt-xrgb555x>` v4l2\_fourcc\_be('X', 'R', '1', '5') \/\* 16  XRGB-5-5-5 BE \*\/
     \#define \ :ref:`V4L2_PIX_FMT_RGB565X <v4l2-pix-fmt-rgb565x>` v4l2\_fourcc('R', 'G', 'B', 'R') \/\* 16  RGB-5-6-5 BE  \*\/
+
+    \/\* RGB formats (3 or 4 bytes per pixel) \*\/
     \#define \ :ref:`V4L2_PIX_FMT_BGR666 <v4l2-pix-fmt-bgr666>`  v4l2\_fourcc('B', 'G', 'R', 'H') \/\* 18  BGR-6-6-6     \*\/
     \#define \ :ref:`V4L2_PIX_FMT_BGR24 <v4l2-pix-fmt-bgr24>`   v4l2\_fourcc('B', 'G', 'R', '3') \/\* 24  BGR-8-8-8     \*\/
     \#define \ :ref:`V4L2_PIX_FMT_RGB24 <v4l2-pix-fmt-rgb24>`   v4l2\_fourcc('R', 'G', 'B', '3') \/\* 24  RGB-8-8-8     \*\/
@@ -599,13 +593,12 @@ videodev2.h
     \#define \ :ref:`V4L2_PIX_FMT_YUV444 <v4l2-pix-fmt-yuv444>`  v4l2\_fourcc('Y', '4', '4', '4') \/\* 16  xxxxyyyy uuuuvvvv \*\/
     \#define \ :ref:`V4L2_PIX_FMT_YUV555 <v4l2-pix-fmt-yuv555>`  v4l2\_fourcc('Y', 'U', 'V', 'O') \/\* 16  YUV-5-5-5     \*\/
     \#define \ :ref:`V4L2_PIX_FMT_YUV565 <v4l2-pix-fmt-yuv565>`  v4l2\_fourcc('Y', 'U', 'V', 'P') \/\* 16  YUV-5-6-5     \*\/
+    \#define \ :ref:`V4L2_PIX_FMT_YUV24 <v4l2-pix-fmt-yuv24>`   v4l2\_fourcc('Y', 'U', 'V', '3') \/\* 24  YUV-8-8-8     \*\/
     \#define \ :ref:`V4L2_PIX_FMT_YUV32 <v4l2-pix-fmt-yuv32>`   v4l2\_fourcc('Y', 'U', 'V', '4') \/\* 32  YUV-8-8-8-8   \*\/
     \#define \ :ref:`V4L2_PIX_FMT_AYUV32 <v4l2-pix-fmt-ayuv32>`  v4l2\_fourcc('A', 'Y', 'U', 'V') \/\* 32  AYUV-8-8-8-8  \*\/
     \#define \ :ref:`V4L2_PIX_FMT_XYUV32 <v4l2-pix-fmt-xyuv32>`  v4l2\_fourcc('X', 'Y', 'U', 'V') \/\* 32  XYUV-8-8-8-8  \*\/
     \#define \ :ref:`V4L2_PIX_FMT_VUYA32 <v4l2-pix-fmt-vuya32>`  v4l2\_fourcc('V', 'U', 'Y', 'A') \/\* 32  VUYA-8-8-8-8  \*\/
     \#define \ :ref:`V4L2_PIX_FMT_VUYX32 <v4l2-pix-fmt-vuyx32>`  v4l2\_fourcc('V', 'U', 'Y', 'X') \/\* 32  VUYX-8-8-8-8  \*\/
-    \#define \ :ref:`V4L2_PIX_FMT_HI240 <v4l2-pix-fmt-hi240>`   v4l2\_fourcc('H', 'I', '2', '4') \/\*  8  8-bit color   \*\/
-    \#define \ :ref:`V4L2_PIX_FMT_HM12 <v4l2-pix-fmt-hm12>`    v4l2\_fourcc('H', 'M', '1', '2') \/\*  8  YUV 4\:2\:0 16x16 macroblocks \*\/
     \#define \ :ref:`V4L2_PIX_FMT_M420 <v4l2-pix-fmt-m420>`    v4l2\_fourcc('M', '4', '2', '0') \/\* 12  YUV 4\:2\:0 2 lines y, 1 line uv interleaved \*\/
 
     \/\* two planes -- one Y, one Cr + Cb interleaved  \*\/
@@ -615,6 +608,7 @@ videodev2.h
     \#define \ :ref:`V4L2_PIX_FMT_NV61 <v4l2-pix-fmt-nv61>`    v4l2\_fourcc('N', 'V', '6', '1') \/\* 16  Y\/CrCb 4\:2\:2  \*\/
     \#define \ :ref:`V4L2_PIX_FMT_NV24 <v4l2-pix-fmt-nv24>`    v4l2\_fourcc('N', 'V', '2', '4') \/\* 24  Y\/CbCr 4\:4\:4  \*\/
     \#define \ :ref:`V4L2_PIX_FMT_NV42 <v4l2-pix-fmt-nv42>`    v4l2\_fourcc('N', 'V', '4', '2') \/\* 24  Y\/CrCb 4\:4\:4  \*\/
+    \#define \ :ref:`V4L2_PIX_FMT_HM12 <v4l2-pix-fmt-hm12>`    v4l2\_fourcc('H', 'M', '1', '2') \/\*  8  YUV 4\:2\:0 16x16 macroblocks \*\/
 
     \/\* two non contiguous planes - one Y, one Cr + Cb interleaved  \*\/
     \#define \ :ref:`V4L2_PIX_FMT_NV12M <v4l2-pix-fmt-nv12m>`   v4l2\_fourcc('N', 'M', '1', '2') \/\* 12  Y\/CbCr 4\:2\:0  \*\/
@@ -708,10 +702,12 @@ videodev2.h
     \#define \ :ref:`V4L2_PIX_FMT_VC1_ANNEX_G <v4l2-pix-fmt-vc1-annex-g>` v4l2\_fourcc('V', 'C', '1', 'G') \/\* SMPTE 421M Annex G compliant stream \*\/
     \#define \ :ref:`V4L2_PIX_FMT_VC1_ANNEX_L <v4l2-pix-fmt-vc1-annex-l>` v4l2\_fourcc('V', 'C', '1', 'L') \/\* SMPTE 421M Annex L compliant stream \*\/
     \#define \ :ref:`V4L2_PIX_FMT_VP8 <v4l2-pix-fmt-vp8>`      v4l2\_fourcc('V', 'P', '8', '0') \/\* VP8 \*\/
+    \#define \ :ref:`V4L2_PIX_FMT_VP8_FRAME <v4l2-pix-fmt-vp8-frame>` v4l2\_fourcc('V', 'P', '8', 'F') \/\* VP8 parsed frame \*\/
     \#define \ :ref:`V4L2_PIX_FMT_VP9 <v4l2-pix-fmt-vp9>`      v4l2\_fourcc('V', 'P', '9', '0') \/\* VP9 \*\/
     \#define \ :ref:`V4L2_PIX_FMT_HEVC <v4l2-pix-fmt-hevc>`     v4l2\_fourcc('H', 'E', 'V', 'C') \/\* HEVC aka H.265 \*\/
     \#define \ :ref:`V4L2_PIX_FMT_FWHT <v4l2-pix-fmt-fwht>`     v4l2\_fourcc('F', 'W', 'H', 'T') \/\* Fast Walsh Hadamard Transform (vicodec) \*\/
     \#define \ :ref:`V4L2_PIX_FMT_FWHT_STATELESS <v4l2-pix-fmt-fwht-stateless>`     v4l2\_fourcc('S', 'F', 'W', 'H') \/\* Stateless FWHT (vicodec) \*\/
+    \#define \ :ref:`V4L2_PIX_FMT_H264_SLICE <v4l2-pix-fmt-h264-slice>` v4l2\_fourcc('S', '2', '6', '4') \/\* H264 parsed slices \*\/
 
     \/\*  Vendor-specific formats   \*\/
     \#define \ :ref:`V4L2_PIX_FMT_CPIA1 <v4l2-pix-fmt-cpia1>`    v4l2\_fourcc('C', 'P', 'I', 'A') \/\* cpia1 YUV \*\/
@@ -747,6 +743,7 @@ videodev2.h
     \#define \ :ref:`V4L2_PIX_FMT_INZI <v4l2-pix-fmt-inzi>`     v4l2\_fourcc('I', 'N', 'Z', 'I') \/\* Intel Planar Greyscale 10-bit and Depth 16-bit \*\/
     \#define \ :ref:`V4L2_PIX_FMT_SUNXI_TILED_NV12 <v4l2-pix-fmt-sunxi-tiled-nv12>` v4l2\_fourcc('S', 'T', '1', '2') \/\* Sunxi Tiled NV12 Format \*\/
     \#define \ :ref:`V4L2_PIX_FMT_CNF4 <v4l2-pix-fmt-cnf4>`     v4l2\_fourcc('C', 'N', 'F', '4') \/\* Intel 4-bit packed depth confidence information \*\/
+    \#define \ :ref:`V4L2_PIX_FMT_HI240 <v4l2-pix-fmt-hi240>`    v4l2\_fourcc('H', 'I', '2', '4') \/\* BTTV 8-bit dithered RGB \*\/
 
     \/\* 10bit raw bayer packed, 32 bytes for every 25 pixels, last LSB 6 bits unused \*\/
     \#define \ :ref:`V4L2_PIX_FMT_IPU3_SBGGR10 <v4l2-pix-fmt-ipu3-sbggr10>`       v4l2\_fourcc('i', 'p', '3', 'b') \/\* IPU3 packed 10-bit BGGR bayer \*\/
@@ -776,6 +773,10 @@ videodev2.h
     \#define \ :ref:`V4L2_META_FMT_UVC <v4l2-meta-fmt-uvc>`         v4l2\_fourcc('U', 'V', 'C', 'H') \/\* UVC Payload Header metadata \*\/
     \#define \ :ref:`V4L2_META_FMT_D4XX <v4l2-meta-fmt-d4xx>`        v4l2\_fourcc('D', '4', 'X', 'X') \/\* D4XX Payload Header metadata \*\/
     \#define \ :ref:`V4L2_META_FMT_VIVID <v4l2-meta-fmt-vivid>`       v4l2\_fourcc('V', 'I', 'V', 'D') \/\* Vivid Metadata \*\/
+
+    \/\* Vendor specific - used for RK\_ISP1 camera sub-system \*\/
+    \#define \ :ref:`V4L2_META_FMT_RK_ISP1_PARAMS <v4l2-meta-fmt-rk-isp1-params>`    v4l2\_fourcc('R', 'K', '1', 'P') \/\* Rockchip ISP1 3A Parameters \*\/
+    \#define \ :ref:`V4L2_META_FMT_RK_ISP1_STAT_3A <v4l2-meta-fmt-rk-isp1-stat-3a>`   v4l2\_fourcc('R', 'K', '1', 'S') \/\* Rockchip ISP1 3A Statistics \*\/
 
     \/\* priv field value to indicates that subsequent fields are valid. \*\/
     \#define :c:type:`V4L2_PIX_FMT_PRIV_MAGIC <v4l2_pix_format>`         0xfeedcafe
@@ -983,8 +984,10 @@ videodev2.h
      \*                      pointing to this plane
      \* @fd\:                 when memory is :c:type:`V4L2_MEMORY_DMABUF <v4l2_memory>`, a userspace file
      \*                      descriptor associated with this plane
+     \* @m\:                  union of @mem\_offset, @userptr and @fd
      \* @data\_offset\:        offset in the plane to the start of data; usually 0,
      \*                      unless there is a header in front of the data
+     \* @reserved\:           drivers and applications must zero this array
      \*
      \* Multi-planar buffers consist of one or more planes, e.g. an YCbCr buffer
      \* with two planes can have one plane for Y, and another for interleaved CbCr
@@ -1026,10 +1029,14 @@ videodev2.h
      \*              a userspace file descriptor associated with this buffer
      \* @planes\:     for multiplanar buffers; userspace pointer to the array of plane
      \*              info structs for this buffer
+     \* @m\:          union of @offset, @userptr, @planes and @fd
      \* @length\:     size in bytes of the buffer (NOT its payload) for single-plane
      \*              buffers (when type != \*\_MPLANE); number of elements in the
      \*              planes array for multi-plane buffers
+     \* @reserved2\:  drivers and applications must zero this field
      \* @request\_fd\: fd of the request that this buffer should use
+     \* @reserved\:   for backwards compatibility with applications that do not know
+     \*              about @request\_fd
      \*
      \* Contains data exchanged by application and driver using one of the Streaming
      \* I\/O methods.
@@ -1067,7 +1074,7 @@ videodev2.h
     \#ifndef \_\_KERNEL\_\_
     \/\*\*
      \* v4l2\_timeval\_to\_ns - Convert timeval to nanoseconds
-     \* @ts\:         pointer to the timeval variable to be converted
+     \* @tv\:         pointer to the timeval variable to be converted
      \*
      \* Returns the scalar nanosecond representation of the timeval
      \* parameter.
@@ -1128,6 +1135,7 @@ videodev2.h
      \* @flags\:      flags for newly created file, currently only O\_CLOEXEC is
      \*              supported, refer to manual of open syscall for more details
      \* @fd\:         file descriptor associated with DMABUF (set by driver)
+     \* @reserved\:   drivers and applications must zero this array
      \*
      \* Contains data used for exporting a video buffer as DMABUF file descriptor.
      \* The buffer is identified by a 'cookie' returned by \ :ref:`VIDIOC_QUERYBUF <vidioc_querybuf>`
@@ -1192,7 +1200,7 @@ videodev2.h
             struct v4l2_rect        w;
             \_\_u32                   field;   \/\* enum :c:type:`v4l2_field` \*\/
             \_\_u32                   chromakey;
-            struct v4l2_clip        \_\_user \*clips;
+            struct v4l2_clip        \*clips;
             \_\_u32                   clipcount;
             void                    \_\_user \*bitmap;
             \_\_u8                    global\_alpha;
@@ -1735,6 +1743,14 @@ videodev2.h
                     \_\_u16 \_\_user \*p\_u16;
                     \_\_u32 \_\_user \*p\_u32;
                     struct v4l2_area \_\_user \*p\_area;
+                    struct v4l2\_ctrl\_h264\_sps \_\_user \*p\_h264\_sps;
+                    struct v4l2\_ctrl\_h264\_pps \*p\_h264\_pps;
+                    struct v4l2\_ctrl\_h264\_scaling\_matrix \_\_user \*p\_h264\_scaling\_matrix;
+                    struct v4l2\_ctrl\_h264\_pred\_weights \_\_user \*p\_h264\_pred\_weights;
+                    struct v4l2\_ctrl\_h264\_slice\_params \_\_user \*p\_h264\_slice\_params;
+                    struct v4l2\_ctrl\_h264\_decode\_params \_\_user \*p\_h264\_decode\_params;
+                    struct v4l2\_ctrl\_fwht\_params \_\_user \*p\_fwht\_params;
+                    struct v4l2\_ctrl\_vp8\_frame \_\_user \*p\_vp8\_frame;
                     void \_\_user \*ptr;
             \};
     \} \_\_attribute\_\_ ((packed));
@@ -1781,6 +1797,17 @@ videodev2.h
             :c:type:`V4L2_CTRL_TYPE_U16 <v4l2_ctrl_type>`           = 0x0101,
             :c:type:`V4L2_CTRL_TYPE_U32 <v4l2_ctrl_type>`           = 0x0102,
             :c:type:`V4L2_CTRL_TYPE_AREA <v4l2_ctrl_type>`          = 0x0106,
+
+            :c:type:`V4L2_CTRL_TYPE_H264_SPS <v4l2_ctrl_type>`             = 0x0200,
+            :c:type:`V4L2_CTRL_TYPE_H264_PPS <v4l2_ctrl_type>`             = 0x0201,
+            :c:type:`V4L2_CTRL_TYPE_H264_SCALING_MATRIX <v4l2_ctrl_type>`  = 0x0202,
+            :c:type:`V4L2_CTRL_TYPE_H264_SLICE_PARAMS <v4l2_ctrl_type>`    = 0x0203,
+            :c:type:`V4L2_CTRL_TYPE_H264_DECODE_PARAMS <v4l2_ctrl_type>`   = 0x0204,
+            :c:type:`V4L2_CTRL_TYPE_H264_PRED_WEIGHTS <v4l2_ctrl_type>`    = 0x0205,
+
+            :c:type:`V4L2_CTRL_TYPE_FWHT_PARAMS <v4l2_ctrl_type>`          = 0x0220,
+
+            :c:type:`V4L2_CTRL_TYPE_VP8_FRAME <v4l2_ctrl_type>`            = 0x0240,
     \};
 
     \/\*  Used in the \ :ref:`VIDIOC_QUERYCTRL <vidioc_queryctrl>` ioctl for querying controls \*\/
@@ -2215,6 +2242,7 @@ videodev2.h
      \*                      this plane will be used
      \* @bytesperline\:       distance in bytes between the leftmost pixels in two
      \*                      adjacent lines
+     \* @reserved\:           drivers and applications must zero this array
      \*\/
     struct v4l2_plane_pix_format \{
             \_\_u32           sizeimage;
@@ -2233,8 +2261,10 @@ videodev2.h
      \* @num\_planes\:         number of planes for this format
      \* @flags\:              format flags (V4L2\_PIX\_FMT\_FLAG\_\*)
      \* @ycbcr\_enc\:          enum :c:type:`v4l2_ycbcr_encoding`\ , Y'CbCr encoding
+     \* @hsv\_enc\:            enum :c:type:`v4l2_hsv_encoding`\ , HSV encoding
      \* @quantization\:       enum :c:type:`v4l2_quantization`\ , colorspace quantization
      \* @xfer\_func\:          enum :c:type:`v4l2_xfer_func`\ , colorspace transfer function
+     \* @reserved\:           drivers and applications must zero this array
      \*\/
     struct v4l2_pix_format_mplane \{
             \_\_u32                           width;
@@ -2259,6 +2289,7 @@ videodev2.h
      \* struct v4l2_sdr_format - SDR format definition
      \* @pixelformat\:        little endian four character code (fourcc)
      \* @buffersize\:         maximum size in bytes required for data
+     \* @reserved\:           drivers and applications must zero this array
      \*\/
     struct v4l2_sdr_format \{
             \_\_u32                           pixelformat;
@@ -2285,6 +2316,8 @@ videodev2.h
      \* @vbi\:        raw VBI capture or output parameters
      \* @sliced\:     sliced VBI capture or output parameters
      \* @raw\_data\:   placeholder for future extensions and custom formats
+     \* @fmt\:        union of @pix, @pix\_mp, @win, @vbi, @sliced, @sdr, @meta
+     \*              and @raw\_data
      \*\/
     struct v4l2_format \{
             \_\_u32    type;

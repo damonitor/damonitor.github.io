@@ -60,7 +60,7 @@
             
             
               <div class="version">
-                5.10.0
+                5.12.0-rc4-mm1
               </div>
             
           
@@ -208,7 +208,7 @@ by Larry Woodman of Red Hat to address several scalability problems with page
 reclaim in Linux.  The problems have been observed at customer sites on large
 memory x86_64 systems.</p>
 <p>To illustrate this with an example, a non-NUMA x86_64 platform with 128GB of
-main memory will have over 32 million 4k pages in a single zone.  When a large
+main memory will have over 32 million 4k pages in a single node.  When a large
 fraction of these pages are not evictable for any reason [see below], vmscan
 will spend a lot of time scanning the LRU lists looking for the small fraction
 of pages that are evictable.  This can result in a situation where all CPUs are
@@ -226,7 +226,7 @@ completely unresponsive.</p>
 unevictable, either by definition or by circumstance, in the future.</p>
 <div class="section" id="the-unevictable-page-list">
 <h3><a class="toc-backref" href="#id3">The Unevictable Page List</a><a class="headerlink" href="#the-unevictable-page-list" title="Permalink to this headline">¶</a></h3>
-<p>The Unevictable LRU infrastructure consists of an additional, per-zone, LRU list
+<p>The Unevictable LRU infrastructure consists of an additional, per-node, LRU list
 called the “unevictable” list and an associated page flag, PG_unevictable, to
 indicate that the page is being managed on the unevictable list.</p>
 <p>The PG_unevictable flag is analogous to, and mutually exclusive with, the
@@ -252,21 +252,16 @@ itself.</p></li>
 <p>The unevictable list does not differentiate between file-backed and anonymous,
 swap-backed pages.  This differentiation is only important while the pages are,
 in fact, evictable.</p>
-<p>The unevictable list benefits from the “arrayification” of the per-zone LRU
+<p>The unevictable list benefits from the “arrayification” of the per-node LRU
 lists and statistics originally proposed and posted by Christoph Lameter.</p>
-<p>The unevictable list does not use the LRU pagevec mechanism. Rather,
-unevictable pages are placed directly on the page’s zone’s unevictable list
-under the zone lru_lock.  This allows us to prevent the stranding of pages on
-the unevictable list when one task has the page isolated from the LRU and other
-tasks are changing the “evictability” state of the page.</p>
 </div>
 <div class="section" id="memory-control-group-interaction">
 <h3><a class="toc-backref" href="#id4">Memory Control Group Interaction</a><a class="headerlink" href="#memory-control-group-interaction" title="Permalink to this headline">¶</a></h3>
 <p>The unevictable LRU facility interacts with the memory control group [aka
 memory controller; see <a class="reference internal" href="../admin-guide/cgroup-v1/memory.html"><span class="doc">Memory Resource Controller</span></a>] by extending the
 lru_list enum.</p>
-<p>The memory controller data structure automatically gets a per-zone unevictable
-list as a result of the “arrayification” of the per-zone LRU lists (one per
+<p>The memory controller data structure automatically gets a per-node unevictable
+list as a result of the “arrayification” of the per-node LRU lists (one per
 lru_list enum element).  The memory controller tracks the movement of pages to
 and from the unevictable list.</p>
 <p>When a memory control group comes under memory pressure, the controller will
@@ -357,7 +352,7 @@ for the sake of expediency, to leave a unevictable page on one of the regular
 active/inactive LRU lists for vmscan to deal with.  vmscan checks for such
 pages in all of the shrink_{active|inactive|page}_list() functions and will
 “cull” such pages that it encounters: that is, it diverts those pages to the
-unevictable list for the zone being scanned.</p>
+unevictable list for the node being scanned.</p>
 <p>There may be situations where a page is mapped into a VM_LOCKED VMA, but the
 page is not marked as PG_mlocked.  Such pages will make it all the way to
 shrink_page_list() where they will be detected when vmscan walks the reverse
@@ -468,7 +463,7 @@ more.</p>
 page from the LRU, as it is likely on the appropriate active or inactive list
 at that time.  If the isolate_lru_page() succeeds, mlock_vma_page() will put
 back the page - by calling putback_lru_page() - which will notice that the page
-is now mlocked and divert the page to the zone’s unevictable list.  If
+is now mlocked and divert the page to the node’s unevictable list.  If
 mlock_vma_page() is unable to isolate the page from the LRU, vmscan will handle
 it later if and when it attempts to reclaim the page.</p>
 </div>
@@ -701,7 +696,7 @@ unevictable list in mlock_vma_page().</p></li>
 </ol>
 </div></blockquote>
 <p>shrink_inactive_list() also diverts any unevictable pages that it finds on the
-inactive lists to the appropriate zone’s unevictable list.</p>
+inactive lists to the appropriate node’s unevictable list.</p>
 <p>shrink_inactive_list() should only see SHM_LOCK’d pages that became SHM_LOCK’d
 after shrink_active_list() had moved them to the inactive list, or pages mapped
 into VM_LOCKED VMAs that munlock_vma_page() couldn’t isolate from the LRU to

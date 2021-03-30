@@ -60,7 +60,7 @@
             
             
               <div class="version">
-                5.12.0-rc3-mm1
+                5.12.0-rc4-mm1
               </div>
             
           
@@ -488,6 +488,16 @@ the target CPU processes packets. It might give some delay on timestamps, but
 permit to distribute the load on several cpus.</p>
 <p>If set to 1 (default), timestamps are sampled as soon as possible, before
 queueing.</p>
+</div>
+<div class="section" id="netdev-unregister-timeout-secs">
+<h3>netdev_unregister_timeout_secs<a class="headerlink" href="#netdev-unregister-timeout-secs" title="Permalink to this headline">¶</a></h3>
+<p>Unregister network device timeout in seconds.
+This option controls the timeout (in seconds) used to issue a warning while
+waiting for a network device refcount to drop to 0 during device
+unregistration. A lower value may be useful during bisection to detect
+a leaked reference faster. A larger value may be useful to prevent false
+warnings on slow/loaded systems.
+Default value is 10, minimum 1, maximum 3600.</p>
 </div>
 <div class="section" id="optmem-max">
 <h3>optmem_max<a class="headerlink" href="#optmem-max" title="Permalink to this headline">¶</a></h3>

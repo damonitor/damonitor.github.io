@@ -60,7 +60,7 @@
             
             
               <div class="version">
-                5.10.0
+                5.12.0-rc4-mm1
               </div>
             
           
@@ -166,22 +166,27 @@ is a partial list of the known problems and missing features:</p>
 <ol class="loweralpha simple">
 <li><p>SMB3 (and SMB3.1.1) missing optional features:</p>
 <ul class="simple">
-<li><p>multichannel (started), integration with RDMA</p></li>
-<li><p>directory leases (improved metadata caching), started (root dir only)</p></li>
+<li><p>multichannel (partially integrated), integration of multichannel with RDMA</p></li>
+<li><p>directory leases (improved metadata caching). Currently only implemented for root dir</p></li>
 <li><p>T10 copy offload ie “ODX” (copy chunk, and “Duplicate Extents” ioctl
 currently the only two server side copy mechanisms supported)</p></li>
 </ul>
 </li>
 <li><p>improved sparse file support (fiemap and SEEK_HOLE are implemented
-but additional features would be supportable by the protocol).</p></li>
+but additional features would be supportable by the protocol such
+as FALLOC_FL_COLLAPSE_RANGE and FALLOC_FL_INSERT_RANGE)</p></li>
 <li><p>Directory entry caching relies on a 1 second timer, rather than
-using Directory Leases, currently only the root file handle is cached longer</p></li>
-<li><p>quota support (needs minor kernel change since quota calls
-to make it to network filesystems or deviceless filesystems)</p></li>
+using Directory Leases, currently only the root file handle is cached longer
+by leveraging Directory Leases</p></li>
+<li><dl class="simple">
+<dt>quota support (needs minor kernel change since quota calls otherwise</dt><dd><p>won’t make it to network filesystems or deviceless filesystems).</p>
+</dd>
+</dl>
+</li>
 <li><p>Additional use cases can be optimized to use “compounding” (e.g.
 open/query/close and open/setinfo/close) to reduce the number of
 roundtrips to the server and improve performance. Various cases
-(stat, statfs, create, unlink, mkdir) already have been improved by
+(stat, statfs, create, unlink, mkdir, xattrs) already have been improved by
 using compounding but more can be done. In addition we could
 significantly reduce redundant opens by using deferred close (with
 handle caching leases) and better using reference counters on file
@@ -204,18 +209,19 @@ sending various SMB3 fsctls and query info and set info calls
 directly from user space) Add tools to make setting various non-POSIX
 metadata attributes easier from tools (e.g. extending what was done
 in smb-info tool).</p></li>
-<li><p>encrypted file support</p></li>
+<li><p>encrypted file support (currently the attribute showing the file is
+encrypted on the server is reported, but changing the attribute is not
+supported).</p></li>
 <li><p>improved stats gathering tools (perhaps integration with nfsometer?)
 to extend and make easier to use what is currently in /proc/fs/cifs/Stats</p></li>
 <li><p>Add support for claims based ACLs (“DAC”)</p></li>
 <li><p>mount helper GUI (to simplify the various configuration options on mount)</p></li>
-<li><p>Add support for witness protocol (perhaps ioctl to cifs.ko from user space
-tool listening on witness protocol RPC) to allow for notification of share
-move, server failover, and server adapter changes.  And also improve other
-failover scenarios, e.g. when client knows multiple DFS entries point to
-different servers, and the server we are connected to has gone down.</p></li>
+<li><p>Expand support for witness protocol to allow for notification of share
+move, and server network adapter changes. Currently only notifications by
+the witness protocol for server move is supported by the Linux client.</p></li>
 <li><p>Allow mount.cifs to be more verbose in reporting errors with dialect
-or unsupported feature errors.</p></li>
+or unsupported feature errors. This would now be easier due to the
+implementation of the new mount API.</p></li>
 <li><p>updating cifs documentation, and user guide.</p></li>
 <li><p>Addressing bugs found by running a broader set of xfstests in standard
 file system xfstest suite.</p></li>
@@ -224,10 +230,9 @@ secure) CIFS dialect can be disabled in environments that don’t need it
 and simplify the code.</p></li>
 </ol>
 <ol class="loweralpha simple" start="22">
-<li><p>POSIX Extensions for SMB3.1.1 (started, create and mkdir support added
-so far).</p></li>
+<li><p>Additional testing of POSIX Extensions for SMB3.1.1</p></li>
 <li><p>Add support for additional strong encryption types, and additional spnego
-authentication mechanisms (see MS-SMB2)</p></li>
+authentication mechanisms (see MS-SMB2).  GCM-256 is now partially implemented.</p></li>
 <li><p>Finish support for SMB3.1.1 compression</p></li>
 </ol>
 </div>

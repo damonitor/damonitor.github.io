@@ -134,6 +134,7 @@ media.h
     \#define \ :ref:`MEDIA_ENT_F_PROC_VIDEO_STATISTICS <media-ent-f-proc-video-statistics>`       (MEDIA\_ENT\_F\_BASE + 0x4006)
     \#define \ :ref:`MEDIA_ENT_F_PROC_VIDEO_ENCODER <media-ent-f-proc-video-encoder>`          (MEDIA\_ENT\_F\_BASE + 0x4007)
     \#define \ :ref:`MEDIA_ENT_F_PROC_VIDEO_DECODER <media-ent-f-proc-video-decoder>`          (MEDIA\_ENT\_F\_BASE + 0x4008)
+    \#define \ :ref:`MEDIA_ENT_F_PROC_VIDEO_ISP <media-ent-f-proc-video-isp>`              (MEDIA\_ENT\_F\_BASE + 0x4009)
 
     \/\*
      \* Switch and bridge entity functions

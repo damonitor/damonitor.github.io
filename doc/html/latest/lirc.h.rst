@@ -145,7 +145,7 @@ lirc.h
      \*\/
     \#define \ :ref:`LIRC_GET_REC_TIMEOUT <lirc_get_rec_timeout>`           \_IOR('i', 0x00000024, \_\_u32)
 
-    \/\*
+    \/\*\*
      \* struct lirc_scancode - decoded scancode with protocol for use with
      \*      \ :ref:`LIRC_MODE_SCANCODE <lirc-mode-scancode>`
      \*
@@ -202,6 +202,7 @@ lirc.h
      \* @RC\_PROTO\_RCMM24\: RC-MM protocol 24 bits
      \* @RC\_PROTO\_RCMM32\: RC-MM protocol 32 bits
      \* @RC\_PROTO\_XBOX\_DVD\: Xbox DVD Movie Playback Kit protocol
+     \* @RC\_PROTO\_MAX\: Maximum value of enum :c:type:`rc_proto`
      \*\/
     enum :c:type:`rc_proto` \{
             RC\_PROTO\_UNKNOWN        = 0,
@@ -232,6 +233,7 @@ lirc.h
             RC\_PROTO\_RCMM24         = 25,
             RC\_PROTO\_RCMM32         = 26,
             RC\_PROTO\_XBOX\_DVD       = 27,
+            RC\_PROTO\_MAX            = RC\_PROTO\_XBOX\_DVD,
     \};
 
     \#endif

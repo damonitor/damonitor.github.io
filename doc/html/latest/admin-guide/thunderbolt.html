@@ -60,7 +60,7 @@
             
             
               <div class="version">
-                5.10.0
+                5.12.0-rc4-mm1
               </div>
             
           
@@ -195,6 +195,8 @@ security levels available. Intel Titan Ridge added one more security level
 be DMA masters and thus read contents of the host memory without CPU and OS
 knowing about it. There are ways to prevent this by setting up an IOMMU but
 it is not always available for various reasons.</p>
+<p>Some USB4 systems have a BIOS setting to disable PCIe tunneling. This is
+treated as another security level (nopcie).</p>
 <p>The security levels are as follows:</p>
 <blockquote>
 <div><dl class="simple">
@@ -220,6 +222,9 @@ typically called <em>Display Port Only</em>.</p>
 <dt>usbonly</dt><dd><p>The firmware automatically creates tunnels for the USB controller and
 Display Port in a dock. All PCIe links downstream of the dock are
 removed.</p>
+</dd>
+<dt>nopcie</dt><dd><p>PCIe tunneling is disabled/forbidden from the BIOS. Available in some
+USB4 systems.</p>
 </dd>
 </dl>
 </div></blockquote>
@@ -291,6 +296,21 @@ returned to the user.</p>
 <p>If the user still wants to connect the device they can either approve
 the device without a key or write a new key and write 1 to the
 <code class="docutils literal notranslate"><span class="pre">authorized</span></code> file to get the new key stored on the device NVM.</p>
+</div>
+<div class="section" id="de-authorizing-devices">
+<h2>De-authorizing devices<a class="headerlink" href="#de-authorizing-devices" title="Permalink to this headline">¶</a></h2>
+<p>It is possible to de-authorize devices by writing <code class="docutils literal notranslate"><span class="pre">0</span></code> to their
+<code class="docutils literal notranslate"><span class="pre">authorized</span></code> attribute. This requires support from the connection
+manager implementation and can be checked by reading domain
+<code class="docutils literal notranslate"><span class="pre">deauthorization</span></code> attribute. If it reads <code class="docutils literal notranslate"><span class="pre">1</span></code> then the feature is
+supported.</p>
+<p>When a device is de-authorized the PCIe tunnel from the parent device
+PCIe downstream (or root) port to the device PCIe upstream port is torn
+down. This is essentially the same thing as PCIe hot-remove and the PCIe
+toplogy in question will not be accessible anymore until the device is
+authorized again. If there is storage such as NVMe or similar involved,
+there is a risk for data loss if the filesystem on that storage is not
+properly shut down. You have been warned!</p>
 </div>
 <div class="section" id="dma-protection-utilizing-iommu">
 <h2>DMA protection utilizing IOMMU<a class="headerlink" href="#dma-protection-utilizing-iommu" title="Permalink to this headline">¶</a></h2>

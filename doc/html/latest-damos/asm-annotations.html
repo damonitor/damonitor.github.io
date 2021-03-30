@@ -60,7 +60,7 @@
             
             
               <div class="version">
-                5.10.0
+                5.12.0-rc4-mm1
               </div>
             
           
@@ -246,6 +246,10 @@ nor assign any debug information to them.</p></li>
 <div class="section" id="instruction-macros">
 <h3>Instruction Macros<a class="headerlink" href="#instruction-macros" title="Permalink to this headline">¶</a></h3>
 <p>This section covers <code class="docutils literal notranslate"><span class="pre">SYM_FUNC_*</span></code> and <code class="docutils literal notranslate"><span class="pre">SYM_CODE_*</span></code> enumerated above.</p>
+<p><code class="docutils literal notranslate"><span class="pre">objtool</span></code> requires that all code must be contained in an ELF symbol. Symbol
+names that have a <code class="docutils literal notranslate"><span class="pre">.L</span></code> prefix do not emit symbol table entries. <code class="docutils literal notranslate"><span class="pre">.L</span></code>
+prefixed symbols can be used within a code region, but should be avoided for
+denoting a range of code via <code class="docutils literal notranslate"><span class="pre">SYM_*_START/END</span></code> annotations.</p>
 <ul>
 <li><p><code class="docutils literal notranslate"><span class="pre">SYM_FUNC_START</span></code> and <code class="docutils literal notranslate"><span class="pre">SYM_FUNC_START_LOCAL</span></code> are supposed to be <strong>the
 most frequent markings</strong>. They are used for functions with standard calling
