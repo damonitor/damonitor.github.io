@@ -60,7 +60,7 @@
             
             
               <div class="version">
-                5.12.0-rc4-mm1
+                5.12.0-rc6-mm1
               </div>
             
           
@@ -6690,8 +6690,9 @@ The notification is in the form of a netlink event.</p>
 </table>
 <p>Defined on file <a class="reference internal" href="#abi-file-stable-procfs-audit-loginuid"><span class="std std-ref">procfs-audit_loginuid</span></a></p>
 <p>The /proc/$pid/sessionid pseudofile is read to get the
-audit login session ID of process $pid.  It is set
-automatically, serially assigned with each new login.</p>
+audit login session ID of process $pid as a decimal
+unsigned int (%u, u32).  It is set automatically,
+serially assigned with each new login.</p>
 <p>Users:
 	audit and login applications</p>
 </div>
@@ -6708,12 +6709,14 @@ automatically, serially assigned with each new login.</p>
 </table>
 <p>Defined on file <a class="reference internal" href="#abi-file-stable-procfs-audit-loginuid"><span class="std std-ref">procfs-audit_loginuid</span></a></p>
 <p>The /proc/$pid/loginuid pseudofile is written to set and
-read to get the audit login UID of process $pid.  If it is
-unset, permissions are not needed to set it.  The accessor must
-have CAP_AUDIT_CONTROL in the initial user namespace to write
-it if it has been set.  It cannot be written again if
-AUDIT_FEATURE_LOGINUID_IMMUTABLE is enabled.  It cannot be
-unset if AUDIT_FEATURE_ONLY_UNSET_LOGINUID is enabled.</p>
+read to get the audit login UID of process $pid as a
+decimal unsigned int (%u, u32).  If it is unset,
+permissions are not needed to set it.  The accessor must
+have CAP_AUDIT_CONTROL in the initial user namespace to
+write it if it has been set.  It cannot be written again
+if AUDIT_FEATURE_LOGINUID_IMMUTABLE is enabled.  It
+cannot be unset if AUDIT_FEATURE_ONLY_UNSET_LOGINUID is
+enabled.</p>
 <p>Users:
 	audit and login applications</p>
 </div>

@@ -1,0 +1,270 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Configfs GPIO Simulator &mdash; The Linux Kernel  documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/theme_overrides.css" type="text/css" />
+
+  
+  
+  
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/doctools.js"></script>
+        <script src="../../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../index.html" class="icon icon-home" alt="Documentation Home"> The Linux Kernel
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                5.12.0-rc6-mm1
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../mm/damon/index.html">Monitoring Data Accesses</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../vm/damon/index.html">DAMON: Data Access MONitor</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">The Linux Kernel</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+      <li>Configfs GPIO Simulator</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../../_sources/admin-guide/gpio/gpio-sim.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="configfs-gpio-simulator">
+<h1>Configfs GPIO Simulator<a class="headerlink" href="#configfs-gpio-simulator" title="Permalink to this headline">¶</a></h1>
+<p>The configfs GPIO Simulator (gpio-sim) provides a way to create simulated GPIO
+chips for testing purposes. The lines exposed by these chips can be accessed
+using the standard GPIO character device interface as well as manipulated
+using sysfs attributes.</p>
+<div class="section" id="creating-simulated-chips">
+<h2>Creating simulated chips<a class="headerlink" href="#creating-simulated-chips" title="Permalink to this headline">¶</a></h2>
+<p>The gpio-sim module registers a configfs subsystem called ‘gpio-sim’. It’s a
+subsystem with committable items which means two subdirectories are created in
+the filesystem: pending and live. For more information on configfs and
+committable items, please refer to <a class="reference internal" href="../../filesystems/configfs.html"><span class="doc">Configfs - Userspace-driven Kernel Object Configuration</span></a>.</p>
+<p>In order to instantiate a new simulated chip, the user needs to mkdir() a new
+directory in pending/. Inside each new directory, there’s a set of attributes
+that can be used to configure the new chip. Once the configuration is complete,
+the user needs to use rename() to move the chip to the live/ directory. This
+creates and registers the new device.</p>
+<p>In order to destroy a simulated chip, it has to be moved back to pending first
+and then removed using rmdir().</p>
+<p>Currently supported configuration attributes are:</p>
+<blockquote>
+<div><dl class="simple">
+<dt>num_lines - an unsigned integer value defining the number of GPIO lines to</dt><dd><p>export</p>
+</dd>
+</dl>
+<p>label - a string defining the label for the GPIO chip</p>
+<dl class="simple">
+<dt>line_names - a list of GPIO line names in the form of quoted strings</dt><dd><p>separated by commas, e.g.: ‘“foo”, “bar”, “”, “foobar”’. The
+number of strings doesn’t have to be equal to the value set in
+the num_lines attribute. If it’s lower than the number of lines,
+the remaining lines are unnamed. If it’s larger, the superfluous
+lines are ignored. A name of the form: ‘””’ means the line
+should be unnamed.</p>
+</dd>
+</dl>
+</div></blockquote>
+<p>Additionally two read-only attributes named ‘chip_name’ and ‘dev_name’ are
+exposed in order to provide users with a mapping from configfs directories to
+the actual devices created in the kernel. The former returns the name of the
+GPIO device as assigned by gpiolib (i.e. “gpiochip0”, “gpiochip1”, etc.). The
+latter returns the parent device name as defined by the gpio-sim driver (i.e.
+“gpio-sim.0”, “gpio-sim.1”, etc.). This allows user-space to map the configfs
+items both to the correct character device file as well as the associated entry
+in sysfs.</p>
+<p>Simulated GPIO chips can also be defined in device-tree. The compatible string
+must be: “gpio-simulator”. Supported properties are:</p>
+<blockquote>
+<div><p>“gpio-sim,label” - chip label</p>
+<p>“gpio-sim,nr-gpios” - number of lines</p>
+</div></blockquote>
+<p>Other standard GPIO properties (like “gpio-line-names” and gpio-hog) are also
+supported.</p>
+</div>
+<div class="section" id="manipulating-simulated-lines">
+<h2>Manipulating simulated lines<a class="headerlink" href="#manipulating-simulated-lines" title="Permalink to this headline">¶</a></h2>
+<p>Each simulated GPIO chip creates a sysfs attribute group under its device
+directory called ‘line-ctrl’. Inside each group, there’s a separate attribute
+for each GPIO line. The name of the attribute is of the form ‘gpioX’ where X
+is the line’s offset in the chip.</p>
+<p>Reading from a line attribute returns the current value. Writing to it (0 or 1)
+changes the configuration of the simulated pull-up/pull-down resistor
+(1 - pull-up, 0 - pull-down).</p>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        
+        &copy; Copyright The kernel development community
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

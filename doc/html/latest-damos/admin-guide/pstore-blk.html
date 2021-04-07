@@ -60,7 +60,7 @@
             
             
               <div class="version">
-                5.12.0-rc4-mm1
+                5.12.0-rc6-mm1
               </div>
             
           
@@ -597,16 +597,16 @@ struct <code class="sig-name descname">pstore_zone_info</code><a class="headerli
 </pre></div>
 </div>
 <p><strong>Members</strong></p>
-<dl>
+<dl class="simple">
 <dt><code class="docutils literal notranslate"><span class="pre">owner</span></code></dt><dd><p>Module which is responsible for this back-end driver.</p>
 </dd>
 <dt><code class="docutils literal notranslate"><span class="pre">name</span></code></dt><dd><p>Name of the back-end driver.</p>
 </dd>
-<dt><code class="docutils literal notranslate"><span class="pre">total_size</span></code></dt><dd><p>The total size in bytes pstore/zone can use. It must be greater</p>
-<p>than 4096 and be multiple of 4096.</p>
+<dt><code class="docutils literal notranslate"><span class="pre">total_size</span></code></dt><dd><p>The total size in bytes pstore/zone can use. It must be greater
+than 4096 and be multiple of 4096.</p>
 </dd>
-<dt><code class="docutils literal notranslate"><span class="pre">kmsg_size</span></code></dt><dd><p>The size of oops/panic zone. Zero means disabled, otherwise,</p>
-<p>it must be multiple of SECTOR_SIZE(512 Bytes).</p>
+<dt><code class="docutils literal notranslate"><span class="pre">kmsg_size</span></code></dt><dd><p>The size of oops/panic zone. Zero means disabled, otherwise,
+it must be multiple of SECTOR_SIZE(512 Bytes).</p>
 </dd>
 <dt><code class="docutils literal notranslate"><span class="pre">max_reason</span></code></dt><dd><p>Maximum kmsg dump reason to store.</p>
 </dd>
@@ -616,21 +616,22 @@ struct <code class="sig-name descname">pstore_zone_info</code><a class="headerli
 </dd>
 <dt><code class="docutils literal notranslate"><span class="pre">ftrace_size</span></code></dt><dd><p>The size of ftrace zone which is the same as <strong>kmsg_size</strong>.</p>
 </dd>
-<dt><code class="docutils literal notranslate"><span class="pre">read</span></code></dt><dd><p>The general read operation. Both of the function parameters</p>
-<p><strong>size</strong> and <strong>offset</strong> are relative value to storage.
+<dt><code class="docutils literal notranslate"><span class="pre">read</span></code></dt><dd><p>The general read operation. Both of the function parameters
+<strong>size</strong> and <strong>offset</strong> are relative value to storage.
 On success, the number of bytes should be returned, others
-mean error.
-<strong>write</strong>:      The same as <strong>read</strong>, but the following error number:
+mean error.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">write</span></code></dt><dd><p>The same as <strong>read</strong>, but the following error number:
 -EBUSY means try to write again later.
 -ENOMSG means to try next zone.</p>
 </dd>
-<dt><code class="docutils literal notranslate"><span class="pre">erase</span></code></dt><dd><p>The general erase operation for device with special removing</p>
-<p>job. Both of the function parameters <strong>size</strong> and <strong>offset</strong> are
+<dt><code class="docutils literal notranslate"><span class="pre">erase</span></code></dt><dd><p>The general erase operation for device with special removing
+job. Both of the function parameters <strong>size</strong> and <strong>offset</strong> are
 relative value to storage.
 Return 0 on success and others on failure.</p>
 </dd>
-<dt><code class="docutils literal notranslate"><span class="pre">panic_write</span></code></dt><dd><p>The write operation only used for panic case. It’s optional</p>
-<p>if you do not care panic log. The parameters are relative
+<dt><code class="docutils literal notranslate"><span class="pre">panic_write</span></code></dt><dd><p>The write operation only used for panic case. It’s optional
+if you do not care panic log. The parameters are relative
 value to storage.
 On success, the number of bytes should be returned, others
 excluding -ENOMSG mean error. -ENOMSG means to try next zone.</p>
@@ -671,30 +672,31 @@ struct <code class="sig-name descname">pstore_device_info</code><a class="header
 </pre></div>
 </div>
 <p><strong>Members</strong></p>
-<dl>
-<dt><code class="docutils literal notranslate"><span class="pre">total_size</span></code></dt><dd><p>The total size in bytes pstore/blk can use. It must be greater</p>
-<p>than 4096 and be multiple of 4096.</p>
+<dl class="simple">
+<dt><code class="docutils literal notranslate"><span class="pre">total_size</span></code></dt><dd><p>The total size in bytes pstore/blk can use. It must be greater
+than 4096 and be multiple of 4096.</p>
 </dd>
-<dt><code class="docutils literal notranslate"><span class="pre">flags</span></code></dt><dd><p>Refer to macro starting with PSTORE_FLAGS defined in</p>
-<p>linux/pstore.h. It means what front-ends this device support.
+<dt><code class="docutils literal notranslate"><span class="pre">flags</span></code></dt><dd><p>Refer to macro starting with PSTORE_FLAGS defined in
+linux/pstore.h. It means what front-ends this device support.
 Zero means all backends for compatible.</p>
 </dd>
-<dt><code class="docutils literal notranslate"><span class="pre">read</span></code></dt><dd><p>The general read operation. Both of the function parameters</p>
-<p><strong>size</strong> and <strong>offset</strong> are relative value to bock device (not the
+<dt><code class="docutils literal notranslate"><span class="pre">read</span></code></dt><dd><p>The general read operation. Both of the function parameters
+<strong>size</strong> and <strong>offset</strong> are relative value to bock device (not the
 whole disk).
 On success, the number of bytes should be returned, others
-means error.
-<strong>write</strong>:      The same as <strong>read</strong>, but the following error number:
+means error.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">write</span></code></dt><dd><p>The same as <strong>read</strong>, but the following error number:
 -EBUSY means try to write again later.
 -ENOMSG means to try next zone.</p>
 </dd>
-<dt><code class="docutils literal notranslate"><span class="pre">erase</span></code></dt><dd><p>The general erase operation for device with special removing</p>
-<p>job. Both of the function parameters <strong>size</strong> and <strong>offset</strong> are
+<dt><code class="docutils literal notranslate"><span class="pre">erase</span></code></dt><dd><p>The general erase operation for device with special removing
+job. Both of the function parameters <strong>size</strong> and <strong>offset</strong> are
 relative value to storage.
 Return 0 on success and others on failure.</p>
 </dd>
-<dt><code class="docutils literal notranslate"><span class="pre">panic_write</span></code></dt><dd><p>The write operation only used for panic case. It’s optional</p>
-<p>if you do not care panic log. The parameters are relative
+<dt><code class="docutils literal notranslate"><span class="pre">panic_write</span></code></dt><dd><p>The write operation only used for panic case. It’s optional
+if you do not care panic log. The parameters are relative
 value to storage.
 On success, the number of bytes should be returned, others
 excluding -ENOMSG mean error. -ENOMSG means to try next zone.</p>

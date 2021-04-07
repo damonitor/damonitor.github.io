@@ -60,7 +60,7 @@
             
             
               <div class="version">
-                5.12.0-rc4-mm1
+                5.12.0-rc6-mm1
               </div>
             
           
@@ -327,7 +327,7 @@ in /config directory use:</p>
 <div class="highlight-none notranslate"><div class="highlight"><pre><span></span># mount -t configfs none /config/
 </pre></div>
 </div>
-<p>For nth PCIe Device Controller /config/pcie-gadget.n/:</p>
+<p>For nth PCIe Device Controller <a class="reference internal" href="#abi-config-pcie-gadget"><span class="std std-ref">/config/pcie-gadget</span></a>.n/:</p>
 <table class="docutils align-default">
 <colgroup>
 <col style="width: 22%" />
@@ -2142,7 +2142,7 @@ with the file descriptor.</p>
 </tbody>
 </table>
 <p>Defined on file <a class="reference internal" href="#abi-file-testing-dev-kmsg"><span class="std std-ref">dev-kmsg</span></a></p>
-<p>The /dev/kmsg character device node provides userspace access
+<p>The <a class="reference internal" href="#abi-dev-kmsg"><span class="std std-ref">/dev/kmsg</span></a> character device node provides userspace access
 to the kernel’s printk buffer.</p>
 <p>Injecting messages:</p>
 <p>Every write() to the opened device node places a log entry in
@@ -2253,10 +2253,10 @@ the console, /proc/kmsg or the syslog() syscall.</p>
 <p>By default, kernel tries to avoid fragments by concatenating
 when it can and fragments are rare; however, when extended
 console support is enabled, the in-kernel concatenation is
-disabled and /dev/kmsg output will contain more fragments. If
+disabled and <a class="reference internal" href="#abi-dev-kmsg"><span class="std std-ref">/dev/kmsg</span></a> output will contain more fragments. If
 the log consumer performs concatenation, the end result
 should be the same. In the future, the in-kernel concatenation
-may be removed entirely and /dev/kmsg users are recommended to
+may be removed entirely and <a class="reference internal" href="#abi-dev-kmsg"><span class="std std-ref">/dev/kmsg</span></a> users are recommended to
 implement fragment handling.</p>
 <p>Users:
 	dmesg(1), userspace kernel log consumers</p>
@@ -2335,7 +2335,7 @@ Platforms that contain larger buffers can return larger
 objects from the system firmware.
 Commonly this size is either 4k or 32k.</p>
 <p>To determine the size of the buffer read() a u64 dword from
-the WMI character device /dev/wmi/dell-smbios.</p>
+the WMI character device <a class="reference internal" href="#abi-dev-wmi-dell-smbios"><span class="std std-ref">/dev/wmi/dell-smbios</span></a>.</p>
 </li>
 <li><p>After you’ve determined the minimum size of the calling
 interface buffer, you can allocate a structure that represents
@@ -2516,7 +2516,7 @@ SELinux and AppArmor provide this interface.</p>
 </tbody>
 </table>
 <p>Defined on file <a class="reference internal" href="#abi-file-testing-procfs-diskstats"><span class="std std-ref">procfs-diskstats</span></a></p>
-<p>The /proc/diskstats file displays the I/O statistics
+<p>The <a class="reference internal" href="#abi-proc-diskstats"><span class="std std-ref">/proc/diskstats</span></a> file displays the I/O statistics
 of block devices. Each line contains the following 14
 fields:</p>
 <table class="docutils align-default">
@@ -3419,6 +3419,195 @@ device is comparing against for the events enabled by
 &lt;type&gt;[Y][_name]_roc[_rising|falling|]_en. E.g. for steps:
 if set to 3, a step change event will be generated every 3
 steps.</p>
+<table class="docutils align-default" id="abi-sys-iio-devicex-buffery-in-accel-type">
+<colgroup>
+<col style="width: 100%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><strong>/sys/…/iio:deviceX/bufferY/in_accel_type</strong></p></td>
+</tr>
+<tr class="row-even"><td><p><strong>/sys/…/iio:deviceX/bufferY/in_anglvel_type</strong></p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>/sys/…/iio:deviceX/bufferY/in_magn_type</strong></p></td>
+</tr>
+<tr class="row-even"><td><p><strong>/sys/…/iio:deviceX/bufferY/in_incli_type</strong></p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>/sys/…/iio:deviceX/bufferY/in_voltageY_type</strong></p></td>
+</tr>
+<tr class="row-even"><td><p><strong>/sys/…/iio:deviceX/bufferY/in_voltage_type</strong></p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>/sys/…/iio:deviceX/bufferY/in_voltageY_supply_type</strong></p></td>
+</tr>
+<tr class="row-even"><td><p><strong>/sys/…/iio:deviceX/bufferY/in_voltageY_i_type</strong></p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>/sys/…/iio:deviceX/bufferY/in_voltageY_q_type</strong></p></td>
+</tr>
+<tr class="row-even"><td><p><strong>/sys/…/iio:deviceX/bufferY/in_voltage_i_type</strong></p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>/sys/…/iio:deviceX/bufferY/in_voltage_q_type</strong></p></td>
+</tr>
+<tr class="row-even"><td><p><strong>/sys/…/iio:deviceX/bufferY/in_timestamp_type</strong></p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>/sys/…/iio:deviceX/bufferY/in_pressureY_type</strong></p></td>
+</tr>
+<tr class="row-even"><td><p><strong>/sys/…/iio:deviceX/bufferY/in_pressure_type</strong></p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>/sys/…/iio:deviceX/bufferY/in_rot_quaternion_type</strong></p></td>
+</tr>
+<tr class="row-even"><td><p><strong>/sys/…/iio:deviceX/bufferY/in_proximity_type</strong></p></td>
+</tr>
+</tbody>
+</table>
+<p>Defined on file <a class="reference internal" href="#abi-file-testing-sysfs-bus-iio"><span class="std std-ref">sysfs-bus-iio</span></a></p>
+<p>Description of the scan element data storage within the buffer
+and hence the form in which it is read from user-space.
+Form is [be|le]:[s|u]bits/storagebits[&gt;&gt;shift].
+be or le specifies big or little endian. s or u specifies if
+signed (2’s complement) or unsigned. bits is the number of bits
+of data and storagebits is the space (after padding) that it
+occupies in the buffer. shift if specified, is the shift that
+needs to be applied prior to masking out unused bits. Some
+devices put their data in the middle of the transferred elements
+with additional information on both sides.  Note that some
+devices will have additional information in the unused bits
+so to get a clean value, the bits value must be used to mask
+the buffer output value appropriately.  The storagebits value
+also specifies the data alignment.  So s48/64&gt;&gt;2 will be a
+signed 48 bit integer stored in a 64 bit location aligned to
+a 64 bit boundary. To obtain the clean value, shift right 2
+and apply a mask to zero the top 16 bits of the result.
+For other storage combinations this attribute will be extended
+appropriately.</p>
+<table class="docutils align-default" id="abi-sys-iio-devicex-buffery-in-accel-x-en">
+<colgroup>
+<col style="width: 100%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><strong>/sys/…/iio:deviceX/bufferY/in_accel_x_en</strong></p></td>
+</tr>
+<tr class="row-even"><td><p><strong>/sys/…/iio:deviceX/bufferY/in_accel_y_en</strong></p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>/sys/…/iio:deviceX/bufferY/in_accel_z_en</strong></p></td>
+</tr>
+<tr class="row-even"><td><p><strong>/sys/…/iio:deviceX/bufferY/in_anglvel_x_en</strong></p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>/sys/…/iio:deviceX/bufferY/in_anglvel_y_en</strong></p></td>
+</tr>
+<tr class="row-even"><td><p><strong>/sys/…/iio:deviceX/bufferY/in_anglvel_z_en</strong></p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>/sys/…/iio:deviceX/bufferY/in_magn_x_en</strong></p></td>
+</tr>
+<tr class="row-even"><td><p><strong>/sys/…/iio:deviceX/bufferY/in_magn_y_en</strong></p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>/sys/…/iio:deviceX/bufferY/in_magn_z_en</strong></p></td>
+</tr>
+<tr class="row-even"><td><p><strong>/sys/…/iio:deviceX/bufferY/in_rot_from_north_magnetic_en</strong></p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>/sys/…/iio:deviceX/bufferY/in_rot_from_north_true_en</strong></p></td>
+</tr>
+<tr class="row-even"><td><p><strong>/sys/…/iio:deviceX/bufferY/in_rot_from_north_magnetic_tilt_comp_en</strong></p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>/sys/…/iio:deviceX/bufferY/in_rot_from_north_true_tilt_comp_en</strong></p></td>
+</tr>
+<tr class="row-even"><td><p><strong>/sys/…/iio:deviceX/bufferY/in_timestamp_en</strong></p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>/sys/…/iio:deviceX/bufferY/in_voltageY_supply_en</strong></p></td>
+</tr>
+<tr class="row-even"><td><p><strong>/sys/…/iio:deviceX/bufferY/in_voltageY_en</strong></p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>/sys/…/iio:deviceX/bufferY/in_voltageY-voltageZ_en</strong></p></td>
+</tr>
+<tr class="row-even"><td><p><strong>/sys/…/iio:deviceX/bufferY/in_voltageY_i_en</strong></p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>/sys/…/iio:deviceX/bufferY/in_voltageY_q_en</strong></p></td>
+</tr>
+<tr class="row-even"><td><p><strong>/sys/…/iio:deviceX/bufferY/in_voltage_i_en</strong></p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>/sys/…/iio:deviceX/bufferY/in_voltage_q_en</strong></p></td>
+</tr>
+<tr class="row-even"><td><p><strong>/sys/…/iio:deviceX/bufferY/in_incli_x_en</strong></p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>/sys/…/iio:deviceX/bufferY/in_incli_y_en</strong></p></td>
+</tr>
+<tr class="row-even"><td><p><strong>/sys/…/iio:deviceX/bufferY/in_pressureY_en</strong></p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>/sys/…/iio:deviceX/bufferY/in_pressure_en</strong></p></td>
+</tr>
+<tr class="row-even"><td><p><strong>/sys/…/iio:deviceX/bufferY/in_rot_quaternion_en</strong></p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>/sys/…/iio:deviceX/bufferY/in_proximity_en</strong></p></td>
+</tr>
+</tbody>
+</table>
+<p>Defined on file <a class="reference internal" href="#abi-file-testing-sysfs-bus-iio"><span class="std std-ref">sysfs-bus-iio</span></a></p>
+<p>Scan element control for triggered data capture.</p>
+<table class="docutils align-default" id="abi-sys-iio-devicex-buffery-in-voltagey-index">
+<colgroup>
+<col style="width: 100%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><strong>/sys/…/iio:deviceX/bufferY/in_voltageY_index</strong></p></td>
+</tr>
+<tr class="row-even"><td><p><strong>/sys/…/iio:deviceX/bufferY/in_voltageY_supply_index</strong></p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>/sys/…/iio:deviceX/bufferY/in_voltageY_i_index</strong></p></td>
+</tr>
+<tr class="row-even"><td><p><strong>/sys/…/iio:deviceX/bufferY/in_voltageY_q_index</strong></p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>/sys/…/iio:deviceX/bufferY/in_voltage_i_index</strong></p></td>
+</tr>
+<tr class="row-even"><td><p><strong>/sys/…/iio:deviceX/bufferY/in_voltage_q_index</strong></p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>/sys/…/iio:deviceX/bufferY/in_accel_x_index</strong></p></td>
+</tr>
+<tr class="row-even"><td><p><strong>/sys/…/iio:deviceX/bufferY/in_accel_y_index</strong></p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>/sys/…/iio:deviceX/bufferY/in_accel_z_index</strong></p></td>
+</tr>
+<tr class="row-even"><td><p><strong>/sys/…/iio:deviceX/bufferY/in_anglvel_x_index</strong></p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>/sys/…/iio:deviceX/bufferY/in_anglvel_y_index</strong></p></td>
+</tr>
+<tr class="row-even"><td><p><strong>/sys/…/iio:deviceX/bufferY/in_anglvel_z_index</strong></p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>/sys/…/iio:deviceX/bufferY/in_magn_x_index</strong></p></td>
+</tr>
+<tr class="row-even"><td><p><strong>/sys/…/iio:deviceX/bufferY/in_magn_y_index</strong></p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>/sys/…/iio:deviceX/bufferY/in_magn_z_index</strong></p></td>
+</tr>
+<tr class="row-even"><td><p><strong>/sys/…/iio:deviceX/bufferY/in_rot_from_north_magnetic_index</strong></p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>/sys/…/iio:deviceX/bufferY/in_rot_from_north_true_index</strong></p></td>
+</tr>
+<tr class="row-even"><td><p><strong>/sys/…/iio:deviceX/bufferY/in_rot_from_north_magnetic_tilt_comp_index</strong></p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>/sys/…/iio:deviceX/bufferY/in_rot_from_north_true_tilt_comp_index</strong></p></td>
+</tr>
+<tr class="row-even"><td><p><strong>/sys/…/iio:deviceX/bufferY/in_incli_x_index</strong></p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>/sys/…/iio:deviceX/bufferY/in_incli_y_index</strong></p></td>
+</tr>
+<tr class="row-even"><td><p><strong>/sys/…/iio:deviceX/bufferY/in_timestamp_index</strong></p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>/sys/…/iio:deviceX/bufferY/in_pressureY_index</strong></p></td>
+</tr>
+<tr class="row-even"><td><p><strong>/sys/…/iio:deviceX/bufferY/in_pressure_index</strong></p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>/sys/…/iio:deviceX/bufferY/in_rot_quaternion_index</strong></p></td>
+</tr>
+<tr class="row-even"><td><p><strong>/sys/…/iio:deviceX/bufferY/in_proximity_index</strong></p></td>
+</tr>
+</tbody>
+</table>
+<p>Defined on file <a class="reference internal" href="#abi-file-testing-sysfs-bus-iio"><span class="std std-ref">sysfs-bus-iio</span></a></p>
+<p>A single positive integer specifying the position of this
+scan element in the buffer. Note these are not dependent on
+what is enabled and may not be contiguous. Thus for user-space
+to establish the full layout these must be used in conjunction
+with all _en attributes to establish which channels are present,
+and the relevant _type attributes to establish the data storage
+format.</p>
 <table class="docutils align-default" id="abi-sys-iio-devicex-events-in-accel-mag-en">
 <colgroup>
 <col style="width: 100%" />
@@ -3977,25 +4166,7 @@ If Y is not present the mode is shared across all outputs.</p>
 </tbody>
 </table>
 <p>Defined on file <a class="reference internal" href="#abi-file-testing-sysfs-bus-iio"><span class="std std-ref">sysfs-bus-iio</span></a></p>
-<p>Description of the scan element data storage within the buffer
-and hence the form in which it is read from user-space.
-Form is [be|le]:[s|u]bits/storagebits[&gt;&gt;shift].
-be or le specifies big or little endian. s or u specifies if
-signed (2’s complement) or unsigned. bits is the number of bits
-of data and storagebits is the space (after padding) that it
-occupies in the buffer. shift if specified, is the shift that
-needs to be applied prior to masking out unused bits. Some
-devices put their data in the middle of the transferred elements
-with additional information on both sides.  Note that some
-devices will have additional information in the unused bits
-so to get a clean value, the bits value must be used to mask
-the buffer output value appropriately.  The storagebits value
-also specifies the data alignment.  So s48/64&gt;&gt;2 will be a
-signed 48 bit integer stored in a 64 bit location aligned to
-a 64 bit boundary. To obtain the clean value, shift right 2
-and apply a mask to zero the top 16 bits of the result.
-For other storage combinations this attribute will be extended
-appropriately.</p>
+<p>DESCRIPTION MISSING for /sys/…/iio:deviceX/scan_elements/in_accel_type, /sys/…/iio:deviceX/scan_elements/in_anglvel_type, /sys/…/iio:deviceX/scan_elements/in_magn_type, /sys/…/iio:deviceX/scan_elements/in_incli_type, /sys/…/iio:deviceX/scan_elements/in_voltageY_type, /sys/…/iio:deviceX/scan_elements/in_voltage_type, /sys/…/iio:deviceX/scan_elements/in_voltageY_supply_type, /sys/…/iio:deviceX/scan_elements/in_voltageY_i_type, /sys/…/iio:deviceX/scan_elements/in_voltageY_q_type, /sys/…/iio:deviceX/scan_elements/in_voltage_i_type, /sys/…/iio:deviceX/scan_elements/in_voltage_q_type, /sys/…/iio:deviceX/scan_elements/in_timestamp_type, /sys/…/iio:deviceX/scan_elements/in_pressureY_type, /sys/…/iio:deviceX/scan_elements/in_pressure_type, /sys/…/iio:deviceX/scan_elements/in_rot_quaternion_type, /sys/…/iio:deviceX/scan_elements/in_proximity_type</p>
 <table class="docutils align-default" id="abi-sys-iio-devicex-scan-elements-in-accel-type-available">
 <colgroup>
 <col style="width: 100%" />
@@ -4070,7 +4241,7 @@ this attribute lists them.</p>
 </tbody>
 </table>
 <p>Defined on file <a class="reference internal" href="#abi-file-testing-sysfs-bus-iio"><span class="std std-ref">sysfs-bus-iio</span></a></p>
-<p>Scan element control for triggered data capture.</p>
+<p>DESCRIPTION MISSING for /sys/…/iio:deviceX/scan_elements/in_accel_x_en, /sys/…/iio:deviceX/scan_elements/in_accel_y_en, /sys/…/iio:deviceX/scan_elements/in_accel_z_en, /sys/…/iio:deviceX/scan_elements/in_anglvel_x_en, /sys/…/iio:deviceX/scan_elements/in_anglvel_y_en, /sys/…/iio:deviceX/scan_elements/in_anglvel_z_en, /sys/…/iio:deviceX/scan_elements/in_magn_x_en, /sys/…/iio:deviceX/scan_elements/in_magn_y_en, /sys/…/iio:deviceX/scan_elements/in_magn_z_en, /sys/…/iio:deviceX/scan_elements/in_rot_from_north_magnetic_en, /sys/…/iio:deviceX/scan_elements/in_rot_from_north_true_en, /sys/…/iio:deviceX/scan_elements/in_rot_from_north_magnetic_tilt_comp_en, /sys/…/iio:deviceX/scan_elements/in_rot_from_north_true_tilt_comp_en, /sys/…/iio:deviceX/scan_elements/in_timestamp_en, /sys/…/iio:deviceX/scan_elements/in_voltageY_supply_en, /sys/…/iio:deviceX/scan_elements/in_voltageY_en, /sys/…/iio:deviceX/scan_elements/in_voltageY-voltageZ_en, /sys/…/iio:deviceX/scan_elements/in_voltageY_i_en, /sys/…/iio:deviceX/scan_elements/in_voltageY_q_en, /sys/…/iio:deviceX/scan_elements/in_voltage_i_en, /sys/…/iio:deviceX/scan_elements/in_voltage_q_en, /sys/…/iio:deviceX/scan_elements/in_incli_x_en, /sys/…/iio:deviceX/scan_elements/in_incli_y_en, /sys/…/iio:deviceX/scan_elements/in_pressureY_en, /sys/…/iio:deviceX/scan_elements/in_pressure_en, /sys/…/iio:deviceX/scan_elements/in_rot_quaternion_en, /sys/…/iio:deviceX/scan_elements/in_proximity_en</p>
 <table class="docutils align-default" id="abi-sys-iio-devicex-scan-elements-in-voltagey-index">
 <colgroup>
 <col style="width: 100%" />
@@ -4131,13 +4302,7 @@ this attribute lists them.</p>
 </tbody>
 </table>
 <p>Defined on file <a class="reference internal" href="#abi-file-testing-sysfs-bus-iio"><span class="std std-ref">sysfs-bus-iio</span></a></p>
-<p>A single positive integer specifying the position of this
-scan element in the buffer. Note these are not dependent on
-what is enabled and may not be contiguous. Thus for user-space
-to establish the full layout these must be used in conjunction
-with all _en attributes to establish which channels are present,
-and the relevant _type attributes to establish the data storage
-format.</p>
+<p>DESCRIPTION MISSING for /sys/…/iio:deviceX/scan_elements/in_voltageY_index, /sys/…/iio:deviceX/scan_elements/in_voltageY_supply_index, /sys/…/iio:deviceX/scan_elements/in_voltageY_i_index, /sys/…/iio:deviceX/scan_elements/in_voltageY_q_index, /sys/…/iio:deviceX/scan_elements/in_voltage_i_index, /sys/…/iio:deviceX/scan_elements/in_voltage_q_index, /sys/…/iio:deviceX/scan_elements/in_accel_x_index, /sys/…/iio:deviceX/scan_elements/in_accel_y_index, /sys/…/iio:deviceX/scan_elements/in_accel_z_index, /sys/…/iio:deviceX/scan_elements/in_anglvel_x_index, /sys/…/iio:deviceX/scan_elements/in_anglvel_y_index, /sys/…/iio:deviceX/scan_elements/in_anglvel_z_index, /sys/…/iio:deviceX/scan_elements/in_magn_x_index, /sys/…/iio:deviceX/scan_elements/in_magn_y_index, /sys/…/iio:deviceX/scan_elements/in_magn_z_index, /sys/…/iio:deviceX/scan_elements/in_rot_from_north_magnetic_index, /sys/…/iio:deviceX/scan_elements/in_rot_from_north_true_index, /sys/…/iio:deviceX/scan_elements/in_rot_from_north_magnetic_tilt_comp_index, /sys/…/iio:deviceX/scan_elements/in_rot_from_north_true_tilt_comp_index, /sys/…/iio:deviceX/scan_elements/in_incli_x_index, /sys/…/iio:deviceX/scan_elements/in_incli_y_index, /sys/…/iio:deviceX/scan_elements/in_timestamp_index, /sys/…/iio:deviceX/scan_elements/in_pressureY_index, /sys/…/iio:deviceX/scan_elements/in_pressure_index, /sys/…/iio:deviceX/scan_elements/in_rot_quaternion_index, /sys/…/iio:deviceX/scan_elements/in_proximity_index</p>
 <table class="docutils align-default" id="abi-sys-in-accel-filter-high-pass-3db-frequency">
 <colgroup>
 <col style="width: 100%" />
@@ -4430,7 +4595,7 @@ use it to calculate the time slice used for every task.</p>
 <p>Defined on file <a class="reference internal" href="#abi-file-testing-sysfs-block"><span class="std std-ref">sysfs-block</span></a></p>
 <p>The <a class="reference internal" href="#abi-sys-block-disk-part-stat"><span class="std std-ref">/sys/block/&lt;disk&gt;/&lt;part&gt;/stat</span></a> files display the
 I/O statistics of partition &lt;part&gt;. The format is the
-same as the above-written /sys/block/&lt;disk&gt;/stat
+same as the above-written <a class="reference internal" href="#abi-sys-block-disk-stat"><span class="std std-ref">/sys/block/&lt;disk&gt;/stat</span></a>
 format.</p>
 <table class="docutils align-default" id="abi-sys-block-disk-partition-alignment-offset">
 <colgroup>
@@ -10457,7 +10622,7 @@ firmware upgrade by writing [Yy1] to the file.</p>
 </table>
 <p>Defined on file <a class="reference internal" href="#abi-file-testing-sysfs-bus-i3c"><span class="std std-ref">sysfs-bus-i3c</span></a></p>
 <p>These directories are just symbolic links to
-/sys/bus/i3c/devices/i3c-&lt;bus-id&gt;/&lt;bus-id&gt;-&lt;device-pid&gt;.</p>
+<a class="reference internal" href="#abi-sys-bus-i3c-devices-i3c-bus-id-bus-id-device-pid"><span class="std std-ref">/sys/bus/i3c/devices/i3c-&lt;bus-id&gt;/&lt;bus-id&gt;-&lt;device-pid&gt;</span></a>.</p>
 <table class="docutils align-default" id="abi-sys-bus-i3c-devices-i3c-bus-id">
 <colgroup>
 <col style="width: 100%" />
@@ -10832,11 +10997,7 @@ using the bridge_switch_en attribute.</p>
 </tbody>
 </table>
 <p>Defined on file <a class="reference internal" href="#abi-file-testing-sysfs-bus-iio"><span class="std std-ref">sysfs-bus-iio</span></a></p>
-<p>A read-only value indicating the bytes of data available in the
-buffer. In the case of an output buffer, this indicates the
-amount of empty space available to write data to. In the case of
-an input buffer, this indicates the amount of data available for
-reading.</p>
+<p>DESCRIPTION MISSING for /sys/bus/iio/devices/iio:deviceX/buffer/data_available</p>
 <table class="docutils align-default" id="abi-sys-bus-iio-devices-iio-devicex-buffer-enable">
 <colgroup>
 <col style="width: 100%" />
@@ -10847,8 +11008,7 @@ reading.</p>
 </tbody>
 </table>
 <p>Defined on file <a class="reference internal" href="#abi-file-testing-sysfs-bus-iio"><span class="std std-ref">sysfs-bus-iio</span></a></p>
-<p>Actually start the buffer capture up.  Will start trigger
-if first device and appropriate.</p>
+<p>DESCRIPTION MISSING for /sys/bus/iio/devices/iio:deviceX/buffer/enable</p>
 <table class="docutils align-default" id="abi-sys-bus-iio-devices-iio-devicex-buffer-hwfifo-enabled">
 <colgroup>
 <col style="width: 100%" />
@@ -10953,7 +11113,7 @@ then the hardware watermark will remain unset.</p>
 </tbody>
 </table>
 <p>Defined on file <a class="reference internal" href="#abi-file-testing-sysfs-bus-iio"><span class="std std-ref">sysfs-bus-iio</span></a></p>
-<p>Number of scans contained by the buffer.</p>
+<p>DESCRIPTION MISSING for /sys/bus/iio/devices/iio:deviceX/buffer/length</p>
 <table class="docutils align-default" id="abi-sys-bus-iio-devices-iio-devicex-buffer-length-align-bytes">
 <colgroup>
 <col style="width: 100%" />
@@ -10983,6 +11143,69 @@ enabled.</p>
 </colgroup>
 <tbody>
 <tr class="row-odd"><td><p><strong>/sys/bus/iio/devices/iio:deviceX/buffer/watermark</strong></p></td>
+</tr>
+</tbody>
+</table>
+<p>Defined on file <a class="reference internal" href="#abi-file-testing-sysfs-bus-iio"><span class="std std-ref">sysfs-bus-iio</span></a></p>
+<p>DESCRIPTION MISSING for /sys/bus/iio/devices/iio:deviceX/buffer/watermark</p>
+<table class="docutils align-default" id="abi-sys-bus-iio-devices-iio-devicex-buffery">
+<colgroup>
+<col style="width: 100%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><strong>/sys/bus/iio/devices/iio:deviceX/bufferY</strong></p></td>
+</tr>
+</tbody>
+</table>
+<p>Defined on file <a class="reference internal" href="#abi-file-testing-sysfs-bus-iio"><span class="std std-ref">sysfs-bus-iio</span></a></p>
+<p>Directory containing interfaces for elements that will be
+captured for a single triggered sample set in the buffer.</p>
+<p>Since kernel 5.11 the scan_elements attributes are merged into
+the bufferY directory, to be configurable per buffer.</p>
+<table class="docutils align-default" id="abi-sys-bus-iio-devices-iio-devicex-buffery-data-available">
+<colgroup>
+<col style="width: 100%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><strong>/sys/bus/iio/devices/iio:deviceX/bufferY/data_available</strong></p></td>
+</tr>
+</tbody>
+</table>
+<p>Defined on file <a class="reference internal" href="#abi-file-testing-sysfs-bus-iio"><span class="std std-ref">sysfs-bus-iio</span></a></p>
+<p>A read-only value indicating the bytes of data available in the
+buffer. In the case of an output buffer, this indicates the
+amount of empty space available to write data to. In the case of
+an input buffer, this indicates the amount of data available for
+reading.</p>
+<table class="docutils align-default" id="abi-sys-bus-iio-devices-iio-devicex-buffery-enable">
+<colgroup>
+<col style="width: 100%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><strong>/sys/bus/iio/devices/iio:deviceX/bufferY/enable</strong></p></td>
+</tr>
+</tbody>
+</table>
+<p>Defined on file <a class="reference internal" href="#abi-file-testing-sysfs-bus-iio"><span class="std std-ref">sysfs-bus-iio</span></a></p>
+<p>Actually start the buffer capture up.  Will start trigger
+if first device and appropriate.</p>
+<table class="docutils align-default" id="abi-sys-bus-iio-devices-iio-devicex-buffery-length">
+<colgroup>
+<col style="width: 100%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><strong>/sys/bus/iio/devices/iio:deviceX/bufferY/length</strong></p></td>
+</tr>
+</tbody>
+</table>
+<p>Defined on file <a class="reference internal" href="#abi-file-testing-sysfs-bus-iio"><span class="std std-ref">sysfs-bus-iio</span></a></p>
+<p>Number of scans contained by the buffer.</p>
+<table class="docutils align-default" id="abi-sys-bus-iio-devices-iio-devicex-buffery-watermark">
+<colgroup>
+<col style="width: 100%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><strong>/sys/bus/iio/devices/iio:deviceX/bufferY/watermark</strong></p></td>
 </tr>
 </tbody>
 </table>
@@ -11408,7 +11631,7 @@ are listed in this attribute.</p>
 <p>Hardware applied calibration offset (assumed to fix production
 inaccuracies). Values represent a real physical offset expressed
 in SI units (m/s^2 for accelerometer and rad/s for gyroscope).</p>
-<table class="docutils align-default" id="abi-sys-bus-iio-devices-iio-devicex-in-accel-x-calibbiase">
+<table class="docutils align-default" id="abi-sys-bus-iio-devices-iio-devicex-in-accel-x-calibbiasc">
 <colgroup>
 <col style="width: 100%" />
 </colgroup>
@@ -11735,100 +11958,6 @@ trigger, and remains enabled for the duration of this
 selected mode.</p>
 </dd>
 </dl>
-<table class="docutils align-default" id="abi-sys-bus-iio-devices-iio-devicex-in-count0-polarity">
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<tbody>
-<tr class="row-odd"><td><p><strong>/sys/bus/iio/devices/iio:deviceX/in_count0_polarity</strong></p></td>
-</tr>
-</tbody>
-</table>
-<p>Defined on file <a class="reference internal" href="#abi-file-testing-sysfs-bus-iio-lptimer-stm32"><span class="std std-ref">sysfs-bus-iio-lptimer-stm32</span></a></p>
-<p>Configure the device encoder/counter active edge:</p>
-<ul class="simple">
-<li><p>rising-edge</p></li>
-<li><p>falling-edge</p></li>
-<li><p>both-edges</p></li>
-</ul>
-<p>In non-quadrature mode, device counts up on active edge.</p>
-<p>In quadrature mode, encoder counting scenarios are as follows:</p>
-<table class="docutils align-default">
-<colgroup>
-<col style="width: 16%" />
-<col style="width: 18%" />
-<col style="width: 18%" />
-<col style="width: 16%" />
-<col style="width: 18%" />
-<col style="width: 16%" />
-</colgroup>
-<tbody>
-<tr class="row-odd"><td rowspan="2"><p>Active
-edge</p></td>
-<td rowspan="2"><p>Level on
-opposite
-signal</p></td>
-<td colspan="2"><p>IN1 signal</p></td>
-<td colspan="2"><p>IN2 signal</p></td>
-</tr>
-<tr class="row-even"><td><p>Rising</p></td>
-<td><p>Falling</p></td>
-<td><p>Rising</p></td>
-<td><p>Falling</p></td>
-</tr>
-<tr class="row-odd"><td><p>Rising
-edge</p></td>
-<td><p>High -&gt;
-Low  -&gt;</p></td>
-<td><p>Down
-Up</p></td>
-<td><ul class="simple">
-<li></li>
-<li></li>
-</ul>
-</td>
-<td><p>Up
-Down</p></td>
-<td><ul class="simple">
-<li></li>
-<li></li>
-</ul>
-</td>
-</tr>
-<tr class="row-even"><td><p>Falling
-edge</p></td>
-<td><p>High -&gt;
-Low  -&gt;</p></td>
-<td><ul class="simple">
-<li></li>
-<li></li>
-</ul>
-</td>
-<td><p>Up
-Down</p></td>
-<td><ul class="simple">
-<li></li>
-<li></li>
-</ul>
-</td>
-<td><p>Down
-Up</p></td>
-</tr>
-<tr class="row-odd"><td><p>Both
-edges</p></td>
-<td><p>High -&gt;
-Low  -&gt;</p></td>
-<td><p>Down
-Up</p></td>
-<td><p>Up
-Down</p></td>
-<td><p>Up
-Down</p></td>
-<td><p>Down
-Up</p></td>
-</tr>
-</tbody>
-</table>
 <table class="docutils align-default" id="abi-sys-bus-iio-devices-iio-devicex-in-count0-preset">
 <colgroup>
 <col style="width: 100%" />
@@ -11839,41 +11968,12 @@ Up</p></td>
 </tbody>
 </table>
 <p>Defined on file <a class="reference internal" href="#abi-file-testing-sysfs-bus-iio-timer-stm32"><span class="std std-ref">sysfs-bus-iio-timer-stm32</span></a></p>
-<p>Defined on file <a class="reference internal" href="#abi-file-testing-sysfs-bus-iio-lptimer-stm32"><span class="std std-ref">sysfs-bus-iio-lptimer-stm32</span></a></p>
 <p>Reading returns the current preset value.
 Writing sets the preset value.
 When counting up the counter starts from 0 and fires an
 event when reach preset value.
 When counting down the counter start from preset value
 and fire event when reach 0.</p>
-<p>Reading returns the current preset value. Writing sets the
-preset value. Encoder counts continuously from 0 to preset
-value, depending on direction (up/down).</p>
-<table class="docutils align-default" id="abi-sys-bus-iio-devices-iio-devicex-in-count0-quadrature-mode">
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<tbody>
-<tr class="row-odd"><td><p><strong>/sys/bus/iio/devices/iio:deviceX/in_count0_quadrature_mode</strong></p></td>
-</tr>
-</tbody>
-</table>
-<p>Defined on file <a class="reference internal" href="#abi-file-testing-sysfs-bus-iio-lptimer-stm32"><span class="std std-ref">sysfs-bus-iio-lptimer-stm32</span></a></p>
-<p>Configure the device counter quadrature modes:</p>
-<ul class="simple">
-<li><dl class="simple">
-<dt>non-quadrature:</dt><dd><p>Encoder IN1 input servers as the count input (up
-direction).</p>
-</dd>
-</dl>
-</li>
-<li><dl class="simple">
-<dt>quadrature:</dt><dd><p>Encoder IN1 and IN2 inputs are mixed to get direction
-and count.</p>
-</dd>
-</dl>
-</li>
-</ul>
 <table class="docutils align-default" id="abi-sys-bus-iio-devices-iio-devicex-in-count0-trigger-mode">
 <colgroup>
 <col style="width: 100%" />
@@ -11900,98 +12000,6 @@ rising edges.</p>
 <p>Defined on file <a class="reference internal" href="#abi-file-testing-sysfs-bus-iio"><span class="std std-ref">sysfs-bus-iio</span></a></p>
 <p>This interface is deprecated; please use the Counter subsystem.</p>
 <p>Raw counter device counters direction for channel Y.</p>
-<table class="docutils align-default" id="abi-sys-bus-iio-devices-iio-devicex-in-county-count-mode">
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<tbody>
-<tr class="row-odd"><td><p><strong>/sys/bus/iio/devices/iio:deviceX/in_countY_count_mode</strong></p></td>
-</tr>
-</tbody>
-</table>
-<p>Defined on file <a class="reference internal" href="#abi-file-testing-sysfs-bus-iio-counter-104-quad-8"><span class="std std-ref">sysfs-bus-iio-counter-104-quad-8</span></a></p>
-<p>This interface is deprecated; please use the Counter subsystem.</p>
-<p>Count mode for channel Y. Four count modes are available:
-normal, range limit, non-recycle, and modulo-n. The preset value
-for channel Y is used by the count mode where required.</p>
-<dl class="simple">
-<dt>Normal:</dt><dd><p>Counting is continuous in either direction.</p>
-</dd>
-<dt>Range Limit:</dt><dd><p>An upper or lower limit is set, mimicking limit switches
-in the mechanical counterpart. The upper limit is set to
-the preset value, while the lower limit is set to 0. The
-counter freezes at count = preset when counting up, and
-at count = 0 when counting down. At either of these
-limits, the counting is resumed only when the count
-direction is reversed.</p>
-</dd>
-<dt>Non-recycle:</dt><dd><p>Counter is disabled whenever a 24-bit count overflow or
-underflow takes place. The counter is re-enabled when a
-new count value is loaded to the counter via a preset
-operation or write to raw.</p>
-</dd>
-<dt>Modulo-N:</dt><dd><p>A count boundary is set between 0 and the preset value.
-The counter is reset to 0 at count = preset when
-counting up, while the counter is set to the preset
-value at count = 0 when counting down; the counter does
-not freeze at the bundary points, but counts
-continuously throughout.</p>
-</dd>
-</dl>
-<table class="docutils align-default" id="abi-sys-bus-iio-devices-iio-devicex-in-county-noise-error">
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<tbody>
-<tr class="row-odd"><td><p><strong>/sys/bus/iio/devices/iio:deviceX/in_countY_noise_error</strong></p></td>
-</tr>
-</tbody>
-</table>
-<p>Defined on file <a class="reference internal" href="#abi-file-testing-sysfs-bus-iio-counter-104-quad-8"><span class="std std-ref">sysfs-bus-iio-counter-104-quad-8</span></a></p>
-<p>This interface is deprecated; please use the Counter subsystem.</p>
-<p>Read-only attribute that indicates whether excessive noise is
-present at the channel Y count inputs in quadrature clock mode;
-irrelevant in non-quadrature clock mode.</p>
-<table class="docutils align-default" id="abi-sys-bus-iio-devices-iio-devicex-in-county-preset">
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<tbody>
-<tr class="row-odd"><td><p><strong>/sys/bus/iio/devices/iio:deviceX/in_countY_preset</strong></p></td>
-</tr>
-</tbody>
-</table>
-<p>Defined on file <a class="reference internal" href="#abi-file-testing-sysfs-bus-iio-counter-104-quad-8"><span class="std std-ref">sysfs-bus-iio-counter-104-quad-8</span></a></p>
-<p>This interface is deprecated; please use the Counter subsystem.</p>
-<p>If the counter device supports preset registers, the preset
-count for channel Y is provided by this attribute.</p>
-<table class="docutils align-default" id="abi-sys-bus-iio-devices-iio-devicex-in-county-quadrature-mode">
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<tbody>
-<tr class="row-odd"><td><p><strong>/sys/bus/iio/devices/iio:deviceX/in_countY_quadrature_mode</strong></p></td>
-</tr>
-</tbody>
-</table>
-<p>Defined on file <a class="reference internal" href="#abi-file-testing-sysfs-bus-iio-counter-104-quad-8"><span class="std std-ref">sysfs-bus-iio-counter-104-quad-8</span></a></p>
-<p>This interface is deprecated; please use the Counter subsystem.</p>
-<p>Configure channel Y counter for non-quadrature or quadrature
-clock mode. Selecting non-quadrature clock mode will disable
-synchronous load mode. In quadrature clock mode, the channel Y
-scale attribute selects the encoder phase division (scale of 1
-selects full-cycle, scale of 0.5 selects half-cycle, scale of
-0.25 selects quarter-cycle) processed by the channel Y counter.</p>
-<dl class="simple">
-<dt>Non-quadrature:</dt><dd><p>The filter and decoder circuit are bypassed. Encoder A
-input serves as the count input and B as the UP/DOWN
-direction control input, with B = 1 selecting UP Count
-mode and B = 0 selecting Down Count mode.</p>
-</dd>
-<dt>Quadrature:</dt><dd><p>Encoder A and B inputs are digitally filtered and
-decoded for UP/DN clock.</p>
-</dd>
-</dl>
 <table class="docutils align-default" id="abi-sys-bus-iio-devices-iio-devicex-in-county-raw">
 <colgroup>
 <col style="width: 100%" />
@@ -12006,20 +12014,6 @@ decoded for UP/DN clock.</p>
 <p>Raw counter device counts from channel Y. For quadrature
 counters, multiplication by an available [Y]_scale results in
 the counts of a single quadrature signal phase from channel Y.</p>
-<table class="docutils align-default" id="abi-sys-bus-iio-devices-iio-devicex-in-county-set-to-preset-on-index">
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<tbody>
-<tr class="row-odd"><td><p><strong>/sys/bus/iio/devices/iio:deviceX/in_countY_set_to_preset_on_index</strong></p></td>
-</tr>
-</tbody>
-</table>
-<p>Defined on file <a class="reference internal" href="#abi-file-testing-sysfs-bus-iio-counter-104-quad-8"><span class="std std-ref">sysfs-bus-iio-counter-104-quad-8</span></a></p>
-<p>This interface is deprecated; please use the Counter subsystem.</p>
-<p>Whether to set channel Y counter with channel Y preset value
-when channel Y index input is active, or continuously count.
-Valid attribute values are boolean.</p>
 <table class="docutils align-default" id="abi-sys-bus-iio-devices-iio-devicex-in-count-count-direction-available">
 <colgroup>
 <col style="width: 100%" />
@@ -12036,27 +12030,6 @@ Valid attribute values are boolean.</p>
 <li><p>“up”  : counter device is increasing.</p></li>
 <li><p>“down”: counter device is decreasing.</p></li>
 </ul>
-<table class="docutils align-default" id="abi-sys-bus-iio-devices-iio-devicex-in-count-count-mode-available">
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<tbody>
-<tr class="row-odd"><td><p><strong>/sys/bus/iio/devices/iio:deviceX/in_count_count_mode_available</strong></p></td>
-</tr>
-<tr class="row-even"><td><p><strong>/sys/bus/iio/devices/iio:deviceX/in_count_noise_error_available</strong></p></td>
-</tr>
-<tr class="row-odd"><td><p><strong>/sys/bus/iio/devices/iio:deviceX/in_count_quadrature_mode_available</strong></p></td>
-</tr>
-<tr class="row-even"><td><p><strong>/sys/bus/iio/devices/iio:deviceX/in_index_index_polarity_available</strong></p></td>
-</tr>
-<tr class="row-odd"><td><p><strong>/sys/bus/iio/devices/iio:deviceX/in_index_synchronous_mode_available</strong></p></td>
-</tr>
-</tbody>
-</table>
-<p>Defined on file <a class="reference internal" href="#abi-file-testing-sysfs-bus-iio-counter-104-quad-8"><span class="std std-ref">sysfs-bus-iio-counter-104-quad-8</span></a></p>
-<p>This interface is deprecated; please use the Counter subsystem.</p>
-<p>Discrete set of available values for the respective counter
-configuration are listed in this file.</p>
 <table class="docutils align-default" id="abi-sys-bus-iio-devices-iio-devicex-in-count-enable-mode-available">
 <colgroup>
 <col style="width: 100%" />
@@ -12068,28 +12041,6 @@ configuration are listed in this file.</p>
 </table>
 <p>Defined on file <a class="reference internal" href="#abi-file-testing-sysfs-bus-iio-timer-stm32"><span class="std std-ref">sysfs-bus-iio-timer-stm32</span></a></p>
 <p>Reading returns the list possible enable modes.</p>
-<table class="docutils align-default" id="abi-sys-bus-iio-devices-iio-devicex-in-count-polarity-available">
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<tbody>
-<tr class="row-odd"><td><p><strong>/sys/bus/iio/devices/iio:deviceX/in_count_polarity_available</strong></p></td>
-</tr>
-</tbody>
-</table>
-<p>Defined on file <a class="reference internal" href="#abi-file-testing-sysfs-bus-iio-lptimer-stm32"><span class="std std-ref">sysfs-bus-iio-lptimer-stm32</span></a></p>
-<p>Reading returns the list possible active edges.</p>
-<table class="docutils align-default" id="abi-sys-bus-iio-devices-iio-devicex-in-count-quadrature-mode-available">
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<tbody>
-<tr class="row-odd"><td><p><strong>/sys/bus/iio/devices/iio:deviceX/in_count_quadrature_mode_available</strong></p></td>
-</tr>
-</tbody>
-</table>
-<p>Defined on file <a class="reference internal" href="#abi-file-testing-sysfs-bus-iio-lptimer-stm32"><span class="std std-ref">sysfs-bus-iio-lptimer-stm32</span></a></p>
-<p>Reading returns the list possible quadrature modes.</p>
 <table class="docutils align-default" id="abi-sys-bus-iio-devices-iio-devicex-in-count-trigger-mode-available">
 <colgroup>
 <col style="width: 100%" />
@@ -12301,6 +12252,21 @@ scale and offset are milli percent.</p>
 <p>Defined on file <a class="reference internal" href="#abi-file-testing-sysfs-bus-iio-light-lm3533-als"><span class="std std-ref">sysfs-bus-iio-light-lm3533-als</span></a></p>
 <p>Get the current light zone (0..4) as defined by the
 in_illuminance0_threshY_{falling,rising} thresholds.</p>
+<table class="docutils align-default" id="abi-sys-bus-iio-devices-iio-devicex-in-illuminance-hysteresis-relative">
+<colgroup>
+<col style="width: 100%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><strong>/sys/bus/iio/devices/iio:deviceX/in_illuminance_hysteresis_relative</strong></p></td>
+</tr>
+<tr class="row-even"><td><p><strong>/sys/bus/iio/devices/iio:deviceX/in_intensity_hysteresis_relative</strong></p></td>
+</tr>
+</tbody>
+</table>
+<p>Defined on file <a class="reference internal" href="#abi-file-testing-sysfs-bus-iio"><span class="std std-ref">sysfs-bus-iio</span></a></p>
+<p>Specify the percent for light sensor relative to the channel
+absolute value that a data field should change before an event
+is generated. Units are a percentage of the prior reading.</p>
 <table class="docutils align-default" id="abi-sys-bus-iio-devices-iio-devicex-in-incli-x-raw">
 <colgroup>
 <col style="width: 100%" />
@@ -12318,19 +12284,6 @@ in_illuminance0_threshY_{falling,rising} thresholds.</p>
 <p>Inclination raw reading about axis x, y or z (may be
 arbitrarily assigned). Data converted by application of offset
 and scale to degrees.</p>
-<table class="docutils align-default" id="abi-sys-bus-iio-devices-iio-devicex-in-indexy-index-polarity">
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<tbody>
-<tr class="row-odd"><td><p><strong>/sys/bus/iio/devices/iio:deviceX/in_indexY_index_polarity</strong></p></td>
-</tr>
-</tbody>
-</table>
-<p>Defined on file <a class="reference internal" href="#abi-file-testing-sysfs-bus-iio-counter-104-quad-8"><span class="std std-ref">sysfs-bus-iio-counter-104-quad-8</span></a></p>
-<p>This interface is deprecated; please use the Counter subsystem.</p>
-<p>Active level of channel Y index input; irrelevant in
-non-synchronous load mode.</p>
 <table class="docutils align-default" id="abi-sys-bus-iio-devices-iio-devicex-in-indexy-raw">
 <colgroup>
 <col style="width: 100%" />
@@ -12346,34 +12299,6 @@ non-synchronous load mode.</p>
 provides an absolute positional reference (e.g. a pulse once per
 revolution) which may be used to home positional systems as
 required.</p>
-<table class="docutils align-default" id="abi-sys-bus-iio-devices-iio-devicex-in-indexy-synchronous-mode">
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<tbody>
-<tr class="row-odd"><td><p><strong>/sys/bus/iio/devices/iio:deviceX/in_indexY_synchronous_mode</strong></p></td>
-</tr>
-</tbody>
-</table>
-<p>Defined on file <a class="reference internal" href="#abi-file-testing-sysfs-bus-iio-counter-104-quad-8"><span class="std std-ref">sysfs-bus-iio-counter-104-quad-8</span></a></p>
-<p>This interface is deprecated; please use the Counter subsystem.</p>
-<p>Configure channel Y counter for non-synchronous or synchronous
-load mode. Synchronous load mode cannot be selected in
-non-quadrature clock mode.</p>
-<dl class="simple">
-<dt>Non-synchronous:</dt><dd><p>A logic low level is the active level at this index
-input. The index function (as enabled via
-set_to_preset_on_index) is performed directly on the
-active level of the index input.</p>
-</dd>
-<dt>Synchronous:</dt><dd><p>Intended for interfacing with encoder Index output in
-quadrature clock mode. The active level is configured
-via index_polarity. The index function (as enabled via
-set_to_preset_on_index) is performed synchronously with
-the quadrature clock on the active level of the index
-input.</p>
-</dd>
-</dl>
 <table class="docutils align-default" id="abi-sys-bus-iio-devices-iio-devicex-in-intensityy-offset">
 <colgroup>
 <col style="width: 100%" />
@@ -12741,6 +12666,9 @@ physical sensors.</p>
 <p>Defined on file <a class="reference internal" href="#abi-file-testing-sysfs-bus-iio-proximity-as3935"><span class="std std-ref">sysfs-bus-iio-proximity-as3935</span></a></p>
 <p>Get the current distance in meters of storm (1km steps)
 1000-40000 = distance in meters</p>
+<p>What            /sys/bus/iio/devices/iio:deviceX/noise_level_tripped
+When 1 the noise level is over the trip level and not reporting
+valid data</p>
 <table class="docutils align-default" id="abi-sys-bus-iio-devices-iio-devicex-in-proximity-nearlevel">
 <colgroup>
 <col style="width: 100%" />
@@ -13347,6 +13275,54 @@ Writing sets the system calibration mode.</p>
 There are two available options:
 “zero_scale” - calibrate to zero scale
 “full_scale” - calibrate to full scale</p>
+<table class="docutils align-default" id="abi-sys-bus-iio-devices-iio-devicex-label">
+<colgroup>
+<col style="width: 100%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><strong>/sys/bus/iio/devices/iio:deviceX/label</strong></p></td>
+</tr>
+</tbody>
+</table>
+<p>Defined on file <a class="reference internal" href="#abi-file-testing-sysfs-bus-iio"><span class="std std-ref">sysfs-bus-iio</span></a></p>
+<p>Optional symbolic label for a device.
+This is useful for userspace to be able to better identify an
+individual device.</p>
+<p>The contents of the label are free-form, but there are some
+standardized uses:</p>
+<p>For proximity sensors which give the proximity (of a person) to
+a certain wlan or wwan antenna the following standardized labels
+are used:</p>
+<ul class="simple">
+<li><p>“proximity-wifi”</p></li>
+<li><p>“proximity-lte”</p></li>
+<li><p>“proximity-wifi-lte”</p></li>
+<li><p>“proximity-wifi-left”</p></li>
+<li><p>“proximity-wifi-right”</p></li>
+</ul>
+<p>These are used to indicate to userspace that these proximity
+sensors may be used to tune transmit power to ensure that
+Specific Absorption Rate (SAR) limits are honored.
+The “-left” and “-right” labels are for devices with multiple
+antennas.</p>
+<p>In some laptops/tablets the standardized proximity sensor labels
+instead indicate proximity to a specific part of the device:</p>
+<ul class="simple">
+<li><p>“proximity-palmrest” indicates proximity to the keyboard’s palmrest</p></li>
+<li><p>“proximity-palmrest-left” indicates proximity to the left part of the palmrest</p></li>
+<li><p>“proximity-palmrest-right” indicates proximity to the right part of the palmrest</p></li>
+<li><p>“proximity-lap” indicates the device is being used on someone’s lap</p></li>
+</ul>
+<p>Note “proximity-lap” is special in that its value may be
+calculated by firmware from other sensor readings, rather then
+being a raw sensor reading.</p>
+<p>For accelerometers used in 2-in-1s with 360° (yoga-style) hinges,
+which have an accelerometer in both their base and their display,
+the following standardized labels are used:</p>
+<ul class="simple">
+<li><p>“accel-base”</p></li>
+<li><p>“accel-display”</p></li>
+</ul>
 <table class="docutils align-default" id="abi-sys-bus-iio-devices-iio-devicex-location">
 <colgroup>
 <col style="width: 100%" />
@@ -13697,14 +13673,11 @@ out_currentY_currentZ_raw, where Z is the current zone.</p>
 </tr>
 </tbody>
 </table>
-<p>Defined on file <a class="reference internal" href="#abi-file-testing-sysfs-bus-iio-humidity-hdc100x"><span class="std std-ref">sysfs-bus-iio-humidity-hdc100x</span></a></p>
-<p>Defined on file <a class="reference internal" href="#abi-file-testing-sysfs-bus-iio-humidity-hdc2010"><span class="std std-ref">sysfs-bus-iio-humidity-hdc2010</span></a></p>
+<p>Defined on file <a class="reference internal" href="#abi-file-testing-sysfs-bus-iio-humidity"><span class="std std-ref">sysfs-bus-iio-humidity</span></a></p>
 <p>Controls the heater device within the humidity sensor to get
 rid of excess condensation.</p>
-<p>Valid control values are 0 = OFF, and 1 = ON.
-Controls the heater device within the humidity sensor to get
-rid of excess condensation.</p>
-<p>Valid control values are 0 = OFF, and 1 = ON.</p>
+<p>In some devices, this is just a switch in which case 0 = OFF,
+and 1 = ON.</p>
 <table class="docutils align-default" id="abi-sys-bus-iio-devices-iio-devicex-out-resistance-raw-available">
 <colgroup>
 <col style="width: 100%" />
@@ -13990,8 +13963,7 @@ frequencies, we can specify the available values with:</p>
 </tbody>
 </table>
 <p>Defined on file <a class="reference internal" href="#abi-file-testing-sysfs-bus-iio"><span class="std std-ref">sysfs-bus-iio</span></a></p>
-<p>Directory containing interfaces for elements that will be
-captured for a single triggered sample set in the buffer.</p>
+<p>DESCRIPTION MISSING for /sys/bus/iio/devices/iio:deviceX/scan_elements</p>
 <table class="docutils align-default" id="abi-sys-bus-iio-devices-iio-devicex-sensor-max-range">
 <colgroup>
 <col style="width: 100%" />
@@ -14022,16 +13994,15 @@ in square brackets.</p>
 </tr>
 </tbody>
 </table>
-<p>Defined on file <a class="reference internal" href="#abi-file-testing-sysfs-bus-iio-distance-srf08"><span class="std std-ref">sysfs-bus-iio-distance-srf08</span></a></p>
-<p>Defined on file <a class="reference internal" href="#abi-file-testing-sysfs-bus-iio-proximity-as3935"><span class="std std-ref">sysfs-bus-iio-proximity-as3935</span></a></p>
-<p>Show or set the gain boost of the amp, from 0-31 range.
-default 31</p>
-<p>Show or set the gain boost of the amp, from 0-31 range.
+<p>Defined on file <a class="reference internal" href="#abi-file-testing-sysfs-bus-iio-proximity"><span class="std std-ref">sysfs-bus-iio-proximity</span></a></p>
+<p>Proximity sensors sometimes have a controllable amplifier
+on the signal from which time of flight measurements are
+taken.
+The appropriate values to take is dependent on both the
+sensor and it’s operating environment:
+* as3935 (0-31 range)
 18 = indoors (default)
 14 = outdoors</p>
-<p>What            /sys/bus/iio/devices/iio:deviceX/noise_level_tripped
-When 1 the noise level is over the trip level and not reporting
-valid data</p>
 <table class="docutils align-default" id="abi-sys-bus-iio-devices-iio-devicex-start-cleaning">
 <colgroup>
 <col style="width: 100%" />
@@ -16135,6 +16106,50 @@ in the PF’s SR-IOV extended capability structure’s TotalVFs
 element.  Drivers have the ability at probe time to reduce the
 value read from this file via the <a class="reference internal" href="../driver-api/pci/pci.html#c.pci_sriov_set_totalvfs" title="pci_sriov_set_totalvfs"><code class="xref c c-func docutils literal notranslate"><span class="pre">pci_sriov_set_totalvfs()</span></code></a>
 function.</p>
+<table class="docutils align-default" id="abi-sys-bus-pci-devices-sriov-vf-msix-count">
+<colgroup>
+<col style="width: 100%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><strong>/sys/bus/pci/devices/…/sriov_vf_msix_count</strong></p></td>
+</tr>
+</tbody>
+</table>
+<p>Defined on file <a class="reference internal" href="#abi-file-testing-sysfs-bus-pci"><span class="std std-ref">sysfs-bus-pci</span></a></p>
+<p>This file is associated with a SR-IOV virtual function (VF).
+It allows configuration of the number of MSI-X vectors for
+the VF. This allows devices that have a global pool of MSI-X
+vectors to optimally divide them between VFs based on VF usage.</p>
+<dl class="simple">
+<dt>The values accepted are:</dt><dd><ul class="simple">
+<li><dl class="simple">
+<dt>&gt; 0 - this number will be reported as the Table Size in the</dt><dd><p>VF’s MSI-X capability</p>
+</dd>
+</dl>
+</li>
+<li><p>&lt; 0 - not valid</p></li>
+<li><p>= 0 - will reset to the device default value</p></li>
+</ul>
+</dd>
+</dl>
+<p>The file is writable if the PF is bound to a driver that
+implements -&gt;sriov_set_msix_vec_count().</p>
+<table class="docutils align-default" id="abi-sys-bus-pci-devices-sriov-vf-total-msix">
+<colgroup>
+<col style="width: 100%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><strong>/sys/bus/pci/devices/…/sriov_vf_total_msix</strong></p></td>
+</tr>
+</tbody>
+</table>
+<p>Defined on file <a class="reference internal" href="#abi-file-testing-sysfs-bus-pci"><span class="std std-ref">sysfs-bus-pci</span></a></p>
+<p>This file is associated with a SR-IOV physical function (PF).
+It contains the total number of MSI-X vectors available for
+assignment to all virtual functions (VFs) associated with PF.
+The value will be zero if the device doesn’t support this
+functionality. For supported devices, the value will be
+constant and won’t be changed after MSI-X vectors assignment.</p>
 <table class="docutils align-default" id="abi-sys-bus-pci-devices-virtfnn">
 <colgroup>
 <col style="width: 100%" />
@@ -16630,7 +16645,7 @@ the format of DDDD:BB:DD.F-REG:SIZE:MASK will allow the guest
 to write and read from the PCI device. That is Domain:Bus:
 Device.Function-Register:Size:Mask (Domain is optional).
 For example:</p>
-<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>#echo 00:19.0-E0:2:FF &gt; :ref:`\/sys\/bus\/pci\/drivers\/pciback\/quirks &lt;abi_sys_bus_pci_drivers_pciback_quirks&gt;`
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>#echo 00:19.0-E0:2:FF &gt; /sys/bus/pci/drivers/pciback/quirks
 </pre></div>
 </div>
 <p>will allow the guest to read and write to the configuration
@@ -20092,7 +20107,7 @@ file.</p>
 <p>(WO) Add rbd block device.</p>
 <p>Usage: &lt;mon ip addr&gt; &lt;options&gt; &lt;pool name&gt; &lt;rbd image name&gt; [&lt;snap name&gt;]</p>
 <p>Example:</p>
-<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>$ echo &quot;192.168.0.1 name=admin rbd foo&quot; &gt; :ref:`\/sys\/bus\/rbd\/add &lt;abi_sys_bus_rbd_add&gt;`
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>$ echo &quot;192.168.0.1 name=admin rbd foo&quot; &gt; /sys/bus/rbd/add
 </pre></div>
 </div>
 <p>The snapshot name can be “-” or omitted to map the image
@@ -20112,7 +20127,7 @@ device. If snapshot is used, it will be mapped read-only.</p>
 parameter set to true.</p>
 <p>Usage is the same as for <a class="reference internal" href="#abi-sys-bus-rbd-add"><span class="std std-ref">/sys/bus/rbd/add</span></a>. If present, this
 should be used instead of the latter: any attempts to use
-<a class="reference internal" href="#abi-sys-bus-rbd-add"><span class="std std-ref">/sys/bus/rbd/add</span></a> if /sys/bus/rbd/add_single_major is available
+<a class="reference internal" href="#abi-sys-bus-rbd-add"><span class="std std-ref">/sys/bus/rbd/add</span></a> if <a class="reference internal" href="#abi-sys-bus-rbd-add-single-major"><span class="std std-ref">/sys/bus/rbd/add_single_major</span></a> is available
 will fail for backwards compatibility reasons.</p>
 <table class="docutils align-default" id="abi-sys-bus-rbd-devices-dev-id-image-id">
 <colgroup>
@@ -20288,7 +20303,7 @@ entity_addr_t (address + nonce). The format is
 <p>(WO) Remove rbd block device.</p>
 <p>Usage: &lt;dev-id&gt; [force]</p>
 <p>Example:</p>
-<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>$ echo 2 &gt; :ref:`\/sys\/bus\/rbd\/remove &lt;abi_sys_bus_rbd_remove&gt;`
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>$ echo 2 &gt; /sys/bus/rbd/remove
 </pre></div>
 </div>
 <p>Optional “force” argument which when passed will wait for
@@ -20309,7 +20324,7 @@ driver after initiating the removal will be failed. (August
 parameter set to true.</p>
 <p>Usage is the same as for <a class="reference internal" href="#abi-sys-bus-rbd-remove"><span class="std std-ref">/sys/bus/rbd/remove</span></a>. If present, this
 should be used instead of the latter: any attempts to use
-<a class="reference internal" href="#abi-sys-bus-rbd-remove"><span class="std std-ref">/sys/bus/rbd/remove</span></a> if /sys/bus/rbd/remove_single_major is
+<a class="reference internal" href="#abi-sys-bus-rbd-remove"><span class="std std-ref">/sys/bus/rbd/remove</span></a> if <a class="reference internal" href="#abi-sys-bus-rbd-remove-single-major"><span class="std std-ref">/sys/bus/rbd/remove_single_major</span></a> is
 available will fail for backwards compatibility reasons.</p>
 <table class="docutils align-default" id="abi-sys-bus-rbd-supported-features">
 <colgroup>
@@ -20606,7 +20621,7 @@ is returned.</p>
 expected under most buses. /sys/bus/soc/devices is of particular
 interest, as it contains a symlink for each SoC device found on
 the system. Each symlink points back into the aforementioned
-/sys/devices/socX devices.</p>
+<a class="reference internal" href="#abi-sys-devices-socx"><span class="std std-ref">/sys/devices/socX</span></a> devices.</p>
 <table class="docutils align-default" id="abi-sys-bus-soundwire-devices-sdw-master-n-revision">
 <colgroup>
 <col style="width: 100%" />
@@ -27957,6 +27972,64 @@ sysfs entries.</p></td>
 <p>Defined on file <a class="reference internal" href="#abi-file-testing-sysfs-class-mic"><span class="std std-ref">sysfs-class-mic</span></a></p>
 <p>Provides information about the silicon stepping for an Intel
 MIC device. For example - “A0” or “B0”</p>
+<table class="docutils align-default" id="abi-sys-class-misc-drivers-dw-xdata-pcie-device-write">
+<colgroup>
+<col style="width: 100%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><strong>/sys/class/misc/drivers/dw-xdata-pcie.&lt;device&gt;/write</strong></p></td>
+</tr>
+</tbody>
+</table>
+<p>Defined on file <a class="reference internal" href="#abi-file-testing-sysfs-driver-xdata"><span class="std std-ref">sysfs-driver-xdata</span></a></p>
+<p>Allows the user to enable the PCIe traffic generator which
+will create write TLPs frames - from the Root Complex to the
+Endpoint direction or to disable the PCIe traffic generator
+in all directions.</p>
+<p>Write y/1/on to enable, n/0/off to disable</p>
+<dl class="simple">
+<dt>Usage e.g.</dt><dd><p>echo 1 &gt; /sys/class/misc/dw-xdata-pcie.&lt;device&gt;/write</p>
+</dd>
+<dt>or</dt><dd><p>echo 0 &gt; /sys/class/misc/dw-xdata-pcie.&lt;device&gt;/write</p>
+</dd>
+</dl>
+<p>The user can read the current PCIe link throughput generated
+through this generator in MB/s.</p>
+<dl class="simple">
+<dt>Usage e.g.</dt><dd><p>cat /sys/class/misc/dw-xdata-pcie.&lt;device&gt;/write
+204</p>
+</dd>
+</dl>
+<p>The file is read and write.</p>
+<table class="docutils align-default" id="abi-sys-class-misc-dw-xdata-pcie-device-read">
+<colgroup>
+<col style="width: 100%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><strong>/sys/class/misc/dw-xdata-pcie.&lt;device&gt;/read</strong></p></td>
+</tr>
+</tbody>
+</table>
+<p>Defined on file <a class="reference internal" href="#abi-file-testing-sysfs-driver-xdata"><span class="std std-ref">sysfs-driver-xdata</span></a></p>
+<p>Allows the user to enable the PCIe traffic generator which
+will create read TLPs frames - from the Endpoint to the Root
+Complex direction or to disable the PCIe traffic generator
+in all directions.</p>
+<p>Write y/1/on to enable, n/0/off to disable</p>
+<dl class="simple">
+<dt>Usage e.g.</dt><dd><p>echo 1 &gt; /sys/class/misc/dw-xdata-pcie.&lt;device&gt;/read</p>
+</dd>
+<dt>or</dt><dd><p>echo 0 &gt; /sys/class/misc/dw-xdata-pcie.&lt;device&gt;/read</p>
+</dd>
+</dl>
+<p>The user can read the current PCIe link throughput generated
+through this generator in MB/s.</p>
+<dl class="simple">
+<dt>Usage e.g.</dt><dd><p>cat /sys/class/misc/dw-xdata-pcie.&lt;device&gt;/read
+199</p>
+</dd>
+</dl>
+<p>The file is read and write.</p>
 <table class="docutils align-default" id="abi-sys-class-mtd">
 <colgroup>
 <col style="width: 100%" />
@@ -32105,7 +32178,7 @@ return it to the “offline” state.</p>
 <p>Provide information about RNBD-client.
 All sysfs files that are not read-only provide the usage information on read:</p>
 <p>Example:</p>
-<div class="highlight-none notranslate"><div class="highlight"><pre><span></span># cat :ref:`\/sys\/class\/rnbd\-client\/ctl\/map_device &lt;abi_sys_class_rnbd_client_ctl_map_device&gt;`
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span># cat /sys/class/rnbd-client/ctl/map_device
 
 &gt; Usage: echo &quot;sessname=&lt;name of the rtrs session&gt; path=&lt;[srcaddr,]dstaddr&gt;
 &gt; [path=&lt;[srcaddr,]dstaddr&gt;] device_path=&lt;full path on remote side&gt;
@@ -36530,12 +36603,12 @@ system.</p>
 <p>read only
 This sysfs file exposes the cpumask which is designated to make
 HCALLs to retrieve hv-gpci pmu event counter data.</p>
-<table class="docutils align-default" id="abi-sys-devices-pci0000-00-qemu0001-00-capability">
+<table class="docutils align-default" id="abi-sys-devices-pci0000-00-qemu0001-00-capability-for-mmio">
 <colgroup>
 <col style="width: 100%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td><p><strong>/sys/devices/pci0000:00/*/QEMU0001:00/capability</strong></p></td>
+<tr class="row-odd"><td><p><strong>/sys/devices/pci0000:00/*/QEMU0001:00/capability for MMIO</strong></p></td>
 </tr>
 </tbody>
 </table>
@@ -39944,8 +40017,8 @@ is read-write.  When read, it returns the online/offline
 state of the memory block.  When written, root can toggle
 the online/offline state of a memory block using the following
 commands:</p>
-<div class="highlight-none notranslate"><div class="highlight"><pre><span></span># echo online &gt; :ref:`\/sys\/devices\/system\/memory\/memoryX\/state &lt;abi_sys_devices_system_memory_memoryx_state&gt;`
-# echo offline &gt; :ref:`\/sys\/devices\/system\/memory\/memoryX\/state &lt;abi_sys_devices_system_memory_memoryx_state&gt;`
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span># echo online &gt; /sys/devices/system/memory/memoryX/state
+# echo offline &gt; /sys/devices/system/memory/memoryX/state
 </pre></div>
 </div>
 <p>On newer kernel versions, advanced states can be specified
@@ -43698,7 +43771,7 @@ files “type” and “data”. “type” file is the string
 representation of setup_data type. “data” file is the binary
 representation of setup_data payload.</p>
 <p>The whole boot_params directory structure is like below:</p>
-<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>:ref:`\/sys\/kernel\/boot_params &lt;abi_sys_kernel_boot_params&gt;`
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>/sys/kernel/boot_params
 |__ data
 |__ setup_data
 |   |__ 0
@@ -45679,11 +45752,11 @@ data.</p>
 <div class="highlight-none notranslate"><div class="highlight"><pre><span></span>// Request EC info type 3 (EC firmware build date)
 // Corresponds with sending type 0x00f0 with
 // MBOX = [38, 00, 03, 00]
-$ echo 00 f0 38 00 03 00 &gt; :ref:`\/sys\/kernel\/debug\/wilco_ec\/raw &lt;abi_sys_kernel_debug_wilco_ec_raw&gt;`
+$ echo 00 f0 38 00 03 00 &gt; /sys/kernel/debug/wilco_ec/raw
 // View the result. The decoded ASCII result &quot;12/21/18&quot; is
 // included after the raw hex.
 // Corresponds with MBOX = [00, 00, 31, 32, 2f, 32, 31, 38, ...]
-$ cat :ref:`\/sys\/kernel\/debug\/wilco_ec\/raw &lt;abi_sys_kernel_debug_wilco_ec_raw&gt;`
+$ cat /sys/kernel/debug/wilco_ec/raw
 00 00 31 32 2f 32 31 2f 31 38 00 38 00 01 00 2f 00  ..12/21/18.8...
 </pre></div>
 </div>
@@ -46080,7 +46153,7 @@ related information in /sys/kernel/.</p>
 <p><a class="reference internal" href="#abi-sys-kernel-mm-cma"><span class="std std-ref">/sys/kernel/mm/cma/</span></a> contains a subdirectory for each CMA
 heap name (also sometimes called CMA areas).</p>
 <p>Each CMA heap subdirectory (that is, each
-:ref:<a href="#id1"><span class="problematic" id="id2">`</span></a>/sys/kernel/mm/cma/ &lt;abi_sys_kernel_mm_cma&gt;`&lt;cma-heap-name&gt; directory) contains the
+/sys/kernel/mm/cma/&lt;cma-heap-name&gt; directory) contains the
 following items:</p>
 <blockquote>
 <div><p>alloc_pages_success
@@ -46243,7 +46316,7 @@ used for all swappable pages.</p>
 <p><a class="reference internal" href="#abi-sys-kernel-profiling"><span class="std std-ref">/sys/kernel/profiling</span></a> is the runtime equivalent
 of the boot-time profile= option.</p>
 <p>You can get the same effect running:</p>
-<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>echo 2 &gt; :ref:`\/sys\/kernel\/profiling &lt;abi_sys_kernel_profiling&gt;`
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>echo 2 &gt; /sys/kernel/profiling
 </pre></div>
 </div>
 <p>as you would by issuing profile=2 on the boot
@@ -47181,7 +47254,7 @@ subsystem.</p>
 </table>
 <p>Defined on file <a class="reference internal" href="#abi-file-testing-sysfs-power"><span class="std std-ref">sysfs-power</span></a></p>
 <p>The <a class="reference internal" href="#abi-sys-power-autosleep"><span class="std std-ref">/sys/power/autosleep</span></a> file can be written one of the strings
-returned by reads from /sys/power/state.  If that happens, a
+returned by reads from <a class="reference internal" href="#abi-sys-power-state"><span class="std std-ref">/sys/power/state</span></a>.  If that happens, a
 work item attempting to trigger a transition of the system to
 the sleep state represented by that string is queued up.  This
 attempt will only succeed if there are no active wakeup sources
@@ -47218,10 +47291,10 @@ the system will be rebooted.</p>
 <p>Additionally, <a class="reference internal" href="#abi-sys-power-disk"><span class="std std-ref">/sys/power/disk</span></a> can be used to turn on one of the
 two testing modes of the suspend-to-disk mechanism: ‘testproc’
 or ‘test’.  If the suspend-to-disk mechanism is in the
-‘testproc’ mode, writing ‘disk’ to /sys/power/state will cause
+‘testproc’ mode, writing ‘disk’ to <a class="reference internal" href="#abi-sys-power-state"><span class="std std-ref">/sys/power/state</span></a> will cause
 the kernel to disable nonboot CPUs and freeze tasks, wait for 5
 seconds, unfreeze tasks and enable nonboot CPUs.  If it is in
-the ‘test’ mode, writing ‘disk’ to /sys/power/state will cause
+the ‘test’ mode, writing ‘disk’ to <a class="reference internal" href="#abi-sys-power-state"><span class="std std-ref">/sys/power/state</span></a> will cause
 the kernel to disable nonboot CPUs and freeze tasks, shrink
 memory, suspend devices, wait for 5 seconds, resume devices,
 unfreeze tasks and enable nonboot CPUs.  Then, we are able to
@@ -47274,7 +47347,7 @@ limit, which is set to around 2/5 of available RAM by default.</p>
 system suspend.  Reading from it returns the available modes
 as “s2idle” (always present), “shallow” and “deep” (present if
 supported).  The mode that will be used on subsequent attempts
-to suspend the system (by writing “mem” to the /sys/power/state
+to suspend the system (by writing “mem” to the <a class="reference internal" href="#abi-sys-power-state"><span class="std std-ref">/sys/power/state</span></a>
 file described above) is enclosed in square brackets.</p>
 <p>Writing one of the above strings to this file causes the mode
 represented by it to be used on subsequent attempts to suspend
@@ -47653,7 +47726,7 @@ flag is unset, or “0” otherwise.</p>
 <p>The <a class="reference internal" href="#abi-sys-power-wake-lock"><span class="std std-ref">/sys/power/wake_lock</span></a> file allows user space to create
 wakeup source objects and activate them on demand (if one of
 those wakeup sources is active, reads from the
-/sys/power/wakeup_count file block or return false).  When a
+<a class="reference internal" href="#abi-sys-power-wakeup-count"><span class="std std-ref">/sys/power/wakeup_count</span></a> file block or return false).  When a
 string without white space is written to <a class="reference internal" href="#abi-sys-power-wake-lock"><span class="std std-ref">/sys/power/wake_lock</span></a>,
 it will be assumed to represent a wakeup source name.  If there
 is a wakeup source object with that name, it will be activated
@@ -47681,13 +47754,13 @@ the moment, separated with spaces.</p>
 </table>
 <p>Defined on file <a class="reference internal" href="#abi-file-testing-sysfs-power"><span class="std std-ref">sysfs-power</span></a></p>
 <p>The <a class="reference internal" href="#abi-sys-power-wake-unlock"><span class="std std-ref">/sys/power/wake_unlock</span></a> file allows user space to deactivate
-wakeup sources created with the help of /sys/power/wake_lock.
+wakeup sources created with the help of <a class="reference internal" href="#abi-sys-power-wake-lock"><span class="std std-ref">/sys/power/wake_lock</span></a>.
 When a string is written to <a class="reference internal" href="#abi-sys-power-wake-unlock"><span class="std std-ref">/sys/power/wake_unlock</span></a>, it will be
 assumed to represent the name of a wakeup source to deactivate.</p>
 <p>If a wakeup source object of that name exists and is active at
 the moment, it will be deactivated.</p>
 <p>Reads from this file return a string consisting of the names of
-wakeup sources created with the help of /sys/power/wake_lock
+wakeup sources created with the help of <a class="reference internal" href="#abi-sys-power-wake-lock"><span class="std std-ref">/sys/power/wake_lock</span></a>
 that are inactive at the moment, separated with spaces.</p>
 <table class="docutils align-default" id="abi-sys-power-wakeup-count">
 <colgroup>
@@ -49349,6 +49422,7 @@ modification.</p>
 <li><p><a class="reference internal" href="#abi-sys-bus-iio-devices-triggerx"><span class="std std-ref">/sys/bus/iio/devices/triggerX</span></a></p></li>
 <li><p><a class="reference internal" href="#abi-sys-bus-iio-devices-iio-devicex-buffer"><span class="std std-ref">/sys/bus/iio/devices/iio:deviceX/buffer</span></a></p></li>
 <li><p><a class="reference internal" href="#abi-sys-bus-iio-devices-iio-devicex-name"><span class="std std-ref">/sys/bus/iio/devices/iio:deviceX/name</span></a></p></li>
+<li><p><a class="reference internal" href="#abi-sys-bus-iio-devices-iio-devicex-label"><span class="std std-ref">/sys/bus/iio/devices/iio:deviceX/label</span></a></p></li>
 <li><p><a class="reference internal" href="#abi-sys-bus-iio-devices-iio-devicex-current-timestamp-clock"><span class="std std-ref">/sys/bus/iio/devices/iio:deviceX/current_timestamp_clock</span></a></p></li>
 <li><p><a class="reference internal" href="#abi-sys-bus-iio-devices-iio-devicex-sampling-frequency"><span class="std std-ref">/sys/bus/iio/devices/iio:deviceX/sampling_frequency</span></a></p></li>
 <li><p><a class="reference internal" href="#abi-sys-bus-iio-devices-iio-devicex-sampling-frequency"><span class="std std-ref">/sys/bus/iio/devices/iio:deviceX/in_intensity_sampling_frequency</span></a></p></li>
@@ -49478,10 +49552,10 @@ modification.</p>
 <li><p><a class="reference internal" href="#abi-sys-bus-iio-devices-iio-devicex-in-accel-x-calibbias"><span class="std std-ref">/sys/bus/iio/devices/iio:deviceX/in_anglvel_x_calibbias</span></a></p></li>
 <li><p><a class="reference internal" href="#abi-sys-bus-iio-devices-iio-devicex-in-accel-x-calibbias"><span class="std std-ref">/sys/bus/iio/devices/iio:deviceX/in_anglvel_y_calibbias</span></a></p></li>
 <li><p><a class="reference internal" href="#abi-sys-bus-iio-devices-iio-devicex-in-accel-x-calibbias"><span class="std std-ref">/sys/bus/iio/devices/iio:deviceX/in_anglvel_z_calibbias</span></a></p></li>
-<li><p><a class="reference internal" href="#abi-sys-bus-iio-devices-iio-devicex-in-accel-x-calibbiase"><span class="std std-ref">/sys/bus/iio/devices/iio:deviceX/in_illuminance0_calibbias</span></a></p></li>
-<li><p><a class="reference internal" href="#abi-sys-bus-iio-devices-iio-devicex-in-accel-x-calibbiase"><span class="std std-ref">/sys/bus/iio/devices/iio:deviceX/in_proximity0_calibbias</span></a></p></li>
-<li><p><a class="reference internal" href="#abi-sys-bus-iio-devices-iio-devicex-in-accel-x-calibbiase"><span class="std std-ref">/sys/bus/iio/devices/iio:deviceX/in_pressureY_calibbias</span></a></p></li>
-<li><p><a class="reference internal" href="#abi-sys-bus-iio-devices-iio-devicex-in-accel-x-calibbiase"><span class="std std-ref">/sys/bus/iio/devices/iio:deviceX/in_pressure_calibbias</span></a></p></li>
+<li><p><a class="reference internal" href="#abi-sys-bus-iio-devices-iio-devicex-in-accel-x-calibbiasc"><span class="std std-ref">/sys/bus/iio/devices/iio:deviceX/in_illuminance0_calibbias</span></a></p></li>
+<li><p><a class="reference internal" href="#abi-sys-bus-iio-devices-iio-devicex-in-accel-x-calibbiasc"><span class="std std-ref">/sys/bus/iio/devices/iio:deviceX/in_proximity0_calibbias</span></a></p></li>
+<li><p><a class="reference internal" href="#abi-sys-bus-iio-devices-iio-devicex-in-accel-x-calibbiasc"><span class="std std-ref">/sys/bus/iio/devices/iio:deviceX/in_pressureY_calibbias</span></a></p></li>
+<li><p><a class="reference internal" href="#abi-sys-bus-iio-devices-iio-devicex-in-accel-x-calibbiasc"><span class="std std-ref">/sys/bus/iio/devices/iio:deviceX/in_pressure_calibbias</span></a></p></li>
 <li><p><a class="reference internal" href="#abi-sys-bus-iio-devices-iio-devicex-in-voltagey-calibscale"><span class="std std-ref">/sys/bus/iio/devices/iio:deviceX/in_voltageY_calibscale</span></a></p></li>
 <li><p><a class="reference internal" href="#abi-sys-bus-iio-devices-iio-devicex-in-voltagey-calibscale"><span class="std std-ref">/sys/bus/iio/devices/iio:deviceX/in_voltageY_supply_calibscale</span></a></p></li>
 <li><p><a class="reference internal" href="#abi-sys-bus-iio-devices-iio-devicex-in-voltagey-calibscale"><span class="std std-ref">/sys/bus/iio/devices/iio:deviceX/in_voltageY_i_calibscale</span></a></p></li>
@@ -49877,8 +49951,11 @@ modification.</p>
 <li><p><a class="reference internal" href="#abi-sys-events-in-steps-change-value"><span class="std std-ref">/sys/…/events/in_steps_change_value</span></a></p></li>
 <li><p><a class="reference internal" href="#abi-sys-bus-iio-devices-iio-devicex-trigger-current-trigger"><span class="std std-ref">/sys/bus/iio/devices/iio:deviceX/trigger/current_trigger</span></a></p></li>
 <li><p><a class="reference internal" href="#abi-sys-bus-iio-devices-iio-devicex-buffer-length"><span class="std std-ref">/sys/bus/iio/devices/iio:deviceX/buffer/length</span></a></p></li>
+<li><p><a class="reference internal" href="#abi-sys-bus-iio-devices-iio-devicex-buffery-length"><span class="std std-ref">/sys/bus/iio/devices/iio:deviceX/bufferY/length</span></a></p></li>
 <li><p><a class="reference internal" href="#abi-sys-bus-iio-devices-iio-devicex-buffer-enable"><span class="std std-ref">/sys/bus/iio/devices/iio:deviceX/buffer/enable</span></a></p></li>
+<li><p><a class="reference internal" href="#abi-sys-bus-iio-devices-iio-devicex-buffery-enable"><span class="std std-ref">/sys/bus/iio/devices/iio:deviceX/bufferY/enable</span></a></p></li>
 <li><p><a class="reference internal" href="#abi-sys-bus-iio-devices-iio-devicex-scan-elements"><span class="std std-ref">/sys/bus/iio/devices/iio:deviceX/scan_elements</span></a></p></li>
+<li><p><a class="reference internal" href="#abi-sys-bus-iio-devices-iio-devicex-buffery"><span class="std std-ref">/sys/bus/iio/devices/iio:deviceX/bufferY</span></a></p></li>
 <li><p><a class="reference internal" href="#abi-sys-iio-devicex-scan-elements-in-accel-x-en"><span class="std std-ref">/sys/…/iio:deviceX/scan_elements/in_accel_x_en</span></a></p></li>
 <li><p><a class="reference internal" href="#abi-sys-iio-devicex-scan-elements-in-accel-x-en"><span class="std std-ref">/sys/…/iio:deviceX/scan_elements/in_accel_y_en</span></a></p></li>
 <li><p><a class="reference internal" href="#abi-sys-iio-devicex-scan-elements-in-accel-x-en"><span class="std std-ref">/sys/…/iio:deviceX/scan_elements/in_accel_z_en</span></a></p></li>
@@ -49906,6 +49983,33 @@ modification.</p>
 <li><p><a class="reference internal" href="#abi-sys-iio-devicex-scan-elements-in-accel-x-en"><span class="std std-ref">/sys/…/iio:deviceX/scan_elements/in_pressure_en</span></a></p></li>
 <li><p><a class="reference internal" href="#abi-sys-iio-devicex-scan-elements-in-accel-x-en"><span class="std std-ref">/sys/…/iio:deviceX/scan_elements/in_rot_quaternion_en</span></a></p></li>
 <li><p><a class="reference internal" href="#abi-sys-iio-devicex-scan-elements-in-accel-x-en"><span class="std std-ref">/sys/…/iio:deviceX/scan_elements/in_proximity_en</span></a></p></li>
+<li><p><a class="reference internal" href="#abi-sys-iio-devicex-buffery-in-accel-x-en"><span class="std std-ref">/sys/…/iio:deviceX/bufferY/in_accel_x_en</span></a></p></li>
+<li><p><a class="reference internal" href="#abi-sys-iio-devicex-buffery-in-accel-x-en"><span class="std std-ref">/sys/…/iio:deviceX/bufferY/in_accel_y_en</span></a></p></li>
+<li><p><a class="reference internal" href="#abi-sys-iio-devicex-buffery-in-accel-x-en"><span class="std std-ref">/sys/…/iio:deviceX/bufferY/in_accel_z_en</span></a></p></li>
+<li><p><a class="reference internal" href="#abi-sys-iio-devicex-buffery-in-accel-x-en"><span class="std std-ref">/sys/…/iio:deviceX/bufferY/in_anglvel_x_en</span></a></p></li>
+<li><p><a class="reference internal" href="#abi-sys-iio-devicex-buffery-in-accel-x-en"><span class="std std-ref">/sys/…/iio:deviceX/bufferY/in_anglvel_y_en</span></a></p></li>
+<li><p><a class="reference internal" href="#abi-sys-iio-devicex-buffery-in-accel-x-en"><span class="std std-ref">/sys/…/iio:deviceX/bufferY/in_anglvel_z_en</span></a></p></li>
+<li><p><a class="reference internal" href="#abi-sys-iio-devicex-buffery-in-accel-x-en"><span class="std std-ref">/sys/…/iio:deviceX/bufferY/in_magn_x_en</span></a></p></li>
+<li><p><a class="reference internal" href="#abi-sys-iio-devicex-buffery-in-accel-x-en"><span class="std std-ref">/sys/…/iio:deviceX/bufferY/in_magn_y_en</span></a></p></li>
+<li><p><a class="reference internal" href="#abi-sys-iio-devicex-buffery-in-accel-x-en"><span class="std std-ref">/sys/…/iio:deviceX/bufferY/in_magn_z_en</span></a></p></li>
+<li><p><a class="reference internal" href="#abi-sys-iio-devicex-buffery-in-accel-x-en"><span class="std std-ref">/sys/…/iio:deviceX/bufferY/in_rot_from_north_magnetic_en</span></a></p></li>
+<li><p><a class="reference internal" href="#abi-sys-iio-devicex-buffery-in-accel-x-en"><span class="std std-ref">/sys/…/iio:deviceX/bufferY/in_rot_from_north_true_en</span></a></p></li>
+<li><p><a class="reference internal" href="#abi-sys-iio-devicex-buffery-in-accel-x-en"><span class="std std-ref">/sys/…/iio:deviceX/bufferY/in_rot_from_north_magnetic_tilt_comp_en</span></a></p></li>
+<li><p><a class="reference internal" href="#abi-sys-iio-devicex-buffery-in-accel-x-en"><span class="std std-ref">/sys/…/iio:deviceX/bufferY/in_rot_from_north_true_tilt_comp_en</span></a></p></li>
+<li><p><a class="reference internal" href="#abi-sys-iio-devicex-buffery-in-accel-x-en"><span class="std std-ref">/sys/…/iio:deviceX/bufferY/in_timestamp_en</span></a></p></li>
+<li><p><a class="reference internal" href="#abi-sys-iio-devicex-buffery-in-accel-x-en"><span class="std std-ref">/sys/…/iio:deviceX/bufferY/in_voltageY_supply_en</span></a></p></li>
+<li><p><a class="reference internal" href="#abi-sys-iio-devicex-buffery-in-accel-x-en"><span class="std std-ref">/sys/…/iio:deviceX/bufferY/in_voltageY_en</span></a></p></li>
+<li><p><a class="reference internal" href="#abi-sys-iio-devicex-buffery-in-accel-x-en"><span class="std std-ref">/sys/…/iio:deviceX/bufferY/in_voltageY-voltageZ_en</span></a></p></li>
+<li><p><a class="reference internal" href="#abi-sys-iio-devicex-buffery-in-accel-x-en"><span class="std std-ref">/sys/…/iio:deviceX/bufferY/in_voltageY_i_en</span></a></p></li>
+<li><p><a class="reference internal" href="#abi-sys-iio-devicex-buffery-in-accel-x-en"><span class="std std-ref">/sys/…/iio:deviceX/bufferY/in_voltageY_q_en</span></a></p></li>
+<li><p><a class="reference internal" href="#abi-sys-iio-devicex-buffery-in-accel-x-en"><span class="std std-ref">/sys/…/iio:deviceX/bufferY/in_voltage_i_en</span></a></p></li>
+<li><p><a class="reference internal" href="#abi-sys-iio-devicex-buffery-in-accel-x-en"><span class="std std-ref">/sys/…/iio:deviceX/bufferY/in_voltage_q_en</span></a></p></li>
+<li><p><a class="reference internal" href="#abi-sys-iio-devicex-buffery-in-accel-x-en"><span class="std std-ref">/sys/…/iio:deviceX/bufferY/in_incli_x_en</span></a></p></li>
+<li><p><a class="reference internal" href="#abi-sys-iio-devicex-buffery-in-accel-x-en"><span class="std std-ref">/sys/…/iio:deviceX/bufferY/in_incli_y_en</span></a></p></li>
+<li><p><a class="reference internal" href="#abi-sys-iio-devicex-buffery-in-accel-x-en"><span class="std std-ref">/sys/…/iio:deviceX/bufferY/in_pressureY_en</span></a></p></li>
+<li><p><a class="reference internal" href="#abi-sys-iio-devicex-buffery-in-accel-x-en"><span class="std std-ref">/sys/…/iio:deviceX/bufferY/in_pressure_en</span></a></p></li>
+<li><p><a class="reference internal" href="#abi-sys-iio-devicex-buffery-in-accel-x-en"><span class="std std-ref">/sys/…/iio:deviceX/bufferY/in_rot_quaternion_en</span></a></p></li>
+<li><p><a class="reference internal" href="#abi-sys-iio-devicex-buffery-in-accel-x-en"><span class="std std-ref">/sys/…/iio:deviceX/bufferY/in_proximity_en</span></a></p></li>
 <li><p><a class="reference internal" href="#abi-sys-iio-devicex-scan-elements-in-accel-type"><span class="std std-ref">/sys/…/iio:deviceX/scan_elements/in_accel_type</span></a></p></li>
 <li><p><a class="reference internal" href="#abi-sys-iio-devicex-scan-elements-in-accel-type"><span class="std std-ref">/sys/…/iio:deviceX/scan_elements/in_anglvel_type</span></a></p></li>
 <li><p><a class="reference internal" href="#abi-sys-iio-devicex-scan-elements-in-accel-type"><span class="std std-ref">/sys/…/iio:deviceX/scan_elements/in_magn_type</span></a></p></li>
@@ -49922,6 +50026,22 @@ modification.</p>
 <li><p><a class="reference internal" href="#abi-sys-iio-devicex-scan-elements-in-accel-type"><span class="std std-ref">/sys/…/iio:deviceX/scan_elements/in_pressure_type</span></a></p></li>
 <li><p><a class="reference internal" href="#abi-sys-iio-devicex-scan-elements-in-accel-type"><span class="std std-ref">/sys/…/iio:deviceX/scan_elements/in_rot_quaternion_type</span></a></p></li>
 <li><p><a class="reference internal" href="#abi-sys-iio-devicex-scan-elements-in-accel-type"><span class="std std-ref">/sys/…/iio:deviceX/scan_elements/in_proximity_type</span></a></p></li>
+<li><p><a class="reference internal" href="#abi-sys-iio-devicex-buffery-in-accel-type"><span class="std std-ref">/sys/…/iio:deviceX/bufferY/in_accel_type</span></a></p></li>
+<li><p><a class="reference internal" href="#abi-sys-iio-devicex-buffery-in-accel-type"><span class="std std-ref">/sys/…/iio:deviceX/bufferY/in_anglvel_type</span></a></p></li>
+<li><p><a class="reference internal" href="#abi-sys-iio-devicex-buffery-in-accel-type"><span class="std std-ref">/sys/…/iio:deviceX/bufferY/in_magn_type</span></a></p></li>
+<li><p><a class="reference internal" href="#abi-sys-iio-devicex-buffery-in-accel-type"><span class="std std-ref">/sys/…/iio:deviceX/bufferY/in_incli_type</span></a></p></li>
+<li><p><a class="reference internal" href="#abi-sys-iio-devicex-buffery-in-accel-type"><span class="std std-ref">/sys/…/iio:deviceX/bufferY/in_voltageY_type</span></a></p></li>
+<li><p><a class="reference internal" href="#abi-sys-iio-devicex-buffery-in-accel-type"><span class="std std-ref">/sys/…/iio:deviceX/bufferY/in_voltage_type</span></a></p></li>
+<li><p><a class="reference internal" href="#abi-sys-iio-devicex-buffery-in-accel-type"><span class="std std-ref">/sys/…/iio:deviceX/bufferY/in_voltageY_supply_type</span></a></p></li>
+<li><p><a class="reference internal" href="#abi-sys-iio-devicex-buffery-in-accel-type"><span class="std std-ref">/sys/…/iio:deviceX/bufferY/in_voltageY_i_type</span></a></p></li>
+<li><p><a class="reference internal" href="#abi-sys-iio-devicex-buffery-in-accel-type"><span class="std std-ref">/sys/…/iio:deviceX/bufferY/in_voltageY_q_type</span></a></p></li>
+<li><p><a class="reference internal" href="#abi-sys-iio-devicex-buffery-in-accel-type"><span class="std std-ref">/sys/…/iio:deviceX/bufferY/in_voltage_i_type</span></a></p></li>
+<li><p><a class="reference internal" href="#abi-sys-iio-devicex-buffery-in-accel-type"><span class="std std-ref">/sys/…/iio:deviceX/bufferY/in_voltage_q_type</span></a></p></li>
+<li><p><a class="reference internal" href="#abi-sys-iio-devicex-buffery-in-accel-type"><span class="std std-ref">/sys/…/iio:deviceX/bufferY/in_timestamp_type</span></a></p></li>
+<li><p><a class="reference internal" href="#abi-sys-iio-devicex-buffery-in-accel-type"><span class="std std-ref">/sys/…/iio:deviceX/bufferY/in_pressureY_type</span></a></p></li>
+<li><p><a class="reference internal" href="#abi-sys-iio-devicex-buffery-in-accel-type"><span class="std std-ref">/sys/…/iio:deviceX/bufferY/in_pressure_type</span></a></p></li>
+<li><p><a class="reference internal" href="#abi-sys-iio-devicex-buffery-in-accel-type"><span class="std std-ref">/sys/…/iio:deviceX/bufferY/in_rot_quaternion_type</span></a></p></li>
+<li><p><a class="reference internal" href="#abi-sys-iio-devicex-buffery-in-accel-type"><span class="std std-ref">/sys/…/iio:deviceX/bufferY/in_proximity_type</span></a></p></li>
 <li><p><a class="reference internal" href="#abi-sys-iio-devicex-scan-elements-in-accel-type-available"><span class="std std-ref">/sys/…/iio:deviceX/scan_elements/in_accel_type_available</span></a></p></li>
 <li><p><a class="reference internal" href="#abi-sys-iio-devicex-scan-elements-in-voltagey-index"><span class="std std-ref">/sys/…/iio:deviceX/scan_elements/in_voltageY_index</span></a></p></li>
 <li><p><a class="reference internal" href="#abi-sys-iio-devicex-scan-elements-in-voltagey-index"><span class="std std-ref">/sys/…/iio:deviceX/scan_elements/in_voltageY_supply_index</span></a></p></li>
@@ -49949,6 +50069,32 @@ modification.</p>
 <li><p><a class="reference internal" href="#abi-sys-iio-devicex-scan-elements-in-voltagey-index"><span class="std std-ref">/sys/…/iio:deviceX/scan_elements/in_pressure_index</span></a></p></li>
 <li><p><a class="reference internal" href="#abi-sys-iio-devicex-scan-elements-in-voltagey-index"><span class="std std-ref">/sys/…/iio:deviceX/scan_elements/in_rot_quaternion_index</span></a></p></li>
 <li><p><a class="reference internal" href="#abi-sys-iio-devicex-scan-elements-in-voltagey-index"><span class="std std-ref">/sys/…/iio:deviceX/scan_elements/in_proximity_index</span></a></p></li>
+<li><p><a class="reference internal" href="#abi-sys-iio-devicex-buffery-in-voltagey-index"><span class="std std-ref">/sys/…/iio:deviceX/bufferY/in_voltageY_index</span></a></p></li>
+<li><p><a class="reference internal" href="#abi-sys-iio-devicex-buffery-in-voltagey-index"><span class="std std-ref">/sys/…/iio:deviceX/bufferY/in_voltageY_supply_index</span></a></p></li>
+<li><p><a class="reference internal" href="#abi-sys-iio-devicex-buffery-in-voltagey-index"><span class="std std-ref">/sys/…/iio:deviceX/bufferY/in_voltageY_i_index</span></a></p></li>
+<li><p><a class="reference internal" href="#abi-sys-iio-devicex-buffery-in-voltagey-index"><span class="std std-ref">/sys/…/iio:deviceX/bufferY/in_voltageY_q_index</span></a></p></li>
+<li><p><a class="reference internal" href="#abi-sys-iio-devicex-buffery-in-voltagey-index"><span class="std std-ref">/sys/…/iio:deviceX/bufferY/in_voltage_i_index</span></a></p></li>
+<li><p><a class="reference internal" href="#abi-sys-iio-devicex-buffery-in-voltagey-index"><span class="std std-ref">/sys/…/iio:deviceX/bufferY/in_voltage_q_index</span></a></p></li>
+<li><p><a class="reference internal" href="#abi-sys-iio-devicex-buffery-in-voltagey-index"><span class="std std-ref">/sys/…/iio:deviceX/bufferY/in_accel_x_index</span></a></p></li>
+<li><p><a class="reference internal" href="#abi-sys-iio-devicex-buffery-in-voltagey-index"><span class="std std-ref">/sys/…/iio:deviceX/bufferY/in_accel_y_index</span></a></p></li>
+<li><p><a class="reference internal" href="#abi-sys-iio-devicex-buffery-in-voltagey-index"><span class="std std-ref">/sys/…/iio:deviceX/bufferY/in_accel_z_index</span></a></p></li>
+<li><p><a class="reference internal" href="#abi-sys-iio-devicex-buffery-in-voltagey-index"><span class="std std-ref">/sys/…/iio:deviceX/bufferY/in_anglvel_x_index</span></a></p></li>
+<li><p><a class="reference internal" href="#abi-sys-iio-devicex-buffery-in-voltagey-index"><span class="std std-ref">/sys/…/iio:deviceX/bufferY/in_anglvel_y_index</span></a></p></li>
+<li><p><a class="reference internal" href="#abi-sys-iio-devicex-buffery-in-voltagey-index"><span class="std std-ref">/sys/…/iio:deviceX/bufferY/in_anglvel_z_index</span></a></p></li>
+<li><p><a class="reference internal" href="#abi-sys-iio-devicex-buffery-in-voltagey-index"><span class="std std-ref">/sys/…/iio:deviceX/bufferY/in_magn_x_index</span></a></p></li>
+<li><p><a class="reference internal" href="#abi-sys-iio-devicex-buffery-in-voltagey-index"><span class="std std-ref">/sys/…/iio:deviceX/bufferY/in_magn_y_index</span></a></p></li>
+<li><p><a class="reference internal" href="#abi-sys-iio-devicex-buffery-in-voltagey-index"><span class="std std-ref">/sys/…/iio:deviceX/bufferY/in_magn_z_index</span></a></p></li>
+<li><p><a class="reference internal" href="#abi-sys-iio-devicex-buffery-in-voltagey-index"><span class="std std-ref">/sys/…/iio:deviceX/bufferY/in_rot_from_north_magnetic_index</span></a></p></li>
+<li><p><a class="reference internal" href="#abi-sys-iio-devicex-buffery-in-voltagey-index"><span class="std std-ref">/sys/…/iio:deviceX/bufferY/in_rot_from_north_true_index</span></a></p></li>
+<li><p><a class="reference internal" href="#abi-sys-iio-devicex-buffery-in-voltagey-index"><span class="std std-ref">/sys/…/iio:deviceX/bufferY/in_rot_from_north_magnetic_tilt_comp_index</span></a></p></li>
+<li><p><a class="reference internal" href="#abi-sys-iio-devicex-buffery-in-voltagey-index"><span class="std std-ref">/sys/…/iio:deviceX/bufferY/in_rot_from_north_true_tilt_comp_index</span></a></p></li>
+<li><p><a class="reference internal" href="#abi-sys-iio-devicex-buffery-in-voltagey-index"><span class="std std-ref">/sys/…/iio:deviceX/bufferY/in_incli_x_index</span></a></p></li>
+<li><p><a class="reference internal" href="#abi-sys-iio-devicex-buffery-in-voltagey-index"><span class="std std-ref">/sys/…/iio:deviceX/bufferY/in_incli_y_index</span></a></p></li>
+<li><p><a class="reference internal" href="#abi-sys-iio-devicex-buffery-in-voltagey-index"><span class="std std-ref">/sys/…/iio:deviceX/bufferY/in_timestamp_index</span></a></p></li>
+<li><p><a class="reference internal" href="#abi-sys-iio-devicex-buffery-in-voltagey-index"><span class="std std-ref">/sys/…/iio:deviceX/bufferY/in_pressureY_index</span></a></p></li>
+<li><p><a class="reference internal" href="#abi-sys-iio-devicex-buffery-in-voltagey-index"><span class="std std-ref">/sys/…/iio:deviceX/bufferY/in_pressure_index</span></a></p></li>
+<li><p><a class="reference internal" href="#abi-sys-iio-devicex-buffery-in-voltagey-index"><span class="std std-ref">/sys/…/iio:deviceX/bufferY/in_rot_quaternion_index</span></a></p></li>
+<li><p><a class="reference internal" href="#abi-sys-iio-devicex-buffery-in-voltagey-index"><span class="std std-ref">/sys/…/iio:deviceX/bufferY/in_proximity_index</span></a></p></li>
 <li><p><a class="reference internal" href="#abi-sys-iio-devicex-in-activity-still-input"><span class="std std-ref">/sys/…/iio:deviceX/in_activity_still_input</span></a></p></li>
 <li><p><a class="reference internal" href="#abi-sys-iio-devicex-in-activity-still-input"><span class="std std-ref">/sys/…/iio:deviceX/in_activity_walking_input</span></a></p></li>
 <li><p><a class="reference internal" href="#abi-sys-iio-devicex-in-activity-still-input"><span class="std std-ref">/sys/…/iio:deviceX/in_activity_jogging_input</span></a></p></li>
@@ -50001,7 +50147,9 @@ modification.</p>
 <li><p><a class="reference internal" href="#abi-sys-iio-devicex-in-steps-debounce-count"><span class="std std-ref">/sys/…/iio:deviceX/in_steps_debounce_count</span></a></p></li>
 <li><p><a class="reference internal" href="#abi-sys-iio-devicex-in-steps-debounce-time"><span class="std std-ref">/sys/…/iio:deviceX/in_steps_debounce_time</span></a></p></li>
 <li><p><a class="reference internal" href="#abi-sys-bus-iio-devices-iio-devicex-buffer-watermark"><span class="std std-ref">/sys/bus/iio/devices/iio:deviceX/buffer/watermark</span></a></p></li>
+<li><p><a class="reference internal" href="#abi-sys-bus-iio-devices-iio-devicex-buffery-watermark"><span class="std std-ref">/sys/bus/iio/devices/iio:deviceX/bufferY/watermark</span></a></p></li>
 <li><p><a class="reference internal" href="#abi-sys-bus-iio-devices-iio-devicex-buffer-data-available"><span class="std std-ref">/sys/bus/iio/devices/iio:deviceX/buffer/data_available</span></a></p></li>
+<li><p><a class="reference internal" href="#abi-sys-bus-iio-devices-iio-devicex-buffery-data-available"><span class="std std-ref">/sys/bus/iio/devices/iio:deviceX/bufferY/data_available</span></a></p></li>
 <li><p><a class="reference internal" href="#abi-sys-bus-iio-devices-iio-devicex-buffer-hwfifo-enabled"><span class="std std-ref">/sys/bus/iio/devices/iio:deviceX/buffer/hwfifo_enabled</span></a></p></li>
 <li><p><a class="reference internal" href="#abi-sys-bus-iio-devices-iio-device-buffer-hwfifo-timeout"><span class="std std-ref">/sys/bus/iio/devices/iio:device*/buffer/hwfifo_timeout</span></a></p></li>
 <li><p><a class="reference internal" href="#abi-sys-bus-iio-devices-iio-devicex-buffer-hwfifo-watermark"><span class="std std-ref">/sys/bus/iio/devices/iio:deviceX/buffer/hwfifo_watermark</span></a></p></li>
@@ -50063,6 +50211,8 @@ modification.</p>
 <li><p><a class="reference internal" href="#abi-sys-bus-iio-devices-iio-devicex-in-intensity-x-raw"><span class="std std-ref">/sys/bus/iio/devices/iio:deviceX/in_intensity_y_raw</span></a></p></li>
 <li><p><a class="reference internal" href="#abi-sys-bus-iio-devices-iio-devicex-in-intensity-x-raw"><span class="std std-ref">/sys/bus/iio/devices/iio:deviceX/in_intensity_z_raw</span></a></p></li>
 <li><p><a class="reference internal" href="#abi-sys-bus-iio-devices-iio-devicex-in-angly-label"><span class="std std-ref">/sys/bus/iio/devices/iio:deviceX/in_anglY_label</span></a></p></li>
+<li><p><a class="reference internal" href="#abi-sys-bus-iio-devices-iio-devicex-in-illuminance-hysteresis-relative"><span class="std std-ref">/sys/bus/iio/devices/iio:deviceX/in_illuminance_hysteresis_relative</span></a></p></li>
+<li><p><a class="reference internal" href="#abi-sys-bus-iio-devices-iio-devicex-in-illuminance-hysteresis-relative"><span class="std std-ref">/sys/bus/iio/devices/iio:deviceX/in_intensity_hysteresis_relative</span></a></p></li>
 </ul>
 </div>
 <div class="section" id="file-home-ant-amazon-com-sjpark-linux-testing-sysfs-bus-iio-accel-adxl372">
@@ -50148,24 +50298,6 @@ modification.</p>
 <li><p><a class="reference internal" href="#abi-sys-bus-iio-devices-iio-devicex-in-concentration-voc-short-raw"><span class="std std-ref">/sys/bus/iio/devices/iio:deviceX/in_concentration_VOC_short_raw</span></a></p></li>
 </ul>
 </div>
-<div class="section" id="file-home-ant-amazon-com-sjpark-linux-testing-sysfs-bus-iio-counter-104-quad-8">
-<span id="abi-file-testing-sysfs-bus-iio-counter-104-quad-8"></span><h2>File /home/ANT.AMAZON.COM/sjpark/linux/testing/sysfs-bus-iio-counter-104-quad-8<a class="headerlink" href="#file-home-ant-amazon-com-sjpark-linux-testing-sysfs-bus-iio-counter-104-quad-8" title="Permalink to this headline">¶</a></h2>
-<p>Has the following ABI:</p>
-<ul class="simple">
-<li><p><a class="reference internal" href="#abi-sys-bus-iio-devices-iio-devicex-in-count-count-mode-available"><span class="std std-ref">/sys/bus/iio/devices/iio:deviceX/in_count_count_mode_available</span></a></p></li>
-<li><p><a class="reference internal" href="#abi-sys-bus-iio-devices-iio-devicex-in-count-count-mode-available"><span class="std std-ref">/sys/bus/iio/devices/iio:deviceX/in_count_noise_error_available</span></a></p></li>
-<li><p><a class="reference internal" href="#abi-sys-bus-iio-devices-iio-devicex-in-count-count-mode-available"><span class="std std-ref">/sys/bus/iio/devices/iio:deviceX/in_count_quadrature_mode_available</span></a></p></li>
-<li><p><a class="reference internal" href="#abi-sys-bus-iio-devices-iio-devicex-in-count-count-mode-available"><span class="std std-ref">/sys/bus/iio/devices/iio:deviceX/in_index_index_polarity_available</span></a></p></li>
-<li><p><a class="reference internal" href="#abi-sys-bus-iio-devices-iio-devicex-in-count-count-mode-available"><span class="std std-ref">/sys/bus/iio/devices/iio:deviceX/in_index_synchronous_mode_available</span></a></p></li>
-<li><p><a class="reference internal" href="#abi-sys-bus-iio-devices-iio-devicex-in-county-count-mode"><span class="std std-ref">/sys/bus/iio/devices/iio:deviceX/in_countY_count_mode</span></a></p></li>
-<li><p><a class="reference internal" href="#abi-sys-bus-iio-devices-iio-devicex-in-county-noise-error"><span class="std std-ref">/sys/bus/iio/devices/iio:deviceX/in_countY_noise_error</span></a></p></li>
-<li><p><a class="reference internal" href="#abi-sys-bus-iio-devices-iio-devicex-in-county-preset"><span class="std std-ref">/sys/bus/iio/devices/iio:deviceX/in_countY_preset</span></a></p></li>
-<li><p><a class="reference internal" href="#abi-sys-bus-iio-devices-iio-devicex-in-county-quadrature-mode"><span class="std std-ref">/sys/bus/iio/devices/iio:deviceX/in_countY_quadrature_mode</span></a></p></li>
-<li><p><a class="reference internal" href="#abi-sys-bus-iio-devices-iio-devicex-in-county-set-to-preset-on-index"><span class="std std-ref">/sys/bus/iio/devices/iio:deviceX/in_countY_set_to_preset_on_index</span></a></p></li>
-<li><p><a class="reference internal" href="#abi-sys-bus-iio-devices-iio-devicex-in-indexy-index-polarity"><span class="std std-ref">/sys/bus/iio/devices/iio:deviceX/in_indexY_index_polarity</span></a></p></li>
-<li><p><a class="reference internal" href="#abi-sys-bus-iio-devices-iio-devicex-in-indexy-synchronous-mode"><span class="std std-ref">/sys/bus/iio/devices/iio:deviceX/in_indexY_synchronous_mode</span></a></p></li>
-</ul>
-</div>
 <div class="section" id="file-home-ant-amazon-com-sjpark-linux-testing-sysfs-bus-iio-cros-ec">
 <span id="abi-file-testing-sysfs-bus-iio-cros-ec"></span><h2>File /home/ANT.AMAZON.COM/sjpark/linux/testing/sysfs-bus-iio-cros-ec<a class="headerlink" href="#file-home-ant-amazon-com-sjpark-linux-testing-sysfs-bus-iio-cros-ec" title="Permalink to this headline">¶</a></h2>
 <p>Has the following ABI:</p>
@@ -50204,7 +50336,6 @@ modification.</p>
 <span id="abi-file-testing-sysfs-bus-iio-distance-srf08"></span><h2>File /home/ANT.AMAZON.COM/sjpark/linux/testing/sysfs-bus-iio-distance-srf08<a class="headerlink" href="#file-home-ant-amazon-com-sjpark-linux-testing-sysfs-bus-iio-distance-srf08" title="Permalink to this headline">¶</a></h2>
 <p>Has the following ABI:</p>
 <ul class="simple">
-<li><p><a class="reference internal" href="#abi-sys-bus-iio-devices-iio-devicex-sensor-sensitivity"><span class="std std-ref">/sys/bus/iio/devices/iio:deviceX/sensor_sensitivity</span></a></p></li>
 <li><p><a class="reference internal" href="#abi-sys-bus-iio-devices-iio-devicex-sensor-max-range"><span class="std std-ref">/sys/bus/iio/devices/iio:deviceX/sensor_max_range</span></a></p></li>
 </ul>
 </div>
@@ -50264,16 +50395,8 @@ modification.</p>
 <li><p><a class="reference internal" href="#abi-sys-bus-iio-devices-iio-devicex-out-currenty-raw"><span class="std std-ref">/sys/bus/iio/devices/iio:deviceX/out_currentY_raw</span></a></p></li>
 </ul>
 </div>
-<div class="section" id="file-home-ant-amazon-com-sjpark-linux-testing-sysfs-bus-iio-humidity-hdc100x">
-<span id="abi-file-testing-sysfs-bus-iio-humidity-hdc100x"></span><h2>File /home/ANT.AMAZON.COM/sjpark/linux/testing/sysfs-bus-iio-humidity-hdc100x<a class="headerlink" href="#file-home-ant-amazon-com-sjpark-linux-testing-sysfs-bus-iio-humidity-hdc100x" title="Permalink to this headline">¶</a></h2>
-<p>Has the following ABI:</p>
-<ul class="simple">
-<li><p><a class="reference internal" href="#abi-sys-bus-iio-devices-iio-devicex-out-current-heater-raw"><span class="std std-ref">/sys/bus/iio/devices/iio:deviceX/out_current_heater_raw</span></a></p></li>
-<li><p><a class="reference internal" href="#abi-sys-bus-iio-devices-iio-devicex-out-current-heater-raw"><span class="std std-ref">/sys/bus/iio/devices/iio:deviceX/out_current_heater_raw_available</span></a></p></li>
-</ul>
-</div>
-<div class="section" id="file-home-ant-amazon-com-sjpark-linux-testing-sysfs-bus-iio-humidity-hdc2010">
-<span id="abi-file-testing-sysfs-bus-iio-humidity-hdc2010"></span><h2>File /home/ANT.AMAZON.COM/sjpark/linux/testing/sysfs-bus-iio-humidity-hdc2010<a class="headerlink" href="#file-home-ant-amazon-com-sjpark-linux-testing-sysfs-bus-iio-humidity-hdc2010" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="file-home-ant-amazon-com-sjpark-linux-testing-sysfs-bus-iio-humidity">
+<span id="abi-file-testing-sysfs-bus-iio-humidity"></span><h2>File /home/ANT.AMAZON.COM/sjpark/linux/testing/sysfs-bus-iio-humidity<a class="headerlink" href="#file-home-ant-amazon-com-sjpark-linux-testing-sysfs-bus-iio-humidity" title="Permalink to this headline">¶</a></h2>
 <p>Has the following ABI:</p>
 <ul class="simple">
 <li><p><a class="reference internal" href="#abi-sys-bus-iio-devices-iio-devicex-out-current-heater-raw"><span class="std std-ref">/sys/bus/iio/devices/iio:deviceX/out_current_heater_raw</span></a></p></li>
@@ -50370,17 +50493,6 @@ modification.</p>
 <li><p><a class="reference internal" href="#abi-sys-bus-iio-devices-device-n-in-proximity0-calibrate"><span class="std std-ref">/sys/bus/iio/devices/device[n]/in_proximity0_calibrate</span></a></p></li>
 </ul>
 </div>
-<div class="section" id="file-home-ant-amazon-com-sjpark-linux-testing-sysfs-bus-iio-lptimer-stm32">
-<span id="abi-file-testing-sysfs-bus-iio-lptimer-stm32"></span><h2>File /home/ANT.AMAZON.COM/sjpark/linux/testing/sysfs-bus-iio-lptimer-stm32<a class="headerlink" href="#file-home-ant-amazon-com-sjpark-linux-testing-sysfs-bus-iio-lptimer-stm32" title="Permalink to this headline">¶</a></h2>
-<p>Has the following ABI:</p>
-<ul class="simple">
-<li><p><a class="reference internal" href="#abi-sys-bus-iio-devices-iio-devicex-in-count0-preset"><span class="std std-ref">/sys/bus/iio/devices/iio:deviceX/in_count0_preset</span></a></p></li>
-<li><p><a class="reference internal" href="#abi-sys-bus-iio-devices-iio-devicex-in-count-count-mode-available"><span class="std std-ref">/sys/bus/iio/devices/iio:deviceX/in_count_quadrature_mode_available</span></a></p></li>
-<li><p><a class="reference internal" href="#abi-sys-bus-iio-devices-iio-devicex-in-count0-quadrature-mode"><span class="std std-ref">/sys/bus/iio/devices/iio:deviceX/in_count0_quadrature_mode</span></a></p></li>
-<li><p><a class="reference internal" href="#abi-sys-bus-iio-devices-iio-devicex-in-count-polarity-available"><span class="std std-ref">/sys/bus/iio/devices/iio:deviceX/in_count_polarity_available</span></a></p></li>
-<li><p><a class="reference internal" href="#abi-sys-bus-iio-devices-iio-devicex-in-count0-polarity"><span class="std std-ref">/sys/bus/iio/devices/iio:deviceX/in_count0_polarity</span></a></p></li>
-</ul>
-</div>
 <div class="section" id="file-home-ant-amazon-com-sjpark-linux-testing-sysfs-bus-iio-magnetometer-hmc5843">
 <span id="abi-file-testing-sysfs-bus-iio-magnetometer-hmc5843"></span><h2>File /home/ANT.AMAZON.COM/sjpark/linux/testing/sysfs-bus-iio-magnetometer-hmc5843<a class="headerlink" href="#file-home-ant-amazon-com-sjpark-linux-testing-sysfs-bus-iio-magnetometer-hmc5843" title="Permalink to this headline">¶</a></h2>
 <p>Has the following ABI:</p>
@@ -50417,6 +50529,7 @@ modification.</p>
 <p>Has the following ABI:</p>
 <ul class="simple">
 <li><p><a class="reference internal" href="#abi-sys-bus-iio-devices-iio-devicex-in-proximity-nearlevel"><span class="std std-ref">/sys/bus/iio/devices/iio:deviceX/in_proximity_nearlevel</span></a></p></li>
+<li><p><a class="reference internal" href="#abi-sys-bus-iio-devices-iio-devicex-sensor-sensitivity"><span class="std std-ref">/sys/bus/iio/devices/iio:deviceX/sensor_sensitivity</span></a></p></li>
 </ul>
 </div>
 <div class="section" id="file-home-ant-amazon-com-sjpark-linux-testing-sysfs-bus-iio-proximity-as3935">
@@ -50424,7 +50537,6 @@ modification.</p>
 <p>Has the following ABI:</p>
 <ul class="simple">
 <li><p><a class="reference internal" href="#abi-sys-bus-iio-devices-iio-devicex-in-proximity-input"><span class="std std-ref">/sys/bus/iio/devices/iio:deviceX/in_proximity_input</span></a></p></li>
-<li><p><a class="reference internal" href="#abi-sys-bus-iio-devices-iio-devicex-sensor-sensitivity"><span class="std std-ref">/sys/bus/iio/devices/iio:deviceX/sensor_sensitivity</span></a></p></li>
 </ul>
 </div>
 <div class="section" id="file-home-ant-amazon-com-sjpark-linux-testing-sysfs-bus-iio-scd30">
@@ -50724,6 +50836,8 @@ Interface Table (NFIT)’ section in the ACPI specification
 <li><p><a class="reference internal" href="#abi-sys-bus-pci-devices-p2pmem-published"><span class="std std-ref">/sys/bus/pci/devices/…/p2pmem/published</span></a></p></li>
 <li><p><a class="reference internal" href="#abi-sys-bus-pci-devices-link-clkpm"><span class="std std-ref">/sys/bus/pci/devices/…/link/clkpm</span></a></p></li>
 <li><p><a class="reference internal" href="#abi-sys-bus-pci-devices-power-state"><span class="std std-ref">/sys/bus/pci/devices/…/power_state</span></a></p></li>
+<li><p><a class="reference internal" href="#abi-sys-bus-pci-devices-sriov-vf-total-msix"><span class="std std-ref">/sys/bus/pci/devices/…/sriov_vf_total_msix</span></a></p></li>
+<li><p><a class="reference internal" href="#abi-sys-bus-pci-devices-sriov-vf-msix-count"><span class="std std-ref">/sys/bus/pci/devices/…/sriov_vf_msix_count</span></a></p></li>
 </ul>
 </div>
 <div class="section" id="file-home-ant-amazon-com-sjpark-linux-testing-sysfs-bus-pci-devices-aer-stats">
@@ -50775,7 +50889,7 @@ saw any problems).</p>
 <span id="abi-file-testing-sysfs-bus-pci-devices-pvpanic"></span><h2>File /home/ANT.AMAZON.COM/sjpark/linux/testing/sysfs-bus-pci-devices-pvpanic<a class="headerlink" href="#file-home-ant-amazon-com-sjpark-linux-testing-sysfs-bus-pci-devices-pvpanic" title="Permalink to this headline">¶</a></h2>
 <p>Has the following ABI:</p>
 <ul class="simple">
-<li><p><a class="reference internal" href="#abi-sys-devices-pci0000-00-qemu0001-00-capability"><span class="std std-ref">/sys/devices/pci0000:00/*/QEMU0001:00/capability</span></a></p></li>
+<li><p><a class="reference internal" href="#abi-sys-devices-pci0000-00-qemu0001-00-capability-for-mmio"><span class="std std-ref">/sys/devices/pci0000:00/*/QEMU0001:00/capability for MMIO</span></a></p></li>
 <li><p><a class="reference internal" href="#abi-sys-devices-pci0000-00-qemu0001-00-events"><span class="std std-ref">/sys/devices/pci0000:00/*/QEMU0001:00/events</span></a></p></li>
 </ul>
 </div>
@@ -51106,7 +51220,7 @@ adp8860, adp8861 and adp8863 devices: daylight (level 1), office (level 2) and
 dark (level 3). By default the brightness operates at the daylight brightness
 level.</p>
 <p>See also <a class="reference internal" href="#abi-sys-class-backlight-backlight-ambient-light-level"><span class="std std-ref">/sys/class/backlight/&lt;backlight&gt;/ambient_light_level</span></a> and
-/sys/class/backlight/&lt;backlight&gt;/ambient_light_zone.</p>
+<a class="reference internal" href="#abi-sys-class-backlight-backlight-ambient-light-zone"><span class="std std-ref">/sys/class/backlight/&lt;backlight&gt;/ambient_light_zone</span></a>.</p>
 <p>Has the following ABI:</p>
 <ul class="simple">
 <li><p><a class="reference internal" href="#abi-sys-class-backlight-backlight-ambient-light-zone-max"><span class="std std-ref">/sys/class/backlight/&lt;backlight&gt;/l1_daylight_max</span></a></p></li>
@@ -51120,7 +51234,7 @@ level.</p>
 <div class="section" id="file-home-ant-amazon-com-sjpark-linux-testing-sysfs-class-backlight-driver-adp8870">
 <span id="abi-file-testing-sysfs-class-backlight-driver-adp8870"></span><h2>File /home/ANT.AMAZON.COM/sjpark/linux/testing/sysfs-class-backlight-driver-adp8870<a class="headerlink" href="#file-home-ant-amazon-com-sjpark-linux-testing-sysfs-class-backlight-driver-adp8870" title="Permalink to this headline">¶</a></h2>
 <p>See also <a class="reference internal" href="#abi-sys-class-backlight-backlight-ambient-light-level"><span class="std std-ref">/sys/class/backlight/&lt;backlight&gt;/ambient_light_level</span></a> and
-/sys/class/backlight/&lt;backlight&gt;/ambient_light_zone.</p>
+<a class="reference internal" href="#abi-sys-class-backlight-backlight-ambient-light-zone"><span class="std std-ref">/sys/class/backlight/&lt;backlight&gt;/ambient_light_zone</span></a>.</p>
 <p>Has the following ABI:</p>
 <ul class="simple">
 <li><p><a class="reference internal" href="#abi-sys-class-backlight-backlight-ambient-light-zone-max"><span class="std std-ref">/sys/class/backlight/&lt;backlight&gt;/&lt;ambient light zone&gt;_max</span></a></p></li>
@@ -53211,6 +53325,14 @@ sysfs: (&lt;devid&gt; is in the format major:minor)</p>
 <li><p><a class="reference internal" href="#abi-sys-bus-hid-devices-bus-vid-pid-n-wacom-led-button-n-rawimg"><span class="std std-ref">/sys/bus/hid/devices/&lt;bus&gt;:&lt;vid&gt;:&lt;pid&gt;.&lt;n&gt;/wacom_led/button&lt;n&gt;_rawimg</span></a></p></li>
 <li><p><a class="reference internal" href="#abi-sys-bus-hid-devices-bus-vid-pid-n-wacom-remote-unpair-remote"><span class="std std-ref">/sys/bus/hid/devices/&lt;bus&gt;:&lt;vid&gt;:&lt;pid&gt;.&lt;n&gt;/wacom_remote/unpair_remote</span></a></p></li>
 <li><p><a class="reference internal" href="#abi-sys-bus-hid-devices-bus-vid-pid-n-wacom-remote-serial-number-remote-mode"><span class="std std-ref">/sys/bus/hid/devices/&lt;bus&gt;:&lt;vid&gt;:&lt;pid&gt;.&lt;n&gt;/wacom_remote/&lt;serial_number&gt;/remote_mode</span></a></p></li>
+</ul>
+</div>
+<div class="section" id="file-home-ant-amazon-com-sjpark-linux-testing-sysfs-driver-xdata">
+<span id="abi-file-testing-sysfs-driver-xdata"></span><h2>File /home/ANT.AMAZON.COM/sjpark/linux/testing/sysfs-driver-xdata<a class="headerlink" href="#file-home-ant-amazon-com-sjpark-linux-testing-sysfs-driver-xdata" title="Permalink to this headline">¶</a></h2>
+<p>Has the following ABI:</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="#abi-sys-class-misc-drivers-dw-xdata-pcie-device-write"><span class="std std-ref">/sys/class/misc/drivers/dw-xdata-pcie.&lt;device&gt;/write</span></a></p></li>
+<li><p><a class="reference internal" href="#abi-sys-class-misc-dw-xdata-pcie-device-read"><span class="std std-ref">/sys/class/misc/dw-xdata-pcie.&lt;device&gt;/read</span></a></p></li>
 </ul>
 </div>
 <div class="section" id="file-home-ant-amazon-com-sjpark-linux-testing-sysfs-driver-xen-blkback">

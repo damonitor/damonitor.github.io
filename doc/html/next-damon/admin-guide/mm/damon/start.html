@@ -62,7 +62,7 @@
             
             
               <div class="version">
-                5.12.0-rc4-mm1
+                5.12.0-rc6-mm1
               </div>
             
           
@@ -181,30 +181,47 @@ default user space tool.  Please note that this document describes only a part
 of its features for brevity.  Please refer to <a class="reference internal" href="usage.html"><span class="doc">Detailed Usages</span></a> for more details.</p>
 <div class="section" id="tl-dr">
 <h2>TL; DR<a class="headerlink" href="#tl-dr" title="Permalink to this headline">¶</a></h2>
-<p>Follow below 5 commands to monitor and visualize the access pattern of your
+<p>Follow below commands to monitor and visualize the access pattern of your
 workload.</p>
-<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>$ git clone https://github.com/sjp38/linux -b damon/master
-/* build the kernel with CONFIG_DAMON=y, install, reboot */
-$ mount -t debugfs none /sys/kernel/debug/
-$ cd linux/tools/damon
-$ ./damo record $(pidof &lt;your workload&gt;)
-$ ./damo report heats --heatmap access_pattern.png
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span># # build the kernel with CONFIG_DAMON_*=y, install it, and reboot
+# mount -t debugfs none /sys/kernel/debug/
+# git clone https://github.com/awslabs/damo
+# ./damo/damo record $(pidof &lt;your workload&gt;)
+# ./damo/damo report heat --plot_ascii
 </pre></div>
 </div>
+<p>The final command draws the access heatmap of <code class="docutils literal notranslate"><span class="pre">&lt;your</span> <span class="pre">workload&gt;</span></code>, heatmap,
+which shows when (y-axis) what memory region (x-axis) is how frequently
+accessed (number).</p>
+<blockquote>
+<div><p>111111111111111111111111111111111111111111111111111111110000
+111121111111111111111111111111211111111111111111111111110000
+000000000000000000000000000000000000000000000000001555552000
+000000000000000000000000000000000000000000000222223555552000
+000000000000000000000000000000000000000011111677775000000000
+000000000000000000000000000000000000000488888000000000000000
+000000000000000000000000000000000177888400000000000000000000
+000000000000000000000000000046666522222100000000000000000000
+000000000000000000000014444344444300000000000000000000000000
+000000000000000002222245555510000000000000000000000000000000
+# access_frequency:  0  1  2  3  4  5  6  7  8  9
+# x-axis: space (140286319947776-140286426374096: 101.496 MiB)
+# y-axis: time (605442256436361-605479951866441: 37.695430s)
+# resolution: 60x10 (1.692 MiB and 3.770s for each character)</p>
+</div></blockquote>
 </div>
 <div class="section" id="prerequisites">
 <h2>Prerequisites<a class="headerlink" href="#prerequisites" title="Permalink to this headline">¶</a></h2>
 <div class="section" id="kernel">
 <h3>Kernel<a class="headerlink" href="#kernel" title="Permalink to this headline">¶</a></h3>
 <p>You should first ensure your system is running on a kernel built with
-<code class="docutils literal notranslate"><span class="pre">CONFIG_DAMON=y</span></code>.</p>
+<code class="docutils literal notranslate"><span class="pre">CONFIG_DAMON_*=y</span></code>.</p>
 </div>
 <div class="section" id="user-space-tool">
 <h3>User Space Tool<a class="headerlink" href="#user-space-tool" title="Permalink to this headline">¶</a></h3>
 <p>For the demonstration, we will use the default user space tool for DAMON,
-called DAMON Operator (DAMO).  It is located at <code class="docutils literal notranslate"><span class="pre">tools/damon/damo</span></code> of the
-DAMON development kernel source tree (<code class="docutils literal notranslate"><span class="pre">damon/master</span></code> branch of
-<a class="reference external" href="https://github.com/sjp38/linux">https://github.com/sjp38/linux</a>).  For brevity, below examples assume you set
+called DAMON Operator (DAMO).  It is available at
+<a class="reference external" href="https://github.com/awslabs/damo">https://github.com/awslabs/damo</a>.  For brevity, below examples assume you set
 <code class="docutils literal notranslate"><span class="pre">$PATH</span></code> to point it.  It’s not mandatory, though.</p>
 <p>Because DAMO is using the debugfs interface (refer to <a class="reference internal" href="usage.html"><span class="doc">Detailed Usages</span></a> for the
 detail) of DAMON, you should ensure debugfs is mounted.  Mount it manually as
