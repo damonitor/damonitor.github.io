@@ -60,7 +60,7 @@
             
             
               <div class="version">
-                5.12.0-rc6-mm1
+                5.12.0-rc7-mm1
               </div>
             
           
@@ -485,26 +485,6 @@ to execute on some other CPU.</p></li>
 kthreads from being created in the first place.  However, please
 note that this will not eliminate OS jitter, but will instead
 shift it to RCU_SOFTIRQ.</p></li>
-</ol>
-<dl class="simple">
-<dt>Name:</dt><dd><p>watchdog/%u</p>
-</dd>
-<dt>Purpose:</dt><dd><p>Detect software lockups on each CPU.</p>
-</dd>
-</dl>
-<p>To reduce its OS jitter, do at least one of the following:</p>
-<ol class="arabic simple">
-<li><p>Build with CONFIG_LOCKUP_DETECTOR=n, which will prevent these
-kthreads from being created in the first place.</p></li>
-<li><p>Boot with “nosoftlockup=0”, which will also prevent these kthreads
-from being created.  Other related watchdog and softlockup boot
-parameters may be found in <a class="reference internal" href="kernel-parameters.html"><span class="doc">The kernel’s command-line parameters</span></a>
-and <a class="reference internal" href="../watchdog/watchdog-parameters.html"><span class="doc">WatchDog Module Parameters</span></a>.</p></li>
-<li><p>Echo a zero to /proc/sys/kernel/watchdog to disable the
-watchdog timer.</p></li>
-<li><p>Echo a large number of /proc/sys/kernel/watchdog_thresh in
-order to reduce the frequency of OS jitter due to the watchdog
-timer down to a level that is acceptable for your workload.</p></li>
 </ol>
 </div>
 </div>

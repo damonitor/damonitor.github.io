@@ -1798,6 +1798,9 @@ videodev2.h
             :c:type:`V4L2_CTRL_TYPE_U32 <v4l2_ctrl_type>`           = 0x0102,
             :c:type:`V4L2_CTRL_TYPE_AREA <v4l2_ctrl_type>`          = 0x0106,
 
+            :c:type:`V4L2_CTRL_TYPE_HDR10_CLL_INFO <v4l2_ctrl_type>`           = 0x0110,
+            :c:type:`V4L2_CTRL_TYPE_HDR10_MASTERING_DISPLAY <v4l2_ctrl_type>`  = 0x0111,
+
             :c:type:`V4L2_CTRL_TYPE_H264_SPS <v4l2_ctrl_type>`             = 0x0200,
             :c:type:`V4L2_CTRL_TYPE_H264_PPS <v4l2_ctrl_type>`             = 0x0201,
             :c:type:`V4L2_CTRL_TYPE_H264_SCALING_MATRIX <v4l2_ctrl_type>`  = 0x0202,

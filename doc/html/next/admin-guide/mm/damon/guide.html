@@ -62,7 +62,7 @@
             
             
               <div class="version">
-                5.12.0-rc6-mm1
+                5.12.0-rc7-mm1
               </div>
             
           
@@ -250,12 +250,37 @@ configurations.</p>
 you can know the appropriate DRAM size for you.  For example, roughly speaking,
 if you worry about only 95 percentile latency, you don’t need to equip DRAM of
 a size larger than 95 percentile working set size.</p>
-<p>Let’s see a real example.  This <a class="reference external" href="https://damonitor.github.io/doc/html/v17/admin-guide/mm/damon/guide.html#memory-configuration">page</a>
-shows the heatmap and the working set size distributions/changes of
-<code class="docutils literal notranslate"><span class="pre">freqmine</span></code> workload in PARSEC3 benchmark suite.  The working set size spikes
-up to 180 MiB, but keeps smaller than 50 MiB for more than 95% of the time.
-Even though you give only 50 MiB of memory space to the workload, it will work
-well for 95% of the time.  Meanwhile, you can save the 130 MiB of memory space.</p>
+<p>Let’s see a real example.  Below are the heatmap and the working set size
+distributions/changes of <code class="docutils literal notranslate"><span class="pre">freqmine</span></code> workload in PARSEC3 benchmark suite.  The
+working set size spikes up to 180 MiB, but keeps smaller than 50 MiB for more
+than 95% of the time.  Even though you give only 50 MiB of memory space to the
+workload, it will work well for 95% of the time.  Meanwhile, you can save the
+130 MiB of memory space.</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><div class="figure align-center" id="id13">
+<img alt="the access pattern in heatmap format" src="../../../_images/freqmine_heatmap.png" />
+<p class="caption"><span class="caption-text">The access pattern in heatmap format.</span><a class="headerlink" href="#id13" title="Permalink to this image">¶</a></p>
+</div>
+</td>
+<td><div class="figure align-center" id="id14">
+<img alt="the distribution of working set size" src="../../../_images/freqmine_wss_sz.png" />
+<p class="caption"><span class="caption-text">The distribution of working set size.</span><a class="headerlink" href="#id14" title="Permalink to this image">¶</a></p>
+</div>
+</td>
+<td><div class="figure align-center" id="id15">
+<img alt="the chronological changes of working set size" src="../../../_images/freqmine_wss_time.png" />
+<p class="caption"><span class="caption-text">The chronological changes of working set size.</span><a class="headerlink" href="#id15" title="Permalink to this image">¶</a></p>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="section" id="program-modification">
 <h3>Program Modification<a class="headerlink" href="#program-modification" title="Permalink to this headline">¶</a></h3>
@@ -269,12 +294,37 @@ object in the main memory by invoking <code class="docutils literal notranslate"
 <code class="docutils literal notranslate"><span class="pre">MADV_WILLNEED</span></code>.  Or, you could proactively evict the cold object using
 <code class="docutils literal notranslate"><span class="pre">madvise()</span></code> with <code class="docutils literal notranslate"><span class="pre">MADV_COLD</span></code> or <code class="docutils literal notranslate"><span class="pre">MADV_PAGEOUT</span></code>.  Using both together
 would be also worthy.</p>
-<p>A research work <a class="footnote-reference brackets" href="#id9" id="id1">1</a> using the <code class="docutils literal notranslate"><span class="pre">mlock()</span></code> achieved up to 2.55x performance
+<p>A research work <a class="footnote-reference brackets" href="#id8" id="id1">1</a> using the <code class="docutils literal notranslate"><span class="pre">mlock()</span></code> achieved up to 2.55x performance
 speedup.</p>
 <p>Let’s see another realistic example access pattern for this kind of
-optimizations.  This <a class="reference external" href="https://damonitor.github.io/doc/html/v17/admin-guide/mm/damon/guide.html#program-modification">page</a>
-shows the visualized access patterns of streamcluster workload in PARSEC3
-benchmark suite.  We can easily identify the 100 MiB sized hot object.</p>
+optimizations.  Below are the visualized access patterns of streamcluster
+workload in PARSEC3 benchmark suite.  We can easily identify the 100 MiB sized
+hot object.</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><div class="figure align-center" id="id16">
+<img alt="the access pattern in heatmap format" src="../../../_images/streamcluster_heatmap.png" />
+<p class="caption"><span class="caption-text">The access pattern in heatmap format.</span><a class="headerlink" href="#id16" title="Permalink to this image">¶</a></p>
+</div>
+</td>
+<td><div class="figure align-center" id="id17">
+<img alt="the distribution of working set size" src="../../../_images/streamcluster_wss_sz.png" />
+<p class="caption"><span class="caption-text">The distribution of working set size.</span><a class="headerlink" href="#id17" title="Permalink to this image">¶</a></p>
+</div>
+</td>
+<td><div class="figure align-center" id="id18">
+<img alt="the chronological changes of working set size" src="../../../_images/streamcluster_wss_time.png" />
+<p class="caption"><span class="caption-text">The chronological changes of working set size.</span><a class="headerlink" href="#id18" title="Permalink to this image">¶</a></p>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="section" id="automated-damon-based-memory-operations">
 <h3>Automated DAMON-based Memory Operations<a class="headerlink" href="#automated-damon-based-memory-operations" title="Permalink to this headline">¶</a></h3>
@@ -288,7 +338,7 @@ system calls inside the code will also be quite challenging.</p>
 <p>By using DAMON-based operation schemes (DAMOS) via <code class="docutils literal notranslate"><span class="pre">damo</span> <span class="pre">schemes</span></code>, you will
 be able to easily optimize your workload in such a case.  Our example schemes
 called ‘efficient THP’ and ‘proactive reclamation’ achieved significant speedup
-and memory space saves against 25 realistic workloads <a class="footnote-reference brackets" href="#id10" id="id3">2</a>.</p>
+and memory space saves against 25 realistic workloads <a class="footnote-reference brackets" href="#id9" id="id2">2</a>.</p>
 <p>That said, note that you need careful tune of the schemes (e.g., target region
 size and age) and monitoring attributes for the successful use of this
 approach.  Because the optimal values of the parameters will be dependent on
@@ -320,26 +370,26 @@ option.</p>
 <div class="section" id="reference-practices">
 <h2>Reference Practices<a class="headerlink" href="#reference-practices" title="Permalink to this headline">¶</a></h2>
 <p>Referencing previously done successful practices could help you getting the
-sense for this kind of optimizations.  There is an academic paper <a class="footnote-reference brackets" href="#id9" id="id4">1</a>
+sense for this kind of optimizations.  There is an academic paper <a class="footnote-reference brackets" href="#id8" id="id3">1</a>
 reporting the visualized access pattern and manual <a class="reference internal" href="#program-modification">Program
 Modification</a> results for a number of realistic workloads.  You can also get
-the visualized access patterns <a class="footnote-reference brackets" href="#id11" id="id5">3</a> <a class="footnote-reference brackets" href="#id12" id="id6">4</a> <a class="footnote-reference brackets" href="#id13" id="id7">5</a> and
+the visualized access patterns <a class="footnote-reference brackets" href="#id10" id="id4">3</a> <a class="footnote-reference brackets" href="#id11" id="id5">4</a> <a class="footnote-reference brackets" href="#id12" id="id6">5</a> and
 <a class="reference internal" href="#automated-damon-based-memory-operations">Automated DAMON-based Memory Operations</a> results for other realistic
-workloads that collected with latest version of DAMON <a class="footnote-reference brackets" href="#id10" id="id8">2</a> .</p>
+workloads that collected with latest version of DAMON <a class="footnote-reference brackets" href="#id9" id="id7">2</a> .</p>
 <dl class="footnote brackets">
-<dt class="label" id="id9"><span class="brackets">1</span><span class="fn-backref">(<a href="#id1">1</a>,<a href="#id4">2</a>)</span></dt>
+<dt class="label" id="id8"><span class="brackets">1</span><span class="fn-backref">(<a href="#id1">1</a>,<a href="#id3">2</a>)</span></dt>
 <dd><p><a class="reference external" href="https://dl.acm.org/doi/10.1145/3366626.3368125">https://dl.acm.org/doi/10.1145/3366626.3368125</a></p>
 </dd>
-<dt class="label" id="id10"><span class="brackets">2</span><span class="fn-backref">(<a href="#id3">1</a>,<a href="#id8">2</a>)</span></dt>
+<dt class="label" id="id9"><span class="brackets">2</span><span class="fn-backref">(<a href="#id2">1</a>,<a href="#id7">2</a>)</span></dt>
 <dd><p><a class="reference external" href="https://damonitor.github.io/test/result/perf/latest/html/">https://damonitor.github.io/test/result/perf/latest/html/</a></p>
 </dd>
-<dt class="label" id="id11"><span class="brackets"><a class="fn-backref" href="#id5">3</a></span></dt>
+<dt class="label" id="id10"><span class="brackets"><a class="fn-backref" href="#id4">3</a></span></dt>
 <dd><p><a class="reference external" href="https://damonitor.github.io/test/result/visual/latest/rec.heatmap.1.png.html">https://damonitor.github.io/test/result/visual/latest/rec.heatmap.1.png.html</a></p>
 </dd>
-<dt class="label" id="id12"><span class="brackets"><a class="fn-backref" href="#id6">4</a></span></dt>
+<dt class="label" id="id11"><span class="brackets"><a class="fn-backref" href="#id5">4</a></span></dt>
 <dd><p><a class="reference external" href="https://damonitor.github.io/test/result/visual/latest/rec.wss_sz.png.html">https://damonitor.github.io/test/result/visual/latest/rec.wss_sz.png.html</a></p>
 </dd>
-<dt class="label" id="id13"><span class="brackets"><a class="fn-backref" href="#id7">5</a></span></dt>
+<dt class="label" id="id12"><span class="brackets"><a class="fn-backref" href="#id6">5</a></span></dt>
 <dd><p><a class="reference external" href="https://damonitor.github.io/test/result/visual/latest/rec.wss_time.png.html">https://damonitor.github.io/test/result/visual/latest/rec.wss_time.png.html</a></p>
 </dd>
 </dl>

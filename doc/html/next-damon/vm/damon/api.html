@@ -61,7 +61,7 @@
             
             
               <div class="version">
-                5.12.0-rc6-mm1
+                5.12.0-rc7-mm1
               </div>
             
           
@@ -176,8 +176,8 @@ the source tree.</p>
 <div class="section" id="structures">
 <h2>Structures<a class="headerlink" href="#structures" title="Permalink to this headline">¶</a></h2>
 <dl class="type">
-<dt id="c.damon_addr_range">
-struct <code class="sig-name descname">damon_addr_range</code><a class="headerlink" href="#c.damon_addr_range" title="Permalink to this definition">¶</a></dt>
+<dt id="c.V4L.damon_addr_range">
+struct <code class="sig-name descname">damon_addr_range</code><a class="headerlink" href="#c.V4L.damon_addr_range" title="Permalink to this definition">¶</a></dt>
 <dd><p>Represents an address region of [<strong>start</strong>, <strong>end</strong>).</p>
 </dd></dl>
 
@@ -196,8 +196,8 @@ struct <code class="sig-name descname">damon_addr_range</code><a class="headerli
 </dd>
 </dl>
 <dl class="type">
-<dt id="c.damon_region">
-struct <code class="sig-name descname">damon_region</code><a class="headerlink" href="#c.damon_region" title="Permalink to this definition">¶</a></dt>
+<dt id="c.V4L.damon_region">
+struct <code class="sig-name descname">damon_region</code><a class="headerlink" href="#c.V4L.damon_region" title="Permalink to this definition">¶</a></dt>
 <dd><p>Represents a monitoring target region.</p>
 </dd></dl>
 
@@ -222,8 +222,8 @@ struct <code class="sig-name descname">damon_region</code><a class="headerlink" 
 </dd>
 </dl>
 <dl class="type">
-<dt id="c.damon_target">
-struct <code class="sig-name descname">damon_target</code><a class="headerlink" href="#c.damon_target" title="Permalink to this definition">¶</a></dt>
+<dt id="c.V4L.damon_target">
+struct <code class="sig-name descname">damon_target</code><a class="headerlink" href="#c.V4L.damon_target" title="Permalink to this definition">¶</a></dt>
 <dd><p>Represents a monitoring target.</p>
 </dd></dl>
 
@@ -251,8 +251,8 @@ for virtual memory address spaces could have multiple target processes.  The
 example, in the virtual address monitoring context, it could be a pidfd or
 an address of an mm_struct.</p>
 <dl class="type">
-<dt id="c.damon_ctx">
-struct <code class="sig-name descname">damon_ctx</code><a class="headerlink" href="#c.damon_ctx" title="Permalink to this definition">¶</a></dt>
+<dt id="c.V4L.damon_ctx">
+struct <code class="sig-name descname">damon_ctx</code><a class="headerlink" href="#c.V4L.damon_ctx" title="Permalink to this definition">¶</a></dt>
 <dd><p>Represents a context for each monitoring. This is the main interface that allows users to set the attributes and get the results of the monitoring.</p>
 </dd></dl>
 
@@ -294,7 +294,7 @@ struct <code class="sig-name descname">damon_ctx</code><a class="headerlink" hre
 </dd>
 <dt><code class="docutils literal notranslate"><span class="pre">max_nr_regions</span></code></dt><dd><p>The maximum number of adaptive monitoring regions.</p>
 </dd>
-<dt><code class="docutils literal notranslate"><span class="pre">adaptive_targets</span></code></dt><dd><p>Head of monitoring targets (<a class="reference internal" href="#c.damon_target" title="damon_target"><code class="xref c c-type docutils literal notranslate"><span class="pre">damon_target</span></code></a>) list.</p>
+<dt><code class="docutils literal notranslate"><span class="pre">adaptive_targets</span></code></dt><dd><p>Head of monitoring targets (<code class="xref c c-type docutils literal notranslate"><span class="pre">damon_target</span></code>) list.</p>
 </dd>
 </dl>
 <p><strong>Description</strong></p>
@@ -322,8 +322,8 @@ outside of the monitoring thread must be protected by <strong>kdamond_lock</stro
 <div class="section" id="functions">
 <h2>Functions<a class="headerlink" href="#functions" title="Permalink to this headline">¶</a></h2>
 <dl class="function">
-<dt id="c.damon_set_targets">
-int <code class="sig-name descname">damon_set_targets</code><span class="sig-paren">(</span>struct <a class="reference internal" href="#c.damon_ctx" title="damon_ctx">damon_ctx</a><em> *ctx</em>, unsigned long<em> *ids</em>, ssize_t<em> nr_ids</em><span class="sig-paren">)</span><a class="headerlink" href="#c.damon_set_targets" title="Permalink to this definition">¶</a></dt>
+<dt id="c.V4L.damon_set_targets">
+int <code class="sig-name descname">damon_set_targets</code><span class="sig-paren">(</span>struct damon_ctx<em> *ctx</em>, unsigned long<em> *ids</em>, ssize_t<em> nr_ids</em><span class="sig-paren">)</span><a class="headerlink" href="#c.V4L.damon_set_targets" title="Permalink to this definition">¶</a></dt>
 <dd><p>Set monitoring targets.</p>
 </dd></dl>
 
@@ -341,8 +341,8 @@ int <code class="sig-name descname">damon_set_targets</code><span class="sig-par
 <p><strong>Return</strong></p>
 <p>0 on success, negative error code otherwise.</p>
 <dl class="function">
-<dt id="c.damon_set_attrs">
-int <code class="sig-name descname">damon_set_attrs</code><span class="sig-paren">(</span>struct <a class="reference internal" href="#c.damon_ctx" title="damon_ctx">damon_ctx</a><em> *ctx</em>, unsigned long<em> sample_int</em>, unsigned long<em> aggr_int</em>, unsigned long<em> primitive_upd_int</em>, unsigned long<em> min_nr_reg</em>, unsigned long<em> max_nr_reg</em><span class="sig-paren">)</span><a class="headerlink" href="#c.damon_set_attrs" title="Permalink to this definition">¶</a></dt>
+<dt id="c.V4L.damon_set_attrs">
+int <code class="sig-name descname">damon_set_attrs</code><span class="sig-paren">(</span>struct damon_ctx<em> *ctx</em>, unsigned long<em> sample_int</em>, unsigned long<em> aggr_int</em>, unsigned long<em> primitive_upd_int</em>, unsigned long<em> min_nr_reg</em>, unsigned long<em> max_nr_reg</em><span class="sig-paren">)</span><a class="headerlink" href="#c.V4L.damon_set_attrs" title="Permalink to this definition">¶</a></dt>
 <dd><p>Set attributes for the monitoring.</p>
 </dd></dl>
 
@@ -367,8 +367,8 @@ Every time interval is in micro-seconds.</p>
 <p><strong>Return</strong></p>
 <p>0 on success, negative error code otherwise.</p>
 <dl class="function">
-<dt id="c.damon_nr_running_ctxs">
-int <code class="sig-name descname">damon_nr_running_ctxs</code><span class="sig-paren">(</span>void<span class="sig-paren">)</span><a class="headerlink" href="#c.damon_nr_running_ctxs" title="Permalink to this definition">¶</a></dt>
+<dt id="c.V4L.damon_nr_running_ctxs">
+int <code class="sig-name descname">damon_nr_running_ctxs</code><span class="sig-paren">(</span>void<span class="sig-paren">)</span><a class="headerlink" href="#c.V4L.damon_nr_running_ctxs" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return number of currently running contexts.</p>
 </dd></dl>
 
@@ -378,8 +378,8 @@ int <code class="sig-name descname">damon_nr_running_ctxs</code><span class="sig
 </dd>
 </dl>
 <dl class="function">
-<dt id="c.damon_start">
-int <code class="sig-name descname">damon_start</code><span class="sig-paren">(</span>struct <a class="reference internal" href="#c.damon_ctx" title="damon_ctx">damon_ctx</a><em> **ctxs</em>, int<em> nr_ctxs</em><span class="sig-paren">)</span><a class="headerlink" href="#c.damon_start" title="Permalink to this definition">¶</a></dt>
+<dt id="c.V4L.damon_start">
+int <code class="sig-name descname">damon_start</code><span class="sig-paren">(</span>struct damon_ctx<em> **ctxs</em>, int<em> nr_ctxs</em><span class="sig-paren">)</span><a class="headerlink" href="#c.V4L.damon_start" title="Permalink to this definition">¶</a></dt>
 <dd><p>Starts the monitorings for a given group of contexts.</p>
 </dd></dl>
 
@@ -394,13 +394,13 @@ int <code class="sig-name descname">damon_start</code><span class="sig-paren">(<
 <p>This function starts a group of monitoring threads for a group of monitoring
 contexts.  One thread per each context is created and run in parallel.  The
 caller should handle synchronization between the threads by itself.  If a
-group of threads that created by other ‘<a class="reference internal" href="#c.damon_start" title="damon_start"><code class="xref c c-func docutils literal notranslate"><span class="pre">damon_start()</span></code></a>’ call is currently
+group of threads that created by other ‘damon_start()’ call is currently
 running, this function does nothing but returns -EBUSY.</p>
 <p><strong>Return</strong></p>
 <p>0 on success, negative error code otherwise.</p>
 <dl class="function">
-<dt id="c.damon_stop">
-int <code class="sig-name descname">damon_stop</code><span class="sig-paren">(</span>struct <a class="reference internal" href="#c.damon_ctx" title="damon_ctx">damon_ctx</a><em> **ctxs</em>, int<em> nr_ctxs</em><span class="sig-paren">)</span><a class="headerlink" href="#c.damon_stop" title="Permalink to this definition">¶</a></dt>
+<dt id="c.V4L.damon_stop">
+int <code class="sig-name descname">damon_stop</code><span class="sig-paren">(</span>struct damon_ctx<em> **ctxs</em>, int<em> nr_ctxs</em><span class="sig-paren">)</span><a class="headerlink" href="#c.V4L.damon_stop" title="Permalink to this definition">¶</a></dt>
 <dd><p>Stops the monitorings for a given group of contexts.</p>
 </dd></dl>
 
