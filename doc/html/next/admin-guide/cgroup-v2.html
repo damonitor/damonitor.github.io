@@ -60,7 +60,7 @@
             
             
               <div class="version">
-                5.12.0-rc7-mm1
+                5.13.0-rc1-mm1
               </div>
             
           
@@ -908,6 +908,17 @@ moved out of a frozen cgroup, it becomes running.</p>
 <p>Frozen status of a cgroup doesn’t affect any cgroup tree operations:
 it’s possible to delete a frozen (and empty) cgroup, as well as
 create new sub-cgroups.</p>
+</dd>
+<dt>cgroup.kill</dt><dd><p>A write-only single value file which exists in non-root cgroups.
+The only allowed value is “1”.</p>
+<p>Writing “1” to the file causes the cgroup and all descendant cgroups to
+be killed. This means that all processes located in the affected cgroup
+tree will be killed via SIGKILL.</p>
+<p>Killing a cgroup tree will deal with concurrent forks appropriately and
+is protected against migrations.</p>
+<p>In a threaded cgroup, writing this file fails with EOPNOTSUPP as
+killing cgroups is a process directed operation, i.e. it affects
+the whole thread-group.</p>
 </dd>
 </dl>
 </div></blockquote>

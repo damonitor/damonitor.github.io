@@ -60,7 +60,7 @@
             
             
               <div class="version">
-                5.12.0-rc7-mm1
+                5.13.0-rc1-mm1
               </div>
             
           
@@ -544,6 +544,17 @@ Size of memory for movable pages (for offline) is ZZZZ.</p></li>
 <p class="admonition-title">Note</p>
 <p>Unfortunately, there is no information to show which memory block belongs
 to ZONE_MOVABLE. This is TBD.</p>
+<p>Memory offlining can fail when dissolving a free huge page on ZONE_MOVABLE
+and the feature of freeing unused vmemmap pages associated with each hugetlb
+page is enabled.</p>
+<p>This can happen when we have plenty of ZONE_MOVABLE memory, but not enough
+kernel memory to allocate vmemmmap pages.  We may even be able to migrate
+huge page contents, but will not be able to dissolve the source huge page.
+This will prevent an offline operation and is unfortunate as memory offlining
+is expected to succeed on movable zones.  Users that depend on memory hotplug
+to succeed for movable zones should carefully consider whether the memory
+savings gained from this feature are worth the risk of possibly not being
+able to offline memory in certain situations.</p>
 </div>
 <div class="admonition note">
 <p class="admonition-title">Note</p>

@@ -60,7 +60,7 @@
             
             
               <div class="version">
-                5.12.0-rc7-mm1
+                5.13.0-rc1-mm1
               </div>
             
           
@@ -206,7 +206,11 @@ huge page from the pool of huge pages at fault time.</p>
 <dt>HugePages_Surp</dt><dd><p>is short for “surplus,” and is the number of huge pages in
 the pool above the value in <code class="docutils literal notranslate"><span class="pre">/proc/sys/vm/nr_hugepages</span></code>. The
 maximum number of surplus huge pages is controlled by
-<code class="docutils literal notranslate"><span class="pre">/proc/sys/vm/nr_overcommit_hugepages</span></code>.</p>
+<code class="docutils literal notranslate"><span class="pre">/proc/sys/vm/nr_overcommit_hugepages</span></code>.
+Note: When the feature of freeing unused vmemmap pages associated
+with each hugetlb page is enabled, the number of surplus huge pages
+may be temporarily larger than the maximum number of surplus huge
+pages when the system is under memory pressure.</p>
 </dd>
 <dt>Hugepagesize</dt><dd><p>is the default hugepage size (in Kb).</p>
 </dd>
@@ -225,6 +229,9 @@ pages in the kernel’s huge page pool.  “Persistent” huge pages will be
 returned to the huge page pool when freed by a task.  A user with root
 privileges can dynamically allocate more or free some persistent huge pages
 by increasing or decreasing the value of <code class="docutils literal notranslate"><span class="pre">nr_hugepages</span></code>.</p>
+<p>Note: When the feature of freeing unused vmemmap pages associated with each
+hugetlb page is enabled, we can fail to free the huge pages triggered by
+the user when ths system is under memory pressure.  Please try again later.</p>
 <p>Pages that are used as huge pages are reserved inside the kernel and cannot
 be used for other purposes.  Huge pages cannot be swapped out under
 memory pressure.</p>
@@ -284,6 +291,9 @@ hugepages=256 default_hugepagesz=2M
 </div>
 <p>will all result in 256 2M huge pages being allocated.  Valid default
 huge page size is architecture dependent.</p>
+</dd>
+<dt>hugetlb_free_vmemmap</dt><dd><p>When CONFIG_HUGETLB_PAGE_FREE_VMEMMAP is set, this enables freeing
+unused vmemmap pages associated with each HugeTLB page.</p>
 </dd>
 </dl>
 <p>When multiple huge page sizes are supported, <code class="docutils literal notranslate"><span class="pre">/proc/sys/vm/nr_hugepages</span></code>

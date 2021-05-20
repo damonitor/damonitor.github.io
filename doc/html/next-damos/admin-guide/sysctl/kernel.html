@@ -60,7 +60,7 @@
             
             
               <div class="version">
-                5.12.0-rc7-mm1
+                5.13.0-rc1-mm1
               </div>
             
           
@@ -765,10 +765,11 @@ if leaking kernel pointer values to unprivileged users is a concern.</p>
 <div class="section" id="modprobe">
 <h2><a class="toc-backref" href="#id31">modprobe</a><a class="headerlink" href="#modprobe" title="Permalink to this headline">¶</a></h2>
 <p>The full path to the usermode helper for autoloading kernel modules,
-by default “/sbin/modprobe”.  This binary is executed when the kernel
-requests a module.  For example, if userspace passes an unknown
-filesystem type to mount(), then the kernel will automatically request
-the corresponding filesystem module by executing this usermode helper.
+by default <code class="docutils literal notranslate"><span class="pre">CONFIG_MODPROBE_PATH</span></code>, which in turn defaults to
+“/sbin/modprobe”.  This binary is executed when the kernel requests a
+module.  For example, if userspace passes an unknown filesystem type
+to mount(), then the kernel will automatically request the
+corresponding filesystem module by executing this usermode helper.
 This usermode helper should insert the needed module into the kernel.</p>
 <p>This sysctl only affects module autoloading.  It has no effect on the
 ability to explicitly insert modules.</p>
@@ -1571,11 +1572,11 @@ when a soft lockup is detected.</p>
 </tbody>
 </table>
 <p>The soft lockup detector monitors CPUs for threads that are hogging the CPUs
-without rescheduling voluntarily, and thus prevent the ‘watchdog/N’ threads
-from running. The mechanism depends on the CPUs ability to respond to timer
-interrupts which are needed for the ‘watchdog/N’ threads to be woken up by
-the watchdog timer function, otherwise the NMI watchdog — if enabled — can
-detect a hard lockup condition.</p>
+without rescheduling voluntarily, and thus prevent the ‘migration/N’ threads
+from running, causing the watchdog work fail to execute. The mechanism depends
+on the CPUs ability to respond to timer interrupts which are needed for the
+watchdog work to be queued by the watchdog timer function, otherwise the NMI
+watchdog — if enabled — can detect a hard lockup condition.</p>
 </div>
 <div class="section" id="stack-erasing">
 <h2><a class="toc-backref" href="#id83">stack_erasing</a><a class="headerlink" href="#stack-erasing" title="Permalink to this headline">¶</a></h2>
@@ -1808,9 +1809,31 @@ example.  If a system hangs up, try pressing the NMI switch.</p>
 <div class="section" id="unprivileged-bpf-disabled">
 <h2><a class="toc-backref" href="#id93">unprivileged_bpf_disabled</a><a class="headerlink" href="#unprivileged-bpf-disabled" title="Permalink to this headline">¶</a></h2>
 <p>Writing 1 to this entry will disable unprivileged calls to <code class="docutils literal notranslate"><span class="pre">bpf()</span></code>;
-once disabled, calling <code class="docutils literal notranslate"><span class="pre">bpf()</span></code> without <code class="docutils literal notranslate"><span class="pre">CAP_SYS_ADMIN</span></code> will return
-<code class="docutils literal notranslate"><span class="pre">-EPERM</span></code>.</p>
-<p>Once set, this can’t be cleared.</p>
+once disabled, calling <code class="docutils literal notranslate"><span class="pre">bpf()</span></code> without <code class="docutils literal notranslate"><span class="pre">CAP_SYS_ADMIN</span></code> or <code class="docutils literal notranslate"><span class="pre">CAP_BPF</span></code>
+will return <code class="docutils literal notranslate"><span class="pre">-EPERM</span></code>. Once set to 1, this can’t be cleared from the
+running kernel anymore.</p>
+<p>Writing 2 to this entry will also disable unprivileged calls to <code class="docutils literal notranslate"><span class="pre">bpf()</span></code>,
+however, an admin can still change this setting later on, if needed, by
+writing 0 or 1 to this entry.</p>
+<p>If <code class="docutils literal notranslate"><span class="pre">BPF_UNPRIV_DEFAULT_OFF</span></code> is enabled in the kernel config, then this
+entry will default to 2 instead of 0.</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 2%" />
+<col style="width: 98%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p>0</p></td>
+<td><p>Unprivileged calls to <code class="docutils literal notranslate"><span class="pre">bpf()</span></code> are enabled</p></td>
+</tr>
+<tr class="row-even"><td><p>1</p></td>
+<td><p>Unprivileged calls to <code class="docutils literal notranslate"><span class="pre">bpf()</span></code> are disabled without recovery</p></td>
+</tr>
+<tr class="row-odd"><td><p>2</p></td>
+<td><p>Unprivileged calls to <code class="docutils literal notranslate"><span class="pre">bpf()</span></code> are disabled</p></td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="section" id="watchdog">
 <h2><a class="toc-backref" href="#id94">watchdog</a><a class="headerlink" href="#watchdog" title="Permalink to this headline">¶</a></h2>

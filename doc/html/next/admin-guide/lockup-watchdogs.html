@@ -60,7 +60,7 @@
             
             
               <div class="version">
-                5.12.0-rc7-mm1
+                5.13.0-rc1-mm1
               </div>
             
           
@@ -188,14 +188,14 @@ perf subsystems, respectively. A direct consequence of this is that,
 in principle, they should work in any architecture where these
 subsystems are present.</p>
 <p>A periodic hrtimer runs to generate interrupts and kick the watchdog
-task. An NMI perf event is generated every “watchdog_thresh”
+job. An NMI perf event is generated every “watchdog_thresh”
 (compile-time initialized to 10 and configurable through sysctl of the
 same name) seconds to check for hardlockups. If any CPU in the system
 does not receive any hrtimer interrupt during that time the
 ‘hardlockup detector’ (the handler for the NMI perf event) will
 generate a kernel warning or call panic, depending on the
 configuration.</p>
-<p>The watchdog task is a high priority kernel thread that updates a
+<p>The watchdog job runs in a stop scheduling thread that updates a
 timestamp every time it is scheduled. If that timestamp is not updated
 for 2*watchdog_thresh seconds (the softlockup threshold) the
 ‘softlockup detector’ (coded inside the hrtimer callback function)

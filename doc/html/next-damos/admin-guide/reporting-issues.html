@@ -60,7 +60,7 @@
             
             
               <div class="version">
-                5.12.0-rc7-mm1
+                5.13.0-rc1-mm1
               </div>
             
           
@@ -162,7 +162,9 @@
 <p>Are you facing a regression with vanilla kernels from the same stable or
 longterm series? One still supported? Then search the <a class="reference external" href="https://lore.kernel.org/lkml/">LKML</a> and the <a class="reference external" href="https://lore.kernel.org/stable/">Linux stable mailing list</a> archives for matching reports to join. If
 you don’t find any, install <a class="reference external" href="https://kernel.org/">the latest release from that series</a>. If it still shows the issue, report it to the stable
-mailing list (<a class="reference external" href="mailto:stable&#37;&#52;&#48;vger&#46;kernel&#46;org">stable<span>&#64;</span>vger<span>&#46;</span>kernel<span>&#46;</span>org</a>).</p>
+mailing list (<a class="reference external" href="mailto:stable&#37;&#52;&#48;vger&#46;kernel&#46;org">stable<span>&#64;</span>vger<span>&#46;</span>kernel<span>&#46;</span>org</a>) and CC the regressions list
+(<a class="reference external" href="mailto:regressions&#37;&#52;&#48;lists&#46;linux&#46;dev">regressions<span>&#64;</span>lists<span>&#46;</span>linux<span>&#46;</span>dev</a>); ideally also CC the maintainer and the mailing
+list for the subsystem in question.</p>
 <p>In all other cases try your best guess which kernel part might be causing the
 issue. Check the <a class="reference internal" href="../process/maintainers.html#maintainers"><span class="std std-ref">MAINTAINERS</span></a> file for how its developers
 expect to be told about problems, which most of the time will be by email with a
@@ -178,10 +180,12 @@ those who handled the change for it.</p>
 ensure it’s vanilla (IOW: not patched and not using add-on modules). Also make
 sure it’s built and running in a healthy environment and not already tainted
 before the issue occurs.</p>
-<p>While writing your report, include all information relevant to the issue, like
-the kernel and the distro used. In case of a regression try to include the
-commit-id of the change causing it, which a bisection can find. If you’re facing
-multiple issues with the Linux kernel at once, report each separately.</p>
+<p>If you are facing multiple issues with the Linux kernel at once, report each
+separately. While writing your report, include all information relevant to the
+issue, like the kernel and the distro used. In case of a regression, CC the
+regressions mailing list (<a class="reference external" href="mailto:regressions&#37;&#52;&#48;lists&#46;linux&#46;dev">regressions<span>&#64;</span>lists<span>&#46;</span>linux<span>&#46;</span>dev</a>) to your report. Also try
+to pin-point the culprit with a bisection; if you succeed, include its
+commit-id and CC everyone in the sign-off-by chain.</p>
 <p>Once the report is out, answer any questions that come up and help where you
 can. That includes keeping the ball rolling by occasionally retesting with newer
 releases and sending a status update afterwards.</p>
@@ -305,11 +309,14 @@ the latest release of the particular version line without an ‘[EOL]’ tag.</p
 kernel. Ensure this kernel is not tainted and still shows the problem, as
 the issue might have already been fixed there. If you first noticed the
 problem with a vendor kernel, check a vanilla build of the last version
-known to work performs fine as well.*</p></li>
+known to work performs fine as well.</p></li>
 <li><p>Send a short problem report to the Linux stable mailing list
-(<a class="reference external" href="mailto:stable&#37;&#52;&#48;vger&#46;kernel&#46;org">stable<span>&#64;</span>vger<span>&#46;</span>kernel<span>&#46;</span>org</a>). Roughly describe the issue and ideally explain
-how to reproduce it. Mention the first version that shows the problem and
-the last version that’s working fine. Then wait for further instructions.*</p></li>
+(<a class="reference external" href="mailto:stable&#37;&#52;&#48;vger&#46;kernel&#46;org">stable<span>&#64;</span>vger<span>&#46;</span>kernel<span>&#46;</span>org</a>) and CC the Linux regressions mailing list
+(<a class="reference external" href="mailto:regressions&#37;&#52;&#48;lists&#46;linux&#46;dev">regressions<span>&#64;</span>lists<span>&#46;</span>linux<span>&#46;</span>dev</a>); if you suspect the cause in a particular
+subsystem, CC its maintainer and its mailing list. Roughly describe the
+issue and ideally explain how to reproduce it. Mention the first version
+that shows the problem and the last version that’s working fine. Then
+wait for further instructions.</p></li>
 </ul>
 </div></blockquote>
 <p>The reference section below explains each of these steps in more detail.</p>
@@ -831,7 +838,9 @@ regular internet search engine and add something like
 ‘site:lists.infradead.org/pipermail/ath10k/’ to your search terms, which limits
 the results to the archives at that URL.</p>
 <p>It’s also wise to check the internet, LKML and maybe bugzilla.kernel.org again
-at this point.</p>
+at this point. If your report needs to be filed in a bug tracker, you may want
+to check the mailing list archives for the subsystem as well, as someone might
+have reported it only there.</p>
 <p>For details how to search and what to do if you find matching reports see
 “Search for existing reports, first run” above.</p>
 <p>Do not hurry with this step of the reporting process: spending 30 to 60 minutes
@@ -1259,14 +1268,21 @@ its way.</p>
 <p>Reports for high priority issues need special handling.</p>
 <p><strong>Severe issues</strong>: make sure the subject or ticket title as well as the first
 paragraph makes the severeness obvious.</p>
-<p><strong>Regressions</strong>: If the issue is a regression add [REGRESSION] to the mail’s
-subject or the title in the bug-tracker. If you did not perform a bisection
-mention at least the latest mainline version you tested that worked fine (say
-5.7) and the oldest where the issue occurs (say 5.8). If you did a successful
-bisection mention the commit id and subject of the change that causes the
-regression. Also make sure to add the author of that change to your report; if
-you need to file your bug in a bug-tracker forward the report to him in a
-private mail and mention where your filed it.</p>
+<p><strong>Regressions</strong>: make the report’s subject start with ‘[REGRESSION]’.</p>
+<p>In case you performed a successful bisection, use the title of the change that
+introduced the regression as the second part of your subject. Make the report
+also mention the commit id of the culprit. In case of an unsuccessful bisection,
+make your report mention the latest tested version that’s working fine (say 5.7)
+and the oldest where the issue occurs (say 5.8-rc1).</p>
+<p>When sending the report by mail, CC the Linux regressions mailing list
+(<a class="reference external" href="mailto:regressions&#37;&#52;&#48;lists&#46;linux&#46;dev">regressions<span>&#64;</span>lists<span>&#46;</span>linux<span>&#46;</span>dev</a>). In case the report needs to be filed to some web
+tracker, proceed to do so. Once filed, forward the report by mail to the
+regressions list; CC the maintainer and the mailing list for the subsystem in
+question. Make sure to inline the forwarded report, hence do not attach it.
+Also add a short note at the top where you mention the URL to the ticket.</p>
+<p>When mailing or forwarding the report, in case of a successful bisection add the
+author of the culprit to the recipients; also CC everyone in the signed-off-by
+chain, which you find at the end of its commit message.</p>
 <p><strong>Security issues</strong>: for these issues your will have to evaluate if a
 short-term risk to other users would arise if details were publicly disclosed.
 If that’s not the case simply proceed with reporting the issue as described.
@@ -1518,15 +1534,20 @@ the issue.</p>
 <h4>Report the regression<a class="headerlink" href="#report-the-regression" title="Permalink to this headline">¶</a></h4>
 <blockquote>
 <div><p><em>Send a short problem report to the Linux stable mailing list
-(stable&#64;vger.kernel.org). Roughly describe the issue and ideally explain
-how to reproduce it. Mention the first version that shows the problem and
-the last version that’s working fine. Then wait for further instructions.</em></p>
+(stable&#64;vger.kernel.org) and CC the Linux regressions mailing list
+(regressions&#64;lists.linux.dev); if you suspect the cause in a particular
+subsystem, CC its maintainer and its mailing list. Roughly describe the
+issue and ideally explain how to reproduce it. Mention the first version
+that shows the problem and the last version that’s working fine. Then
+wait for further instructions.</em></p>
 </div></blockquote>
 <p>When reporting a regression that happens within a stable or longterm kernel
 line (say when updating from 5.10.4 to 5.10.5) a brief report is enough for
-the start to get the issue reported quickly. Hence a rough description is all
-it takes.</p>
-<p>But note, it helps developers a great deal if you can specify the exact version
+the start to get the issue reported quickly. Hence a rough description to the
+stable and regressions mailing list is all it takes; but in case you suspect
+the cause in a particular subsystem, CC its maintainers and its mailing list
+as well, because that will speed things up.</p>
+<p>And note, it helps developers a great deal if you can specify the exact version
 that introduced the problem. Hence if possible within a reasonable time frame,
 try to find that version using vanilla kernels. Lets assume something broke when
 your distributor released a update from Linux kernel 5.10.5 to 5.10.8. Then as
@@ -1542,7 +1563,9 @@ pinpoint the exact change that causes the issue (which then can easily get
 reverted to fix the issue quickly). Hence consider to do a proper bisection
 right away if time permits. See the section ‘Special care for regressions’ and
 the document ‘<a class="reference internal" href="bug-bisect.html"><span class="doc">Bisecting a bug</span></a>’ for details how to
-perform one.</p>
+perform one. In case of a successful bisection add the author of the culprit to
+the recipients; also CC everyone in the signed-off-by chain, which you find at
+the end of its commit message.</p>
 </div>
 </div>
 <div class="section" id="reference-for-reporting-issues-only-occurring-in-older-kernel-version-lines">

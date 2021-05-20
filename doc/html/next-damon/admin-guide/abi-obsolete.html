@@ -60,7 +60,7 @@
             
             
               <div class="version">
-                5.12.0-rc7-mm1
+                5.13.0-rc1-mm1
               </div>
             
           
@@ -161,8 +161,299 @@
 marked to be removed at some later point in time.</p>
 <p>The description of the interface will document the reason why it is
 obsolete and when it can be expected to be removed.</p>
+<div class="section" id="symbols-under-sys">
+<h2>Symbols under /sys<a class="headerlink" href="#symbols-under-sys" title="Permalink to this headline">¶</a></h2>
+<table class="docutils align-default" id="abi-sys-iio-devicex-scan-elements-in-accel-type">
+<colgroup>
+<col style="width: 100%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><strong>/sys/…/iio:deviceX/scan_elements/in_accel_type</strong></p></td>
+</tr>
+<tr class="row-even"><td><p><strong>/sys/…/iio:deviceX/scan_elements/in_anglvel_type</strong></p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>/sys/…/iio:deviceX/scan_elements/in_magn_type</strong></p></td>
+</tr>
+<tr class="row-even"><td><p><strong>/sys/…/iio:deviceX/scan_elements/in_incli_type</strong></p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>/sys/…/iio:deviceX/scan_elements/in_voltageY_type</strong></p></td>
+</tr>
+<tr class="row-even"><td><p><strong>/sys/…/iio:deviceX/scan_elements/in_voltage_type</strong></p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>/sys/…/iio:deviceX/scan_elements/in_voltageY_supply_type</strong></p></td>
+</tr>
+<tr class="row-even"><td><p><strong>/sys/…/iio:deviceX/scan_elements/in_voltageY_i_type</strong></p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>/sys/…/iio:deviceX/scan_elements/in_voltageY_q_type</strong></p></td>
+</tr>
+<tr class="row-even"><td><p><strong>/sys/…/iio:deviceX/scan_elements/in_voltage_i_type</strong></p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>/sys/…/iio:deviceX/scan_elements/in_voltage_q_type</strong></p></td>
+</tr>
+<tr class="row-even"><td><p><strong>/sys/…/iio:deviceX/scan_elements/in_timestamp_type</strong></p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>/sys/…/iio:deviceX/scan_elements/in_pressureY_type</strong></p></td>
+</tr>
+<tr class="row-even"><td><p><strong>/sys/…/iio:deviceX/scan_elements/in_pressure_type</strong></p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>/sys/…/iio:deviceX/scan_elements/in_rot_quaternion_type</strong></p></td>
+</tr>
+<tr class="row-even"><td><p><strong>/sys/…/iio:deviceX/scan_elements/in_proximity_type</strong></p></td>
+</tr>
+</tbody>
+</table>
+<p>Defined on file <a class="reference internal" href="#abi-file-obsolete-sysfs-bus-iio"><span class="std std-ref">sysfs-bus-iio</span></a></p>
+<p>Description of the scan element data storage within the buffer
+and hence the form in which it is read from user-space.
+Form is [be|le]:[s|u]bits/storagebits[&gt;&gt;shift].
+be or le specifies big or little endian. s or u specifies if
+signed (2’s complement) or unsigned. bits is the number of bits
+of data and storagebits is the space (after padding) that it
+occupies in the buffer. shift if specified, is the shift that
+needs to be applied prior to masking out unused bits. Some
+devices put their data in the middle of the transferred elements
+with additional information on both sides.  Note that some
+devices will have additional information in the unused bits
+so to get a clean value, the bits value must be used to mask
+the buffer output value appropriately.  The storagebits value
+also specifies the data alignment.  So s48/64&gt;&gt;2 will be a
+signed 48 bit integer stored in a 64 bit location aligned to
+a 64 bit boundary. To obtain the clean value, shift right 2
+and apply a mask to zero the top 16 bits of the result.
+For other storage combinations this attribute will be extended
+appropriately.</p>
+<p>Since kernel 5.11 the scan_elements attributes are merged into
+the bufferY directory, to be configurable per buffer.</p>
+<table class="docutils align-default" id="abi-sys-iio-devicex-scan-elements-in-accel-x-en">
+<colgroup>
+<col style="width: 100%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><strong>/sys/…/iio:deviceX/scan_elements/in_accel_x_en</strong></p></td>
+</tr>
+<tr class="row-even"><td><p><strong>/sys/…/iio:deviceX/scan_elements/in_accel_y_en</strong></p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>/sys/…/iio:deviceX/scan_elements/in_accel_z_en</strong></p></td>
+</tr>
+<tr class="row-even"><td><p><strong>/sys/…/iio:deviceX/scan_elements/in_anglvel_x_en</strong></p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>/sys/…/iio:deviceX/scan_elements/in_anglvel_y_en</strong></p></td>
+</tr>
+<tr class="row-even"><td><p><strong>/sys/…/iio:deviceX/scan_elements/in_anglvel_z_en</strong></p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>/sys/…/iio:deviceX/scan_elements/in_magn_x_en</strong></p></td>
+</tr>
+<tr class="row-even"><td><p><strong>/sys/…/iio:deviceX/scan_elements/in_magn_y_en</strong></p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>/sys/…/iio:deviceX/scan_elements/in_magn_z_en</strong></p></td>
+</tr>
+<tr class="row-even"><td><p><strong>/sys/…/iio:deviceX/scan_elements/in_rot_from_north_magnetic_en</strong></p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>/sys/…/iio:deviceX/scan_elements/in_rot_from_north_true_en</strong></p></td>
+</tr>
+<tr class="row-even"><td><p><strong>/sys/…/iio:deviceX/scan_elements/in_rot_from_north_magnetic_tilt_comp_en</strong></p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>/sys/…/iio:deviceX/scan_elements/in_rot_from_north_true_tilt_comp_en</strong></p></td>
+</tr>
+<tr class="row-even"><td><p><strong>/sys/…/iio:deviceX/scan_elements/in_timestamp_en</strong></p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>/sys/…/iio:deviceX/scan_elements/in_voltageY_supply_en</strong></p></td>
+</tr>
+<tr class="row-even"><td><p><strong>/sys/…/iio:deviceX/scan_elements/in_voltageY_en</strong></p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>/sys/…/iio:deviceX/scan_elements/in_voltageY-voltageZ_en</strong></p></td>
+</tr>
+<tr class="row-even"><td><p><strong>/sys/…/iio:deviceX/scan_elements/in_voltageY_i_en</strong></p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>/sys/…/iio:deviceX/scan_elements/in_voltageY_q_en</strong></p></td>
+</tr>
+<tr class="row-even"><td><p><strong>/sys/…/iio:deviceX/scan_elements/in_voltage_i_en</strong></p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>/sys/…/iio:deviceX/scan_elements/in_voltage_q_en</strong></p></td>
+</tr>
+<tr class="row-even"><td><p><strong>/sys/…/iio:deviceX/scan_elements/in_incli_x_en</strong></p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>/sys/…/iio:deviceX/scan_elements/in_incli_y_en</strong></p></td>
+</tr>
+<tr class="row-even"><td><p><strong>/sys/…/iio:deviceX/scan_elements/in_pressureY_en</strong></p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>/sys/…/iio:deviceX/scan_elements/in_pressure_en</strong></p></td>
+</tr>
+<tr class="row-even"><td><p><strong>/sys/…/iio:deviceX/scan_elements/in_rot_quaternion_en</strong></p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>/sys/…/iio:deviceX/scan_elements/in_proximity_en</strong></p></td>
+</tr>
+</tbody>
+</table>
+<p>Defined on file <a class="reference internal" href="#abi-file-obsolete-sysfs-bus-iio"><span class="std std-ref">sysfs-bus-iio</span></a></p>
+<p>Scan element control for triggered data capture.</p>
+<p>Since kernel 5.11 the scan_elements attributes are merged into
+the bufferY directory, to be configurable per buffer.</p>
+<table class="docutils align-default" id="abi-sys-iio-devicex-scan-elements-in-voltagey-index">
+<colgroup>
+<col style="width: 100%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><strong>/sys/…/iio:deviceX/scan_elements/in_voltageY_index</strong></p></td>
+</tr>
+<tr class="row-even"><td><p><strong>/sys/…/iio:deviceX/scan_elements/in_voltageY_supply_index</strong></p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>/sys/…/iio:deviceX/scan_elements/in_voltageY_i_index</strong></p></td>
+</tr>
+<tr class="row-even"><td><p><strong>/sys/…/iio:deviceX/scan_elements/in_voltageY_q_index</strong></p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>/sys/…/iio:deviceX/scan_elements/in_voltage_i_index</strong></p></td>
+</tr>
+<tr class="row-even"><td><p><strong>/sys/…/iio:deviceX/scan_elements/in_voltage_q_index</strong></p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>/sys/…/iio:deviceX/scan_elements/in_accel_x_index</strong></p></td>
+</tr>
+<tr class="row-even"><td><p><strong>/sys/…/iio:deviceX/scan_elements/in_accel_y_index</strong></p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>/sys/…/iio:deviceX/scan_elements/in_accel_z_index</strong></p></td>
+</tr>
+<tr class="row-even"><td><p><strong>/sys/…/iio:deviceX/scan_elements/in_anglvel_x_index</strong></p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>/sys/…/iio:deviceX/scan_elements/in_anglvel_y_index</strong></p></td>
+</tr>
+<tr class="row-even"><td><p><strong>/sys/…/iio:deviceX/scan_elements/in_anglvel_z_index</strong></p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>/sys/…/iio:deviceX/scan_elements/in_magn_x_index</strong></p></td>
+</tr>
+<tr class="row-even"><td><p><strong>/sys/…/iio:deviceX/scan_elements/in_magn_y_index</strong></p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>/sys/…/iio:deviceX/scan_elements/in_magn_z_index</strong></p></td>
+</tr>
+<tr class="row-even"><td><p><strong>/sys/…/iio:deviceX/scan_elements/in_rot_from_north_magnetic_index</strong></p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>/sys/…/iio:deviceX/scan_elements/in_rot_from_north_true_index</strong></p></td>
+</tr>
+<tr class="row-even"><td><p><strong>/sys/…/iio:deviceX/scan_elements/in_rot_from_north_magnetic_tilt_comp_index</strong></p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>/sys/…/iio:deviceX/scan_elements/in_rot_from_north_true_tilt_comp_index</strong></p></td>
+</tr>
+<tr class="row-even"><td><p><strong>/sys/…/iio:deviceX/scan_elements/in_incli_x_index</strong></p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>/sys/…/iio:deviceX/scan_elements/in_incli_y_index</strong></p></td>
+</tr>
+<tr class="row-even"><td><p><strong>/sys/…/iio:deviceX/scan_elements/in_timestamp_index</strong></p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>/sys/…/iio:deviceX/scan_elements/in_pressureY_index</strong></p></td>
+</tr>
+<tr class="row-even"><td><p><strong>/sys/…/iio:deviceX/scan_elements/in_pressure_index</strong></p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>/sys/…/iio:deviceX/scan_elements/in_rot_quaternion_index</strong></p></td>
+</tr>
+<tr class="row-even"><td><p><strong>/sys/…/iio:deviceX/scan_elements/in_proximity_index</strong></p></td>
+</tr>
+</tbody>
+</table>
+<p>Defined on file <a class="reference internal" href="#abi-file-obsolete-sysfs-bus-iio"><span class="std std-ref">sysfs-bus-iio</span></a></p>
+<p>A single positive integer specifying the position of this
+scan element in the buffer. Note these are not dependent on
+what is enabled and may not be contiguous. Thus for user-space
+to establish the full layout these must be used in conjunction
+with all _en attributes to establish which channels are present,
+and the relevant _type attributes to establish the data storage
+format.</p>
+<p>Since kernel 5.11 the scan_elements attributes are merged into
+the bufferY directory, to be configurable per buffer.</p>
+</div>
 <div class="section" id="symbols-under-sys-bus">
 <h2>Symbols under /sys/bus<a class="headerlink" href="#symbols-under-sys-bus" title="Permalink to this headline">¶</a></h2>
+<table class="docutils align-default" id="abi-sys-bus-iio-devices-iio-devicex-buffer-data-available">
+<colgroup>
+<col style="width: 100%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><strong>/sys/bus/iio/devices/iio:deviceX/buffer/data_available</strong></p></td>
+</tr>
+</tbody>
+</table>
+<p>Defined on file <a class="reference internal" href="#abi-file-obsolete-sysfs-bus-iio"><span class="std std-ref">sysfs-bus-iio</span></a></p>
+<p>A read-only value indicating the bytes of data available in the
+buffer. In the case of an output buffer, this indicates the
+amount of empty space available to write data to. In the case of
+an input buffer, this indicates the amount of data available for
+reading.</p>
+<p>Since Kernel 5.11, multiple buffers are supported.
+so, it is better to use, instead:</p>
+<blockquote>
+<div><p>/sys/bus/iio/devices/iio:deviceX/bufferY/data_available</p>
+</div></blockquote>
+<table class="docutils align-default" id="abi-sys-bus-iio-devices-iio-devicex-buffer-enable">
+<colgroup>
+<col style="width: 100%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><strong>/sys/bus/iio/devices/iio:deviceX/buffer/enable</strong></p></td>
+</tr>
+</tbody>
+</table>
+<p>Defined on file <a class="reference internal" href="#abi-file-obsolete-sysfs-bus-iio"><span class="std std-ref">sysfs-bus-iio</span></a></p>
+<p>Actually start the buffer capture up.  Will start trigger
+if first device and appropriate.</p>
+<p>Since Kernel 5.11, multiple buffers are supported.
+so, it is better to use, instead:</p>
+<blockquote>
+<div><p>/sys/bus/iio/devices/iio:deviceX/bufferY/enable</p>
+</div></blockquote>
+<table class="docutils align-default" id="abi-sys-bus-iio-devices-iio-devicex-buffer-length">
+<colgroup>
+<col style="width: 100%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><strong>/sys/bus/iio/devices/iio:deviceX/buffer/length</strong></p></td>
+</tr>
+</tbody>
+</table>
+<p>Defined on file <a class="reference internal" href="#abi-file-obsolete-sysfs-bus-iio"><span class="std std-ref">sysfs-bus-iio</span></a></p>
+<p>Number of scans contained by the buffer.</p>
+<p>Since Kernel 5.11, multiple buffers are supported.
+so, it is better to use, instead:</p>
+<blockquote>
+<div><p>/sys/bus/iio/devices/iio:deviceX/bufferY/length</p>
+</div></blockquote>
+<table class="docutils align-default" id="abi-sys-bus-iio-devices-iio-devicex-buffer-watermark">
+<colgroup>
+<col style="width: 100%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><strong>/sys/bus/iio/devices/iio:deviceX/buffer/watermark</strong></p></td>
+</tr>
+</tbody>
+</table>
+<p>Defined on file <a class="reference internal" href="#abi-file-obsolete-sysfs-bus-iio"><span class="std std-ref">sysfs-bus-iio</span></a></p>
+<p>A single positive integer specifying the maximum number of scan
+elements to wait for.</p>
+<p>Poll will block until the watermark is reached.</p>
+<p>Blocking read will wait until the minimum between the requested
+read amount or the low water mark is available.</p>
+<p>Non-blocking read will retrieve the available samples from the
+buffer even if there are less samples then watermark level. This
+allows the application to block on poll with a timeout and read
+the available samples after the timeout expires and thus have a
+maximum delay guarantee.</p>
+<p>Since Kernel 5.11, multiple buffers are supported.
+so, it is better to use, instead:</p>
+<blockquote>
+<div><p>/sys/bus/iio/devices/iio:deviceX/bufferY/watermark</p>
+</div></blockquote>
+<table class="docutils align-default" id="abi-sys-bus-iio-devices-iio-devicex-scan-elements">
+<colgroup>
+<col style="width: 100%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><strong>/sys/bus/iio/devices/iio:deviceX/scan_elements</strong></p></td>
+</tr>
+</tbody>
+</table>
+<p>Defined on file <a class="reference internal" href="#abi-file-obsolete-sysfs-bus-iio"><span class="std std-ref">sysfs-bus-iio</span></a></p>
+<p>Directory containing interfaces for elements that will be
+captured for a single triggered sample set in the buffer.</p>
+<p>Since kernel 5.11 the scan_elements attributes are merged into
+the bufferY directory, to be configurable per buffer.</p>
+</div>
 <table class="docutils align-default" id="abi-sys-bus-platform-devices-int34d2-00-northpeak">
 <colgroup>
 <col style="width: 100%" />
@@ -190,7 +481,6 @@ Northpeak through the PMC/SCU.</p>
 IPC command to the PMC/SCU.</p>
 <p>Format: %d %d where first number is command and
 second number is subcommand.</p>
-</div>
 <table class="docutils align-default" id="abi-sys-bus-usb-devices-power-level">
 <colgroup>
 <col style="width: 100%" />
@@ -2107,6 +2397,86 @@ This is a special sysfs file and only available when
 the system is booted to capture the vmcore using FADump.
 It is used to release the memory reserved by FADump to
 save the crash dump.</p>
+<div class="section" id="file-home-ant-amazon-com-sjpark-linux-obsolete-sysfs-bus-iio">
+<span id="abi-file-obsolete-sysfs-bus-iio"></span><h2>File /home/ANT.AMAZON.COM/sjpark/linux/obsolete/sysfs-bus-iio<a class="headerlink" href="#file-home-ant-amazon-com-sjpark-linux-obsolete-sysfs-bus-iio" title="Permalink to this headline">¶</a></h2>
+<p>Has the following ABI:</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="#abi-sys-bus-iio-devices-iio-devicex-buffer-length"><span class="std std-ref">/sys/bus/iio/devices/iio:deviceX/buffer/length</span></a></p></li>
+<li><p><a class="reference internal" href="#abi-sys-bus-iio-devices-iio-devicex-buffer-enable"><span class="std std-ref">/sys/bus/iio/devices/iio:deviceX/buffer/enable</span></a></p></li>
+<li><p><a class="reference internal" href="#abi-sys-bus-iio-devices-iio-devicex-scan-elements"><span class="std std-ref">/sys/bus/iio/devices/iio:deviceX/scan_elements</span></a></p></li>
+<li><p><a class="reference internal" href="#abi-sys-iio-devicex-scan-elements-in-accel-x-en"><span class="std std-ref">/sys/…/iio:deviceX/scan_elements/in_accel_x_en</span></a></p></li>
+<li><p><a class="reference internal" href="#abi-sys-iio-devicex-scan-elements-in-accel-x-en"><span class="std std-ref">/sys/…/iio:deviceX/scan_elements/in_accel_y_en</span></a></p></li>
+<li><p><a class="reference internal" href="#abi-sys-iio-devicex-scan-elements-in-accel-x-en"><span class="std std-ref">/sys/…/iio:deviceX/scan_elements/in_accel_z_en</span></a></p></li>
+<li><p><a class="reference internal" href="#abi-sys-iio-devicex-scan-elements-in-accel-x-en"><span class="std std-ref">/sys/…/iio:deviceX/scan_elements/in_anglvel_x_en</span></a></p></li>
+<li><p><a class="reference internal" href="#abi-sys-iio-devicex-scan-elements-in-accel-x-en"><span class="std std-ref">/sys/…/iio:deviceX/scan_elements/in_anglvel_y_en</span></a></p></li>
+<li><p><a class="reference internal" href="#abi-sys-iio-devicex-scan-elements-in-accel-x-en"><span class="std std-ref">/sys/…/iio:deviceX/scan_elements/in_anglvel_z_en</span></a></p></li>
+<li><p><a class="reference internal" href="#abi-sys-iio-devicex-scan-elements-in-accel-x-en"><span class="std std-ref">/sys/…/iio:deviceX/scan_elements/in_magn_x_en</span></a></p></li>
+<li><p><a class="reference internal" href="#abi-sys-iio-devicex-scan-elements-in-accel-x-en"><span class="std std-ref">/sys/…/iio:deviceX/scan_elements/in_magn_y_en</span></a></p></li>
+<li><p><a class="reference internal" href="#abi-sys-iio-devicex-scan-elements-in-accel-x-en"><span class="std std-ref">/sys/…/iio:deviceX/scan_elements/in_magn_z_en</span></a></p></li>
+<li><p><a class="reference internal" href="#abi-sys-iio-devicex-scan-elements-in-accel-x-en"><span class="std std-ref">/sys/…/iio:deviceX/scan_elements/in_rot_from_north_magnetic_en</span></a></p></li>
+<li><p><a class="reference internal" href="#abi-sys-iio-devicex-scan-elements-in-accel-x-en"><span class="std std-ref">/sys/…/iio:deviceX/scan_elements/in_rot_from_north_true_en</span></a></p></li>
+<li><p><a class="reference internal" href="#abi-sys-iio-devicex-scan-elements-in-accel-x-en"><span class="std std-ref">/sys/…/iio:deviceX/scan_elements/in_rot_from_north_magnetic_tilt_comp_en</span></a></p></li>
+<li><p><a class="reference internal" href="#abi-sys-iio-devicex-scan-elements-in-accel-x-en"><span class="std std-ref">/sys/…/iio:deviceX/scan_elements/in_rot_from_north_true_tilt_comp_en</span></a></p></li>
+<li><p><a class="reference internal" href="#abi-sys-iio-devicex-scan-elements-in-accel-x-en"><span class="std std-ref">/sys/…/iio:deviceX/scan_elements/in_timestamp_en</span></a></p></li>
+<li><p><a class="reference internal" href="#abi-sys-iio-devicex-scan-elements-in-accel-x-en"><span class="std std-ref">/sys/…/iio:deviceX/scan_elements/in_voltageY_supply_en</span></a></p></li>
+<li><p><a class="reference internal" href="#abi-sys-iio-devicex-scan-elements-in-accel-x-en"><span class="std std-ref">/sys/…/iio:deviceX/scan_elements/in_voltageY_en</span></a></p></li>
+<li><p><a class="reference internal" href="#abi-sys-iio-devicex-scan-elements-in-accel-x-en"><span class="std std-ref">/sys/…/iio:deviceX/scan_elements/in_voltageY-voltageZ_en</span></a></p></li>
+<li><p><a class="reference internal" href="#abi-sys-iio-devicex-scan-elements-in-accel-x-en"><span class="std std-ref">/sys/…/iio:deviceX/scan_elements/in_voltageY_i_en</span></a></p></li>
+<li><p><a class="reference internal" href="#abi-sys-iio-devicex-scan-elements-in-accel-x-en"><span class="std std-ref">/sys/…/iio:deviceX/scan_elements/in_voltageY_q_en</span></a></p></li>
+<li><p><a class="reference internal" href="#abi-sys-iio-devicex-scan-elements-in-accel-x-en"><span class="std std-ref">/sys/…/iio:deviceX/scan_elements/in_voltage_i_en</span></a></p></li>
+<li><p><a class="reference internal" href="#abi-sys-iio-devicex-scan-elements-in-accel-x-en"><span class="std std-ref">/sys/…/iio:deviceX/scan_elements/in_voltage_q_en</span></a></p></li>
+<li><p><a class="reference internal" href="#abi-sys-iio-devicex-scan-elements-in-accel-x-en"><span class="std std-ref">/sys/…/iio:deviceX/scan_elements/in_incli_x_en</span></a></p></li>
+<li><p><a class="reference internal" href="#abi-sys-iio-devicex-scan-elements-in-accel-x-en"><span class="std std-ref">/sys/…/iio:deviceX/scan_elements/in_incli_y_en</span></a></p></li>
+<li><p><a class="reference internal" href="#abi-sys-iio-devicex-scan-elements-in-accel-x-en"><span class="std std-ref">/sys/…/iio:deviceX/scan_elements/in_pressureY_en</span></a></p></li>
+<li><p><a class="reference internal" href="#abi-sys-iio-devicex-scan-elements-in-accel-x-en"><span class="std std-ref">/sys/…/iio:deviceX/scan_elements/in_pressure_en</span></a></p></li>
+<li><p><a class="reference internal" href="#abi-sys-iio-devicex-scan-elements-in-accel-x-en"><span class="std std-ref">/sys/…/iio:deviceX/scan_elements/in_rot_quaternion_en</span></a></p></li>
+<li><p><a class="reference internal" href="#abi-sys-iio-devicex-scan-elements-in-accel-x-en"><span class="std std-ref">/sys/…/iio:deviceX/scan_elements/in_proximity_en</span></a></p></li>
+<li><p><a class="reference internal" href="#abi-sys-iio-devicex-scan-elements-in-accel-type"><span class="std std-ref">/sys/…/iio:deviceX/scan_elements/in_accel_type</span></a></p></li>
+<li><p><a class="reference internal" href="#abi-sys-iio-devicex-scan-elements-in-accel-type"><span class="std std-ref">/sys/…/iio:deviceX/scan_elements/in_anglvel_type</span></a></p></li>
+<li><p><a class="reference internal" href="#abi-sys-iio-devicex-scan-elements-in-accel-type"><span class="std std-ref">/sys/…/iio:deviceX/scan_elements/in_magn_type</span></a></p></li>
+<li><p><a class="reference internal" href="#abi-sys-iio-devicex-scan-elements-in-accel-type"><span class="std std-ref">/sys/…/iio:deviceX/scan_elements/in_incli_type</span></a></p></li>
+<li><p><a class="reference internal" href="#abi-sys-iio-devicex-scan-elements-in-accel-type"><span class="std std-ref">/sys/…/iio:deviceX/scan_elements/in_voltageY_type</span></a></p></li>
+<li><p><a class="reference internal" href="#abi-sys-iio-devicex-scan-elements-in-accel-type"><span class="std std-ref">/sys/…/iio:deviceX/scan_elements/in_voltage_type</span></a></p></li>
+<li><p><a class="reference internal" href="#abi-sys-iio-devicex-scan-elements-in-accel-type"><span class="std std-ref">/sys/…/iio:deviceX/scan_elements/in_voltageY_supply_type</span></a></p></li>
+<li><p><a class="reference internal" href="#abi-sys-iio-devicex-scan-elements-in-accel-type"><span class="std std-ref">/sys/…/iio:deviceX/scan_elements/in_voltageY_i_type</span></a></p></li>
+<li><p><a class="reference internal" href="#abi-sys-iio-devicex-scan-elements-in-accel-type"><span class="std std-ref">/sys/…/iio:deviceX/scan_elements/in_voltageY_q_type</span></a></p></li>
+<li><p><a class="reference internal" href="#abi-sys-iio-devicex-scan-elements-in-accel-type"><span class="std std-ref">/sys/…/iio:deviceX/scan_elements/in_voltage_i_type</span></a></p></li>
+<li><p><a class="reference internal" href="#abi-sys-iio-devicex-scan-elements-in-accel-type"><span class="std std-ref">/sys/…/iio:deviceX/scan_elements/in_voltage_q_type</span></a></p></li>
+<li><p><a class="reference internal" href="#abi-sys-iio-devicex-scan-elements-in-accel-type"><span class="std std-ref">/sys/…/iio:deviceX/scan_elements/in_timestamp_type</span></a></p></li>
+<li><p><a class="reference internal" href="#abi-sys-iio-devicex-scan-elements-in-accel-type"><span class="std std-ref">/sys/…/iio:deviceX/scan_elements/in_pressureY_type</span></a></p></li>
+<li><p><a class="reference internal" href="#abi-sys-iio-devicex-scan-elements-in-accel-type"><span class="std std-ref">/sys/…/iio:deviceX/scan_elements/in_pressure_type</span></a></p></li>
+<li><p><a class="reference internal" href="#abi-sys-iio-devicex-scan-elements-in-accel-type"><span class="std std-ref">/sys/…/iio:deviceX/scan_elements/in_rot_quaternion_type</span></a></p></li>
+<li><p><a class="reference internal" href="#abi-sys-iio-devicex-scan-elements-in-accel-type"><span class="std std-ref">/sys/…/iio:deviceX/scan_elements/in_proximity_type</span></a></p></li>
+<li><p><a class="reference internal" href="#abi-sys-iio-devicex-scan-elements-in-voltagey-index"><span class="std std-ref">/sys/…/iio:deviceX/scan_elements/in_voltageY_index</span></a></p></li>
+<li><p><a class="reference internal" href="#abi-sys-iio-devicex-scan-elements-in-voltagey-index"><span class="std std-ref">/sys/…/iio:deviceX/scan_elements/in_voltageY_supply_index</span></a></p></li>
+<li><p><a class="reference internal" href="#abi-sys-iio-devicex-scan-elements-in-voltagey-index"><span class="std std-ref">/sys/…/iio:deviceX/scan_elements/in_voltageY_i_index</span></a></p></li>
+<li><p><a class="reference internal" href="#abi-sys-iio-devicex-scan-elements-in-voltagey-index"><span class="std std-ref">/sys/…/iio:deviceX/scan_elements/in_voltageY_q_index</span></a></p></li>
+<li><p><a class="reference internal" href="#abi-sys-iio-devicex-scan-elements-in-voltagey-index"><span class="std std-ref">/sys/…/iio:deviceX/scan_elements/in_voltage_i_index</span></a></p></li>
+<li><p><a class="reference internal" href="#abi-sys-iio-devicex-scan-elements-in-voltagey-index"><span class="std std-ref">/sys/…/iio:deviceX/scan_elements/in_voltage_q_index</span></a></p></li>
+<li><p><a class="reference internal" href="#abi-sys-iio-devicex-scan-elements-in-voltagey-index"><span class="std std-ref">/sys/…/iio:deviceX/scan_elements/in_accel_x_index</span></a></p></li>
+<li><p><a class="reference internal" href="#abi-sys-iio-devicex-scan-elements-in-voltagey-index"><span class="std std-ref">/sys/…/iio:deviceX/scan_elements/in_accel_y_index</span></a></p></li>
+<li><p><a class="reference internal" href="#abi-sys-iio-devicex-scan-elements-in-voltagey-index"><span class="std std-ref">/sys/…/iio:deviceX/scan_elements/in_accel_z_index</span></a></p></li>
+<li><p><a class="reference internal" href="#abi-sys-iio-devicex-scan-elements-in-voltagey-index"><span class="std std-ref">/sys/…/iio:deviceX/scan_elements/in_anglvel_x_index</span></a></p></li>
+<li><p><a class="reference internal" href="#abi-sys-iio-devicex-scan-elements-in-voltagey-index"><span class="std std-ref">/sys/…/iio:deviceX/scan_elements/in_anglvel_y_index</span></a></p></li>
+<li><p><a class="reference internal" href="#abi-sys-iio-devicex-scan-elements-in-voltagey-index"><span class="std std-ref">/sys/…/iio:deviceX/scan_elements/in_anglvel_z_index</span></a></p></li>
+<li><p><a class="reference internal" href="#abi-sys-iio-devicex-scan-elements-in-voltagey-index"><span class="std std-ref">/sys/…/iio:deviceX/scan_elements/in_magn_x_index</span></a></p></li>
+<li><p><a class="reference internal" href="#abi-sys-iio-devicex-scan-elements-in-voltagey-index"><span class="std std-ref">/sys/…/iio:deviceX/scan_elements/in_magn_y_index</span></a></p></li>
+<li><p><a class="reference internal" href="#abi-sys-iio-devicex-scan-elements-in-voltagey-index"><span class="std std-ref">/sys/…/iio:deviceX/scan_elements/in_magn_z_index</span></a></p></li>
+<li><p><a class="reference internal" href="#abi-sys-iio-devicex-scan-elements-in-voltagey-index"><span class="std std-ref">/sys/…/iio:deviceX/scan_elements/in_rot_from_north_magnetic_index</span></a></p></li>
+<li><p><a class="reference internal" href="#abi-sys-iio-devicex-scan-elements-in-voltagey-index"><span class="std std-ref">/sys/…/iio:deviceX/scan_elements/in_rot_from_north_true_index</span></a></p></li>
+<li><p><a class="reference internal" href="#abi-sys-iio-devicex-scan-elements-in-voltagey-index"><span class="std std-ref">/sys/…/iio:deviceX/scan_elements/in_rot_from_north_magnetic_tilt_comp_index</span></a></p></li>
+<li><p><a class="reference internal" href="#abi-sys-iio-devicex-scan-elements-in-voltagey-index"><span class="std std-ref">/sys/…/iio:deviceX/scan_elements/in_rot_from_north_true_tilt_comp_index</span></a></p></li>
+<li><p><a class="reference internal" href="#abi-sys-iio-devicex-scan-elements-in-voltagey-index"><span class="std std-ref">/sys/…/iio:deviceX/scan_elements/in_incli_x_index</span></a></p></li>
+<li><p><a class="reference internal" href="#abi-sys-iio-devicex-scan-elements-in-voltagey-index"><span class="std std-ref">/sys/…/iio:deviceX/scan_elements/in_incli_y_index</span></a></p></li>
+<li><p><a class="reference internal" href="#abi-sys-iio-devicex-scan-elements-in-voltagey-index"><span class="std std-ref">/sys/…/iio:deviceX/scan_elements/in_timestamp_index</span></a></p></li>
+<li><p><a class="reference internal" href="#abi-sys-iio-devicex-scan-elements-in-voltagey-index"><span class="std std-ref">/sys/…/iio:deviceX/scan_elements/in_pressureY_index</span></a></p></li>
+<li><p><a class="reference internal" href="#abi-sys-iio-devicex-scan-elements-in-voltagey-index"><span class="std std-ref">/sys/…/iio:deviceX/scan_elements/in_pressure_index</span></a></p></li>
+<li><p><a class="reference internal" href="#abi-sys-iio-devicex-scan-elements-in-voltagey-index"><span class="std std-ref">/sys/…/iio:deviceX/scan_elements/in_rot_quaternion_index</span></a></p></li>
+<li><p><a class="reference internal" href="#abi-sys-iio-devicex-scan-elements-in-voltagey-index"><span class="std std-ref">/sys/…/iio:deviceX/scan_elements/in_proximity_index</span></a></p></li>
+<li><p><a class="reference internal" href="#abi-sys-bus-iio-devices-iio-devicex-buffer-watermark"><span class="std std-ref">/sys/bus/iio/devices/iio:deviceX/buffer/watermark</span></a></p></li>
+<li><p><a class="reference internal" href="#abi-sys-bus-iio-devices-iio-devicex-buffer-data-available"><span class="std std-ref">/sys/bus/iio/devices/iio:deviceX/buffer/data_available</span></a></p></li>
+</ul>
+</div>
 <div class="section" id="file-home-ant-amazon-com-sjpark-linux-obsolete-sysfs-bus-usb">
 <span id="abi-file-obsolete-sysfs-bus-usb"></span><h2>File /home/ANT.AMAZON.COM/sjpark/linux/obsolete/sysfs-bus-usb<a class="headerlink" href="#file-home-ant-amazon-com-sjpark-linux-obsolete-sysfs-bus-usb" title="Permalink to this headline">¶</a></h2>
 <p>Has the following ABI:</p>
@@ -2320,7 +2690,7 @@ used in any new applications.</p>
 </div>
 <div class="section" id="file-home-ant-amazon-com-sjpark-linux-obsolete-sysfs-kernel-fadump-registered">
 <span id="abi-file-obsolete-sysfs-kernel-fadump-registered"></span><h2>File /home/ANT.AMAZON.COM/sjpark/linux/obsolete/sysfs-kernel-fadump_registered<a class="headerlink" href="#file-home-ant-amazon-com-sjpark-linux-obsolete-sysfs-kernel-fadump-registered" title="Permalink to this headline">¶</a></h2>
-<p>This ABI is renamed and moved to a new location /sys/kernel/fadump/registered.¬</p>
+<p>This ABI is renamed and moved to a new location /sys/kernel/fadump/registered.</p>
 <p>Has the following ABI:</p>
 <ul class="simple">
 <li><p><a class="reference internal" href="abi-testing.html#abi-sys-kernel-fadump-registered"><span class="std std-ref">/sys/kernel/fadump_registered</span></a></p></li>
@@ -2328,7 +2698,7 @@ used in any new applications.</p>
 </div>
 <div class="section" id="file-home-ant-amazon-com-sjpark-linux-obsolete-sysfs-kernel-fadump-release-mem">
 <span id="abi-file-obsolete-sysfs-kernel-fadump-release-mem"></span><h2>File /home/ANT.AMAZON.COM/sjpark/linux/obsolete/sysfs-kernel-fadump_release_mem<a class="headerlink" href="#file-home-ant-amazon-com-sjpark-linux-obsolete-sysfs-kernel-fadump-release-mem" title="Permalink to this headline">¶</a></h2>
-<p>This ABI is renamed and moved to a new location /sys/kernel/fadump/release_mem.¬</p>
+<p>This ABI is renamed and moved to a new location /sys/kernel/fadump/release_mem.</p>
 <p>Has the following ABI:</p>
 <ul class="simple">
 <li><p><a class="reference internal" href="abi-testing.html#abi-sys-kernel-fadump-release-mem"><span class="std std-ref">/sys/kernel/fadump_release_mem</span></a></p></li>
