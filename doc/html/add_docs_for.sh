@@ -59,7 +59,7 @@ git rm -rq latest*
 
 gen_copy_doc "$linux_repo" "$damon_hashid" "$patch_version" "-damon"
 gen_copy_doc "$linux_repo" "$damos_hashid" "$patch_version" "-damos"
-gen_copy_doc "$linux_repo" "$paddr_hashid" "$patch_version" "-damos"
+gen_copy_doc "$linux_repo" "$paddr_hashid" "$patch_version" "-paddr"
 gen_copy_doc "$linux_repo" "$darc_hashid" "$patch_version" ""
 
 ./cleanup.sh
