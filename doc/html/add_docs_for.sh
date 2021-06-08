@@ -1,16 +1,17 @@
 #!/bin/bash
 
-if [ $# -ne 5 ]
+if [ $# -ne 6 ]
 then
-	echo "Usage: $0 <version> <damon commit> <damos commit> <final commit>  <linux repo>"
+	echo "Usage: $0 <linux repo> <version> <damon commit> <damos commit> <paddr commit> <damon_reclaim commit>"
 	exit 1
 fi
 
-patch_version=$1
-damon_hashid=$2
-damos_hashid=$3
-final_hashid=$4
-linux_repo=$5
+linux_repo=$1
+patch_version=$2
+damon_hashid=$3
+damos_hashid=$4
+paddr_hashid=$5
+darc_hashid=$6
 
 gen_doc() {
 	repo=$1
@@ -58,7 +59,8 @@ git rm -rq latest*
 
 gen_copy_doc "$linux_repo" "$damon_hashid" "$patch_version" "-damon"
 gen_copy_doc "$linux_repo" "$damos_hashid" "$patch_version" "-damos"
-gen_copy_doc "$linux_repo" "$final_hashid" "$patch_version" ""
+gen_copy_doc "$linux_repo" "$paddr_hashid" "$patch_version" "-damos"
+gen_copy_doc "$linux_repo" "$darc_hashid" "$patch_version" ""
 
 ./cleanup.sh
 git add next*
