@@ -1,0 +1,278 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Softlockup detector and hardlockup detector (aka nmi_watchdog) &mdash; The Linux Kernel  documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/theme_overrides.css" type="text/css" />
+
+  
+  
+  
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home" alt="Documentation Home"> The Linux Kernel
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                5.13.0-rc5-mm1
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="mm/damon/index.html">Monitoring Data Accesses</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../vm/damon/index.html">DAMON: Data Access MONitor</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">The Linux Kernel</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+      <li>Softlockup detector and hardlockup detector (aka nmi_watchdog)</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/admin-guide/lockup-watchdogs.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="softlockup-detector-and-hardlockup-detector-aka-nmi-watchdog">
+<h1>Softlockup detector and hardlockup detector (aka nmi_watchdog)<a class="headerlink" href="#softlockup-detector-and-hardlockup-detector-aka-nmi-watchdog" title="Permalink to this headline">¶</a></h1>
+<p>The Linux kernel can act as a watchdog to detect both soft and hard
+lockups.</p>
+<p>A ‘softlockup’ is defined as a bug that causes the kernel to loop in
+kernel mode for more than 20 seconds (see “Implementation” below for
+details), without giving other tasks a chance to run. The current
+stack trace is displayed upon detection and, by default, the system
+will stay locked up. Alternatively, the kernel can be configured to
+panic; a sysctl, “kernel.softlockup_panic”, a kernel parameter,
+“softlockup_panic” (see “<a class="reference internal" href="kernel-parameters.html"><span class="doc">The kernel’s command-line parameters</span></a>” for
+details), and a compile option, “BOOTPARAM_SOFTLOCKUP_PANIC”, are
+provided for this.</p>
+<p>A ‘hardlockup’ is defined as a bug that causes the CPU to loop in
+kernel mode for more than 10 seconds (see “Implementation” below for
+details), without letting other interrupts have a chance to run.
+Similarly to the softlockup case, the current stack trace is displayed
+upon detection and the system will stay locked up unless the default
+behavior is changed, which can be done through a sysctl,
+‘hardlockup_panic’, a compile time knob, “BOOTPARAM_HARDLOCKUP_PANIC”,
+and a kernel parameter, “nmi_watchdog”
+(see “<a class="reference internal" href="kernel-parameters.html"><span class="doc">The kernel’s command-line parameters</span></a>” for details).</p>
+<p>The panic option can be used in combination with panic_timeout (this
+timeout is set through the confusingly named “kernel.panic” sysctl),
+to cause the system to reboot automatically after a specified amount
+of time.</p>
+<div class="section" id="implementation">
+<h2>Implementation<a class="headerlink" href="#implementation" title="Permalink to this headline">¶</a></h2>
+<p>The soft and hard lockup detectors are built on top of the hrtimer and
+perf subsystems, respectively. A direct consequence of this is that,
+in principle, they should work in any architecture where these
+subsystems are present.</p>
+<p>A periodic hrtimer runs to generate interrupts and kick the watchdog
+job. An NMI perf event is generated every “watchdog_thresh”
+(compile-time initialized to 10 and configurable through sysctl of the
+same name) seconds to check for hardlockups. If any CPU in the system
+does not receive any hrtimer interrupt during that time the
+‘hardlockup detector’ (the handler for the NMI perf event) will
+generate a kernel warning or call panic, depending on the
+configuration.</p>
+<p>The watchdog job runs in a stop scheduling thread that updates a
+timestamp every time it is scheduled. If that timestamp is not updated
+for 2*watchdog_thresh seconds (the softlockup threshold) the
+‘softlockup detector’ (coded inside the hrtimer callback function)
+will dump useful debug information to the system log, after which it
+will call panic if it was instructed to do so or resume execution of
+other kernel code.</p>
+<p>The period of the hrtimer is 2*watchdog_thresh/5, which means it has
+two or three chances to generate an interrupt before the hardlockup
+detector kicks in.</p>
+<p>As explained above, a kernel knob is provided that allows
+administrators to configure the period of the hrtimer and the perf
+event. The right value for a particular environment is a trade-off
+between fast response to lockups and detection overhead.</p>
+<p>By default, the watchdog runs on all online cores.  However, on a
+kernel configured with NO_HZ_FULL, by default the watchdog runs only
+on the housekeeping cores, not the cores specified in the “nohz_full”
+boot argument.  If we allowed the watchdog to run by default on
+the “nohz_full” cores, we would have to run timer ticks to activate
+the scheduler, which would prevent the “nohz_full” functionality
+from protecting the user code on those cores from the kernel.
+Of course, disabling it by default on the nohz_full cores means that
+when those cores do enter the kernel, by default we will not be
+able to detect if they lock up.  However, allowing the watchdog
+to continue to run on the housekeeping (non-tickless) cores means
+that we will continue to detect lockups properly on those cores.</p>
+<p>In either case, the set of cores excluded from running the watchdog
+may be adjusted via the kernel.watchdog_cpumask sysctl.  For
+nohz_full cores, this may be useful for debugging a case where the
+kernel seems to be hanging on the nohz_full cores.</p>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        
+        &copy; Copyright The kernel development community
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

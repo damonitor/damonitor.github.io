@@ -1,0 +1,295 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Writecache target &mdash; The Linux Kernel  documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/theme_overrides.css" type="text/css" />
+
+  
+  
+  
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/doctools.js"></script>
+        <script src="../../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../index.html" class="icon icon-home" alt="Documentation Home"> The Linux Kernel
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                5.13.0-rc5-mm1
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../mm/damon/index.html">Monitoring Data Accesses</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../vm/damon/index.html">DAMON: Data Access MONitor</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">The Linux Kernel</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+      <li>Writecache target</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../../_sources/admin-guide/device-mapper/writecache.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="writecache-target">
+<h1>Writecache target<a class="headerlink" href="#writecache-target" title="Permalink to this headline">¶</a></h1>
+<p>The writecache target caches writes on persistent memory or on SSD. It
+doesn’t cache reads because reads are supposed to be cached in page cache
+in normal RAM.</p>
+<p>When the device is constructed, the first sector should be zeroed or the
+first sector should contain valid superblock from previous invocation.</p>
+<p>Constructor parameters:</p>
+<ol class="arabic">
+<li><p>type of the cache device - “p” or “s”</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>p - persistent memory</p></li>
+<li><p>s - SSD</p></li>
+</ul>
+</div></blockquote>
+</li>
+<li><p>the underlying device that will be cached</p></li>
+<li><p>the cache device</p></li>
+<li><p>block size (4096 is recommended; the maximum block size is the page
+size)</p></li>
+<li><p>the number of optional parameters (the parameters with an argument
+count as two)</p>
+<blockquote>
+<div><dl class="simple">
+<dt>start_sector n          (default: 0)</dt><dd><p>offset from the start of cache device in 512-byte sectors</p>
+</dd>
+<dt>high_watermark n        (default: 50)</dt><dd><p>start writeback when the number of used blocks reach this
+watermark</p>
+</dd>
+<dt>low_watermark x         (default: 45)</dt><dd><p>stop writeback when the number of used blocks drops below
+this watermark</p>
+</dd>
+<dt>writeback_jobs n        (default: unlimited)</dt><dd><p>limit the number of blocks that are in flight during
+writeback. Setting this value reduces writeback
+throughput, but it may improve latency of read requests</p>
+</dd>
+<dt>autocommit_blocks n     (default: 64 for pmem, 65536 for ssd)</dt><dd><p>when the application writes this amount of blocks without
+issuing the FLUSH request, the blocks are automatically
+committed</p>
+</dd>
+<dt>autocommit_time ms      (default: 1000)</dt><dd><p>autocommit time in milliseconds. The data is automatically
+committed if this time passes and no FLUSH request is
+received</p>
+</dd>
+<dt>fua                     (by default on)</dt><dd><p>applicable only to persistent memory - use the FUA flag
+when writing data from persistent memory back to the
+underlying device</p>
+</dd>
+<dt>nofua</dt><dd><p>applicable only to persistent memory - don’t use the FUA
+flag when writing back data and send the FLUSH request
+afterwards</p>
+<ul class="simple">
+<li><p>some underlying devices perform better with fua, some
+with nofua. The user should test it</p></li>
+</ul>
+</dd>
+</dl>
+</div></blockquote>
+</li>
+</ol>
+<p>Status:
+1. error indicator - 0 if there was no error, otherwise error number
+2. the number of blocks
+3. the number of free blocks
+4. the number of blocks under writeback</p>
+<dl class="simple">
+<dt>Messages:</dt><dd><dl class="simple">
+<dt>flush</dt><dd><p>flush the cache device. The message returns successfully
+if the cache device was flushed without an error</p>
+</dd>
+<dt>flush_on_suspend</dt><dd><p>flush the cache device on next suspend. Use this message
+when you are going to remove the cache device. The proper
+sequence for removing the cache device is:</p>
+<ol class="arabic simple">
+<li><p>send the “flush_on_suspend” message</p></li>
+<li><p>load an inactive table with a linear target that maps
+to the underlying device</p></li>
+<li><p>suspend the device</p></li>
+<li><p>ask for status and verify that there are no errors</p></li>
+<li><p>resume the device, so that it will use the linear
+target</p></li>
+<li><p>the cache device is now inactive and it can be deleted</p></li>
+</ol>
+</dd>
+</dl>
+</dd>
+</dl>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        
+        &copy; Copyright The kernel development community
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>
