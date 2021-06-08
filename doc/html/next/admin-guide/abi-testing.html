@@ -60,7 +60,7 @@
             
             
               <div class="version">
-                5.13.0-rc1-mm1
+                5.13.0-rc5-mm1
               </div>
             
           
@@ -281,7 +281,7 @@ objects.</p>
 </table>
 <p>Defined on file <a class="reference internal" href="#abi-file-testing-configfs-iio"><span class="std std-ref">configfs-iio</span></a></p>
 <p>Dummy IIO devices directory. Creating a directory here will result
-in creating a dummy IIO device in the IIO subystem.</p>
+in creating a dummy IIO device in the IIO subsystem.</p>
 <table class="docutils align-default" id="abi-config-iio-triggers">
 <colgroup>
 <col style="width: 100%" />
@@ -1729,7 +1729,7 @@ chroma values from the color primaries</p></td>
 </tr>
 <tr class="row-even"><td><p>bTransferCharacteristics</p></td>
 <td><p>optoelectronic transfer
-characteristic of the source picutre,
+characteristic of the source picture,
 also called the gamma function</p></td>
 </tr>
 <tr class="row-odd"><td><p>bColorPrimaries</p></td>
@@ -1776,7 +1776,7 @@ a hardware trigger interrupt event</p></td>
 triggering is supported</p></td>
 </tr>
 <tr class="row-odd"><td><p>bStillCaptureMethod</p></td>
-<td><p>method of still image caputre
+<td><p>method of still image capture
 supported</p></td>
 </tr>
 <tr class="row-even"><td><p>bTerminalLink</p></td>
@@ -2047,7 +2047,7 @@ support</p></td>
 </colgroup>
 <tbody>
 <tr class="row-odd"><td><p>use</p></td>
-<td><p>flag turning “OS Desctiptors” support on/off</p></td>
+<td><p>flag turning “OS Descriptors” support on/off</p></td>
 </tr>
 <tr class="row-even"><td><p>b_vendor_code</p></td>
 <td><p>one-byte value used for custom per-device and
@@ -3384,7 +3384,12 @@ is LEAVING running state.</p>
 </tbody>
 </table>
 <p>Defined on file <a class="reference internal" href="#abi-file-testing-sysfs-bus-iio"><span class="std std-ref">sysfs-bus-iio</span></a></p>
-<p>DESCRIPTION MISSING for /sys/…/events/in_capacitanceY_adaptive_thresh_rising_en, /sys/…/events/in_capacitanceY_adaptive_thresh_falling_en</p>
+<p>Adaptive thresholds are similar to normal fixed thresholds
+but the value is expressed as an offset from a value which
+provides a low frequency approximation of the channel itself.
+Thus these detect if a rapid change occurs in the specified
+direction which crosses tracking value + offset.
+Tracking value calculation is devices specific.</p>
 <table class="docutils align-default" id="abi-sys-events-in-illuminance0-threshy-hysteresis">
 <colgroup>
 <col style="width: 100%" />
@@ -4209,7 +4214,14 @@ gives the 3dB frequency of the filter in Hz.</p>
 </tbody>
 </table>
 <p>Defined on file <a class="reference internal" href="#abi-file-testing-sysfs-bus-iio"><span class="std std-ref">sysfs-bus-iio</span></a></p>
-<p>DESCRIPTION MISSING for /sys/…/in_capacitanceY_adaptive_thresh_rising_timeout, /sys/…/in_capacitanceY_adaptive_thresh_falling_timeout</p>
+<p>When adaptive thresholds are used, the tracking signal
+may adjust too slowly to step changes in the raw signal.
+Thus these specify the time in seconds for which the
+difference between the slow tracking signal and the raw
+signal is allowed to remain out-of-range before a reset
+event occurs in which the tracking signal is made equal
+to the raw signal, allowing slow tracking to resume and the
+adaptive threshold event detection to function as expected.</p>
 <table class="docutils align-default" id="abi-sys-mdev-supported-types-type-id-available-instances">
 <colgroup>
 <col style="width: 100%" />
@@ -8631,6 +8643,20 @@ evaluated as Direction.</p>
 <dt>both edges:</dt><dd><p>Any state transition.</p>
 </dd>
 </dl>
+<table class="docutils align-default" id="abi-sys-bus-counter-devices-counterx-county-spike-filter-ns">
+<colgroup>
+<col style="width: 100%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><strong>/sys/bus/counter/devices/counterX/countY/spike_filter_ns</strong></p></td>
+</tr>
+</tbody>
+</table>
+<p>Defined on file <a class="reference internal" href="#abi-file-testing-sysfs-bus-counter"><span class="std std-ref">sysfs-bus-counter</span></a></p>
+<p>If the counter device supports programmable spike filter this
+attribute indicates the value in nanoseconds where noise pulses
+shorter or equal to configured value are ignored. Value 0 means
+filter is disabled.</p>
 <table class="docutils align-default" id="abi-sys-bus-counter-devices-counterx-name">
 <colgroup>
 <col style="width: 100%" />
@@ -16071,8 +16097,8 @@ Virtual Function whose index is N (0…MaxVFs-1).</p>
 binary file containing the Vital Product Data for the
 device.  It should follow the VPD format defined in
 PCI Specification 2.1 or 2.2, but users should consider
-that some devices may have malformatted data.  If the
-underlying VPD has a writable section then the
+that some devices may have incorrectly formatted data.  
+If the underlying VPD has a writable section then the
 corresponding section of this file will be writable.</p>
 <table class="docutils align-default" id="abi-sys-bus-pci-devices-dev-aer-dev-correctable">
 <colgroup>
@@ -16673,7 +16699,7 @@ FSI device.</p>
 </table>
 <p>Defined on file <a class="reference internal" href="#abi-file-testing-sysfs-bus-fsi"><span class="std std-ref">sysfs-bus-fsi</span></a></p>
 <p>Sends an FSI BREAK command on a master’s communication
-link to any connnected slaves.  A BREAK resets connected
+link to any connected slaves.  A BREAK resets connected
 device’s logic and preps it to receive further commands
 from the master.</p>
 <table class="docutils align-default" id="abi-sys-bus-platform-devices-fsi-master-fsi0-rescan">
@@ -17125,6 +17151,30 @@ fuel gauge in milli Ohms.</p>
 <p>Defined on file <a class="reference internal" href="#abi-file-testing-sysfs-platform-dptf"><span class="std std-ref">sysfs-platform-dptf</span></a></p>
 <p>(RO) The no-load voltage that can be obtained from battery fuel gauge in
 milli volts.</p>
+<table class="docutils align-default" id="abi-sys-bus-platform-devices-intc1045-00-pch-fivr-switch-frequency-fivr-switching-fault-status">
+<colgroup>
+<col style="width: 100%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><strong>/sys/bus/platform/devices/INTC1045:00/pch_fivr_switch_frequency/fivr_switching_fault_status</strong></p></td>
+</tr>
+</tbody>
+</table>
+<p>Defined on file <a class="reference internal" href="#abi-file-testing-sysfs-platform-dptf"><span class="std std-ref">sysfs-platform-dptf</span></a></p>
+<p>(RO) Read the FIVR switching frequency control fault status.</p>
+<table class="docutils align-default" id="abi-sys-bus-platform-devices-intc1045-00-pch-fivr-switch-frequency-fivr-switching-freq-mhz">
+<colgroup>
+<col style="width: 100%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><strong>/sys/bus/platform/devices/INTC1045:00/pch_fivr_switch_frequency/fivr_switching_freq_mhz</strong></p></td>
+</tr>
+</tbody>
+</table>
+<p>Defined on file <a class="reference internal" href="#abi-file-testing-sysfs-platform-dptf"><span class="std std-ref">sysfs-platform-dptf</span></a></p>
+<p>(RO) PCH FIVR switching control frequency in the units of
+XTAL_FREQ / 128, where XTAL_FREQ is the (product specific)
+Crystal Oscillator frequency.</p>
 <table class="docutils align-default" id="abi-sys-bus-platform-devices-intc1045-00-pch-fivr-switch-frequency-freq-mhz-high-clock">
 <colgroup>
 <col style="width: 100%" />
@@ -17149,6 +17199,40 @@ when FIVR clock is 38.4MHz.</p>
 <p>Defined on file <a class="reference internal" href="#abi-file-testing-sysfs-platform-dptf"><span class="std std-ref">sysfs-platform-dptf</span></a></p>
 <p>(RW) The PCH FIVR (Fully Integrated Voltage Regulator) switching frequency in MHz,
 when FIVR clock is 19.2MHz or 24MHz.</p>
+<table class="docutils align-default" id="abi-sys-bus-platform-devices-intc1045-00-pch-fivr-switch-frequency-ssc-clock-info">
+<colgroup>
+<col style="width: 100%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><strong>/sys/bus/platform/devices/INTC1045:00/pch_fivr_switch_frequency/ssc_clock_info</strong></p></td>
+</tr>
+</tbody>
+</table>
+<p>Defined on file <a class="reference internal" href="#abi-file-testing-sysfs-platform-dptf"><span class="std std-ref">sysfs-platform-dptf</span></a></p>
+<p>(RO) Presents SSC (spread spectrum clock) information for EMI
+(Electro magnetic interference) control. This is a bit mask.
+Bits    Description
+[7:0]   Sets clock spectrum spread percentage:</p>
+<blockquote>
+<div><p>0x00=0.2% , 0x3F=10%
+1 LSB = 0.1% increase in spread (for
+settings 0x01 thru 0x1C)
+1 LSB = 0.2% increase in spread (for
+settings 0x1E thru 0x3F)</p>
+</div></blockquote>
+<dl class="simple">
+<dt>[8]     When set to 1, enables spread</dt><dd><p>spectrum clock</p>
+</dd>
+<dt>[9]     0: Triangle mode. FFC frequency</dt><dd><p>walks around the Fcenter in a linear
+fashion
+1: Random walk mode. FFC frequency
+changes randomly within the SSC
+(Spread spectrum clock) range</p>
+</dd>
+<dt>[10]    0: No white noise. 1: Add white noise</dt><dd><p>to spread waveform</p>
+</dd>
+</dl>
+<p>[11]    When 1, future writes are ignored.</p>
 <table class="docutils align-default" id="abi-sys-bus-platform-devices-mlnxbf04-00-lifecycle-state">
 <colgroup>
 <col style="width: 100%" />
@@ -18583,7 +18667,7 @@ about the descriptor could be found at UFS specifications 2.1.</p>
 </tbody>
 </table>
 <p>Defined on file <a class="reference internal" href="#abi-file-testing-sysfs-driver-ufs"><span class="std std-ref">sysfs-driver-ufs</span></a></p>
-<p>This file shows the manufacturee ID. This is one of the
+<p>This file shows the manufacturer ID. This is one of the
 UFS device descriptor parameters. The full information about
 the descriptor could be found at UFS specifications 2.1.</p>
 <p>The file is read only.</p>
@@ -19474,6 +19558,214 @@ This is one of the UFS interconnect descriptor parameters.
 The full information about the descriptor could be found at
 UFS specifications 2.1.</p>
 <p>The file is read only.</p>
+<table class="docutils align-default" id="abi-sys-bus-platform-drivers-ufshcd-monitor-monitor-chunk-size">
+<colgroup>
+<col style="width: 100%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><strong>/sys/bus/platform/drivers/ufshcd/*/monitor/monitor_chunk_size</strong></p></td>
+</tr>
+</tbody>
+</table>
+<p>Defined on file <a class="reference internal" href="#abi-file-testing-sysfs-driver-ufs"><span class="std std-ref">sysfs-driver-ufs</span></a></p>
+<p>This file tells the monitor to focus on requests transferring
+data of specific chunk size (in Bytes). 0 means any chunk size.
+It can only be changed when monitor is disabled.</p>
+<table class="docutils align-default" id="abi-sys-bus-platform-drivers-ufshcd-monitor-monitor-enable">
+<colgroup>
+<col style="width: 100%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><strong>/sys/bus/platform/drivers/ufshcd/*/monitor/monitor_enable</strong></p></td>
+</tr>
+</tbody>
+</table>
+<p>Defined on file <a class="reference internal" href="#abi-file-testing-sysfs-driver-ufs"><span class="std std-ref">sysfs-driver-ufs</span></a></p>
+<p>This file shows the status of performance monitor enablement
+and it can be used to start/stop the monitor. When the monitor
+is stopped, the performance data collected is also cleared.</p>
+<table class="docutils align-default" id="abi-sys-bus-platform-drivers-ufshcd-monitor-read-nr-requests">
+<colgroup>
+<col style="width: 100%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><strong>/sys/bus/platform/drivers/ufshcd/*/monitor/read_nr_requests</strong></p></td>
+</tr>
+</tbody>
+</table>
+<p>Defined on file <a class="reference internal" href="#abi-file-testing-sysfs-driver-ufs"><span class="std std-ref">sysfs-driver-ufs</span></a></p>
+<p>This file shows how many read requests have been sent after
+monitor gets started.</p>
+<p>The file is read only.</p>
+<table class="docutils align-default" id="abi-sys-bus-platform-drivers-ufshcd-monitor-read-req-latency-avg">
+<colgroup>
+<col style="width: 100%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><strong>/sys/bus/platform/drivers/ufshcd/*/monitor/read_req_latency_avg</strong></p></td>
+</tr>
+</tbody>
+</table>
+<p>Defined on file <a class="reference internal" href="#abi-file-testing-sysfs-driver-ufs"><span class="std std-ref">sysfs-driver-ufs</span></a></p>
+<p>This file shows the average latency (in micro seconds) of
+read requests after monitor gets started.</p>
+<p>The file is read only.</p>
+<table class="docutils align-default" id="abi-sys-bus-platform-drivers-ufshcd-monitor-read-req-latency-max">
+<colgroup>
+<col style="width: 100%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><strong>/sys/bus/platform/drivers/ufshcd/*/monitor/read_req_latency_max</strong></p></td>
+</tr>
+</tbody>
+</table>
+<p>Defined on file <a class="reference internal" href="#abi-file-testing-sysfs-driver-ufs"><span class="std std-ref">sysfs-driver-ufs</span></a></p>
+<p>This file shows the maximum latency (in micro seconds) of
+read requests after monitor gets started.</p>
+<p>The file is read only.</p>
+<table class="docutils align-default" id="abi-sys-bus-platform-drivers-ufshcd-monitor-read-req-latency-min">
+<colgroup>
+<col style="width: 100%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><strong>/sys/bus/platform/drivers/ufshcd/*/monitor/read_req_latency_min</strong></p></td>
+</tr>
+</tbody>
+</table>
+<p>Defined on file <a class="reference internal" href="#abi-file-testing-sysfs-driver-ufs"><span class="std std-ref">sysfs-driver-ufs</span></a></p>
+<p>This file shows the minimum latency (in micro seconds) of
+read requests after monitor gets started.</p>
+<p>The file is read only.</p>
+<table class="docutils align-default" id="abi-sys-bus-platform-drivers-ufshcd-monitor-read-req-latency-sum">
+<colgroup>
+<col style="width: 100%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><strong>/sys/bus/platform/drivers/ufshcd/*/monitor/read_req_latency_sum</strong></p></td>
+</tr>
+</tbody>
+</table>
+<p>Defined on file <a class="reference internal" href="#abi-file-testing-sysfs-driver-ufs"><span class="std std-ref">sysfs-driver-ufs</span></a></p>
+<p>This file shows the total latency (in micro seconds) of
+read requests sent after monitor gets started.</p>
+<p>The file is read only.</p>
+<table class="docutils align-default" id="abi-sys-bus-platform-drivers-ufshcd-monitor-read-total-busy">
+<colgroup>
+<col style="width: 100%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><strong>/sys/bus/platform/drivers/ufshcd/*/monitor/read_total_busy</strong></p></td>
+</tr>
+</tbody>
+</table>
+<p>Defined on file <a class="reference internal" href="#abi-file-testing-sysfs-driver-ufs"><span class="std std-ref">sysfs-driver-ufs</span></a></p>
+<p>This file shows how long (in micro seconds) has been spent
+sending data from device to host after monitor gets started.</p>
+<p>The file is read only.</p>
+<table class="docutils align-default" id="abi-sys-bus-platform-drivers-ufshcd-monitor-read-total-sectors">
+<colgroup>
+<col style="width: 100%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><strong>/sys/bus/platform/drivers/ufshcd/*/monitor/read_total_sectors</strong></p></td>
+</tr>
+</tbody>
+</table>
+<p>Defined on file <a class="reference internal" href="#abi-file-testing-sysfs-driver-ufs"><span class="std std-ref">sysfs-driver-ufs</span></a></p>
+<p>This file shows how many sectors (in 512 Bytes) have been
+sent from device to host after monitor gets started.</p>
+<p>The file is read only.</p>
+<table class="docutils align-default" id="abi-sys-bus-platform-drivers-ufshcd-monitor-write-nr-requests">
+<colgroup>
+<col style="width: 100%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><strong>/sys/bus/platform/drivers/ufshcd/*/monitor/write_nr_requests</strong></p></td>
+</tr>
+</tbody>
+</table>
+<p>Defined on file <a class="reference internal" href="#abi-file-testing-sysfs-driver-ufs"><span class="std std-ref">sysfs-driver-ufs</span></a></p>
+<p>This file shows how many write requests have been sent after
+monitor gets started.</p>
+<p>The file is read only.</p>
+<table class="docutils align-default" id="abi-sys-bus-platform-drivers-ufshcd-monitor-write-req-latency-avg">
+<colgroup>
+<col style="width: 100%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><strong>/sys/bus/platform/drivers/ufshcd/*/monitor/write_req_latency_avg</strong></p></td>
+</tr>
+</tbody>
+</table>
+<p>Defined on file <a class="reference internal" href="#abi-file-testing-sysfs-driver-ufs"><span class="std std-ref">sysfs-driver-ufs</span></a></p>
+<p>This file shows the average latency (in micro seconds) of write
+requests after monitor gets started.</p>
+<p>The file is read only.</p>
+<table class="docutils align-default" id="abi-sys-bus-platform-drivers-ufshcd-monitor-write-req-latency-max">
+<colgroup>
+<col style="width: 100%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><strong>/sys/bus/platform/drivers/ufshcd/*/monitor/write_req_latency_max</strong></p></td>
+</tr>
+</tbody>
+</table>
+<p>Defined on file <a class="reference internal" href="#abi-file-testing-sysfs-driver-ufs"><span class="std std-ref">sysfs-driver-ufs</span></a></p>
+<p>This file shows the maximum latency (in micro seconds) of write
+requests after monitor gets started.</p>
+<p>The file is read only.</p>
+<table class="docutils align-default" id="abi-sys-bus-platform-drivers-ufshcd-monitor-write-req-latency-min">
+<colgroup>
+<col style="width: 100%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><strong>/sys/bus/platform/drivers/ufshcd/*/monitor/write_req_latency_min</strong></p></td>
+</tr>
+</tbody>
+</table>
+<p>Defined on file <a class="reference internal" href="#abi-file-testing-sysfs-driver-ufs"><span class="std std-ref">sysfs-driver-ufs</span></a></p>
+<p>This file shows the minimum latency (in micro seconds) of write
+requests after monitor gets started.</p>
+<p>The file is read only.</p>
+<table class="docutils align-default" id="abi-sys-bus-platform-drivers-ufshcd-monitor-write-req-latency-sum">
+<colgroup>
+<col style="width: 100%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><strong>/sys/bus/platform/drivers/ufshcd/*/monitor/write_req_latency_sum</strong></p></td>
+</tr>
+</tbody>
+</table>
+<p>Defined on file <a class="reference internal" href="#abi-file-testing-sysfs-driver-ufs"><span class="std std-ref">sysfs-driver-ufs</span></a></p>
+<p>This file shows the total latency (in micro seconds) of write
+requests after monitor gets started.</p>
+<p>The file is read only.</p>
+<table class="docutils align-default" id="abi-sys-bus-platform-drivers-ufshcd-monitor-write-total-busy">
+<colgroup>
+<col style="width: 100%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><strong>/sys/bus/platform/drivers/ufshcd/*/monitor/write_total_busy</strong></p></td>
+</tr>
+</tbody>
+</table>
+<p>Defined on file <a class="reference internal" href="#abi-file-testing-sysfs-driver-ufs"><span class="std std-ref">sysfs-driver-ufs</span></a></p>
+<p>This file shows how long (in micro seconds) has been spent
+sending data from host to device after monitor gets started.</p>
+<p>The file is read only.</p>
+<table class="docutils align-default" id="abi-sys-bus-platform-drivers-ufshcd-monitor-write-total-sectors">
+<colgroup>
+<col style="width: 100%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><strong>/sys/bus/platform/drivers/ufshcd/*/monitor/write_total_sectors</strong></p></td>
+</tr>
+</tbody>
+</table>
+<p>Defined on file <a class="reference internal" href="#abi-file-testing-sysfs-driver-ufs"><span class="std std-ref">sysfs-driver-ufs</span></a></p>
+<p>This file shows how many sectors (in 512 Bytes) have been sent
+from host to device after monitor gets started.</p>
+<p>The file is read only.</p>
 <table class="docutils align-default" id="abi-sys-bus-platform-drivers-ufshcd-power-descriptor-active-icc-levels-vcc">
 <colgroup>
 <col style="width: 100%" />
@@ -19653,7 +19945,7 @@ for the chosen system power management level.</p>
 </tbody>
 </table>
 <p>Defined on file <a class="reference internal" href="#abi-file-testing-sysfs-driver-ufs"><span class="std std-ref">sysfs-driver-ufs</span></a></p>
-<p>This file contains a device manufactureer name string.
+<p>This file contains a device manufacturer name string.
 The full information about the descriptor could be found at
 UFS specifications 2.1.</p>
 <p>The file is read only.</p>
@@ -20908,12 +21200,15 @@ this file.
 If everything goes well, the device is
 restarted with the new NVM firmware. If the image
 verification fails an error code is returned instead.</p>
-<p>This file will accept writing values “1” or “2”</p>
+<p>This file will accept writing values “1”, “2” or “3”.</p>
 <ul class="simple">
 <li><p>Writing “1” will flush the image to the storage
 area and authenticate the image in one action.</p></li>
 <li><p>Writing “2” will run some basic validation on the image
 and flush it to the storage area.</p></li>
+<li><p>Writing “3” will authenticate the image that is
+currently written in the storage area. This is only
+supported with USB4 devices and retimers.</p></li>
 </ul>
 <p>When read holds status of the last authentication
 operation if an error occurred during the process. This
@@ -21182,6 +21477,53 @@ bitmask. Format: %x</p>
 <p>Defined on file <a class="reference internal" href="#abi-file-testing-sysfs-bus-thunderbolt"><span class="std std-ref">sysfs-bus-thunderbolt</span></a></p>
 <p>This contains XDomain protocol version the XDomain
 service supports.</p>
+<table class="docutils align-default" id="abi-sys-bus-thunderbolt-devices-usb4-portx-link">
+<colgroup>
+<col style="width: 100%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><strong>/sys/bus/thunderbolt/devices/usb4_portX/link</strong></p></td>
+</tr>
+</tbody>
+</table>
+<p>Defined on file <a class="reference internal" href="#abi-file-testing-sysfs-bus-thunderbolt"><span class="std std-ref">sysfs-bus-thunderbolt</span></a></p>
+<p>Returns the current link mode. Possible values are
+“usb4”, “tbt” and “none”.</p>
+<table class="docutils align-default" id="abi-sys-bus-thunderbolt-devices-usb4-portx-offline">
+<colgroup>
+<col style="width: 100%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><strong>/sys/bus/thunderbolt/devices/usb4_portX/offline</strong></p></td>
+</tr>
+</tbody>
+</table>
+<p>Defined on file <a class="reference internal" href="#abi-file-testing-sysfs-bus-thunderbolt"><span class="std std-ref">sysfs-bus-thunderbolt</span></a></p>
+<p>Writing 1 to this attribute puts the USB4 port into
+offline mode. Only allowed when there is nothing
+connected to the port (link attribute returns “none”).
+Once the port is in offline mode it does not receive any
+hotplug events. This is used to update NVM firmware of
+on-board retimers. Writing 0 puts the port back to
+online mode.</p>
+<p>This attribute is only visible if the platform supports
+powering on retimers when there is no cable connected.</p>
+<table class="docutils align-default" id="abi-sys-bus-thunderbolt-devices-usb4-portx-rescan">
+<colgroup>
+<col style="width: 100%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><strong>/sys/bus/thunderbolt/devices/usb4_portX/rescan</strong></p></td>
+</tr>
+</tbody>
+</table>
+<p>Defined on file <a class="reference internal" href="#abi-file-testing-sysfs-bus-thunderbolt"><span class="std std-ref">sysfs-bus-thunderbolt</span></a></p>
+<p>When the USB4 port is in offline mode writing 1 to this
+attribute forces rescan of the sideband for on-board
+retimers. Each retimer appear under the USB4 port as if
+the USB4 link was up. These retimers act in the same way
+as if the cable was connected so upgrading their NVM
+firmware can be done the usual way.</p>
 <table class="docutils align-default" id="abi-sys-bus-typec-devices-active">
 <colgroup>
 <col style="width: 100%" />
@@ -21731,22 +22073,6 @@ device directory will contain two files named
 power/usb3_hardware_lpm_u1 and power/usb3_hardware_lpm_u2. These
 files hold a string value (enable or disable) indicating whether
 or not USB3 hardware LPM U1 or U2 is enabled for the device.</p>
-<table class="docutils align-default" id="abi-sys-bus-usb-devices-removable">
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<tbody>
-<tr class="row-odd"><td><p><strong>/sys/bus/usb/devices/…/removable</strong></p></td>
-</tr>
-</tbody>
-</table>
-<p>Defined on file <a class="reference internal" href="#abi-file-testing-sysfs-bus-usb"><span class="std std-ref">sysfs-bus-usb</span></a></p>
-<p>Some information about whether a given USB device is
-physically fixed to the platform can be inferred from a
-combination of hub descriptor bits and platform-specific data
-such as ACPI. This file will read either “removable” or
-“fixed” if the information is available, and “unknown”
-otherwise.</p>
 <table class="docutils align-default" id="abi-sys-bus-usb-devices-rx-lanes">
 <colgroup>
 <col style="width: 100%" />
@@ -22816,6 +23142,70 @@ There are two available states:</p>
 <li><p>1 -&gt; Attempt firmware update on next reboot</p></li>
 </ul>
 </div></blockquote>
+<table class="docutils align-default" id="abi-sys-bus-wmi-devices-6932965f-1671-4ceb-b988-d3ab0a901919-dell-privacy-current-state">
+<colgroup>
+<col style="width: 100%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><strong>/sys/bus/wmi/devices/6932965F-1671-4CEB-B988-D3AB0A901919/dell_privacy_current_state</strong></p></td>
+</tr>
+</tbody>
+</table>
+<p>Defined on file <a class="reference internal" href="#abi-file-testing-sysfs-platform-dell-privacy-wmi"><span class="std std-ref">sysfs-platform-dell-privacy-wmi</span></a></p>
+<p>Allow user space to check current dell privacy device state.
+Describes the Device State class exposed by BIOS which can be
+consumed by various applications interested in knowing the Privacy
+feature capabilities
+Attributes:</p>
+<blockquote>
+<div><dl class="simple">
+<dt>muted:</dt><dd><p>Identifies the privacy device is turned off and cannot send stream to OS applications</p>
+</dd>
+<dt>unmuted:</dt><dd><p>Identifies the privacy device is turned on ,audio or camera driver can get
+stream from mic and camera module to OS applications</p>
+</dd>
+</dl>
+<p>For example to check all supported current privacy device states:</p>
+<p># cat /sys/bus/wmi/drivers/dell-privacy/6932965F-1671-4CEB-B988-D3AB0A901919/dell_privacy_current_state
+[Microphone] [unmuted]
+[Camera Shutter] [unmuted]</p>
+</div></blockquote>
+<table class="docutils align-default" id="abi-sys-bus-wmi-devices-6932965f-1671-4ceb-b988-d3ab0a901919-dell-privacy-supported-type">
+<colgroup>
+<col style="width: 100%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><strong>/sys/bus/wmi/devices/6932965F-1671-4CEB-B988-D3AB0A901919/dell_privacy_supported_type</strong></p></td>
+</tr>
+</tbody>
+</table>
+<p>Defined on file <a class="reference internal" href="#abi-file-testing-sysfs-platform-dell-privacy-wmi"><span class="std std-ref">sysfs-platform-dell-privacy-wmi</span></a></p>
+<p>Display which dell hardware level privacy devices are supported
+“Dell Privacy” is a set of HW, FW, and SW features to enhance
+Dell’s commitment to platform privacy for MIC, Camera, and
+ePrivacy screens.
+The supported hardware privacy devices are:
+Attributes:</p>
+<blockquote>
+<div><dl class="simple">
+<dt>Microphone Mute:</dt><dd><p>Identifies the local microphone can be muted by hardware, no applications
+is available to capture system mic sound</p>
+</dd>
+<dt>Camera Shutter:</dt><dd><p>Identifies camera shutter controlled by hardware, which is a micromechanical
+shutter assembly that is built onto the camera module to block capturing images
+from outside the laptop</p>
+</dd>
+<dt>supported:</dt><dd><p>The privacy device is supported by this system</p>
+</dd>
+<dt>unsupported:</dt><dd><p>The privacy device is not supported on this system</p>
+</dd>
+</dl>
+<p>For example to check which privacy devices are supported:</p>
+<p># cat /sys/bus/wmi/drivers/dell-privacy/6932965F-1671-4CEB-B988-D3AB0A901919/dell_privacy_supported_type
+[Microphone Mute] [supported]
+[Camera Shutter] [supported]
+[ePrivacy Screen] [unsupported]</p>
+</div></blockquote>
 <div class="section" id="symbols-under-sys-class">
 <h2>Symbols under /sys/class<a class="headerlink" href="#symbols-under-sys-class" title="Permalink to this headline">¶</a></h2>
 <table class="docutils align-default" id="abi-sys-class">
@@ -23461,22 +23851,100 @@ ata_port_id of the parent port and Y the PM port.</p>
 <tbody>
 <tr class="row-odd"><td><p><strong>/sys/class/backlight/&lt;backlight&gt;/&lt;ambient light zone&gt;_dim</strong></p></td>
 </tr>
-<tr class="row-even"><td><p><strong>/sys/class/backlight/&lt;backlight&gt;/l2_bright_dim</strong></p></td>
-</tr>
-<tr class="row-odd"><td><p><strong>/sys/class/backlight/&lt;backlight&gt;/l3_office_dim</strong></p></td>
-</tr>
-<tr class="row-even"><td><p><strong>/sys/class/backlight/&lt;backlight&gt;/l4_indoor_dim</strong></p></td>
-</tr>
-<tr class="row-odd"><td><p><strong>/sys/class/backlight/&lt;backlight&gt;/l5_dark_dim</strong></p></td>
-</tr>
 </tbody>
 </table>
-<p>Defined on file <a class="reference internal" href="#abi-file-testing-sysfs-class-backlight-driver-adp8870"><span class="std std-ref">sysfs-class-backlight-driver-adp8870</span></a></p>
+<p>Defined on file <a class="reference internal" href="#abi-file-testing-sysfs-class-backlight"><span class="std std-ref">sysfs-class-backlight</span></a></p>
 <p>Control the dim brightness for &lt;ambient light zone&gt;
 on this &lt;backlight&gt;. Values are between 0 and 127, typically
 set to 0. Full off when the backlight is disabled.
 This file will also show the dim brightness level stored for
 this &lt;ambient light zone&gt;.</p>
+<p>The &lt;ambient light zone&gt; is device-driver specific:</p>
+<p>For ADP5520 and ADP5501, &lt;ambient light zone&gt; can be:</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 19%" />
+<col style="width: 81%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Ambient</p></th>
+<th class="head"><p>sysfs entry</p></th>
+</tr>
+<tr class="row-even"><th class="head"><p>light zone</p></th>
+<th class="head"></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-odd"><td><p>daylight</p></td>
+<td><p>/sys/class/backlight/&lt;backlight&gt;/daylight_dim</p></td>
+</tr>
+<tr class="row-even"><td><p>office</p></td>
+<td><p>/sys/class/backlight/&lt;backlight&gt;/office_dim</p></td>
+</tr>
+<tr class="row-odd"><td><p>dark</p></td>
+<td><p>/sys/class/backlight/&lt;backlight&gt;/dark_dim</p></td>
+</tr>
+</tbody>
+</table>
+<p>For ADP8860, &lt;ambient light zone&gt; can be:</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 19%" />
+<col style="width: 81%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Ambient</p></th>
+<th class="head"><p>sysfs entry</p></th>
+</tr>
+<tr class="row-even"><th class="head"><p>light zone</p></th>
+<th class="head"></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-odd"><td><p>l1_daylight</p></td>
+<td><p>/sys/class/backlight/&lt;backlight&gt;/l1_daylight_dim</p></td>
+</tr>
+<tr class="row-even"><td><p>l2_office</p></td>
+<td><p>/sys/class/backlight/&lt;backlight&gt;/l2_office_dim</p></td>
+</tr>
+<tr class="row-odd"><td><p>l3_dark</p></td>
+<td><p>/sys/class/backlight/&lt;backlight&gt;/l3_dark_dim</p></td>
+</tr>
+</tbody>
+</table>
+<p>For ADP8870, &lt;ambient light zone&gt; can be:</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 19%" />
+<col style="width: 81%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Ambient</p></th>
+<th class="head"><p>sysfs entry</p></th>
+</tr>
+<tr class="row-even"><th class="head"><p>light zone</p></th>
+<th class="head"></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-odd"><td><p>l1_daylight</p></td>
+<td><p>/sys/class/backlight/&lt;backlight&gt;/l1_daylight_dim</p></td>
+</tr>
+<tr class="row-even"><td><p>l2_bright</p></td>
+<td><p>/sys/class/backlight/&lt;backlight&gt;/l2_bright_dim</p></td>
+</tr>
+<tr class="row-odd"><td><p>l3_office</p></td>
+<td><p>/sys/class/backlight/&lt;backlight&gt;/l3_office_dim</p></td>
+</tr>
+<tr class="row-even"><td><p>l4_indoor</p></td>
+<td><p>/sys/class/backlight/&lt;backlight&gt;/l4_indoor_dim</p></td>
+</tr>
+<tr class="row-odd"><td><p>l5_dark</p></td>
+<td><p>/sys/class/backlight/&lt;backlight&gt;/l5_dark_dim</p></td>
+</tr>
+</tbody>
+</table>
+<p>See also: <a class="reference internal" href="#abi-sys-class-backlight-backlight-ambient-light-zone"><span class="std std-ref">/sys/class/backlight/&lt;backlight&gt;/ambient_light_zone</span></a>.</p>
 <table class="docutils align-default" id="abi-sys-class-backlight-backlight-ambient-light-zone-max">
 <colgroup>
 <col style="width: 100%" />
@@ -23484,23 +23952,99 @@ this &lt;ambient light zone&gt;.</p>
 <tbody>
 <tr class="row-odd"><td><p><strong>/sys/class/backlight/&lt;backlight&gt;/&lt;ambient light zone&gt;_max</strong></p></td>
 </tr>
-<tr class="row-even"><td><p><strong>/sys/class/backlight/&lt;backlight&gt;/l1_daylight_max</strong></p></td>
-</tr>
-<tr class="row-odd"><td><p><strong>/sys/class/backlight/&lt;backlight&gt;/l2_bright_max</strong></p></td>
-</tr>
-<tr class="row-even"><td><p><strong>/sys/class/backlight/&lt;backlight&gt;/l3_office_max</strong></p></td>
-</tr>
-<tr class="row-odd"><td><p><strong>/sys/class/backlight/&lt;backlight&gt;/l4_indoor_max</strong></p></td>
-</tr>
-<tr class="row-even"><td><p><strong>/sys/class/backlight/&lt;backlight&gt;/l5_dark_max</strong></p></td>
-</tr>
 </tbody>
 </table>
-<p>Defined on file <a class="reference internal" href="#abi-file-testing-sysfs-class-backlight-driver-adp8870"><span class="std std-ref">sysfs-class-backlight-driver-adp8870</span></a></p>
+<p>Defined on file <a class="reference internal" href="#abi-file-testing-sysfs-class-backlight"><span class="std std-ref">sysfs-class-backlight</span></a></p>
 <p>Control the maximum brightness for &lt;ambient light zone&gt;
 on this &lt;backlight&gt;. Values are between 0 and 127. This file
 will also show the brightness level stored for this
 &lt;ambient light zone&gt;.</p>
+<p>The &lt;ambient light zone&gt; is device-driver specific:</p>
+<p>For ADP5520 and ADP5501, &lt;ambient light zone&gt; can be:</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 19%" />
+<col style="width: 81%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Ambient</p></th>
+<th class="head"><p>sysfs entry</p></th>
+</tr>
+<tr class="row-even"><th class="head"><p>light zone</p></th>
+<th class="head"></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-odd"><td><p>daylight</p></td>
+<td><p>/sys/class/backlight/&lt;backlight&gt;/daylight_max</p></td>
+</tr>
+<tr class="row-even"><td><p>office</p></td>
+<td><p>/sys/class/backlight/&lt;backlight&gt;/office_max</p></td>
+</tr>
+<tr class="row-odd"><td><p>dark</p></td>
+<td><p>/sys/class/backlight/&lt;backlight&gt;/dark_max</p></td>
+</tr>
+</tbody>
+</table>
+<p>For ADP8860, &lt;ambient light zone&gt; can be:</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 19%" />
+<col style="width: 81%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Ambient</p></th>
+<th class="head"><p>sysfs entry</p></th>
+</tr>
+<tr class="row-even"><th class="head"><p>light zone</p></th>
+<th class="head"></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-odd"><td><p>l1_daylight</p></td>
+<td><p>/sys/class/backlight/&lt;backlight&gt;/l1_daylight_max</p></td>
+</tr>
+<tr class="row-even"><td><p>l2_office</p></td>
+<td><p>/sys/class/backlight/&lt;backlight&gt;/l2_office_max</p></td>
+</tr>
+<tr class="row-odd"><td><p>l3_dark</p></td>
+<td><p>/sys/class/backlight/&lt;backlight&gt;/l3_dark_max</p></td>
+</tr>
+</tbody>
+</table>
+<p>For ADP8870, &lt;ambient light zone&gt; can be:</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 19%" />
+<col style="width: 81%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Ambient</p></th>
+<th class="head"><p>sysfs entry</p></th>
+</tr>
+<tr class="row-even"><th class="head"><p>light zone</p></th>
+<th class="head"></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-odd"><td><p>l1_daylight</p></td>
+<td><p>/sys/class/backlight/&lt;backlight&gt;/l1_daylight_max</p></td>
+</tr>
+<tr class="row-even"><td><p>l2_bright</p></td>
+<td><p>/sys/class/backlight/&lt;backlight&gt;/l2_bright_max</p></td>
+</tr>
+<tr class="row-odd"><td><p>l3_office</p></td>
+<td><p>/sys/class/backlight/&lt;backlight&gt;/l3_office_max</p></td>
+</tr>
+<tr class="row-even"><td><p>l4_indoor</p></td>
+<td><p>/sys/class/backlight/&lt;backlight&gt;/l4_indoor_max</p></td>
+</tr>
+<tr class="row-odd"><td><p>l5_dark</p></td>
+<td><p>/sys/class/backlight/&lt;backlight&gt;/l5_dark_max</p></td>
+</tr>
+</tbody>
+</table>
+<p>See also: <a class="reference internal" href="#abi-sys-class-backlight-backlight-ambient-light-zone"><span class="std std-ref">/sys/class/backlight/&lt;backlight&gt;/ambient_light_zone</span></a>.</p>
 <table class="docutils align-default" id="abi-sys-class-backlight-backlight-als-channel">
 <colgroup>
 <col style="width: 100%" />
@@ -23644,43 +24188,6 @@ operation.</p>
 <p>(WO) Write to the backlight mapping mode. The backlight current
 can be mapped for either exponential (value “0”) or linear
 mapping modes (default).</p>
-<table class="docutils align-default" id="abi-sys-class-backlight-backlight-daylight-dim">
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<tbody>
-<tr class="row-odd"><td><p><strong>/sys/class/backlight/&lt;backlight&gt;/daylight_dim</strong></p></td>
-</tr>
-<tr class="row-even"><td><p><strong>/sys/class/backlight/&lt;backlight&gt;/office_dim</strong></p></td>
-</tr>
-<tr class="row-odd"><td><p><strong>/sys/class/backlight/&lt;backlight&gt;/dark_dim</strong></p></td>
-</tr>
-</tbody>
-</table>
-<p>Defined on file <a class="reference internal" href="#abi-file-testing-sysfs-class-backlight-adp5520"><span class="std std-ref">sysfs-class-backlight-adp5520</span></a></p>
-<p>(RW) Dim current setting for the backlight when brightness is at
-one of the three levels (daylight, office or dark). This is an
-input code between 0 and 127, which is transformed to a value
-between 0 mA and 30 mA using linear or non-linear algorithms.</p>
-<table class="docutils align-default" id="abi-sys-class-backlight-backlight-daylight-max">
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<tbody>
-<tr class="row-odd"><td><p><strong>/sys/class/backlight/&lt;backlight&gt;/daylight_max</strong></p></td>
-</tr>
-<tr class="row-even"><td><p><strong>/sys/class/backlight/&lt;backlight&gt;/office_max</strong></p></td>
-</tr>
-<tr class="row-odd"><td><p><strong>/sys/class/backlight/&lt;backlight&gt;/dark_max</strong></p></td>
-</tr>
-</tbody>
-</table>
-<p>Defined on file <a class="reference internal" href="#abi-file-testing-sysfs-class-backlight-adp5520"><span class="std std-ref">sysfs-class-backlight-adp5520</span></a></p>
-<p>(RW) Maximum current setting for the backlight when brightness
-is at one of the three levels (daylight, office or dark). This
-is an input code between 0 and 127, which is transformed to a
-value between 0 mA and 30 mA using linear or non-linear
-algorithms.</p>
 <table class="docutils align-default" id="abi-sys-class-backlight-backlight-id">
 <colgroup>
 <col style="width: 100%" />
@@ -23692,43 +24199,6 @@ algorithms.</p>
 </table>
 <p>Defined on file <a class="reference internal" href="#abi-file-testing-sysfs-class-backlight-driver-lm3533"><span class="std std-ref">sysfs-class-backlight-driver-lm3533</span></a></p>
 <p>Get the id of this backlight (0, 1).</p>
-<table class="docutils align-default" id="abi-sys-class-backlight-backlight-l1-daylight-dim">
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<tbody>
-<tr class="row-odd"><td><p><strong>/sys/class/backlight/&lt;backlight&gt;/l1_daylight_dim</strong></p></td>
-</tr>
-<tr class="row-even"><td><p><strong>/sys/class/backlight/&lt;backlight&gt;/l2_office_dim</strong></p></td>
-</tr>
-<tr class="row-odd"><td><p><strong>/sys/class/backlight/&lt;backlight&gt;/l3_dark_dim</strong></p></td>
-</tr>
-</tbody>
-</table>
-<p>Defined on file <a class="reference internal" href="#abi-file-testing-sysfs-class-backlight-adp8860"><span class="std std-ref">sysfs-class-backlight-adp8860</span></a></p>
-<p>(RW) Dim current setting for the backlight when brightness is at
-one of the three levels (daylight, office or dark). This is an
-input code between 0 and 127, which is transformed to a value
-between 0 mA and 30 mA using linear or non-linear algorithms.</p>
-<table class="docutils align-default" id="abi-sys-class-backlight-backlight-l1-daylight-max">
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<tbody>
-<tr class="row-odd"><td><p><strong>/sys/class/backlight/&lt;backlight&gt;/l1_daylight_max</strong></p></td>
-</tr>
-<tr class="row-even"><td><p><strong>/sys/class/backlight/&lt;backlight&gt;/l2_office_max</strong></p></td>
-</tr>
-<tr class="row-odd"><td><p><strong>/sys/class/backlight/&lt;backlight&gt;/l3_dark_max</strong></p></td>
-</tr>
-</tbody>
-</table>
-<p>Defined on file <a class="reference internal" href="#abi-file-testing-sysfs-class-backlight-adp8860"><span class="std std-ref">sysfs-class-backlight-adp8860</span></a></p>
-<p>(RW) Maximum current setting for the backlight when brightness
-is at one of the three levels (daylight, office or dark). This
-is an input code between 0 and 127, which is transformed to a
-value between 0 mA and 30 mA using linear or non-linear
-algorithms.</p>
 <table class="docutils align-default" id="abi-sys-class-backlight-backlight-linear">
 <colgroup>
 <col style="width: 100%" />
@@ -25543,8 +26013,21 @@ echo &quot;&quot; &gt; current_password
 </div>
 <p>Drivers may emit a CHANGE uevent when a password is set or unset
 userspace may check it again.</p>
-<p>On Dell systems, if Admin password is set, then all BIOS attributes
-require password validation.</p>
+<p>On Dell and Lenovo systems, if Admin password is set, then all BIOS attributes
+require password validation.
+On Lenovo systems if you change the Admin password the new password is not active until
+the next boot.</p>
+<p>Lenovo specific class extensions</p>
+<p>On Lenovo systems the following additional settings are available:</p>
+<dl class="simple">
+<dt>lenovo_encoding:</dt><dd><p>The encoding method that is used. This can be either “ascii”
+or “scancode”. Default is set to “ascii”</p>
+</dd>
+<dt>lenovo_kbdlang:</dt><dd><p>The keyboard language method that is used. This is generally a
+two char code (e.g. “us”, “fr”, “gr”) and may vary per platform.
+Default is set to “us”</p>
+</dd>
+</dl>
 <table class="docutils align-default" id="abi-sys-class-fpga-bridge-bridge-name">
 <colgroup>
 <col style="width: 100%" />
@@ -27163,15 +27646,12 @@ Current state can be also read.</p>
 </tbody>
 </table>
 <p>Defined on file <a class="reference internal" href="#abi-file-testing-sysfs-class-led-trigger-pattern"><span class="std std-ref">sysfs-class-led-trigger-pattern</span></a></p>
-<p>Defined on file <a class="reference internal" href="#abi-file-testing-sysfs-class-led-driver-el15203000"><span class="std std-ref">sysfs-class-led-driver-el15203000</span></a></p>
 <p>Specify a pattern repeat number. -1 means repeat indefinitely,
 other negative numbers and number 0 are invalid.</p>
 <p>This file will always return the originally written repeat
-number.
-EL15203000 supports only indefinitely patterns,
-so this file should always store -1.</p>
-<p>For more info, please see:
-<a class="reference internal" href="#abi-file-testing-sysfs-class-led-trigger-pattern"><span class="std std-ref">testing/sysfs-class-led-trigger-pattern</span></a></p>
+number.</p>
+<p>It should be noticed that some leds, like EL15203000 may
+only support indefinitely patterns, so they always store -1.</p>
 <table class="docutils align-default" id="abi-sys-class-leds-led-rx">
 <colgroup>
 <col style="width: 100%" />
@@ -35961,6 +36441,30 @@ the same device object.  If that happens, some shared power
 resources used by the device node are only ON because of some
 other devices using them at the moment.</p>
 <p>This attribute is read-only.</p>
+<table class="docutils align-default" id="abi-sys-devices-removable">
+<colgroup>
+<col style="width: 100%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><strong>/sys/devices/…/removable</strong></p></td>
+</tr>
+</tbody>
+</table>
+<p>Defined on file <a class="reference internal" href="#abi-file-testing-sysfs-devices-removable"><span class="std std-ref">sysfs-devices-removable</span></a></p>
+<p>Information about whether a given device can be removed from the
+platform by the user. This is determined by its subsystem in a
+bus / platform-specific way. This attribute is only present for
+devices that can support determining such information:</p>
+<p>“removable”: device can be removed from the platform by the user
+“fixed”:     device is fixed to the platform / cannot be removed</p>
+<blockquote>
+<div><p>by the user.</p>
+</div></blockquote>
+<p>“unknown”:   The information is unavailable / cannot be deduced.</p>
+<p>Currently this is only supported by USB (which infers the
+information from a combination of hub descriptor bits and
+platform-specific data such as ACPI) and PCI (which gets this
+from ACPI / device tree).</p>
 <table class="docutils align-default" id="abi-sys-devices-resource-in-use">
 <colgroup>
 <col style="width: 100%" />
@@ -38985,7 +39489,7 @@ numbers within the same physical_package_id as cpu#.</p>
 <p>physical_package_id: physical package id of cpu#. Typically
 corresponds to a physical socket number, but the actual value
 is architecture and platform dependent.</p>
-<p>thread_siblings: internel kernel map of cpu#’s hardware
+<p>thread_siblings: internal kernel map of cpu#’s hardware
 threads within the same core as cpu#</p>
 <p>thread_siblings_list: human-readable list of cpu#’s hardware
 threads within the same core as cpu#</p>
@@ -39103,7 +39607,7 @@ can be used to disable a cache index. Reading from these files
 on a processor with this functionality will return the currently
 disabled index for that node. There is one L3 structure per
 node, or per internal node on MCM machines. Writing a valid
-index to one of these files will cause the specificed cache
+index to one of these files will cause the specified cache
 index to be disabled.</p>
 <p>All AMD processors with L3 caches provide this functionality.
 For details, see BKDGs at
@@ -39379,7 +39883,7 @@ of SPURR ticks for cpuX.</p>
 <p>Processor frequency boosting control</p>
 <p>This switch controls the boost setting for the whole system.
 Boosting allows the CPU and the firmware to run at a frequency
-beyound it’s nominal limit.</p>
+beyond it’s nominal limit.</p>
 <p>More details can be found in
 <a class="reference internal" href="pm/cpufreq.html"><span class="doc">CPU Performance Scaling</span></a></p>
 <table class="docutils align-default" id="abi-sys-devices-system-cpu-cpufreq-policyx-throttle-stats">
@@ -39484,7 +39988,7 @@ from the system.</p>
 system.  Information written to the file to add CPU’s is
 architecture specific.</p>
 <p>release: writes to this file dynamically remove a CPU from
-the system.  Information writtento the file to remove CPU’s
+the system.  Information written to the file to remove CPU’s
 is architecture specific.</p>
 <table class="docutils align-default" id="abi-sys-devices-system-cpu-smt">
 <colgroup>
@@ -39496,7 +40000,7 @@ is architecture specific.</p>
 </tbody>
 </table>
 <p>Defined on file <a class="reference internal" href="#abi-file-testing-sysfs-devices-system-cpu"><span class="std std-ref">sysfs-devices-system-cpu</span></a></p>
-<p>Control Symetric Multi Threading (SMT)</p>
+<p>Control Symmetric Multi Threading (SMT)</p>
 <p>active:  Tells whether SMT is active (enabled and siblings online)</p>
 <dl>
 <dt>control: Read/write interface to control SMT. Possible</dt><dd><p>values:</p>
@@ -42021,6 +42525,58 @@ preallocation pool.</p>
 kilobytes of data that have been written to this
 filesystem since it was mounted.</p>
 </div>
+<table class="docutils align-default" id="abi-sys-fs-f2fs-disk-atgc-age-threshold">
+<colgroup>
+<col style="width: 100%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><strong>/sys/fs/f2fs/&lt;disk&gt;/atgc_age_threshold</strong></p></td>
+</tr>
+</tbody>
+</table>
+<p>Defined on file <a class="reference internal" href="#abi-file-testing-sysfs-fs-f2fs"><span class="std std-ref">sysfs-fs-f2fs</span></a></p>
+<p>When ATGC is on, it controls age threshold to bypass GCing young
+candidates whose age is not beyond the threshold, by default it was
+initialized as 604800 seconds (equals to 7 days).</p>
+<table class="docutils align-default" id="abi-sys-fs-f2fs-disk-atgc-age-weight">
+<colgroup>
+<col style="width: 100%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><strong>/sys/fs/f2fs/&lt;disk&gt;/atgc_age_weight</strong></p></td>
+</tr>
+</tbody>
+</table>
+<p>Defined on file <a class="reference internal" href="#abi-file-testing-sysfs-fs-f2fs"><span class="std std-ref">sysfs-fs-f2fs</span></a></p>
+<p>When ATGC is on, it controls age weight to balance weight proportion
+in between aging and valid blocks, the value should be in range of
+[0, 100], by default it was initialized as 60(%).</p>
+<table class="docutils align-default" id="abi-sys-fs-f2fs-disk-atgc-candidate-count">
+<colgroup>
+<col style="width: 100%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><strong>/sys/fs/f2fs/&lt;disk&gt;/atgc_candidate_count</strong></p></td>
+</tr>
+</tbody>
+</table>
+<p>Defined on file <a class="reference internal" href="#abi-file-testing-sysfs-fs-f2fs"><span class="std std-ref">sysfs-fs-f2fs</span></a></p>
+<p>When ATGC is on, it controls candidate count in order to limit total
+number of potential victim in all candidates, by default it was
+initialized as 10 (sections).</p>
+<table class="docutils align-default" id="abi-sys-fs-f2fs-disk-atgc-candidate-ratio">
+<colgroup>
+<col style="width: 100%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><strong>/sys/fs/f2fs/&lt;disk&gt;/atgc_candidate_ratio</strong></p></td>
+</tr>
+</tbody>
+</table>
+<p>Defined on file <a class="reference internal" href="#abi-file-testing-sysfs-fs-f2fs"><span class="std std-ref">sysfs-fs-f2fs</span></a></p>
+<p>When ATGC is on, it controls candidate ratio in order to limit total
+number of potential victim in all candidates, the value should be in
+range of [0, 100], by default it was initialized as 20(%).</p>
 <table class="docutils align-default" id="abi-sys-fs-f2fs-disk-avg-vblocks">
 <colgroup>
 <col style="width: 100%" />
@@ -42286,6 +42842,23 @@ If no encoding is set, displays (none)</p>
 - Del: echo ‘[h/c]!extension’ &gt; <a class="reference internal" href="#abi-sys-fs-f2fs-disk-extension-list"><span class="std std-ref">/sys/fs/f2fs/&lt;disk&gt;/extension_list</span></a>
 - [h] means add/del hot file extension
 - [c] means add/del cold file extension</p>
+<table class="docutils align-default" id="abi-sys-fs-f2fs-disk-feature-list">
+<colgroup>
+<col style="width: 100%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><strong>/sys/fs/f2fs/&lt;disk&gt;/feature_list/</strong></p></td>
+</tr>
+</tbody>
+</table>
+<p>Defined on file <a class="reference internal" href="#abi-file-testing-sysfs-fs-f2fs"><span class="std std-ref">sysfs-fs-f2fs</span></a></p>
+<p>Expand <a class="reference internal" href="#abi-sys-fs-f2fs-disk-features"><span class="std std-ref">/sys/fs/f2fs/&lt;disk&gt;/features</span></a> to meet sysfs rule.
+Supported on-disk features:
+encryption, block_zoned (aka blkzoned), extra_attr,
+project_quota (aka projquota), inode_checksum,
+flexible_inline_xattr, quota_ino, inode_crtime, lost_found,
+verity, sb_checksum, casefold, readonly, compression.
+Note that, pin_file is moved into /sys/fs/f2fs/features/.</p>
 <table class="docutils align-default" id="abi-sys-fs-f2fs-disk-features">
 <colgroup>
 <col style="width: 100%" />
@@ -42296,7 +42869,12 @@ If no encoding is set, displays (none)</p>
 </tbody>
 </table>
 <p>Defined on file <a class="reference internal" href="#abi-file-testing-sysfs-fs-f2fs"><span class="std std-ref">sysfs-fs-f2fs</span></a></p>
-<p>Shows all enabled features in current device.</p>
+<p>&lt;deprecated: should use <a class="reference internal" href="#abi-sys-fs-f2fs-disk-feature-list"><span class="std std-ref">/sys/fs/f2fs/&lt;disk&gt;/feature_list/</span></a>
+Shows all enabled features in current device.
+Supported features:
+encryption, blkzoned, extra_attr, projquota, inode_checksum,
+flexible_inline_xattr, quota_ino, inode_crtime, lost_found,
+verity, sb_checksum, casefold, readonly, compression, pin_file.</p>
 <table class="docutils align-default" id="abi-sys-fs-f2fs-disk-free-segments">
 <colgroup>
 <col style="width: 100%" />
@@ -42431,7 +43009,7 @@ state. 2048 trials is set by default.</p>
 </tbody>
 </table>
 <p>Defined on file <a class="reference internal" href="#abi-file-testing-sysfs-fs-f2fs"><span class="std std-ref">sysfs-fs-f2fs</span></a></p>
-<p>Do background GC agressively when set. When gc_urgent = 1,
+<p>Do background GC aggressively when set. When gc_urgent = 1,
 background thread starts to do GC by given gc_urgent_sleep_time
 interval. When gc_urgent = 2, F2FS will lower the bar of
 checking idle in order to process outstanding discard commands
@@ -42941,6 +43519,23 @@ Default: 5 secs</p>
 are unusable.
 If checkpoint=enable it displays the number of blocks that
 would be unusable if checkpoint=disable were to be set.</p>
+<table class="docutils align-default" id="abi-sys-fs-f2fs-feature">
+<colgroup>
+<col style="width: 100%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><strong>/sys/fs/f2fs/feature/</strong></p></td>
+</tr>
+</tbody>
+</table>
+<p>Defined on file <a class="reference internal" href="#abi-file-testing-sysfs-fs-f2fs"><span class="std std-ref">sysfs-fs-f2fs</span></a></p>
+<p>Shows all enabled kernel features.
+Supported features:
+encryption, block_zoned, extra_attr, project_quota,
+inode_checksum, flexible_inline_xattr, quota_ino,
+inode_crtime, lost_found, verity, sb_checksum,
+casefold, readonly, compression, test_dummy_encryption_v2,
+atomic_write, pin_file, encrypted_casefold.</p>
 <table class="docutils align-default" id="abi-sys-fs-nilfs2-device-readme">
 <colgroup>
 <col style="width: 100%" />
@@ -43837,7 +44432,7 @@ configfs in /sys/kernel/config directory use:
 <dt>buffer_size</dt><dd><p>configure the buffer size for this channel</p>
 </dd>
 <dt>subbuffer_size</dt><dd><p>configure the sub-buffer size for this channel
-(needed for synchronous and isochrnous data)</p>
+(needed for synchronous and isochronous data)</p>
 </dd>
 <dt>num_buffers</dt><dd><p>configure number of buffers used for this
 channel</p>
@@ -43886,7 +44481,7 @@ active link</p>
 <dt>buffer_size</dt><dd><p>configure the buffer size for this channel</p>
 </dd>
 <dt>subbuffer_size</dt><dd><p>configure the sub-buffer size for this channel
-(needed for synchronous and isochrnous data)</p>
+(needed for synchronous and isochronous data)</p>
 </dd>
 <dt>num_buffers</dt><dd><p>configure number of buffers used for this
 channel</p>
@@ -43952,7 +44547,7 @@ subsystem.</p>
 <dt>buffer_size</dt><dd><p>configure the buffer size for this channel</p>
 </dd>
 <dt>subbuffer_size</dt><dd><p>configure the sub-buffer size for this channel
-(needed for synchronous and isochrnous data)</p>
+(needed for synchronous and isochronous data)</p>
 </dd>
 <dt>num_buffers</dt><dd><p>configure number of buffers used for this
 channel</p>
@@ -44001,7 +44596,7 @@ active link</p>
 <dt>buffer_size</dt><dd><p>configure the buffer size for this channel</p>
 </dd>
 <dt>subbuffer_size</dt><dd><p>configure the sub-buffer size for this channel
-(needed for synchronous and isochrnous data)</p>
+(needed for synchronous and isochronous data)</p>
 </dd>
 <dt>num_buffers</dt><dd><p>configure number of buffers used for this
 channel</p>
@@ -44322,7 +44917,7 @@ Only available for PF.</p>
 </table>
 <p>Defined on file <a class="reference internal" href="#abi-file-testing-debugfs-driver-genwqe"><span class="std std-ref">debugfs-driver-genwqe</span></a></p>
 <p>Dump of the error registers before the last reset of
-the card occured.
+the card occurred.
 Only available for PF.</p>
 <table class="docutils align-default" id="abi-sys-kernel-debug-genwqe-genwqe-n-card-queue-working-time">
 <colgroup>
@@ -44593,7 +45188,7 @@ the device’s CPU</p>
 <p>Defined on file <a class="reference internal" href="#abi-file-testing-debugfs-driver-habanalabs"><span class="std std-ref">debugfs-driver-habanalabs</span></a></p>
 <p>Triggers an I2C transaction that is generated by the device’s
 CPU. Writing to this file generates a write transaction while
-reading from the file generates a read transcation</p>
+reading from the file generates a read transaction</p>
 <table class="docutils align-default" id="abi-sys-kernel-debug-habanalabs-hl-n-i2c-reg">
 <colgroup>
 <col style="width: 100%" />
@@ -45963,10 +46558,10 @@ output direct-mapped, MSI, non mappable regions. Each
 region is described on a single line: the 1st field is
 the base IOVA, the second is the end IOVA and the third
 field describes the type of the region.</p>
-<p>In case an RMRR is used only by graphics or USB devices
-it is now exposed as “direct-relaxable” instead of “direct”.
-In device assignment use case, for instance, those RMRR
-are considered to be relaxable and safe.</p>
+<p>Since kernel 5.3, in case an RMRR is used only by graphics or
+USB devices it is now exposed as “direct-relaxable” instead
+of “direct”. In device assignment use case, for instance,
+those RMRR are considered to be relaxable and safe.</p>
 <table class="docutils align-default" id="abi-sys-kernel-irq">
 <colgroup>
 <col style="width: 100%" />
@@ -47992,7 +48587,7 @@ following bits:</p>
 <tr class="row-even"><td><p>2</p></td>
 <td><p>Permit modification of EVM-protected metadata at
 runtime. Not supported if HMAC validation and
-creation is enabled.</p></td>
+creation is enabled (deprecated).</p></td>
 </tr>
 <tr class="row-odd"><td><p>31</p></td>
 <td><p>Disable further runtime modification of EVM policy</p></td>
@@ -48014,9 +48609,34 @@ HMAC creation and disable all further modification of policy.</p>
 </div>
 <p>will enable digital signature validation, permit
 modification of EVM-protected metadata and
-disable all further modification of policy</p>
-<p>Note that once a key has been loaded, it will no longer be
-possible to enable metadata modification.</p>
+disable all further modification of policy. This option is now
+deprecated in favor of:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>echo 0x80000002 &gt;&lt;securityfs&gt;/evm
+</pre></div>
+</div>
+<p>as the outstanding issues that prevent the usage of EVM portable
+signatures have been solved.</p>
+<p>Echoing a value is additive, the new value is added to the
+existing initialization flags.</p>
+<p>For example, after:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>echo 2 &gt;&lt;securityfs&gt;/evm
+</pre></div>
+</div>
+<p>another echo can be performed:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>echo 1 &gt;&lt;securityfs&gt;/evm
+</pre></div>
+</div>
+<p>and the resulting value will be 3.</p>
+<p>Note that once an HMAC key has been loaded, it will no longer
+be possible to enable metadata modification. Signaling that an
+HMAC key has been loaded will clear the corresponding flag.
+For example, if the current value is 6 (2 and 4 set):</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>echo 1 &gt;&lt;securityfs&gt;/evm
+</pre></div>
+</div>
+<p>will set the new value to 3 (4 cleared).</p>
+<p>Loading an HMAC key is the only way to disable metadata
+modification.</p>
 <p>Until key loading has been signaled EVM can not create
 or validate the ‘security.evm’ xattr, but returns
 INTEGRITY_UNKNOWN.  Loading keys and signaling EVM
@@ -49235,6 +49855,7 @@ modification.</p>
 <li><p><a class="reference internal" href="#abi-sys-bus-counter-devices-counterx-county-preset"><span class="std std-ref">/sys/bus/counter/devices/counterX/countY/preset</span></a></p></li>
 <li><p><a class="reference internal" href="#abi-sys-bus-counter-devices-counterx-county-preset-enable"><span class="std std-ref">/sys/bus/counter/devices/counterX/countY/preset_enable</span></a></p></li>
 <li><p><a class="reference internal" href="#abi-sys-bus-counter-devices-counterx-county-signalz-action"><span class="std std-ref">/sys/bus/counter/devices/counterX/countY/signalZ_action</span></a></p></li>
+<li><p><a class="reference internal" href="#abi-sys-bus-counter-devices-counterx-county-spike-filter-ns"><span class="std std-ref">/sys/bus/counter/devices/counterX/countY/spike_filter_ns</span></a></p></li>
 <li><p><a class="reference internal" href="#abi-sys-bus-counter-devices-counterx-name"><span class="std std-ref">/sys/bus/counter/devices/counterX/name</span></a></p></li>
 <li><p><a class="reference internal" href="#abi-sys-bus-counter-devices-counterx-num-counts"><span class="std std-ref">/sys/bus/counter/devices/counterX/num_counts</span></a></p></li>
 <li><p><a class="reference internal" href="#abi-sys-bus-counter-devices-counterx-num-signals"><span class="std std-ref">/sys/bus/counter/devices/counterX/num_signals</span></a></p></li>
@@ -51021,17 +51642,20 @@ saw any problems).</p>
 <li><p><a class="reference internal" href="#abi-sys-bus-thunderbolt-devices-unique-id"><span class="std std-ref">/sys/bus/thunderbolt/devices/…/unique_id</span></a></p></li>
 <li><p><a class="reference internal" href="#abi-sys-bus-thunderbolt-devices-nvm-version"><span class="std std-ref">/sys/bus/thunderbolt/devices/…/nvm_version</span></a></p></li>
 <li><p><a class="reference internal" href="#abi-sys-bus-thunderbolt-devices-nvm-authenticate"><span class="std std-ref">/sys/bus/thunderbolt/devices/…/nvm_authenticate</span></a></p></li>
+<li><p><a class="reference internal" href="#abi-sys-bus-thunderbolt-devices-nvm-authenticate-on-disconnect"><span class="std std-ref">/sys/bus/thunderbolt/devices/…/nvm_authenticate_on_disconnect</span></a></p></li>
 <li><p><a class="reference internal" href="#abi-sys-bus-thunderbolt-devices-xdomain-service-key"><span class="std std-ref">/sys/bus/thunderbolt/devices/&lt;xdomain&gt;.&lt;service&gt;/key</span></a></p></li>
 <li><p><a class="reference internal" href="#abi-sys-bus-thunderbolt-devices-xdomain-service-modalias"><span class="std std-ref">/sys/bus/thunderbolt/devices/&lt;xdomain&gt;.&lt;service&gt;/modalias</span></a></p></li>
 <li><p><a class="reference internal" href="#abi-sys-bus-thunderbolt-devices-xdomain-service-prtcid"><span class="std std-ref">/sys/bus/thunderbolt/devices/&lt;xdomain&gt;.&lt;service&gt;/prtcid</span></a></p></li>
 <li><p><a class="reference internal" href="#abi-sys-bus-thunderbolt-devices-xdomain-service-prtcvers"><span class="std std-ref">/sys/bus/thunderbolt/devices/&lt;xdomain&gt;.&lt;service&gt;/prtcvers</span></a></p></li>
 <li><p><a class="reference internal" href="#abi-sys-bus-thunderbolt-devices-xdomain-service-prtcrevs"><span class="std std-ref">/sys/bus/thunderbolt/devices/&lt;xdomain&gt;.&lt;service&gt;/prtcrevs</span></a></p></li>
 <li><p><a class="reference internal" href="#abi-sys-bus-thunderbolt-devices-xdomain-service-prtcstns"><span class="std std-ref">/sys/bus/thunderbolt/devices/&lt;xdomain&gt;.&lt;service&gt;/prtcstns</span></a></p></li>
+<li><p><a class="reference internal" href="#abi-sys-bus-thunderbolt-devices-usb4-portx-link"><span class="std std-ref">/sys/bus/thunderbolt/devices/usb4_portX/link</span></a></p></li>
+<li><p><a class="reference internal" href="#abi-sys-bus-thunderbolt-devices-usb4-portx-offline"><span class="std std-ref">/sys/bus/thunderbolt/devices/usb4_portX/offline</span></a></p></li>
+<li><p><a class="reference internal" href="#abi-sys-bus-thunderbolt-devices-usb4-portx-rescan"><span class="std std-ref">/sys/bus/thunderbolt/devices/usb4_portX/rescan</span></a></p></li>
 <li><p><a class="reference internal" href="#abi-sys-bus-thunderbolt-devices-device-port-index-device"><span class="std std-ref">/sys/bus/thunderbolt/devices/&lt;device&gt;:&lt;port&gt;.&lt;index&gt;/device</span></a></p></li>
 <li><p><a class="reference internal" href="#abi-sys-bus-thunderbolt-devices-device-port-index-nvm-authenticate"><span class="std std-ref">/sys/bus/thunderbolt/devices/&lt;device&gt;:&lt;port&gt;.&lt;index&gt;/nvm_authenticate</span></a></p></li>
 <li><p><a class="reference internal" href="#abi-sys-bus-thunderbolt-devices-device-port-index-nvm-version"><span class="std std-ref">/sys/bus/thunderbolt/devices/&lt;device&gt;:&lt;port&gt;.&lt;index&gt;/nvm_version</span></a></p></li>
 <li><p><a class="reference internal" href="#abi-sys-bus-thunderbolt-devices-device-port-index-vendor"><span class="std std-ref">/sys/bus/thunderbolt/devices/&lt;device&gt;:&lt;port&gt;.&lt;index&gt;/vendor</span></a></p></li>
-<li><p><a class="reference internal" href="#abi-sys-bus-thunderbolt-devices-nvm-authenticate-on-disconnect"><span class="std std-ref">/sys/bus/thunderbolt/devices/…/nvm_authenticate_on_disconnect</span></a></p></li>
 </ul>
 </div>
 <div class="section" id="file-home-ant-amazon-com-sjpark-linux-testing-sysfs-bus-typec">
@@ -51069,7 +51693,6 @@ saw any problems).</p>
 <li><p><a class="reference internal" href="#abi-sys-bus-usb-drivers-remove-id"><span class="std std-ref">/sys/bus/usb/drivers/…/remove_id</span></a></p></li>
 <li><p><a class="reference internal" href="#abi-sys-bus-usb-devices-power-usb2-hardware-lpm"><span class="std std-ref">/sys/bus/usb/devices/…/power/usb2_hardware_lpm</span></a></p></li>
 <li><p><a class="reference internal" href="#abi-sys-bus-usb-devices-power-usb3-hardware-lpm-u1"><span class="std std-ref">/sys/bus/usb/devices/…/power/usb3_hardware_lpm_u1</span></a></p></li>
-<li><p><a class="reference internal" href="#abi-sys-bus-usb-devices-removable"><span class="std std-ref">/sys/bus/usb/devices/…/removable</span></a></p></li>
 <li><p><a class="reference internal" href="#abi-sys-bus-usb-devices-ltm-capable"><span class="std std-ref">/sys/bus/usb/devices/…/ltm_capable</span></a></p></li>
 <li><p><a class="reference internal" href="#abi-sys-bus-usb-devices-hub-interface-portx"><span class="std std-ref">/sys/bus/usb/devices/…/(hub interface)/portX</span></a></p></li>
 <li><p><a class="reference internal" href="#abi-sys-bus-usb-devices-hub-interface-portx-connect-type"><span class="std std-ref">/sys/bus/usb/devices/…/(hub interface)/portX/connect_type</span></a></p></li>
@@ -51174,60 +51797,8 @@ driver is bound with root hub device.</p>
 <li><p><a class="reference internal" href="#abi-sys-class-backlight-backlight-scale"><span class="std std-ref">/sys/class/backlight/&lt;backlight&gt;/scale</span></a></p></li>
 <li><p><a class="reference internal" href="#abi-sys-class-backlight-backlight-ambient-light-level"><span class="std std-ref">/sys/class/backlight/&lt;backlight&gt;/ambient_light_level</span></a></p></li>
 <li><p><a class="reference internal" href="#abi-sys-class-backlight-backlight-ambient-light-zone"><span class="std std-ref">/sys/class/backlight/&lt;backlight&gt;/ambient_light_zone</span></a></p></li>
-</ul>
-</div>
-<div class="section" id="file-home-ant-amazon-com-sjpark-linux-testing-sysfs-class-backlight-adp5520">
-<span id="abi-file-testing-sysfs-class-backlight-adp5520"></span><h2>File /home/ANT.AMAZON.COM/sjpark/linux/testing/sysfs-class-backlight-adp5520<a class="headerlink" href="#file-home-ant-amazon-com-sjpark-linux-testing-sysfs-class-backlight-adp5520" title="Permalink to this headline">¶</a></h2>
-<p>sysfs interface for analog devices adp5520(01) backlight driver</p>
-<p>The backlight brightness control operates at three different levels for the
-adp5520 and adp5501 devices: daylight (level 1), office (level 2) and dark
-(level 3). By default the brightness operates at the daylight brightness level.</p>
-<p>Has the following ABI:</p>
-<ul class="simple">
-<li><p><a class="reference internal" href="#abi-sys-class-backlight-backlight-daylight-max"><span class="std std-ref">/sys/class/backlight/&lt;backlight&gt;/daylight_max</span></a></p></li>
-<li><p><a class="reference internal" href="#abi-sys-class-backlight-backlight-daylight-max"><span class="std std-ref">/sys/class/backlight/&lt;backlight&gt;/office_max</span></a></p></li>
-<li><p><a class="reference internal" href="#abi-sys-class-backlight-backlight-daylight-max"><span class="std std-ref">/sys/class/backlight/&lt;backlight&gt;/dark_max</span></a></p></li>
-<li><p><a class="reference internal" href="#abi-sys-class-backlight-backlight-daylight-dim"><span class="std std-ref">/sys/class/backlight/&lt;backlight&gt;/daylight_dim</span></a></p></li>
-<li><p><a class="reference internal" href="#abi-sys-class-backlight-backlight-daylight-dim"><span class="std std-ref">/sys/class/backlight/&lt;backlight&gt;/office_dim</span></a></p></li>
-<li><p><a class="reference internal" href="#abi-sys-class-backlight-backlight-daylight-dim"><span class="std std-ref">/sys/class/backlight/&lt;backlight&gt;/dark_dim</span></a></p></li>
-</ul>
-</div>
-<div class="section" id="file-home-ant-amazon-com-sjpark-linux-testing-sysfs-class-backlight-adp8860">
-<span id="abi-file-testing-sysfs-class-backlight-adp8860"></span><h2>File /home/ANT.AMAZON.COM/sjpark/linux/testing/sysfs-class-backlight-adp8860<a class="headerlink" href="#file-home-ant-amazon-com-sjpark-linux-testing-sysfs-class-backlight-adp8860" title="Permalink to this headline">¶</a></h2>
-<p>sysfs interface for analog devices adp8860 backlight driver</p>
-<p>The backlight brightness control operates at three different levels for the
-adp8860, adp8861 and adp8863 devices: daylight (level 1), office (level 2) and
-dark (level 3). By default the brightness operates at the daylight brightness
-level.</p>
-<p>See also <a class="reference internal" href="#abi-sys-class-backlight-backlight-ambient-light-level"><span class="std std-ref">/sys/class/backlight/&lt;backlight&gt;/ambient_light_level</span></a> and
-<a class="reference internal" href="#abi-sys-class-backlight-backlight-ambient-light-zone"><span class="std std-ref">/sys/class/backlight/&lt;backlight&gt;/ambient_light_zone</span></a>.</p>
-<p>Has the following ABI:</p>
-<ul class="simple">
-<li><p><a class="reference internal" href="#abi-sys-class-backlight-backlight-ambient-light-zone-max"><span class="std std-ref">/sys/class/backlight/&lt;backlight&gt;/l1_daylight_max</span></a></p></li>
-<li><p><a class="reference internal" href="#abi-sys-class-backlight-backlight-l1-daylight-max"><span class="std std-ref">/sys/class/backlight/&lt;backlight&gt;/l2_office_max</span></a></p></li>
-<li><p><a class="reference internal" href="#abi-sys-class-backlight-backlight-l1-daylight-max"><span class="std std-ref">/sys/class/backlight/&lt;backlight&gt;/l3_dark_max</span></a></p></li>
-<li><p><a class="reference internal" href="#abi-sys-class-backlight-backlight-l1-daylight-dim"><span class="std std-ref">/sys/class/backlight/&lt;backlight&gt;/l1_daylight_dim</span></a></p></li>
-<li><p><a class="reference internal" href="#abi-sys-class-backlight-backlight-l1-daylight-dim"><span class="std std-ref">/sys/class/backlight/&lt;backlight&gt;/l2_office_dim</span></a></p></li>
-<li><p><a class="reference internal" href="#abi-sys-class-backlight-backlight-l1-daylight-dim"><span class="std std-ref">/sys/class/backlight/&lt;backlight&gt;/l3_dark_dim</span></a></p></li>
-</ul>
-</div>
-<div class="section" id="file-home-ant-amazon-com-sjpark-linux-testing-sysfs-class-backlight-driver-adp8870">
-<span id="abi-file-testing-sysfs-class-backlight-driver-adp8870"></span><h2>File /home/ANT.AMAZON.COM/sjpark/linux/testing/sysfs-class-backlight-driver-adp8870<a class="headerlink" href="#file-home-ant-amazon-com-sjpark-linux-testing-sysfs-class-backlight-driver-adp8870" title="Permalink to this headline">¶</a></h2>
-<p>See also <a class="reference internal" href="#abi-sys-class-backlight-backlight-ambient-light-level"><span class="std std-ref">/sys/class/backlight/&lt;backlight&gt;/ambient_light_level</span></a> and
-<a class="reference internal" href="#abi-sys-class-backlight-backlight-ambient-light-zone"><span class="std std-ref">/sys/class/backlight/&lt;backlight&gt;/ambient_light_zone</span></a>.</p>
-<p>Has the following ABI:</p>
-<ul class="simple">
 <li><p><a class="reference internal" href="#abi-sys-class-backlight-backlight-ambient-light-zone-max"><span class="std std-ref">/sys/class/backlight/&lt;backlight&gt;/&lt;ambient light zone&gt;_max</span></a></p></li>
-<li><p><a class="reference internal" href="#abi-sys-class-backlight-backlight-ambient-light-zone-max"><span class="std std-ref">/sys/class/backlight/&lt;backlight&gt;/l1_daylight_max</span></a></p></li>
-<li><p><a class="reference internal" href="#abi-sys-class-backlight-backlight-ambient-light-zone-max"><span class="std std-ref">/sys/class/backlight/&lt;backlight&gt;/l2_bright_max</span></a></p></li>
-<li><p><a class="reference internal" href="#abi-sys-class-backlight-backlight-ambient-light-zone-max"><span class="std std-ref">/sys/class/backlight/&lt;backlight&gt;/l3_office_max</span></a></p></li>
-<li><p><a class="reference internal" href="#abi-sys-class-backlight-backlight-ambient-light-zone-max"><span class="std std-ref">/sys/class/backlight/&lt;backlight&gt;/l4_indoor_max</span></a></p></li>
-<li><p><a class="reference internal" href="#abi-sys-class-backlight-backlight-ambient-light-zone-max"><span class="std std-ref">/sys/class/backlight/&lt;backlight&gt;/l5_dark_max</span></a></p></li>
 <li><p><a class="reference internal" href="#abi-sys-class-backlight-backlight-ambient-light-zone-dim"><span class="std std-ref">/sys/class/backlight/&lt;backlight&gt;/&lt;ambient light zone&gt;_dim</span></a></p></li>
-<li><p><a class="reference internal" href="#abi-sys-class-backlight-backlight-ambient-light-zone-dim"><span class="std std-ref">/sys/class/backlight/&lt;backlight&gt;/l2_bright_dim</span></a></p></li>
-<li><p><a class="reference internal" href="#abi-sys-class-backlight-backlight-ambient-light-zone-dim"><span class="std std-ref">/sys/class/backlight/&lt;backlight&gt;/l3_office_dim</span></a></p></li>
-<li><p><a class="reference internal" href="#abi-sys-class-backlight-backlight-ambient-light-zone-dim"><span class="std std-ref">/sys/class/backlight/&lt;backlight&gt;/l4_indoor_dim</span></a></p></li>
-<li><p><a class="reference internal" href="#abi-sys-class-backlight-backlight-ambient-light-zone-dim"><span class="std std-ref">/sys/class/backlight/&lt;backlight&gt;/l5_dark_dim</span></a></p></li>
 </ul>
 </div>
 <div class="section" id="file-home-ant-amazon-com-sjpark-linux-testing-sysfs-class-backlight-driver-lm3533">
@@ -51507,13 +52078,6 @@ For example, the real path of the attribute /sys/class/cxl/afu0.0s/irqs_max is
 <li><p><a class="reference internal" href="#abi-sys-class-leds-led-brightness-hw-changed"><span class="std std-ref">/sys/class/leds/&lt;led&gt;/brightness_hw_changed</span></a></p></li>
 <li><p><a class="reference internal" href="#abi-sys-class-leds-led-trigger"><span class="std std-ref">/sys/class/leds/&lt;led&gt;/trigger</span></a></p></li>
 <li><p><a class="reference internal" href="#abi-sys-class-leds-led-inverted"><span class="std std-ref">/sys/class/leds/&lt;led&gt;/inverted</span></a></p></li>
-</ul>
-</div>
-<div class="section" id="file-home-ant-amazon-com-sjpark-linux-testing-sysfs-class-led-driver-el15203000">
-<span id="abi-file-testing-sysfs-class-led-driver-el15203000"></span><h2>File /home/ANT.AMAZON.COM/sjpark/linux/testing/sysfs-class-led-driver-el15203000<a class="headerlink" href="#file-home-ant-amazon-com-sjpark-linux-testing-sysfs-class-led-driver-el15203000" title="Permalink to this headline">¶</a></h2>
-<p>Has the following ABI:</p>
-<ul class="simple">
-<li><p><a class="reference internal" href="#abi-sys-class-leds-led-repeat"><span class="std std-ref">/sys/class/leds/&lt;led&gt;/repeat</span></a></p></li>
 </ul>
 </div>
 <div class="section" id="file-home-ant-amazon-com-sjpark-linux-testing-sysfs-class-led-driver-lm3533">
@@ -52662,6 +53226,13 @@ sysfs: (&lt;devid&gt; is in the format major:minor)</p>
 <li><p><a class="reference internal" href="#abi-sys-devices-real-power-state"><span class="std std-ref">/sys/devices/…/real_power_state</span></a></p></li>
 </ul>
 </div>
+<div class="section" id="file-home-ant-amazon-com-sjpark-linux-testing-sysfs-devices-removable">
+<span id="abi-file-testing-sysfs-devices-removable"></span><h2>File /home/ANT.AMAZON.COM/sjpark/linux/testing/sysfs-devices-removable<a class="headerlink" href="#file-home-ant-amazon-com-sjpark-linux-testing-sysfs-devices-removable" title="Permalink to this headline">¶</a></h2>
+<p>Has the following ABI:</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="#abi-sys-devices-removable"><span class="std std-ref">/sys/devices/…/removable</span></a></p></li>
+</ul>
+</div>
 <div class="section" id="file-home-ant-amazon-com-sjpark-linux-testing-sysfs-devices-resource-in-use">
 <span id="abi-file-testing-sysfs-devices-resource-in-use"></span><h2>File /home/ANT.AMAZON.COM/sjpark/linux/testing/sysfs-devices-resource_in_use<a class="headerlink" href="#file-home-ant-amazon-com-sjpark-linux-testing-sysfs-devices-resource-in-use" title="Permalink to this headline">¶</a></h2>
 <p>Has the following ABI:</p>
@@ -53258,6 +53829,22 @@ sysfs: (&lt;devid&gt; is in the format major:minor)</p>
 <li><p><a class="reference internal" href="#abi-sys-bus-platform-drivers-ufshcd-spm-lvl"><span class="std std-ref">/sys/bus/platform/drivers/ufshcd/*/spm_lvl</span></a></p></li>
 <li><p><a class="reference internal" href="#abi-sys-bus-platform-drivers-ufshcd-spm-target-dev-state"><span class="std std-ref">/sys/bus/platform/drivers/ufshcd/*/spm_target_dev_state</span></a></p></li>
 <li><p><a class="reference internal" href="#abi-sys-bus-platform-drivers-ufshcd-spm-target-link-state"><span class="std std-ref">/sys/bus/platform/drivers/ufshcd/*/spm_target_link_state</span></a></p></li>
+<li><p><a class="reference internal" href="#abi-sys-bus-platform-drivers-ufshcd-monitor-monitor-enable"><span class="std std-ref">/sys/bus/platform/drivers/ufshcd/*/monitor/monitor_enable</span></a></p></li>
+<li><p><a class="reference internal" href="#abi-sys-bus-platform-drivers-ufshcd-monitor-monitor-chunk-size"><span class="std std-ref">/sys/bus/platform/drivers/ufshcd/*/monitor/monitor_chunk_size</span></a></p></li>
+<li><p><a class="reference internal" href="#abi-sys-bus-platform-drivers-ufshcd-monitor-read-total-sectors"><span class="std std-ref">/sys/bus/platform/drivers/ufshcd/*/monitor/read_total_sectors</span></a></p></li>
+<li><p><a class="reference internal" href="#abi-sys-bus-platform-drivers-ufshcd-monitor-read-total-busy"><span class="std std-ref">/sys/bus/platform/drivers/ufshcd/*/monitor/read_total_busy</span></a></p></li>
+<li><p><a class="reference internal" href="#abi-sys-bus-platform-drivers-ufshcd-monitor-read-nr-requests"><span class="std std-ref">/sys/bus/platform/drivers/ufshcd/*/monitor/read_nr_requests</span></a></p></li>
+<li><p><a class="reference internal" href="#abi-sys-bus-platform-drivers-ufshcd-monitor-read-req-latency-max"><span class="std std-ref">/sys/bus/platform/drivers/ufshcd/*/monitor/read_req_latency_max</span></a></p></li>
+<li><p><a class="reference internal" href="#abi-sys-bus-platform-drivers-ufshcd-monitor-read-req-latency-min"><span class="std std-ref">/sys/bus/platform/drivers/ufshcd/*/monitor/read_req_latency_min</span></a></p></li>
+<li><p><a class="reference internal" href="#abi-sys-bus-platform-drivers-ufshcd-monitor-read-req-latency-avg"><span class="std std-ref">/sys/bus/platform/drivers/ufshcd/*/monitor/read_req_latency_avg</span></a></p></li>
+<li><p><a class="reference internal" href="#abi-sys-bus-platform-drivers-ufshcd-monitor-read-req-latency-sum"><span class="std std-ref">/sys/bus/platform/drivers/ufshcd/*/monitor/read_req_latency_sum</span></a></p></li>
+<li><p><a class="reference internal" href="#abi-sys-bus-platform-drivers-ufshcd-monitor-write-total-sectors"><span class="std std-ref">/sys/bus/platform/drivers/ufshcd/*/monitor/write_total_sectors</span></a></p></li>
+<li><p><a class="reference internal" href="#abi-sys-bus-platform-drivers-ufshcd-monitor-write-total-busy"><span class="std std-ref">/sys/bus/platform/drivers/ufshcd/*/monitor/write_total_busy</span></a></p></li>
+<li><p><a class="reference internal" href="#abi-sys-bus-platform-drivers-ufshcd-monitor-write-nr-requests"><span class="std std-ref">/sys/bus/platform/drivers/ufshcd/*/monitor/write_nr_requests</span></a></p></li>
+<li><p><a class="reference internal" href="#abi-sys-bus-platform-drivers-ufshcd-monitor-write-req-latency-max"><span class="std std-ref">/sys/bus/platform/drivers/ufshcd/*/monitor/write_req_latency_max</span></a></p></li>
+<li><p><a class="reference internal" href="#abi-sys-bus-platform-drivers-ufshcd-monitor-write-req-latency-min"><span class="std std-ref">/sys/bus/platform/drivers/ufshcd/*/monitor/write_req_latency_min</span></a></p></li>
+<li><p><a class="reference internal" href="#abi-sys-bus-platform-drivers-ufshcd-monitor-write-req-latency-avg"><span class="std std-ref">/sys/bus/platform/drivers/ufshcd/*/monitor/write_req_latency_avg</span></a></p></li>
+<li><p><a class="reference internal" href="#abi-sys-bus-platform-drivers-ufshcd-monitor-write-req-latency-sum"><span class="std std-ref">/sys/bus/platform/drivers/ufshcd/*/monitor/write_req_latency_sum</span></a></p></li>
 <li><p><a class="reference internal" href="#abi-sys-bus-platform-drivers-ufshcd-device-descriptor-wb-presv-us-en"><span class="std std-ref">/sys/bus/platform/drivers/ufshcd/*/device_descriptor/wb_presv_us_en</span></a></p></li>
 <li><p><a class="reference internal" href="#abi-sys-bus-platform-drivers-ufshcd-device-descriptor-wb-shared-alloc-units"><span class="std std-ref">/sys/bus/platform/drivers/ufshcd/*/device_descriptor/wb_shared_alloc_units</span></a></p></li>
 <li><p><a class="reference internal" href="#abi-sys-bus-platform-drivers-ufshcd-device-descriptor-wb-type"><span class="std std-ref">/sys/bus/platform/drivers/ufshcd/*/device_descriptor/wb_type</span></a></p></li>
@@ -53541,6 +54128,8 @@ sysfs: (&lt;devid&gt; is in the format major:minor)</p>
 <li><p><a class="reference internal" href="#abi-sys-fs-f2fs-disk-dirty-nats-ratio"><span class="std std-ref">/sys/fs/f2fs/&lt;disk&gt;/dirty_nats_ratio</span></a></p></li>
 <li><p><a class="reference internal" href="#abi-sys-fs-f2fs-disk-lifetime-write-kbytes"><span class="std std-ref">/sys/fs/f2fs/&lt;disk&gt;/lifetime_write_kbytes</span></a></p></li>
 <li><p><a class="reference internal" href="#abi-sys-fs-f2fs-disk-features"><span class="std std-ref">/sys/fs/f2fs/&lt;disk&gt;/features</span></a></p></li>
+<li><p><a class="reference internal" href="#abi-sys-fs-f2fs-disk-feature-list"><span class="std std-ref">/sys/fs/f2fs/&lt;disk&gt;/feature_list/</span></a></p></li>
+<li><p><a class="reference internal" href="#abi-sys-fs-f2fs-feature"><span class="std std-ref">/sys/fs/f2fs/feature/</span></a></p></li>
 <li><p><a class="reference internal" href="#abi-sys-fs-f2fs-disk-inject-rate"><span class="std std-ref">/sys/fs/f2fs/&lt;disk&gt;/inject_rate</span></a></p></li>
 <li><p><a class="reference internal" href="#abi-sys-fs-f2fs-disk-inject-type"><span class="std std-ref">/sys/fs/f2fs/&lt;disk&gt;/inject_type</span></a></p></li>
 <li><p><a class="reference internal" href="#abi-sys-fs-f2fs-disk-dirty-segments"><span class="std std-ref">/sys/fs/f2fs/&lt;disk&gt;/dirty_segments</span></a></p></li>
@@ -53572,6 +54161,10 @@ sysfs: (&lt;devid&gt; is in the format major:minor)</p>
 <li><p><a class="reference internal" href="#abi-sys-fs-f2fs-disk-compr-written-block"><span class="std std-ref">/sys/fs/f2fs/&lt;disk&gt;/compr_written_block</span></a></p></li>
 <li><p><a class="reference internal" href="#abi-sys-fs-f2fs-disk-compr-saved-block"><span class="std std-ref">/sys/fs/f2fs/&lt;disk&gt;/compr_saved_block</span></a></p></li>
 <li><p><a class="reference internal" href="#abi-sys-fs-f2fs-disk-compr-new-inode"><span class="std std-ref">/sys/fs/f2fs/&lt;disk&gt;/compr_new_inode</span></a></p></li>
+<li><p><a class="reference internal" href="#abi-sys-fs-f2fs-disk-atgc-candidate-ratio"><span class="std std-ref">/sys/fs/f2fs/&lt;disk&gt;/atgc_candidate_ratio</span></a></p></li>
+<li><p><a class="reference internal" href="#abi-sys-fs-f2fs-disk-atgc-candidate-count"><span class="std std-ref">/sys/fs/f2fs/&lt;disk&gt;/atgc_candidate_count</span></a></p></li>
+<li><p><a class="reference internal" href="#abi-sys-fs-f2fs-disk-atgc-age-weight"><span class="std std-ref">/sys/fs/f2fs/&lt;disk&gt;/atgc_age_weight</span></a></p></li>
+<li><p><a class="reference internal" href="#abi-sys-fs-f2fs-disk-atgc-age-threshold"><span class="std std-ref">/sys/fs/f2fs/&lt;disk&gt;/atgc_age_threshold</span></a></p></li>
 </ul>
 </div>
 <div class="section" id="file-home-ant-amazon-com-sjpark-linux-testing-sysfs-fs-nilfs2">
@@ -53691,7 +54284,6 @@ sysfs: (&lt;devid&gt; is in the format major:minor)</p>
 <p>Has the following ABI:</p>
 <ul class="simple">
 <li><p><a class="reference internal" href="#abi-sys-kernel-iommu-groups"><span class="std std-ref">/sys/kernel/iommu_groups/</span></a></p></li>
-<li><p><a class="reference internal" href="#abi-sys-kernel-iommu-groups-reserved-regions"><span class="std std-ref">/sys/kernel/iommu_groups/reserved_regions</span></a></p></li>
 <li><p><a class="reference internal" href="#abi-sys-kernel-iommu-groups-reserved-regions"><span class="std std-ref">/sys/kernel/iommu_groups/reserved_regions</span></a></p></li>
 <li><p><a class="reference internal" href="#abi-sys-kernel-iommu-groups-grp-id-type"><span class="std std-ref">/sys/kernel/iommu_groups/&lt;grp_id&gt;/type</span></a></p></li>
 </ul>
@@ -53938,6 +54530,14 @@ sysfs: (&lt;devid&gt; is in the format major:minor)</p>
 <li><p><a class="reference internal" href="#abi-sys-class-leds-dell-kbd-backlight-stop-timeout"><span class="std std-ref">/sys/class/leds/dell::kbd_backlight/stop_timeout</span></a></p></li>
 </ul>
 </div>
+<div class="section" id="file-home-ant-amazon-com-sjpark-linux-testing-sysfs-platform-dell-privacy-wmi">
+<span id="abi-file-testing-sysfs-platform-dell-privacy-wmi"></span><h2>File /home/ANT.AMAZON.COM/sjpark/linux/testing/sysfs-platform-dell-privacy-wmi<a class="headerlink" href="#file-home-ant-amazon-com-sjpark-linux-testing-sysfs-platform-dell-privacy-wmi" title="Permalink to this headline">¶</a></h2>
+<p>Has the following ABI:</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="#abi-sys-bus-wmi-devices-6932965f-1671-4ceb-b988-d3ab0a901919-dell-privacy-supported-type"><span class="std std-ref">/sys/bus/wmi/devices/6932965F-1671-4CEB-B988-D3AB0A901919/dell_privacy_supported_type</span></a></p></li>
+<li><p><a class="reference internal" href="#abi-sys-bus-wmi-devices-6932965f-1671-4ceb-b988-d3ab0a901919-dell-privacy-current-state"><span class="std std-ref">/sys/bus/wmi/devices/6932965F-1671-4CEB-B988-D3AB0A901919/dell_privacy_current_state</span></a></p></li>
+</ul>
+</div>
 <div class="section" id="file-home-ant-amazon-com-sjpark-linux-testing-sysfs-platform-dell-smbios">
 <span id="abi-file-testing-sysfs-platform-dell-smbios"></span><h2>File /home/ANT.AMAZON.COM/sjpark/linux/testing/sysfs-platform-dell-smbios<a class="headerlink" href="#file-home-ant-amazon-com-sjpark-linux-testing-sysfs-platform-dell-smbios" title="Permalink to this headline">¶</a></h2>
 <p>Has the following ABI:</p>
@@ -54018,6 +54618,9 @@ sysfs: (&lt;devid&gt; is in the format major:minor)</p>
 <li><p><a class="reference internal" href="#abi-sys-bus-platform-devices-int3532-00-dptf-battery-current-discharge-capbility-ma"><span class="std std-ref">/sys/bus/platform/devices/INT3532:00/dptf_battery/current_discharge_capbility_ma</span></a></p></li>
 <li><p><a class="reference internal" href="#abi-sys-bus-platform-devices-intc1045-00-pch-fivr-switch-frequency-freq-mhz-low-clock"><span class="std std-ref">/sys/bus/platform/devices/INTC1045:00/pch_fivr_switch_frequency/freq_mhz_low_clock</span></a></p></li>
 <li><p><a class="reference internal" href="#abi-sys-bus-platform-devices-intc1045-00-pch-fivr-switch-frequency-freq-mhz-high-clock"><span class="std std-ref">/sys/bus/platform/devices/INTC1045:00/pch_fivr_switch_frequency/freq_mhz_high_clock</span></a></p></li>
+<li><p><a class="reference internal" href="#abi-sys-bus-platform-devices-intc1045-00-pch-fivr-switch-frequency-fivr-switching-freq-mhz"><span class="std std-ref">/sys/bus/platform/devices/INTC1045:00/pch_fivr_switch_frequency/fivr_switching_freq_mhz</span></a></p></li>
+<li><p><a class="reference internal" href="#abi-sys-bus-platform-devices-intc1045-00-pch-fivr-switch-frequency-fivr-switching-fault-status"><span class="std std-ref">/sys/bus/platform/devices/INTC1045:00/pch_fivr_switch_frequency/fivr_switching_fault_status</span></a></p></li>
+<li><p><a class="reference internal" href="#abi-sys-bus-platform-devices-intc1045-00-pch-fivr-switch-frequency-ssc-clock-info"><span class="std std-ref">/sys/bus/platform/devices/INTC1045:00/pch_fivr_switch_frequency/ssc_clock_info</span></a></p></li>
 </ul>
 </div>
 <div class="section" id="file-home-ant-amazon-com-sjpark-linux-testing-sysfs-platform-eeepc-laptop">

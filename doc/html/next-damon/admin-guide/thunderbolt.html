@@ -60,7 +60,7 @@
             
             
               <div class="version">
-                5.13.0-rc1-mm1
+                5.13.0-rc5-mm1
               </div>
             
           
@@ -384,6 +384,36 @@ of the NVM image failed.</p>
 <p>Note names of the NVMem devices <code class="docutils literal notranslate"><span class="pre">nvm_activeN</span></code> and <code class="docutils literal notranslate"><span class="pre">nvm_non_activeN</span></code>
 depend on the order they are registered in the NVMem subsystem. N in
 the name is the identifier added by the NVMem subsystem.</p>
+</div>
+<div class="section" id="upgrading-on-board-retimer-nvm-when-there-is-no-cable-connected">
+<h2>Upgrading on-board retimer NVM when there is no cable connected<a class="headerlink" href="#upgrading-on-board-retimer-nvm-when-there-is-no-cable-connected" title="Permalink to this headline">¶</a></h2>
+<p>If the platform supports, it may be possible to upgrade the retimer NVM
+firmware even when there is nothing connected to the USB4
+ports. When this is the case the <code class="docutils literal notranslate"><span class="pre">usb4_portX</span></code> devices have two special
+attributes: <code class="docutils literal notranslate"><span class="pre">offline</span></code> and <code class="docutils literal notranslate"><span class="pre">rescan</span></code>. The way to upgrade the firmware
+is to first put the USB4 port into offline mode:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span># echo 1 &gt; /sys/bus/thunderbolt/devices/0-0/usb4_port1/offline
+</pre></div>
+</div>
+<p>This step makes sure the port does not respond to any hotplug events,
+and also ensures the retimers are powered on. The next step is to scan
+for the retimers:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span># echo 1 &gt; /sys/bus/thunderbolt/devices/0-0/usb4_port1/rescan
+</pre></div>
+</div>
+<p>This enumerates and adds the on-board retimers. Now retimer NVM can be
+upgraded in the same way than with cable connected (see previous
+section). However, the retimer is not disconnected as we are offline
+mode) so after writing <code class="docutils literal notranslate"><span class="pre">1</span></code> to <code class="docutils literal notranslate"><span class="pre">nvm_authenticate</span></code> one should wait for
+5 or more seconds before running rescan again:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span># echo 1 &gt; /sys/bus/thunderbolt/devices/0-0/usb4_port1/rescan
+</pre></div>
+</div>
+<p>This point if everything went fine, the port can be put back to
+functional state again:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span># echo 0 &gt; /sys/bus/thunderbolt/devices/0-0/usb4_port1/offline
+</pre></div>
+</div>
 </div>
 <div class="section" id="upgrading-nvm-when-host-controller-is-in-safe-mode">
 <h2>Upgrading NVM when host controller is in safe mode<a class="headerlink" href="#upgrading-nvm-when-host-controller-is-in-safe-mode" title="Permalink to this headline">¶</a></h2>

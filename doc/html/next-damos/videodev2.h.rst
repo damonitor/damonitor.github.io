@@ -1751,6 +1751,9 @@ videodev2.h
                     struct v4l2\_ctrl\_h264\_decode\_params \_\_user \*p\_h264\_decode\_params;
                     struct v4l2\_ctrl\_fwht\_params \_\_user \*p\_fwht\_params;
                     struct v4l2\_ctrl\_vp8\_frame \_\_user \*p\_vp8\_frame;
+                    struct v4l2\_ctrl\_mpeg2\_sequence \_\_user \*p\_mpeg2\_sequence;
+                    struct v4l2\_ctrl\_mpeg2\_picture \_\_user \*p\_mpeg2\_picture;
+                    struct v4l2\_ctrl\_mpeg2\_quantisation \_\_user \*p\_mpeg2\_quantisation;
                     void \_\_user \*ptr;
             \};
     \} \_\_attribute\_\_ ((packed));
@@ -1811,6 +1814,10 @@ videodev2.h
             :c:type:`V4L2_CTRL_TYPE_FWHT_PARAMS <v4l2_ctrl_type>`          = 0x0220,
 
             :c:type:`V4L2_CTRL_TYPE_VP8_FRAME <v4l2_ctrl_type>`            = 0x0240,
+
+            :c:type:`V4L2_CTRL_TYPE_MPEG2_QUANTISATION <v4l2_ctrl_type>`   = 0x0250,
+            :c:type:`V4L2_CTRL_TYPE_MPEG2_SEQUENCE <v4l2_ctrl_type>`       = 0x0251,
+            :c:type:`V4L2_CTRL_TYPE_MPEG2_PICTURE <v4l2_ctrl_type>`        = 0x0252,
     \};
 
     \/\*  Used in the \ :ref:`VIDIOC_QUERYCTRL <vidioc_queryctrl>` ioctl for querying controls \*\/
