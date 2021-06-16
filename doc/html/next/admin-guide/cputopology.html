@@ -60,7 +60,7 @@
             
             
               <div class="version">
-                5.13.0-rc5-mm1
+                5.13.0-rc6-mm1
               </div>
             
           
@@ -157,87 +157,10 @@
             
   <div class="section" id="how-cpu-topology-info-is-exported-via-sysfs">
 <h1>How CPU topology info is exported via sysfs<a class="headerlink" href="#how-cpu-topology-info-is-exported-via-sysfs" title="Permalink to this headline">¶</a></h1>
-<p>Export CPU topology info via sysfs. Items (attributes) are similar
-to /proc/cpuinfo output of some architectures.  They reside in
-/sys/devices/system/cpu/cpuX/topology/:</p>
-<p>physical_package_id:</p>
-<blockquote>
-<div><p>physical package id of cpuX. Typically corresponds to a physical
-socket number, but the actual value is architecture and platform
-dependent.</p>
-</div></blockquote>
-<p>die_id:</p>
-<blockquote>
-<div><p>the CPU die ID of cpuX. Typically it is the hardware platform’s
-identifier (rather than the kernel’s).  The actual value is
-architecture and platform dependent.</p>
-</div></blockquote>
-<p>core_id:</p>
-<blockquote>
-<div><p>the CPU core ID of cpuX. Typically it is the hardware platform’s
-identifier (rather than the kernel’s).  The actual value is
-architecture and platform dependent.</p>
-</div></blockquote>
-<p>book_id:</p>
-<blockquote>
-<div><p>the book ID of cpuX. Typically it is the hardware platform’s
-identifier (rather than the kernel’s).  The actual value is
-architecture and platform dependent.</p>
-</div></blockquote>
-<p>drawer_id:</p>
-<blockquote>
-<div><p>the drawer ID of cpuX. Typically it is the hardware platform’s
-identifier (rather than the kernel’s).  The actual value is
-architecture and platform dependent.</p>
-</div></blockquote>
-<p>core_cpus:</p>
-<blockquote>
-<div><p>internal kernel map of CPUs within the same core.
-(deprecated name: “thread_siblings”)</p>
-</div></blockquote>
-<p>core_cpus_list:</p>
-<blockquote>
-<div><p>human-readable list of CPUs within the same core.
-(deprecated name: “thread_siblings_list”);</p>
-</div></blockquote>
-<p>package_cpus:</p>
-<blockquote>
-<div><p>internal kernel map of the CPUs sharing the same physical_package_id.
-(deprecated name: “core_siblings”)</p>
-</div></blockquote>
-<p>package_cpus_list:</p>
-<blockquote>
-<div><p>human-readable list of CPUs sharing the same physical_package_id.
-(deprecated name: “core_siblings_list”)</p>
-</div></blockquote>
-<p>die_cpus:</p>
-<blockquote>
-<div><p>internal kernel map of CPUs within the same die.</p>
-</div></blockquote>
-<p>die_cpus_list:</p>
-<blockquote>
-<div><p>human-readable list of CPUs within the same die.</p>
-</div></blockquote>
-<p>book_siblings:</p>
-<blockquote>
-<div><p>internal kernel map of cpuX’s hardware threads within the same
-book_id.</p>
-</div></blockquote>
-<p>book_siblings_list:</p>
-<blockquote>
-<div><p>human-readable list of cpuX’s hardware threads within the same
-book_id.</p>
-</div></blockquote>
-<p>drawer_siblings:</p>
-<blockquote>
-<div><p>internal kernel map of cpuX’s hardware threads within the same
-drawer_id.</p>
-</div></blockquote>
-<p>drawer_siblings_list:</p>
-<blockquote>
-<div><p>human-readable list of cpuX’s hardware threads within the same
-drawer_id.</p>
-</div></blockquote>
+<p>CPU topology info is exported via sysfs. Items (attributes) are similar
+to /proc/cpuinfo output of some architectures. They reside in
+/sys/devices/system/cpu/cpuX/topology/. Please refer to the ABI file:
+Documentation/ABI/stable/sysfs-devices-system-cpu.</p>
 <p>Architecture-neutral, drivers/base/topology.c, exports these attributes.
 However, the book and drawer related sysfs files will only be created if
 CONFIG_SCHED_BOOK and CONFIG_SCHED_DRAWER are selected, respectively.</p>

@@ -60,7 +60,7 @@
             
             
               <div class="version">
-                5.13.0-rc5-mm1
+                5.13.0-rc6-mm1
               </div>
             
           
@@ -658,6 +658,9 @@ bytes respectively. Such letter suffixes can also be entirely omitted:</p>
                                           allowed anymore to lift isolation
                                           requirements as needed. This option
                                           does not override iommu=pt
+                        force_enable - Force enable the IOMMU on platforms known
+                                       to be buggy with IOMMU enabled. Use this
+                                       option with care.
 
         amd_iommu_dump= [HW,X86-64]
                         Enable AMD IOMMU driver option to dump the ACPI table
@@ -854,16 +857,21 @@ bytes respectively. Such letter suffixes can also be entirely omitted:</p>
         ccw_timeout_log [S390]
                         See Documentation/s390/common_io.rst for details.
 
-        cgroup_disable= [KNL] Disable a particular controller
-                        Format: {name of the controller(s) to disable}
+        cgroup_disable= [KNL] Disable a particular controller or optional feature
+                        Format: {name of the controller(s) or feature(s) to disable}
                         The effects of cgroup_disable=foo are:
                         - foo isn't auto-mounted if you mount all cgroups in
                           a single hierarchy
                         - foo isn't visible as an individually mountable
                           subsystem
+                        - if foo is an optional feature then the feature is
+                          disabled and corresponding cgroup files are not
+                          created
                         {Currently only &quot;memory&quot; controller deal with this and
                         cut the overhead, others just disable the usage. So
                         only cgroup_disable=memory is actually worthy}
+                        Specifying &quot;pressure&quot; disables per-cgroup pressure
+                        stall information accounting feature
 
         cgroup_no_v1=   [KNL] Disable cgroup controllers and named hierarchies in v1
                         Format: { { controller | &quot;all&quot; | &quot;named&quot; }
@@ -5191,11 +5199,6 @@ bytes respectively. Such letter suffixes can also be entirely omitted:</p>
                         Format: nn[KMG]
                         Reserves a hole at the top of the kernel virtual
                         address space.
-
-        reservelow=     [X86]
-                        Format: nn[K]
-                        Set the amount of memory to reserve for BIOS at
-                        the bottom of the address space.
 
         reset_devices   [KNL] Force drivers to reset the underlying device
                         during initialization.

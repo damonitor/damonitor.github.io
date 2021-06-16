@@ -60,7 +60,7 @@
             
             
               <div class="version">
-                5.13.0-rc5-mm1
+                5.13.0-rc6-mm1
               </div>
             
           
@@ -452,73 +452,88 @@ target residency.</p>
 <p>The timer events oriented (TEO) governor is an alternative <code class="docutils literal notranslate"><span class="pre">CPUIdle</span></code> governor
 for tickless systems.  It follows the same basic strategy as the <code class="docutils literal notranslate"><span class="pre">menu</span></code> <a class="reference internal" href="#menu-gov">one</a>: it always tries to find the deepest idle state suitable for the
 given conditions.  However, it applies a different approach to that problem.</p>
-<p>First, it does not use sleep length correction factors, but instead it attempts
-to correlate the observed idle duration values with the available idle states
-and use that information to pick up the idle state that is most likely to
-“match” the upcoming CPU idle interval.   Second, it does not take the tasks
-that were running on the given CPU in the past and are waiting on some I/O
-operations to complete now at all (there is no guarantee that they will run on
-the same CPU when they become runnable again) and the pattern detection code in
-it avoids taking timer wakeups into account.  It also only uses idle duration
-values less than the current time till the closest timer (with the scheduler
-tick excluded) for that purpose.</p>
-<p>Like in the <code class="docutils literal notranslate"><span class="pre">menu</span></code> governor <a class="reference internal" href="#menu-gov">case</a>, the first step is to obtain
-the <em>sleep length</em>, which is the time until the closest timer event with the
-assumption that the scheduler tick will be stopped (that also is the upper bound
-on the time until the next CPU wakeup).  That value is then used to preselect an
-idle state on the basis of three metrics maintained for each idle state provided
-by the <code class="docutils literal notranslate"><span class="pre">CPUIdle</span></code> driver: <code class="docutils literal notranslate"><span class="pre">hits</span></code>, <code class="docutils literal notranslate"><span class="pre">misses</span></code> and <code class="docutils literal notranslate"><span class="pre">early_hits</span></code>.</p>
-<p>The <code class="docutils literal notranslate"><span class="pre">hits</span></code> and <code class="docutils literal notranslate"><span class="pre">misses</span></code> metrics measure the likelihood that a given idle
-state will “match” the observed (post-wakeup) idle duration if it “matches” the
-sleep length.  They both are subject to decay (after a CPU wakeup) every time
-the target residency of the idle state corresponding to them is less than or
-equal to the sleep length and the target residency of the next idle state is
-greater than the sleep length (that is, when the idle state corresponding to
-them “matches” the sleep length).  The <code class="docutils literal notranslate"><span class="pre">hits</span></code> metric is increased if the
-former condition is satisfied and the target residency of the given idle state
-is less than or equal to the observed idle duration and the target residency of
-the next idle state is greater than the observed idle duration at the same time
-(that is, it is increased when the given idle state “matches” both the sleep
-length and the observed idle duration).  In turn, the <code class="docutils literal notranslate"><span class="pre">misses</span></code> metric is
-increased when the given idle state “matches” the sleep length only and the
-observed idle duration is too short for its target residency.</p>
-<p>The <code class="docutils literal notranslate"><span class="pre">early_hits</span></code> metric measures the likelihood that a given idle state will
-“match” the observed (post-wakeup) idle duration if it does not “match” the
-sleep length.  It is subject to decay on every CPU wakeup and it is increased
-when the idle state corresponding to it “matches” the observed (post-wakeup)
-idle duration and the target residency of the next idle state is less than or
-equal to the sleep length (i.e. the idle state “matching” the sleep length is
-deeper than the given one).</p>
-<p>The governor walks the list of idle states provided by the <code class="docutils literal notranslate"><span class="pre">CPUIdle</span></code> driver
-and finds the last (deepest) one with the target residency less than or equal
-to the sleep length.  Then, the <code class="docutils literal notranslate"><span class="pre">hits</span></code> and <code class="docutils literal notranslate"><span class="pre">misses</span></code> metrics of that idle
-state are compared with each other and it is preselected if the <code class="docutils literal notranslate"><span class="pre">hits</span></code> one is
-greater (which means that that idle state is likely to “match” the observed idle
-duration after CPU wakeup).  If the <code class="docutils literal notranslate"><span class="pre">misses</span></code> one is greater, the governor
-preselects the shallower idle state with the maximum <code class="docutils literal notranslate"><span class="pre">early_hits</span></code> metric
-(or if there are multiple shallower idle states with equal <code class="docutils literal notranslate"><span class="pre">early_hits</span></code>
-metric which also is the maximum, the shallowest of them will be preselected).
-[If there is a wakeup latency constraint coming from the <a class="reference internal" href="#cpu-pm-qos">PM QoS framework</a> which is hit before reaching the deepest idle state with the
-target residency within the sleep length, the deepest idle state with the exit
-latency within the constraint is preselected without consulting the <code class="docutils literal notranslate"><span class="pre">hits</span></code>,
-<code class="docutils literal notranslate"><span class="pre">misses</span></code> and <code class="docutils literal notranslate"><span class="pre">early_hits</span></code> metrics.]</p>
-<p>Next, the governor takes several idle duration values observed most recently
-into consideration and if at least a half of them are greater than or equal to
-the target residency of the preselected idle state, that idle state becomes the
-final candidate to ask for.  Otherwise, the average of the most recent idle
-duration values below the target residency of the preselected idle state is
-computed and the governor walks the idle states shallower than the preselected
-one and finds the deepest of them with the target residency within that average.
-That idle state is then taken as the final candidate to ask for.</p>
-<p>Still, at this point the governor may need to refine the idle state selection if
-it has not decided to <a class="reference internal" href="#idle-cpus-and-tick">stop the scheduler tick</a>.  That
-generally happens if the target residency of the idle state selected so far is
-less than the tick period and the tick has not been stopped already (in a
-previous iteration of the idle loop).  Then, like in the <code class="docutils literal notranslate"><span class="pre">menu</span></code> governor
-<a class="reference internal" href="#menu-gov">case</a>, the sleep length used in the previous computations may not
-reflect the real time until the closest timer event and if it really is greater
-than that time, a shallower state with a suitable target residency may need to
-be selected.</p>
+<p>The idea of this governor is based on the observation that on many systems
+timer events are two or more orders of magnitude more frequent than any
+other interrupts, so they are likely to be the most significant cause of CPU
+wakeups from idle states.  Moreover, information about what happened in the
+(relatively recent) past can be used to estimate whether or not the deepest
+idle state with target residency within the (known) time till the closest
+timer event, referred to as the sleep length, is likely to be suitable for
+the upcoming CPU idle period and, if not, then which of the shallower idle
+states to choose instead of it.</p>
+<p>Of course, non-timer wakeup sources are more important in some use cases
+which can be covered by taking a few most recent idle time intervals of the
+CPU into account.  However, even in that context it is not necessary to
+consider idle duration values greater than the sleep length, because the
+closest timer will ultimately wake up the CPU anyway unless it is woken up
+earlier.</p>
+<p>Thus this governor estimates whether or not the prospective idle duration of
+a CPU is likely to be significantly shorter than the sleep length and selects
+an idle state for it accordingly.</p>
+<p>The computations carried out by this governor are based on using bins whose
+boundaries are aligned with the target residency parameter values of the CPU
+idle states provided by the <code class="docutils literal notranslate"><span class="pre">CPUIdle</span></code> driver in the ascending order.  That is,
+the first bin spans from 0 up to, but not including, the target residency of
+the second idle state (idle state 1), the second bin spans from the target
+residency of idle state 1 up to, but not including, the target residency of
+idle state 2, the third bin spans from the target residency of idle state 2
+up to, but not including, the target residency of idle state 3 and so on.
+The last bin spans from the target residency of the deepest idle state
+supplied by the driver to infinity.</p>
+<p>Two metrics called “hits” and “intercepts” are associated with each bin.
+They are updated every time before selecting an idle state for the given CPU
+in accordance with what happened last time.</p>
+<p>The “hits” metric reflects the relative frequency of situations in which the
+sleep length and the idle duration measured after CPU wakeup fall into the
+same bin (that is, the CPU appears to wake up “on time” relative to the sleep
+length).  In turn, the “intercepts” metric reflects the relative frequency of
+situations in which the measured idle duration is so much shorter than the
+sleep length that the bin it falls into corresponds to an idle state
+shallower than the one whose bin is fallen into by the sleep length (these
+situations are referred to as “intercepts” below).</p>
+<p>In addition to the metrics described above, the governor counts recent
+intercepts (that is, intercepts that have occurred during the last
+<code class="docutils literal notranslate"><span class="pre">NR_RECENT</span></code> invocations of it for the given CPU) for each bin.</p>
+<p>In order to select an idle state for a CPU, the governor takes the following
+steps (modulo the possible latency constraint that must be taken into account
+too):</p>
+<ol class="arabic simple">
+<li><p>Find the deepest CPU idle state whose target residency does not exceed
+the current sleep length (the candidate idle state) and compute 3 sums as
+follows:</p>
+<ul class="simple">
+<li><p>The sum of the “hits” and “intercepts” metrics for the candidate state
+and all of the deeper idle states (it represents the cases in which the
+CPU was idle long enough to avoid being intercepted if the sleep length
+had been equal to the current one).</p></li>
+<li><p>The sum of the “intercepts” metrics for all of the idle states shallower
+than the candidate one (it represents the cases in which the CPU was not
+idle long enough to avoid being intercepted if the sleep length had been
+equal to the current one).</p></li>
+<li><p>The sum of the numbers of recent intercepts for all of the idle states
+shallower than the candidate one.</p></li>
+</ul>
+</li>
+<li><p>If the second sum is greater than the first one or the third sum is
+greater than <code class="docutils literal notranslate"><span class="pre">NR_RECENT</span></code> / 2, the CPU is likely to wake up early, so look
+for an alternative idle state to select.</p>
+<ul class="simple">
+<li><p>Traverse the idle states shallower than the candidate one in the
+descending order.</p></li>
+<li><p>For each of them compute the sum of the “intercepts” metrics and the sum
+of the numbers of recent intercepts over all of the idle states between
+it and the candidate one (including the former and excluding the
+latter).</p></li>
+<li><p>If each of these sums that needs to be taken into account (because the
+check related to it has indicated that the CPU is likely to wake up
+early) is greater than a half of the corresponding sum computed in step
+1 (which means that the target residency of the state in question had
+not exceeded the idle duration in over a half of the relevant cases),
+select the given idle state instead of the candidate one.</p></li>
+</ul>
+</li>
+<li><p>By default, select the candidate state.</p></li>
+</ol>
 </div>
 <div class="section" id="representation-of-idle-states">
 <span id="idle-states-representation"></span><h2>Representation of Idle States<a class="headerlink" href="#representation-of-idle-states" title="Permalink to this headline">¶</a></h2>

@@ -60,7 +60,7 @@
             
             
               <div class="version">
-                5.13.0-rc5-mm1
+                5.13.0-rc6-mm1
               </div>
             
           
@@ -314,7 +314,7 @@ slabs allocation.</p>
 <h3>SLUB Debug output<a class="headerlink" href="#slub-debug-output" title="Permalink to this headline">¶</a></h3>
 <p>Here is a sample of slub debug output:</p>
 <div class="highlight-none notranslate"><div class="highlight"><pre><span></span>====================================================================
-BUG kmalloc-8: Redzone overwritten
+BUG kmalloc-8: Right Redzone overwritten
 --------------------------------------------------------------------
 
 INFO: 0xc90f6d28-0xc90f6d2b. First byte 0x00 instead of 0xcc
@@ -322,10 +322,10 @@ INFO: Slab 0xc528c530 flags=0x400000c3 inuse=61 fp=0xc90f6d58
 INFO: Object 0xc90f6d20 @offset=3360 fp=0xc90f6d58
 INFO: Allocated in get_modalias+0x61/0xf5 age=53 cpu=1 pid=554
 
-Bytes b4 0xc90f6d10:  00 00 00 00 00 00 00 00 5a 5a 5a 5a 5a 5a 5a 5a ........ZZZZZZZZ
-  Object 0xc90f6d20:  31 30 31 39 2e 30 30 35                         1019.005
- Redzone 0xc90f6d28:  00 cc cc cc                                     .
- Padding 0xc90f6d50:  5a 5a 5a 5a 5a 5a 5a 5a                         ZZZZZZZZ
+Bytes b4 (0xc90f6d10): 00 00 00 00 00 00 00 00 5a 5a 5a 5a 5a 5a 5a 5a ........ZZZZZZZZ
+Object   (0xc90f6d20): 31 30 31 39 2e 30 30 35                         1019.005
+Redzone  (0xc90f6d28): 00 cc cc cc                                     .
+Padding  (0xc90f6d50): 5a 5a 5a 5a 5a 5a 5a 5a                         ZZZZZZZZ
 
   [&lt;c010523d&gt;] dump_trace+0x63/0x1eb
   [&lt;c01053df&gt;] show_trace_log_lvl+0x1a/0x2f

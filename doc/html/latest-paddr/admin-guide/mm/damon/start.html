@@ -62,7 +62,7 @@
             
             
               <div class="version">
-                5.13.0-rc5-mm1
+                5.13.0-rc6-mm1
               </div>
             
           
@@ -182,8 +182,8 @@ default user space tool.  Please note that this document describes only a part
 of its features for brevity.  Please refer to <a class="reference internal" href="usage.html"><span class="doc">Detailed Usages</span></a> for more details.</p>
 <div class="section" id="tl-dr">
 <h2>TL; DR<a class="headerlink" href="#tl-dr" title="Permalink to this headline">¶</a></h2>
-<p>Follow below commands to monitor and visualize the access pattern of your
-workload.</p>
+<p>Follow the commands below to monitor and visualize the memory access pattern of
+your workload.</p>
 <div class="highlight-none notranslate"><div class="highlight"><pre><span></span># # build the kernel with CONFIG_DAMON_*=y, install it, and reboot
 # mount -t debugfs none /sys/kernel/debug/
 # git clone https://github.com/awslabs/damo
@@ -191,9 +191,9 @@ workload.</p>
 # ./damo/damo report heat --plot_ascii
 </pre></div>
 </div>
-<p>The final command draws the access heatmap of <code class="docutils literal notranslate"><span class="pre">&lt;your</span> <span class="pre">workload&gt;</span></code>, heatmap,
-which shows when (y-axis) what memory region (x-axis) is how frequently
-accessed (number).</p>
+<p>The final command draws the access heatmap of <code class="docutils literal notranslate"><span class="pre">&lt;your</span> <span class="pre">workload&gt;</span></code>.  The heatmap
+shows which memory region (x-axis) is accessed when (y-axis) and how frequently
+(number; the higher the more accesses have been observed).</p>
 <div class="highlight-none notranslate"><div class="highlight"><pre><span></span>111111111111111111111111111111111111111111111111111111110000
 111121111111111111111111111111211111111111111111111111110000
 000000000000000000000000000000000000000000000000001555552000
@@ -222,16 +222,16 @@ accessed (number).</p>
 <h3>User Space Tool<a class="headerlink" href="#user-space-tool" title="Permalink to this headline">¶</a></h3>
 <p>For the demonstration, we will use the default user space tool for DAMON,
 called DAMON Operator (DAMO).  It is available at
-<a class="reference external" href="https://github.com/awslabs/damo">https://github.com/awslabs/damo</a>.  For brevity, below examples assume you set
-<code class="docutils literal notranslate"><span class="pre">$PATH</span></code> to point it.  It’s not mandatory, though.</p>
+<a class="reference external" href="https://github.com/awslabs/damo">https://github.com/awslabs/damo</a>.  The examples below assume that <code class="docutils literal notranslate"><span class="pre">damo</span></code> is on
+your <code class="docutils literal notranslate"><span class="pre">$PATH</span></code>.  It’s not mandatory, though.</p>
 <p>Because DAMO is using the debugfs interface (refer to <a class="reference internal" href="usage.html"><span class="doc">Detailed Usages</span></a> for the
 detail) of DAMON, you should ensure debugfs is mounted.  Mount it manually as
 below:</p>
 <div class="highlight-none notranslate"><div class="highlight"><pre><span></span># mount -t debugfs none /sys/kernel/debug/
 </pre></div>
 </div>
-<p>or append below line to your <code class="docutils literal notranslate"><span class="pre">/etc/fstab</span></code> file so that your system can
-automatically mount debugfs from next booting:</p>
+<p>or append the following line to your <code class="docutils literal notranslate"><span class="pre">/etc/fstab</span></code> file so that your system
+can automatically mount debugfs upon booting:</p>
 <div class="highlight-none notranslate"><div class="highlight"><pre><span></span>debugfs /sys/kernel/debug debugfs defaults 0 0
 </pre></div>
 </div>
@@ -239,32 +239,32 @@ automatically mount debugfs from next booting:</p>
 </div>
 <div class="section" id="recording-data-access-patterns">
 <h2>Recording Data Access Patterns<a class="headerlink" href="#recording-data-access-patterns" title="Permalink to this headline">¶</a></h2>
-<p>Below commands record memory access pattern of a program and save the
-monitoring results in a file.</p>
+<p>The commands below record the memory access patterns of a program and save the
+monitoring results to a file.</p>
 <div class="highlight-none notranslate"><div class="highlight"><pre><span></span>$ git clone https://github.com/sjp38/masim
 $ cd masim; make; ./masim ./configs/zigzag.cfg &amp;
 $ sudo damo record -o damon.data $(pidof masim)
 </pre></div>
 </div>
-<p>The first two lines of the commands get an artificial memory access generator
-program and runs it in the background.  It will repeatedly access two 100 MiB
-sized memory regions one by one.  You can substitute this with your real
-workload.  The last line asks <code class="docutils literal notranslate"><span class="pre">damo</span></code> to record the access pattern in
-<code class="docutils literal notranslate"><span class="pre">damon.data</span></code> file.</p>
+<p>The first two lines of the commands download an artificial memory access
+generator program and run it in the background.  The generator will repeatedly
+access two 100 MiB sized memory regions one by one.  You can substitute this
+with your real workload.  The last line asks <code class="docutils literal notranslate"><span class="pre">damo</span></code> to record the access
+pattern in the <code class="docutils literal notranslate"><span class="pre">damon.data</span></code> file.</p>
 </div>
 <div class="section" id="visualizing-recorded-patterns">
 <h2>Visualizing Recorded Patterns<a class="headerlink" href="#visualizing-recorded-patterns" title="Permalink to this headline">¶</a></h2>
-<p>Below three commands visualize the recorded access patterns into three
-image files.</p>
+<p>The following three commands visualize the recorded access patterns and save
+the results as separate image files.</p>
 <div class="highlight-none notranslate"><div class="highlight"><pre><span></span>$ damo report heats --heatmap access_pattern_heatmap.png
 $ damo report wss --range 0 101 1 --plot wss_dist.png
 $ damo report wss --range 0 101 1 --sortby time --plot wss_chron_change.png
 </pre></div>
 </div>
 <ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">access_pattern_heatmap.png</span></code> will show the data access pattern in a
-heatmap, which shows when (x-axis) what memory region (y-axis) is how
-frequently accessed (color).</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">access_pattern_heatmap.png</span></code> will visualize the data access pattern in a
+heatmap, showing which memory region (y-axis) got accessed when (x-axis)
+and how frequently (color).</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">wss_dist.png</span></code> will show the distribution of the working set size.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">wss_chron_change.png</span></code> will show how the working set size has
 chronologically changed.</p></li>
@@ -278,19 +278,19 @@ workloads at external web pages <a class="footnote-reference brackets" href="#id
 <col style="width: 33%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td><div class="figure align-center" id="id7">
+<tr class="row-odd"><td><div class="figure align-center" id="id8">
 <img alt="the access pattern in heatmap format" src="../../../_images/damon_heatmap.png" />
-<p class="caption"><span class="caption-text">The access pattern in heatmap format.</span><a class="headerlink" href="#id7" title="Permalink to this image">¶</a></p>
-</div>
-</td>
-<td><div class="figure align-center" id="id8">
-<img alt="the distribution of working set size" src="../../../_images/damon_wss_dist.png" />
-<p class="caption"><span class="caption-text">The distribution of working set size.</span><a class="headerlink" href="#id8" title="Permalink to this image">¶</a></p>
+<p class="caption"><span class="caption-text">The access pattern in heatmap format.</span><a class="headerlink" href="#id8" title="Permalink to this image">¶</a></p>
 </div>
 </td>
 <td><div class="figure align-center" id="id9">
+<img alt="the distribution of working set size" src="../../../_images/damon_wss_dist.png" />
+<p class="caption"><span class="caption-text">The distribution of working set size.</span><a class="headerlink" href="#id9" title="Permalink to this image">¶</a></p>
+</div>
+</td>
+<td><div class="figure align-center" id="id10">
 <img alt="the chronological changes of working set size" src="../../../_images/damon_wss_change.png" />
-<p class="caption"><span class="caption-text">The chronological changes of working set size.</span><a class="headerlink" href="#id9" title="Permalink to this image">¶</a></p>
+<p class="caption"><span class="caption-text">The chronological changes of working set size.</span><a class="headerlink" href="#id10" title="Permalink to this image">¶</a></p>
 </div>
 </td>
 </tr>
@@ -308,12 +308,15 @@ $ damo schemes -c my_thp_scheme &lt;pid of your workload&gt;
 </div>
 <dl class="footnote brackets">
 <dt class="label" id="id4"><span class="brackets"><a class="fn-backref" href="#id1">1</a></span></dt>
-<dd><p><a class="reference external" href="https://damonitor.github.io/test/result/visual/latest/rec.heatmap.1.png.html">https://damonitor.github.io/test/result/visual/latest/rec.heatmap.1.png.html</a></p>
+<dd><p><a class="reference external" href="https://damonitor.github.io/doc/html/v17/admin-guide/mm/damon/start.html#visualizing-recorded-patterns">https://damonitor.github.io/doc/html/v17/admin-guide/mm/damon/start.html#visualizing-recorded-patterns</a></p>
 </dd>
 <dt class="label" id="id5"><span class="brackets"><a class="fn-backref" href="#id2">2</a></span></dt>
-<dd><p><a class="reference external" href="https://damonitor.github.io/test/result/visual/latest/rec.wss_sz.png.html">https://damonitor.github.io/test/result/visual/latest/rec.wss_sz.png.html</a></p>
+<dd><p><a class="reference external" href="https://damonitor.github.io/test/result/visual/latest/rec.heatmap.1.png.html">https://damonitor.github.io/test/result/visual/latest/rec.heatmap.1.png.html</a></p>
 </dd>
 <dt class="label" id="id6"><span class="brackets"><a class="fn-backref" href="#id3">3</a></span></dt>
+<dd><p><a class="reference external" href="https://damonitor.github.io/test/result/visual/latest/rec.wss_sz.png.html">https://damonitor.github.io/test/result/visual/latest/rec.wss_sz.png.html</a></p>
+</dd>
+<dt class="label" id="id7"><span class="brackets">4</span></dt>
 <dd><p><a class="reference external" href="https://damonitor.github.io/test/result/visual/latest/rec.wss_time.png.html">https://damonitor.github.io/test/result/visual/latest/rec.wss_time.png.html</a></p>
 </dd>
 </dl>

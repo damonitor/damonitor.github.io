@@ -60,7 +60,7 @@
             
             
               <div class="version">
-                5.13.0-rc5-mm1
+                5.13.0-rc6-mm1
               </div>
             
           
@@ -164,15 +164,10 @@ however, that this range contains small holes that are not accessible
 for the CPU. Then there could be several contiguous ranges at
 completely distinct addresses. And, don’t forget about NUMA, where
 different memory banks are attached to different CPUs.</p>
-<p>Linux abstracts this diversity using one of the three memory models:
-FLATMEM, DISCONTIGMEM and SPARSEMEM. Each architecture defines what
+<p>Linux abstracts this diversity using one of the two memory models:
+FLATMEM and SPARSEMEM. Each architecture defines what
 memory models it supports, what the default memory model is and
 whether it is possible to manually override that default.</p>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>At time of this writing, DISCONTIGMEM is considered deprecated,
-although it is still in use by several architectures.</p>
-</div>
 <p>All the memory models track the status of physical page frames using
 struct page arranged in one or more arrays.</p>
 <p>Regardless of the selected memory model, there exists one-to-one
@@ -203,37 +198,6 @@ straightforward: <cite>PFN - ARCH_PFN_OFFSET</cite> is an index to the
 <cite>mem_map</cite> array.</p>
 <p>The <cite>ARCH_PFN_OFFSET</cite> defines the first page frame number for
 systems with physical memory starting at address different from 0.</p>
-</div>
-<div class="section" id="discontigmem">
-<h2>DISCONTIGMEM<a class="headerlink" href="#discontigmem" title="Permalink to this headline">¶</a></h2>
-<p>The DISCONTIGMEM model treats the physical memory as a collection of
-<cite>nodes</cite> similarly to how Linux NUMA support does. For each node Linux
-constructs an independent memory management subsystem represented by
-<cite>struct pglist_data</cite> (or <cite>pg_data_t</cite> for short). Among other
-things, <cite>pg_data_t</cite> holds the <cite>node_mem_map</cite> array that maps
-physical pages belonging to that node. The <cite>node_start_pfn</cite> field of
-<cite>pg_data_t</cite> is the number of the first page frame belonging to that
-node.</p>
-<p>The architecture setup code should call <code class="xref c c-func docutils literal notranslate"><span class="pre">free_area_init_node()</span></code> for
-each node in the system to initialize the <cite>pg_data_t</cite> object and its
-<cite>node_mem_map</cite>.</p>
-<p>Every <cite>node_mem_map</cite> behaves exactly as FLATMEM’s <cite>mem_map</cite> -
-every physical page frame in a node has a <cite>struct page</cite> entry in the
-<cite>node_mem_map</cite> array. When DISCONTIGMEM is enabled, a portion of the
-<cite>flags</cite> field of the <cite>struct page</cite> encodes the node number of the
-node hosting that page.</p>
-<p>The conversion between a PFN and the <cite>struct page</cite> in the
-DISCONTIGMEM model became slightly more complex as it has to determine
-which node hosts the physical page and which <cite>pg_data_t</cite> object
-holds the <cite>struct page</cite>.</p>
-<p>Architectures that support DISCONTIGMEM provide <code class="xref c c-func docutils literal notranslate"><span class="pre">pfn_to_nid()</span></code>
-to convert PFN to the node number. The opposite conversion helper
-<code class="xref c c-func docutils literal notranslate"><span class="pre">page_to_nid()</span></code> is generic as it uses the node number encoded in
-page-&gt;flags.</p>
-<p>Once the node number is known, the PFN can be used to index
-appropriate <cite>node_mem_map</cite> array to access the <cite>struct page</cite> and
-the offset of the <cite>struct page</cite> from the <cite>node_mem_map</cite> plus
-<cite>node_start_pfn</cite> is the PFN of that page.</p>
 </div>
 <div class="section" id="sparsemem">
 <h2>SPARSEMEM<a class="headerlink" href="#sparsemem" title="Permalink to this headline">¶</a></h2>

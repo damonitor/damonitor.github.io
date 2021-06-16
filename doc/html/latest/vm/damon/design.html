@@ -62,7 +62,7 @@
             
             
               <div class="version">
-                5.13.0-rc5-mm1
+                5.13.0-rc6-mm1
               </div>
             
           
@@ -96,8 +96,8 @@
 <li class="toctree-l2 current"><a class="current reference internal" href="#">Design</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#configurable-layers">Configurable Layers</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#reference-implementations-of-address-space-specific-primitives">Reference Implementations of Address Space Specific Primitives</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#pte-accessed-bit-based-access-check">PTE Accessed-bit Based Access Check</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#vma-based-target-address-range-construction">VMA-based Target Address Range Construction</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pte-accessed-bit-based-access-check">PTE Accessed-bit Based Access Check</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="#address-space-independent-core-mechanisms">Address Space Independent Core Mechanisms</a><ul>
@@ -210,21 +210,6 @@ two parts:</p>
 </ol>
 <p>DAMON currently provides the implementations of the primitives for the physical
 and virtual address spaces. Below two subsections describe how those work.</p>
-<div class="section" id="pte-accessed-bit-based-access-check">
-<h3>PTE Accessed-bit Based Access Check<a class="headerlink" href="#pte-accessed-bit-based-access-check" title="Permalink to this headline">¶</a></h3>
-<p>Both of the implementations for physical and virtual address spaces use PTE
-Accessed-bit for basic access checks.  Only one difference is the way of
-finding the relevant PTE Accessed bit(s) from the address.  While the
-implementation for the virtual address walks the page table for the target task
-of the address, the implementation for the physical address walks every page
-table having a mapping to the address.  In this way, the implementations find
-and clear the bit(s) for next sampling target address and checks whether the
-bit(s) set again after one sampling period.  This could disturb other kernel
-subsystems using the Accessed bits, namely Idle page tracking and the reclaim
-logic.  To avoid such disturbances, DAMON makes it mutually exclusive with Idle
-page tracking and uses <code class="docutils literal notranslate"><span class="pre">PG_idle</span></code> and <code class="docutils literal notranslate"><span class="pre">PG_young</span></code> page flags to solve the
-conflict with the reclaim logic, as Idle page tracking does.</p>
-</div>
 <div class="section" id="vma-based-target-address-range-construction">
 <h3>VMA-based Target Address Range Construction<a class="headerlink" href="#vma-based-target-address-range-construction" title="Permalink to this headline">¶</a></h3>
 <p>This is only for the virtual address space primitives implementation.  That for
@@ -254,6 +239,21 @@ to make a reasonable trade-off.  Below shows this in detail:</p>
 &lt;stack&gt;
 </pre></div>
 </div>
+</div>
+<div class="section" id="pte-accessed-bit-based-access-check">
+<h3>PTE Accessed-bit Based Access Check<a class="headerlink" href="#pte-accessed-bit-based-access-check" title="Permalink to this headline">¶</a></h3>
+<p>Both of the implementations for physical and virtual address spaces use PTE
+Accessed-bit for basic access checks.  Only one difference is the way of
+finding the relevant PTE Accessed bit(s) from the address.  While the
+implementation for the virtual address walks the page table for the target task
+of the address, the implementation for the physical address walks every page
+table having a mapping to the address.  In this way, the implementations find
+and clear the bit(s) for next sampling target address and checks whether the
+bit(s) set again after one sampling period.  This could disturb other kernel
+subsystems using the Accessed bits, namely Idle page tracking and the reclaim
+logic.  To avoid such disturbances, DAMON makes it mutually exclusive with Idle
+page tracking and uses <code class="docutils literal notranslate"><span class="pre">PG_idle</span></code> and <code class="docutils literal notranslate"><span class="pre">PG_young</span></code> page flags to solve the
+conflict with the reclaim logic, as Idle page tracking does.</p>
 </div>
 </div>
 <div class="section" id="address-space-independent-core-mechanisms">

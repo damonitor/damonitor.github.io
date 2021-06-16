@@ -60,7 +60,7 @@
             
             
               <div class="version">
-                5.13.0-rc5-mm1
+                5.13.0-rc6-mm1
               </div>
             
           
@@ -184,8 +184,7 @@ leveraging the device DMA engine.</p>
 <li><p><a class="reference internal" href="#leverage-default-flags-and-pfn-flags-mask" id="id5">Leverage default_flags and pfn_flags_mask</a></p></li>
 <li><p><a class="reference internal" href="#represent-and-manage-device-memory-from-core-kernel-point-of-view" id="id6">Represent and manage device memory from core kernel point of view</a></p></li>
 <li><p><a class="reference internal" href="#migration-to-and-from-device-memory" id="id7">Migration to and from device memory</a></p></li>
-<li><p><a class="reference internal" href="#exclusive-access-memory" id="id8">Exclusive access memory</a></p></li>
-<li><p><a class="reference internal" href="#memory-cgroup-memcg-and-rss-accounting" id="id9">Memory cgroup (memcg) and rss accounting</a></p></li>
+<li><p><a class="reference internal" href="#memory-cgroup-memcg-and-rss-accounting" id="id8">Memory cgroup (memcg) and rss accounting</a></p></li>
 </ul>
 </div>
 <div class="section" id="problems-of-using-a-device-specific-memory-allocator">
@@ -455,7 +454,7 @@ device’s MMUs with the <code class="docutils literal notranslate"><span class=
 walks to fill in the <code class="docutils literal notranslate"><span class="pre">args-&gt;src</span></code> array with PFNs to be migrated.
 The <code class="docutils literal notranslate"><span class="pre">invalidate_range_start()</span></code> callback is passed a
 <code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">mmu_notifier_range</span></code> with the <code class="docutils literal notranslate"><span class="pre">event</span></code> field set to
-<code class="docutils literal notranslate"><span class="pre">MMU_NOTIFY_MIGRATE</span></code> and the <code class="docutils literal notranslate"><span class="pre">owner</span></code> field set to
+<code class="docutils literal notranslate"><span class="pre">MMU_NOTIFY_MIGRATE</span></code> and the <code class="docutils literal notranslate"><span class="pre">migrate_pgmap_owner</span></code> field set to
 the <code class="docutils literal notranslate"><span class="pre">args-&gt;pgmap_owner</span></code> field passed to migrate_vma_setup(). This is
 allows the device driver to skip the invalidation callback and only
 invalidate device private MMU mappings that are actually migrating.
@@ -520,23 +519,8 @@ destination <code class="docutils literal notranslate"><span class="pre">struct<
 </li>
 </ol>
 </div>
-<div class="section" id="exclusive-access-memory">
-<h2><a class="toc-backref" href="#id8">Exclusive access memory</a><a class="headerlink" href="#exclusive-access-memory" title="Permalink to this headline">¶</a></h2>
-<p>Some devices have features such as atomic PTE bits that can be used to implement
-atomic access to system memory. To support atomic operations to a shared virtual
-memory page such a device needs access to that page which is exclusive of any
-userspace access from the CPU. The <code class="docutils literal notranslate"><span class="pre">make_device_exclusive_range()</span></code> function
-can be used to make a memory range inaccessible from userspace.</p>
-<p>This replaces all mappings for pages in the given range with special swap
-entries. Any attempt to access the swap entry results in a fault which is
-resovled by replacing the entry with the original mapping. A driver gets
-notified that the mapping has been changed by MMU notifiers, after which point
-it will no longer have exclusive access to the page. Exclusive access is
-guranteed to last until the driver drops the page lock and page reference, at
-which point any CPU faults on the page may proceed as described.</p>
-</div>
 <div class="section" id="memory-cgroup-memcg-and-rss-accounting">
-<h2><a class="toc-backref" href="#id9">Memory cgroup (memcg) and rss accounting</a><a class="headerlink" href="#memory-cgroup-memcg-and-rss-accounting" title="Permalink to this headline">¶</a></h2>
+<h2><a class="toc-backref" href="#id8">Memory cgroup (memcg) and rss accounting</a><a class="headerlink" href="#memory-cgroup-memcg-and-rss-accounting" title="Permalink to this headline">¶</a></h2>
 <p>For now, device memory is accounted as any regular page in rss counters (either
 anonymous if device page is used for anonymous, file if device page is used for
 file backed page, or shmem if device page is used for shared memory). This is a
