@@ -190,15 +190,18 @@ module parameters have priority over Kconfig.</p>
 <h3>blkdev<a class="headerlink" href="#blkdev" title="Permalink to this headline">¶</a></h3>
 <p>The block device to use. Most of the time, it is a partition of block device.
 It’s required for pstore/blk. It is also used for MTD device.</p>
-<p>It accepts the following variants for block device:</p>
+<p>When pstore/blk is built as a module, “blkdev” accepts the following variants:</p>
 <ol class="arabic simple">
-<li><p>&lt;hex_major&gt;&lt;hex_minor&gt; device number in hexadecimal represents itself; no
-leading 0x, for example b302.</p></li>
 <li><p>/dev/&lt;disk_name&gt; represents the device number of disk</p></li>
 <li><p>/dev/&lt;disk_name&gt;&lt;decimal&gt; represents the device number of partition - device
 number of disk plus the partition number</p></li>
 <li><p>/dev/&lt;disk_name&gt;p&lt;decimal&gt; - same as the above; this form is used when disk
 name of partitioned disk ends with a digit.</p></li>
+</ol>
+<p>When pstore/blk is built into the kernel, “blkdev” accepts the following variants:</p>
+<ol class="arabic simple">
+<li><p>&lt;hex_major&gt;&lt;hex_minor&gt; device number in hexadecimal representation,
+with no leading 0x, for example b302.</p></li>
 <li><p>PARTUUID=00112233-4455-6677-8899-AABBCCDDEEFF represents the unique id of
 a partition if the partition table provides it. The UUID may be either an
 EFI/GPT UUID, or refer to an MSDOS partition using the format SSSSSSSS-PP,
@@ -645,44 +648,18 @@ struct <code class="sig-name descname">pstore_device_info</code><a class="header
 
 <p><strong>Definition</strong></p>
 <div class="highlight-none notranslate"><div class="highlight"><pre><span></span>struct pstore_device_info {
-  unsigned long total_size;
   unsigned int flags;
-  pstore_zone_read_op read;
-  pstore_zone_write_op write;
-  pstore_zone_erase_op erase;
-  pstore_zone_write_op panic_write;
+  struct pstore_zone_info zone;
 };
 </pre></div>
 </div>
 <p><strong>Members</strong></p>
 <dl class="simple">
-<dt><code class="docutils literal notranslate"><span class="pre">total_size</span></code></dt><dd><p>The total size in bytes pstore/blk can use. It must be greater
-than 4096 and be multiple of 4096.</p>
-</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">flags</span></code></dt><dd><p>Refer to macro starting with PSTORE_FLAGS defined in
 linux/pstore.h. It means what front-ends this device support.
 Zero means all backends for compatible.</p>
 </dd>
-<dt><code class="docutils literal notranslate"><span class="pre">read</span></code></dt><dd><p>The general read operation. Both of the function parameters
-<strong>size</strong> and <strong>offset</strong> are relative value to bock device (not the
-whole disk).
-On success, the number of bytes should be returned, others
-means error.</p>
-</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">write</span></code></dt><dd><p>The same as <strong>read</strong>, but the following error number:
--EBUSY means try to write again later.
--ENOMSG means to try next zone.</p>
-</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">erase</span></code></dt><dd><p>The general erase operation for device with special removing
-job. Both of the function parameters <strong>size</strong> and <strong>offset</strong> are
-relative value to storage.
-Return 0 on success and others on failure.</p>
-</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">panic_write</span></code></dt><dd><p>The write operation only used for panic case. It’s optional
-if you do not care panic log. The parameters are relative
-value to storage.
-On success, the number of bytes should be returned, others
-excluding -ENOMSG mean error. -ENOMSG means to try next zone.</p>
+<dt><code class="docutils literal notranslate"><span class="pre">zone</span></code></dt><dd><p>The <a class="reference internal" href="#c.pstore_zone_info" title="pstore_zone_info"><code class="xref c c-type docutils literal notranslate"><span class="pre">struct</span> <span class="pre">pstore_zone_info</span></code></a> details.</p>
 </dd>
 </dl>
 <dl class="type">
