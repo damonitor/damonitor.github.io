@@ -60,7 +60,7 @@
             
             
               <div class="version">
-                5.13.0-rc6-mm1
+                5.13.0-rc7-mm1
               </div>
             
           
@@ -188,7 +188,7 @@ write protected memory content, but each “dup” corresponds to a
 different KSM page copy of that content</p></li>
 </ul>
 <p>Internally, the regular nodes, “dups” and “chains” are represented
-using the same struct stable_node structure.</p>
+using the same <a class="reference internal" href="#c.stable_node" title="stable_node"><code class="xref c c-type docutils literal notranslate"><span class="pre">struct</span> <span class="pre">stable_node</span></code></a> structure.</p>
 <p>In addition to the stable tree, KSM uses a second data structure called the
 unstable tree: this tree holds pointers to pages which have been found to
 be “unchanged for a period of time”.  The unstable tree sorts these pages
@@ -220,7 +220,7 @@ stable trees and multiple unstable trees: one of each for each NUMA node.</p>
 tree.</p>
 <p>If a KSM page is shared between less than <code class="docutils literal notranslate"><span class="pre">max_page_sharing</span></code> VMAs,
 the node of the stable tree that represents such KSM page points to a
-list of struct rmap_item and the <code class="docutils literal notranslate"><span class="pre">page-&gt;mapping</span></code> of the
+list of <a class="reference internal" href="#c.rmap_item" title="rmap_item"><code class="xref c c-type docutils literal notranslate"><span class="pre">struct</span> <span class="pre">rmap_item</span></code></a> and the <code class="docutils literal notranslate"><span class="pre">page-&gt;mapping</span></code> of the
 KSM page points to the stable tree node.</p>
 <p>When the sharing passes this threshold, KSM adds a second dimension to
 the stable tree. The tree node becomes a “chain” that links one or
@@ -267,8 +267,8 @@ The frequency of such scans is defined by
 <div class="section" id="reference">
 <h3>Reference<a class="headerlink" href="#reference" title="Permalink to this headline">¶</a></h3>
 <dl class="type">
-<dt id="c.V4L.mm_slot">
-struct <code class="sig-name descname">mm_slot</code><a class="headerlink" href="#c.V4L.mm_slot" title="Permalink to this definition">¶</a></dt>
+<dt id="c.mm_slot">
+struct <code class="sig-name descname">mm_slot</code><a class="headerlink" href="#c.mm_slot" title="Permalink to this definition">¶</a></dt>
 <dd><p>ksm information per mm that is being scanned</p>
 </dd></dl>
 
@@ -293,8 +293,8 @@ struct <code class="sig-name descname">mm_slot</code><a class="headerlink" href=
 </dd>
 </dl>
 <dl class="type">
-<dt id="c.V4L.ksm_scan">
-struct <code class="sig-name descname">ksm_scan</code><a class="headerlink" href="#c.V4L.ksm_scan" title="Permalink to this definition">¶</a></dt>
+<dt id="c.ksm_scan">
+struct <code class="sig-name descname">ksm_scan</code><a class="headerlink" href="#c.ksm_scan" title="Permalink to this definition">¶</a></dt>
 <dd><p>cursor for scanning</p>
 </dd></dl>
 
@@ -321,8 +321,8 @@ struct <code class="sig-name descname">ksm_scan</code><a class="headerlink" href
 <p><strong>Description</strong></p>
 <p>There is only the one ksm_scan instance of this cursor structure.</p>
 <dl class="type">
-<dt id="c.V4L.stable_node">
-struct <code class="sig-name descname">stable_node</code><a class="headerlink" href="#c.V4L.stable_node" title="Permalink to this definition">¶</a></dt>
+<dt id="c.stable_node">
+struct <code class="sig-name descname">stable_node</code><a class="headerlink" href="#c.stable_node" title="Permalink to this definition">¶</a></dt>
 <dd><p>node of the stable rbtree</p>
 </dd></dl>
 
@@ -381,8 +381,8 @@ struct <code class="sig-name descname">stable_node</code><a class="headerlink" h
 </dd>
 </dl>
 <dl class="type">
-<dt id="c.V4L.rmap_item">
-struct <code class="sig-name descname">rmap_item</code><a class="headerlink" href="#c.V4L.rmap_item" title="Permalink to this definition">¶</a></dt>
+<dt id="c.rmap_item">
+struct <code class="sig-name descname">rmap_item</code><a class="headerlink" href="#c.rmap_item" title="Permalink to this definition">¶</a></dt>
 <dd><p>reverse mapping item for virtual addresses</p>
 </dd></dl>
 

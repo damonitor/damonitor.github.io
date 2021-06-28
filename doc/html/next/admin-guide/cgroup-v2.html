@@ -60,7 +60,7 @@
             
             
               <div class="version">
-                5.13.0-rc6-mm1
+                5.13.0-rc7-mm1
               </div>
             
           
@@ -1770,6 +1770,77 @@ with IO activity.  Idle periods extend the most recent window.</p>
 </dd>
 </dl>
 </div></blockquote>
+</div>
+<div class="section" id="io-priority">
+<h4>IO Priority<a class="headerlink" href="#io-priority" title="Permalink to this headline">¶</a></h4>
+<p>A single attribute controls the behavior of the I/O priority cgroup policy,
+namely the blkio.prio.class attribute. The following values are accepted for
+that attribute:</p>
+<blockquote>
+<div><dl class="simple">
+<dt>no-change</dt><dd><p>Do not modify the I/O priority class.</p>
+</dd>
+<dt>none-to-rt</dt><dd><p>For requests that do not have an I/O priority class (NONE),
+change the I/O priority class into RT. Do not modify
+the I/O priority class of other requests.</p>
+</dd>
+<dt>restrict-to-be</dt><dd><p>For requests that do not have an I/O priority class or that have I/O
+priority class RT, change it into BE. Do not modify the I/O priority
+class of requests that have priority class IDLE.</p>
+</dd>
+<dt>idle</dt><dd><p>Change the I/O priority class of all requests into IDLE, the lowest
+I/O priority class.</p>
+</dd>
+</dl>
+</div></blockquote>
+<p>The following numerical values are associated with the I/O priority policies:</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 81%" />
+<col style="width: 19%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p>no-change</p></td>
+<td><p>0</p></td>
+</tr>
+<tr class="row-even"><td><p>none-to-rt</p></td>
+<td><p>1</p></td>
+</tr>
+<tr class="row-odd"><td><p>rt-to-be</p></td>
+<td><p>2</p></td>
+</tr>
+<tr class="row-even"><td><p>all-to-idle</p></td>
+<td><p>3</p></td>
+</tr>
+</tbody>
+</table>
+<p>The numerical value that corresponds to each I/O priority class is as follows:</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 91%" />
+<col style="width: 9%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p>IOPRIO_CLASS_NONE</p></td>
+<td><p>0</p></td>
+</tr>
+<tr class="row-even"><td><p>IOPRIO_CLASS_RT (real-time)</p></td>
+<td><p>1</p></td>
+</tr>
+<tr class="row-odd"><td><p>IOPRIO_CLASS_BE (best effort)</p></td>
+<td><p>2</p></td>
+</tr>
+<tr class="row-even"><td><p>IOPRIO_CLASS_IDLE</p></td>
+<td><p>3</p></td>
+</tr>
+</tbody>
+</table>
+<p>The algorithm to set the I/O priority class for a request is as follows:</p>
+<ul class="simple">
+<li><p>Translate the I/O priority class policy into a number.</p></li>
+<li><p>Change the request I/O priority class into the maximum of the I/O priority
+class policy number and the numerical I/O priority class.</p></li>
+</ul>
 </div>
 </div>
 <div class="section" id="pid">

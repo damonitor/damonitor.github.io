@@ -60,7 +60,7 @@
             
             
               <div class="version">
-                5.13.0-rc6-mm1
+                5.13.0-rc7-mm1
               </div>
             
           
@@ -470,7 +470,7 @@ bytes respectively. Such letter suffixes can also be entirely omitted:</p>
                         the GPE dispatcher.
                         This facility can be used to prevent such uncontrolled
                         GPE floodings.
-                        Format: &lt;byte&gt;
+                        Format: &lt;byte&gt; or &lt;bitmap-list&gt;
 
         acpi_no_auto_serialize  [HW,ACPI]
                         Disable auto-serialization of AML methods
@@ -2396,7 +2396,7 @@ bytes respectively. Such letter suffixes can also be entirely omitted:</p>
                           forcing Dual Address Cycle for PCI cards supporting
                           greater than 32-bit addressing.
 
-        iommu.strict=   [ARM64] Configure TLB invalidation behaviour
+        iommu.strict=   [ARM64, X86] Configure TLB invalidation behaviour
                         Format: { &quot;0&quot; | &quot;1&quot; }
                         0 - Lazy mode.
                           Request that DMA unmap operations use deferred
@@ -2407,6 +2407,10 @@ bytes respectively. Such letter suffixes can also be entirely omitted:</p>
                         1 - Strict mode (default).
                           DMA unmap operations invalidate IOMMU hardware TLBs
                           synchronously.
+                        Note: on x86, the default behaviour depends on the
+                        equivalent driver-specific parameters, but a strict
+                        mode explicitly specified by either method takes
+                        precedence.
 
         iommu.passthrough=
                         [ARM64, X86] Configure DMA to bypass the IOMMU by default.
@@ -3981,6 +3985,12 @@ bytes respectively. Such letter suffixes can also be entirely omitted:</p>
                         CONFIG_PAGE_POISONING=y.
                         off: turn off poisoning (default)
                         on: turn on poisoning
+
+        page_reporting.page_reporting_order=
+                        [KNL] Minimal page reporting order
+                        Format: &lt;integer&gt;
+                        Adjust the minimal page reporting order. The page
+                        reporting is disabled when it exceeds (MAX_ORDER-1).
 
         panic=          [KNL] Kernel behaviour on panic: delay &lt;timeout&gt;
                         timeout &gt; 0: seconds before rebooting

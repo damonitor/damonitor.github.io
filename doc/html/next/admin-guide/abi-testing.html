@@ -60,7 +60,7 @@
             
             
               <div class="version">
-                5.13.0-rc6-mm1
+                5.13.0-rc7-mm1
               </div>
             
           
@@ -17403,30 +17403,6 @@ fuel gauge in milli Ohms.</p>
 <p>Defined on file <a class="reference internal" href="#abi-file-testing-sysfs-platform-dptf"><span class="std std-ref">sysfs-platform-dptf</span></a></p>
 <p>(RO) The no-load voltage that can be obtained from battery fuel gauge in
 milli volts.</p>
-<table class="docutils align-default" id="abi-sys-bus-platform-devices-intc1045-00-pch-fivr-switch-frequency-fivr-switching-fault-status">
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<tbody>
-<tr class="row-odd"><td><p><strong>/sys/bus/platform/devices/INTC1045:00/pch_fivr_switch_frequency/fivr_switching_fault_status</strong></p></td>
-</tr>
-</tbody>
-</table>
-<p>Defined on file <a class="reference internal" href="#abi-file-testing-sysfs-platform-dptf"><span class="std std-ref">sysfs-platform-dptf</span></a></p>
-<p>(RO) Read the FIVR switching frequency control fault status.</p>
-<table class="docutils align-default" id="abi-sys-bus-platform-devices-intc1045-00-pch-fivr-switch-frequency-fivr-switching-freq-mhz">
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<tbody>
-<tr class="row-odd"><td><p><strong>/sys/bus/platform/devices/INTC1045:00/pch_fivr_switch_frequency/fivr_switching_freq_mhz</strong></p></td>
-</tr>
-</tbody>
-</table>
-<p>Defined on file <a class="reference internal" href="#abi-file-testing-sysfs-platform-dptf"><span class="std std-ref">sysfs-platform-dptf</span></a></p>
-<p>(RO) PCH FIVR switching control frequency in the units of
-XTAL_FREQ / 128, where XTAL_FREQ is the (product specific)
-Crystal Oscillator frequency.</p>
 <table class="docutils align-default" id="abi-sys-bus-platform-devices-intc1045-00-pch-fivr-switch-frequency-freq-mhz-high-clock">
 <colgroup>
 <col style="width: 100%" />
@@ -17451,40 +17427,6 @@ when FIVR clock is 38.4MHz.</p>
 <p>Defined on file <a class="reference internal" href="#abi-file-testing-sysfs-platform-dptf"><span class="std std-ref">sysfs-platform-dptf</span></a></p>
 <p>(RW) The PCH FIVR (Fully Integrated Voltage Regulator) switching frequency in MHz,
 when FIVR clock is 19.2MHz or 24MHz.</p>
-<table class="docutils align-default" id="abi-sys-bus-platform-devices-intc1045-00-pch-fivr-switch-frequency-ssc-clock-info">
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<tbody>
-<tr class="row-odd"><td><p><strong>/sys/bus/platform/devices/INTC1045:00/pch_fivr_switch_frequency/ssc_clock_info</strong></p></td>
-</tr>
-</tbody>
-</table>
-<p>Defined on file <a class="reference internal" href="#abi-file-testing-sysfs-platform-dptf"><span class="std std-ref">sysfs-platform-dptf</span></a></p>
-<p>(RO) Presents SSC (spread spectrum clock) information for EMI
-(Electro magnetic interference) control. This is a bit mask.
-Bits    Description
-[7:0]   Sets clock spectrum spread percentage:</p>
-<blockquote>
-<div><p>0x00=0.2% , 0x3F=10%
-1 LSB = 0.1% increase in spread (for
-settings 0x01 thru 0x1C)
-1 LSB = 0.2% increase in spread (for
-settings 0x1E thru 0x3F)</p>
-</div></blockquote>
-<dl class="simple">
-<dt>[8]     When set to 1, enables spread</dt><dd><p>spectrum clock</p>
-</dd>
-<dt>[9]     0: Triangle mode. FFC frequency</dt><dd><p>walks around the Fcenter in a linear
-fashion
-1: Random walk mode. FFC frequency
-changes randomly within the SSC
-(Spread spectrum clock) range</p>
-</dd>
-<dt>[10]    0: No white noise. 1: Add white noise</dt><dd><p>to spread waveform</p>
-</dd>
-</dl>
-<p>[11]    When 1, future writes are ignored.</p>
 <table class="docutils align-default" id="abi-sys-bus-platform-devices-mlnxbf04-00-lifecycle-state">
 <colgroup>
 <col style="width: 100%" />
@@ -21193,6 +21135,54 @@ addresses assigned to the board managed by the Intel
 MAX10 BMC. This value is stored in FLASH and is mirrored
 in the MAX10 BMC register space.
 Format: “%u”.</p>
+<table class="docutils align-default" id="abi-sys-bus-spi-devices-spi-nor-jedec-id">
+<colgroup>
+<col style="width: 100%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><strong>/sys/bus/spi/devices/…/spi-nor/jedec_id</strong></p></td>
+</tr>
+</tbody>
+</table>
+<p>Defined on file <a class="reference internal" href="#abi-file-testing-sysfs-bus-spi-devices-spi-nor"><span class="std std-ref">sysfs-bus-spi-devices-spi-nor</span></a></p>
+<p>(RO) The JEDEC ID of the SPI NOR flash as reported by the
+flash device.</p>
+<table class="docutils align-default" id="abi-sys-bus-spi-devices-spi-nor-manufacturer">
+<colgroup>
+<col style="width: 100%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><strong>/sys/bus/spi/devices/…/spi-nor/manufacturer</strong></p></td>
+</tr>
+</tbody>
+</table>
+<p>Defined on file <a class="reference internal" href="#abi-file-testing-sysfs-bus-spi-devices-spi-nor"><span class="std std-ref">sysfs-bus-spi-devices-spi-nor</span></a></p>
+<p>(RO) Manufacturer of the SPI NOR flash.</p>
+<table class="docutils align-default" id="abi-sys-bus-spi-devices-spi-nor-partname">
+<colgroup>
+<col style="width: 100%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><strong>/sys/bus/spi/devices/…/spi-nor/partname</strong></p></td>
+</tr>
+</tbody>
+</table>
+<p>Defined on file <a class="reference internal" href="#abi-file-testing-sysfs-bus-spi-devices-spi-nor"><span class="std std-ref">sysfs-bus-spi-devices-spi-nor</span></a></p>
+<p>(RO) Part name of the SPI NOR flash.</p>
+<table class="docutils align-default" id="abi-sys-bus-spi-devices-spi-nor-sfdp">
+<colgroup>
+<col style="width: 100%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><strong>/sys/bus/spi/devices/…/spi-nor/sfdp</strong></p></td>
+</tr>
+</tbody>
+</table>
+<p>Defined on file <a class="reference internal" href="#abi-file-testing-sysfs-bus-spi-devices-spi-nor"><span class="std std-ref">sysfs-bus-spi-devices-spi-nor</span></a></p>
+<p>(RO) This attribute is only present if the SPI NOR flash
+device supports the “Read SFDP” command (5Ah).</p>
+<p>If present, it contains the complete SFDP (serial flash
+discoverable parameters) binary data of the flash.</p>
 <table class="docutils align-default" id="abi-sys-bus-tee-devices-optee-ta-uuid">
 <colgroup>
 <col style="width: 100%" />
@@ -45569,6 +45559,19 @@ cat /sys/kernel/debug/habanalabs/hl0/mmu_error</p>
 <p>Defined on file <a class="reference internal" href="#abi-file-testing-debugfs-driver-habanalabs"><span class="std std-ref">debugfs-driver-habanalabs</span></a></p>
 <p>Sets the PCI power state. Valid values are “1” for D0 and “2”
 for D3Hot</p>
+<table class="docutils align-default" id="abi-sys-kernel-debug-habanalabs-hl-n-skip-reset-on-timeout">
+<colgroup>
+<col style="width: 100%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><strong>/sys/kernel/debug/habanalabs/hl&lt;n&gt;/skip_reset_on_timeout</strong></p></td>
+</tr>
+</tbody>
+</table>
+<p>Defined on file <a class="reference internal" href="#abi-file-testing-debugfs-driver-habanalabs"><span class="std std-ref">debugfs-driver-habanalabs</span></a></p>
+<p>Sets the skip reset on timeout option for the device. Value of
+“0” means device will be reset in case some CS has timed out,
+otherwise it will not be reset.</p>
 <table class="docutils align-default" id="abi-sys-kernel-debug-habanalabs-hl-n-stop-on-err">
 <colgroup>
 <col style="width: 100%" />
@@ -49433,6 +49436,7 @@ modification.</p>
 <li><p><a class="reference internal" href="#abi-sys-kernel-debug-habanalabs-hl-n-mmu"><span class="std std-ref">/sys/kernel/debug/habanalabs/hl&lt;n&gt;/mmu</span></a></p></li>
 <li><p><a class="reference internal" href="#abi-sys-kernel-debug-habanalabs-hl-n-mmu-error"><span class="std std-ref">/sys/kernel/debug/habanalabs/hl&lt;n&gt;/mmu_error</span></a></p></li>
 <li><p><a class="reference internal" href="#abi-sys-kernel-debug-habanalabs-hl-n-set-power-state"><span class="std std-ref">/sys/kernel/debug/habanalabs/hl&lt;n&gt;/set_power_state</span></a></p></li>
+<li><p><a class="reference internal" href="#abi-sys-kernel-debug-habanalabs-hl-n-skip-reset-on-timeout"><span class="std std-ref">/sys/kernel/debug/habanalabs/hl&lt;n&gt;/skip_reset_on_timeout</span></a></p></li>
 <li><p><a class="reference internal" href="#abi-sys-kernel-debug-habanalabs-hl-n-stop-on-err"><span class="std std-ref">/sys/kernel/debug/habanalabs/hl&lt;n&gt;/stop_on_err</span></a></p></li>
 <li><p><a class="reference internal" href="#abi-sys-kernel-debug-habanalabs-hl-n-userptr"><span class="std std-ref">/sys/kernel/debug/habanalabs/hl&lt;n&gt;/userptr</span></a></p></li>
 <li><p><a class="reference internal" href="#abi-sys-kernel-debug-habanalabs-hl-n-vm"><span class="std std-ref">/sys/kernel/debug/habanalabs/hl&lt;n&gt;/vm</span></a></p></li>
@@ -51906,6 +51910,16 @@ saw any problems).</p>
 <li><p><a class="reference internal" href="#abi-sys-bus-soundwire-devices-sdw-dev-properties-mipi-revision"><span class="std std-ref">/sys/bus/soundwire/devices/sdw:…/dev-properties/mipi_revision</span></a></p></li>
 <li><p><a class="reference internal" href="#abi-sys-bus-soundwire-devices-sdw-dp0-max-word"><span class="std std-ref">/sys/bus/soundwire/devices/sdw:…/dp0/max_word</span></a></p></li>
 <li><p><a class="reference internal" href="#abi-sys-bus-soundwire-devices-sdw-dpn-src-max-word"><span class="std std-ref">/sys/bus/soundwire/devices/sdw:…/dpN_src/max_word</span></a></p></li>
+</ul>
+</div>
+<div class="section" id="file-home-ant-amazon-com-sjpark-linux-testing-sysfs-bus-spi-devices-spi-nor">
+<span id="abi-file-testing-sysfs-bus-spi-devices-spi-nor"></span><h2>File /home/ANT.AMAZON.COM/sjpark/linux/testing/sysfs-bus-spi-devices-spi-nor<a class="headerlink" href="#file-home-ant-amazon-com-sjpark-linux-testing-sysfs-bus-spi-devices-spi-nor" title="Permalink to this headline">¶</a></h2>
+<p>Has the following ABI:</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="#abi-sys-bus-spi-devices-spi-nor-jedec-id"><span class="std std-ref">/sys/bus/spi/devices/…/spi-nor/jedec_id</span></a></p></li>
+<li><p><a class="reference internal" href="#abi-sys-bus-spi-devices-spi-nor-manufacturer"><span class="std std-ref">/sys/bus/spi/devices/…/spi-nor/manufacturer</span></a></p></li>
+<li><p><a class="reference internal" href="#abi-sys-bus-spi-devices-spi-nor-partname"><span class="std std-ref">/sys/bus/spi/devices/…/spi-nor/partname</span></a></p></li>
+<li><p><a class="reference internal" href="#abi-sys-bus-spi-devices-spi-nor-sfdp"><span class="std std-ref">/sys/bus/spi/devices/…/spi-nor/sfdp</span></a></p></li>
 </ul>
 </div>
 <div class="section" id="file-home-ant-amazon-com-sjpark-linux-testing-sysfs-bus-thunderbolt">
@@ -54930,9 +54944,6 @@ sysfs: (&lt;devid&gt; is in the format major:minor)</p>
 <li><p><a class="reference internal" href="#abi-sys-bus-platform-devices-int3532-00-dptf-battery-current-discharge-capbility-ma"><span class="std std-ref">/sys/bus/platform/devices/INT3532:00/dptf_battery/current_discharge_capbility_ma</span></a></p></li>
 <li><p><a class="reference internal" href="#abi-sys-bus-platform-devices-intc1045-00-pch-fivr-switch-frequency-freq-mhz-low-clock"><span class="std std-ref">/sys/bus/platform/devices/INTC1045:00/pch_fivr_switch_frequency/freq_mhz_low_clock</span></a></p></li>
 <li><p><a class="reference internal" href="#abi-sys-bus-platform-devices-intc1045-00-pch-fivr-switch-frequency-freq-mhz-high-clock"><span class="std std-ref">/sys/bus/platform/devices/INTC1045:00/pch_fivr_switch_frequency/freq_mhz_high_clock</span></a></p></li>
-<li><p><a class="reference internal" href="#abi-sys-bus-platform-devices-intc1045-00-pch-fivr-switch-frequency-fivr-switching-freq-mhz"><span class="std std-ref">/sys/bus/platform/devices/INTC1045:00/pch_fivr_switch_frequency/fivr_switching_freq_mhz</span></a></p></li>
-<li><p><a class="reference internal" href="#abi-sys-bus-platform-devices-intc1045-00-pch-fivr-switch-frequency-fivr-switching-fault-status"><span class="std std-ref">/sys/bus/platform/devices/INTC1045:00/pch_fivr_switch_frequency/fivr_switching_fault_status</span></a></p></li>
-<li><p><a class="reference internal" href="#abi-sys-bus-platform-devices-intc1045-00-pch-fivr-switch-frequency-ssc-clock-info"><span class="std std-ref">/sys/bus/platform/devices/INTC1045:00/pch_fivr_switch_frequency/ssc_clock_info</span></a></p></li>
 </ul>
 </div>
 <div class="section" id="file-home-ant-amazon-com-sjpark-linux-testing-sysfs-platform-eeepc-laptop">
