@@ -98,6 +98,9 @@
 <li class="toctree-l3"><a class="reference internal" href="#interface-module-parameters">Interface: Module Parameters</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#enabled">enabled</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#min-age">min_age</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#quota-ms">quota_ms</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#quota-sz">quota_sz</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#quota-reset-interval-ms">quota_reset_interval_ms</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#limit-sz">limit_sz</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#limit-ms">limit_ms</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#wmarks-interval">wmarks_interval</a></li>
@@ -246,6 +249,33 @@ condition.  Refer to below descriptions for the watermarks parameter for this.</
 <p>Time threshold for cold memory regions identification in microseconds.</p>
 <p>If a memory region is not accessed for this or longer time, DAMON_RECLAIM
 identifies the region as cold, and reclaims it.</p>
+</div>
+<div class="section" id="quota-ms">
+<h3>quota_ms<a class="headerlink" href="#quota-ms" title="Permalink to this headline">¶</a></h3>
+<p>Limit of time for the reclamation in milliseconds.</p>
+<p>DAMON_RECLAIM tries to use only up to this time within a time window
+(quota_reset_interval_ms) for trying reclamation of cold pages.  This can be
+used for limiting CPU consumption of DAMON_RECLAIM.  If the value is zero, the
+limit is disabled.</p>
+<p>100 ms by default.</p>
+</div>
+<div class="section" id="quota-sz">
+<h3>quota_sz<a class="headerlink" href="#quota-sz" title="Permalink to this headline">¶</a></h3>
+<p>Limit of size of memory for the reclamation in bytes.</p>
+<p>DAMON_RECLAIM charges amount of memory which it tried to reclaim within a time
+window (quota_reset_interval_ms) and makes no more than this limit is tried.
+This can be used for limiting consumption of CPU and IO.  If this value is
+zero, the limit is disabled.</p>
+<p>1 GiB by default.</p>
+</div>
+<div class="section" id="quota-reset-interval-ms">
+<h3>quota_reset_interval_ms<a class="headerlink" href="#quota-reset-interval-ms" title="Permalink to this headline">¶</a></h3>
+<p>The time/size quota charge reset interval in milliseconds.</p>
+<p>The charget reset interval for the quota of time (quota_ms) and size
+(quota_sz).  That is, DAMON_RECLAIM does not try reclamation for more than
+quota_ms milliseconds or quota_sz bytes within quota_reset_interval_ms
+milliseconds.</p>
+<p>1 second by default.</p>
 </div>
 <div class="section" id="limit-sz">
 <h3>limit_sz<a class="headerlink" href="#limit-sz" title="Permalink to this headline">¶</a></h3>
