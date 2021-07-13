@@ -60,7 +60,7 @@
             
             
               <div class="version">
-                5.13.0-rc7-mm1
+                5.14.0-rc1
               </div>
             
           
@@ -233,11 +233,34 @@ foo += qux
 </pre></div>
 </div>
 <p>In this case, the key <code class="docutils literal notranslate"><span class="pre">foo</span></code> has <code class="docutils literal notranslate"><span class="pre">bar</span></code>, <code class="docutils literal notranslate"><span class="pre">baz</span></code> and <code class="docutils literal notranslate"><span class="pre">qux</span></code>.</p>
-<p>However, a sub-key and a value can not co-exist under a parent key.
-For example, following config is NOT allowed.:</p>
+<p>Moreover, sub-keys and a value can coexist under a parent key.
+For example, following config is allowed.:</p>
 <div class="highlight-none notranslate"><div class="highlight"><pre><span></span>foo = value1
-foo.bar = value2 # !ERROR! subkey &quot;bar&quot; and value &quot;value1&quot; can NOT co-exist
-foo.bar := value2 # !ERROR! even with the override operator, this is NOT allowed.
+foo.bar = value2
+foo := value3 # This will update foo&#39;s value.
+</pre></div>
+</div>
+<p>Note, since there is no syntax to put a raw value directly under a
+structured key, you have to define it outside of the brace. For example:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>foo {
+    bar = value1
+    bar {
+        baz = value2
+        qux = value3
+    }
+}
+</pre></div>
+</div>
+<p>Also, the order of the value node under a key is fixed. If there
+are a value and subkeys, the value is always the first child node
+of the key. Thus if user specifies subkeys first, e.g.:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>foo.bar = value1
+foo = value2
+</pre></div>
+</div>
+<p>In the program (and /proc/bootconfig), it will be shown as below:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>foo = value2
+foo.bar = value1
 </pre></div>
 </div>
 </div>
@@ -362,6 +385,23 @@ read-only. All data and keys must be copied if you need to modify it.</p>
 <div class="section" id="functions-and-structures">
 <h2>Functions and structures<a class="headerlink" href="#functions-and-structures" title="Permalink to this headline">¶</a></h2>
 <dl class="function">
+<dt id="c.xbc_calc_checksum">
+u32 <code class="sig-name descname">xbc_calc_checksum</code><span class="sig-paren">(</span>void<em> *data</em>, u32<em> size</em><span class="sig-paren">)</span><a class="headerlink" href="#c.xbc_calc_checksum" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculate checksum of bootconfig</p>
+</dd></dl>
+
+<p><strong>Parameters</strong></p>
+<dl class="simple">
+<dt><code class="docutils literal notranslate"><span class="pre">void</span> <span class="pre">*data</span></code></dt><dd><p>Bootconfig data.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">u32</span> <span class="pre">size</span></code></dt><dd><p>The size of the bootconfig data.</p>
+</dd>
+</dl>
+<p><strong>Description</strong></p>
+<p>Calculate the checksum value of the bootconfig data.
+The checksum will be used with the BOOTCONFIG_MAGIC and the size for
+embedding the bootconfig in the initrd image.</p>
+<dl class="function">
 <dt id="c.xbc_node_is_value">
 bool <code class="sig-name descname">xbc_node_is_value</code><span class="sig-paren">(</span>struct xbc_node<em> *node</em><span class="sig-paren">)</span><a class="headerlink" href="#c.xbc_node_is_value" title="Permalink to this definition">¶</a></dt>
 <dd><p>Test the node is a value node</p>
@@ -413,7 +453,9 @@ bool <code class="sig-name descname">xbc_node_is_leaf</code><span class="sig-par
 </dl>
 <p><strong>Description</strong></p>
 <p>Test the <strong>node</strong> is a leaf key node which is a key node and has a value node
-or no child. Returns true if it is a leaf node, or false if not.</p>
+or no child. Returns true if it is a leaf node, or false if not.
+Note that the leaf node can have subkey nodes in addition to the
+value node.</p>
 <dl class="function">
 <dt id="c.xbc_find_value">
 const char * <code class="sig-name descname">xbc_find_value</code><span class="sig-paren">(</span>const char<em> *key</em>, struct xbc_node<em> **vnode</em><span class="sig-paren">)</span><a class="headerlink" href="#c.xbc_find_value" title="Permalink to this definition">¶</a></dt>
@@ -447,6 +489,20 @@ struct xbc_node * <code class="sig-name descname">xbc_find_node</code><span clas
 <p>Search a (key) node whose key matches <strong>key</strong> from whole of XBC tree and
 return the node if found. If not found, returns NULL.</p>
 <dl class="function">
+<dt id="c.xbc_node_get_subkey">
+struct xbc_node * <code class="sig-name descname">xbc_node_get_subkey</code><span class="sig-paren">(</span>struct xbc_node<em> *node</em><span class="sig-paren">)</span><a class="headerlink" href="#c.xbc_node_get_subkey" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the first subkey node if exists</p>
+</dd></dl>
+
+<p><strong>Parameters</strong></p>
+<dl class="simple">
+<dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">xbc_node</span> <span class="pre">*node</span></code></dt><dd><p>Parent node</p>
+</dd>
+</dl>
+<p><strong>Description</strong></p>
+<p>Return the first subkey node of the <strong>node</strong>. If the <strong>node</strong> has no child
+or only value node, this will return NULL.</p>
+<dl class="function">
 <dt id="c.xbc_array_for_each_value">
 <code class="sig-name descname">xbc_array_for_each_value</code><span class="sig-paren">(</span><em>anode</em>, <em>value</em><span class="sig-paren">)</span><a class="headerlink" href="#c.xbc_array_for_each_value" title="Permalink to this definition">¶</a></dt>
 <dd><p>Iterate value nodes on an array</p>
@@ -477,7 +533,24 @@ process each array entry node.</p>
 </dd>
 </dl>
 <p><strong>Description</strong></p>
-<p>Iterate child nodes of <strong>parent</strong>. Each child nodes are stored to <strong>child</strong>.</p>
+<p>Iterate child nodes of <strong>parent</strong>. Each child nodes are stored to <strong>child</strong>.
+The <strong>child</strong> can be mixture of a value node and subkey nodes.</p>
+<dl class="function">
+<dt id="c.xbc_node_for_each_subkey">
+<code class="sig-name descname">xbc_node_for_each_subkey</code><span class="sig-paren">(</span><em>parent</em>, <em>child</em><span class="sig-paren">)</span><a class="headerlink" href="#c.xbc_node_for_each_subkey" title="Permalink to this definition">¶</a></dt>
+<dd><p>Iterate child subkey nodes</p>
+</dd></dl>
+
+<p><strong>Parameters</strong></p>
+<dl class="simple">
+<dt><code class="docutils literal notranslate"><span class="pre">parent</span></code></dt><dd><p>An XBC node.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">child</span></code></dt><dd><p>Iterated XBC node.</p>
+</dd>
+</dl>
+<p><strong>Description</strong></p>
+<p>Iterate subkey nodes of <strong>parent</strong>. Each child nodes are stored to <strong>child</strong>.
+The <strong>child</strong> is only the subkey node.</p>
 <dl class="function">
 <dt id="c.xbc_node_for_each_array_value">
 <code class="sig-name descname">xbc_node_for_each_array_value</code><span class="sig-paren">(</span><em>node</em>, <em>key</em>, <em>anode</em>, <em>value</em><span class="sig-paren">)</span><a class="headerlink" href="#c.xbc_node_for_each_array_value" title="Permalink to this definition">¶</a></dt>

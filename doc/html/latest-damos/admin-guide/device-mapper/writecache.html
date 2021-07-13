@@ -60,7 +60,7 @@
             
             
               <div class="version">
-                5.13.0-rc7-mm1
+                5.14.0-rc1
               </div>
             
           
@@ -164,13 +164,13 @@ in normal RAM.</p>
 first sector should contain valid superblock from previous invocation.</p>
 <p>Constructor parameters:</p>
 <ol class="arabic">
-<li><p>type of the cache device - “p” or “s”</p>
-<blockquote>
-<div><ul class="simple">
+<li><dl class="simple">
+<dt>type of the cache device - “p” or “s”</dt><dd><ul class="simple">
 <li><p>p - persistent memory</p></li>
 <li><p>s - SSD</p></li>
 </ul>
-</div></blockquote>
+</dd>
+</dl>
 </li>
 <li><p>the underlying device that will be cached</p></li>
 <li><p>the cache device</p></li>
@@ -212,6 +212,27 @@ afterwards</p>
 with nofua. The user should test it</p></li>
 </ul>
 </dd>
+<dt>cleaner</dt><dd><p>when this option is activated (either in the constructor
+arguments or by a message), the cache will not promote
+new writes (however, writes to already cached blocks are
+promoted, to avoid data corruption due to misordered
+writes) and it will gradually writeback any cached
+data. The userspace can then monitor the cleaning
+process with “dmsetup status”. When the number of cached
+blocks drops to zero, userspace can unload the
+dm-writecache target and replace it with dm-linear or
+other targets.</p>
+</dd>
+<dt>max_age n</dt><dd><p>specifies the maximum age of a block in milliseconds. If
+a block is stored in the cache for too long, it will be
+written to the underlying device and cleaned up.</p>
+</dd>
+<dt>metadata_only</dt><dd><p>only metadata is promoted to the cache. This option
+improves performance for heavier REQ_META workloads.</p>
+</dd>
+<dt>pause_writeback n       (default: 3000)</dt><dd><p>pause writeback if there was some write I/O redirected to
+the origin volume in the last n milliseconds</p>
+</dd>
 </dl>
 </div></blockquote>
 </li>
@@ -239,6 +260,8 @@ to the underlying device</p></li>
 target</p></li>
 <li><p>the cache device is now inactive and it can be deleted</p></li>
 </ol>
+</dd>
+<dt>cleaner</dt><dd><p>See above “cleaner” constructor documentation.</p>
 </dd>
 </dl>
 </dd>

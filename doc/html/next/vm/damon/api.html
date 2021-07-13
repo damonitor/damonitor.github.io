@@ -61,7 +61,7 @@
             
             
               <div class="version">
-                5.13.0-rc7-mm1
+                5.14.0-rc1
               </div>
             
           
@@ -315,21 +315,21 @@ struct <code class="sig-name descname">damos_quota</code><a class="headerlink" h
 </dd>
 </dl>
 <p><strong>Description</strong></p>
-<p>To avoid consuming too much CPU time or IO resource for applying the <a class="reference internal" href="#c.damos" title="damos"><code class="xref c c-type docutils literal notranslate"><span class="pre">struct</span>
-<span class="pre">damos</span></code></a>-&gt;action to large memory regions, DAMON allows users to set a time
-and/or size quota.  The quotas can be set by writing non-zero values to <code class="xref c c-type docutils literal notranslate"><span class="pre">ms</span></code>
-and <code class="xref c c-type docutils literal notranslate"><span class="pre">sz</span></code>, respectively.  If the time quota is set, DAMON tries to use only up
-to <code class="xref c c-type docutils literal notranslate"><span class="pre">ms</span></code> milliseconds within <code class="xref c c-type docutils literal notranslate"><span class="pre">reset_interval</span></code> for applying the action.  If the
+<p>To avoid consuming too much CPU time or IO resources for applying the
+<a class="reference internal" href="#c.damos" title="damos"><code class="xref c c-type docutils literal notranslate"><span class="pre">struct</span> <span class="pre">damos</span></code></a>-&gt;action to large memory, DAMON allows users to set time and/or
+size quotas.  The quotas can be set by writing non-zero values to <code class="xref c c-type docutils literal notranslate"><span class="pre">ms</span></code> and
+<code class="xref c c-type docutils literal notranslate"><span class="pre">sz</span></code>, respectively.  If the time quota is set, DAMON tries to use only up to
+<code class="xref c c-type docutils literal notranslate"><span class="pre">ms</span></code> milliseconds within <code class="xref c c-type docutils literal notranslate"><span class="pre">reset_interval</span></code> for applying the action.  If the
 size quota is set, DAMON tries to apply the action only up to <code class="xref c c-type docutils literal notranslate"><span class="pre">sz</span></code> bytes
 within <code class="xref c c-type docutils literal notranslate"><span class="pre">reset_interval</span></code>.</p>
-<p>Internally, the time limit is transformed to a size limit using estimated
-throughput of the action of the scheme.  DAMON then compares it against <code class="xref c c-type docutils literal notranslate"><span class="pre">sz</span></code>
-and use smaller one as the effective limit.</p>
+<p>Internally, the time quota is transformed to a size quota using estimated
+throughput of the scheme’s action.  DAMON then compares it against <code class="xref c c-type docutils literal notranslate"><span class="pre">sz</span></code> and
+uses smaller one as the effective quota.</p>
 <p>For selecting regions within the quota, DAMON prioritizes current scheme’s
 target memory regions using the <code class="xref c c-type docutils literal notranslate"><span class="pre">struct</span> <span class="pre">damon_primitive</span></code>-&gt;get_scheme_score.
 You could customize the prioritization logic by setting <code class="xref c c-type docutils literal notranslate"><span class="pre">weight_sz</span></code>,
-<code class="xref c c-type docutils literal notranslate"><span class="pre">weight_nr_accesses</span></code>, and <code class="xref c c-type docutils literal notranslate"><span class="pre">weight_age</span></code>, because primitives are encouraged to
-respect those.</p>
+<code class="xref c c-type docutils literal notranslate"><span class="pre">weight_nr_accesses</span></code>, and <code class="xref c c-type docutils literal notranslate"><span class="pre">weight_age</span></code>, because monitoring primitives are
+encouraged to respect those.</p>
 <dl class="type">
 <dt id="c.damos_wmark_metric">
 enum <code class="sig-name descname">damos_wmark_metric</code><a class="headerlink" href="#c.damos_wmark_metric" title="Permalink to this definition">¶</a></dt>
@@ -434,7 +434,8 @@ struct <code class="sig-name descname">damos</code><a class="headerlink" href="#
 <p>For each aggregation interval, DAMON finds regions which fit in the
 condition (<code class="xref c c-type docutils literal notranslate"><span class="pre">min_sz_region</span></code>, <code class="xref c c-type docutils literal notranslate"><span class="pre">max_sz_region</span></code>, <code class="xref c c-type docutils literal notranslate"><span class="pre">min_nr_accesses</span></code>,
 <code class="xref c c-type docutils literal notranslate"><span class="pre">max_nr_accesses</span></code>, <code class="xref c c-type docutils literal notranslate"><span class="pre">min_age_region</span></code>, <code class="xref c c-type docutils literal notranslate"><span class="pre">max_age_region</span></code>) and applies <code class="xref c c-type docutils literal notranslate"><span class="pre">action</span></code> to
-those.  To avoid consuming too much CPU for the <code class="xref c c-type docutils literal notranslate"><span class="pre">action</span></code>, <code class="xref c c-type docutils literal notranslate"><span class="pre">quota</span></code> is used.</p>
+those.  To avoid consuming too much CPU time or IO resources for the
+<code class="xref c c-type docutils literal notranslate"><span class="pre">action</span></code>, <code class="xref c c-type docutils literal notranslate"><span class="pre">quota</span></code> is used.</p>
 <p>To do the work only when needed, schemes can be activated for specific
 system situations using <code class="xref c c-type docutils literal notranslate"><span class="pre">wmarks</span></code>.  If all schemes that registered to the
 monitoring context are inactive, DAMON stops monitoring either, and just
