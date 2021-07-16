@@ -645,7 +645,7 @@ cec.h
     \#define CEC\_OP\_REC\_SEQ\_WEDNESDAY                        0x08
     \#define CEC\_OP\_REC\_SEQ\_THURSDAY                         0x10
     \#define CEC\_OP\_REC\_SEQ\_FRIDAY                           0x20
-    \#define CEC\_OP\_REC\_SEQ\_SATERDAY                         0x40
+    \#define CEC\_OP\_REC\_SEQ\_SATURDAY                         0x40
     \#define CEC\_OP\_REC\_SEQ\_ONCE\_ONLY                        0x00
 
     \#define CEC\_MSG\_CLEAR\_DIGITAL\_TIMER                     0x99

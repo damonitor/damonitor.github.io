@@ -62,7 +62,7 @@
             
             
               <div class="version">
-                5.13.0-rc7-mm1
+                5.14.0-rc1
               </div>
             
           
@@ -101,8 +101,6 @@
 <li class="toctree-l4"><a class="reference internal" href="#quota-ms">quota_ms</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#quota-sz">quota_sz</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#quota-reset-interval-ms">quota_reset_interval_ms</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#limit-sz">limit_sz</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#limit-ms">limit_ms</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#wmarks-interval">wmarks_interval</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#wmarks-high">wmarks_high</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#wmarks-mid">wmarks_mid</a></li>
@@ -277,17 +275,6 @@ quota_ms milliseconds or quota_sz bytes within quota_reset_interval_ms
 milliseconds.</p>
 <p>1 second by default.</p>
 </div>
-<div class="section" id="limit-sz">
-<h3>limit_sz<a class="headerlink" href="#limit-sz" title="Permalink to this headline">¶</a></h3>
-<p>Maximum bytes of memory that can be reclaimed in a charging window.</p>
-<p>DAMON_RECLAIM counts amount of memory which has reclaimed within current
-charging time window and avoids reclaiming more than this limit in current time
-window.  This could be useful for limiting CPU consumption of DAMON_RECLAIM.</p>
-</div>
-<div class="section" id="limit-ms">
-<h3>limit_ms<a class="headerlink" href="#limit-ms" title="Permalink to this headline">¶</a></h3>
-<p>The reclaimed memory charging window in milliseconds.</p>
-</div>
 <div class="section" id="wmarks-interval">
 <h3>wmarks_interval<a class="headerlink" href="#wmarks-interval" title="Permalink to this headline">¶</a></h3>
 <p>Minimal time to wait before checking the watermarks, when DAMON_RECLAIM is
@@ -377,8 +364,8 @@ do nothing again, so that we can fall back to the LRU-list based page
 granularity reclamation.</p>
 <div class="highlight-none notranslate"><div class="highlight"><pre><span></span># cd /sys/modules/damon_reclaim/parameters
 # echo 30000000 &gt; min_age
-# echo $((1 * 1024 * 1024 * 1024)) &gt; limit_sz
-# echo 1000 &gt; limit_ms
+# echo $((1 * 1024 * 1024 * 1024)) &gt; quota_sz
+# echo 1000 &gt; quota_reset_interval_ms
 # echo 500 &gt; wmarks_high
 # echo 400 &gt; wmarks_mid
 # echo 200 &gt; wmarks_low
