@@ -1,0 +1,547 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <title>Detailed Usages &mdash; The Linux Kernel  documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/theme_overrides.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/theme_rtd_colors.css" type="text/css" />
+
+  
+  
+
+  
+  
+
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+        <script src="../../../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+    <link rel="next" title="DAMON-based Reclamation" href="reclaim.html" />
+    <link rel="prev" title="Optimization Guide" href="guide.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home"> The Linux Kernel
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                5.16.0-rc7-mm1-damon
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Monitoring Data Accesses</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="start.html">Getting Started</a></li>
+<li class="toctree-l2"><a class="reference internal" href="guide.html">Optimization Guide</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Detailed Usages</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#debugfs-interface">debugfs Interface</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#attributes">Attributes</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#target-ids">Target IDs</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#initial-monitoring-target-regions">Initial Monitoring Target Regions</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#schemes">Schemes</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#turning-on-off">Turning On/Off</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#monitoring-thread-pid">Monitoring Thread PID</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#using-multiple-monitoring-threads">Using Multiple Monitoring Threads</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#tracepoint-for-monitoring-results">Tracepoint for Monitoring Results</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="reclaim.html">DAMON-based Reclamation</a></li>
+</ul>
+</li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../vm/damon/index.html">DAMON: Data Access MONitor</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">The Linux Kernel</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="index.html">Monitoring Data Accesses</a> &raquo;</li>
+        
+      <li>Detailed Usages</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            <a href="../../../_sources/admin-guide/mm/damon/usage.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="detailed-usages">
+<h1>Detailed Usages<a class="headerlink" href="#detailed-usages" title="Permalink to this headline">¶</a></h1>
+<p>DAMON provides below three interfaces for different users.</p>
+<ul class="simple">
+<li><p><em>DAMON user space tool.</em>
+<a class="reference external" href="https://github.com/awslabs/damo">This</a> is for privileged people such as
+system administrators who want a just-working human-friendly interface.
+Using this, users can use the DAMON’s major features in a human-friendly way.
+It may not be highly tuned for special cases, though.  It supports both
+virtual and physical address spaces monitoring.  For more detail, please
+refer to its <a class="reference external" href="https://github.com/awslabs/damo/blob/next/USAGE.md">usage document</a>.</p></li>
+<li><p><em>debugfs interface.</em>
+<a class="reference internal" href="#debugfs-interface"><span class="std std-ref">This</span></a> is for privileged user space programmers who
+want more optimized use of DAMON.  Using this, users can use DAMON’s major
+features by reading from and writing to special debugfs files.  Therefore,
+you can write and use your personalized DAMON debugfs wrapper programs that
+reads/writes the debugfs files instead of you.  The <a class="reference external" href="https://github.com/awslabs/damo">DAMON user space tool</a> is one example of such programs.  It
+supports both virtual and physical address spaces monitoring.  Note that this
+interface provides only simple <a class="reference internal" href="#damos-stats"><span class="std std-ref">statistics</span></a> for the
+monitoring results.  For detailed monitoring results, DAMON provides a
+<a class="reference internal" href="#tracepoint"><span class="std std-ref">tracepoint</span></a>.</p></li>
+<li><p><em>Kernel Space Programming Interface.</em>
+<a class="reference internal" href="../../../vm/damon/api.html"><span class="doc">This</span></a> is for kernel space programmers.  Using this,
+users can utilize every feature of DAMON most flexibly and efficiently by
+writing kernel space DAMON application programs for you.  You can even extend
+DAMON for various address spaces.  For detail, please refer to the interface
+<a class="reference internal" href="../../../vm/damon/api.html"><span class="doc">document</span></a>.</p></li>
+</ul>
+<div class="section" id="debugfs-interface">
+<span id="id1"></span><h2>debugfs Interface<a class="headerlink" href="#debugfs-interface" title="Permalink to this headline">¶</a></h2>
+<p>DAMON exports eight files, <code class="docutils literal notranslate"><span class="pre">attrs</span></code>, <code class="docutils literal notranslate"><span class="pre">target_ids</span></code>, <code class="docutils literal notranslate"><span class="pre">init_regions</span></code>,
+<code class="docutils literal notranslate"><span class="pre">schemes</span></code>, <code class="docutils literal notranslate"><span class="pre">monitor_on</span></code>, <code class="docutils literal notranslate"><span class="pre">kdamond_pid</span></code>, <code class="docutils literal notranslate"><span class="pre">mk_contexts</span></code> and
+<code class="docutils literal notranslate"><span class="pre">rm_contexts</span></code> under its debugfs directory, <code class="docutils literal notranslate"><span class="pre">&lt;debugfs&gt;/damon/</span></code>.</p>
+<div class="section" id="attributes">
+<h3>Attributes<a class="headerlink" href="#attributes" title="Permalink to this headline">¶</a></h3>
+<p>Users can get and set the <code class="docutils literal notranslate"><span class="pre">sampling</span> <span class="pre">interval</span></code>, <code class="docutils literal notranslate"><span class="pre">aggregation</span> <span class="pre">interval</span></code>,
+<code class="docutils literal notranslate"><span class="pre">regions</span> <span class="pre">update</span> <span class="pre">interval</span></code>, and min/max number of monitoring target regions by
+reading from and writing to the <code class="docutils literal notranslate"><span class="pre">attrs</span></code> file.  To know about the monitoring
+attributes in detail, please refer to the <a class="reference internal" href="../../../vm/damon/design.html"><span class="doc">Design</span></a>.  For
+example, below commands set those values to 5 ms, 100 ms, 1,000 ms, 10 and
+1000, and then check it again:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span># cd &lt;debugfs&gt;/damon
+# echo 5000 100000 1000000 10 1000 &gt; attrs
+# cat attrs
+5000 100000 1000000 10 1000
+</pre></div>
+</div>
+</div>
+<div class="section" id="target-ids">
+<h3>Target IDs<a class="headerlink" href="#target-ids" title="Permalink to this headline">¶</a></h3>
+<p>Some types of address spaces supports multiple monitoring target.  For example,
+the virtual memory address spaces monitoring can have multiple processes as the
+monitoring targets.  Users can set the targets by writing relevant id values of
+the targets to, and get the ids of the current targets by reading from the
+<code class="docutils literal notranslate"><span class="pre">target_ids</span></code> file.  In case of the virtual address spaces monitoring, the
+values should be pids of the monitoring target processes.  For example, below
+commands set processes having pids 42 and 4242 as the monitoring targets and
+check it again:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span># cd &lt;debugfs&gt;/damon
+# echo 42 4242 &gt; target_ids
+# cat target_ids
+42 4242
+</pre></div>
+</div>
+<p>Users can also monitor the physical memory address space of the system by
+writing a special keyword, “<code class="docutils literal notranslate"><span class="pre">paddr\n</span></code>” to the file.  Because physical address
+space monitoring doesn’t support multiple targets, reading the file will show a
+fake value, <code class="docutils literal notranslate"><span class="pre">42</span></code>, as below:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span># cd &lt;debugfs&gt;/damon
+# echo paddr &gt; target_ids
+# cat target_ids
+42
+</pre></div>
+</div>
+<p>Note that setting the target ids doesn’t start the monitoring.</p>
+</div>
+<div class="section" id="initial-monitoring-target-regions">
+<h3>Initial Monitoring Target Regions<a class="headerlink" href="#initial-monitoring-target-regions" title="Permalink to this headline">¶</a></h3>
+<p>In case of the virtual address space monitoring, DAMON automatically sets and
+updates the monitoring target regions so that entire memory mappings of target
+processes can be covered.  However, users can want to limit the monitoring
+region to specific address ranges, such as the heap, the stack, or specific
+file-mapped area.  Or, some users can know the initial access pattern of their
+workloads and therefore want to set optimal initial regions for the ‘adaptive
+regions adjustment’.</p>
+<p>In contrast, DAMON do not automatically sets and updates the monitoring target
+regions in case of physical memory monitoring.  Therefore, users should set the
+monitoring target regions by themselves.</p>
+<p>In such cases, users can explicitly set the initial monitoring target regions
+as they want, by writing proper values to the <code class="docutils literal notranslate"><span class="pre">init_regions</span></code> file.  Each line
+of the input should represent one region in below form.:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>&lt;target idx&gt; &lt;start address&gt; &lt;end address&gt;
+</pre></div>
+</div>
+<p>The <code class="docutils literal notranslate"><span class="pre">target</span> <span class="pre">idx</span></code> should be the index of the target in <code class="docutils literal notranslate"><span class="pre">target_ids</span></code> file,
+starting from <code class="docutils literal notranslate"><span class="pre">0</span></code>, and the regions should be passed in address order.  For
+example, below commands will set a couple of address ranges, <code class="docutils literal notranslate"><span class="pre">1-100</span></code> and
+<code class="docutils literal notranslate"><span class="pre">100-200</span></code> as the initial monitoring target region of pid 42, which is the
+first one (index <code class="docutils literal notranslate"><span class="pre">0</span></code>) in <code class="docutils literal notranslate"><span class="pre">target_ids</span></code>, and another couple of address
+ranges, <code class="docutils literal notranslate"><span class="pre">20-40</span></code> and <code class="docutils literal notranslate"><span class="pre">50-100</span></code> as that of pid 4242, which is the second one
+(index <code class="docutils literal notranslate"><span class="pre">1</span></code>) in <code class="docutils literal notranslate"><span class="pre">target_ids</span></code>.:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span># cd &lt;debugfs&gt;/damon
+# cat target_ids
+42 4242
+# echo &quot;0   1       100
+        0   100     200
+        1   20      40
+        1   50      100&quot; &gt; init_regions
+</pre></div>
+</div>
+<p>Note that this sets the initial monitoring target regions only.  In case of
+virtual memory monitoring, DAMON will automatically updates the boundary of the
+regions after one <code class="docutils literal notranslate"><span class="pre">regions</span> <span class="pre">update</span> <span class="pre">interval</span></code>.  Therefore, users should set the
+<code class="docutils literal notranslate"><span class="pre">regions</span> <span class="pre">update</span> <span class="pre">interval</span></code> large enough in this case, if they don’t want the
+update.</p>
+</div>
+<div class="section" id="schemes">
+<h3>Schemes<a class="headerlink" href="#schemes" title="Permalink to this headline">¶</a></h3>
+<p>For usual DAMON-based data access aware memory management optimizations, users
+would simply want the system to apply a memory management action to a memory
+region of a specific access pattern.  DAMON receives such formalized operation
+schemes from the user and applies those to the target processes.</p>
+<p>Users can get and set the schemes by reading from and writing to <code class="docutils literal notranslate"><span class="pre">schemes</span></code>
+debugfs file.  Reading the file also shows the statistics of each scheme.  To
+the file, each of the schemes should be represented in each line in below
+form:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>&lt;target access pattern&gt; &lt;action&gt; &lt;quota&gt; &lt;watermarks&gt;
+</pre></div>
+</div>
+<p>You can disable schemes by simply writing an empty string to the file.</p>
+<div class="section" id="target-access-pattern">
+<h4>Target Access Pattern<a class="headerlink" href="#target-access-pattern" title="Permalink to this headline">¶</a></h4>
+<p>The <code class="docutils literal notranslate"><span class="pre">&lt;target</span> <span class="pre">access</span> <span class="pre">pattern&gt;</span></code> is constructed with three ranges in below
+form:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>min-size max-size min-acc max-acc min-age max-age
+</pre></div>
+</div>
+<p>Specifically, bytes for the size of regions (<code class="docutils literal notranslate"><span class="pre">min-size</span></code> and <code class="docutils literal notranslate"><span class="pre">max-size</span></code>),
+number of monitored accesses per aggregate interval for access frequency
+(<code class="docutils literal notranslate"><span class="pre">min-acc</span></code> and <code class="docutils literal notranslate"><span class="pre">max-acc</span></code>), number of aggregate intervals for the age of
+regions (<code class="docutils literal notranslate"><span class="pre">min-age</span></code> and <code class="docutils literal notranslate"><span class="pre">max-age</span></code>) are specified.  Note that the ranges are
+closed interval.</p>
+</div>
+<div class="section" id="action">
+<h4>Action<a class="headerlink" href="#action" title="Permalink to this headline">¶</a></h4>
+<p>The <code class="docutils literal notranslate"><span class="pre">&lt;action&gt;</span></code> is a predefined integer for memory management actions, which
+DAMON will apply to the regions having the target access pattern.  The
+supported numbers and their meanings are as below.</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>0: Call <code class="docutils literal notranslate"><span class="pre">madvise()</span></code> for the region with <code class="docutils literal notranslate"><span class="pre">MADV_WILLNEED</span></code></p></li>
+<li><p>1: Call <code class="docutils literal notranslate"><span class="pre">madvise()</span></code> for the region with <code class="docutils literal notranslate"><span class="pre">MADV_COLD</span></code></p></li>
+<li><p>2: Call <code class="docutils literal notranslate"><span class="pre">madvise()</span></code> for the region with <code class="docutils literal notranslate"><span class="pre">MADV_PAGEOUT</span></code></p></li>
+<li><p>3: Call <code class="docutils literal notranslate"><span class="pre">madvise()</span></code> for the region with <code class="docutils literal notranslate"><span class="pre">MADV_HUGEPAGE</span></code></p></li>
+<li><p>4: Call <code class="docutils literal notranslate"><span class="pre">madvise()</span></code> for the region with <code class="docutils literal notranslate"><span class="pre">MADV_NOHUGEPAGE</span></code></p></li>
+<li><p>5: Do nothing but count the statistics</p></li>
+</ul>
+</div></blockquote>
+</div>
+<div class="section" id="quota">
+<h4>Quota<a class="headerlink" href="#quota" title="Permalink to this headline">¶</a></h4>
+<p>Optimal <code class="docutils literal notranslate"><span class="pre">target</span> <span class="pre">access</span> <span class="pre">pattern</span></code> for each <code class="docutils literal notranslate"><span class="pre">action</span></code> is workload dependent, so
+not easy to find.  Worse yet, setting a scheme of some action too aggressive
+can cause severe overhead.  To avoid such overhead, users can limit time and
+size quota for the scheme via the <code class="docutils literal notranslate"><span class="pre">&lt;quota&gt;</span></code> in below form:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>&lt;ms&gt; &lt;sz&gt; &lt;reset interval&gt; &lt;priority weights&gt;
+</pre></div>
+</div>
+<p>This makes DAMON to try to use only up to <code class="docutils literal notranslate"><span class="pre">&lt;ms&gt;</span></code> milliseconds for applying
+the action to memory regions of the <code class="docutils literal notranslate"><span class="pre">target</span> <span class="pre">access</span> <span class="pre">pattern</span></code> within the
+<code class="docutils literal notranslate"><span class="pre">&lt;reset</span> <span class="pre">interval&gt;</span></code> milliseconds, and to apply the action to only up to
+<code class="docutils literal notranslate"><span class="pre">&lt;sz&gt;</span></code> bytes of memory regions within the <code class="docutils literal notranslate"><span class="pre">&lt;reset</span> <span class="pre">interval&gt;</span></code>.  Setting both
+<code class="docutils literal notranslate"><span class="pre">&lt;ms&gt;</span></code> and <code class="docutils literal notranslate"><span class="pre">&lt;sz&gt;</span></code> zero disables the quota limits.</p>
+<p>When the quota limit is expected to be exceeded, DAMON prioritizes found memory
+regions of the <code class="docutils literal notranslate"><span class="pre">target</span> <span class="pre">access</span> <span class="pre">pattern</span></code> based on their size, access frequency,
+and age.  For personalized prioritization, users can set the weights for the
+three properties in <code class="docutils literal notranslate"><span class="pre">&lt;priority</span> <span class="pre">weights&gt;</span></code> in below form:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>&lt;size weight&gt; &lt;access frequency weight&gt; &lt;age weight&gt;
+</pre></div>
+</div>
+</div>
+<div class="section" id="watermarks">
+<h4>Watermarks<a class="headerlink" href="#watermarks" title="Permalink to this headline">¶</a></h4>
+<p>Some schemes would need to run based on current value of the system’s specific
+metrics like free memory ratio.  For such cases, users can specify watermarks
+for the condition.:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>&lt;metric&gt; &lt;check interval&gt; &lt;high mark&gt; &lt;middle mark&gt; &lt;low mark&gt;
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">&lt;metric&gt;</span></code> is a predefined integer for the metric to be checked.  The
+supported numbers and their meanings are as below.</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>0: Ignore the watermarks</p></li>
+<li><p>1: System’s free memory rate (per thousand)</p></li>
+</ul>
+</div></blockquote>
+<p>The value of the metric is checked every <code class="docutils literal notranslate"><span class="pre">&lt;check</span> <span class="pre">interval&gt;</span></code> microseconds.</p>
+<p>If the value is higher than <code class="docutils literal notranslate"><span class="pre">&lt;high</span> <span class="pre">mark&gt;</span></code> or lower than <code class="docutils literal notranslate"><span class="pre">&lt;low</span> <span class="pre">mark&gt;</span></code>, the
+scheme is deactivated.  If the value is lower than <code class="docutils literal notranslate"><span class="pre">&lt;mid</span> <span class="pre">mark&gt;</span></code>, the scheme
+is activated.</p>
+</div>
+<div class="section" id="statistics">
+<span id="damos-stats"></span><h4>Statistics<a class="headerlink" href="#statistics" title="Permalink to this headline">¶</a></h4>
+<p>It also counts the total number and bytes of regions that each scheme is tried
+to be applied, the two numbers for the regions that each scheme is successfully
+applied, and the total number of the quota limit exceeds.  This statistics can
+be used for online analysis or tuning of the schemes.</p>
+<p>The statistics can be shown by reading the <code class="docutils literal notranslate"><span class="pre">schemes</span></code> file.  Reading the file
+will show each scheme you entered in each line, and the five numbers for the
+statistics will be added at the end of each line.</p>
+</div>
+<div class="section" id="example">
+<h4>Example<a class="headerlink" href="#example" title="Permalink to this headline">¶</a></h4>
+<p>Below commands applies a scheme saying “If a memory region of size in [4KiB,
+8KiB] is showing accesses per aggregate interval in [0, 5] for aggregate
+interval in [10, 20], page out the region.  For the paging out, use only up to
+10ms per second, and also don’t page out more than 1GiB per second.  Under the
+limitation, page out memory regions having longer age first.  Also, check the
+free memory rate of the system every 5 seconds, start the monitoring and paging
+out when the free memory rate becomes lower than 50%, but stop it if the free
+memory rate becomes larger than 60%, or lower than 30%”.:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span># cd &lt;debugfs&gt;/damon
+# scheme=&quot;4096 8192  0 5    10 20    2&quot;  # target access pattern and action
+# scheme+=&quot; 10 $((1024*1024*1024)) 1000&quot; # quotas
+# scheme+=&quot; 0 0 100&quot;                     # prioritization weights
+# scheme+=&quot; 1 5000000 600 500 300&quot;       # watermarks
+# echo &quot;$scheme&quot; &gt; schemes
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="turning-on-off">
+<h3>Turning On/Off<a class="headerlink" href="#turning-on-off" title="Permalink to this headline">¶</a></h3>
+<p>Setting the files as described above doesn’t incur effect unless you explicitly
+start the monitoring.  You can start, stop, and check the current status of the
+monitoring by writing to and reading from the <code class="docutils literal notranslate"><span class="pre">monitor_on</span></code> file.  Writing
+<code class="docutils literal notranslate"><span class="pre">on</span></code> to the file starts the monitoring of the targets with the attributes.
+Writing <code class="docutils literal notranslate"><span class="pre">off</span></code> to the file stops those.  DAMON also stops if every target
+process is terminated.  Below example commands turn on, off, and check the
+status of DAMON:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span># cd &lt;debugfs&gt;/damon
+# echo on &gt; monitor_on
+# echo off &gt; monitor_on
+# cat monitor_on
+off
+</pre></div>
+</div>
+<p>Please note that you cannot write to the above-mentioned debugfs files while
+the monitoring is turned on.  If you write to the files while DAMON is running,
+an error code such as <code class="docutils literal notranslate"><span class="pre">-EBUSY</span></code> will be returned.</p>
+</div>
+<div class="section" id="monitoring-thread-pid">
+<h3>Monitoring Thread PID<a class="headerlink" href="#monitoring-thread-pid" title="Permalink to this headline">¶</a></h3>
+<p>DAMON does requested monitoring with a kernel thread called <code class="docutils literal notranslate"><span class="pre">kdamond</span></code>.  You
+can get the pid of the thread by reading the <code class="docutils literal notranslate"><span class="pre">kdamond_pid</span></code> file.  When the
+monitoring is turned off, reading the file returns <code class="docutils literal notranslate"><span class="pre">none</span></code>.</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span># cd &lt;debugfs&gt;/damon
+# cat monitor_on
+off
+# cat kdamond_pid
+none
+# echo on &gt; monitor_on
+# cat kdamond_pid
+18594
+</pre></div>
+</div>
+</div>
+<div class="section" id="using-multiple-monitoring-threads">
+<h3>Using Multiple Monitoring Threads<a class="headerlink" href="#using-multiple-monitoring-threads" title="Permalink to this headline">¶</a></h3>
+<p>One <code class="docutils literal notranslate"><span class="pre">kdamond</span></code> thread is created for each monitoring context.  You can create
+and remove monitoring contexts for multiple <code class="docutils literal notranslate"><span class="pre">kdamond</span></code> required use case using
+the <code class="docutils literal notranslate"><span class="pre">mk_contexts</span></code> and <code class="docutils literal notranslate"><span class="pre">rm_contexts</span></code> files.</p>
+<p>Writing the name of the new context to the <code class="docutils literal notranslate"><span class="pre">mk_contexts</span></code> file creates a
+directory of the name on the DAMON debugfs directory.  The directory will have
+DAMON debugfs files for the context.</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span># cd &lt;debugfs&gt;/damon
+# ls foo
+# ls: cannot access &#39;foo&#39;: No such file or directory
+# echo foo &gt; mk_contexts
+# ls foo
+# attrs  init_regions  kdamond_pid  schemes  target_ids
+</pre></div>
+</div>
+<p>If the context is not needed anymore, you can remove it and the corresponding
+directory by putting the name of the context to the <code class="docutils literal notranslate"><span class="pre">rm_contexts</span></code> file.</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span># echo foo &gt; rm_contexts
+# ls foo
+# ls: cannot access &#39;foo&#39;: No such file or directory
+</pre></div>
+</div>
+<p>Note that <code class="docutils literal notranslate"><span class="pre">mk_contexts</span></code>, <code class="docutils literal notranslate"><span class="pre">rm_contexts</span></code>, and <code class="docutils literal notranslate"><span class="pre">monitor_on</span></code> files are in the
+root directory only.</p>
+</div>
+</div>
+<div class="section" id="tracepoint-for-monitoring-results">
+<span id="tracepoint"></span><h2>Tracepoint for Monitoring Results<a class="headerlink" href="#tracepoint-for-monitoring-results" title="Permalink to this headline">¶</a></h2>
+<p>DAMON provides the monitoring results via a tracepoint,
+<code class="docutils literal notranslate"><span class="pre">damon:damon_aggregated</span></code>.  While the monitoring is turned on, you could
+record the tracepoint events and show results using tracepoint supporting tools
+like <code class="docutils literal notranslate"><span class="pre">perf</span></code>.  For example:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span># echo on &gt; monitor_on
+# perf record -e damon:damon_aggregated &amp;
+# sleep 5
+# kill 9 $(pidof perf)
+# echo off &gt; monitor_on
+# perf script
+</pre></div>
+</div>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+        <a href="reclaim.html" class="btn btn-neutral float-right" title="DAMON-based Reclamation" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="guide.html" class="btn btn-neutral float-left" title="Optimization Guide" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &#169; Copyright The kernel development community.
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>
