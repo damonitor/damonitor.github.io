@@ -1,75 +1,36 @@
-
-
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8" />
-  
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  
-  <title>GPIO Sysfs Interface for Userspace &mdash; The Linux Kernel  documentation</title>
-  
-
-  
-  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
-  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="../../_static/theme_overrides.css" type="text/css" />
-  <link rel="stylesheet" href="../../_static/theme_rtd_colors.css" type="text/css" />
-
-  
-  
-
-  
-  
-
-  
-
-  
+  <title>GPIO Sysfs Interface for Userspace &mdash; The Linux Kernel  documentation</title><link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/theme_overrides.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/theme_rtd_colors.css" type="text/css" />
   <!--[if lt IE 9]>
     <script src="../../_static/js/html5shiv.min.js"></script>
   <![endif]-->
-  
-    
-      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+  <script id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
         <script src="../../_static/jquery.js"></script>
         <script src="../../_static/underscore.js"></script>
         <script src="../../_static/doctools.js"></script>
         <script src="../../_static/language_data.js"></script>
-    
-    <script type="text/javascript" src="../../_static/js/theme.js"></script>
-
-    
+    <script src="../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" /> 
 </head>
 
-<body class="wy-body-for-nav">
-
-   
+<body class="wy-body-for-nav"> 
   <div class="wy-grid-for-nav">
-    
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-          
-
-          
             <a href="../../index.html" class="icon icon-home"> The Linux Kernel
-          
-
-          
           </a>
-
-          
-            
-            
               <div class="version">
-                5.16.0-rc7-mm1-damon
+                5.19.0-rc1-mm-unstable-damon
               </div>
-            
-          
-
-          
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
     <input type="text" name="q" placeholder="Search docs" />
@@ -77,18 +38,7 @@
     <input type="hidden" name="area" value="default" />
   </form>
 </div>
-
-          
-        </div>
-
-        
-        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
-          
-            
-            
-              
-            
-            
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <ul>
 <li class="toctree-l1"><a class="reference internal" href="../mm/damon/index.html">Monitoring Data Accesses</a></li>
 </ul>
@@ -96,72 +46,31 @@
 <li class="toctree-l1"><a class="reference internal" href="../../vm/damon/index.html">DAMON: Data Access MONitor</a></li>
 </ul>
 
-            
-          
         </div>
-        
       </div>
     </nav>
 
-    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
-
-      
-      <nav class="wy-nav-top" aria-label="top navigation">
-        
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
           <a href="../../index.html">The Linux Kernel</a>
-        
       </nav>
 
-
       <div class="wy-nav-content">
-        
         <div class="rst-content">
-        
-          
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<div role="navigation" aria-label="breadcrumbs navigation">
-
+          <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-    
       <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
-        
       <li>GPIO Sysfs Interface for Userspace</li>
-    
-    
       <li class="wy-breadcrumbs-aside">
-        
-          
             <a href="../../_sources/admin-guide/gpio/sysfs.rst.txt" rel="nofollow"> View page source</a>
-          
-        
       </li>
-    
   </ul>
-
-  
   <hr/>
 </div>
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
-            
-  <div class="section" id="gpio-sysfs-interface-for-userspace">
+             
+  <section id="gpio-sysfs-interface-for-userspace">
 <h1>GPIO Sysfs Interface for Userspace<a class="headerlink" href="#gpio-sysfs-interface-for-userspace" title="Permalink to this headline">¶</a></h1>
 <div class="admonition warning">
 <p class="admonition-title">Warning</p>
@@ -173,7 +82,7 @@ NOT BE DEVELOPED (NO NEW FEATURES), IT WILL JUST BE MAINTAINED.</p>
 <p>Refer to the examples in tools/gpio/* for an introduction to the new
 character device ABI. Also see the userspace header in
 include/uapi/linux/gpio.h</p>
-<div class="section" id="the-deprecated-sysfs-abi">
+<section id="the-deprecated-sysfs-abi">
 <h2>The deprecated sysfs ABI<a class="headerlink" href="#the-deprecated-sysfs-abi" title="Permalink to this headline">¶</a></h2>
 <p>Platforms which use the “gpiolib” implementors framework may choose to
 configure a sysfs user interface to GPIOs. This is different from the
@@ -194,8 +103,8 @@ GPIO drivers could be all that the system really needs.</p>
 <p>DO NOT ABUSE SYSFS TO CONTROL HARDWARE THAT HAS PROPER KERNEL DRIVERS.
 PLEASE READ THE DOCUMENT AT <a class="reference internal" href="../../driver-api/gpio/drivers-on-gpio.html"><span class="doc">Subsystem drivers using GPIO</span></a>
 TO AVOID REINVENTING KERNEL WHEELS IN USERSPACE. I MEAN IT. REALLY.</p>
-</div>
-<div class="section" id="paths-in-sysfs">
+</section>
+<section id="paths-in-sysfs">
 <h2>Paths in Sysfs<a class="headerlink" href="#paths-in-sysfs" title="Permalink to this headline">¶</a></h2>
 <p>There are three kinds of entries in /sys/class/gpio:</p>
 <blockquote>
@@ -290,8 +199,8 @@ a daughtercard might be different depending on the base board being used,
 or other cards in the stack. In such cases, you may need to use the
 gpiochip nodes (possibly in conjunction with schematics) to determine
 the correct GPIO number to use for a given signal.</p>
-</div>
-<div class="section" id="exporting-from-kernel-code">
+</section>
+<section id="exporting-from-kernel-code">
 <h2>Exporting from Kernel code<a class="headerlink" href="#exporting-from-kernel-code" title="Permalink to this headline">¶</a></h2>
 <p>Kernel code can explicitly manage exports of GPIOs which have already been
 requested using gpio_request():</p>
@@ -317,51 +226,35 @@ suitable for documenting as part of a board support package.</p>
 symlinks from elsewhere in sysfs to the GPIO sysfs node. Drivers can
 use this to provide the interface under their own device in sysfs with
 a descriptive name.</p>
-</div>
-</div>
+</section>
+</section>
 
 
            </div>
-           
           </div>
           <footer>
 
   <hr/>
 
   <div role="contentinfo">
-    <p>
-        &#169; Copyright The kernel development community.
-
-    </p>
+    <p>&#169; Copyright The kernel development community.</p>
   </div>
-    
-    
-    
-    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
-    
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
     <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
-    
-    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
 
 </footer>
         </div>
       </div>
-
     </section>
-
   </div>
-  
-
-  <script type="text/javascript">
+  <script>
       jQuery(function () {
           SphinxRtdTheme.Navigation.enable(true);
       });
-  </script>
-
-  
-  
-    
-   
+  </script> 
 
 </body>
 </html>

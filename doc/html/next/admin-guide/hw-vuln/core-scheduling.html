@@ -1,75 +1,36 @@
-
-
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8" />
-  
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  
-  <title>Core Scheduling &mdash; The Linux Kernel  documentation</title>
-  
-
-  
-  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
-  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="../../_static/theme_overrides.css" type="text/css" />
-  <link rel="stylesheet" href="../../_static/theme_rtd_colors.css" type="text/css" />
-
-  
-  
-
-  
-  
-
-  
-
-  
+  <title>Core Scheduling &mdash; The Linux Kernel  documentation</title><link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/theme_overrides.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/theme_rtd_colors.css" type="text/css" />
   <!--[if lt IE 9]>
     <script src="../../_static/js/html5shiv.min.js"></script>
   <![endif]-->
-  
-    
-      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+  <script id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
         <script src="../../_static/jquery.js"></script>
         <script src="../../_static/underscore.js"></script>
         <script src="../../_static/doctools.js"></script>
         <script src="../../_static/language_data.js"></script>
-    
-    <script type="text/javascript" src="../../_static/js/theme.js"></script>
-
-    
+    <script src="../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" /> 
 </head>
 
-<body class="wy-body-for-nav">
-
-   
+<body class="wy-body-for-nav"> 
   <div class="wy-grid-for-nav">
-    
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-          
-
-          
             <a href="../../index.html" class="icon icon-home"> The Linux Kernel
-          
-
-          
           </a>
-
-          
-            
-            
               <div class="version">
-                5.16.0-rc7-mm1-damon
+                5.19.0-rc1-mm-unstable-damon
               </div>
-            
-          
-
-          
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
     <input type="text" name="q" placeholder="Search docs" />
@@ -77,18 +38,7 @@
     <input type="hidden" name="area" value="default" />
   </form>
 </div>
-
-          
-        </div>
-
-        
-        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
-          
-            
-            
-              
-            
-            
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <ul>
 <li class="toctree-l1"><a class="reference internal" href="../mm/damon/index.html">Monitoring Data Accesses</a></li>
 </ul>
@@ -96,72 +46,31 @@
 <li class="toctree-l1"><a class="reference internal" href="../../vm/damon/index.html">DAMON: Data Access MONitor</a></li>
 </ul>
 
-            
-          
         </div>
-        
       </div>
     </nav>
 
-    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
-
-      
-      <nav class="wy-nav-top" aria-label="top navigation">
-        
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
           <a href="../../index.html">The Linux Kernel</a>
-        
       </nav>
 
-
       <div class="wy-nav-content">
-        
         <div class="rst-content">
-        
-          
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<div role="navigation" aria-label="breadcrumbs navigation">
-
+          <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-    
       <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
-        
       <li>Core Scheduling</li>
-    
-    
       <li class="wy-breadcrumbs-aside">
-        
-          
             <a href="../../_sources/admin-guide/hw-vuln/core-scheduling.rst.txt" rel="nofollow"> View page source</a>
-          
-        
       </li>
-    
   </ul>
-
-  
   <hr/>
 </div>
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
-            
-  <div class="section" id="core-scheduling">
+             
+  <section id="core-scheduling">
 <h1>Core Scheduling<a class="headerlink" href="#core-scheduling" title="Permalink to this headline">¶</a></h1>
 <p>Core scheduling support allows userspace to define groups of tasks that can
 share a core. These groups can be specified either for security usecases (one
@@ -170,7 +79,7 @@ workloads may benefit from running on the same core as they don’t need the sam
 hardware resources of the shared core, or may prefer different cores if they
 do share hardware resource needs). This document only describes the security
 usecase.</p>
-<div class="section" id="security-usecase">
+<section id="security-usecase">
 <h2>Security usecase<a class="headerlink" href="#security-usecase" title="Permalink to this headline">¶</a></h2>
 <p>A cross-HT attack involves the attacker and victim running on different Hyper
 Threads of the same core. MDS and L1TF are examples of such attacks.  The only
@@ -187,8 +96,8 @@ core involves additional overhead - especially when the system is lightly
 loaded. When <code class="docutils literal notranslate"><span class="pre">total_threads</span> <span class="pre">&lt;=</span> <span class="pre">N_CPUS/2</span></code>, the extra overhead may cause core
 scheduling to perform more poorly compared to SMT-disabled, where N_CPUS is the
 total number of CPUs. Please measure the performance of your workloads always.</p>
-</div>
-<div class="section" id="usage">
+</section>
+<section id="usage">
 <h2>Usage<a class="headerlink" href="#usage" title="Permalink to this headline">¶</a></h2>
 <p>Core scheduling support is enabled via the <code class="docutils literal notranslate"><span class="pre">CONFIG_SCHED_CORE</span></code> config option.
 Using this feature, userspace defines groups of tasks that can be co-scheduled
@@ -229,24 +138,24 @@ will be performed for all tasks in the task group of <code class="docutils liter
 <p>In order for a process to push a cookie to, or pull a cookie from a process, it
 is required to have the ptrace access mode: <cite>PTRACE_MODE_READ_REALCREDS</cite> to the
 process.</p>
-<div class="section" id="building-hierarchies-of-tasks">
+<section id="building-hierarchies-of-tasks">
 <h3>Building hierarchies of tasks<a class="headerlink" href="#building-hierarchies-of-tasks" title="Permalink to this headline">¶</a></h3>
 <p>The simplest way to build hierarchies of threads/processes which share a
 cookie and thus a core is to rely on the fact that the core-sched cookie is
 inherited across forks/clones and execs, thus setting a cookie for the
 ‘initial’ script/executable/daemon will place every spawned child in the
 same core-sched group.</p>
-</div>
-<div class="section" id="cookie-transferral">
+</section>
+<section id="cookie-transferral">
 <h3>Cookie Transferral<a class="headerlink" href="#cookie-transferral" title="Permalink to this headline">¶</a></h3>
 <p>Transferring a cookie between the current and other tasks is possible using
 PR_SCHED_CORE_SHARE_FROM and PR_SCHED_CORE_SHARE_TO to inherit a cookie from a
 specified task or a share a cookie with a task. In combination this allows a
 simple helper program to pull a cookie from a task in an existing core
 scheduling group and share it with already running tasks.</p>
-</div>
-</div>
-<div class="section" id="design-implementation">
+</section>
+</section>
+<section id="design-implementation">
 <h2>Design/Implementation<a class="headerlink" href="#design-implementation" title="Permalink to this headline">¶</a></h2>
 <p>Each task that is tagged is assigned a cookie internally in the kernel. As
 mentioned in <a class="reference internal" href="#usage">Usage</a>, tasks with the same cookie value are assumed to trust
@@ -268,7 +177,7 @@ switch to the new task immediately. If an idle task is selected for a sibling,
 then the sibling is considered to be in a <cite>forced idle</cite> state. I.e., it may
 have tasks on its on runqueue to run, however it will still have to run idle.
 More on this in the next section.</p>
-<div class="section" id="forced-idling-of-hyperthreads">
+<section id="forced-idling-of-hyperthreads">
 <h3>Forced-idling of hyperthreads<a class="headerlink" href="#forced-idling-of-hyperthreads" title="Permalink to this headline">¶</a></h3>
 <p>The scheduler tries its best to find tasks that trust each other such that all
 tasks selected to be scheduled are of the highest priority in a core.  However,
@@ -296,8 +205,8 @@ in the case of guests. At best, this would only leak some scheduler metadata
 which may not be worth protecting. It is also possible that the IPI is received
 too late on some architectures, but this has not been observed in the case of
 x86.</p>
-</div>
-<div class="section" id="trust-model">
+</section>
+<section id="trust-model">
 <h3>Trust model<a class="headerlink" href="#trust-model" title="Permalink to this headline">¶</a></h3>
 <p>Core scheduling maintains trust relationships amongst groups of tasks by
 assigning them a tag that is the same cookie value.
@@ -310,15 +219,15 @@ cookie-0 tasks is also avoided.</p>
 <p>Once userspace uses the above mentioned interfaces to group sets of tasks, tasks
 within such groups are considered to trust each other, but do not trust those
 outside. Tasks outside the group also don’t trust tasks within.</p>
-</div>
-</div>
-<div class="section" id="limitations-of-core-scheduling">
+</section>
+</section>
+<section id="limitations-of-core-scheduling">
 <h2>Limitations of core-scheduling<a class="headerlink" href="#limitations-of-core-scheduling" title="Permalink to this headline">¶</a></h2>
 <p>Core scheduling tries to guarantee that only trusted tasks run concurrently on a
 core. But there could be small window of time during which untrusted tasks run
 concurrently or kernel could be running concurrently with a task not trusted by
 kernel.</p>
-<div class="section" id="ipi-processing-delays">
+<section id="ipi-processing-delays">
 <h3>IPI processing delays<a class="headerlink" href="#ipi-processing-delays" title="Permalink to this headline">¶</a></h3>
 <p>Core scheduling selects only trusted tasks to run together. IPI is used to notify
 the siblings to switch to the new task. But there could be hardware delays in
@@ -327,11 +236,11 @@ cause an attacker task to start running on a CPU before its siblings receive the
 IPI. Even though cache is flushed on entry to user mode, victim tasks on siblings
 may populate data in the cache and micro architectural buffers after the attacker
 starts to run and this is a possibility for data leak.</p>
-</div>
-</div>
-<div class="section" id="open-cross-ht-issues-that-core-scheduling-does-not-solve">
+</section>
+</section>
+<section id="open-cross-ht-issues-that-core-scheduling-does-not-solve">
 <h2>Open cross-HT issues that core scheduling does not solve<a class="headerlink" href="#open-cross-ht-issues-that-core-scheduling-does-not-solve" title="Permalink to this headline">¶</a></h2>
-<div class="section" id="for-mds">
+<section id="for-mds">
 <h3>1. For MDS<a class="headerlink" href="#for-mds" title="Permalink to this headline">¶</a></h3>
 <p>Core scheduling cannot protect against MDS attacks between the siblings
 running in user mode and the others running in kernel mode. Even though all
@@ -339,8 +248,8 @@ siblings run tasks which trust each other, when the kernel is executing
 code on behalf of a task, it cannot trust the code running in the
 sibling. Such attacks are possible for any combination of sibling CPU modes
 (host or guest mode).</p>
-</div>
-<div class="section" id="for-l1tf">
+</section>
+<section id="for-l1tf">
 <h3>2. For L1TF<a class="headerlink" href="#for-l1tf" title="Permalink to this headline">¶</a></h3>
 <p>Core scheduling cannot protect against an L1TF guest attacker exploiting a
 guest or host victim. This is because the guest attacker can craft invalid
@@ -354,17 +263,17 @@ a guest problem.</p>
 system to not trust every other untrusted task. While this could reduce
 parallelism of the untrusted tasks, it would still solve the above issues while
 allowing system processes (trusted tasks) to share a core.</p>
-</div>
-<div class="section" id="protecting-the-kernel-irq-syscall-vmexit">
+</section>
+<section id="protecting-the-kernel-irq-syscall-vmexit">
 <h3>3. Protecting the kernel (IRQ, syscall, VMEXIT)<a class="headerlink" href="#protecting-the-kernel-irq-syscall-vmexit" title="Permalink to this headline">¶</a></h3>
 <p>Unfortunately, core scheduling does not protect kernel contexts running on
 sibling hyperthreads from one another. Prototypes of mitigations have been posted
 to LKML to solve this, but it is debatable whether such windows are practically
 exploitable, and whether the performance overhead of the prototypes are worth
 it (not to mention, the added code complexity).</p>
-</div>
-</div>
-<div class="section" id="other-use-cases">
+</section>
+</section>
+<section id="other-use-cases">
 <h2>Other Use cases<a class="headerlink" href="#other-use-cases" title="Permalink to this headline">¶</a></h2>
 <p>The main use case for Core scheduling is mitigating the cross-HT vulnerabilities
 with SMT enabled. There are other use cases where this feature could be used:</p>
@@ -375,51 +284,35 @@ that uses SIMD instructions etc.</p></li>
 together could also be realized using core scheduling. One example is vCPUs of
 a VM.</p></li>
 </ul>
-</div>
-</div>
+</section>
+</section>
 
 
            </div>
-           
           </div>
           <footer>
 
   <hr/>
 
   <div role="contentinfo">
-    <p>
-        &#169; Copyright The kernel development community.
-
-    </p>
+    <p>&#169; Copyright The kernel development community.</p>
   </div>
-    
-    
-    
-    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
-    
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
     <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
-    
-    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
 
 </footer>
         </div>
       </div>
-
     </section>
-
   </div>
-  
-
-  <script type="text/javascript">
+  <script>
       jQuery(function () {
           SphinxRtdTheme.Navigation.enable(true);
       });
-  </script>
-
-  
-  
-    
-   
+  </script> 
 
 </body>
 </html>

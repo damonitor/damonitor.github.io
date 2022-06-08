@@ -1,75 +1,36 @@
-
-
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8" />
-  
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  
-  <title>Transparent Hugepage Support &mdash; The Linux Kernel  documentation</title>
-  
-
-  
-  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
-  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="../_static/theme_overrides.css" type="text/css" />
-  <link rel="stylesheet" href="../_static/theme_rtd_colors.css" type="text/css" />
-
-  
-  
-
-  
-  
-
-  
-
-  
+  <title>Transparent Hugepage Support &mdash; The Linux Kernel  documentation</title><link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/theme_overrides.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/theme_rtd_colors.css" type="text/css" />
   <!--[if lt IE 9]>
     <script src="../_static/js/html5shiv.min.js"></script>
   <![endif]-->
-  
-    
-      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+  <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
         <script src="../_static/jquery.js"></script>
         <script src="../_static/underscore.js"></script>
         <script src="../_static/doctools.js"></script>
         <script src="../_static/language_data.js"></script>
-    
-    <script type="text/javascript" src="../_static/js/theme.js"></script>
-
-    
+    <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" /> 
 </head>
 
-<body class="wy-body-for-nav">
-
-   
+<body class="wy-body-for-nav"> 
   <div class="wy-grid-for-nav">
-    
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-          
-
-          
             <a href="../index.html" class="icon icon-home"> The Linux Kernel
-          
-
-          
           </a>
-
-          
-            
-            
               <div class="version">
-                5.16.0-rc7-mm1-damon
+                5.19.0-rc1-mm-unstable-damon
               </div>
-            
-          
-
-          
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
     <input type="text" name="q" placeholder="Search docs" />
@@ -77,18 +38,7 @@
     <input type="hidden" name="area" value="default" />
   </form>
 </div>
-
-          
-        </div>
-
-        
-        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
-          
-            
-            
-              
-            
-            
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <ul>
 <li class="toctree-l1"><a class="reference internal" href="../admin-guide/mm/damon/index.html">Monitoring Data Accesses</a></li>
 </ul>
@@ -96,77 +46,36 @@
 <li class="toctree-l1"><a class="reference internal" href="damon/index.html">DAMON: Data Access MONitor</a></li>
 </ul>
 
-            
-          
         </div>
-        
       </div>
     </nav>
 
-    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
-
-      
-      <nav class="wy-nav-top" aria-label="top navigation">
-        
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
           <a href="../index.html">The Linux Kernel</a>
-        
       </nav>
 
-
       <div class="wy-nav-content">
-        
         <div class="rst-content">
-        
-          
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<div role="navigation" aria-label="breadcrumbs navigation">
-
+          <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-    
       <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
-        
       <li>Transparent Hugepage Support</li>
-    
-    
       <li class="wy-breadcrumbs-aside">
-        
-          
             <a href="../_sources/vm/transhuge.rst.txt" rel="nofollow"> View page source</a>
-          
-        
       </li>
-    
   </ul>
-
-  
   <hr/>
 </div>
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
-            
-  <div class="section" id="transparent-hugepage-support">
+             
+  <section id="transparent-hugepage-support">
 <span id="transhuge"></span><h1>Transparent Hugepage Support<a class="headerlink" href="#transparent-hugepage-support" title="Permalink to this headline">¶</a></h1>
 <p>This document describes design principles for Transparent Hugepage (THP)
 support and its interaction with other parts of the memory management
 system.</p>
-<div class="section" id="design-principles">
+<section id="design-principles">
 <h2>Design principles<a class="headerlink" href="#design-principles" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
 <li><p>“graceful fallback”: mm components which don’t have transparent hugepage
@@ -188,8 +97,8 @@ is not specific to transparent hugepage support and it’s a generic
 feature that applies to all dynamic high order allocations in the
 kernel)</p></li>
 </ul>
-</div>
-<div class="section" id="get-user-pages-and-follow-page">
+</section>
+<section id="get-user-pages-and-follow-page">
 <h2>get_user_pages and follow_page<a class="headerlink" href="#get-user-pages-and-follow-page" title="Permalink to this headline">¶</a></h2>
 <p>get_user_pages and follow_page if run on a hugepage, will return the
 head or tail pages as usual (exactly as they would do on
@@ -208,8 +117,8 @@ same constraints that apply to hugetlbfs too, so any driver capable
 of handling GUP on hugetlbfs will also work fine on transparent
 hugepage backed mappings.</p>
 </div>
-</div>
-<div class="section" id="graceful-fallback">
+</section>
+<section id="graceful-fallback">
 <h2>Graceful fallback<a class="headerlink" href="#graceful-fallback" title="Permalink to this headline">¶</a></h2>
 <p>Code walking pagetables but unaware about huge pmds can simply call
 split_huge_pmd(vma, pmd, addr) where the pmd is the one returned by
@@ -238,8 +147,8 @@ change:</p>
                 return NULL;
 </pre></div>
 </div>
-</div>
-<div class="section" id="locking-in-hugepage-aware-code">
+</section>
+<section id="locking-in-hugepage-aware-code">
 <h2>Locking in hugepage aware code<a class="headerlink" href="#locking-in-hugepage-aware-code" title="Permalink to this headline">¶</a></h2>
 <p>We want as much code as possible hugepage aware, as calling
 split_huge_page() or split_huge_pmd() has a cost.</p>
@@ -257,8 +166,8 @@ pagetable walk). If the second pmd_trans_huge returns false, you
 should just drop the page table lock and fallback to the old code as
 before. Otherwise, you can proceed to process the huge pmd and the
 hugepage natively. Once finished, you can drop the page table lock.</p>
-</div>
-<div class="section" id="refcounts-and-transparent-huge-pages">
+</section>
+<section id="refcounts-and-transparent-huge-pages">
 <h2>Refcounts and transparent huge pages<a class="headerlink" href="#refcounts-and-transparent-huge-pages" title="Permalink to this headline">¶</a></h2>
 <p>Refcounting on THP is mostly consistent with refcounting on other compound
 pages:</p>
@@ -308,8 +217,8 @@ many references should be uncharged from the head page.</p>
 clear where references should go after split: it will stay on the head page.</p>
 <p>Note that split_huge_pmd() doesn’t have any limitations on refcounting:
 pmd can be split at any point and never fails.</p>
-</div>
-<div class="section" id="partial-unmap-and-deferred-split-huge-page">
+</section>
+<section id="partial-unmap-and-deferred-split-huge-page">
 <h2>Partial unmap and deferred_split_huge_page()<a class="headerlink" href="#partial-unmap-and-deferred-split-huge-page" title="Permalink to this headline">¶</a></h2>
 <p>Unmapping part of THP (with munmap() or other way) is not going to free
 memory immediately. Instead, we detect that a subpage of THP is not in use
@@ -322,51 +231,35 @@ a THP crosses a VMA boundary.</p>
 <p>The function deferred_split_huge_page() is used to queue a page for splitting.
 The splitting itself will happen when we get memory pressure via shrinker
 interface.</p>
-</div>
-</div>
+</section>
+</section>
 
 
            </div>
-           
           </div>
           <footer>
 
   <hr/>
 
   <div role="contentinfo">
-    <p>
-        &#169; Copyright The kernel development community.
-
-    </p>
+    <p>&#169; Copyright The kernel development community.</p>
   </div>
-    
-    
-    
-    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
-    
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
     <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
-    
-    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
 
 </footer>
         </div>
       </div>
-
     </section>
-
   </div>
-  
-
-  <script type="text/javascript">
+  <script>
       jQuery(function () {
           SphinxRtdTheme.Navigation.enable(true);
       });
-  </script>
-
-  
-  
-    
-   
+  </script> 
 
 </body>
 </html>

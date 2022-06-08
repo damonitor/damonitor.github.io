@@ -1,75 +1,36 @@
-
-
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8" />
-  
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  
-  <title>Assembler Annotations &mdash; The Linux Kernel  documentation</title>
-  
-
-  
-  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
-  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="_static/theme_overrides.css" type="text/css" />
-  <link rel="stylesheet" href="_static/theme_rtd_colors.css" type="text/css" />
-
-  
-  
-
-  
-  
-
-  
-
-  
+  <title>Assembler Annotations &mdash; The Linux Kernel  documentation</title><link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/theme_overrides.css" type="text/css" />
+      <link rel="stylesheet" href="_static/theme_rtd_colors.css" type="text/css" />
   <!--[if lt IE 9]>
     <script src="_static/js/html5shiv.min.js"></script>
   <![endif]-->
-  
-    
-      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+  <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
         <script src="_static/jquery.js"></script>
         <script src="_static/underscore.js"></script>
         <script src="_static/doctools.js"></script>
         <script src="_static/language_data.js"></script>
-    
-    <script type="text/javascript" src="_static/js/theme.js"></script>
-
-    
+    <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" /> 
 </head>
 
-<body class="wy-body-for-nav">
-
-   
+<body class="wy-body-for-nav"> 
   <div class="wy-grid-for-nav">
-    
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-          
-
-          
             <a href="index.html" class="icon icon-home"> The Linux Kernel
-          
-
-          
           </a>
-
-          
-            
-            
               <div class="version">
-                5.16.0-rc7-mm1-damon
+                5.19.0-rc1-mm-unstable-damon
               </div>
-            
-          
-
-          
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
     <input type="text" name="q" placeholder="Search docs" />
@@ -77,18 +38,7 @@
     <input type="hidden" name="area" value="default" />
   </form>
 </div>
-
-          
-        </div>
-
-        
-        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
-          
-            
-            
-              
-            
-            
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <ul>
 <li class="toctree-l1"><a class="reference internal" href="admin-guide/mm/damon/index.html">Monitoring Data Accesses</a></li>
 </ul>
@@ -96,78 +46,37 @@
 <li class="toctree-l1"><a class="reference internal" href="vm/damon/index.html">DAMON: Data Access MONitor</a></li>
 </ul>
 
-            
-          
         </div>
-        
       </div>
     </nav>
 
-    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
-
-      
-      <nav class="wy-nav-top" aria-label="top navigation">
-        
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
           <a href="index.html">The Linux Kernel</a>
-        
       </nav>
 
-
       <div class="wy-nav-content">
-        
         <div class="rst-content">
-        
-          
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<div role="navigation" aria-label="breadcrumbs navigation">
-
+          <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-    
       <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
-        
       <li>Assembler Annotations</li>
-    
-    
       <li class="wy-breadcrumbs-aside">
-        
-          
             <a href="_sources/asm-annotations.rst.txt" rel="nofollow"> View page source</a>
-          
-        
       </li>
-    
   </ul>
-
-  
   <hr/>
 </div>
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
-            
-  <div class="section" id="assembler-annotations">
+             
+  <section id="assembler-annotations">
 <h1>Assembler Annotations<a class="headerlink" href="#assembler-annotations" title="Permalink to this headline">¶</a></h1>
 <p>Copyright (c) 2017-2019 Jiri Slaby</p>
 <p>This document describes the new macros for annotation of data and code in
 assembly. In particular, it contains information about <code class="docutils literal notranslate"><span class="pre">SYM_FUNC_START</span></code>,
 <code class="docutils literal notranslate"><span class="pre">SYM_FUNC_END</span></code>, <code class="docutils literal notranslate"><span class="pre">SYM_CODE_START</span></code>, and similar.</p>
-<div class="section" id="rationale">
+<section id="rationale">
 <h2>Rationale<a class="headerlink" href="#rationale" title="Permalink to this headline">¶</a></h2>
 <p>Some code like entries, trampolines, or boot code needs to be written in
 assembly. The same as in C, such code is grouped into functions and
@@ -204,8 +113,8 @@ missing frame pointer setup/destruction in functions. It can also
 automatically generate annotations for <a class="reference internal" href="x86/orc-unwinder.html"><span class="doc">ORC unwinder</span></a>
 for most code. Both of these are especially important to support reliable
 stack traces which are in turn necessary for <a class="reference internal" href="livepatch/livepatch.html"><span class="doc">Kernel live patching</span></a>.</p>
-</div>
-<div class="section" id="caveat-and-discussion">
+</section>
+<section id="caveat-and-discussion">
 <h2>Caveat and Discussion<a class="headerlink" href="#caveat-and-discussion" title="Permalink to this headline">¶</a></h2>
 <p>As one might realize, there were only three macros previously. That is indeed
 insufficient to cover all the combinations of cases:</p>
@@ -221,8 +130,8 @@ of importing all the crappy, historic, essentially randomly chosen
 debug symbol macro names from the binutils and older kernels?
 </pre></div>
 </div>
-</div>
-<div class="section" id="macros-description">
+</section>
+<section id="macros-description">
 <h2>Macros Description<a class="headerlink" href="#macros-description" title="Permalink to this headline">¶</a></h2>
 <p>The new macros are prefixed with the <code class="docutils literal notranslate"><span class="pre">SYM_</span></code> prefix and can be divided into
 three main groups:</p>
@@ -249,7 +158,7 @@ this code needs hints like <code class="docutils literal notranslate"><span clas
 specially by the tools: they should not treat the bytes as instructions,
 nor assign any debug information to them.</p></li>
 </ol>
-<div class="section" id="instruction-macros">
+<section id="instruction-macros">
 <h3>Instruction Macros<a class="headerlink" href="#instruction-macros" title="Permalink to this headline">¶</a></h3>
 <p>This section covers <code class="docutils literal notranslate"><span class="pre">SYM_FUNC_*</span></code> and <code class="docutils literal notranslate"><span class="pre">SYM_CODE_*</span></code> enumerated above.</p>
 <p><code class="docutils literal notranslate"><span class="pre">objtool</span></code> requires that all code must be contained in an ELF symbol. Symbol
@@ -279,13 +188,12 @@ SYM_FUNC_END(memset)
 <p>In fact, this kind of annotation corresponds to the now deprecated <code class="docutils literal notranslate"><span class="pre">ENTRY</span></code>
 and <code class="docutils literal notranslate"><span class="pre">ENDPROC</span></code> macros.</p>
 </li>
-<li><p><code class="docutils literal notranslate"><span class="pre">SYM_FUNC_START_ALIAS</span></code> and <code class="docutils literal notranslate"><span class="pre">SYM_FUNC_START_LOCAL_ALIAS</span></code> serve for those
-who decided to have two or more names for one function. The typical use is:</p>
-<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>SYM_FUNC_START_ALIAS(__memset)
-SYM_FUNC_START(memset)
+<li><p><code class="docutils literal notranslate"><span class="pre">SYM_FUNC_ALIAS</span></code>, <code class="docutils literal notranslate"><span class="pre">SYM_FUNC_ALIAS_LOCAL</span></code>, and <code class="docutils literal notranslate"><span class="pre">SYM_FUNC_ALIAS_WEAK</span></code> can
+be used to define multiple names for a function. The typical use is:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>SYM_FUNC_START(__memset)
     ... asm insns ...
-SYM_FUNC_END(memset)
-SYM_FUNC_END_ALIAS(__memset)
+SYN_FUNC_END(__memset)
+SYM_FUNC_ALIAS(memset, __memset)
 </pre></div>
 </div>
 <p>In this example, one can call <code class="docutils literal notranslate"><span class="pre">__memset</span></code> or <code class="docutils literal notranslate"><span class="pre">memset</span></code> with the same
@@ -326,8 +234,8 @@ SYM_CODE_END(ftrace_caller)
 </div>
 </li>
 </ul>
-</div>
-<div class="section" id="data-macros">
+</section>
+<section id="data-macros">
 <h3>Data Macros<a class="headerlink" href="#data-macros" title="Permalink to this headline">¶</a></h3>
 <p>Similar to instructions, there is a couple of macros to describe data in the
 assembly.</p>
@@ -353,8 +261,8 @@ SYM_DATA(heap_end, .long rm_stack)
 internally.</p>
 </li>
 </ul>
-</div>
-<div class="section" id="support-macros">
+</section>
+<section id="support-macros">
 <h3>Support Macros<a class="headerlink" href="#support-macros" title="Permalink to this headline">¶</a></h3>
 <p>All the above reduce themselves to some invocation of <code class="docutils literal notranslate"><span class="pre">SYM_START</span></code>,
 <code class="docutils literal notranslate"><span class="pre">SYM_END</span></code>, or <code class="docutils literal notranslate"><span class="pre">SYM_ENTRY</span></code> at last. Normally, developers should avoid using
@@ -363,8 +271,8 @@ these.</p>
 <code class="docutils literal notranslate"><span class="pre">SYM_L_GLOBAL</span></code> and <code class="docutils literal notranslate"><span class="pre">SYM_L_WEAK</span></code>. All are intended to denote linkage of a
 symbol marked by them. They are used either in <code class="docutils literal notranslate"><span class="pre">_LABEL</span></code> variants of the
 earlier macros, or in <code class="docutils literal notranslate"><span class="pre">SYM_START</span></code>.</p>
-</div>
-<div class="section" id="overriding-macros">
+</section>
+<section id="overriding-macros">
 <h3>Overriding Macros<a class="headerlink" href="#overriding-macros" title="Permalink to this headline">¶</a></h3>
 <p>Architecture can also override any of the macros in their own
 <code class="docutils literal notranslate"><span class="pre">asm/linkage.h</span></code>, including macros specifying the type of a symbol
@@ -372,52 +280,36 @@ earlier macros, or in <code class="docutils literal notranslate"><span class="pr
 described in this file is surrounded by <code class="docutils literal notranslate"><span class="pre">#ifdef</span></code> + <code class="docutils literal notranslate"><span class="pre">#endif</span></code>, it is enough
 to define the macros differently in the aforementioned architecture-dependent
 header.</p>
-</div>
-</div>
-</div>
+</section>
+</section>
+</section>
 
 
            </div>
-           
           </div>
           <footer>
 
   <hr/>
 
   <div role="contentinfo">
-    <p>
-        &#169; Copyright The kernel development community.
-
-    </p>
+    <p>&#169; Copyright The kernel development community.</p>
   </div>
-    
-    
-    
-    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
-    
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
     <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
-    
-    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
 
 </footer>
         </div>
       </div>
-
     </section>
-
   </div>
-  
-
-  <script type="text/javascript">
+  <script>
       jQuery(function () {
           SphinxRtdTheme.Navigation.enable(true);
       });
-  </script>
-
-  
-  
-    
-   
+  </script> 
 
 </body>
 </html>

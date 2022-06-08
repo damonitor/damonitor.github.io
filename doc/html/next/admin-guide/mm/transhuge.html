@@ -1,75 +1,36 @@
-
-
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8" />
-  
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  
-  <title>Transparent Hugepage Support &mdash; The Linux Kernel  documentation</title>
-  
-
-  
-  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
-  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="../../_static/theme_overrides.css" type="text/css" />
-  <link rel="stylesheet" href="../../_static/theme_rtd_colors.css" type="text/css" />
-
-  
-  
-
-  
-  
-
-  
-
-  
+  <title>Transparent Hugepage Support &mdash; The Linux Kernel  documentation</title><link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/theme_overrides.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/theme_rtd_colors.css" type="text/css" />
   <!--[if lt IE 9]>
     <script src="../../_static/js/html5shiv.min.js"></script>
   <![endif]-->
-  
-    
-      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+  <script id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
         <script src="../../_static/jquery.js"></script>
         <script src="../../_static/underscore.js"></script>
         <script src="../../_static/doctools.js"></script>
         <script src="../../_static/language_data.js"></script>
-    
-    <script type="text/javascript" src="../../_static/js/theme.js"></script>
-
-    
+    <script src="../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" /> 
 </head>
 
-<body class="wy-body-for-nav">
-
-   
+<body class="wy-body-for-nav"> 
   <div class="wy-grid-for-nav">
-    
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-          
-
-          
             <a href="../../index.html" class="icon icon-home"> The Linux Kernel
-          
-
-          
           </a>
-
-          
-            
-            
               <div class="version">
-                5.16.0-rc7-mm1-damon
+                5.19.0-rc1-mm-unstable-damon
               </div>
-            
-          
-
-          
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
     <input type="text" name="q" placeholder="Search docs" />
@@ -77,18 +38,7 @@
     <input type="hidden" name="area" value="default" />
   </form>
 </div>
-
-          
-        </div>
-
-        
-        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
-          
-            
-            
-              
-            
-            
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <ul>
 <li class="toctree-l1"><a class="reference internal" href="damon/index.html">Monitoring Data Accesses</a></li>
 </ul>
@@ -96,74 +46,33 @@
 <li class="toctree-l1"><a class="reference internal" href="../../vm/damon/index.html">DAMON: Data Access MONitor</a></li>
 </ul>
 
-            
-          
         </div>
-        
       </div>
     </nav>
 
-    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
-
-      
-      <nav class="wy-nav-top" aria-label="top navigation">
-        
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
           <a href="../../index.html">The Linux Kernel</a>
-        
       </nav>
 
-
       <div class="wy-nav-content">
-        
         <div class="rst-content">
-        
-          
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<div role="navigation" aria-label="breadcrumbs navigation">
-
+          <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-    
       <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
-        
       <li>Transparent Hugepage Support</li>
-    
-    
       <li class="wy-breadcrumbs-aside">
-        
-          
             <a href="../../_sources/admin-guide/mm/transhuge.rst.txt" rel="nofollow"> View page source</a>
-          
-        
       </li>
-    
   </ul>
-
-  
   <hr/>
 </div>
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
-            
-  <div class="section" id="transparent-hugepage-support">
+             
+  <section id="transparent-hugepage-support">
 <span id="admin-guide-transhuge"></span><h1>Transparent Hugepage Support<a class="headerlink" href="#transparent-hugepage-support" title="Permalink to this headline">¶</a></h1>
-<div class="section" id="objective">
+<section id="objective">
 <h2>Objective<a class="headerlink" href="#objective" title="Permalink to this headline">¶</a></h2>
 <p>Performance critical computing applications dealing with large memory
 working sets are already running on top of libhugetlbfs and in turn
@@ -235,10 +144,10 @@ only run faster.</p>
 <p>Applications that gets a lot of benefit from hugepages and that don’t
 risk to lose memory by using hugepages, should use
 madvise(MADV_HUGEPAGE) on their critical mmapped regions.</p>
-</div>
-<div class="section" id="sysfs">
+</section>
+<section id="sysfs">
 <span id="thp-sysfs"></span><h2>sysfs<a class="headerlink" href="#sysfs" title="Permalink to this headline">¶</a></h2>
-<div class="section" id="global-thp-controls">
+<section id="global-thp-controls">
 <h3>Global THP controls<a class="headerlink" href="#global-thp-controls" title="Permalink to this headline">¶</a></h3>
 <p>Transparent Hugepage Support for anonymous memory can be entirely disabled
 (mostly for debugging purposes) or only enabled inside MADV_HUGEPAGE
@@ -304,8 +213,8 @@ library) may want to know the size (in bytes) of a transparent hugepage:</p>
 <p>khugepaged will be automatically started when
 transparent_hugepage/enabled is set to “always” or “madvise, and it’ll
 be automatically shutdown if it’s set to “never”.</p>
-</div>
-<div class="section" id="khugepaged-controls">
+</section>
+<section id="khugepaged-controls">
 <h3>Khugepaged controls<a class="headerlink" href="#khugepaged-controls" title="Permalink to this headline">¶</a></h3>
 <p>khugepaged runs usually at low frequency so while one may not want to
 invoke defrag algorithms synchronously during the page faults, it
@@ -364,16 +273,16 @@ processes. Exceeding the number would block the collapse:</p>
 </pre></div>
 </div>
 <p>A higher value may increase memory footprint for some workloads.</p>
-</div>
-</div>
-<div class="section" id="boot-parameter">
+</section>
+</section>
+<section id="boot-parameter">
 <h2>Boot parameter<a class="headerlink" href="#boot-parameter" title="Permalink to this headline">¶</a></h2>
 <p>You can change the sysfs boot time defaults of Transparent Hugepage
 Support by passing the parameter <code class="docutils literal notranslate"><span class="pre">transparent_hugepage=always</span></code> or
 <code class="docutils literal notranslate"><span class="pre">transparent_hugepage=madvise</span></code> or <code class="docutils literal notranslate"><span class="pre">transparent_hugepage=never</span></code>
 to the kernel command line.</p>
-</div>
-<div class="section" id="hugepages-in-tmpfs-shmem">
+</section>
+<section id="hugepages-in-tmpfs-shmem">
 <h2>Hugepages in tmpfs/shmem<a class="headerlink" href="#hugepages-in-tmpfs-shmem" title="Permalink to this headline">¶</a></h2>
 <p>You can control hugepage allocation policy in tmpfs with mount option
 <code class="docutils literal notranslate"><span class="pre">huge=</span></code>. It can have following values:</p>
@@ -405,15 +314,15 @@ all mounts;</p>
 <dt>force</dt><dd><p>Force the huge option on for all - very useful for testing;</p>
 </dd>
 </dl>
-</div>
-<div class="section" id="need-of-application-restart">
+</section>
+<section id="need-of-application-restart">
 <h2>Need of application restart<a class="headerlink" href="#need-of-application-restart" title="Permalink to this headline">¶</a></h2>
 <p>The transparent_hugepage/enabled values and tmpfs mount option only affect
 future behavior. So to make them effective you need to restart any
 application that could have been using hugepages. This also applies to the
 regions registered in khugepaged.</p>
-</div>
-<div class="section" id="monitoring-usage">
+</section>
+<section id="monitoring-usage">
 <h2>Monitoring usage<a class="headerlink" href="#monitoring-usage" title="Permalink to this headline">¶</a></h2>
 <p>The number of anonymous transparent huge pages currently used by the
 system is available by reading the AnonHugePages field in <code class="docutils literal notranslate"><span class="pre">/proc/meminfo</span></code>.
@@ -514,65 +423,49 @@ but failed.</p>
 tracer to record how long was spent in __alloc_pages() and
 using the mm_page_alloc tracepoint to identify which allocations were
 for huge pages.</p>
-</div>
-<div class="section" id="optimizing-the-applications">
+</section>
+<section id="optimizing-the-applications">
 <h2>Optimizing the applications<a class="headerlink" href="#optimizing-the-applications" title="Permalink to this headline">¶</a></h2>
 <p>To be guaranteed that the kernel will map a 2M page immediately in any
 memory region, the mmap region has to be hugepage naturally
 aligned. posix_memalign() can provide that guarantee.</p>
-</div>
-<div class="section" id="hugetlbfs">
+</section>
+<section id="hugetlbfs">
 <h2>Hugetlbfs<a class="headerlink" href="#hugetlbfs" title="Permalink to this headline">¶</a></h2>
 <p>You can use hugetlbfs on a kernel that has transparent hugepage
 support enabled just fine as always. No difference can be noted in
 hugetlbfs other than there will be less overall fragmentation. All
 usual features belonging to hugetlbfs are preserved and
 unaffected. libhugetlbfs will also work fine as usual.</p>
-</div>
-</div>
+</section>
+</section>
 
 
            </div>
-           
           </div>
           <footer>
 
   <hr/>
 
   <div role="contentinfo">
-    <p>
-        &#169; Copyright The kernel development community.
-
-    </p>
+    <p>&#169; Copyright The kernel development community.</p>
   </div>
-    
-    
-    
-    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
-    
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
     <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
-    
-    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
 
 </footer>
         </div>
       </div>
-
     </section>
-
   </div>
-  
-
-  <script type="text/javascript">
+  <script>
       jQuery(function () {
           SphinxRtdTheme.Navigation.enable(true);
       });
-  </script>
-
-  
-  
-    
-   
+  </script> 
 
 </body>
 </html>

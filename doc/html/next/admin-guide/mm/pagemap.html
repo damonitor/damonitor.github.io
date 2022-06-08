@@ -1,75 +1,36 @@
-
-
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8" />
-  
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  
-  <title>Examining Process Page Tables &mdash; The Linux Kernel  documentation</title>
-  
-
-  
-  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
-  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="../../_static/theme_overrides.css" type="text/css" />
-  <link rel="stylesheet" href="../../_static/theme_rtd_colors.css" type="text/css" />
-
-  
-  
-
-  
-  
-
-  
-
-  
+  <title>Examining Process Page Tables &mdash; The Linux Kernel  documentation</title><link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/theme_overrides.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/theme_rtd_colors.css" type="text/css" />
   <!--[if lt IE 9]>
     <script src="../../_static/js/html5shiv.min.js"></script>
   <![endif]-->
-  
-    
-      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+  <script id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
         <script src="../../_static/jquery.js"></script>
         <script src="../../_static/underscore.js"></script>
         <script src="../../_static/doctools.js"></script>
         <script src="../../_static/language_data.js"></script>
-    
-    <script type="text/javascript" src="../../_static/js/theme.js"></script>
-
-    
+    <script src="../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" /> 
 </head>
 
-<body class="wy-body-for-nav">
-
-   
+<body class="wy-body-for-nav"> 
   <div class="wy-grid-for-nav">
-    
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-          
-
-          
             <a href="../../index.html" class="icon icon-home"> The Linux Kernel
-          
-
-          
           </a>
-
-          
-            
-            
               <div class="version">
-                5.16.0-rc7-mm1-damon
+                5.19.0-rc1-mm-unstable-damon
               </div>
-            
-          
-
-          
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
     <input type="text" name="q" placeholder="Search docs" />
@@ -77,18 +38,7 @@
     <input type="hidden" name="area" value="default" />
   </form>
 </div>
-
-          
-        </div>
-
-        
-        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
-          
-            
-            
-              
-            
-            
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <ul>
 <li class="toctree-l1"><a class="reference internal" href="damon/index.html">Monitoring Data Accesses</a></li>
 </ul>
@@ -96,72 +46,31 @@
 <li class="toctree-l1"><a class="reference internal" href="../../vm/damon/index.html">DAMON: Data Access MONitor</a></li>
 </ul>
 
-            
-          
         </div>
-        
       </div>
     </nav>
 
-    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
-
-      
-      <nav class="wy-nav-top" aria-label="top navigation">
-        
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
           <a href="../../index.html">The Linux Kernel</a>
-        
       </nav>
 
-
       <div class="wy-nav-content">
-        
         <div class="rst-content">
-        
-          
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<div role="navigation" aria-label="breadcrumbs navigation">
-
+          <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-    
       <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
-        
       <li>Examining Process Page Tables</li>
-    
-    
       <li class="wy-breadcrumbs-aside">
-        
-          
             <a href="../../_sources/admin-guide/mm/pagemap.rst.txt" rel="nofollow"> View page source</a>
-          
-        
       </li>
-    
   </ul>
-
-  
   <hr/>
 </div>
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
-            
-  <div class="section" id="examining-process-page-tables">
+             
+  <section id="examining-process-page-tables">
 <span id="pagemap"></span><h1>Examining Process Page Tables<a class="headerlink" href="#examining-process-page-tables" title="Permalink to this headline">¶</a></h1>
 <p>pagemap is a new (as of 2.6.25) set of interfaces in the kernel that allow
 userspace programs to examine the page tables and related information by
@@ -179,11 +88,11 @@ value for each virtual page, containing the following data (from
 <li><p>Bits 0-4   swap type if swapped</p></li>
 <li><p>Bits 5-54  swap offset if swapped</p></li>
 <li><p>Bit  55    pte is soft-dirty (see
-<a class="reference internal" href="soft-dirty.html#soft-dirty"><span class="std std-ref"><a class="reference internal" href="soft-dirty.html"><span class="doc">Soft-Dirty PTEs</span></a></span></a>)</p></li>
+<a class="reference internal" href="soft-dirty.html#soft-dirty"><span class="std std-ref">Documentation/admin-guide/mm/soft-dirty.rst</span></a>)</p></li>
 <li><p>Bit  56    page exclusively mapped (since 4.2)</p></li>
 <li><p>Bit  57    pte is uffd-wp write-protected (since 5.13) (see
-<a class="reference internal" href="userfaultfd.html#userfaultfd"><span class="std std-ref"><a class="reference internal" href="userfaultfd.html"><span class="doc">Userfaultfd</span></a></span></a>)</p></li>
-<li><p>Bits 57-60 zero</p></li>
+<a class="reference internal" href="userfaultfd.html#userfaultfd"><span class="std std-ref">Documentation/admin-guide/mm/userfaultfd.rst</span></a>)</p></li>
+<li><p>Bits 58-60 zero</p></li>
 <li><p>Bit  61    page is file-page or shared-anon (since 3.5)</p></li>
 <li><p>Bit  62    page swapped</p></li>
 <li><p>Bit  63    page present</p></li>
@@ -250,7 +159,7 @@ memory cgroup each page is charged to, indexed by PFN. Only available when
 CONFIG_MEMCG is set.</p></li>
 </ul>
 </div></blockquote>
-<div class="section" id="short-descriptions-to-the-page-flags">
+<section id="short-descriptions-to-the-page-flags">
 <h2>Short descriptions to the page flags<a class="headerlink" href="#short-descriptions-to-the-page-flags" title="Permalink to this headline">¶</a></h2>
 <dl class="simple">
 <dt>0 - LOCKED</dt><dd><p>The page is being locked for exclusive access, e.g. by undergoing read/write
@@ -269,7 +178,7 @@ set for and _only_ for the first page.</p>
 A compound page with order 2 takes the form of “HTTT”, where H donates its
 head page and T donates its tail page(s).  The major consumers of compound
 pages are hugeTLB pages
-(<a class="reference internal" href="hugetlbpage.html#hugetlbpage"><span class="std std-ref"><a class="reference internal" href="hugetlbpage.html"><span class="doc">HugeTLB Pages</span></a></span></a>),
+(<a class="reference internal" href="hugetlbpage.html#hugetlbpage"><span class="std std-ref">Documentation/admin-guide/mm/hugetlbpage.rst</span></a>),
 the SLUB etc.  memory allocators and various device drivers.
 However in this interface, only huge/giga pages are made visible
 to end users.</p>
@@ -291,7 +200,7 @@ to end users.</p>
 <dt>24 - ZERO_PAGE</dt><dd><p>Zero page for pfn_zero or huge_zero page.</p>
 </dd>
 <dt>25 - IDLE</dt><dd><p>The page has not been accessed since it was marked idle (see
-<a class="reference internal" href="idle_page_tracking.html#idle-page-tracking"><span class="std std-ref"><a class="reference internal" href="idle_page_tracking.html"><span class="doc">Idle Page Tracking</span></a></span></a>).
+<a class="reference internal" href="idle_page_tracking.html#idle-page-tracking"><span class="std std-ref">Documentation/admin-guide/mm/idle_page_tracking.rst</span></a>).
 Note that this flag may be stale in case the page was accessed via
 a PTE. To make sure the flag is up-to-date one has to read
 <code class="docutils literal notranslate"><span class="pre">/sys/kernel/mm/page_idle/bitmap</span></code> first.</p>
@@ -299,7 +208,7 @@ a PTE. To make sure the flag is up-to-date one has to read
 <dt>26 - PGTABLE</dt><dd><p>The page is in use as a page table.</p>
 </dd>
 </dl>
-<div class="section" id="io-related-page-flags">
+<section id="io-related-page-flags">
 <h3>IO related page flags<a class="headerlink" href="#io-related-page-flags" title="Permalink to this headline">¶</a></h3>
 <dl class="simple">
 <dt>1 - ERROR</dt><dd><p>IO error occurred.</p>
@@ -313,8 +222,8 @@ i.e. for file backed page: (in-memory data revision &gt;  on-disk one)</p>
 <dt>8 - WRITEBACK</dt><dd><p>The page is being synced to disk.</p>
 </dd>
 </dl>
-</div>
-<div class="section" id="lru-related-page-flags">
+</section>
+<section id="lru-related-page-flags">
 <h3>LRU related page flags<a class="headerlink" href="#lru-related-page-flags" title="Permalink to this headline">¶</a></h3>
 <dl class="simple">
 <dt>5 - LRU</dt><dd><p>The page is in one of the LRU lists.</p>
@@ -340,9 +249,9 @@ shmctl(SHM_LOCK) and mlock() memory segments.</p>
 </dl>
 <p>The page-types tool in the tools/vm directory can be used to query the
 above flags.</p>
-</div>
-</div>
-<div class="section" id="using-pagemap-to-do-something-useful">
+</section>
+</section>
+<section id="using-pagemap-to-do-something-useful">
 <h2>Using pagemap to do something useful<a class="headerlink" href="#using-pagemap-to-do-something-useful" title="Permalink to this headline">¶</a></h2>
 <p>The general procedure for using pagemap to find out about a process’ memory
 usage goes like this:</p>
@@ -363,8 +272,8 @@ memory that a process is using that is not shared with any other process,
 you can go through every map in the process, find the PFNs, look those up
 in kpagecount, and tally up the number of pages that are only referenced
 once.</p>
-</div>
-<div class="section" id="exceptions-for-shared-memory">
+</section>
+<section id="exceptions-for-shared-memory">
 <h2>Exceptions for Shared Memory<a class="headerlink" href="#exceptions-for-shared-memory" title="Permalink to this headline">¶</a></h2>
 <p>Page table entries for shared pages are cleared when the pages are zapped or
 swapped out. This makes swapped out pages indistinguishable from never-allocated
@@ -380,8 +289,8 @@ the pages are backed. For anonymous shared pages, the file can be found in
 <code class="docutils literal notranslate"><span class="pre">/proc/pid/map_files/</span></code>.</p>
 <p>mincore() can differentiate between pages in memory (present, including swap
 cache) and out of memory (swapped out or none/non-allocated).</p>
-</div>
-<div class="section" id="other-notes">
+</section>
+<section id="other-notes">
 <h2>Other notes<a class="headerlink" href="#other-notes" title="Permalink to this headline">¶</a></h2>
 <p>Reading from any of the files will return -EINVAL if you are not starting
 the read on an 8-byte boundary (e.g., if you sought an odd number of bytes
@@ -390,51 +299,35 @@ into the file), or if the size of the read is not a multiple of 8 bytes.</p>
 always 12 at most architectures). Since Linux 3.11 their meaning changes
 after first clear of soft-dirty bits. Since Linux 4.2 they are used for
 flags unconditionally.</p>
-</div>
-</div>
+</section>
+</section>
 
 
            </div>
-           
           </div>
           <footer>
 
   <hr/>
 
   <div role="contentinfo">
-    <p>
-        &#169; Copyright The kernel development community.
-
-    </p>
+    <p>&#169; Copyright The kernel development community.</p>
   </div>
-    
-    
-    
-    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
-    
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
     <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
-    
-    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
 
 </footer>
         </div>
       </div>
-
     </section>
-
   </div>
-  
-
-  <script type="text/javascript">
+  <script>
       jQuery(function () {
           SphinxRtdTheme.Navigation.enable(true);
       });
-  </script>
-
-  
-  
-    
-   
+  </script> 
 
 </body>
 </html>

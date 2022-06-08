@@ -1,75 +1,36 @@
-
-
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8" />
-  
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  
-  <title>Memory Hot(Un)Plug &mdash; The Linux Kernel  documentation</title>
-  
-
-  
-  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
-  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="../../_static/theme_overrides.css" type="text/css" />
-  <link rel="stylesheet" href="../../_static/theme_rtd_colors.css" type="text/css" />
-
-  
-  
-
-  
-  
-
-  
-
-  
+  <title>Memory Hot(Un)Plug &mdash; The Linux Kernel  documentation</title><link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/theme_overrides.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/theme_rtd_colors.css" type="text/css" />
   <!--[if lt IE 9]>
     <script src="../../_static/js/html5shiv.min.js"></script>
   <![endif]-->
-  
-    
-      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+  <script id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
         <script src="../../_static/jquery.js"></script>
         <script src="../../_static/underscore.js"></script>
         <script src="../../_static/doctools.js"></script>
         <script src="../../_static/language_data.js"></script>
-    
-    <script type="text/javascript" src="../../_static/js/theme.js"></script>
-
-    
+    <script src="../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" /> 
 </head>
 
-<body class="wy-body-for-nav">
-
-   
+<body class="wy-body-for-nav"> 
   <div class="wy-grid-for-nav">
-    
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-          
-
-          
             <a href="../../index.html" class="icon icon-home"> The Linux Kernel
-          
-
-          
           </a>
-
-          
-            
-            
               <div class="version">
-                5.16.0-rc7-mm1-damon
+                5.19.0-rc1-mm-unstable-damon
               </div>
-            
-          
-
-          
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
     <input type="text" name="q" placeholder="Search docs" />
@@ -77,18 +38,7 @@
     <input type="hidden" name="area" value="default" />
   </form>
 </div>
-
-          
-        </div>
-
-        
-        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
-          
-            
-            
-              
-            
-            
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <ul>
 <li class="toctree-l1"><a class="reference internal" href="damon/index.html">Monitoring Data Accesses</a></li>
 </ul>
@@ -96,72 +46,31 @@
 <li class="toctree-l1"><a class="reference internal" href="../../vm/damon/index.html">DAMON: Data Access MONitor</a></li>
 </ul>
 
-            
-          
         </div>
-        
       </div>
     </nav>
 
-    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
-
-      
-      <nav class="wy-nav-top" aria-label="top navigation">
-        
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
           <a href="../../index.html">The Linux Kernel</a>
-        
       </nav>
 
-
       <div class="wy-nav-content">
-        
         <div class="rst-content">
-        
-          
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<div role="navigation" aria-label="breadcrumbs navigation">
-
+          <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-    
       <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
-        
       <li>Memory Hot(Un)Plug</li>
-    
-    
       <li class="wy-breadcrumbs-aside">
-        
-          
             <a href="../../_sources/admin-guide/mm/memory-hotplug.rst.txt" rel="nofollow"> View page source</a>
-          
-        
       </li>
-    
   </ul>
-
-  
   <hr/>
 </div>
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
-            
-  <div class="section" id="memory-hot-un-plug">
+             
+  <section id="memory-hot-un-plug">
 <span id="admin-guide-memory-hotplug"></span><h1>Memory Hot(Un)Plug<a class="headerlink" href="#memory-hot-un-plug" title="Permalink to this headline">¶</a></h1>
 <p>This document describes generic Linux support for memory hot(un)plug with
 a focus on System RAM, including ZONE_MOVABLE support.</p>
@@ -205,7 +114,7 @@ a focus on System RAM, including ZONE_MOVABLE support.</p>
 </li>
 </ul>
 </div>
-<div class="section" id="introduction">
+<section id="introduction">
 <h2><a class="toc-backref" href="#id1">Introduction</a><a class="headerlink" href="#introduction" title="Permalink to this headline">¶</a></h2>
 <p>Memory hot(un)plug allows for increasing and decreasing the size of physical
 memory available to a machine at runtime. In the simplest case, it consists of
@@ -227,7 +136,7 @@ used to expose persistent memory, other performance-differentiated memory and
 reserved memory regions as ordinary system RAM to Linux.</p>
 <p>Linux only supports memory hot(un)plug on selected 64 bit architectures, such as
 x86_64, arm64, ppc64, s390x and ia64.</p>
-<div class="section" id="memory-hot-un-plug-granularity">
+<section id="memory-hot-un-plug-granularity">
 <h3><a class="toc-backref" href="#id2">Memory Hot(Un)Plug Granularity</a><a class="headerlink" href="#memory-hot-un-plug-granularity" title="Permalink to this headline">¶</a></h3>
 <p>Memory hot(un)plug in Linux uses the SPARSEMEM memory model, which divides the
 physical memory address space into chunks of the same size: memory sections. The
@@ -238,8 +147,8 @@ size of a memory block is architecture dependent and corresponds to the smallest
 granularity that can be hot(un)plugged. The default size of a memory block is
 the same as memory section size, unless an architecture specifies otherwise.</p>
 <p>All memory blocks have the same size.</p>
-</div>
-<div class="section" id="phases-of-memory-hotplug">
+</section>
+<section id="phases-of-memory-hotplug">
 <h3><a class="toc-backref" href="#id3">Phases of Memory Hotplug</a><a class="headerlink" href="#phases-of-memory-hotplug" title="Permalink to this headline">¶</a></h3>
 <p>Memory hotplug consists of two phases:</p>
 <ol class="arabic simple">
@@ -253,8 +162,8 @@ blocks.</p>
 <p>In the second phase, added memory is exposed to the page allocator. After this
 phase, the memory is visible in memory statistics, such as free and total
 memory, of the system.</p>
-</div>
-<div class="section" id="phases-of-memory-hotunplug">
+</section>
+<section id="phases-of-memory-hotunplug">
 <h3><a class="toc-backref" href="#id4">Phases of Memory Hotunplug</a><a class="headerlink" href="#phases-of-memory-hotunplug" title="Permalink to this headline">¶</a></h3>
 <p>Memory hotunplug consists of two phases:</p>
 <ol class="arabic simple">
@@ -266,15 +175,15 @@ example, by migrating busy memory to other memory locations and removing all
 relevant free pages from the page allocator After this phase, the memory is no
 longer visible in memory statistics of the system.</p>
 <p>In the second phase, the memory blocks are removed and metadata is freed.</p>
-</div>
-</div>
-<div class="section" id="memory-hotplug-notifications">
+</section>
+</section>
+<section id="memory-hotplug-notifications">
 <h2><a class="toc-backref" href="#id5">Memory Hotplug Notifications</a><a class="headerlink" href="#memory-hotplug-notifications" title="Permalink to this headline">¶</a></h2>
 <p>There are various ways how Linux is notified about memory hotplug events such
 that it can start adding hotplugged memory. This description is limited to
 systems that support ACPI; mechanisms specific to other firmware interfaces or
 virtual machines are not described.</p>
-<div class="section" id="acpi-notifications">
+<section id="acpi-notifications">
 <h3><a class="toc-backref" href="#id6">ACPI Notifications</a><a class="headerlink" href="#acpi-notifications" title="Permalink to this headline">¶</a></h3>
 <p>Platforms that support ACPI, such as x86_64, can support memory hotplug
 notifications via ACPI.</p>
@@ -287,8 +196,8 @@ assigned memory devices are added to Linux by the ACPI driver.</p>
 <p>Similarly, Linux can be notified about requests to hotunplug a memory device or
 a NUMA node via ACPI. The ACPI driver will try offlining all relevant memory
 blocks, and, if successful, hotunplug the memory from Linux.</p>
-</div>
-<div class="section" id="manual-probing">
+</section>
+<section id="manual-probing">
 <h3><a class="toc-backref" href="#id7">Manual Probing</a><a class="headerlink" href="#manual-probing" title="Permalink to this headline">¶</a></h3>
 <p>On some architectures, the firmware may not be able to notify the operating
 system about a memory hotplug event. Instead, the memory has to be manually
@@ -310,9 +219,9 @@ being created.</p>
 because Linux cannot validate user input; this interface might be removed in
 the future.</p>
 </div>
-</div>
-</div>
-<div class="section" id="onlining-and-offlining-memory-blocks">
+</section>
+</section>
+<section id="onlining-and-offlining-memory-blocks">
 <h2><a class="toc-backref" href="#id8">Onlining and Offlining Memory Blocks</a><a class="headerlink" href="#onlining-and-offlining-memory-blocks" title="Permalink to this headline">¶</a></h2>
 <p>After a memory block has been created, Linux has to be instructed to actually
 make use of that memory: the memory block has to be “online”.</p>
@@ -323,7 +232,7 @@ and drivers automatically trigger offlining of memory blocks when trying
 hotunplug of memory. Memory blocks can only be removed once offlining succeeded
 and drivers may trigger offlining of memory blocks when attempting hotunplug of
 memory.</p>
-<div class="section" id="onlining-memory-blocks-manually">
+<section id="onlining-memory-blocks-manually">
 <h3><a class="toc-backref" href="#id9">Onlining Memory Blocks Manually</a><a class="headerlink" href="#onlining-memory-blocks-manually" title="Permalink to this headline">¶</a></h3>
 <p>If auto-onlining of memory blocks isn’t enabled, user-space has to manually
 trigger onlining of memory blocks. Often, udev rules are used to automate this
@@ -350,8 +259,8 @@ ZONE_MOVABLE by:</p>
 <p>In any case, if onlining succeeds, the state of the memory block is changed to
 be “online”. If it fails, the state of the memory block will remain unchanged
 and the above commands will fail.</p>
-</div>
-<div class="section" id="onlining-memory-blocks-automatically">
+</section>
+<section id="onlining-memory-blocks-automatically">
 <h3><a class="toc-backref" href="#id10">Onlining Memory Blocks Automatically</a><a class="headerlink" href="#onlining-memory-blocks-automatically" title="Permalink to this headline">¶</a></h3>
 <p>The kernel can be configured to try auto-onlining of newly added memory blocks.
 If this feature is disabled, the memory blocks will stay offline until
@@ -379,8 +288,8 @@ auto-onlining is not expected to fail in default configurations.</p>
 <p>DLPAR on ppc64 ignores the <code class="docutils literal notranslate"><span class="pre">offline</span></code> setting and will still online added
 memory blocks; if onlining fails, memory blocks are removed again.</p>
 </div>
-</div>
-<div class="section" id="offlining-memory-blocks">
+</section>
+<section id="offlining-memory-blocks">
 <h3><a class="toc-backref" href="#id11">Offlining Memory Blocks</a><a class="headerlink" href="#offlining-memory-blocks" title="Permalink to this headline">¶</a></h3>
 <p>In the current implementation, Linux’s memory offlining will try migrating all
 movable pages off the affected memory block. As most kernel allocations, such as
@@ -409,8 +318,8 @@ commands will fail, for example, via:</p>
 <div class="highlight-none notranslate"><div class="highlight"><pre><span></span>bash: echo: write error: Invalid argument
 </pre></div>
 </div>
-</div>
-<div class="section" id="observing-the-state-of-memory-blocks">
+</section>
+<section id="observing-the-state-of-memory-blocks">
 <h3><a class="toc-backref" href="#id12">Observing the State of Memory Blocks</a><a class="headerlink" href="#observing-the-state-of-memory-blocks" title="Permalink to this headline">¶</a></h3>
 <p>The state (online/offline/going-offline) of a memory block can be observed
 either via:</p>
@@ -425,13 +334,13 @@ either via:</p>
 <div class="highlight-none notranslate"><div class="highlight"><pre><span></span>% cat /sys/device/system/memory/memoryXXX/valid_zones
 </pre></div>
 </div>
-</div>
-</div>
-<div class="section" id="configuring-memory-hot-un-plug">
+</section>
+</section>
+<section id="configuring-memory-hot-un-plug">
 <h2><a class="toc-backref" href="#id13">Configuring Memory Hot(Un)Plug</a><a class="headerlink" href="#configuring-memory-hot-un-plug" title="Permalink to this headline">¶</a></h2>
 <p>There are various ways how system administrators can configure memory
 hot(un)plug and interact with memory blocks, especially, to online them.</p>
-<div class="section" id="memory-hot-un-plug-configuration-via-sysfs">
+<section id="memory-hot-un-plug-configuration-via-sysfs">
 <h3><a class="toc-backref" href="#id14">Memory Hot(Un)Plug Configuration via Sysfs</a><a class="headerlink" href="#memory-hot-un-plug-configuration-via-sysfs" title="Permalink to this headline">¶</a></h3>
 <p>Some memory hot(un)plug properties can be configured or inspected via sysfs in:</p>
 <div class="highlight-none notranslate"><div class="highlight"><pre><span></span>/sys/devices/system/memory/
@@ -476,8 +385,8 @@ to trigger hwpoisoning of pages, for example, for testing purposes. Note that
 this functionality is not really related to memory hot(un)plug or actual
 offlining of memory blocks.</p>
 </div>
-</div>
-<div class="section" id="memory-block-configuration-via-sysfs">
+</section>
+<section id="memory-block-configuration-via-sysfs">
 <h3><a class="toc-backref" href="#id15">Memory Block Configuration via Sysfs</a><a class="headerlink" href="#memory-block-configuration-via-sysfs" title="Permalink to this headline">¶</a></h3>
 <p>Each memory block is represented as a memory block device that can be
 onlined or offlined. All memory blocks have their device information located in
@@ -570,8 +479,8 @@ directories can also be accessed via symbolic links located in the
 </pre></div>
 </div>
 </div>
-</div>
-<div class="section" id="command-line-parameters">
+</section>
+<section id="command-line-parameters">
 <h3><a class="toc-backref" href="#id16">Command Line Parameters</a><a class="headerlink" href="#command-line-parameters" title="Permalink to this headline">¶</a></h3>
 <p>Some command line parameters affect memory hot(un)plug handling. The following
 command line parameters are relevant:</p>
@@ -596,8 +505,8 @@ contiguous.</p></td>
 </table>
 <p>See <a class="reference internal" href="../kernel-parameters.html"><span class="doc">The kernel’s command-line parameters</span></a> for a more generic
 description of these command line parameters.</p>
-</div>
-<div class="section" id="module-parameters">
+</section>
+<section id="module-parameters">
 <h3><a class="toc-backref" href="#id17">Module Parameters</a><a class="headerlink" href="#module-parameters" title="Permalink to this headline">¶</a></h3>
 <p>Instead of additional command line parameters or sysfs files, the
 <code class="docutils literal notranslate"><span class="pre">memory_hotplug</span></code> subsystem now provides a dedicated namespace for module
@@ -730,9 +639,9 @@ possible.</p>
 </tr>
 </tbody>
 </table>
-</div>
-</div>
-<div class="section" id="zone-movable">
+</section>
+</section>
+<section id="zone-movable">
 <h2><a class="toc-backref" href="#id18">ZONE_MOVABLE</a><a class="headerlink" href="#zone-movable" title="Permalink to this headline">¶</a></h2>
 <p>ZONE_MOVABLE is an important mechanism for more reliable memory offlining.
 Further, having system RAM managed by ZONE_MOVABLE instead of one of the
@@ -746,7 +655,7 @@ movable. Such allocations can be served from ZONE_MOVABLE and the kernel zones.<
 <p>Only movable allocations are served from ZONE_MOVABLE, resulting in unmovable
 allocations being limited to the kernel zones. Without ZONE_MOVABLE, there is
 absolutely no guarantee whether a memory block can be offlined successfully.</p>
-<div class="section" id="zone-imbalances">
+<section id="zone-imbalances">
 <h3><a class="toc-backref" href="#id19">Zone Imbalances</a><a class="headerlink" href="#zone-imbalances" title="Permalink to this headline">¶</a></h3>
 <p>Having too much system RAM managed by ZONE_MOVABLE is called a zone imbalance,
 which can harm the system or degrade performance. As one example, the kernel
@@ -762,8 +671,8 @@ long-term pinning of pages, might not be able to deal with ZONE_MOVABLE at all.<
 ZONE_MOVABLE and similar considerations apply, especially when combining
 CMA with ZONE_MOVABLE.</p>
 </div>
-</div>
-<div class="section" id="zone-movable-sizing-considerations">
+</section>
+<section id="zone-movable-sizing-considerations">
 <h3><a class="toc-backref" href="#id20">ZONE_MOVABLE Sizing Considerations</a><a class="headerlink" href="#zone-movable-sizing-considerations" title="Permalink to this headline">¶</a></h3>
 <p>We usually expect that a large portion of available system RAM will actually
 be consumed by user space, either directly or indirectly via the page cache. In
@@ -812,8 +721,8 @@ zones and ZONE_MOVABLE is not used.</p>
 ratio between movable and kernel zones there are two command line options:
 <code class="docutils literal notranslate"><span class="pre">kernelcore=</span></code> and <code class="docutils literal notranslate"><span class="pre">movablecore=</span></code>. See
 <a class="reference internal" href="../kernel-parameters.html"><span class="doc">The kernel’s command-line parameters</span></a> for their description.</p>
-</div>
-<div class="section" id="memory-offlining-and-zone-movable">
+</section>
+<section id="memory-offlining-and-zone-movable">
 <h3><a class="toc-backref" href="#id21">Memory Offlining and ZONE_MOVABLE</a><a class="headerlink" href="#memory-offlining-and-zone-movable" title="Permalink to this headline">¶</a></h3>
 <p>Even with ZONE_MOVABLE, there are some corner cases where offlining a memory
 block might fail:</p>
@@ -852,52 +761,36 @@ implemented via:</p>
 <div class="highlight-none notranslate"><div class="highlight"><pre><span></span>% timeout $TIMEOUT offline_block | failure_handling
 </pre></div>
 </div>
-</div>
-</div>
-</div>
+</section>
+</section>
+</section>
 
 
            </div>
-           
           </div>
           <footer>
 
   <hr/>
 
   <div role="contentinfo">
-    <p>
-        &#169; Copyright The kernel development community.
-
-    </p>
+    <p>&#169; Copyright The kernel development community.</p>
   </div>
-    
-    
-    
-    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
-    
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
     <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
-    
-    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
 
 </footer>
         </div>
       </div>
-
     </section>
-
   </div>
-  
-
-  <script type="text/javascript">
+  <script>
       jQuery(function () {
           SphinxRtdTheme.Navigation.enable(true);
       });
-  </script>
-
-  
-  
-    
-   
+  </script> 
 
 </body>
 </html>

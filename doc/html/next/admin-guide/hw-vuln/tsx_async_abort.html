@@ -1,75 +1,36 @@
-
-
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8" />
-  
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  
-  <title>TAA - TSX Asynchronous Abort &mdash; The Linux Kernel  documentation</title>
-  
-
-  
-  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
-  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="../../_static/theme_overrides.css" type="text/css" />
-  <link rel="stylesheet" href="../../_static/theme_rtd_colors.css" type="text/css" />
-
-  
-  
-
-  
-  
-
-  
-
-  
+  <title>TAA - TSX Asynchronous Abort &mdash; The Linux Kernel  documentation</title><link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/theme_overrides.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/theme_rtd_colors.css" type="text/css" />
   <!--[if lt IE 9]>
     <script src="../../_static/js/html5shiv.min.js"></script>
   <![endif]-->
-  
-    
-      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+  <script id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
         <script src="../../_static/jquery.js"></script>
         <script src="../../_static/underscore.js"></script>
         <script src="../../_static/doctools.js"></script>
         <script src="../../_static/language_data.js"></script>
-    
-    <script type="text/javascript" src="../../_static/js/theme.js"></script>
-
-    
+    <script src="../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" /> 
 </head>
 
-<body class="wy-body-for-nav">
-
-   
+<body class="wy-body-for-nav"> 
   <div class="wy-grid-for-nav">
-    
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-          
-
-          
             <a href="../../index.html" class="icon icon-home"> The Linux Kernel
-          
-
-          
           </a>
-
-          
-            
-            
               <div class="version">
-                5.16.0-rc7-mm1-damon
+                5.19.0-rc1-mm-unstable-damon
               </div>
-            
-          
-
-          
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
     <input type="text" name="q" placeholder="Search docs" />
@@ -77,18 +38,7 @@
     <input type="hidden" name="area" value="default" />
   </form>
 </div>
-
-          
-        </div>
-
-        
-        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
-          
-            
-            
-              
-            
-            
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <ul>
 <li class="toctree-l1"><a class="reference internal" href="../mm/damon/index.html">Monitoring Data Accesses</a></li>
 </ul>
@@ -96,77 +46,36 @@
 <li class="toctree-l1"><a class="reference internal" href="../../vm/damon/index.html">DAMON: Data Access MONitor</a></li>
 </ul>
 
-            
-          
         </div>
-        
       </div>
     </nav>
 
-    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
-
-      
-      <nav class="wy-nav-top" aria-label="top navigation">
-        
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
           <a href="../../index.html">The Linux Kernel</a>
-        
       </nav>
 
-
       <div class="wy-nav-content">
-        
         <div class="rst-content">
-        
-          
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<div role="navigation" aria-label="breadcrumbs navigation">
-
+          <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-    
       <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
-        
       <li>TAA - TSX Asynchronous Abort</li>
-    
-    
       <li class="wy-breadcrumbs-aside">
-        
-          
             <a href="../../_sources/admin-guide/hw-vuln/tsx_async_abort.rst.txt" rel="nofollow"> View page source</a>
-          
-        
       </li>
-    
   </ul>
-
-  
   <hr/>
 </div>
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
-            
-  <div class="section" id="taa-tsx-asynchronous-abort">
+             
+  <section id="taa-tsx-asynchronous-abort">
 <h1>TAA - TSX Asynchronous Abort<a class="headerlink" href="#taa-tsx-asynchronous-abort" title="Permalink to this headline">¶</a></h1>
 <p>TAA is a hardware vulnerability that allows unprivileged speculative access to
 data which is available in various CPU internal buffers by using asynchronous
 aborts within an Intel TSX transactional region.</p>
-<div class="section" id="affected-processors">
+<section id="affected-processors">
 <h2>Affected processors<a class="headerlink" href="#affected-processors" title="Permalink to this headline">¶</a></h2>
 <p>This vulnerability only affects Intel processors that support Intel
 Transactional Synchronization Extensions (TSX) when the TAA_NO bit (bit 8)
@@ -175,8 +84,8 @@ is 0 in the IA32_ARCH_CAPABILITIES MSR.  On processors where the MDS_NO bit
 also mitigate against TAA.</p>
 <p>Whether a processor is affected or not can be read out from the TAA
 vulnerability file in sysfs. See <a class="reference internal" href="#tsx-async-abort-sys-info"><span class="std std-ref">TAA system information</span></a>.</p>
-</div>
-<div class="section" id="related-cves">
+</section>
+<section id="related-cves">
 <h2>Related CVEs<a class="headerlink" href="#related-cves" title="Permalink to this headline">¶</a></h2>
 <p>The following CVE entry is related to this TAA issue:</p>
 <blockquote>
@@ -198,8 +107,8 @@ local access.</p></td>
 </tbody>
 </table>
 </div></blockquote>
-</div>
-<div class="section" id="problem">
+</section>
+<section id="problem">
 <h2>Problem<a class="headerlink" href="#problem" title="Permalink to this headline">¶</a></h2>
 <p>When performing store, load or L1 refill operations, processors write
 data into temporary microarchitectural structures (buffers). The data in
@@ -223,9 +132,9 @@ Hyper-Thread attacks are possible.</p>
 attacker needs to begin a TSX transaction and raise an asynchronous abort
 which in turn potentially leaks data stored in the buffers.</p>
 <p>More detailed technical information is available in the TAA specific x86
-architecture section: <a class="reference internal" href="../../x86/tsx_async_abort.html#tsx-async-abort"><span class="std std-ref"><a class="reference internal" href="../../x86/tsx_async_abort.html"><span class="doc">TSX Async Abort (TAA) mitigation</span></a></span></a>.</p>
-</div>
-<div class="section" id="attack-scenarios">
+architecture section: <a class="reference internal" href="../../x86/tsx_async_abort.html#tsx-async-abort"><span class="std std-ref">Documentation/x86/tsx_async_abort.rst</span></a>.</p>
+</section>
+<section id="attack-scenarios">
 <h2>Attack scenarios<a class="headerlink" href="#attack-scenarios" title="Permalink to this headline">¶</a></h2>
 <p>Attacks against the TAA vulnerability can be implemented from unprivileged
 applications running on hosts or guests.</p>
@@ -235,8 +144,8 @@ a result, the malicious actor has to sample as much data as possible and
 then postprocess it to try to infer any useful information from it.</p>
 <p>A potential attacker only has read access to the data. Also, there is no direct
 privilege escalation by using this technique.</p>
-</div>
-<div class="section" id="taa-system-information">
+</section>
+<section id="taa-system-information">
 <span id="tsx-async-abort-sys-info"></span><h2>TAA system information<a class="headerlink" href="#taa-system-information" title="Permalink to this headline">¶</a></h2>
 <p>The Linux kernel provides a sysfs interface to enumerate the current TAA status
 of mitigated systems. The relevant sysfs file is:</p>
@@ -265,7 +174,7 @@ of mitigated systems. The relevant sysfs file is:</p>
 </tr>
 </tbody>
 </table>
-<div class="section" id="best-effort-mitigation-mode">
+<section id="best-effort-mitigation-mode">
 <span id="ucode-needed"></span><h3>Best effort mitigation mode<a class="headerlink" href="#best-effort-mitigation-mode" title="Permalink to this headline">¶</a></h3>
 <p>If the processor is vulnerable, but the availability of the microcode-based
 mitigation mechanism is not advertised via CPUID the kernel selects a best
@@ -277,25 +186,25 @@ CPUID to the guest. If the host has updated microcode the protection takes
 effect; otherwise a few CPU cycles are wasted pointlessly.</p>
 <p>The state in the tsx_async_abort sysfs file reflects this situation
 accordingly.</p>
-</div>
-</div>
-<div class="section" id="mitigation-mechanism">
+</section>
+</section>
+<section id="mitigation-mechanism">
 <h2>Mitigation mechanism<a class="headerlink" href="#mitigation-mechanism" title="Permalink to this headline">¶</a></h2>
 <p>The kernel detects the affected CPUs and the presence of the microcode which is
 required. If a CPU is affected and the microcode is available, then the kernel
 enables the mitigation by default.</p>
 <p>The mitigation can be controlled at boot time via a kernel command line option.
 See <a class="reference internal" href="#taa-mitigation-control-command-line"><span class="std std-ref">Mitigation control on the kernel command line</span></a>.</p>
-<div class="section" id="virtualization-mitigation">
+<section id="virtualization-mitigation">
 <h3>Virtualization mitigation<a class="headerlink" href="#virtualization-mitigation" title="Permalink to this headline">¶</a></h3>
 <p>Affected systems where the host has TAA microcode and TAA is mitigated by
 having disabled TSX previously, are not vulnerable regardless of the status
 of the VMs.</p>
 <p>In all other cases, if the host either does not have the TAA microcode or
 the kernel is not mitigated, the system might be vulnerable.</p>
-</div>
-</div>
-<div class="section" id="mitigation-control-on-the-kernel-command-line">
+</section>
+</section>
+<section id="mitigation-control-on-the-kernel-command-line">
 <span id="taa-mitigation-control-command-line"></span><h2>Mitigation control on the kernel command line<a class="headerlink" href="#mitigation-control-on-the-kernel-command-line" title="Permalink to this headline">¶</a></h2>
 <p>The kernel command line allows to control the TAA mitigations at boot time with
 the option “tsx_async_abort=”. The valid arguments for this option are:</p>
@@ -458,16 +367,16 @@ VERW or TSX_CTRL_MSR</p></td>
 </tbody>
 </table>
 </div></blockquote>
-</div>
-<div class="section" id="mitigation-selection-guide">
+</section>
+<section id="mitigation-selection-guide">
 <h2>Mitigation selection guide<a class="headerlink" href="#mitigation-selection-guide" title="Permalink to this headline">¶</a></h2>
-<div class="section" id="trusted-userspace-and-guests">
+<section id="trusted-userspace-and-guests">
 <h3>1. Trusted userspace and guests<a class="headerlink" href="#trusted-userspace-and-guests" title="Permalink to this headline">¶</a></h3>
 <p>If all user space applications are from a trusted source and do not execute
 untrusted code which is supplied externally, then the mitigation can be
 disabled. The same applies to virtualized environments with trusted guests.</p>
-</div>
-<div class="section" id="untrusted-userspace-and-guests">
+</section>
+<section id="untrusted-userspace-and-guests">
 <h3>2. Untrusted userspace and guests<a class="headerlink" href="#untrusted-userspace-and-guests" title="Permalink to this headline">¶</a></h3>
 <p>If there are untrusted applications or guests on the system, enabling TSX
 might allow a malicious actor to leak data from the host or from other
@@ -475,9 +384,9 @@ processes running on the same physical core.</p>
 <p>If the microcode is available and the TSX is disabled on the host, attacks
 are prevented in a virtualized environment as well, even if the VMs do not
 explicitly enable the mitigation.</p>
-</div>
-</div>
-<div class="section" id="default-mitigations">
+</section>
+</section>
+<section id="default-mitigations">
 <span id="taa-default-mitigations"></span><h2>Default mitigations<a class="headerlink" href="#default-mitigations" title="Permalink to this headline">¶</a></h2>
 <p>The kernel’s default action for vulnerable processors is:</p>
 <blockquote>
@@ -485,51 +394,35 @@ explicitly enable the mitigation.</p>
 <li><p>Deploy TSX disable mitigation (tsx_async_abort=full tsx=off).</p></li>
 </ul>
 </div></blockquote>
-</div>
-</div>
+</section>
+</section>
 
 
            </div>
-           
           </div>
           <footer>
 
   <hr/>
 
   <div role="contentinfo">
-    <p>
-        &#169; Copyright The kernel development community.
-
-    </p>
+    <p>&#169; Copyright The kernel development community.</p>
   </div>
-    
-    
-    
-    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
-    
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
     <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
-    
-    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
 
 </footer>
         </div>
       </div>
-
     </section>
-
   </div>
-  
-
-  <script type="text/javascript">
+  <script>
       jQuery(function () {
           SphinxRtdTheme.Navigation.enable(true);
       });
-  </script>
-
-  
-  
-    
-   
+  </script> 
 
 </body>
 </html>

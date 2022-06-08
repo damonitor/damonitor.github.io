@@ -1,75 +1,36 @@
-
-
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8" />
-  
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  
-  <title>Bug hunting &mdash; The Linux Kernel  documentation</title>
-  
-
-  
-  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
-  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="../_static/theme_overrides.css" type="text/css" />
-  <link rel="stylesheet" href="../_static/theme_rtd_colors.css" type="text/css" />
-
-  
-  
-
-  
-  
-
-  
-
-  
+  <title>Bug hunting &mdash; The Linux Kernel  documentation</title><link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/theme_overrides.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/theme_rtd_colors.css" type="text/css" />
   <!--[if lt IE 9]>
     <script src="../_static/js/html5shiv.min.js"></script>
   <![endif]-->
-  
-    
-      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+  <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
         <script src="../_static/jquery.js"></script>
         <script src="../_static/underscore.js"></script>
         <script src="../_static/doctools.js"></script>
         <script src="../_static/language_data.js"></script>
-    
-    <script type="text/javascript" src="../_static/js/theme.js"></script>
-
-    
+    <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" /> 
 </head>
 
-<body class="wy-body-for-nav">
-
-   
+<body class="wy-body-for-nav"> 
   <div class="wy-grid-for-nav">
-    
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-          
-
-          
             <a href="../index.html" class="icon icon-home"> The Linux Kernel
-          
-
-          
           </a>
-
-          
-            
-            
               <div class="version">
-                5.16.0-rc7-mm1-damon
+                5.19.0-rc1-mm-unstable-damon
               </div>
-            
-          
-
-          
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
     <input type="text" name="q" placeholder="Search docs" />
@@ -77,18 +38,7 @@
     <input type="hidden" name="area" value="default" />
   </form>
 </div>
-
-          
-        </div>
-
-        
-        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
-          
-            
-            
-              
-            
-            
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <ul>
 <li class="toctree-l1"><a class="reference internal" href="mm/damon/index.html">Monitoring Data Accesses</a></li>
 </ul>
@@ -96,72 +46,31 @@
 <li class="toctree-l1"><a class="reference internal" href="../vm/damon/index.html">DAMON: Data Access MONitor</a></li>
 </ul>
 
-            
-          
         </div>
-        
       </div>
     </nav>
 
-    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
-
-      
-      <nav class="wy-nav-top" aria-label="top navigation">
-        
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
           <a href="../index.html">The Linux Kernel</a>
-        
       </nav>
 
-
       <div class="wy-nav-content">
-        
         <div class="rst-content">
-        
-          
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<div role="navigation" aria-label="breadcrumbs navigation">
-
+          <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-    
       <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
-        
       <li>Bug hunting</li>
-    
-    
       <li class="wy-breadcrumbs-aside">
-        
-          
             <a href="../_sources/admin-guide/bug-hunting.rst.txt" rel="nofollow"> View page source</a>
-          
-        
       </li>
-    
   </ul>
-
-  
   <hr/>
 </div>
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
-            
-  <div class="section" id="bug-hunting">
+             
+  <section id="bug-hunting">
 <h1>Bug hunting<a class="headerlink" href="#bug-hunting" title="Permalink to this headline">¶</a></h1>
 <p>Kernel bug reports often come with a stack dump like the one below:</p>
 <div class="highlight-none notranslate"><div class="highlight"><pre><span></span>------------[ cut here ]------------
@@ -214,14 +123,14 @@ line is usually required to identify and handle the bug. Along this chapter,
 we’ll refer to “Oops” for all kinds of stack traces that need to be analyzed.</p>
 <p>If the kernel is compiled with <code class="docutils literal notranslate"><span class="pre">CONFIG_DEBUG_INFO</span></code>, you can enhance the
 quality of the stack trace by using file:<cite>scripts/decode_stacktrace.sh</cite>.</p>
-<div class="section" id="modules-linked-in">
+<section id="modules-linked-in">
 <h2>Modules linked in<a class="headerlink" href="#modules-linked-in" title="Permalink to this headline">¶</a></h2>
 <p>Modules that are tainted or are being loaded or unloaded are marked with
 “(…)”, where the taint flags are described in
 file:<cite><a class="reference internal" href="tainted-kernels.html"><span class="doc">Tainted kernels</span></a></cite>, “being loaded” is
 annotated with “+”, and “being unloaded” is annotated with “-“.</p>
-</div>
-<div class="section" id="where-is-the-oops-message-is-located">
+</section>
+<section id="where-is-the-oops-message-is-located">
 <h2>Where is the Oops message is located?<a class="headerlink" href="#where-is-the-oops-message-is-located" title="Permalink to this headline">¶</a></h2>
 <p>Normally the Oops text is read from the kernel buffers by klogd and
 handed to <code class="docutils literal notranslate"><span class="pre">syslogd</span></code> which writes it to a syslog file, typically
@@ -244,20 +153,20 @@ may find that booting with a higher resolution (e.g., <code class="docutils lite
 will allow you to read more of the text. (Caveat: This needs <code class="docutils literal notranslate"><span class="pre">vesafb</span></code>,
 so won’t help for ‘early’ oopses.)</p></li>
 <li><p>Boot with a serial console (see
-<a class="reference internal" href="serial-console.html#serial-console"><span class="std std-ref"><a class="reference internal" href="serial-console.html"><span class="doc">Linux Serial Console</span></a></span></a>),
+<a class="reference internal" href="serial-console.html#serial-console"><span class="std std-ref">Documentation/admin-guide/serial-console.rst</span></a>),
 run a null modem to a second machine and capture the output there
 using your favourite communication program.  Minicom works well.</p></li>
 <li><p>Use Kdump (see <a class="reference internal" href="kdump/kdump.html"><span class="doc">Documentation for Kdump - The kexec-based Crash Dumping Solution</span></a>),
 extract the kernel ring buffer from old memory with using dmesg
 gdbmacro in Documentation/admin-guide/kdump/gdbmacros.txt.</p></li>
 </ol>
-</div>
-<div class="section" id="finding-the-bug-s-location">
+</section>
+<section id="finding-the-bug-s-location">
 <h2>Finding the bug’s location<a class="headerlink" href="#finding-the-bug-s-location" title="Permalink to this headline">¶</a></h2>
 <p>Reporting a bug works best if you point the location of the bug at the
 Kernel source file. There are two methods for doing that. Usually, using
 <code class="docutils literal notranslate"><span class="pre">gdb</span></code> is easier, but the Kernel should be pre-compiled with debug info.</p>
-<div class="section" id="gdb">
+<section id="gdb">
 <h3>gdb<a class="headerlink" href="#gdb" title="Permalink to this headline">¶</a></h3>
 <p>The GNU debugger (<code class="docutils literal notranslate"><span class="pre">gdb</span></code>) is the best way to figure out the exact file and line
 number of the OOPS from the <code class="docutils literal notranslate"><span class="pre">vmlinux</span></code> file.</p>
@@ -338,8 +247,8 @@ like this one:</p>
 </pre></div>
 </div>
 </div>
-</div>
-<div class="section" id="objdump">
+</section>
+<section id="objdump">
 <h3>objdump<a class="headerlink" href="#objdump" title="Permalink to this headline">¶</a></h3>
 <p>To debug a kernel, use objdump and look for the hex offset from the crash
 output to find the valid line of code/assembler. Without debug symbols, you
@@ -388,9 +297,9 @@ ip_queue_xmit:
 </div>
 <p>file:<cite>scripts/decodecode</cite> can be used to automate most of this, depending
 on what CPU architecture is being debugged.</p>
-</div>
-</div>
-<div class="section" id="reporting-the-bug">
+</section>
+</section>
+<section id="reporting-the-bug">
 <h2>Reporting the bug<a class="headerlink" href="#reporting-the-bug" title="Permalink to this headline">¶</a></h2>
 <p>Once you find where the bug happened, by inspecting its location,
 you could either try to fix it yourself or report it upstream.</p>
@@ -425,8 +334,8 @@ driver maintainer (Hans).</p>
 <code class="docutils literal notranslate"><span class="pre">get_maintainer.pl</span></code> didn’t provide you anything useful, send it to
 <a class="reference external" href="mailto:linux-kernel&#37;&#52;&#48;vger&#46;kernel&#46;org">linux-kernel<span>&#64;</span>vger<span>&#46;</span>kernel<span>&#46;</span>org</a>.</p>
 <p>Thanks for your help in making Linux as stable as humanly possible.</p>
-</div>
-<div class="section" id="fixing-the-bug">
+</section>
+<section id="fixing-the-bug">
 <h2>Fixing the bug<a class="headerlink" href="#fixing-the-bug" title="Permalink to this headline">¶</a></h2>
 <p>If you know programming, you could help us by not only reporting the bug,
 but also providing us with a solution. After all, open source is about
@@ -434,11 +343,11 @@ sharing what you do and don’t you want to be recognised for your genius?</p>
 <p>If you decide to take this way, once you have worked out a fix please submit
 it upstream.</p>
 <p>Please do read
-<a class="reference internal" href="../process/submitting-patches.html#submittingpatches"><span class="std std-ref"><a class="reference internal" href="../process/submitting-patches.html"><span class="doc">Submitting patches: the essential guide to getting your code into the kernel</span></a></span></a> though
+<a class="reference internal" href="../process/submitting-patches.html#submittingpatches"><span class="std std-ref">Documentation/process/submitting-patches.rst</span></a> though
 to help your code get accepted.</p>
-</div>
+</section>
 <hr class="docutils" />
-<div class="section" id="notes-on-oops-tracing-with-klogd">
+<section id="notes-on-oops-tracing-with-klogd">
 <h2>Notes on Oops tracing with <code class="docutils literal notranslate"><span class="pre">klogd</span></code><a class="headerlink" href="#notes-on-oops-tracing-with-klogd" title="Permalink to this headline">¶</a></h2>
 <p>In order to help Linus and the other kernel developers there has been
 substantial support incorporated into <code class="docutils literal notranslate"><span class="pre">klogd</span></code> for processing protection
@@ -508,51 +417,35 @@ Fargo, ND  58122
 Phone: 701-234-7556
 </pre></div>
 </div>
-</div>
-</div>
+</section>
+</section>
 
 
            </div>
-           
           </div>
           <footer>
 
   <hr/>
 
   <div role="contentinfo">
-    <p>
-        &#169; Copyright The kernel development community.
-
-    </p>
+    <p>&#169; Copyright The kernel development community.</p>
   </div>
-    
-    
-    
-    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
-    
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
     <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
-    
-    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
 
 </footer>
         </div>
       </div>
-
     </section>
-
   </div>
-  
-
-  <script type="text/javascript">
+  <script>
       jQuery(function () {
           SphinxRtdTheme.Navigation.enable(true);
       });
-  </script>
-
-  
-  
-    
-   
+  </script> 
 
 </body>
 </html>

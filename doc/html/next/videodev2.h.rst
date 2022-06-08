@@ -576,6 +576,7 @@ videodev2.h
     \/\* Grey bit-packed formats \*\/
     \#define \ :ref:`V4L2_PIX_FMT_Y10BPACK <v4l2-pix-fmt-y10bpack>`    v4l2\_fourcc('Y', '1', '0', 'B') \/\* 10  Greyscale bit-packed \*\/
     \#define \ :ref:`V4L2_PIX_FMT_Y10P <v4l2-pix-fmt-y10p>`    v4l2\_fourcc('Y', '1', '0', 'P') \/\* 10  Greyscale, MIPI RAW10 packed \*\/
+    \#define \ :ref:`V4L2_PIX_FMT_IPU3_Y10 <v4l2-pix-fmt-ipu3-y10>`           v4l2\_fourcc('i', 'p', '3', 'y') \/\* IPU3 packed 10-bit greyscale \*\/
 
     \/\* Palette formats \*\/
     \#define \ :ref:`V4L2_PIX_FMT_PAL8 <v4l2-pix-fmt-pal8>`    v4l2\_fourcc('P', 'A', 'L', '8') \/\*  8  8-bit palette \*\/
@@ -639,6 +640,8 @@ videodev2.h
     \/\* Tiled YUV formats, non contiguous planes \*\/
     \#define \ :ref:`V4L2_PIX_FMT_NV12MT <v4l2-pix-fmt-nv12mt>`  v4l2\_fourcc('T', 'M', '1', '2') \/\* 12  Y\/CbCr 4\:2\:0 64x32 tiles \*\/
     \#define \ :ref:`V4L2_PIX_FMT_NV12MT_16X16 <v4l2-pix-fmt-nv12mt-16x16>` v4l2\_fourcc('V', 'M', '1', '2') \/\* 12  Y\/CbCr 4\:2\:0 16x16 tiles \*\/
+    \#define \ :ref:`V4L2_PIX_FMT_NV12M_8L128 <v4l2-pix-fmt-nv12m-8l128>`      v4l2\_fourcc('N', 'A', '1', '2') \/\* Y\/CbCr 4\:2\:0 8x128 tiles \*\/
+    \#define \ :ref:`V4L2_PIX_FMT_NV12M_10BE_8L128 <v4l2-pix-fmt-nv12m-10be-8l128>` v4l2\_fourcc\_be('N', 'T', '1', '2') \/\* Y\/CbCr 4\:2\:0 10-bit 8x128 tiles \*\/
 
     \/\* Bayer formats - see http\:\/\/www.siliconimaging.com\/RGB\%20Bayer.htm \*\/
     \#define \ :ref:`V4L2_PIX_FMT_SBGGR8 <v4l2-pix-fmt-sbggr8>`  v4l2\_fourcc('B', 'A', '8', '1') \/\*  8  BGBG.. GRGR.. \*\/
@@ -751,8 +754,10 @@ videodev2.h
     \#define \ :ref:`V4L2_PIX_FMT_INZI <v4l2-pix-fmt-inzi>`     v4l2\_fourcc('I', 'N', 'Z', 'I') \/\* Intel Planar Greyscale 10-bit and Depth 16-bit \*\/
     \#define \ :ref:`V4L2_PIX_FMT_CNF4 <v4l2-pix-fmt-cnf4>`     v4l2\_fourcc('C', 'N', 'F', '4') \/\* Intel 4-bit packed depth confidence information \*\/
     \#define \ :ref:`V4L2_PIX_FMT_HI240 <v4l2-pix-fmt-hi240>`    v4l2\_fourcc('H', 'I', '2', '4') \/\* BTTV 8-bit dithered RGB \*\/
+    \#define \ :ref:`V4L2_PIX_FMT_QC08C <v4l2-pix-fmt-qc08c>`    v4l2\_fourcc('Q', '0', '8', 'C') \/\* Qualcomm 8-bit compressed \*\/
+    \#define \ :ref:`V4L2_PIX_FMT_QC10C <v4l2-pix-fmt-qc10c>`    v4l2\_fourcc('Q', '1', '0', 'C') \/\* Qualcomm 10-bit compressed \*\/
 
-    \/\* 10bit raw bayer packed, 32 bytes for every 25 pixels, last LSB 6 bits unused \*\/
+    \/\* 10bit raw packed, 32 bytes for every 25 pixels, last LSB 6 bits unused \*\/
     \#define \ :ref:`V4L2_PIX_FMT_IPU3_SBGGR10 <v4l2-pix-fmt-ipu3-sbggr10>`       v4l2\_fourcc('i', 'p', '3', 'b') \/\* IPU3 packed 10-bit BGGR bayer \*\/
     \#define \ :ref:`V4L2_PIX_FMT_IPU3_SGBRG10 <v4l2-pix-fmt-ipu3-sgbrg10>`       v4l2\_fourcc('i', 'p', '3', 'g') \/\* IPU3 packed 10-bit GBRG bayer \*\/
     \#define \ :ref:`V4L2_PIX_FMT_IPU3_SGRBG10 <v4l2-pix-fmt-ipu3-sgrbg10>`       v4l2\_fourcc('i', 'p', '3', 'G') \/\* IPU3 packed 10-bit GRBG bayer \*\/

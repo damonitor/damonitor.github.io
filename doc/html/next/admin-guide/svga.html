@@ -1,75 +1,36 @@
-
-
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8" />
-  
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  
-  <title>Video Mode Selection Support 2.13 &mdash; The Linux Kernel  documentation</title>
-  
-
-  
-  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
-  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="../_static/theme_overrides.css" type="text/css" />
-  <link rel="stylesheet" href="../_static/theme_rtd_colors.css" type="text/css" />
-
-  
-  
-
-  
-  
-
-  
-
-  
+  <title>Video Mode Selection Support 2.13 &mdash; The Linux Kernel  documentation</title><link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/theme_overrides.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/theme_rtd_colors.css" type="text/css" />
   <!--[if lt IE 9]>
     <script src="../_static/js/html5shiv.min.js"></script>
   <![endif]-->
-  
-    
-      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+  <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
         <script src="../_static/jquery.js"></script>
         <script src="../_static/underscore.js"></script>
         <script src="../_static/doctools.js"></script>
         <script src="../_static/language_data.js"></script>
-    
-    <script type="text/javascript" src="../_static/js/theme.js"></script>
-
-    
+    <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" /> 
 </head>
 
-<body class="wy-body-for-nav">
-
-   
+<body class="wy-body-for-nav"> 
   <div class="wy-grid-for-nav">
-    
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-          
-
-          
             <a href="../index.html" class="icon icon-home"> The Linux Kernel
-          
-
-          
           </a>
-
-          
-            
-            
               <div class="version">
-                5.16.0-rc7-mm1-damon
+                5.19.0-rc1-mm-unstable-damon
               </div>
-            
-          
-
-          
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
     <input type="text" name="q" placeholder="Search docs" />
@@ -77,18 +38,7 @@
     <input type="hidden" name="area" value="default" />
   </form>
 </div>
-
-          
-        </div>
-
-        
-        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
-          
-            
-            
-              
-            
-            
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <ul>
 <li class="toctree-l1"><a class="reference internal" href="mm/damon/index.html">Monitoring Data Accesses</a></li>
 </ul>
@@ -96,79 +46,38 @@
 <li class="toctree-l1"><a class="reference internal" href="../vm/damon/index.html">DAMON: Data Access MONitor</a></li>
 </ul>
 
-            
-          
         </div>
-        
       </div>
     </nav>
 
-    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
-
-      
-      <nav class="wy-nav-top" aria-label="top navigation">
-        
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
           <a href="../index.html">The Linux Kernel</a>
-        
       </nav>
 
-
       <div class="wy-nav-content">
-        
         <div class="rst-content">
-        
-          
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<div role="navigation" aria-label="breadcrumbs navigation">
-
+          <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-    
       <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
-        
       <li>Video Mode Selection Support 2.13</li>
-    
-    
       <li class="wy-breadcrumbs-aside">
-        
-          
             <a href="../_sources/admin-guide/svga.rst.txt" rel="nofollow"> View page source</a>
-          
-        
       </li>
-    
   </ul>
-
-  
   <hr/>
 </div>
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
-            
-  <div class="section" id="video-mode-selection-support-2-13">
+             
+  <section id="video-mode-selection-support-2-13">
 <h1>Video Mode Selection Support 2.13<a class="headerlink" href="#video-mode-selection-support-2-13" title="Permalink to this headline">¶</a></h1>
 <dl class="field-list simple">
 <dt class="field-odd">Copyright</dt>
 <dd class="field-odd"><p>© 1995–1999 Martin Mares, &lt;<a class="reference external" href="mailto:mj&#37;&#52;&#48;ucw&#46;cz">mj<span>&#64;</span>ucw<span>&#46;</span>cz</a>&gt;</p>
 </dd>
 </dl>
-<div class="section" id="intro">
+<section id="intro">
 <h2>Intro<a class="headerlink" href="#intro" title="Permalink to this headline">¶</a></h2>
 <p>This small document describes the “Video Mode Selection” feature which
 allows the use of various special video modes supported by the video BIOS. Due
@@ -205,8 +114,8 @@ ASK_VGA - Display a video mode menu upon startup (see below).
    hexadecimal numbers -- you have to convert it to decimal manually.
 </pre></div>
 </div>
-</div>
-<div class="section" id="menu">
+</section>
+<section id="menu">
 <h2>Menu<a class="headerlink" href="#menu" title="Permalink to this headline">¶</a></h2>
 <p>The ASK_VGA mode causes the kernel to offer a video mode menu upon
 bootup. It displays a “Press &lt;RETURN&gt; to see video modes available, &lt;SPACE&gt;
@@ -256,8 +165,8 @@ this function.</p>
 <p>After scanning, the mode ordering is a bit different: the auto-detected SVGA
 modes are not listed at all and the modes revealed by <code class="docutils literal notranslate"><span class="pre">scan</span></code> are shown before
 all VESA modes.</p>
-</div>
-<div class="section" id="mode-ids">
+</section>
+<section id="mode-ids">
 <h2>Mode IDs<a class="headerlink" href="#mode-ids" title="Permalink to this headline">¶</a></h2>
 <p>Because of the complexity of all the video stuff, the video mode IDs
 used here are also a bit complex. A video mode ID is a 16-bit number usually
@@ -307,8 +216,8 @@ vertical display timing according to mode parameters, which can be used to
 eliminate some annoying bugs of certain VGA BIOSes (usually those used for
 cards with S3 chipsets and old Cirrus Logic BIOSes) – mainly extra lines at the
 end of the display.</p>
-</div>
-<div class="section" id="options">
+</section>
+<section id="options">
 <h2>Options<a class="headerlink" href="#options" title="Permalink to this headline">¶</a></h2>
 <p>Build options for arch/x86/boot/* are selected by the kernel kconfig
 utility and the kernel .config file.</p>
@@ -318,8 +227,8 @@ Allows to set _any_ BIOS mode including graphic ones and forcing specific
 text screen resolution instead of peeking it from BIOS variables. Don’t use
 unless you think you know what you’re doing. To activate this setup, use
 mode number 0x0f08 (see the Mode IDs section above).</p>
-</div>
-<div class="section" id="still-doesn-t-work">
+</section>
+<section id="still-doesn-t-work">
 <h2>Still doesn’t work?<a class="headerlink" href="#still-doesn-t-work" title="Permalink to this headline">¶</a></h2>
 <p>When the mode detection doesn’t work (e.g., the mode list is incorrect or
 the machine hangs instead of displaying the menu), try to switch off some of
@@ -336,8 +245,8 @@ bottom of the display containing already scrolled-out text, your VGA BIOS
 contains the most common video BIOS bug called “incorrect vertical display
 end setting”. Adding 0x8000 to the mode ID might fix the problem. Unfortunately,
 this must be done manually – no autodetection mechanisms are available.</p>
-</div>
-<div class="section" id="history">
+</section>
+<section id="history">
 <h2>History<a class="headerlink" href="#history" title="Permalink to this headline">¶</a></h2>
 <table class="docutils align-default">
 <colgroup>
@@ -443,51 +352,35 @@ functions as I try to get rid of _all_ hardware probing here.</p></li>
 </tr>
 </tbody>
 </table>
-</div>
-</div>
+</section>
+</section>
 
 
            </div>
-           
           </div>
           <footer>
 
   <hr/>
 
   <div role="contentinfo">
-    <p>
-        &#169; Copyright The kernel development community.
-
-    </p>
+    <p>&#169; Copyright The kernel development community.</p>
   </div>
-    
-    
-    
-    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
-    
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
     <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
-    
-    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
 
 </footer>
         </div>
       </div>
-
     </section>
-
   </div>
-  
-
-  <script type="text/javascript">
+  <script>
       jQuery(function () {
           SphinxRtdTheme.Navigation.enable(true);
       });
-  </script>
-
-  
-  
-    
-   
+  </script> 
 
 </body>
 </html>

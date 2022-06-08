@@ -1,75 +1,36 @@
-
-
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8" />
-  
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  
-  <title>RAID arrays &mdash; The Linux Kernel  documentation</title>
-  
-
-  
-  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
-  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="../_static/theme_overrides.css" type="text/css" />
-  <link rel="stylesheet" href="../_static/theme_rtd_colors.css" type="text/css" />
-
-  
-  
-
-  
-  
-
-  
-
-  
+  <title>RAID arrays &mdash; The Linux Kernel  documentation</title><link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/theme_overrides.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/theme_rtd_colors.css" type="text/css" />
   <!--[if lt IE 9]>
     <script src="../_static/js/html5shiv.min.js"></script>
   <![endif]-->
-  
-    
-      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+  <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
         <script src="../_static/jquery.js"></script>
         <script src="../_static/underscore.js"></script>
         <script src="../_static/doctools.js"></script>
         <script src="../_static/language_data.js"></script>
-    
-    <script type="text/javascript" src="../_static/js/theme.js"></script>
-
-    
+    <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" /> 
 </head>
 
-<body class="wy-body-for-nav">
-
-   
+<body class="wy-body-for-nav"> 
   <div class="wy-grid-for-nav">
-    
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-          
-
-          
             <a href="../index.html" class="icon icon-home"> The Linux Kernel
-          
-
-          
           </a>
-
-          
-            
-            
               <div class="version">
-                5.16.0-rc7-mm1-damon
+                5.19.0-rc1-mm-unstable-damon
               </div>
-            
-          
-
-          
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
     <input type="text" name="q" placeholder="Search docs" />
@@ -77,18 +38,7 @@
     <input type="hidden" name="area" value="default" />
   </form>
 </div>
-
-          
-        </div>
-
-        
-        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
-          
-            
-            
-              
-            
-            
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <ul>
 <li class="toctree-l1"><a class="reference internal" href="mm/damon/index.html">Monitoring Data Accesses</a></li>
 </ul>
@@ -96,74 +46,33 @@
 <li class="toctree-l1"><a class="reference internal" href="../vm/damon/index.html">DAMON: Data Access MONitor</a></li>
 </ul>
 
-            
-          
         </div>
-        
       </div>
     </nav>
 
-    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
-
-      
-      <nav class="wy-nav-top" aria-label="top navigation">
-        
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
           <a href="../index.html">The Linux Kernel</a>
-        
       </nav>
 
-
       <div class="wy-nav-content">
-        
         <div class="rst-content">
-        
-          
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<div role="navigation" aria-label="breadcrumbs navigation">
-
+          <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-    
       <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
-        
       <li>RAID arrays</li>
-    
-    
       <li class="wy-breadcrumbs-aside">
-        
-          
             <a href="../_sources/admin-guide/md.rst.txt" rel="nofollow"> View page source</a>
-          
-        
       </li>
-    
   </ul>
-
-  
   <hr/>
 </div>
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
-            
-  <div class="section" id="raid-arrays">
+             
+  <section id="raid-arrays">
 <h1>RAID arrays<a class="headerlink" href="#raid-arrays" title="Permalink to this headline">¶</a></h1>
-<div class="section" id="boot-time-assembly-of-raid-arrays">
+<section id="boot-time-assembly-of-raid-arrays">
 <h2>Boot time assembly of RAID arrays<a class="headerlink" href="#boot-time-assembly-of-raid-arrays" title="Permalink to this headline">¶</a></h2>
 <dl class="simple">
 <dt>Tools that manage md devices can be found at</dt><dd><p><a class="reference external" href="https://www.kernel.org/pub/linux/utils/raid/">https://www.kernel.org/pub/linux/utils/raid/</a></p>
@@ -183,7 +92,7 @@ lines:</p>
 <div class="highlight-none notranslate"><div class="highlight"><pre><span></span>md=d&lt;md device no.&gt;,dev0,dev1,...,devn
 </pre></div>
 </div>
-<div class="section" id="md-device-no">
+<section id="md-device-no">
 <h3><code class="docutils literal notranslate"><span class="pre">md</span> <span class="pre">device</span> <span class="pre">no.</span></code><a class="headerlink" href="#md-device-no" title="Permalink to this headline">¶</a></h3>
 <p>The number of the md device</p>
 <table class="docutils align-default">
@@ -214,8 +123,8 @@ lines:</p>
 </tr>
 </tbody>
 </table>
-</div>
-<div class="section" id="raid-level">
+</section>
+<section id="raid-level">
 <h3><code class="docutils literal notranslate"><span class="pre">raid</span> <span class="pre">level</span></code><a class="headerlink" href="#raid-level" title="Permalink to this headline">¶</a></h3>
 <p>level of the RAID array</p>
 <table class="docutils align-default">
@@ -238,26 +147,26 @@ lines:</p>
 </tbody>
 </table>
 <p>other modes are only supported with persistent super blocks</p>
-</div>
-<div class="section" id="chunk-size-factor">
+</section>
+<section id="chunk-size-factor">
 <h3><code class="docutils literal notranslate"><span class="pre">chunk</span> <span class="pre">size</span> <span class="pre">factor</span></code><a class="headerlink" href="#chunk-size-factor" title="Permalink to this headline">¶</a></h3>
 <p>(raid-0 and raid-1 only)</p>
 <p>Set  the chunk size as 4k &lt;&lt; n.</p>
-</div>
-<div class="section" id="fault-level">
+</section>
+<section id="fault-level">
 <h3><code class="docutils literal notranslate"><span class="pre">fault</span> <span class="pre">level</span></code><a class="headerlink" href="#fault-level" title="Permalink to this headline">¶</a></h3>
 <p>Totally ignored</p>
-</div>
-<div class="section" id="dev0-to-devn">
+</section>
+<section id="dev0-to-devn">
 <h3><code class="docutils literal notranslate"><span class="pre">dev0</span></code> to <code class="docutils literal notranslate"><span class="pre">devn</span></code><a class="headerlink" href="#dev0-to-devn" title="Permalink to this headline">¶</a></h3>
 <p>e.g. <code class="docutils literal notranslate"><span class="pre">/dev/hda1</span></code>, <code class="docutils literal notranslate"><span class="pre">/dev/hdc1</span></code>, <code class="docutils literal notranslate"><span class="pre">/dev/sda1</span></code>, <code class="docutils literal notranslate"><span class="pre">/dev/sdb1</span></code></p>
 <p>A possible loadlin line (Harald Hoyer &lt;<a class="reference external" href="mailto:HarryH&#37;&#52;&#48;Royal&#46;Net">HarryH<span>&#64;</span>Royal<span>&#46;</span>Net</a>&gt;)  looks like this:</p>
 <div class="highlight-none notranslate"><div class="highlight"><pre><span></span>e:\loadlin\loadlin e:\zimage root=/dev/md0 md=0,0,4,0,/dev/hdb2,/dev/hdc3 ro
 </pre></div>
 </div>
-</div>
-</div>
-<div class="section" id="boot-time-autodetection-of-raid-arrays">
+</section>
+</section>
+<section id="boot-time-autodetection-of-raid-arrays">
 <h2>Boot time autodetection of RAID arrays<a class="headerlink" href="#boot-time-autodetection-of-raid-arrays" title="Permalink to this headline">¶</a></h2>
 <p>When md is compiled into the kernel (not as module), partitions of
 type 0xfd are scanned and automatically assembled into RAID arrays.
@@ -266,8 +175,8 @@ This autodetection may be suppressed with the kernel parameter
 superblock can be autodetected and run at boot time.</p>
 <p>The kernel parameter <code class="docutils literal notranslate"><span class="pre">raid=partitionable</span></code> (or <code class="docutils literal notranslate"><span class="pre">raid=part</span></code>) means
 that all auto-detected arrays are assembled as partitionable.</p>
-</div>
-<div class="section" id="boot-time-assembly-of-degraded-dirty-arrays">
+</section>
+<section id="boot-time-assembly-of-degraded-dirty-arrays">
 <h2>Boot time assembly of degraded/dirty arrays<a class="headerlink" href="#boot-time-assembly-of-degraded-dirty-arrays" title="Permalink to this headline">¶</a></h2>
 <p>If a raid5 or raid6 array is both dirty and degraded, it could have
 undetectable data corruption.  This is because the fact that it is
@@ -289,8 +198,8 @@ arrays to be started.</p>
 <div class="highlight-none notranslate"><div class="highlight"><pre><span></span>md-mod.start_dirty_degraded=1
 </pre></div>
 </div>
-</div>
-<div class="section" id="superblock-formats">
+</section>
+<section id="superblock-formats">
 <h2>Superblock formats<a class="headerlink" href="#superblock-formats" title="Permalink to this headline">¶</a></h2>
 <p>The md driver can support a variety of different superblock formats.
 Currently, it supports superblock formats <code class="docutils literal notranslate"><span class="pre">0.90.0</span></code> and the <code class="docutils literal notranslate"><span class="pre">md-1</span></code> format
@@ -298,8 +207,8 @@ introduced in the 2.5 development series.</p>
 <p>The kernel will autodetect which format superblock is being used.</p>
 <p>Superblock format <code class="docutils literal notranslate"><span class="pre">0</span></code> is treated differently to others for legacy
 reasons - it is the original superblock format.</p>
-</div>
-<div class="section" id="general-rules-apply-for-all-superblock-formats">
+</section>
+<section id="general-rules-apply-for-all-superblock-formats">
 <h2>General Rules - apply for all superblock formats<a class="headerlink" href="#general-rules-apply-for-all-superblock-formats" title="Permalink to this headline">¶</a></h2>
 <p>An array is <code class="docutils literal notranslate"><span class="pre">created</span></code> by writing appropriate superblocks to all
 devices.</p>
@@ -326,8 +235,8 @@ appropriate superblock written to them, and then be passed in with
 ADD_NEW_DISK.</p>
 <p>Devices that have failed or are not yet active can be detached from an
 array using HOT_REMOVE_DISK.</p>
-</div>
-<div class="section" id="specific-rules-that-apply-to-format-0-super-block-arrays-and-arrays-with-no-superblock-non-persistent">
+</section>
+<section id="specific-rules-that-apply-to-format-0-super-block-arrays-and-arrays-with-no-superblock-non-persistent">
 <h2>Specific Rules that apply to format-0 super block arrays, and arrays with no superblock (non-persistent)<a class="headerlink" href="#specific-rules-that-apply-to-format-0-super-block-arrays-and-arrays-with-no-superblock-non-persistent" title="Permalink to this headline">¶</a></h2>
 <p>An array can be <code class="docutils literal notranslate"><span class="pre">created</span></code> by describing the array (level, chunksize
 etc) in a SET_ARRAY_INFO ioctl.  This must have <code class="docutils literal notranslate"><span class="pre">major_version==0</span></code> and
@@ -337,8 +246,8 @@ structure passed to ADD_NEW_DISK must specify the state of the device
 and its role in the array.</p>
 <p>Once started with RUN_ARRAY, uninitialized spares can be added with
 HOT_ADD_DISK.</p>
-</div>
-<div class="section" id="md-devices-in-sysfs">
+</section>
+<section id="md-devices-in-sysfs">
 <h2>MD devices in sysfs<a class="headerlink" href="#md-devices-in-sysfs" title="Permalink to this headline">¶</a></h2>
 <p>md devices appear in sysfs (<code class="docutils literal notranslate"><span class="pre">/sys</span></code>) as regular block devices,
 e.g.:</p>
@@ -828,51 +737,35 @@ default is “write-through”.</p>
 </dd>
 </dl>
 </div></blockquote>
-</div>
-</div>
+</section>
+</section>
 
 
            </div>
-           
           </div>
           <footer>
 
   <hr/>
 
   <div role="contentinfo">
-    <p>
-        &#169; Copyright The kernel development community.
-
-    </p>
+    <p>&#169; Copyright The kernel development community.</p>
   </div>
-    
-    
-    
-    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
-    
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
     <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
-    
-    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
 
 </footer>
         </div>
       </div>
-
     </section>
-
   </div>
-  
-
-  <script type="text/javascript">
+  <script>
       jQuery(function () {
           SphinxRtdTheme.Navigation.enable(true);
       });
-  </script>
-
-  
-  
-    
-   
+  </script> 
 
 </body>
 </html>

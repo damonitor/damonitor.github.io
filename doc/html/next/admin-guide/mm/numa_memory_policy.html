@@ -1,75 +1,36 @@
-
-
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8" />
-  
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  
-  <title>NUMA Memory Policy &mdash; The Linux Kernel  documentation</title>
-  
-
-  
-  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
-  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="../../_static/theme_overrides.css" type="text/css" />
-  <link rel="stylesheet" href="../../_static/theme_rtd_colors.css" type="text/css" />
-
-  
-  
-
-  
-  
-
-  
-
-  
+  <title>NUMA Memory Policy &mdash; The Linux Kernel  documentation</title><link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/theme_overrides.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/theme_rtd_colors.css" type="text/css" />
   <!--[if lt IE 9]>
     <script src="../../_static/js/html5shiv.min.js"></script>
   <![endif]-->
-  
-    
-      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+  <script id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
         <script src="../../_static/jquery.js"></script>
         <script src="../../_static/underscore.js"></script>
         <script src="../../_static/doctools.js"></script>
         <script src="../../_static/language_data.js"></script>
-    
-    <script type="text/javascript" src="../../_static/js/theme.js"></script>
-
-    
+    <script src="../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" /> 
 </head>
 
-<body class="wy-body-for-nav">
-
-   
+<body class="wy-body-for-nav"> 
   <div class="wy-grid-for-nav">
-    
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-          
-
-          
             <a href="../../index.html" class="icon icon-home"> The Linux Kernel
-          
-
-          
           </a>
-
-          
-            
-            
               <div class="version">
-                5.16.0-rc7-mm1-damon
+                5.19.0-rc1-mm-unstable-damon
               </div>
-            
-          
-
-          
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
     <input type="text" name="q" placeholder="Search docs" />
@@ -77,18 +38,7 @@
     <input type="hidden" name="area" value="default" />
   </form>
 </div>
-
-          
-        </div>
-
-        
-        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
-          
-            
-            
-              
-            
-            
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <ul>
 <li class="toctree-l1"><a class="reference internal" href="damon/index.html">Monitoring Data Accesses</a></li>
 </ul>
@@ -96,74 +46,33 @@
 <li class="toctree-l1"><a class="reference internal" href="../../vm/damon/index.html">DAMON: Data Access MONitor</a></li>
 </ul>
 
-            
-          
         </div>
-        
       </div>
     </nav>
 
-    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
-
-      
-      <nav class="wy-nav-top" aria-label="top navigation">
-        
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
           <a href="../../index.html">The Linux Kernel</a>
-        
       </nav>
 
-
       <div class="wy-nav-content">
-        
         <div class="rst-content">
-        
-          
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<div role="navigation" aria-label="breadcrumbs navigation">
-
+          <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-    
       <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
-        
       <li>NUMA Memory Policy</li>
-    
-    
       <li class="wy-breadcrumbs-aside">
-        
-          
             <a href="../../_sources/admin-guide/mm/numa_memory_policy.rst.txt" rel="nofollow"> View page source</a>
-          
-        
       </li>
-    
   </ul>
-
-  
   <hr/>
 </div>
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
-            
-  <div class="section" id="numa-memory-policy">
+             
+  <section id="numa-memory-policy">
 <span id="id1"></span><h1>NUMA Memory Policy<a class="headerlink" href="#numa-memory-policy" title="Permalink to this headline">¶</a></h1>
-<div class="section" id="what-is-numa-memory-policy">
+<section id="what-is-numa-memory-policy">
 <h2>What is NUMA Memory Policy?<a class="headerlink" href="#what-is-numa-memory-policy" title="Permalink to this headline">¶</a></h2>
 <p>In the Linux kernel, “memory policy” determines from which node the kernel will
 allocate memory in a NUMA system or in an emulated NUMA system.  Linux has
@@ -179,10 +88,10 @@ programming interface that a NUMA-aware application can take advantage of.  When
 both cpusets and policies are applied to a task, the restrictions of the cpuset
 takes priority.  See <a class="reference internal" href="#mem-pol-and-cpusets"><span class="std std-ref">Memory Policies and cpusets</span></a>
 below for more details.</p>
-</div>
-<div class="section" id="memory-policy-concepts">
+</section>
+<section id="memory-policy-concepts">
 <h2>Memory Policy Concepts<a class="headerlink" href="#memory-policy-concepts" title="Permalink to this headline">¶</a></h2>
-<div class="section" id="scope-of-memory-policies">
+<section id="scope-of-memory-policies">
 <h3>Scope of Memory Policies<a class="headerlink" href="#scope-of-memory-policies" title="Permalink to this headline">¶</a></h3>
 <p>The Linux kernel supports _scopes_ of memory policy, described here from
 most general to most specific:</p>
@@ -301,8 +210,8 @@ a shared memory region, when one task has installed shared policy on
 one or more ranges of the region.</p>
 </dd>
 </dl>
-</div>
-<div class="section" id="components-of-memory-policies">
+</section>
+<section id="components-of-memory-policies">
 <h3>Components of Memory Policies<a class="headerlink" href="#components-of-memory-policies" title="Permalink to this headline">¶</a></h3>
 <p>A NUMA memory policy consists of a “mode”, optional mode flags, and
 an optional set of nodes.  The mode determines the behavior of the
@@ -452,9 +361,9 @@ MPOL_PREFERRED policies that were created with an empty nodemask
 (local allocation).</p>
 </dd>
 </dl>
-</div>
-</div>
-<div class="section" id="memory-policy-reference-counting">
+</section>
+</section>
+<section id="memory-policy-reference-counting">
 <h2>Memory Policy Reference Counting<a class="headerlink" href="#memory-policy-reference-counting" title="Permalink to this headline">¶</a></h2>
 <p>To resolve use/free races, struct mempolicy contains an atomic reference
 count field.  Internal interfaces, mpol_get()/mpol_put() increment and
@@ -516,8 +425,8 @@ or by prefaulting the entire shared memory region into memory and locking
 it down.  However, this might not be appropriate for all applications.</p>
 </li>
 </ol>
-</div>
-<div class="section" id="memory-policy-apis">
+</section>
+<section id="memory-policy-apis">
 <span id="id2"></span><h2>Memory Policy APIs<a class="headerlink" href="#memory-policy-apis" title="Permalink to this headline">¶</a></h2>
 <p>Linux supports 4 system calls for controlling memory policy.  These APIS
 always affect only the calling task, the calling task’s address space, or
@@ -575,8 +484,8 @@ mempolicy range. Other address ranges are ignored. A home node is the NUMA node
 closest to which page allocation will come from. Specifying the home node override
 the default allocation policy to allocate memory close to the local node for an
 executing CPU.</p>
-</div>
-<div class="section" id="memory-policy-command-line-interface">
+</section>
+<section id="memory-policy-command-line-interface">
 <h2>Memory Policy Command Line Interface<a class="headerlink" href="#memory-policy-command-line-interface" title="Permalink to this headline">¶</a></h2>
 <p>Although not strictly part of the Linux implementation of memory policy,
 a command line tool, numactl(8), exists that allows one to:</p>
@@ -589,8 +498,8 @@ exec(2)</p></li>
 containing the memory policy system call wrappers.  Some distributions
 package the headers and compile-time libraries in a separate development
 package.</p>
-</div>
-<div class="section" id="memory-policies-and-cpusets">
+</section>
+<section id="memory-policies-and-cpusets">
 <span id="mem-pol-and-cpusets"></span><h2>Memory Policies and cpusets<a class="headerlink" href="#memory-policies-and-cpusets" title="Permalink to this headline">¶</a></h2>
 <p>Memory policies work within cpusets as described above.  For memory policies
 that require a node or set of nodes, the nodes are restricted to the set of
@@ -610,51 +519,35 @@ this information requires “stepping outside” the memory policy APIs to use t
 cpuset information and requires that one know in what cpusets other task might
 be attaching to the shared region.  Furthermore, if the cpusets’ allowed
 memory sets are disjoint, “local” allocation is the only valid policy.</p>
-</div>
-</div>
+</section>
+</section>
 
 
            </div>
-           
           </div>
           <footer>
 
   <hr/>
 
   <div role="contentinfo">
-    <p>
-        &#169; Copyright The kernel development community.
-
-    </p>
+    <p>&#169; Copyright The kernel development community.</p>
   </div>
-    
-    
-    
-    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
-    
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
     <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
-    
-    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
 
 </footer>
         </div>
       </div>
-
     </section>
-
   </div>
-  
-
-  <script type="text/javascript">
+  <script>
       jQuery(function () {
           SphinxRtdTheme.Navigation.enable(true);
       });
-  </script>
-
-  
-  
-    
-   
+  </script> 
 
 </body>
 </html>

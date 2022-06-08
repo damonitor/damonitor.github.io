@@ -1,75 +1,36 @@
-
-
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8" />
-  
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  
-  <title>dm-verity &mdash; The Linux Kernel  documentation</title>
-  
-
-  
-  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
-  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="../../_static/theme_overrides.css" type="text/css" />
-  <link rel="stylesheet" href="../../_static/theme_rtd_colors.css" type="text/css" />
-
-  
-  
-
-  
-  
-
-  
-
-  
+  <title>dm-verity &mdash; The Linux Kernel  documentation</title><link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/theme_overrides.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/theme_rtd_colors.css" type="text/css" />
   <!--[if lt IE 9]>
     <script src="../../_static/js/html5shiv.min.js"></script>
   <![endif]-->
-  
-    
-      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+  <script id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
         <script src="../../_static/jquery.js"></script>
         <script src="../../_static/underscore.js"></script>
         <script src="../../_static/doctools.js"></script>
         <script src="../../_static/language_data.js"></script>
-    
-    <script type="text/javascript" src="../../_static/js/theme.js"></script>
-
-    
+    <script src="../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" /> 
 </head>
 
-<body class="wy-body-for-nav">
-
-   
+<body class="wy-body-for-nav"> 
   <div class="wy-grid-for-nav">
-    
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-          
-
-          
             <a href="../../index.html" class="icon icon-home"> The Linux Kernel
-          
-
-          
           </a>
-
-          
-            
-            
               <div class="version">
-                5.16.0-rc7-mm1-damon
+                5.19.0-rc1-mm-unstable-damon
               </div>
-            
-          
-
-          
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
     <input type="text" name="q" placeholder="Search docs" />
@@ -77,18 +38,7 @@
     <input type="hidden" name="area" value="default" />
   </form>
 </div>
-
-          
-        </div>
-
-        
-        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
-          
-            
-            
-              
-            
-            
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <ul>
 <li class="toctree-l1"><a class="reference internal" href="../mm/damon/index.html">Monitoring Data Accesses</a></li>
 </ul>
@@ -96,77 +46,36 @@
 <li class="toctree-l1"><a class="reference internal" href="../../vm/damon/index.html">DAMON: Data Access MONitor</a></li>
 </ul>
 
-            
-          
         </div>
-        
       </div>
     </nav>
 
-    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
-
-      
-      <nav class="wy-nav-top" aria-label="top navigation">
-        
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
           <a href="../../index.html">The Linux Kernel</a>
-        
       </nav>
 
-
       <div class="wy-nav-content">
-        
         <div class="rst-content">
-        
-          
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<div role="navigation" aria-label="breadcrumbs navigation">
-
+          <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-    
       <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
-        
       <li>dm-verity</li>
-    
-    
       <li class="wy-breadcrumbs-aside">
-        
-          
             <a href="../../_sources/admin-guide/device-mapper/verity.rst.txt" rel="nofollow"> View page source</a>
-          
-        
       </li>
-    
   </ul>
-
-  
   <hr/>
 </div>
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
-            
-  <div class="section" id="dm-verity">
+             
+  <section id="dm-verity">
 <h1>dm-verity<a class="headerlink" href="#dm-verity" title="Permalink to this headline">¶</a></h1>
 <p>Device-Mapper’s “verity” target provides transparent integrity checking of
 block devices using a cryptographic digest provided by the kernel crypto API.
 This target is read-only.</p>
-<div class="section" id="construction-parameters">
+<section id="construction-parameters">
 <h2>Construction Parameters<a class="headerlink" href="#construction-parameters" title="Permalink to this headline">¶</a></h2>
 <div class="highlight-none notranslate"><div class="highlight"><pre><span></span>&lt;version&gt; &lt;dev&gt; &lt;hash_dev&gt;
 &lt;data_block_size&gt; &lt;hash_block_size&gt;
@@ -278,8 +187,8 @@ also gain new certificates at run time if they are signed by a certificate
 already in the secondary trusted keyring.</p>
 </dd>
 </dl>
-</div>
-<div class="section" id="theory-of-operation">
+</section>
+<section id="theory-of-operation">
 <h2>Theory of operation<a class="headerlink" href="#theory-of-operation" title="Permalink to this headline">¶</a></h2>
 <p>dm-verity is meant to be set up as part of a verified boot path.  This
 may be anything ranging from a boot using tboot or trustedgrub to just
@@ -298,7 +207,7 @@ block size.</p>
 corrupted data will be verified using the cryptographic hash of the
 corresponding data. This is why combining error correction with
 integrity checking is essential.</p>
-<div class="section" id="hash-tree">
+<section id="hash-tree">
 <h3>Hash Tree<a class="headerlink" href="#hash-tree" title="Permalink to this headline">¶</a></h3>
 <p>Each node in the tree is a cryptographic hash.  If it is a leaf node, the hash
 of some data block on disk is calculated. If it is an intermediary node,
@@ -321,9 +230,9 @@ calculating the parent node.</p>
 blk_0 ... blk_127  blk_16256   blk_16383      blk_32640 . . . blk_32767
 </pre></div>
 </div>
-</div>
-</div>
-<div class="section" id="on-disk-format">
+</section>
+</section>
+<section id="on-disk-format">
 <h2>On-disk format<a class="headerlink" href="#on-disk-format" title="Permalink to this headline">¶</a></h2>
 <p>The verity kernel code does not read the verity metadata on-disk header.
 It only reads the hash blocks which directly follow the header.
@@ -340,13 +249,13 @@ is available at the cryptsetup project’s wiki page</p>
 <blockquote>
 <div><p><a class="reference external" href="https://gitlab.com/cryptsetup/cryptsetup/wikis/DMVerity">https://gitlab.com/cryptsetup/cryptsetup/wikis/DMVerity</a></p>
 </div></blockquote>
-</div>
-<div class="section" id="status">
+</section>
+<section id="status">
 <h2>Status<a class="headerlink" href="#status" title="Permalink to this headline">¶</a></h2>
 <p>V (for Valid) is returned if every check performed so far was valid.
 If any check failed, C (for Corruption) is returned.</p>
-</div>
-<div class="section" id="example">
+</section>
+<section id="example">
 <h2>Example<a class="headerlink" href="#example" title="Permalink to this headline">¶</a></h2>
 <p>Set up a device:</p>
 <div class="highlight-none notranslate"><div class="highlight"><pre><span></span># dmsetup create vroot --readonly --table \
@@ -370,51 +279,35 @@ Root hash: 4392712ba01368efdf14b05c76f9e4df0d53664630b5d48632ed17a137f39076
   4392712ba01368efdf14b05c76f9e4df0d53664630b5d48632ed17a137f39076
 </pre></div>
 </div>
-</div>
-</div>
+</section>
+</section>
 
 
            </div>
-           
           </div>
           <footer>
 
   <hr/>
 
   <div role="contentinfo">
-    <p>
-        &#169; Copyright The kernel development community.
-
-    </p>
+    <p>&#169; Copyright The kernel development community.</p>
   </div>
-    
-    
-    
-    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
-    
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
     <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
-    
-    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
 
 </footer>
         </div>
       </div>
-
     </section>
-
   </div>
-  
-
-  <script type="text/javascript">
+  <script>
       jQuery(function () {
           SphinxRtdTheme.Navigation.enable(true);
       });
-  </script>
-
-  
-  
-    
-   
+  </script> 
 
 </body>
 </html>

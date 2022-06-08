@@ -1,75 +1,36 @@
-
-
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8" />
-  
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  
-  <title>intel_pstate CPU Performance Scaling Driver &mdash; The Linux Kernel  documentation</title>
-  
-
-  
-  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
-  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="../../_static/theme_overrides.css" type="text/css" />
-  <link rel="stylesheet" href="../../_static/theme_rtd_colors.css" type="text/css" />
-
-  
-  
-
-  
-  
-
-  
-
-  
+  <title>intel_pstate CPU Performance Scaling Driver &mdash; The Linux Kernel  documentation</title><link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/theme_overrides.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/theme_rtd_colors.css" type="text/css" />
   <!--[if lt IE 9]>
     <script src="../../_static/js/html5shiv.min.js"></script>
   <![endif]-->
-  
-    
-      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+  <script id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
         <script src="../../_static/jquery.js"></script>
         <script src="../../_static/underscore.js"></script>
         <script src="../../_static/doctools.js"></script>
         <script src="../../_static/language_data.js"></script>
-    
-    <script type="text/javascript" src="../../_static/js/theme.js"></script>
-
-    
+    <script src="../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" /> 
 </head>
 
-<body class="wy-body-for-nav">
-
-   
+<body class="wy-body-for-nav"> 
   <div class="wy-grid-for-nav">
-    
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-          
-
-          
             <a href="../../index.html" class="icon icon-home"> The Linux Kernel
-          
-
-          
           </a>
-
-          
-            
-            
               <div class="version">
-                5.16.0-rc7-mm1-damon
+                5.19.0-rc1-mm-unstable-damon
               </div>
-            
-          
-
-          
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
     <input type="text" name="q" placeholder="Search docs" />
@@ -77,18 +38,7 @@
     <input type="hidden" name="area" value="default" />
   </form>
 </div>
-
-          
-        </div>
-
-        
-        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
-          
-            
-            
-              
-            
-            
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <ul>
 <li class="toctree-l1"><a class="reference internal" href="../mm/damon/index.html">Monitoring Data Accesses</a></li>
 </ul>
@@ -96,72 +46,31 @@
 <li class="toctree-l1"><a class="reference internal" href="../../vm/damon/index.html">DAMON: Data Access MONitor</a></li>
 </ul>
 
-            
-          
         </div>
-        
       </div>
     </nav>
 
-    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
-
-      
-      <nav class="wy-nav-top" aria-label="top navigation">
-        
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
           <a href="../../index.html">The Linux Kernel</a>
-        
       </nav>
 
-
       <div class="wy-nav-content">
-        
         <div class="rst-content">
-        
-          
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<div role="navigation" aria-label="breadcrumbs navigation">
-
+          <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-    
       <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
-        
       <li><code class="docutils literal notranslate"><span class="pre">intel_pstate</span></code> CPU Performance Scaling Driver</li>
-    
-    
       <li class="wy-breadcrumbs-aside">
-        
-          
             <a href="../../_sources/admin-guide/pm/intel_pstate.rst.txt" rel="nofollow"> View page source</a>
-          
-        
       </li>
-    
   </ul>
-
-  
   <hr/>
 </div>
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
-            
-  <div class="section" id="intel-pstate-cpu-performance-scaling-driver">
+             
+  <section id="intel-pstate-cpu-performance-scaling-driver">
 <h1><code class="docutils literal notranslate"><span class="pre">intel_pstate</span></code> CPU Performance Scaling Driver<a class="headerlink" href="#intel-pstate-cpu-performance-scaling-driver" title="Permalink to this headline">¶</a></h1>
 <dl class="field-list simple">
 <dt class="field-odd">Copyright</dt>
@@ -171,7 +80,7 @@
 <dd class="field-even"><p>Rafael J. Wysocki &lt;<a class="reference external" href="mailto:rafael&#46;j&#46;wysocki&#37;&#52;&#48;intel&#46;com">rafael<span>&#46;</span>j<span>&#46;</span>wysocki<span>&#64;</span>intel<span>&#46;</span>com</a>&gt;</p>
 </dd>
 </dl>
-<div class="section" id="general-information">
+<section id="general-information">
 <h2>General Information<a class="headerlink" href="#general-information" title="Permalink to this headline">¶</a></h2>
 <p><code class="docutils literal notranslate"><span class="pre">intel_pstate</span></code> is a part of the
 <a class="reference internal" href="cpufreq.html"><span class="doc">CPU performance scaling subsystem</span></a> in the Linux kernel
@@ -206,8 +115,8 @@ command line.  However, its configuration can be adjusted via <code class="docut
 great extent.  In some configurations it even is possible to unregister it via
 <code class="docutils literal notranslate"><span class="pre">sysfs</span></code> which allows another <code class="docutils literal notranslate"><span class="pre">CPUFreq</span></code> scaling driver to be loaded and
 registered (see <a class="reference internal" href="#status-attr">below</a>).</p>
-</div>
-<div class="section" id="operation-modes">
+</section>
+<section id="operation-modes">
 <h2>Operation Modes<a class="headerlink" href="#operation-modes" title="Permalink to this headline">¶</a></h2>
 <p><code class="docutils literal notranslate"><span class="pre">intel_pstate</span></code> can operate in two different modes, active or passive.  In the
 active mode, it uses its own internal performance scaling governor algorithm or
@@ -216,7 +125,7 @@ mode it responds to requests made by a generic <code class="docutils literal not
 a certain performance scaling algorithm.  Which of them will be in effect
 depends on what kernel command line options are used and on the capabilities of
 the processor.</p>
-<div class="section" id="active-mode">
+<section id="active-mode">
 <h3>Active Mode<a class="headerlink" href="#active-mode" title="Permalink to this headline">¶</a></h3>
 <p>This is the default operation mode of <code class="docutils literal notranslate"><span class="pre">intel_pstate</span></code> for processors with
 hardware-managed P-states (HWP) support.  If it works in this mode, the
@@ -242,7 +151,7 @@ enabled in the processor and possibly on the processor model.</p>
 <code class="xref c c-macro docutils literal notranslate"><span class="pre">CONFIG_CPU_FREQ_DEFAULT_GOV_PERFORMANCE</span></code> kernel configuration option.
 Namely, if that option is set, the <code class="docutils literal notranslate"><span class="pre">performance</span></code> algorithm will be used by
 default, and the other one will be used by default if it is not set.</p>
-<div class="section" id="active-mode-with-hwp">
+<section id="active-mode-with-hwp">
 <h4>Active Mode With HWP<a class="headerlink" href="#active-mode-with-hwp" title="Permalink to this headline">¶</a></h4>
 <p>If the processor supports the HWP feature, it will be enabled during the
 processor initialization and cannot be disabled after that.  It is possible
@@ -258,7 +167,7 @@ corresponds to).</p>
 in this mode.  However, they are not used for running a P-state selection
 algorithm, but for periodic updates of the current CPU frequency information to
 be made available from the <code class="docutils literal notranslate"><span class="pre">scaling_cur_freq</span></code> policy attribute in <code class="docutils literal notranslate"><span class="pre">sysfs</span></code>.</p>
-<div class="section" id="hwp-performance">
+<section id="hwp-performance">
 <h5>HWP + <code class="docutils literal notranslate"><span class="pre">performance</span></code><a class="headerlink" href="#hwp-performance" title="Permalink to this headline">¶</a></h5>
 <p>In this configuration <code class="docutils literal notranslate"><span class="pre">intel_pstate</span></code> will write 0 to the processor’s
 Energy-Performance Preference (EPP) knob (if supported) or its
@@ -271,8 +180,8 @@ configuration will be rejected.</p>
 <p>Also, in this configuration the range of P-states available to the processor’s
 internal P-state selection logic is always restricted to the upper boundary
 (that is, the maximum P-state that the driver is allowed to use).</p>
-</div>
-<div class="section" id="hwp-powersave">
+</section>
+<section id="hwp-powersave">
 <h5>HWP + <code class="docutils literal notranslate"><span class="pre">powersave</span></code><a class="headerlink" href="#hwp-powersave" title="Permalink to this headline">¶</a></h5>
 <p>In this configuration <code class="docutils literal notranslate"><span class="pre">intel_pstate</span></code> will set the processor’s
 Energy-Performance Preference (EPP) knob (if supported) or its
@@ -280,9 +189,9 @@ Energy-Performance Bias (EPB) knob (otherwise) to whatever value it was
 previously set to via <code class="docutils literal notranslate"><span class="pre">sysfs</span></code> (or whatever default value it was
 set to by the platform firmware).  This usually causes the processor’s
 internal P-state selection logic to be less performance-focused.</p>
-</div>
-</div>
-<div class="section" id="active-mode-without-hwp">
+</section>
+</section>
+<section id="active-mode-without-hwp">
 <h4>Active Mode Without HWP<a class="headerlink" href="#active-mode-without-hwp" title="Permalink to this headline">¶</a></h4>
 <p>This operation mode is optional for processors that do not support the HWP
 feature or when the <code class="docutils literal notranslate"><span class="pre">intel_pstate=no_hwp</span></code> argument is passed to the kernel in
@@ -297,7 +206,7 @@ CPU scheduler in order to run a P-state selection algorithm, either
 setting in <code class="docutils literal notranslate"><span class="pre">sysfs</span></code>.  The current CPU frequency information to be made
 available from the <code class="docutils literal notranslate"><span class="pre">scaling_cur_freq</span></code> policy attribute in <code class="docutils literal notranslate"><span class="pre">sysfs</span></code> is
 periodically updated by those utilization update callbacks too.</p>
-<div class="section" id="performance">
+<section id="performance">
 <h5><code class="docutils literal notranslate"><span class="pre">performance</span></code><a class="headerlink" href="#performance" title="Permalink to this headline">¶</a></h5>
 <p>Without HWP, this P-state selection algorithm is always the same regardless of
 the processor model and platform configuration.</p>
@@ -307,8 +216,8 @@ the processor model and platform configuration.</p>
 <p>This is the default P-state selection algorithm if the
 <code class="xref c c-macro docutils literal notranslate"><span class="pre">CONFIG_CPU_FREQ_DEFAULT_GOV_PERFORMANCE</span></code> kernel configuration option
 is set.</p>
-</div>
-<div class="section" id="powersave">
+</section>
+<section id="powersave">
 <h5><code class="docutils literal notranslate"><span class="pre">powersave</span></code><a class="headerlink" href="#powersave" title="Permalink to this headline">¶</a></h5>
 <p>Without HWP, this P-state selection algorithm is similar to the algorithm
 implemented by the generic <code class="docutils literal notranslate"><span class="pre">schedutil</span></code> scaling governor except that the
@@ -323,10 +232,10 @@ one.</p>
 <p>This is the default P-state selection algorithm if the
 <code class="xref c c-macro docutils literal notranslate"><span class="pre">CONFIG_CPU_FREQ_DEFAULT_GOV_PERFORMANCE</span></code> kernel configuration option
 is not set.</p>
-</div>
-</div>
-</div>
-<div class="section" id="passive-mode">
+</section>
+</section>
+</section>
+<section id="passive-mode">
 <h3>Passive Mode<a class="headerlink" href="#passive-mode" title="Permalink to this headline">¶</a></h3>
 <p>This is the default operation mode of <code class="docutils literal notranslate"><span class="pre">intel_pstate</span></code> for processors without
 hardware-managed P-states (HWP) support.  It is always used if the
@@ -356,9 +265,9 @@ the entire range of available P-states is exposed by <code class="docutils liter
 utilization update callbacks with the CPU scheduler and the <code class="docutils literal notranslate"><span class="pre">scaling_cur_freq</span></code>
 information comes from the <code class="docutils literal notranslate"><span class="pre">CPUFreq</span></code> core (and is the last frequency selected
 by the current scaling governor for the given policy).</p>
-</div>
-</div>
-<div class="section" id="turbo-p-states-support">
+</section>
+</section>
+<section id="turbo-p-states-support">
 <span id="turbo"></span><h2>Turbo P-states Support<a class="headerlink" href="#turbo-p-states-support" title="Permalink to this headline">¶</a></h2>
 <p>In the majority of cases, the entire range of P-states available to
 <code class="docutils literal notranslate"><span class="pre">intel_pstate</span></code> can be divided into two sub-ranges that correspond to
@@ -417,8 +326,8 @@ for more information).</p>
 <code class="docutils literal notranslate"><span class="pre">no_turbo</span></code> attribute in <code class="docutils literal notranslate"><span class="pre">sysfs</span></code> (described <a class="reference internal" href="#no-turbo-attr">below</a>) should
 work as expected in all cases (that is, if set to disable turbo P-states, it
 always should prevent <code class="docutils literal notranslate"><span class="pre">intel_pstate</span></code> from using them).</p>
-</div>
-<div class="section" id="processor-support">
+</section>
+<section id="processor-support">
 <h2>Processor Support<a class="headerlink" href="#processor-support" title="Permalink to this headline">¶</a></h2>
 <p>To handle a given processor <code class="docutils literal notranslate"><span class="pre">intel_pstate</span></code> requires a number of different
 pieces of information on it to be known, including:</p>
@@ -442,10 +351,10 @@ the driver initialization will fail if the detected processor is not in that
 list, unless it supports the HWP feature.  [The interface to obtain all of the
 information listed above is the same for all of the processors supporting the
 HWP feature, which is why <code class="docutils literal notranslate"><span class="pre">intel_pstate</span></code> works with all of them.]</p>
-</div>
-<div class="section" id="user-space-interface-in-sysfs">
+</section>
+<section id="user-space-interface-in-sysfs">
 <h2>User Space Interface in <code class="docutils literal notranslate"><span class="pre">sysfs</span></code><a class="headerlink" href="#user-space-interface-in-sysfs" title="Permalink to this headline">¶</a></h2>
-<div class="section" id="global-attributes">
+<section id="global-attributes">
 <h3>Global Attributes<a class="headerlink" href="#global-attributes" title="Permalink to this headline">¶</a></h3>
 <p><code class="docutils literal notranslate"><span class="pre">intel_pstate</span></code> exposes several global attributes (files) in <code class="docutils literal notranslate"><span class="pre">sysfs</span></code> to
 control its functionality at the system level.  They are located in the
@@ -538,8 +447,8 @@ attribute to “1” enables the energy-efficiency optimizations and setting
 to “0” disables them.</p>
 </dd>
 </dl>
-</div>
-<div class="section" id="interpretation-of-policy-attributes">
+</section>
+<section id="interpretation-of-policy-attributes">
 <h3>Interpretation of Policy Attributes<a class="headerlink" href="#interpretation-of-policy-attributes" title="Permalink to this headline">¶</a></h3>
 <p>The interpretation of some <code class="docutils literal notranslate"><span class="pre">CPUFreq</span></code> policy attributes described in
 <a class="reference internal" href="cpufreq.html"><span class="doc">CPU Performance Scaling</span></a> is special with <code class="docutils literal notranslate"><span class="pre">intel_pstate</span></code>
@@ -588,8 +497,8 @@ same as for other scaling drivers.</p>
 depends on the operation mode of the driver.  Namely, it is either
 “intel_pstate” (in the <a class="reference internal" href="#active-mode">active mode</a>) or “intel_cpufreq” (in the
 <a class="reference internal" href="#passive-mode">passive mode</a>).</p>
-</div>
-<div class="section" id="coordination-of-p-state-limits">
+</section>
+<section id="coordination-of-p-state-limits">
 <h3>Coordination of P-State Limits<a class="headerlink" href="#coordination-of-p-state-limits" title="Permalink to this headline">¶</a></h3>
 <p><code class="docutils literal notranslate"><span class="pre">intel_pstate</span></code> allows P-state limits to be set in two ways: with the help of
 the <code class="docutils literal notranslate"><span class="pre">max_perf_pct</span></code> and <code class="docutils literal notranslate"><span class="pre">min_perf_pct</span></code> <a class="reference internal" href="#global-attributes">global attributes</a> or via the <code class="docutils literal notranslate"><span class="pre">scaling_max_freq</span></code> and <code class="docutils literal notranslate"><span class="pre">scaling_min_freq</span></code>
@@ -623,8 +532,8 @@ every time before setting a new P-state for a CPU.</p>
 <p>Additionally, if the <code class="docutils literal notranslate"><span class="pre">intel_pstate=per_cpu_perf_limits</span></code> command line argument
 is passed to the kernel, <code class="docutils literal notranslate"><span class="pre">max_perf_pct</span></code> and <code class="docutils literal notranslate"><span class="pre">min_perf_pct</span></code> are not exposed
 at all and the only way to set the limits is by using the policy attributes.</p>
-</div>
-<div class="section" id="energy-vs-performance-hints">
+</section>
+<section id="energy-vs-performance-hints">
 <h3>Energy vs Performance Hints<a class="headerlink" href="#energy-vs-performance-hints" title="Permalink to this headline">¶</a></h3>
 <p>If the hardware-managed P-states (HWP) is enabled in the processor, additional
 attributes, intended to allow user space to help <code class="docutils literal notranslate"><span class="pre">intel_pstate</span></code> to adjust the
@@ -656,9 +565,9 @@ load-balancing algorithm and if different energy vs performance hints are
 set for those CPUs, that may lead to undesirable outcomes.  To avoid such
 issues it is better to set the same energy vs performance hint for all CPUs
 or to pin every task potentially sensitive to them to a specific CPU.]</p>
-</div>
-</div>
-<div class="section" id="intel-pstate-vs-acpi-cpufreq">
+</section>
+</section>
+<section id="intel-pstate-vs-acpi-cpufreq">
 <span id="acpi-cpufreq"></span><h2><code class="docutils literal notranslate"><span class="pre">intel_pstate</span></code> vs <code class="docutils literal notranslate"><span class="pre">acpi-cpufreq</span></code><a class="headerlink" href="#intel-pstate-vs-acpi-cpufreq" title="Permalink to this headline">¶</a></h2>
 <p>On the majority of systems supported by <code class="docutils literal notranslate"><span class="pre">intel_pstate</span></code>, the ACPI tables
 provided by the platform firmware contain <code class="docutils literal notranslate"><span class="pre">_PSS</span></code> objects returning information
@@ -709,8 +618,8 @@ the list returned by it.</p>
 <p>Apart from the above, <code class="docutils literal notranslate"><span class="pre">acpi-cpufreq</span></code> works like <code class="docutils literal notranslate"><span class="pre">intel_pstate</span></code> in the
 <a class="reference internal" href="#passive-mode">passive mode</a>, except that the number of P-states it can set
 is limited to the ones listed by the ACPI <code class="docutils literal notranslate"><span class="pre">_PSS</span></code> objects.</p>
-</div>
-<div class="section" id="kernel-command-line-options-for-intel-pstate">
+</section>
+<section id="kernel-command-line-options-for-intel-pstate">
 <h2>Kernel Command Line Options for <code class="docutils literal notranslate"><span class="pre">intel_pstate</span></code><a class="headerlink" href="#kernel-command-line-options-for-intel-pstate" title="Permalink to this headline">¶</a></h2>
 <p>Several kernel command line options can be used to pass early-configuration-time
 parameters to <code class="docutils literal notranslate"><span class="pre">intel_pstate</span></code> in order to enforce specific behavior of it.  All
@@ -751,10 +660,10 @@ and this option has no effect.</p>
 Limits</a> for details).</p>
 </dd>
 </dl>
-</div>
-<div class="section" id="diagnostics-and-tuning">
+</section>
+<section id="diagnostics-and-tuning">
 <h2>Diagnostics and Tuning<a class="headerlink" href="#diagnostics-and-tuning" title="Permalink to this headline">¶</a></h2>
-<div class="section" id="trace-events">
+<section id="trace-events">
 <h3>Trace Events<a class="headerlink" href="#trace-events" title="Permalink to this headline">¶</a></h3>
 <p>There are two static trace events that can be used for <code class="docutils literal notranslate"><span class="pre">intel_pstate</span></code>
 diagnostics.  One of them is the <code class="docutils literal notranslate"><span class="pre">cpu_frequency</span></code> trace event generally used
@@ -775,8 +684,8 @@ cat-5235  [002] ..s.  1177.681723: cpu_frequency: state=2900000 cpu_id=2
 <code class="docutils literal notranslate"><span class="pre">cpu_frequency</span></code> trace event will be triggered either by the <code class="docutils literal notranslate"><span class="pre">schedutil</span></code>
 scaling governor (for the policies it is attached to), or by the <code class="docutils literal notranslate"><span class="pre">CPUFreq</span></code>
 core (for the policies with other scaling governors).</p>
-</div>
-<div class="section" id="ftrace">
+</section>
+<section id="ftrace">
 <h3><code class="docutils literal notranslate"><span class="pre">ftrace</span></code><a class="headerlink" href="#ftrace" title="Permalink to this headline">¶</a></h3>
 <p>The <code class="docutils literal notranslate"><span class="pre">ftrace</span></code> interface can be used for low-level diagnostics of
 <code class="docutils literal notranslate"><span class="pre">intel_pstate</span></code>.  For example, to check how often the function to set a
@@ -807,9 +716,9 @@ intel_pstate_cpu_init
           &lt;idle&gt;-0     [000] ..s.  2537.654843: intel_pstate_set_pstate &lt;-intel_pstate_timer_func
 </pre></div>
 </div>
-</div>
-</div>
-<div class="section" id="references">
+</section>
+</section>
+<section id="references">
 <h2>References<a class="headerlink" href="#references" title="Permalink to this headline">¶</a></h2>
 <dl class="footnote brackets">
 <dt class="label" id="id4"><span class="brackets"><a class="fn-backref" href="#id1">1</a></span></dt>
@@ -825,51 +734,35 @@ intel_pstate_cpu_init
 <a class="reference external" href="https://uefi.org/sites/default/files/resources/ACPI_6_3_final_Jan30.pdf">https://uefi.org/sites/default/files/resources/ACPI_6_3_final_Jan30.pdf</a></p>
 </dd>
 </dl>
-</div>
-</div>
+</section>
+</section>
 
 
            </div>
-           
           </div>
           <footer>
 
   <hr/>
 
   <div role="contentinfo">
-    <p>
-        &#169; Copyright The kernel development community.
-
-    </p>
+    <p>&#169; Copyright The kernel development community.</p>
   </div>
-    
-    
-    
-    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
-    
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
     <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
-    
-    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
 
 </footer>
         </div>
       </div>
-
     </section>
-
   </div>
-  
-
-  <script type="text/javascript">
+  <script>
       jQuery(function () {
           SphinxRtdTheme.Navigation.enable(true);
       });
-  </script>
-
-  
-  
-    
-   
+  </script> 
 
 </body>
 </html>

@@ -1,75 +1,36 @@
-
-
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8" />
-  
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  
-  <title>Virtually Mapped Kernel Stack Support &mdash; The Linux Kernel  documentation</title>
-  
-
-  
-  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
-  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="../_static/theme_overrides.css" type="text/css" />
-  <link rel="stylesheet" href="../_static/theme_rtd_colors.css" type="text/css" />
-
-  
-  
-
-  
-  
-
-  
-
-  
+  <title>Virtually Mapped Kernel Stack Support &mdash; The Linux Kernel  documentation</title><link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/theme_overrides.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/theme_rtd_colors.css" type="text/css" />
   <!--[if lt IE 9]>
     <script src="../_static/js/html5shiv.min.js"></script>
   <![endif]-->
-  
-    
-      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+  <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
         <script src="../_static/jquery.js"></script>
         <script src="../_static/underscore.js"></script>
         <script src="../_static/doctools.js"></script>
         <script src="../_static/language_data.js"></script>
-    
-    <script type="text/javascript" src="../_static/js/theme.js"></script>
-
-    
+    <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" /> 
 </head>
 
-<body class="wy-body-for-nav">
-
-   
+<body class="wy-body-for-nav"> 
   <div class="wy-grid-for-nav">
-    
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-          
-
-          
             <a href="../index.html" class="icon icon-home"> The Linux Kernel
-          
-
-          
           </a>
-
-          
-            
-            
               <div class="version">
-                5.16.0-rc7-mm1-damon
+                5.19.0-rc1-mm-unstable-damon
               </div>
-            
-          
-
-          
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
     <input type="text" name="q" placeholder="Search docs" />
@@ -77,18 +38,7 @@
     <input type="hidden" name="area" value="default" />
   </form>
 </div>
-
-          
-        </div>
-
-        
-        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
-          
-            
-            
-              
-            
-            
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <ul>
 <li class="toctree-l1"><a class="reference internal" href="../admin-guide/mm/damon/index.html">Monitoring Data Accesses</a></li>
 </ul>
@@ -96,72 +46,31 @@
 <li class="toctree-l1"><a class="reference internal" href="damon/index.html">DAMON: Data Access MONitor</a></li>
 </ul>
 
-            
-          
         </div>
-        
       </div>
     </nav>
 
-    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
-
-      
-      <nav class="wy-nav-top" aria-label="top navigation">
-        
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
           <a href="../index.html">The Linux Kernel</a>
-        
       </nav>
 
-
       <div class="wy-nav-content">
-        
         <div class="rst-content">
-        
-          
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<div role="navigation" aria-label="breadcrumbs navigation">
-
+          <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-    
       <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
-        
       <li>Virtually Mapped Kernel Stack Support</li>
-    
-    
       <li class="wy-breadcrumbs-aside">
-        
-          
             <a href="../_sources/vm/vmalloced-kernel-stacks.rst.txt" rel="nofollow"> View page source</a>
-          
-        
       </li>
-    
   </ul>
-
-  
   <hr/>
 </div>
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
-            
-  <div class="section" id="virtually-mapped-kernel-stack-support">
+             
+  <section id="virtually-mapped-kernel-stack-support">
 <h1>Virtually Mapped Kernel Stack Support<a class="headerlink" href="#virtually-mapped-kernel-stack-support" title="Permalink to this headline">¶</a></h1>
 <dl class="field-list simple">
 <dt class="field-odd">Author</dt>
@@ -180,13 +89,13 @@
 <li><p><a class="reference internal" href="#conclusions" id="id8">Conclusions</a></p></li>
 </ul>
 </div>
-<div class="section" id="overview">
+<section id="overview">
 <h2><a class="toc-backref" href="#id1">Overview</a><a class="headerlink" href="#overview" title="Permalink to this headline">¶</a></h2>
 <p>This is a compilation of information from the code and original patch
 series that introduced the <cite>Virtually Mapped Kernel Stacks feature
 &lt;https://lwn.net/Articles/694348/&gt;</cite></p>
-</div>
-<div class="section" id="introduction">
+</section>
+<section id="introduction">
 <h2><a class="toc-backref" href="#id2">Introduction</a><a class="headerlink" href="#introduction" title="Permalink to this headline">¶</a></h2>
 <p>Kernel stack overflows are often hard to debug and make the kernel
 susceptible to exploits. Problems could show up at a later time making
@@ -204,8 +113,8 @@ is architecture dependent.</p>
 <p>As of this writing, arm64, powerpc, riscv, s390, um, and x86 have
 support for VMAP_STACK.</p>
 </div>
-</div>
-<div class="section" id="have-arch-vmap-stack">
+</section>
+<section id="have-arch-vmap-stack">
 <h2><a class="toc-backref" href="#id3">HAVE_ARCH_VMAP_STACK</a><a class="headerlink" href="#have-arch-vmap-stack" title="Permalink to this headline">¶</a></h2>
 <p>Architectures that can support Virtually Mapped Kernel Stacks should
 enable this bool configuration option. The requirements are:</p>
@@ -222,8 +131,8 @@ are populated before running on a possibly unpopulated stack.</p></li>
 should happen. The definition of “reasonable” is flexible, but
 instantly rebooting without logging anything would be unfriendly.</p></li>
 </ul>
-</div>
-<div class="section" id="vmap-stack">
+</section>
+<section id="vmap-stack">
 <h2><a class="toc-backref" href="#id4">VMAP_STACK</a><a class="headerlink" href="#vmap-stack" title="Permalink to this headline">¶</a></h2>
 <p>VMAP_STACK bool configuration option when enabled allocates virtually
 mapped task stacks. This option depends on HAVE_ARCH_VMAP_STACK.</p>
@@ -246,8 +155,8 @@ allocated data.</p>
 <p>Kernel configuration options and dependencies keep changing. Refer to
 the latest code base:</p>
 <p><cite>Kconfig &lt;https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/arch/Kconfig&gt;</cite></p>
-</div>
-<div class="section" id="allocation">
+</section>
+<section id="allocation">
 <h2><a class="toc-backref" href="#id5">Allocation</a><a class="headerlink" href="#allocation" title="Permalink to this headline">¶</a></h2>
 <p>When a new kernel thread is created, thread stack is allocated from
 virtually contiguous memory pages from the page level allocator. These
@@ -278,8 +187,8 @@ virtually mapped kernel stacks are enabled.</p>
 <div class="highlight-none notranslate"><div class="highlight"><pre><span></span>struct vm_struct *stack_vm_area;
 </pre></div>
 </div>
-</div>
-<div class="section" id="stack-overflow-handling">
+</section>
+<section id="stack-overflow-handling">
 <h2><a class="toc-backref" href="#id6">Stack overflow handling</a><a class="headerlink" href="#stack-overflow-handling" title="Permalink to this headline">¶</a></h2>
 <p>Leading and trailing guard pages help detect stack overflows. When stack
 overflows into the guard pages, handlers have to be careful not overflow
@@ -287,8 +196,8 @@ the stack again. When handlers are called, it is likely that very little
 stack space is left.</p>
 <p>On x86, this is done by handling the page fault indicating the kernel
 stack overflow on the double-fault stack.</p>
-</div>
-<div class="section" id="testing-vmap-allocation-with-guard-pages">
+</section>
+<section id="testing-vmap-allocation-with-guard-pages">
 <h2><a class="toc-backref" href="#id7">Testing VMAP allocation with guard pages</a><a class="headerlink" href="#testing-vmap-allocation-with-guard-pages" title="Permalink to this headline">¶</a></h2>
 <p>How do we ensure that VMAP_STACK is actually allocating with a leading
 and trailing guard page? The following lkdtm tests can help detect any
@@ -297,8 +206,8 @@ regressions.</p>
 void lkdtm_STACK_GUARD_PAGE_TRAILING()
 </pre></div>
 </div>
-</div>
-<div class="section" id="conclusions">
+</section>
+<section id="conclusions">
 <h2><a class="toc-backref" href="#id8">Conclusions</a><a class="headerlink" href="#conclusions" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
 <li><p>A percpu cache of vmalloced stacks appears to be a bit faster than a
@@ -310,51 +219,35 @@ task_struct.</p></li>
 waiting for RCU) and then, if vmapped stacks are in use, cache the
 entire stack for reuse on the same cpu.</p></li>
 </ul>
-</div>
-</div>
+</section>
+</section>
 
 
            </div>
-           
           </div>
           <footer>
 
   <hr/>
 
   <div role="contentinfo">
-    <p>
-        &#169; Copyright The kernel development community.
-
-    </p>
+    <p>&#169; Copyright The kernel development community.</p>
   </div>
-    
-    
-    
-    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
-    
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
     <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
-    
-    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
 
 </footer>
         </div>
       </div>
-
     </section>
-
   </div>
-  
-
-  <script type="text/javascript">
+  <script>
       jQuery(function () {
           SphinxRtdTheme.Navigation.enable(true);
       });
-  </script>
-
-  
-  
-    
-   
+  </script> 
 
 </body>
 </html>

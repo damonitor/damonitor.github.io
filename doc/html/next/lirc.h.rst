@@ -23,14 +23,16 @@ lirc.h
     \#define LIRC\_MODE2\_PULSE     0x01000000
     \#define \ :ref:`LIRC_MODE2_FREQUENCY <lirc-mode2-frequency>` 0x02000000
     \#define LIRC\_MODE2\_TIMEOUT   0x03000000
+    \#define LIRC\_MODE2\_OVERFLOW  0x04000000
 
     \#define LIRC\_VALUE\_MASK      0x00FFFFFF
     \#define LIRC\_MODE2\_MASK      0xFF000000
 
-    \#define LIRC\_SPACE(val) (((val)\&LIRC\_VALUE\_MASK) \| LIRC\_MODE2\_SPACE)
-    \#define LIRC\_PULSE(val) (((val)\&LIRC\_VALUE\_MASK) \| LIRC\_MODE2\_PULSE)
-    \#define LIRC\_FREQUENCY(val) (((val)\&LIRC\_VALUE\_MASK) \| \ :ref:`LIRC_MODE2_FREQUENCY <lirc-mode2-frequency>`\ )
-    \#define LIRC\_TIMEOUT(val) (((val)\&LIRC\_VALUE\_MASK) \| LIRC\_MODE2\_TIMEOUT)
+    \#define LIRC\_SPACE(val) (((val) \& LIRC\_VALUE\_MASK) \| LIRC\_MODE2\_SPACE)
+    \#define LIRC\_PULSE(val) (((val) \& LIRC\_VALUE\_MASK) \| LIRC\_MODE2\_PULSE)
+    \#define LIRC\_FREQUENCY(val) (((val) \& LIRC\_VALUE\_MASK) \| \ :ref:`LIRC_MODE2_FREQUENCY <lirc-mode2-frequency>`\ )
+    \#define LIRC\_TIMEOUT(val) (((val) \& LIRC\_VALUE\_MASK) \| LIRC\_MODE2\_TIMEOUT)
+    \#define LIRC\_OVERFLOW(val) (((val) \& LIRC\_VALUE\_MASK) \| LIRC\_MODE2\_OVERFLOW)
 
     \#define LIRC\_VALUE(val) ((val)\&LIRC\_VALUE\_MASK)
     \#define LIRC\_MODE2(val) ((val)\&LIRC\_MODE2\_MASK)
@@ -39,6 +41,7 @@ lirc.h
     \#define LIRC\_IS\_PULSE(val) (LIRC\_MODE2(val) == LIRC\_MODE2\_PULSE)
     \#define LIRC\_IS\_FREQUENCY(val) (LIRC\_MODE2(val) == \ :ref:`LIRC_MODE2_FREQUENCY <lirc-mode2-frequency>`\ )
     \#define LIRC\_IS\_TIMEOUT(val) (LIRC\_MODE2(val) == LIRC\_MODE2\_TIMEOUT)
+    \#define LIRC\_IS\_OVERFLOW(val) (LIRC\_MODE2(val) == LIRC\_MODE2\_OVERFLOW)
 
     \/\* used heavily by lirc userspace \*\/
     \#define lirc\_t int
@@ -76,13 +79,10 @@ lirc.h
     \#define LIRC\_CAN\_REC\_MASK              LIRC\_MODE2REC(LIRC\_CAN\_SEND\_MASK)
 
     \#define \ :ref:`LIRC_CAN_SET_REC_CARRIER <lirc-can-set-rec-carrier>`       (\ :ref:`LIRC_CAN_SET_SEND_CARRIER <lirc-can-set-send-carrier>` \<\< 16)
-    \#define LIRC\_CAN\_SET\_REC\_DUTY\_CYCLE    (\ :ref:`LIRC_CAN_SET_SEND_DUTY_CYCLE <lirc-can-set-send-duty-cycle>` \<\< 16)
 
-    \#define \ :ref:`LIRC_CAN_SET_REC_DUTY_CYCLE_RANGE <lirc-can-set-rec-duty-cycle-range>` 0x40000000
     \#define \ :ref:`LIRC_CAN_SET_REC_CARRIER_RANGE <lirc-can-set-rec-carrier-range>`    0x80000000
     \#define \ :ref:`LIRC_CAN_GET_REC_RESOLUTION <lirc-can-get-rec-resolution>`       0x20000000
     \#define \ :ref:`LIRC_CAN_SET_REC_TIMEOUT <lirc-can-set-rec-timeout>`          0x10000000
-    \#define \ :ref:`LIRC_CAN_SET_REC_FILTER <lirc-can-set-rec-filter>`           0x08000000
 
     \#define \ :ref:`LIRC_CAN_MEASURE_CARRIER <lirc-can-measure-carrier>`          0x02000000
     \#define \ :ref:`LIRC_CAN_USE_WIDEBAND_RECEIVER <lirc-can-use-wideband-receiver>`    0x04000000
@@ -90,7 +90,12 @@ lirc.h
     \#define LIRC\_CAN\_SEND(x) ((x)\&LIRC\_CAN\_SEND\_MASK)
     \#define LIRC\_CAN\_REC(x) ((x)\&LIRC\_CAN\_REC\_MASK)
 
-    \#define \ :ref:`LIRC_CAN_NOTIFY_DECODE <lirc-can-notify-decode>`            0x01000000
+    \/\*
+     \* Unused features. These features were never implemented, in tree or
+     \* out of tree. These definitions are here so not to break the lircd build.
+     \*\/
+    \#define LIRC\_CAN\_SET\_REC\_FILTER         0
+    \#define LIRC\_CAN\_NOTIFY\_DECODE          0
 
     \/\*\*\* IOCTL commands for lirc driver \*\*\*\/
 

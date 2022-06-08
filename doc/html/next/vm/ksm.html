@@ -1,75 +1,36 @@
-
-
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8" />
-  
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  
-  <title>Kernel Samepage Merging &mdash; The Linux Kernel  documentation</title>
-  
-
-  
-  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
-  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="../_static/theme_overrides.css" type="text/css" />
-  <link rel="stylesheet" href="../_static/theme_rtd_colors.css" type="text/css" />
-
-  
-  
-
-  
-  
-
-  
-
-  
+  <title>Kernel Samepage Merging &mdash; The Linux Kernel  documentation</title><link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/theme_overrides.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/theme_rtd_colors.css" type="text/css" />
   <!--[if lt IE 9]>
     <script src="../_static/js/html5shiv.min.js"></script>
   <![endif]-->
-  
-    
-      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+  <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
         <script src="../_static/jquery.js"></script>
         <script src="../_static/underscore.js"></script>
         <script src="../_static/doctools.js"></script>
         <script src="../_static/language_data.js"></script>
-    
-    <script type="text/javascript" src="../_static/js/theme.js"></script>
-
-    
+    <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" /> 
 </head>
 
-<body class="wy-body-for-nav">
-
-   
+<body class="wy-body-for-nav"> 
   <div class="wy-grid-for-nav">
-    
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-          
-
-          
             <a href="../index.html" class="icon icon-home"> The Linux Kernel
-          
-
-          
           </a>
-
-          
-            
-            
               <div class="version">
-                5.16.0-rc7-mm1-damon
+                5.19.0-rc1-mm-unstable-damon
               </div>
-            
-          
-
-          
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
     <input type="text" name="q" placeholder="Search docs" />
@@ -77,18 +38,7 @@
     <input type="hidden" name="area" value="default" />
   </form>
 </div>
-
-          
-        </div>
-
-        
-        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
-          
-            
-            
-              
-            
-            
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <ul>
 <li class="toctree-l1"><a class="reference internal" href="../admin-guide/mm/damon/index.html">Monitoring Data Accesses</a></li>
 </ul>
@@ -96,80 +46,39 @@
 <li class="toctree-l1"><a class="reference internal" href="damon/index.html">DAMON: Data Access MONitor</a></li>
 </ul>
 
-            
-          
         </div>
-        
       </div>
     </nav>
 
-    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
-
-      
-      <nav class="wy-nav-top" aria-label="top navigation">
-        
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
           <a href="../index.html">The Linux Kernel</a>
-        
       </nav>
 
-
       <div class="wy-nav-content">
-        
         <div class="rst-content">
-        
-          
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<div role="navigation" aria-label="breadcrumbs navigation">
-
+          <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-    
       <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
-        
       <li>Kernel Samepage Merging</li>
-    
-    
       <li class="wy-breadcrumbs-aside">
-        
-          
             <a href="../_sources/vm/ksm.rst.txt" rel="nofollow"> View page source</a>
-          
-        
       </li>
-    
   </ul>
-
-  
   <hr/>
 </div>
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
-            
-  <div class="section" id="kernel-samepage-merging">
+             
+  <section id="kernel-samepage-merging">
 <span id="ksm"></span><h1>Kernel Samepage Merging<a class="headerlink" href="#kernel-samepage-merging" title="Permalink to this headline">¶</a></h1>
 <p>KSM is a memory-saving de-duplication feature, enabled by CONFIG_KSM=y,
 added to the Linux kernel in 2.6.32.  See <code class="docutils literal notranslate"><span class="pre">mm/ksm.c</span></code> for its implementation,
 and <a class="reference external" href="http://lwn.net/Articles/306704/">http://lwn.net/Articles/306704/</a> and <a class="reference external" href="https://lwn.net/Articles/330589/">https://lwn.net/Articles/330589/</a></p>
-<p>The userspace interface of KSM is described in <a class="reference internal" href="../admin-guide/mm/ksm.html#admin-guide-ksm"><span class="std std-ref"><a class="reference internal" href="../admin-guide/mm/ksm.html"><span class="doc">Kernel Samepage Merging</span></a></span></a></p>
-<div class="section" id="design">
+<p>The userspace interface of KSM is described in <a class="reference internal" href="../admin-guide/mm/ksm.html#admin-guide-ksm"><span class="std std-ref">Documentation/admin-guide/mm/ksm.rst</span></a></p>
+<section id="design">
 <h2>Design<a class="headerlink" href="#design" title="Permalink to this headline">¶</a></h2>
-<div class="section" id="overview">
+<section id="overview">
 <h3>Overview<a class="headerlink" href="#overview" title="Permalink to this headline">¶</a></h3>
 <p>A few notes about the KSM scanning process,
 to make it easier to understand the data structures below:</p>
@@ -219,8 +128,8 @@ compare it against the stable tree, and then against the unstable tree.)</p></li
 </ol>
 <p>If the merge_across_nodes tunable is unset, then KSM maintains multiple
 stable trees and multiple unstable trees: one of each for each NUMA node.</p>
-</div>
-<div class="section" id="reverse-mapping">
+</section>
+<section id="reverse-mapping">
 <h3>Reverse mapping<a class="headerlink" href="#reverse-mapping" title="Permalink to this headline">¶</a></h3>
 <p>KSM maintains reverse mapping information for KSM pages in the stable
 tree.</p>
@@ -269,8 +178,8 @@ the KSM pages of the applications.</p>
 “chains” is scanned periodically in order to prune stale stable_nodes.
 The frequency of such scans is defined by
 <code class="docutils literal notranslate"><span class="pre">stable_node_chains_prune_millisecs</span></code> sysfs tunable.</p>
-</div>
-<div class="section" id="reference">
+</section>
+<section id="reference">
 <h3>Reference<a class="headerlink" href="#reference" title="Permalink to this headline">¶</a></h3>
 <dl class="type">
 <dt id="c.mm_slot">
@@ -444,52 +353,36 @@ struct <code class="sig-name descname">rmap_item</code><a class="headerlink" hre
 <p>–
 Izik Eidus,
 Hugh Dickins, 17 Nov 2009</p>
-</div>
-</div>
-</div>
+</section>
+</section>
+</section>
 
 
            </div>
-           
           </div>
           <footer>
 
   <hr/>
 
   <div role="contentinfo">
-    <p>
-        &#169; Copyright The kernel development community.
-
-    </p>
+    <p>&#169; Copyright The kernel development community.</p>
   </div>
-    
-    
-    
-    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
-    
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
     <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
-    
-    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
 
 </footer>
         </div>
       </div>
-
     </section>
-
   </div>
-  
-
-  <script type="text/javascript">
+  <script>
       jQuery(function () {
           SphinxRtdTheme.Navigation.enable(true);
       });
-  </script>
-
-  
-  
-    
-   
+  </script> 
 
 </body>
 </html>

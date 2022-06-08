@@ -1,75 +1,36 @@
-
-
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8" />
-  
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  
-  <title>Dynamic debug &mdash; The Linux Kernel  documentation</title>
-  
-
-  
-  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
-  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="../_static/theme_overrides.css" type="text/css" />
-  <link rel="stylesheet" href="../_static/theme_rtd_colors.css" type="text/css" />
-
-  
-  
-
-  
-  
-
-  
-
-  
+  <title>Dynamic debug &mdash; The Linux Kernel  documentation</title><link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/theme_overrides.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/theme_rtd_colors.css" type="text/css" />
   <!--[if lt IE 9]>
     <script src="../_static/js/html5shiv.min.js"></script>
   <![endif]-->
-  
-    
-      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+  <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
         <script src="../_static/jquery.js"></script>
         <script src="../_static/underscore.js"></script>
         <script src="../_static/doctools.js"></script>
         <script src="../_static/language_data.js"></script>
-    
-    <script type="text/javascript" src="../_static/js/theme.js"></script>
-
-    
+    <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" /> 
 </head>
 
-<body class="wy-body-for-nav">
-
-   
+<body class="wy-body-for-nav"> 
   <div class="wy-grid-for-nav">
-    
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-          
-
-          
             <a href="../index.html" class="icon icon-home"> The Linux Kernel
-          
-
-          
           </a>
-
-          
-            
-            
               <div class="version">
-                5.16.0-rc7-mm1-damon
+                5.19.0-rc1-mm-unstable-damon
               </div>
-            
-          
-
-          
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
     <input type="text" name="q" placeholder="Search docs" />
@@ -77,18 +38,7 @@
     <input type="hidden" name="area" value="default" />
   </form>
 </div>
-
-          
-        </div>
-
-        
-        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
-          
-            
-            
-              
-            
-            
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <ul>
 <li class="toctree-l1"><a class="reference internal" href="mm/damon/index.html">Monitoring Data Accesses</a></li>
 </ul>
@@ -96,74 +46,33 @@
 <li class="toctree-l1"><a class="reference internal" href="../vm/damon/index.html">DAMON: Data Access MONitor</a></li>
 </ul>
 
-            
-          
         </div>
-        
       </div>
     </nav>
 
-    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
-
-      
-      <nav class="wy-nav-top" aria-label="top navigation">
-        
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
           <a href="../index.html">The Linux Kernel</a>
-        
       </nav>
 
-
       <div class="wy-nav-content">
-        
         <div class="rst-content">
-        
-          
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<div role="navigation" aria-label="breadcrumbs navigation">
-
+          <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-    
       <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
-        
       <li>Dynamic debug</li>
-    
-    
       <li class="wy-breadcrumbs-aside">
-        
-          
             <a href="../_sources/admin-guide/dynamic-debug-howto.rst.txt" rel="nofollow"> View page source</a>
-          
-        
       </li>
-    
   </ul>
-
-  
   <hr/>
 </div>
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
-            
-  <div class="section" id="dynamic-debug">
+             
+  <section id="dynamic-debug">
 <h1>Dynamic debug<a class="headerlink" href="#dynamic-debug" title="Permalink to this headline">¶</a></h1>
-<div class="section" id="introduction">
+<section id="introduction">
 <h2>Introduction<a class="headerlink" href="#introduction" title="Permalink to this headline">¶</a></h2>
 <p>This document describes how to use the dynamic debug (dyndbg) feature.</p>
 <p>Dynamic debug is designed to allow you to dynamically enable/disable
@@ -198,8 +107,8 @@ which can be read to display the complete list of known debug
 statements, to help guide you</p></li>
 </ul>
 </div></blockquote>
-</div>
-<div class="section" id="controlling-dynamic-debug-behaviour">
+</section>
+<section id="controlling-dynamic-debug-behaviour">
 <h2>Controlling dynamic debug Behaviour<a class="headerlink" href="#controlling-dynamic-debug-behaviour" title="Permalink to this headline">¶</a></h2>
 <p>The behaviour of <code class="docutils literal notranslate"><span class="pre">pr_debug()</span></code>/<code class="docutils literal notranslate"><span class="pre">dev_dbg()</span></code> are controlled via writing to a
 control file in the ‘debugfs’ filesystem. Thus, you must first mount
@@ -219,8 +128,8 @@ printing from source file <code class="docutils literal notranslate"><span class
 </div>
 <p>Note, for systems without ‘debugfs’ enabled, the control file can be
 found in <code class="docutils literal notranslate"><span class="pre">/proc/dynamic_debug/control</span></code>.</p>
-</div>
-<div class="section" id="viewing-dynamic-debug-behaviour">
+</section>
+<section id="viewing-dynamic-debug-behaviour">
 <h2>Viewing Dynamic Debug Behaviour<a class="headerlink" href="#viewing-dynamic-debug-behaviour" title="Permalink to this headline">¶</a></h2>
 <p>You can view the currently configured behaviour of all the debug
 statements via:</p>
@@ -251,8 +160,8 @@ the debug statement callsites with any non-default flags:</p>
 net/sunrpc/svcsock.c:1603 [sunrpc]svc_send p &quot;svc_process: st_sendto returned %d\012&quot;
 </pre></div>
 </div>
-</div>
-<div class="section" id="command-language-reference">
+</section>
+<section id="command-language-reference">
 <h2>Command Language Reference<a class="headerlink" href="#command-language-reference" title="Permalink to this headline">¶</a></h2>
 <p>At the lexical level, a command comprises a sequence of words separated
 by spaces or tabs.  So these are all equivalent:</p>
@@ -395,8 +304,8 @@ have meaning, other flags ignored.</p>
 (mnemonic: what the flags are currently equal to).</p>
 <p>Note the regexp <code class="docutils literal notranslate"><span class="pre">^[-+=][flmpt_]+$</span></code> matches a flags specification.
 To clear all flags at once, use <code class="docutils literal notranslate"><span class="pre">=_</span></code> or <code class="docutils literal notranslate"><span class="pre">-flmpt</span></code>.</p>
-</div>
-<div class="section" id="debug-messages-during-boot-process">
+</section>
+<section id="debug-messages-during-boot-process">
 <h2>Debug messages during Boot Process<a class="headerlink" href="#debug-messages-during-boot-process" title="Permalink to this headline">¶</a></h2>
 <p>To activate debug messages for core code and built-in modules during
 the boot process, even before userspace and debugfs exists, use
@@ -418,8 +327,8 @@ this boot parameter for debugging purposes.</p>
 <p>If <code class="docutils literal notranslate"><span class="pre">foo</span></code> module is not built-in, <code class="docutils literal notranslate"><span class="pre">foo.dyndbg</span></code> will still be processed at
 boot time, without effect, but will be reprocessed when module is
 loaded later. Bare <code class="docutils literal notranslate"><span class="pre">dyndbg=</span></code> is only processed at boot.</p>
-</div>
-<div class="section" id="debug-messages-at-module-initialization-time">
+</section>
+<section id="debug-messages-at-module-initialization-time">
 <h2>Debug Messages at Module Initialization Time<a class="headerlink" href="#debug-messages-at-module-initialization-time" title="Permalink to this headline">¶</a></h2>
 <p>When <code class="docutils literal notranslate"><span class="pre">modprobe</span> <span class="pre">foo</span></code> is called, modprobe scans <code class="docutils literal notranslate"><span class="pre">/proc/cmdline</span></code> for
 <code class="docutils literal notranslate"><span class="pre">foo.params</span></code>, strips <code class="docutils literal notranslate"><span class="pre">foo.</span></code>, and passes them to the kernel along with
@@ -463,8 +372,8 @@ the debugfs interface if the debug messages are no longer needed:</p>
 <div class="highlight-none notranslate"><div class="highlight"><pre><span></span>echo &quot;module module_name -p&quot; &gt; &lt;debugfs&gt;/dynamic_debug/control
 </pre></div>
 </div>
-</div>
-<div class="section" id="examples">
+</section>
+<section id="examples">
 <h2>Examples<a class="headerlink" href="#examples" title="Permalink to this headline">¶</a></h2>
 <div class="highlight-none notranslate"><div class="highlight"><pre><span></span>// enable the message at line 1603 of file svcsock.c
 nullarbor:~ # echo -n &#39;file svcsock.c line 1603 +p&#39; &gt;
@@ -512,51 +421,35 @@ Kernel command line: ...
   pc87360.dyndbg=&quot;func pc87360_init_device +p; func pc87360_find +p&quot;
 </pre></div>
 </div>
-</div>
-</div>
+</section>
+</section>
 
 
            </div>
-           
           </div>
           <footer>
 
   <hr/>
 
   <div role="contentinfo">
-    <p>
-        &#169; Copyright The kernel development community.
-
-    </p>
+    <p>&#169; Copyright The kernel development community.</p>
   </div>
-    
-    
-    
-    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
-    
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
     <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
-    
-    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
 
 </footer>
         </div>
       </div>
-
     </section>
-
   </div>
-  
-
-  <script type="text/javascript">
+  <script>
       jQuery(function () {
           SphinxRtdTheme.Navigation.enable(true);
       });
-  </script>
-
-  
-  
-    
-   
+  </script> 
 
 </body>
 </html>

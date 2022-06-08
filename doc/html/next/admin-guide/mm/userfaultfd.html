@@ -1,75 +1,36 @@
-
-
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8" />
-  
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  
-  <title>Userfaultfd &mdash; The Linux Kernel  documentation</title>
-  
-
-  
-  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
-  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="../../_static/theme_overrides.css" type="text/css" />
-  <link rel="stylesheet" href="../../_static/theme_rtd_colors.css" type="text/css" />
-
-  
-  
-
-  
-  
-
-  
-
-  
+  <title>Userfaultfd &mdash; The Linux Kernel  documentation</title><link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/theme_overrides.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/theme_rtd_colors.css" type="text/css" />
   <!--[if lt IE 9]>
     <script src="../../_static/js/html5shiv.min.js"></script>
   <![endif]-->
-  
-    
-      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+  <script id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
         <script src="../../_static/jquery.js"></script>
         <script src="../../_static/underscore.js"></script>
         <script src="../../_static/doctools.js"></script>
         <script src="../../_static/language_data.js"></script>
-    
-    <script type="text/javascript" src="../../_static/js/theme.js"></script>
-
-    
+    <script src="../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" /> 
 </head>
 
-<body class="wy-body-for-nav">
-
-   
+<body class="wy-body-for-nav"> 
   <div class="wy-grid-for-nav">
-    
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-          
-
-          
             <a href="../../index.html" class="icon icon-home"> The Linux Kernel
-          
-
-          
           </a>
-
-          
-            
-            
               <div class="version">
-                5.16.0-rc7-mm1-damon
+                5.19.0-rc1-mm-unstable-damon
               </div>
-            
-          
-
-          
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
     <input type="text" name="q" placeholder="Search docs" />
@@ -77,18 +38,7 @@
     <input type="hidden" name="area" value="default" />
   </form>
 </div>
-
-          
-        </div>
-
-        
-        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
-          
-            
-            
-              
-            
-            
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <ul>
 <li class="toctree-l1"><a class="reference internal" href="damon/index.html">Monitoring Data Accesses</a></li>
 </ul>
@@ -96,82 +46,41 @@
 <li class="toctree-l1"><a class="reference internal" href="../../vm/damon/index.html">DAMON: Data Access MONitor</a></li>
 </ul>
 
-            
-          
         </div>
-        
       </div>
     </nav>
 
-    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
-
-      
-      <nav class="wy-nav-top" aria-label="top navigation">
-        
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
           <a href="../../index.html">The Linux Kernel</a>
-        
       </nav>
 
-
       <div class="wy-nav-content">
-        
         <div class="rst-content">
-        
-          
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<div role="navigation" aria-label="breadcrumbs navigation">
-
+          <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-    
       <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
-        
       <li>Userfaultfd</li>
-    
-    
       <li class="wy-breadcrumbs-aside">
-        
-          
             <a href="../../_sources/admin-guide/mm/userfaultfd.rst.txt" rel="nofollow"> View page source</a>
-          
-        
       </li>
-    
   </ul>
-
-  
   <hr/>
 </div>
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
-            
-  <div class="section" id="userfaultfd">
+             
+  <section id="userfaultfd">
 <span id="id1"></span><h1>Userfaultfd<a class="headerlink" href="#userfaultfd" title="Permalink to this headline">¶</a></h1>
-<div class="section" id="objective">
+<section id="objective">
 <h2>Objective<a class="headerlink" href="#objective" title="Permalink to this headline">¶</a></h2>
 <p>Userfaults allow the implementation of on-demand paging from userland
 and more generally they allow userland to take control of various
 memory page faults, something otherwise only the kernel code could do.</p>
 <p>For example userfaults allows a proper and more optimal implementation
 of the <code class="docutils literal notranslate"><span class="pre">PROT_NONE+SIGSEGV</span></code> trick.</p>
-</div>
-<div class="section" id="design">
+</section>
+<section id="design">
 <h2>Design<a class="headerlink" href="#design" title="Permalink to this headline">¶</a></h2>
 <p>Userfaults are delivered and resolved through the <code class="docutils literal notranslate"><span class="pre">userfaultfd</span></code> syscall.</p>
 <p>The <code class="docutils literal notranslate"><span class="pre">userfaultfd</span></code> (aside from registering and unregistering virtual
@@ -198,8 +107,8 @@ different processes without them being aware about what is going on
 (well of course unless they later try to use the <code class="docutils literal notranslate"><span class="pre">userfaultfd</span></code>
 themselves on the same region the manager is already tracking, which
 is a corner case that would currently return <code class="docutils literal notranslate"><span class="pre">-EBUSY</span></code>).</p>
-</div>
-<div class="section" id="api">
+</section>
+<section id="api">
 <h2>API<a class="headerlink" href="#api" title="Permalink to this headline">¶</a></h2>
 <p>When first opened the <code class="docutils literal notranslate"><span class="pre">userfaultfd</span></code> must be enabled invoking the
 <code class="docutils literal notranslate"><span class="pre">UFFDIO_API</span></code> ioctl specifying a <code class="docutils literal notranslate"><span class="pre">uffdio_api.api</span></code> value set to <code class="docutils literal notranslate"><span class="pre">UFFD_API</span></code> (or
@@ -246,7 +155,7 @@ address space in the background (to add or potentially also remove
 memory from the <code class="docutils literal notranslate"><span class="pre">userfaultfd</span></code> registered range). This means a userfault
 could be triggering just before userland maps in the background the
 user-faulted page.</p>
-<div class="section" id="resolving-userfaults">
+<section id="resolving-userfaults">
 <h3>Resolving Userfaults<a class="headerlink" href="#resolving-userfaults" title="Permalink to this headline">¶</a></h3>
 <p>There are three basic ways to resolve userfaults:</p>
 <ul class="simple">
@@ -292,8 +201,8 @@ those IOCTLs wakes up the faulting thread.</p></li>
 (<code class="docutils literal notranslate"><span class="pre">pollfd[0].revents</span> <span class="pre">&amp;</span> <span class="pre">POLLERR</span></code>).  This can happen, e.g. when ranges
 supplied were incorrect.</p></li>
 </ul>
-</div>
-<div class="section" id="write-protect-notifications">
+</section>
+<section id="write-protect-notifications">
 <h3>Write Protect Notifications<a class="headerlink" href="#write-protect-notifications" title="Permalink to this headline">¶</a></h3>
 <p>This is equivalent to (but faster than) using mprotect and a SIGSEGV
 signal handler.</p>
@@ -319,9 +228,9 @@ former will have <code class="docutils literal notranslate"><span class="pre">UF
 <code class="docutils literal notranslate"><span class="pre">UFFD_PAGEFAULT_FLAG_WRITE</span></code>.  The latter did not fail on protection but
 you still need to supply a page when <code class="docutils literal notranslate"><span class="pre">UFFDIO_REGISTER_MODE_MISSING</span></code> was
 used.</p>
-</div>
-</div>
-<div class="section" id="qemu-kvm">
+</section>
+</section>
+<section id="qemu-kvm">
 <h2>QEMU/KVM<a class="headerlink" href="#qemu-kvm" title="Permalink to this headline">¶</a></h2>
 <p>QEMU/KVM is using the <code class="docutils literal notranslate"><span class="pre">userfaultfd</span></code> syscall to implement postcopy live
 migration. Postcopy live migration is one form of memory
@@ -375,8 +284,8 @@ course the bitmap is updated accordingly. It’s also useful to avoid
 sending the same page twice (in case the userfault is read by the
 postcopy thread just before <code class="docutils literal notranslate"><span class="pre">UFFDIO_COPY|ZEROPAGE</span></code> runs in the migration
 thread).</p>
-</div>
-<div class="section" id="non-cooperative-userfaultfd">
+</section>
+<section id="non-cooperative-userfaultfd">
 <h2>Non-cooperative userfaultfd<a class="headerlink" href="#non-cooperative-userfaultfd" title="Permalink to this headline">¶</a></h2>
 <p>When the <code class="docutils literal notranslate"><span class="pre">userfaultfd</span></code> is monitored by an external manager, the manager
 must be able to track changes in the process virtual memory
@@ -438,51 +347,35 @@ non cooperative manager, for example to allow <code class="docutils literal notr
 run in parallel to the event reception. Single threaded
 implementations should continue to use the current async event
 delivery model instead.</p>
-</div>
-</div>
+</section>
+</section>
 
 
            </div>
-           
           </div>
           <footer>
 
   <hr/>
 
   <div role="contentinfo">
-    <p>
-        &#169; Copyright The kernel development community.
-
-    </p>
+    <p>&#169; Copyright The kernel development community.</p>
   </div>
-    
-    
-    
-    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
-    
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
     <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
-    
-    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
 
 </footer>
         </div>
       </div>
-
     </section>
-
   </div>
-  
-
-  <script type="text/javascript">
+  <script>
       jQuery(function () {
           SphinxRtdTheme.Navigation.enable(true);
       });
-  </script>
-
-  
-  
-    
-   
+  </script> 
 
 </body>
 </html>

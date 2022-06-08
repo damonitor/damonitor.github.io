@@ -149,6 +149,26 @@ cec.h
             msg-\>reply = msg-\>timeout = 0;
     \}
 
+    \/\*\*
+     \* cec\_msg\_recv\_is\_tx\_result - return true if this message contains the
+     \*                             result of an earlier non-blocking transmit
+     \* @msg\:        the message structure from \ :ref:`CEC_RECEIVE <cec_receive>`
+     \*\/
+    static inline int cec\_msg\_recv\_is\_tx\_result(const struct cec_msg \*msg)
+    \{
+            return msg-\>sequence \&\& msg-\>tx\_status \&\& !msg-\>rx\_status;
+    \}
+
+    \/\*\*
+     \* cec\_msg\_recv\_is\_rx\_result - return true if this message contains the
+     \*                             reply of an earlier non-blocking transmit
+     \* @msg\:        the message structure from \ :ref:`CEC_RECEIVE <cec_receive>`
+     \*\/
+    static inline int cec\_msg\_recv\_is\_rx\_result(const struct cec_msg \*msg)
+    \{
+            return msg-\>sequence \&\& !msg-\>tx\_status \&\& msg-\>rx\_status;
+    \}
+
     \/\* cec\_msg flags field \*\/
     \#define \ :ref:`CEC_MSG_FL_REPLY_TO_FOLLOWERS <cec-msg-fl-reply-to-followers>`   (1 \<\< 0)
     \#define \ :ref:`CEC_MSG_FL_RAW <cec-msg-fl-raw>`                  (1 \<\< 1)

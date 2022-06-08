@@ -1,75 +1,36 @@
-
-
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8" />
-  
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  
-  <title>Guidance for writing policies &mdash; The Linux Kernel  documentation</title>
-  
-
-  
-  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
-  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="../../_static/theme_overrides.css" type="text/css" />
-  <link rel="stylesheet" href="../../_static/theme_rtd_colors.css" type="text/css" />
-
-  
-  
-
-  
-  
-
-  
-
-  
+  <title>Guidance for writing policies &mdash; The Linux Kernel  documentation</title><link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/theme_overrides.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/theme_rtd_colors.css" type="text/css" />
   <!--[if lt IE 9]>
     <script src="../../_static/js/html5shiv.min.js"></script>
   <![endif]-->
-  
-    
-      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+  <script id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
         <script src="../../_static/jquery.js"></script>
         <script src="../../_static/underscore.js"></script>
         <script src="../../_static/doctools.js"></script>
         <script src="../../_static/language_data.js"></script>
-    
-    <script type="text/javascript" src="../../_static/js/theme.js"></script>
-
-    
+    <script src="../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" /> 
 </head>
 
-<body class="wy-body-for-nav">
-
-   
+<body class="wy-body-for-nav"> 
   <div class="wy-grid-for-nav">
-    
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-          
-
-          
             <a href="../../index.html" class="icon icon-home"> The Linux Kernel
-          
-
-          
           </a>
-
-          
-            
-            
               <div class="version">
-                5.16.0-rc7-mm1-damon
+                5.19.0-rc1-mm-unstable-damon
               </div>
-            
-          
-
-          
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
     <input type="text" name="q" placeholder="Search docs" />
@@ -77,18 +38,7 @@
     <input type="hidden" name="area" value="default" />
   </form>
 </div>
-
-          
-        </div>
-
-        
-        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
-          
-            
-            
-              
-            
-            
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <ul>
 <li class="toctree-l1"><a class="reference internal" href="../mm/damon/index.html">Monitoring Data Accesses</a></li>
 </ul>
@@ -96,72 +46,31 @@
 <li class="toctree-l1"><a class="reference internal" href="../../vm/damon/index.html">DAMON: Data Access MONitor</a></li>
 </ul>
 
-            
-          
         </div>
-        
       </div>
     </nav>
 
-    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
-
-      
-      <nav class="wy-nav-top" aria-label="top navigation">
-        
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
           <a href="../../index.html">The Linux Kernel</a>
-        
       </nav>
 
-
       <div class="wy-nav-content">
-        
         <div class="rst-content">
-        
-          
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<div role="navigation" aria-label="breadcrumbs navigation">
-
+          <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-    
       <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
-        
       <li>Guidance for writing policies</li>
-    
-    
       <li class="wy-breadcrumbs-aside">
-        
-          
             <a href="../../_sources/admin-guide/device-mapper/cache-policies.rst.txt" rel="nofollow"> View page source</a>
-          
-        
       </li>
-    
   </ul>
-
-  
   <hr/>
 </div>
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
-            
-  <div class="section" id="guidance-for-writing-policies">
+             
+  <section id="guidance-for-writing-policies">
 <h1>Guidance for writing policies<a class="headerlink" href="#guidance-for-writing-policies" title="Permalink to this headline">¶</a></h1>
 <p>Try to keep transactionality out of it.  The core is careful to
 avoid asking about anything that is migrating.  This is a pain, but
@@ -178,9 +87,9 @@ issues periodic ticks to the policy.  It’s suggested that the policy
 doesn’t update states (eg, hit counts) for a block more than once
 for each tick.  The core ticks by watching bios complete, and so
 trying to see when the io scheduler has let the ios run.</p>
-<div class="section" id="overview-of-supplied-cache-replacement-policies">
+<section id="overview-of-supplied-cache-replacement-policies">
 <h2>Overview of supplied cache replacement policies<a class="headerlink" href="#overview-of-supplied-cache-replacement-policies" title="Permalink to this headline">¶</a></h2>
-<div class="section" id="multiqueue-mq">
+<section id="multiqueue-mq">
 <h3>multiqueue (mq)<a class="headerlink" href="#multiqueue-mq" title="Permalink to this headline">¶</a></h3>
 <p>This policy is now an alias for smq (see below).</p>
 <p>The following tunables are accepted, but have no effect:</p>
@@ -191,8 +100,8 @@ trying to see when the io scheduler has let the ios run.</p>
 &#39;discard_promote_adjustment &lt;value&gt;&#39;
 </pre></div>
 </div>
-</div>
-<div class="section" id="stochastic-multiqueue-smq">
+</section>
+<section id="stochastic-multiqueue-smq">
 <h3>Stochastic multiqueue (smq)<a class="headerlink" href="#stochastic-multiqueue-smq" title="Permalink to this headline">¶</a></h3>
 <p>This policy is the default.</p>
 <p>The stochastic multi-queue (smq) policy addresses some of the problems
@@ -205,7 +114,7 @@ DM table that is using the cache target.  Doing so will cause all of the
 mq policy’s hints to be dropped.  Also, performance of the cache may
 degrade slightly until smq recalculates the origin device’s hotspots
 that should be cached.</p>
-<div class="section" id="memory-usage">
+<section id="memory-usage">
 <h4>Memory usage<a class="headerlink" href="#memory-usage" title="Permalink to this headline">¶</a></h4>
 <p>The mq policy used a lot of memory; 88 bytes per cache block on a 64
 bit machine.</p>
@@ -216,8 +125,8 @@ the entries (each hotspot block covers a larger area than a single
 cache block).</p>
 <p>All this means smq uses ~25bytes per cache block.  Still a lot of
 memory, but a substantial improvement nontheless.</p>
-</div>
-<div class="section" id="level-balancing">
+</section>
+<section id="level-balancing">
 <h4>Level balancing<a class="headerlink" href="#level-balancing" title="Permalink to this headline">¶</a></h4>
 <p>mq placed entries in different levels of the multiqueue structures
 based on their hit count (~ln(hit count)).  This meant the bottom
@@ -239,18 +148,18 @@ away.  In addition it tracks performance of the hotspot queue, which
 is used to decide which blocks to promote.  If the hotspot queue is
 performing badly then it starts moving entries more quickly between
 levels.  This lets it adapt to new IO patterns very quickly.</p>
-</div>
-<div class="section" id="performance">
+</section>
+<section id="performance">
 <h4>Performance<a class="headerlink" href="#performance" title="Permalink to this headline">¶</a></h4>
 <p>Testing smq shows substantially better performance than mq.</p>
-</div>
-</div>
-<div class="section" id="cleaner">
+</section>
+</section>
+<section id="cleaner">
 <h3>cleaner<a class="headerlink" href="#cleaner" title="Permalink to this headline">¶</a></h3>
 <p>The cleaner writes back all dirty blocks in a cache to decommission it.</p>
-</div>
-</div>
-<div class="section" id="examples">
+</section>
+</section>
+<section id="examples">
 <h2>Examples<a class="headerlink" href="#examples" title="Permalink to this headline">¶</a></h2>
 <p>The syntax for a table is:</p>
 <div class="highlight-none notranslate"><div class="highlight"><pre><span></span>cache &lt;metadata dev&gt; &lt;cache dev&gt; &lt;origin dev&gt; &lt;block size&gt;
@@ -270,51 +179,35 @@ creates a 128GB large mapped device named &#39;blah&#39; with the
 sequential threshold set to 1024 and the random_threshold set to 8.
 </pre></div>
 </div>
-</div>
-</div>
+</section>
+</section>
 
 
            </div>
-           
           </div>
           <footer>
 
   <hr/>
 
   <div role="contentinfo">
-    <p>
-        &#169; Copyright The kernel development community.
-
-    </p>
+    <p>&#169; Copyright The kernel development community.</p>
   </div>
-    
-    
-    
-    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
-    
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
     <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
-    
-    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
 
 </footer>
         </div>
       </div>
-
     </section>
-
   </div>
-  
-
-  <script type="text/javascript">
+  <script>
       jQuery(function () {
           SphinxRtdTheme.Navigation.enable(true);
       });
-  </script>
-
-  
-  
-    
-   
+  </script> 
 
 </body>
 </html>

@@ -1,75 +1,36 @@
-
-
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8" />
-  
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  
-  <title>CPU Idle Time Management &mdash; The Linux Kernel  documentation</title>
-  
-
-  
-  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
-  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="../../_static/theme_overrides.css" type="text/css" />
-  <link rel="stylesheet" href="../../_static/theme_rtd_colors.css" type="text/css" />
-
-  
-  
-
-  
-  
-
-  
-
-  
+  <title>CPU Idle Time Management &mdash; The Linux Kernel  documentation</title><link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/theme_overrides.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/theme_rtd_colors.css" type="text/css" />
   <!--[if lt IE 9]>
     <script src="../../_static/js/html5shiv.min.js"></script>
   <![endif]-->
-  
-    
-      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+  <script id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
         <script src="../../_static/jquery.js"></script>
         <script src="../../_static/underscore.js"></script>
         <script src="../../_static/doctools.js"></script>
         <script src="../../_static/language_data.js"></script>
-    
-    <script type="text/javascript" src="../../_static/js/theme.js"></script>
-
-    
+    <script src="../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" /> 
 </head>
 
-<body class="wy-body-for-nav">
-
-   
+<body class="wy-body-for-nav"> 
   <div class="wy-grid-for-nav">
-    
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-          
-
-          
             <a href="../../index.html" class="icon icon-home"> The Linux Kernel
-          
-
-          
           </a>
-
-          
-            
-            
               <div class="version">
-                5.16.0-rc7-mm1-damon
+                5.19.0-rc1-mm-unstable-damon
               </div>
-            
-          
-
-          
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
     <input type="text" name="q" placeholder="Search docs" />
@@ -77,18 +38,7 @@
     <input type="hidden" name="area" value="default" />
   </form>
 </div>
-
-          
-        </div>
-
-        
-        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
-          
-            
-            
-              
-            
-            
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <ul>
 <li class="toctree-l1"><a class="reference internal" href="../mm/damon/index.html">Monitoring Data Accesses</a></li>
 </ul>
@@ -96,72 +46,31 @@
 <li class="toctree-l1"><a class="reference internal" href="../../vm/damon/index.html">DAMON: Data Access MONitor</a></li>
 </ul>
 
-            
-          
         </div>
-        
       </div>
     </nav>
 
-    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
-
-      
-      <nav class="wy-nav-top" aria-label="top navigation">
-        
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
           <a href="../../index.html">The Linux Kernel</a>
-        
       </nav>
 
-
       <div class="wy-nav-content">
-        
         <div class="rst-content">
-        
-          
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<div role="navigation" aria-label="breadcrumbs navigation">
-
+          <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-    
       <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
-        
       <li>CPU Idle Time Management</li>
-    
-    
       <li class="wy-breadcrumbs-aside">
-        
-          
             <a href="../../_sources/admin-guide/pm/cpuidle.rst.txt" rel="nofollow"> View page source</a>
-          
-        
       </li>
-    
   </ul>
-
-  
   <hr/>
 </div>
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
-            
-  <div class="section" id="cpu-idle-time-management">
+             
+  <section id="cpu-idle-time-management">
 <h1>CPU Idle Time Management<a class="headerlink" href="#cpu-idle-time-management" title="Permalink to this headline">¶</a></h1>
 <dl class="field-list simple">
 <dt class="field-odd">Copyright</dt>
@@ -171,7 +80,7 @@
 <dd class="field-even"><p>Rafael J. Wysocki &lt;<a class="reference external" href="mailto:rafael&#46;j&#46;wysocki&#37;&#52;&#48;intel&#46;com">rafael<span>&#46;</span>j<span>&#46;</span>wysocki<span>&#64;</span>intel<span>&#46;</span>com</a>&gt;</p>
 </dd>
 </dl>
-<div class="section" id="concepts">
+<section id="concepts">
 <h2>Concepts<a class="headerlink" href="#concepts" title="Permalink to this headline">¶</a></h2>
 <p>Modern processors are generally able to enter states in which the execution of
 a program is suspended and instructions belonging to it are not fetched from
@@ -181,7 +90,7 @@ generally allows power drawn by the processor to be reduced and, in consequence,
 it is an opportunity to save energy.</p>
 <p>CPU idle time management is an energy-efficiency feature concerned about using
 the idle states of processors for this purpose.</p>
-<div class="section" id="logical-cpus">
+<section id="logical-cpus">
 <h3>Logical CPUs<a class="headerlink" href="#logical-cpus" title="Permalink to this headline">¶</a></h3>
 <p>CPU idle time management operates on CPUs as seen by the <em>CPU scheduler</em> (that
 is the part of the kernel responsible for the distribution of computational
@@ -223,8 +132,8 @@ core also have asked the processor to enter an idle state.  In that situation,
 the core may be put into an idle state individually or a larger unit containing
 it may be put into an idle state as a whole (if the other cores within the
 larger unit are in idle states already).</p>
-</div>
-<div class="section" id="idle-cpus">
+</section>
+<section id="idle-cpus">
 <h3>Idle CPUs<a class="headerlink" href="#idle-cpus" title="Permalink to this headline">¶</a></h3>
 <p>Logical CPUs, simply referred to as “CPUs” in what follows, are regarded as
 <em>idle</em> by the Linux kernel when there are no tasks to run on them except for the
@@ -253,9 +162,9 @@ idle states, or there is not enough time to spend in an idle state before the
 next wakeup event, or there are strict latency constraints preventing any of the
 available idle states from being used, the CPU will simply execute more or less
 useless instructions in a loop until it is assigned a new task to run.</p>
-</div>
-</div>
-<div class="section" id="the-idle-loop">
+</section>
+</section>
+<section id="the-idle-loop">
 <span id="idle-loop"></span><h2>The Idle Loop<a class="headerlink" href="#the-idle-loop" title="Permalink to this headline">¶</a></h2>
 <p>The idle loop code takes two major steps in every iteration of it.  First, it
 calls into a code module referred to as the <em>governor</em> that belongs to the CPU
@@ -319,8 +228,8 @@ the <code class="docutils literal notranslate"><span class="pre">acpi_idle</span
 reason or if it does not recognize the processor).  The name of the <code class="docutils literal notranslate"><span class="pre">CPUIdle</span></code>
 driver currently used by the kernel can be read from the <code class="file docutils literal notranslate"><span class="pre">current_driver</span></code>
 file under <code class="file docutils literal notranslate"><span class="pre">/sys/devices/system/cpu/cpuidle/</span></code> in <code class="docutils literal notranslate"><span class="pre">sysfs</span></code>.</p>
-</div>
-<div class="section" id="idle-cpus-and-tick">
+</section>
+<section id="idle-cpus-and-tick">
 <span id="idle-cpus-and-the-scheduler-tick"></span><h2>Idle CPUs and The Scheduler Tick<a class="headerlink" href="#idle-cpus-and-tick" title="Permalink to this headline">¶</a></h2>
 <p>The scheduler tick is a timer that triggers periodically in order to implement
 the time sharing strategy of the CPU scheduler.  Of course, if there are
@@ -384,8 +293,8 @@ generally regarded as more energy-efficient than the systems running kernels in
 which the tick cannot be stopped.  If the given system is tickless, it will use
 the <code class="docutils literal notranslate"><span class="pre">menu</span></code> governor by default and if it is not tickless, the default
 <code class="docutils literal notranslate"><span class="pre">CPUIdle</span></code> governor on it will be <code class="docutils literal notranslate"><span class="pre">ladder</span></code>.</p>
-</div>
-<div class="section" id="the-menu-governor">
+</section>
+<section id="the-menu-governor">
 <span id="menu-gov"></span><h2>The <code class="docutils literal notranslate"><span class="pre">menu</span></code> Governor<a class="headerlink" href="#the-menu-governor" title="Permalink to this headline">¶</a></h2>
 <p>The <code class="docutils literal notranslate"><span class="pre">menu</span></code> governor is the default <code class="docutils literal notranslate"><span class="pre">CPUIdle</span></code> governor for tickless systems.
 It is quite complex, but the basic principle of its design is straightforward.
@@ -452,8 +361,8 @@ loop).  Then, the sleep length used in the previous computations may not reflect
 the real time until the closest timer event and if it really is greater than
 that time, the governor may need to select a shallower state with a suitable
 target residency.</p>
-</div>
-<div class="section" id="the-timer-events-oriented-teo-governor">
+</section>
+<section id="the-timer-events-oriented-teo-governor">
 <span id="teo-gov"></span><h2>The Timer Events Oriented (TEO) Governor<a class="headerlink" href="#the-timer-events-oriented-teo-governor" title="Permalink to this headline">¶</a></h2>
 <p>The timer events oriented (TEO) governor is an alternative <code class="docutils literal notranslate"><span class="pre">CPUIdle</span></code> governor
 for tickless systems.  It follows the same basic strategy as the <code class="docutils literal notranslate"><span class="pre">menu</span></code> <a class="reference internal" href="#menu-gov">one</a>: it always tries to find the deepest idle state suitable for the
@@ -540,8 +449,8 @@ select the given idle state instead of the candidate one.</p></li>
 </li>
 <li><p>By default, select the candidate state.</p></li>
 </ol>
-</div>
-<div class="section" id="representation-of-idle-states">
+</section>
+<section id="representation-of-idle-states">
 <span id="idle-states-representation"></span><h2>Representation of Idle States<a class="headerlink" href="#representation-of-idle-states" title="Permalink to this headline">¶</a></h2>
 <p>For the CPU idle time management purposes all of the physical idle states
 supported by the processor have to be represented as a one-dimensional array of
@@ -676,8 +585,8 @@ idle state entry request to be rejected, in which case the <code class="docutils
 may return an error code to indicate that this was the case. The <code class="file docutils literal notranslate"><span class="pre">usage</span></code>
 and <code class="file docutils literal notranslate"><span class="pre">rejected</span></code> files report the number of times the given idle state
 was entered successfully or rejected, respectively.</p>
-</div>
-<div class="section" id="power-management-quality-of-service-for-cpus">
+</section>
+<section id="power-management-quality-of-service-for-cpus">
 <span id="cpu-pm-qos"></span><h2>Power Management Quality of Service for CPUs<a class="headerlink" href="#power-management-quality-of-service-for-cpus" title="Permalink to this headline">¶</a></h2>
 <p>The power management quality of service (PM QoS) framework in the Linux kernel
 allows kernel code and user space processes to set constraints on various
@@ -742,8 +651,8 @@ CPU in question every time the list of requests is updated this way or another
 the given CPU as the upper limit for the exit latency of the idle states that
 they are allowed to select for that CPU.  They should never select any idle
 states with exit latency beyond that limit.</p>
-</div>
-<div class="section" id="idle-states-control-via-kernel-command-line">
+</section>
+<section id="idle-states-control-via-kernel-command-line">
 <h2>Idle States Control Via Kernel Command Line<a class="headerlink" href="#idle-states-control-via-kernel-command-line" title="Permalink to this headline">¶</a></h2>
 <p>In addition to the <code class="docutils literal notranslate"><span class="pre">sysfs</span></code> interface allowing individual idle states to be
 <a class="reference internal" href="#idle-states-representation">disabled for individual CPUs</a>, there are kernel
@@ -807,51 +716,35 @@ the two drivers is different for <code class="docutils literal notranslate"><spa
 Also, the <code class="docutils literal notranslate"><span class="pre">acpi_idle</span></code> driver is part of the <code class="docutils literal notranslate"><span class="pre">processor</span></code> kernel module that
 can be loaded separately and <code class="docutils literal notranslate"><span class="pre">max_cstate=&lt;n&gt;</span></code> can be passed to it as a module
 parameter when it is loaded.]</p>
-</div>
-</div>
+</section>
+</section>
 
 
            </div>
-           
           </div>
           <footer>
 
   <hr/>
 
   <div role="contentinfo">
-    <p>
-        &#169; Copyright The kernel development community.
-
-    </p>
+    <p>&#169; Copyright The kernel development community.</p>
   </div>
-    
-    
-    
-    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
-    
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
     <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
-    
-    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
 
 </footer>
         </div>
       </div>
-
     </section>
-
   </div>
-  
-
-  <script type="text/javascript">
+  <script>
       jQuery(function () {
           SphinxRtdTheme.Navigation.enable(true);
       });
-  </script>
-
-  
-  
-    
-   
+  </script> 
 
 </body>
 </html>

@@ -1,77 +1,38 @@
-
-
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8" />
-  
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  
-  <title>Optimization Guide &mdash; The Linux Kernel  documentation</title>
-  
-
-  
-  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
-  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="../../../_static/theme_overrides.css" type="text/css" />
-  <link rel="stylesheet" href="../../../_static/theme_rtd_colors.css" type="text/css" />
-
-  
-  
-
-  
-  
-
-  
-
-  
+  <title>Optimization Guide &mdash; The Linux Kernel  documentation</title><link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/theme_overrides.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/theme_rtd_colors.css" type="text/css" />
   <!--[if lt IE 9]>
     <script src="../../../_static/js/html5shiv.min.js"></script>
   <![endif]-->
-  
-    
-      <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+  <script id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
         <script src="../../../_static/jquery.js"></script>
         <script src="../../../_static/underscore.js"></script>
         <script src="../../../_static/doctools.js"></script>
         <script src="../../../_static/language_data.js"></script>
-    
-    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
-
-    
+    <script src="../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" />
     <link rel="next" title="Detailed Usages" href="usage.html" />
     <link rel="prev" title="Getting Started" href="start.html" /> 
 </head>
 
-<body class="wy-body-for-nav">
-
-   
+<body class="wy-body-for-nav"> 
   <div class="wy-grid-for-nav">
-    
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-          
-
-          
             <a href="../../../index.html" class="icon icon-home"> The Linux Kernel
-          
-
-          
           </a>
-
-          
-            
-            
               <div class="version">
-                5.16.0-rc7-mm1-damon
+                5.19.0-rc1-mm-unstable-damon
               </div>
-            
-          
-
-          
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
     <input type="text" name="q" placeholder="Search docs" />
@@ -79,18 +40,7 @@
     <input type="hidden" name="area" value="default" />
   </form>
 </div>
-
-          
-        </div>
-
-        
-        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
-          
-            
-            
-              
-            
-            
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <ul class="current">
 <li class="toctree-l1 current"><a class="reference internal" href="index.html">Monitoring Data Accesses</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="start.html">Getting Started</a></li>
@@ -109,6 +59,7 @@
 </li>
 <li class="toctree-l2"><a class="reference internal" href="usage.html">Detailed Usages</a></li>
 <li class="toctree-l2"><a class="reference internal" href="reclaim.html">DAMON-based Reclamation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lru_sort.html">DAMON-based LRU-lists Sorting</a></li>
 </ul>
 </li>
 </ul>
@@ -116,79 +67,37 @@
 <li class="toctree-l1"><a class="reference internal" href="../../../vm/damon/index.html">DAMON: Data Access MONitor</a></li>
 </ul>
 
-            
-          
         </div>
-        
       </div>
     </nav>
 
-    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
-
-      
-      <nav class="wy-nav-top" aria-label="top navigation">
-        
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
           <a href="../../../index.html">The Linux Kernel</a>
-        
       </nav>
 
-
       <div class="wy-nav-content">
-        
         <div class="rst-content">
-        
-          
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<div role="navigation" aria-label="breadcrumbs navigation">
-
+          <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-    
       <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
-        
           <li><a href="index.html">Monitoring Data Accesses</a> &raquo;</li>
-        
       <li>Optimization Guide</li>
-    
-    
       <li class="wy-breadcrumbs-aside">
-        
-          
             <a href="../../../_sources/admin-guide/mm/damon/guide.rst.txt" rel="nofollow"> View page source</a>
-          
-        
       </li>
-    
   </ul>
-
-  
   <hr/>
 </div>
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
-            
-  <div class="section" id="optimization-guide">
+             
+  <section id="optimization-guide">
 <h1>Optimization Guide<a class="headerlink" href="#optimization-guide" title="Permalink to this headline">¶</a></h1>
 <p>This document helps you estimating the amount of benefit that you could get
 from DAMON-based optimizations, and describes how you could achieve it.  You
 are assumed to already read <a class="reference internal" href="start.html"><span class="doc">Getting Started</span></a>.</p>
-<div class="section" id="check-the-signs">
+<section id="check-the-signs">
 <h2>Check The Signs<a class="headerlink" href="#check-the-signs" title="Permalink to this headline">¶</a></h2>
 <p>No optimization can provide same extent of benefit to every case.  Therefore
 you should first guess how much improvements you could get using DAMON.  If
@@ -213,8 +122,8 @@ that placed between DRAM and traditional hard disks, such as non-volatile
 memory or fast SSDs, DAMON could help you utilizing the devices more
 efficiently.</p></li>
 </ul>
-</div>
-<div class="section" id="profile">
+</section>
+<section id="profile">
 <h2>Profile<a class="headerlink" href="#profile" title="Permalink to this headline">¶</a></h2>
 <p>If you found some positive signals, you could start by profiling your workloads
 using DAMON.  Find major workloads on your systems and analyze their data
@@ -236,8 +145,8 @@ microscope view.</p>
 DAMON Application</a> for your special case.</p>
 <p>You don’t need to take only one approach among the above plans, but you could
 use multiple of the above approaches to maximize the benefit.</p>
-</div>
-<div class="section" id="optimize">
+</section>
+<section id="optimize">
 <h2>Optimize<a class="headerlink" href="#optimize" title="Permalink to this headline">¶</a></h2>
 <p>If the profiling result also says it’s worth trying some optimization, you
 could consider below approaches.  Note that some of the below approaches assume
@@ -245,7 +154,7 @@ that your systems are configured with swap devices or other types of auxiliary
 memory so that you don’t strictly required to accommodate the whole working set
 in the main memory.  Most of the detailed optimization should be made on your
 concrete understanding of your memory devices.</p>
-<div class="section" id="memory-configuration">
+<section id="memory-configuration">
 <h3>Memory Configuration<a class="headerlink" href="#memory-configuration" title="Permalink to this headline">¶</a></h3>
 <p>No more no less, DRAM should be large enough to accommodate only important
 working sets, because DRAM is highly performance critical but expensive and
@@ -263,8 +172,8 @@ shows the heatmap and the working set size distributions/changes of
 up to 180 MiB, but keeps smaller than 50 MiB for more than 95% of the time.
 Even though you give only 50 MiB of memory space to the workload, it will work
 well for 95% of the time.  Meanwhile, you can save the 130 MiB of memory space.</p>
-</div>
-<div class="section" id="program-modification">
+</section>
+<section id="program-modification">
 <h3>Program Modification<a class="headerlink" href="#program-modification" title="Permalink to this headline">¶</a></h3>
 <p>If the data access pattern heatmap plotted by <code class="docutils literal notranslate"><span class="pre">damo</span> <span class="pre">report</span> <span class="pre">heats</span></code> is quite
 simple so that you can understand how the things are going in the workload with
@@ -282,8 +191,8 @@ speedup.</p>
 optimizations.  This <a class="reference external" href="https://damonitor.github.io/doc/html/v17/admin-guide/mm/damon/guide.html#program-modification">page</a>
 shows the visualized access patterns of streamcluster workload in PARSEC3
 benchmark suite.  We can easily identify the 100 MiB sized hot object.</p>
-</div>
-<div class="section" id="automated-damon-based-memory-operations">
+</section>
+<section id="automated-damon-based-memory-operations">
 <h3>Automated DAMON-based Memory Operations<a class="headerlink" href="#automated-damon-based-memory-operations" title="Permalink to this headline">¶</a></h3>
 <p>Though <cite>Manual Program Optimization</cite> works well in many cases and DAMON can
 help it, modifying the source code is not a good option in many cases.  First
@@ -307,8 +216,8 @@ changes.  The total number and the total size of the regions that each scheme
 is applied, which are provided via the debugfs interface and the programming
 interface can also be useful.  Writing a program automating this optimal
 parameter could be an option.</p>
-</div>
-<div class="section" id="personalized-damon-application">
+</section>
+<section id="personalized-damon-application">
 <h3>Personalized DAMON Application<a class="headerlink" href="#personalized-damon-application" title="Permalink to this headline">¶</a></h3>
 <p>Above approaches will work well for many general cases, but would not enough
 for some special cases.</p>
@@ -322,9 +231,9 @@ and wise optimizations.</p>
 <p>If you are a kernel space programmer, writing kernel space DAMON applications
 using the API (refer to the <a class="reference internal" href="../../../vm/damon/api.html"><span class="doc">API Reference</span></a> for more detail) would be an
 option.</p>
-</div>
-</div>
-<div class="section" id="reference-practices">
+</section>
+</section>
+<section id="reference-practices">
 <h2>Reference Practices<a class="headerlink" href="#reference-practices" title="Permalink to this headline">¶</a></h2>
 <p>Referencing previously done successful practices could help you getting the
 sense for this kind of optimizations.  There is an academic paper <a class="footnote-reference brackets" href="#id9" id="id4">1</a>
@@ -350,55 +259,38 @@ workloads that collected with latest version of DAMON <a class="footnote-referen
 <dd><p><a class="reference external" href="https://damonitor.github.io/test/result/visual/latest/rec.wss_time.png.html">https://damonitor.github.io/test/result/visual/latest/rec.wss_time.png.html</a></p>
 </dd>
 </dl>
-</div>
-</div>
+</section>
+</section>
 
 
            </div>
-           
           </div>
-          <footer>
-    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
-        <a href="usage.html" class="btn btn-neutral float-right" title="Detailed Usages" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
         <a href="start.html" class="btn btn-neutral float-left" title="Getting Started" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="usage.html" class="btn btn-neutral float-right" title="Detailed Usages" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>
 
   <div role="contentinfo">
-    <p>
-        &#169; Copyright The kernel development community.
-
-    </p>
+    <p>&#169; Copyright The kernel development community.</p>
   </div>
-    
-    
-    
-    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
-    
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
     <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
-    
-    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
 
 </footer>
         </div>
       </div>
-
     </section>
-
   </div>
-  
-
-  <script type="text/javascript">
+  <script>
       jQuery(function () {
           SphinxRtdTheme.Navigation.enable(true);
       });
-  </script>
-
-  
-  
-    
-   
+  </script> 
 
 </body>
 </html>

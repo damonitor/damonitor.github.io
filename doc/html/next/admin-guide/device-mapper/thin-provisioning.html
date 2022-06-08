@@ -1,75 +1,36 @@
-
-
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8" />
-  
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  
-  <title>Thin provisioning &mdash; The Linux Kernel  documentation</title>
-  
-
-  
-  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
-  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="../../_static/theme_overrides.css" type="text/css" />
-  <link rel="stylesheet" href="../../_static/theme_rtd_colors.css" type="text/css" />
-
-  
-  
-
-  
-  
-
-  
-
-  
+  <title>Thin provisioning &mdash; The Linux Kernel  documentation</title><link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/theme_overrides.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/theme_rtd_colors.css" type="text/css" />
   <!--[if lt IE 9]>
     <script src="../../_static/js/html5shiv.min.js"></script>
   <![endif]-->
-  
-    
-      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+  <script id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
         <script src="../../_static/jquery.js"></script>
         <script src="../../_static/underscore.js"></script>
         <script src="../../_static/doctools.js"></script>
         <script src="../../_static/language_data.js"></script>
-    
-    <script type="text/javascript" src="../../_static/js/theme.js"></script>
-
-    
+    <script src="../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" /> 
 </head>
 
-<body class="wy-body-for-nav">
-
-   
+<body class="wy-body-for-nav"> 
   <div class="wy-grid-for-nav">
-    
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-          
-
-          
             <a href="../../index.html" class="icon icon-home"> The Linux Kernel
-          
-
-          
           </a>
-
-          
-            
-            
               <div class="version">
-                5.16.0-rc7-mm1-damon
+                5.19.0-rc1-mm-unstable-damon
               </div>
-            
-          
-
-          
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
     <input type="text" name="q" placeholder="Search docs" />
@@ -77,18 +38,7 @@
     <input type="hidden" name="area" value="default" />
   </form>
 </div>
-
-          
-        </div>
-
-        
-        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
-          
-            
-            
-              
-            
-            
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <ul>
 <li class="toctree-l1"><a class="reference internal" href="../mm/damon/index.html">Monitoring Data Accesses</a></li>
 </ul>
@@ -96,74 +46,33 @@
 <li class="toctree-l1"><a class="reference internal" href="../../vm/damon/index.html">DAMON: Data Access MONitor</a></li>
 </ul>
 
-            
-          
         </div>
-        
       </div>
     </nav>
 
-    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
-
-      
-      <nav class="wy-nav-top" aria-label="top navigation">
-        
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
           <a href="../../index.html">The Linux Kernel</a>
-        
       </nav>
 
-
       <div class="wy-nav-content">
-        
         <div class="rst-content">
-        
-          
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<div role="navigation" aria-label="breadcrumbs navigation">
-
+          <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-    
       <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
-        
       <li>Thin provisioning</li>
-    
-    
       <li class="wy-breadcrumbs-aside">
-        
-          
             <a href="../../_sources/admin-guide/device-mapper/thin-provisioning.rst.txt" rel="nofollow"> View page source</a>
-          
-        
       </li>
-    
   </ul>
-
-  
   <hr/>
 </div>
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
-            
-  <div class="section" id="thin-provisioning">
+             
+  <section id="thin-provisioning">
 <h1>Thin provisioning<a class="headerlink" href="#thin-provisioning" title="Permalink to this headline">¶</a></h1>
-<div class="section" id="introduction">
+<section id="introduction">
 <h2>Introduction<a class="headerlink" href="#introduction" title="Permalink to this headline">¶</a></h2>
 <p>This document describes a collection of device-mapper targets that
 between them implement thin-provisioning and snapshots.</p>
@@ -185,8 +94,8 @@ administrator some freedom, for example to:</p>
 but data on a non-mirrored one.</p></li>
 <li><p>Improve performance by storing the metadata on SSD.</p></li>
 </ul>
-</div>
-<div class="section" id="status">
+</section>
+<section id="status">
 <h2>Status<a class="headerlink" href="#status" title="Permalink to this headline">¶</a></h2>
 <p>These targets are considered safe for production use.  But different use
 cases will have different performance characteristics, for example due
@@ -198,14 +107,14 @@ things for you.</p>
 developed and are available as ‘thin_check’ and ‘thin_repair’.  The name
 of the package that provides these utilities varies by distribution (on
 a Red Hat distribution it is named ‘device-mapper-persistent-data’).</p>
-</div>
-<div class="section" id="cookbook">
+</section>
+<section id="cookbook">
 <h2>Cookbook<a class="headerlink" href="#cookbook" title="Permalink to this headline">¶</a></h2>
 <p>This section describes some quick recipes for using thin provisioning.
 They use the dmsetup program to control the device-mapper driver
 directly.  End users will be advised to use a higher-level volume
 manager such as LVM2 once support has been added.</p>
-<div class="section" id="pool-device">
+<section id="pool-device">
 <h3>Pool device<a class="headerlink" href="#pool-device" title="Permalink to this headline">¶</a></h3>
 <p>The pool device ties together the metadata volume and the data volume.
 It maps I/O linearly to the data volume and updates the metadata via
@@ -215,8 +124,8 @@ two mechanisms:</p>
 <li><p>Device-mapper ‘messages’ from userspace which control the creation of new
 virtual devices amongst other things.</p></li>
 </ul>
-</div>
-<div class="section" id="setting-up-a-fresh-pool-device">
+</section>
+<section id="setting-up-a-fresh-pool-device">
 <h3>Setting up a fresh pool device<a class="headerlink" href="#setting-up-a-fresh-pool-device" title="Permalink to this headline">¶</a></h3>
 <p>Setting up a pool device requires a valid metadata device, and a
 data device.  If you do not have an existing metadata device you can
@@ -234,16 +143,16 @@ snapshots which are recording large amounts of change, you may find you
 need to increase this.</p>
 <p>The largest size supported is 16GB: If the device is larger,
 a warning will be issued and the excess space will not be used.</p>
-</div>
-<div class="section" id="reloading-a-pool-table">
+</section>
+<section id="reloading-a-pool-table">
 <h3>Reloading a pool table<a class="headerlink" href="#reloading-a-pool-table" title="Permalink to this headline">¶</a></h3>
 <p>You may reload a pool’s table, indeed this is how the pool is resized
 if it runs out of space.  (N.B. While specifying a different metadata
 device when reloading is not forbidden at the moment, things will go
 wrong if it does not route I/O to exactly the same on-disk location as
 previously.)</p>
-</div>
-<div class="section" id="using-an-existing-pool-device">
+</section>
+<section id="using-an-existing-pool-device">
 <h3>Using an existing pool device<a class="headerlink" href="#using-an-existing-pool-device" title="Permalink to this headline">¶</a></h3>
 <div class="highlight-none notranslate"><div class="highlight"><pre><span></span>dmsetup create pool \
     --table &quot;0 20971520 thin-pool $metadata_dev $data_dev \
@@ -270,8 +179,8 @@ water mark when handling this event.</p>
 <p>A low water mark for the metadata device is maintained in the kernel and
 will trigger a dm event if free space on the metadata device drops below
 it.</p>
-</div>
-<div class="section" id="updating-on-disk-metadata">
+</section>
+<section id="updating-on-disk-metadata">
 <h3>Updating on-disk metadata<a class="headerlink" href="#updating-on-disk-metadata" title="Permalink to this headline">¶</a></h3>
 <p>On-disk metadata is committed every time a FLUSH or FUA bio is written.
 If no such requests are made then commits will occur every second.  This
@@ -293,8 +202,8 @@ completion may have already been acknowledged to upper IO layers
 (e.g. filesystem) it is strongly suggested that consistency checks
 (e.g. fsck) be performed on those layers when repair of the pool is
 required.</p>
-</div>
-<div class="section" id="id1">
+</section>
+<section id="id1">
 <h3>Thin provisioning<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h3>
 <ol class="lowerroman simple">
 <li><p>Creating a new thinly-provisioned volume.</p></li>
@@ -319,8 +228,8 @@ identifier is already in use, the message will fail with -EEXIST.</p>
 </div>
 <p>The last parameter is the identifier for the thinp device.</p>
 </div></blockquote>
-</div>
-<div class="section" id="internal-snapshots">
+</section>
+<section id="internal-snapshots">
 <h3>Internal snapshots<a class="headerlink" href="#internal-snapshots" title="Permalink to this headline">¶</a></h3>
 <ol class="lowerroman simple">
 <li><p>Creating an internal snapshot.</p></li>
@@ -354,8 +263,8 @@ device-mapper snapshots.)</p>
 </pre></div>
 </div>
 </div></blockquote>
-</div>
-<div class="section" id="external-snapshots">
+</section>
+<section id="external-snapshots">
 <h3>External snapshots<a class="headerlink" href="#external-snapshots" title="Permalink to this headline">¶</a></h3>
 <p>You can use an external <strong>read only</strong> device as an origin for a
 thinly-provisioned volume.  Any read to an unprovisioned area of the
@@ -388,8 +297,8 @@ You don’t mention the origin at this stage.</p>
 <p>N.B. All descendants (internal snapshots) of this snapshot require the
 same extra origin parameter.</p>
 </div></blockquote>
-</div>
-<div class="section" id="deactivation">
+</section>
+<section id="deactivation">
 <h3>Deactivation<a class="headerlink" href="#deactivation" title="Permalink to this headline">¶</a></h3>
 <p>All devices using a pool must be deactivated before the pool itself
 can be.</p>
@@ -398,11 +307,11 @@ dmsetup remove snap
 dmsetup remove pool
 </pre></div>
 </div>
-</div>
-</div>
-<div class="section" id="reference">
+</section>
+</section>
+<section id="reference">
 <h2>Reference<a class="headerlink" href="#reference" title="Permalink to this headline">¶</a></h2>
-<div class="section" id="thin-pool-target">
+<section id="thin-pool-target">
 <h3>‘thin-pool’ target<a class="headerlink" href="#thin-pool-target" title="Permalink to this headline">¶</a></h3>
 <ol class="lowerroman">
 <li><p>Constructor</p>
@@ -452,7 +361,7 @@ it will occur only once after each resume so volume manager writers
 should register for the event and then check the target’s status.</p>
 </dd>
 <dt>held metadata root:</dt><dd><p>The location, in blocks, of the metadata root that has been
-‘held’ for userspace read access.  ‘-‘ indicates there is no
+‘held’ for userspace read access.  ‘-’ indicates there is no
 held root.</p>
 </dd>
 <dt>discard_passdown|no_discard_passdown</dt><dd><p>Whether or not discards are actually being passed down to the
@@ -477,7 +386,7 @@ defaults to 60 seconds but may be disabled using a value of 0.</p>
 <dt>needs_check</dt><dd><p>A metadata operation has failed, resulting in the needs_check
 flag being set in the metadata’s superblock.  The metadata
 device must be deactivated and checked/repaired before the
-thin-pool can be made fully operational again.  ‘-‘ indicates
+thin-pool can be made fully operational again.  ‘-’ indicates
 needs_check is not set.</p>
 </dd>
 <dt>metadata_low_watermark:</dt><dd><p>Value of metadata low watermark in blocks.  The kernel sets this
@@ -519,8 +428,8 @@ get the root block associated with the metadata snapshot.</p>
 </dd>
 </dl>
 </div></blockquote>
-</div>
-<div class="section" id="thin-target">
+</section>
+<section id="thin-target">
 <h3>‘thin’ target<a class="headerlink" href="#thin-target" title="Permalink to this headline">¶</a></h3>
 <ol class="lowerroman">
 <li><p>Constructor</p>
@@ -559,52 +468,36 @@ tools should then be used.</p>
 mapped sector and the value of &lt;highest mapped sector&gt; is unspecified.</p>
 </li>
 </ol>
-</div>
-</div>
-</div>
+</section>
+</section>
+</section>
 
 
            </div>
-           
           </div>
           <footer>
 
   <hr/>
 
   <div role="contentinfo">
-    <p>
-        &#169; Copyright The kernel development community.
-
-    </p>
+    <p>&#169; Copyright The kernel development community.</p>
   </div>
-    
-    
-    
-    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
-    
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
     <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
-    
-    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
 
 </footer>
         </div>
       </div>
-
     </section>
-
   </div>
-  
-
-  <script type="text/javascript">
+  <script>
       jQuery(function () {
           SphinxRtdTheme.Navigation.enable(true);
       });
-  </script>
-
-  
-  
-    
-   
+  </script> 
 
 </body>
 </html>

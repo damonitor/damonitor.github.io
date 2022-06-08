@@ -1,75 +1,36 @@
-
-
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8" />
-  
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  
-  <title>CPUSETS &mdash; The Linux Kernel  documentation</title>
-  
-
-  
-  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
-  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="../../_static/theme_overrides.css" type="text/css" />
-  <link rel="stylesheet" href="../../_static/theme_rtd_colors.css" type="text/css" />
-
-  
-  
-
-  
-  
-
-  
-
-  
+  <title>CPUSETS &mdash; The Linux Kernel  documentation</title><link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/theme_overrides.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/theme_rtd_colors.css" type="text/css" />
   <!--[if lt IE 9]>
     <script src="../../_static/js/html5shiv.min.js"></script>
   <![endif]-->
-  
-    
-      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+  <script id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
         <script src="../../_static/jquery.js"></script>
         <script src="../../_static/underscore.js"></script>
         <script src="../../_static/doctools.js"></script>
         <script src="../../_static/language_data.js"></script>
-    
-    <script type="text/javascript" src="../../_static/js/theme.js"></script>
-
-    
+    <script src="../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" /> 
 </head>
 
-<body class="wy-body-for-nav">
-
-   
+<body class="wy-body-for-nav"> 
   <div class="wy-grid-for-nav">
-    
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-          
-
-          
             <a href="../../index.html" class="icon icon-home"> The Linux Kernel
-          
-
-          
           </a>
-
-          
-            
-            
               <div class="version">
-                5.16.0-rc7-mm1-damon
+                5.19.0-rc1-mm-unstable-damon
               </div>
-            
-          
-
-          
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
     <input type="text" name="q" placeholder="Search docs" />
@@ -77,18 +38,7 @@
     <input type="hidden" name="area" value="default" />
   </form>
 </div>
-
-          
-        </div>
-
-        
-        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
-          
-            
-            
-              
-            
-            
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <ul>
 <li class="toctree-l1"><a class="reference internal" href="../mm/damon/index.html">Monitoring Data Accesses</a></li>
 </ul>
@@ -96,72 +46,31 @@
 <li class="toctree-l1"><a class="reference internal" href="../../vm/damon/index.html">DAMON: Data Access MONitor</a></li>
 </ul>
 
-            
-          
         </div>
-        
       </div>
     </nav>
 
-    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
-
-      
-      <nav class="wy-nav-top" aria-label="top navigation">
-        
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
           <a href="../../index.html">The Linux Kernel</a>
-        
       </nav>
 
-
       <div class="wy-nav-content">
-        
         <div class="rst-content">
-        
-          
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<div role="navigation" aria-label="breadcrumbs navigation">
-
+          <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-    
       <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
-        
       <li>CPUSETS</li>
-    
-    
       <li class="wy-breadcrumbs-aside">
-        
-          
             <a href="../../_sources/admin-guide/cgroup-v1/cpusets.rst.txt" rel="nofollow"> View page source</a>
-          
-        
       </li>
-    
   </ul>
-
-  
   <hr/>
 </div>
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
-            
-  <div class="section" id="cpusets">
+             
+  <section id="cpusets">
 <span id="id1"></span><h1>CPUSETS<a class="headerlink" href="#cpusets" title="Permalink to this headline">¶</a></h1>
 <p>Copyright (C) 2004 BULL SA.</p>
 <p>Written by <a class="reference external" href="mailto:Simon&#46;Derr&#37;&#52;&#48;bull&#46;net">Simon<span>&#46;</span>Derr<span>&#64;</span>bull<span>&#46;</span>net</a></p>
@@ -172,9 +81,9 @@
 <li><p>Modified by Paul Menage &lt;<a class="reference external" href="mailto:menage&#37;&#52;&#48;google&#46;com">menage<span>&#64;</span>google<span>&#46;</span>com</a>&gt;</p></li>
 <li><p>Modified by Hidetoshi Seto &lt;<a class="reference external" href="mailto:seto&#46;hidetoshi&#37;&#52;&#48;jp&#46;fujitsu&#46;com">seto<span>&#46;</span>hidetoshi<span>&#64;</span>jp<span>&#46;</span>fujitsu<span>&#46;</span>com</a>&gt;</p></li>
 </ul>
-<div class="section" id="id2">
+<section id="id2">
 <h2>1. Cpusets<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h2>
-<div class="section" id="what-are-cpusets">
+<section id="what-are-cpusets">
 <h3>1.1 What are cpusets ?<a class="headerlink" href="#what-are-cpusets" title="Permalink to this headline">¶</a></h3>
 <p>Cpusets provide a mechanism for assigning a set of CPUs and Memory
 Nodes to a set of tasks.   In this document “Memory Node” refers to
@@ -199,8 +108,8 @@ virtual file system, manage the attributes and permissions of these
 cpusets and which CPUs and Memory Nodes are assigned to each cpuset,
 specify and query to which cpuset a task is assigned, and list the
 task pids assigned to a cpuset.</p>
-</div>
-<div class="section" id="why-are-cpusets-needed">
+</section>
+<section id="why-are-cpusets-needed">
 <h3>1.2 Why are cpusets needed ?<a class="headerlink" href="#why-are-cpusets-needed" title="Permalink to this headline">¶</a></h3>
 <p>The management of large computer systems, with many processors (CPUs),
 complex memory cache hierarchies and multiple Memory Nodes having
@@ -233,8 +142,8 @@ mechanisms required to efficiently implement such subsets.  It
 leverages existing CPU and Memory Placement facilities in the Linux
 kernel to avoid any additional impact on the critical scheduler or
 memory allocator code.</p>
-</div>
-<div class="section" id="how-are-cpusets-implemented">
+</section>
+<section id="how-are-cpusets-implemented">
 <h3>1.3 How are cpusets implemented ?<a class="headerlink" href="#how-are-cpusets-implemented" title="Permalink to this headline">¶</a></h3>
 <p>Cpusets provide a Linux kernel mechanism to constrain which CPUs and
 Memory Nodes are used by a process or set of processes.</p>
@@ -362,8 +271,8 @@ only affect cpuset.effective_cpus and cpuset.effective_mems which show
 the actual cpus and memory nodes that are currently used by this cpuset.
 See <a class="reference internal" href="../cgroup-v2.html"><span class="doc">Control Group v2</span></a> for more information about
 cpuset v2 behavior.</p>
-</div>
-<div class="section" id="what-are-exclusive-cpusets">
+</section>
+<section id="what-are-exclusive-cpusets">
 <h3>1.4 What are exclusive cpusets ?<a class="headerlink" href="#what-are-exclusive-cpusets" title="Permalink to this headline">¶</a></h3>
 <p>If a cpuset is cpu or mem exclusive, no other cpuset, other than
 a direct ancestor or descendant, may share any of the same CPUs or
@@ -380,8 +289,8 @@ construct child, non-mem_exclusive cpusets for each individual job.
 Only a small amount of typical kernel memory, such as requests from
 interrupt handlers, is allowed to be taken outside even a
 mem_exclusive cpuset.</p>
-</div>
-<div class="section" id="what-is-memory-pressure">
+</section>
+<section id="what-is-memory-pressure">
 <h3>1.5 What is memory_pressure ?<a class="headerlink" href="#what-is-memory-pressure" title="Permalink to this headline">¶</a></h3>
 <p>The memory_pressure of a cpuset provides a simple per-cpuset metric
 of the rate that the tasks in a cpuset are attempting to free up in
@@ -431,8 +340,8 @@ cpuset, if it enters the synchronous (direct) page reclaim code.</p>
 (half-life of 10 seconds) rate of direct page reclaims caused by
 the tasks in the cpuset, in units of reclaims attempted per second,
 times 1000.</p>
-</div>
-<div class="section" id="what-is-memory-spread">
+</section>
+<section id="what-is-memory-spread">
 <h3>1.6 What is memory spread ?<a class="headerlink" href="#what-is-memory-spread" title="Permalink to this headline">¶</a></h3>
 <p>There are two boolean flag files per cpuset that control where the
 kernel allocates pages for the file system buffers and related in
@@ -488,8 +397,8 @@ the several nodes in the jobs cpuset in order to fit.  Without this
 policy, especially for jobs that might have one thread reading in the
 data set, the memory allocation across the nodes in the jobs cpuset
 can become very uneven.</p>
-</div>
-<div class="section" id="what-is-sched-load-balance">
+</section>
+<section id="what-is-sched-load-balance">
 <h3>1.7 What is sched_load_balance ?<a class="headerlink" href="#what-is-sched-load-balance" title="Permalink to this headline">¶</a></h3>
 <p>The kernel scheduler (kernel/sched/core.c) automatically load balances
 tasks.  If one CPU is underutilized, kernel code running on that
@@ -577,8 +486,8 @@ load balancing to the other CPUs.</p>
 <p>CPUs in “cpuset.isolcpus” were excluded from load balancing by the
 isolcpus= kernel boot option, and will never be load balanced regardless
 of the value of “cpuset.sched_load_balance” in any cpuset.</p>
-</div>
-<div class="section" id="sched-load-balance-implementation-details">
+</section>
+<section id="sched-load-balance-implementation-details">
 <h3>1.7.1 sched_load_balance implementation details.<a class="headerlink" href="#sched-load-balance-implementation-details" title="Permalink to this headline">¶</a></h3>
 <p>The per-cpuset flag ‘cpuset.sched_load_balance’ defaults to enabled (contrary
 to most cpuset flags.)  When enabled for a cpuset, the kernel will
@@ -620,8 +529,8 @@ When the scheduler routine partition_sched_domains() is invoked from
 the cpuset code to update these sched domains, it compares the new
 partition requested with the current, and updates its sched domains,
 removing the old and adding the new, for each change.</p>
-</div>
-<div class="section" id="what-is-sched-relax-domain-level">
+</section>
+<section id="what-is-sched-relax-domain-level">
 <h3>1.8 What is sched_relax_domain_level ?<a class="headerlink" href="#what-is-sched-relax-domain-level" title="Permalink to this headline">¶</a></h3>
 <p>In sched domain, the scheduler migrates tasks in 2 ways; periodic load
 balance on tick, and at time of some schedule events.</p>
@@ -701,8 +610,8 @@ the searching cost enough small by managing cpuset to compact etc.</p></li>
 then increasing ‘sched_relax_domain_level’ would benefit you.</p></li>
 </ul>
 </div></blockquote>
-</div>
-<div class="section" id="how-do-i-use-cpusets">
+</section>
+<section id="how-do-i-use-cpusets">
 <h3>1.9 How do I use cpusets ?<a class="headerlink" href="#how-do-i-use-cpusets" title="Permalink to this headline">¶</a></h3>
 <p>In order to minimize the impact of cpusets on critical kernel
 code, such as the scheduler, and due to the fact that the kernel
@@ -816,11 +725,11 @@ cat, rmdir commands from the shell, or their equivalent from C.</p></li>
 SGI’s runon or Robert Love’s taskset.  The mbind and set_mempolicy
 calls can be done at the shell prompt using the numactl command
 (part of Andi Kleen’s numa package).</p>
-</div>
-</div>
-<div class="section" id="usage-examples-and-syntax">
+</section>
+</section>
+<section id="usage-examples-and-syntax">
 <h2>2. Usage Examples and Syntax<a class="headerlink" href="#usage-examples-and-syntax" title="Permalink to this headline">¶</a></h2>
-<div class="section" id="basic-usage">
+<section id="basic-usage">
 <h3>2.1 Basic Usage<a class="headerlink" href="#basic-usage" title="Permalink to this headline">¶</a></h3>
 <p>Creating, modifying, using the cpusets can be done through the cpuset
 virtual filesystem.</p>
@@ -892,8 +801,8 @@ wrapper around the cgroup filesystem.</p>
 echo &quot;/sbin/cpuset_release_agent&quot; &gt; /sys/fs/cgroup/cpuset/release_agent
 </pre></div>
 </div>
-</div>
-<div class="section" id="adding-removing-cpus">
+</section>
+<section id="adding-removing-cpus">
 <h3>2.2 Adding/removing cpus<a class="headerlink" href="#adding-removing-cpus" title="Permalink to this headline">¶</a></h3>
 <p>This is the syntax to use when writing in the cpus or mems files
 in cpuset directories:</p>
@@ -912,16 +821,16 @@ without the CPU to be removed.</p>
 <div class="highlight-none notranslate"><div class="highlight"><pre><span></span># /bin/echo &quot;&quot; &gt; cpuset.cpus          -&gt; clear cpus list
 </pre></div>
 </div>
-</div>
-<div class="section" id="setting-flags">
+</section>
+<section id="setting-flags">
 <h3>2.3 Setting flags<a class="headerlink" href="#setting-flags" title="Permalink to this headline">¶</a></h3>
 <p>The syntax is very simple:</p>
 <div class="highlight-none notranslate"><div class="highlight"><pre><span></span># /bin/echo 1 &gt; cpuset.cpu_exclusive  -&gt; set flag &#39;cpuset.cpu_exclusive&#39;
 # /bin/echo 0 &gt; cpuset.cpu_exclusive  -&gt; unset flag &#39;cpuset.cpu_exclusive&#39;
 </pre></div>
 </div>
-</div>
-<div class="section" id="attaching-processes">
+</section>
+<section id="attaching-processes">
 <h3>2.4 Attaching processes<a class="headerlink" href="#attaching-processes" title="Permalink to this headline">¶</a></h3>
 <div class="highlight-none notranslate"><div class="highlight"><pre><span></span># /bin/echo PID &gt; tasks
 </pre></div>
@@ -934,9 +843,9 @@ If you have several tasks to attach, you have to do it one after another:</p>
 # /bin/echo PIDn &gt; tasks
 </pre></div>
 </div>
-</div>
-</div>
-<div class="section" id="questions">
+</section>
+</section>
+<section id="questions">
 <h2>3. Questions<a class="headerlink" href="#questions" title="Permalink to this headline">¶</a></h2>
 <dl class="simple">
 <dt>Q:</dt><dd><p>what’s up with this ‘/bin/echo’ ?</p>
@@ -951,55 +860,39 @@ able to tell whether a command succeeded or failed.</p>
 put only ONE pid.</p>
 </dd>
 </dl>
-</div>
-<div class="section" id="contact">
+</section>
+<section id="contact">
 <h2>4. Contact<a class="headerlink" href="#contact" title="Permalink to this headline">¶</a></h2>
 <p>Web: <a class="reference external" href="http://www.bullopensource.org/cpuset">http://www.bullopensource.org/cpuset</a></p>
-</div>
-</div>
+</section>
+</section>
 
 
            </div>
-           
           </div>
           <footer>
 
   <hr/>
 
   <div role="contentinfo">
-    <p>
-        &#169; Copyright The kernel development community.
-
-    </p>
+    <p>&#169; Copyright The kernel development community.</p>
   </div>
-    
-    
-    
-    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
-    
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
     <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
-    
-    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
 
 </footer>
         </div>
       </div>
-
     </section>
-
   </div>
-  
-
-  <script type="text/javascript">
+  <script>
       jQuery(function () {
           SphinxRtdTheme.Navigation.enable(true);
       });
-  </script>
-
-  
-  
-    
-   
+  </script> 
 
 </body>
 </html>

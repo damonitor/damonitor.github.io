@@ -1,75 +1,36 @@
-
-
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8" />
-  
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  
-  <title>Page migration &mdash; The Linux Kernel  documentation</title>
-  
-
-  
-  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
-  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="../_static/theme_overrides.css" type="text/css" />
-  <link rel="stylesheet" href="../_static/theme_rtd_colors.css" type="text/css" />
-
-  
-  
-
-  
-  
-
-  
-
-  
+  <title>Page migration &mdash; The Linux Kernel  documentation</title><link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/theme_overrides.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/theme_rtd_colors.css" type="text/css" />
   <!--[if lt IE 9]>
     <script src="../_static/js/html5shiv.min.js"></script>
   <![endif]-->
-  
-    
-      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+  <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
         <script src="../_static/jquery.js"></script>
         <script src="../_static/underscore.js"></script>
         <script src="../_static/doctools.js"></script>
         <script src="../_static/language_data.js"></script>
-    
-    <script type="text/javascript" src="../_static/js/theme.js"></script>
-
-    
+    <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" /> 
 </head>
 
-<body class="wy-body-for-nav">
-
-   
+<body class="wy-body-for-nav"> 
   <div class="wy-grid-for-nav">
-    
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-          
-
-          
             <a href="../index.html" class="icon icon-home"> The Linux Kernel
-          
-
-          
           </a>
-
-          
-            
-            
               <div class="version">
-                5.16.0-rc7-mm1-damon
+                5.19.0-rc1-mm-unstable-damon
               </div>
-            
-          
-
-          
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
     <input type="text" name="q" placeholder="Search docs" />
@@ -77,18 +38,7 @@
     <input type="hidden" name="area" value="default" />
   </form>
 </div>
-
-          
-        </div>
-
-        
-        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
-          
-            
-            
-              
-            
-            
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <ul>
 <li class="toctree-l1"><a class="reference internal" href="../admin-guide/mm/damon/index.html">Monitoring Data Accesses</a></li>
 </ul>
@@ -96,72 +46,31 @@
 <li class="toctree-l1"><a class="reference internal" href="damon/index.html">DAMON: Data Access MONitor</a></li>
 </ul>
 
-            
-          
         </div>
-        
       </div>
     </nav>
 
-    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
-
-      
-      <nav class="wy-nav-top" aria-label="top navigation">
-        
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
           <a href="../index.html">The Linux Kernel</a>
-        
       </nav>
 
-
       <div class="wy-nav-content">
-        
         <div class="rst-content">
-        
-          
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<div role="navigation" aria-label="breadcrumbs navigation">
-
+          <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-    
       <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
-        
       <li>Page migration</li>
-    
-    
       <li class="wy-breadcrumbs-aside">
-        
-          
             <a href="../_sources/vm/page_migration.rst.txt" rel="nofollow"> View page source</a>
-          
-        
       </li>
-    
   </ul>
-
-  
   <hr/>
 </div>
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
-            
-  <div class="section" id="page-migration">
+             
+  <section id="page-migration">
 <span id="id1"></span><h1>Page migration<a class="headerlink" href="#page-migration" title="Permalink to this headline">¶</a></h1>
 <p>Page migration allows moving the physical location of pages between
 nodes in a NUMA system while the process is running. This means that the
@@ -213,7 +122,7 @@ Processes will run with similar performance after migration.</p>
 description for those trying to use migrate_pages() from the kernel
 (for userspace usage see the Andi Kleen’s numactl package mentioned above)
 and then a low level description of how the low level details work.</p>
-<div class="section" id="in-kernel-use-of-migrate-pages">
+<section id="in-kernel-use-of-migrate-pages">
 <h2>In kernel use of migrate_pages()<a class="headerlink" href="#in-kernel-use-of-migrate-pages" title="Permalink to this headline">¶</a></h2>
 <ol class="arabic">
 <li><p>Remove pages from the LRU.</p>
@@ -233,8 +142,8 @@ to do the migration. It will call the function to allocate
 the new page for each page that is considered for
 moving.</p></li>
 </ol>
-</div>
-<div class="section" id="how-migrate-pages-works">
+</section>
+<section id="how-migrate-pages-works">
 <h2>How migrate_pages() works<a class="headerlink" href="#how-migrate-pages-works" title="Permalink to this headline">¶</a></h2>
 <p>migrate_pages() does several passes over its list of pages. A page is moved
 if all references to a page are removable at the time. The page has
@@ -280,8 +189,8 @@ and will reach the new page.</p></li>
 <li><p>The new page is moved to the LRU and can be scanned by the swapper,
 etc. again.</p></li>
 </ol>
-</div>
-<div class="section" id="non-lru-page-migration">
+</section>
+<section id="non-lru-page-migration">
 <h2>Non-LRU page migration<a class="headerlink" href="#non-lru-page-migration" title="Permalink to this headline">¶</a></h2>
 <p>Although migration originally aimed for reducing the latency of memory accesses
 for NUMA, compaction also uses migration to create high-order pages.</p>
@@ -360,17 +269,17 @@ doesn’t have a stable value although it has PAGE_MAPPING_MOVABLE set
 page is LRU or non-LRU movable once the page has been isolated because LRU
 pages can never have PAGE_MAPPING_MOVABLE set in page-&gt;mapping. It is also
 good for just peeking to test non-LRU movable pages before more expensive
-checking with lock_page() in pfn scanning to select a victim.</p>
+checking with <a class="reference internal" href="../core-api/mm-api.html#c.lock_page" title="lock_page"><code class="xref c c-func docutils literal notranslate"><span class="pre">lock_page()</span></code></a> in pfn scanning to select a victim.</p>
 <p>For guaranteeing non-LRU movable page, VM provides PageMovable() function.
 Unlike __PageMovable(), PageMovable() validates page-&gt;mapping and
-mapping-&gt;a_ops-&gt;isolate_page under lock_page(). The lock_page() prevents
+mapping-&gt;a_ops-&gt;isolate_page under <a class="reference internal" href="../core-api/mm-api.html#c.lock_page" title="lock_page"><code class="xref c c-func docutils literal notranslate"><span class="pre">lock_page()</span></code></a>. The <a class="reference internal" href="../core-api/mm-api.html#c.lock_page" title="lock_page"><code class="xref c c-func docutils literal notranslate"><span class="pre">lock_page()</span></code></a> prevents
 sudden destroying of page-&gt;mapping.</p>
 <p>Drivers using __SetPageMovable() should clear the flag via
 __ClearMovablePage() under page_lock() before the releasing the page.</p>
 </li>
 <li><p>PG_isolated</p>
 <p>To prevent concurrent isolation among several CPUs, VM marks isolated page
-as PG_isolated under lock_page(). So if a CPU encounters PG_isolated
+as PG_isolated under <a class="reference internal" href="../core-api/mm-api.html#c.lock_page" title="lock_page"><code class="xref c c-func docutils literal notranslate"><span class="pre">lock_page()</span></code></a>. So if a CPU encounters PG_isolated
 non-LRU movable page, it can skip it. Driver doesn’t need to manipulate the
 flag because VM will set/clear it automatically. Keep in mind that if the
 driver sees a PG_isolated page, it means the page has been isolated by the
@@ -380,8 +289,8 @@ shouldn’t use PG_isolated for its own purposes.</p>
 </li>
 </ul>
 </div></blockquote>
-</div>
-<div class="section" id="monitoring-migration">
+</section>
+<section id="monitoring-migration">
 <h2>Monitoring Migration<a class="headerlink" href="#monitoring-migration" title="Permalink to this headline">¶</a></h2>
 <p>The following events (counters) can be used to monitor page migration.</p>
 <ol class="arabic simple">
@@ -404,51 +313,35 @@ PGMIGRATE_FAIL events. For example, a THP migration failure will cause both
 THP_MIGRATION_FAIL and PGMIGRATE_FAIL to increase.</p>
 <p>Christoph Lameter, May 8, 2006.
 Minchan Kim, Mar 28, 2016.</p>
-</div>
-</div>
+</section>
+</section>
 
 
            </div>
-           
           </div>
           <footer>
 
   <hr/>
 
   <div role="contentinfo">
-    <p>
-        &#169; Copyright The kernel development community.
-
-    </p>
+    <p>&#169; Copyright The kernel development community.</p>
   </div>
-    
-    
-    
-    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
-    
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
     <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
-    
-    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
 
 </footer>
         </div>
       </div>
-
     </section>
-
   </div>
-  
-
-  <script type="text/javascript">
+  <script>
       jQuery(function () {
           SphinxRtdTheme.Navigation.enable(true);
       });
-  </script>
-
-  
-  
-    
-   
+  </script> 
 
 </body>
 </html>

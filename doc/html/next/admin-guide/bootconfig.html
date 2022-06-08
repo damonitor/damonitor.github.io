@@ -1,75 +1,36 @@
-
-
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8" />
-  
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  
-  <title>Boot Configuration &mdash; The Linux Kernel  documentation</title>
-  
-
-  
-  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
-  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="../_static/theme_overrides.css" type="text/css" />
-  <link rel="stylesheet" href="../_static/theme_rtd_colors.css" type="text/css" />
-
-  
-  
-
-  
-  
-
-  
-
-  
+  <title>Boot Configuration &mdash; The Linux Kernel  documentation</title><link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/theme_overrides.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/theme_rtd_colors.css" type="text/css" />
   <!--[if lt IE 9]>
     <script src="../_static/js/html5shiv.min.js"></script>
   <![endif]-->
-  
-    
-      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+  <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
         <script src="../_static/jquery.js"></script>
         <script src="../_static/underscore.js"></script>
         <script src="../_static/doctools.js"></script>
         <script src="../_static/language_data.js"></script>
-    
-    <script type="text/javascript" src="../_static/js/theme.js"></script>
-
-    
+    <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" /> 
 </head>
 
-<body class="wy-body-for-nav">
-
-   
+<body class="wy-body-for-nav"> 
   <div class="wy-grid-for-nav">
-    
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-          
-
-          
             <a href="../index.html" class="icon icon-home"> The Linux Kernel
-          
-
-          
           </a>
-
-          
-            
-            
               <div class="version">
-                5.16.0-rc7-mm1-damon
+                5.19.0-rc1-mm-unstable-damon
               </div>
-            
-          
-
-          
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
     <input type="text" name="q" placeholder="Search docs" />
@@ -77,18 +38,7 @@
     <input type="hidden" name="area" value="default" />
   </form>
 </div>
-
-          
-        </div>
-
-        
-        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
-          
-            
-            
-              
-            
-            
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <ul>
 <li class="toctree-l1"><a class="reference internal" href="mm/damon/index.html">Monitoring Data Accesses</a></li>
 </ul>
@@ -96,85 +46,44 @@
 <li class="toctree-l1"><a class="reference internal" href="../vm/damon/index.html">DAMON: Data Access MONitor</a></li>
 </ul>
 
-            
-          
         </div>
-        
       </div>
     </nav>
 
-    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
-
-      
-      <nav class="wy-nav-top" aria-label="top navigation">
-        
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
           <a href="../index.html">The Linux Kernel</a>
-        
       </nav>
 
-
       <div class="wy-nav-content">
-        
         <div class="rst-content">
-        
-          
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<div role="navigation" aria-label="breadcrumbs navigation">
-
+          <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-    
       <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
-        
       <li>Boot Configuration</li>
-    
-    
       <li class="wy-breadcrumbs-aside">
-        
-          
             <a href="../_sources/admin-guide/bootconfig.rst.txt" rel="nofollow"> View page source</a>
-          
-        
       </li>
-    
   </ul>
-
-  
   <hr/>
 </div>
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
-            
-  <div class="section" id="boot-configuration">
+             
+  <section id="boot-configuration">
 <span id="bootconfig"></span><h1>Boot Configuration<a class="headerlink" href="#boot-configuration" title="Permalink to this headline">¶</a></h1>
 <dl class="field-list simple">
 <dt class="field-odd">Author</dt>
 <dd class="field-odd"><p>Masami Hiramatsu &lt;<a class="reference external" href="mailto:mhiramat&#37;&#52;&#48;kernel&#46;org">mhiramat<span>&#64;</span>kernel<span>&#46;</span>org</a>&gt;</p>
 </dd>
 </dl>
-<div class="section" id="overview">
+<section id="overview">
 <h2>Overview<a class="headerlink" href="#overview" title="Permalink to this headline">¶</a></h2>
 <p>The boot configuration expands the current kernel command line to support
 additional key-value data when booting the kernel in an efficient way.
 This allows administrators to pass a structured-Key config file.</p>
-</div>
-<div class="section" id="config-file-syntax">
+</section>
+<section id="config-file-syntax">
 <h2>Config File Syntax<a class="headerlink" href="#config-file-syntax" title="Permalink to this headline">¶</a></h2>
 <p>The boot config syntax is a simple structured key-value. Each key consists
 of dot-connected-words, and key and value are connected by <code class="docutils literal notranslate"><span class="pre">=</span></code>. The value
@@ -193,7 +102,7 @@ quotes (<code class="docutils literal notranslate"><span class="pre">&quot;VALUE
 you can not escape these quotes.</p>
 <p>There can be a key which doesn’t have value or has an empty value. Those keys
 are used for checking if the key exists or not (like a boolean).</p>
-<div class="section" id="key-value-syntax">
+<section id="key-value-syntax">
 <h3>Key-Value Syntax<a class="headerlink" href="#key-value-syntax" title="Permalink to this headline">¶</a></h3>
 <p>The boot config file syntax allows user to merge partially same word keys
 by brace. For example:</p>
@@ -214,8 +123,8 @@ foo.bar.qux.quux = value2
 </div>
 <p>In both styles, same key words are automatically merged when parsing it
 at boot time. So you can append similar trees or key-values.</p>
-</div>
-<div class="section" id="same-key-values">
+</section>
+<section id="same-key-values">
 <h3>Same-key Values<a class="headerlink" href="#same-key-values" title="Permalink to this headline">¶</a></h3>
 <p>It is prohibited that two or more values or arrays share a same-key.
 For example,:</p>
@@ -269,8 +178,8 @@ foo = value2
 foo.bar = value1
 </pre></div>
 </div>
-</div>
-<div class="section" id="comments">
+</section>
+<section id="comments">
 <h3>Comments<a class="headerlink" href="#comments" title="Permalink to this headline">¶</a></h3>
 <p>The config syntax accepts shell-script style comments. The comments starting
 with hash (“#”) until newline (“n”) will be ignored.</p>
@@ -292,9 +201,9 @@ bar = 1, 2, 3
       ,2
 </pre></div>
 </div>
-</div>
-</div>
-<div class="section" id="proc-bootconfig">
+</section>
+</section>
+<section id="proc-bootconfig">
 <h2>/proc/bootconfig<a class="headerlink" href="#proc-bootconfig" title="Permalink to this headline">¶</a></h2>
 <p>/proc/bootconfig is a user-space interface of the boot config.
 Unlike /proc/cmdline, this file shows the key-value style list.
@@ -302,12 +211,16 @@ Each key-value pair is shown in each line with following style:</p>
 <div class="highlight-none notranslate"><div class="highlight"><pre><span></span>KEY[.WORDS...] = &quot;[VALUE]&quot;[,&quot;VALUE2&quot;...]
 </pre></div>
 </div>
-</div>
-<div class="section" id="boot-kernel-with-a-boot-config">
+</section>
+<section id="boot-kernel-with-a-boot-config">
 <h2>Boot Kernel With a Boot Config<a class="headerlink" href="#boot-kernel-with-a-boot-config" title="Permalink to this headline">¶</a></h2>
-<p>Since the boot configuration file is loaded with initrd, it will be added
-to the end of the initrd (initramfs) image file with padding, size,
-checksum and 12-byte magic word as below.</p>
+<p>There are two options to boot the kernel with bootconfig: attaching the
+bootconfig to the initrd image or embedding it in the kernel itself.</p>
+<section id="attaching-a-boot-config-to-initrd">
+<h3>Attaching a Boot Config to Initrd<a class="headerlink" href="#attaching-a-boot-config-to-initrd" title="Permalink to this headline">¶</a></h3>
+<p>Since the boot configuration file is loaded with initrd by default,
+it will be added to the end of the initrd (initramfs) image file with
+padding, size, checksum and 12-byte magic word as below.</p>
 <p>[initrd][bootconfig][padding][size(le32)][checksum(le32)][#BOOTCONFIGn]</p>
 <p>The size and checksum fields are unsigned 32bit little endian value.</p>
 <p>When the boot configuration is added to the initrd image, the total
@@ -337,8 +250,26 @@ to/from initrd image. You can build it by the following command:</p>
 </div>
 <p>Then add “bootconfig” on the normal kernel command line to tell the
 kernel to look for the bootconfig at the end of the initrd file.</p>
+</section>
+<section id="embedding-a-boot-config-into-kernel">
+<h3>Embedding a Boot Config into Kernel<a class="headerlink" href="#embedding-a-boot-config-into-kernel" title="Permalink to this headline">¶</a></h3>
+<p>If you can not use initrd, you can also embed the bootconfig file in the
+kernel by Kconfig options. In this case, you need to recompile the kernel
+with the following configs:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>CONFIG_BOOT_CONFIG_EMBED=y
+CONFIG_BOOT_CONFIG_EMBED_FILE=&quot;/PATH/TO/BOOTCONFIG/FILE&quot;
+</pre></div>
 </div>
-<div class="section" id="kernel-parameters-via-boot-config">
+<p><code class="docutils literal notranslate"><span class="pre">CONFIG_BOOT_CONFIG_EMBED_FILE</span></code> requires an absolute path or a relative
+path to the bootconfig file from source tree or object tree.
+The kernel will embed it as the default bootconfig.</p>
+<p>Just as when attaching the bootconfig to the initrd, you need <code class="docutils literal notranslate"><span class="pre">bootconfig</span></code>
+option on the kernel command line to enable the embedded bootconfig.</p>
+<p>Note that even if you set this option, you can override the embedded
+bootconfig by another bootconfig which attached to the initrd.</p>
+</section>
+</section>
+<section id="kernel-parameters-via-boot-config">
 <h2>Kernel parameters via Boot Config<a class="headerlink" href="#kernel-parameters-via-boot-config" title="Permalink to this headline">¶</a></h2>
 <p>In addition to the kernel command line, the boot config can be used for
 passing the kernel parameters. All the key-value pairs under <code class="docutils literal notranslate"><span class="pre">kernel</span></code>
@@ -372,8 +303,8 @@ init {
 <div class="highlight-none notranslate"><div class="highlight"><pre><span></span>root=&quot;01234567-89ab-cdef-0123-456789abcd&quot; ro bootconfig -- splash quiet
 </pre></div>
 </div>
-</div>
-<div class="section" id="config-file-limitation">
+</section>
+<section id="config-file-limitation">
 <h2>Config File Limitation<a class="headerlink" href="#config-file-limitation" title="Permalink to this headline">¶</a></h2>
 <p>Currently the maximum config size size is 32KB and the total key-words (not
 key-value entries) must be under 1024 nodes.
@@ -387,8 +318,8 @@ size is smaller than 32KB. (Note that this maximum size is not including
 the padding null characters.)
 Anyway, since bootconfig command verifies it when appending a boot config
 to initrd image, user can notice it before boot.</p>
-</div>
-<div class="section" id="bootconfig-apis">
+</section>
+<section id="bootconfig-apis">
 <h2>Bootconfig APIs<a class="headerlink" href="#bootconfig-apis" title="Permalink to this headline">¶</a></h2>
 <p>User can query or loop on key-value pairs, also it is possible to find
 a root (prefix) key node and find key-values under that node.</p>
@@ -422,8 +353,8 @@ xbc_node_for_each_array_value(root, &quot;array-option&quot;, value, anode) {
 “key.prefix.array-option”.</p>
 <p>Locking is not needed, since after initialization, the config becomes
 read-only. All data and keys must be copied if you need to modify it.</p>
-</div>
-<div class="section" id="functions-and-structures">
+</section>
+<section id="functions-and-structures">
 <h2>Functions and structures<a class="headerlink" href="#functions-and-structures" title="Permalink to this headline">¶</a></h2>
 <dl class="function">
 <dt id="c.xbc_calc_checksum">
@@ -915,51 +846,35 @@ if there is any error.
 In error cases, <strong>emsg</strong> will be updated with an error message and
 <strong>epos</strong> will be updated with the error position which is the byte offset
 of <strong>buf</strong>. If the error is not a parser error, <strong>epos</strong> will be -1.</p>
-</div>
-</div>
+</section>
+</section>
 
 
            </div>
-           
           </div>
           <footer>
 
   <hr/>
 
   <div role="contentinfo">
-    <p>
-        &#169; Copyright The kernel development community.
-
-    </p>
+    <p>&#169; Copyright The kernel development community.</p>
   </div>
-    
-    
-    
-    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
-    
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
     <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
-    
-    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
 
 </footer>
         </div>
       </div>
-
     </section>
-
   </div>
-  
-
-  <script type="text/javascript">
+  <script>
       jQuery(function () {
           SphinxRtdTheme.Navigation.enable(true);
       });
-  </script>
-
-  
-  
-    
-   
+  </script> 
 
 </body>
 </html>

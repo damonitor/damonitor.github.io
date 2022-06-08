@@ -1,75 +1,36 @@
-
-
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8" />
-  
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  
-  <title>I/O statistics fields &mdash; The Linux Kernel  documentation</title>
-  
-
-  
-  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
-  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="../_static/theme_overrides.css" type="text/css" />
-  <link rel="stylesheet" href="../_static/theme_rtd_colors.css" type="text/css" />
-
-  
-  
-
-  
-  
-
-  
-
-  
+  <title>I/O statistics fields &mdash; The Linux Kernel  documentation</title><link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/theme_overrides.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/theme_rtd_colors.css" type="text/css" />
   <!--[if lt IE 9]>
     <script src="../_static/js/html5shiv.min.js"></script>
   <![endif]-->
-  
-    
-      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+  <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
         <script src="../_static/jquery.js"></script>
         <script src="../_static/underscore.js"></script>
         <script src="../_static/doctools.js"></script>
         <script src="../_static/language_data.js"></script>
-    
-    <script type="text/javascript" src="../_static/js/theme.js"></script>
-
-    
+    <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" /> 
 </head>
 
-<body class="wy-body-for-nav">
-
-   
+<body class="wy-body-for-nav"> 
   <div class="wy-grid-for-nav">
-    
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-          
-
-          
             <a href="../index.html" class="icon icon-home"> The Linux Kernel
-          
-
-          
           </a>
-
-          
-            
-            
               <div class="version">
-                5.16.0-rc7-mm1-damon
+                5.19.0-rc1-mm-unstable-damon
               </div>
-            
-          
-
-          
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
     <input type="text" name="q" placeholder="Search docs" />
@@ -77,18 +38,7 @@
     <input type="hidden" name="area" value="default" />
   </form>
 </div>
-
-          
-        </div>
-
-        
-        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
-          
-            
-            
-              
-            
-            
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <ul>
 <li class="toctree-l1"><a class="reference internal" href="mm/damon/index.html">Monitoring Data Accesses</a></li>
 </ul>
@@ -96,72 +46,31 @@
 <li class="toctree-l1"><a class="reference internal" href="../vm/damon/index.html">DAMON: Data Access MONitor</a></li>
 </ul>
 
-            
-          
         </div>
-        
       </div>
     </nav>
 
-    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
-
-      
-      <nav class="wy-nav-top" aria-label="top navigation">
-        
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
           <a href="../index.html">The Linux Kernel</a>
-        
       </nav>
 
-
       <div class="wy-nav-content">
-        
         <div class="rst-content">
-        
-          
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<div role="navigation" aria-label="breadcrumbs navigation">
-
+          <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-    
       <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
-        
       <li>I/O statistics fields</li>
-    
-    
       <li class="wy-breadcrumbs-aside">
-        
-          
             <a href="../_sources/admin-guide/iostats.rst.txt" rel="nofollow"> View page source</a>
-          
-        
       </li>
-    
   </ul>
-
-  
   <hr/>
 </div>
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
-            
-  <div class="section" id="i-o-statistics-fields">
+             
+  <section id="i-o-statistics-fields">
 <h1>I/O statistics fields<a class="headerlink" href="#i-o-statistics-fields" title="Permalink to this headline">¶</a></h1>
 <p>Since 2.4.20 (and some versions before, with patches), and 2.5.45,
 more extensive disk statistics have been introduced to help measure disk
@@ -228,7 +137,7 @@ as only one I/O.  This field lets you know how often this was done.</p>
 <dt>Field  3 – # of sectors read (unsigned long)</dt><dd><p>This is the total number of sectors read successfully.</p>
 </dd>
 <dt>Field  4 – # of milliseconds spent reading (unsigned int)</dt><dd><p>This is the total number of milliseconds spent by all reads (as
-measured from __make_request() to end_that_request_last()).</p>
+measured from blk_mq_alloc_request() to __blk_mq_end_request()).</p>
 </dd>
 <dt>Field  5 – # of writes completed (unsigned long)</dt><dd><p>This is the total number of writes completed successfully.</p>
 </dd>
@@ -237,7 +146,7 @@ measured from __make_request() to end_that_request_last()).</p>
 <dt>Field  7 – # of sectors written (unsigned long)</dt><dd><p>This is the total number of sectors written successfully.</p>
 </dd>
 <dt>Field  8 – # of milliseconds spent writing (unsigned int)</dt><dd><p>This is the total number of milliseconds spent by all writes (as
-measured from __make_request() to end_that_request_last()).</p>
+measured from blk_mq_alloc_request() to __blk_mq_end_request()).</p>
 </dd>
 <dt>Field  9 – # of I/Os currently in progress (unsigned int)</dt><dd><p>The only field that should go to zero. Incremented as requests are
 given to appropriate struct request_queue and decremented as they finish.</p>
@@ -260,7 +169,7 @@ I/O completion time and the backlog that may be accumulating.</p>
 <dt>Field 14 – # of sectors discarded (unsigned long)</dt><dd><p>This is the total number of sectors discarded successfully.</p>
 </dd>
 <dt>Field 15 – # of milliseconds spent discarding (unsigned int)</dt><dd><p>This is the total number of milliseconds spent by all discards (as
-measured from __make_request() to end_that_request_last()).</p>
+measured from blk_mq_alloc_request() to __blk_mq_end_request()).</p>
 </dd>
 <dt>Field 16 – # of flush requests completed</dt><dd><p>This is the total number of flush requests completed successfully.</p>
 <p>Block layer combines flush requests and executes at most one at a time.
@@ -281,7 +190,7 @@ summed to) and the result given to the user.  There is no convenient
 user interface for accessing the per-CPU counters themselves.</p>
 <p>Since 4.19 request times are measured with nanoseconds precision and
 truncated to milliseconds before showing in this interface.</p>
-<div class="section" id="disks-vs-partitions">
+<section id="disks-vs-partitions">
 <h2>Disks vs Partitions<a class="headerlink" href="#disks-vs-partitions" title="Permalink to this headline">¶</a></h2>
 <p>There were significant changes between 2.4 and 2.6+ in the I/O subsystem.
 As a result, some statistic information disappeared. The translation from
@@ -320,8 +229,8 @@ keep record of the partition-relative address, an operation is attributed to
 the partition which contains the first sector of the request after the
 eventual merges. As requests can be merged across partition, this could lead
 to some (probably insignificant) inaccuracy.</p>
-</div>
-<div class="section" id="additional-notes">
+</section>
+<section id="additional-notes">
 <h2>Additional notes<a class="headerlink" href="#additional-notes" title="Permalink to this headline">¶</a></h2>
 <p>In 2.6+, sysfs is not mounted by default.  If your distribution of
 Linux hasn’t added it already, here’s the line you’ll want to add to
@@ -334,51 +243,35 @@ appear in both <code class="docutils literal notranslate"><span class="pre">/pro
 <code class="docutils literal notranslate"><span class="pre">/proc/stat</span></code> take a very different format from those in <code class="docutils literal notranslate"><span class="pre">/proc/partitions</span></code>
 (see proc(5), if your system has it.)</p>
 <p>– <a class="reference external" href="mailto:ricklind&#37;&#52;&#48;us&#46;ibm&#46;com">ricklind<span>&#64;</span>us<span>&#46;</span>ibm<span>&#46;</span>com</a></p>
-</div>
-</div>
+</section>
+</section>
 
 
            </div>
-           
           </div>
           <footer>
 
   <hr/>
 
   <div role="contentinfo">
-    <p>
-        &#169; Copyright The kernel development community.
-
-    </p>
+    <p>&#169; Copyright The kernel development community.</p>
   </div>
-    
-    
-    
-    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
-    
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
     <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
-    
-    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
 
 </footer>
         </div>
       </div>
-
     </section>
-
   </div>
-  
-
-  <script type="text/javascript">
+  <script>
       jQuery(function () {
           SphinxRtdTheme.Navigation.enable(true);
       });
-  </script>
-
-  
-  
-    
-   
+  </script> 
 
 </body>
 </html>

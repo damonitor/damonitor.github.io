@@ -1,75 +1,36 @@
-
-
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8" />
-  
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  
-  <title>SafeSetID &mdash; The Linux Kernel  documentation</title>
-  
-
-  
-  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
-  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="../../_static/theme_overrides.css" type="text/css" />
-  <link rel="stylesheet" href="../../_static/theme_rtd_colors.css" type="text/css" />
-
-  
-  
-
-  
-  
-
-  
-
-  
+  <title>SafeSetID &mdash; The Linux Kernel  documentation</title><link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/theme_overrides.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/theme_rtd_colors.css" type="text/css" />
   <!--[if lt IE 9]>
     <script src="../../_static/js/html5shiv.min.js"></script>
   <![endif]-->
-  
-    
-      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+  <script id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
         <script src="../../_static/jquery.js"></script>
         <script src="../../_static/underscore.js"></script>
         <script src="../../_static/doctools.js"></script>
         <script src="../../_static/language_data.js"></script>
-    
-    <script type="text/javascript" src="../../_static/js/theme.js"></script>
-
-    
+    <script src="../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" /> 
 </head>
 
-<body class="wy-body-for-nav">
-
-   
+<body class="wy-body-for-nav"> 
   <div class="wy-grid-for-nav">
-    
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-          
-
-          
             <a href="../../index.html" class="icon icon-home"> The Linux Kernel
-          
-
-          
           </a>
-
-          
-            
-            
               <div class="version">
-                5.16.0-rc7-mm1-damon
+                5.19.0-rc1-mm-unstable-damon
               </div>
-            
-          
-
-          
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
     <input type="text" name="q" placeholder="Search docs" />
@@ -77,18 +38,7 @@
     <input type="hidden" name="area" value="default" />
   </form>
 </div>
-
-          
-        </div>
-
-        
-        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
-          
-            
-            
-              
-            
-            
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <ul>
 <li class="toctree-l1"><a class="reference internal" href="../mm/damon/index.html">Monitoring Data Accesses</a></li>
 </ul>
@@ -96,79 +46,38 @@
 <li class="toctree-l1"><a class="reference internal" href="../../vm/damon/index.html">DAMON: Data Access MONitor</a></li>
 </ul>
 
-            
-          
         </div>
-        
       </div>
     </nav>
 
-    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
-
-      
-      <nav class="wy-nav-top" aria-label="top navigation">
-        
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
           <a href="../../index.html">The Linux Kernel</a>
-        
       </nav>
 
-
       <div class="wy-nav-content">
-        
         <div class="rst-content">
-        
-          
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<div role="navigation" aria-label="breadcrumbs navigation">
-
+          <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-    
       <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
-        
       <li>SafeSetID</li>
-    
-    
       <li class="wy-breadcrumbs-aside">
-        
-          
             <a href="../../_sources/admin-guide/LSM/SafeSetID.rst.txt" rel="nofollow"> View page source</a>
-          
-        
       </li>
-    
   </ul>
-
-  
   <hr/>
 </div>
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
-            
-  <div class="section" id="safesetid">
+             
+  <section id="safesetid">
 <h1>SafeSetID<a class="headerlink" href="#safesetid" title="Permalink to this headline">¶</a></h1>
 <p>SafeSetID is an LSM module that gates the setid family of syscalls to restrict
 UID/GID transitions from a given UID/GID to only those approved by a
 system-wide allowlist. These restrictions also prohibit the given UIDs/GIDs
 from obtaining auxiliary privileges associated with CAP_SET{U/G}ID, such as
 allowing a user to set up user namespace UID/GID mappings.</p>
-<div class="section" id="background">
+<section id="background">
 <h2>Background<a class="headerlink" href="#background" title="Permalink to this headline">¶</a></h2>
 <p>In absence of file capabilities, processes spawned on a Linux system that need
 to switch to a different user must be spawned with CAP_SETUID privileges.
@@ -201,10 +110,10 @@ non-root programs can drop to even-lesser-privileged uids. This is especially
 relevant when one non-root daemon on the system should be allowed to spawn other
 processes as different uids, but its undesirable to give the daemon a
 basically-root-equivalent CAP_SETUID.</p>
-</div>
-<div class="section" id="other-approaches-considered">
+</section>
+<section id="other-approaches-considered">
 <h2>Other Approaches Considered<a class="headerlink" href="#other-approaches-considered" title="Permalink to this headline">¶</a></h2>
-<div class="section" id="solve-this-problem-in-userspace">
+<section id="solve-this-problem-in-userspace">
 <h3>Solve this problem in userspace<a class="headerlink" href="#solve-this-problem-in-userspace" title="Permalink to this headline">¶</a></h3>
 <p>For candidate applications that would like to have restricted setid capabilities
 as implemented in this LSM, an alternative option would be to simply take away
@@ -218,8 +127,8 @@ args for spawned child processes, or inheritance of file handles across a
 fork()/exec(). Because of this, as solution that uses a privileged helper in
 userspace would likely be less appealing to incorporate into existing projects
 that rely on certain process-spawning semantics in Linux.</p>
-</div>
-<div class="section" id="use-user-namespaces">
+</section>
+<section id="use-user-namespaces">
 <h3>Use user namespaces<a class="headerlink" href="#use-user-namespaces" title="Permalink to this headline">¶</a></h3>
 <p>Another possible approach would be to run a given process tree in its own user
 namespace and give programs in the tree setid capabilities. In this way,
@@ -240,17 +149,17 @@ initial namespace. This is a deal-breaker for any application that expects to
 retain the CAP_NET_ADMIN capability for the purpose of adjusting network
 configurations. Using user namespaces in isolation causes problems regarding
 other system interactions, including use of pid namespaces and device creation.</p>
-</div>
-<div class="section" id="use-an-existing-lsm">
+</section>
+<section id="use-an-existing-lsm">
 <h3>Use an existing LSM<a class="headerlink" href="#use-an-existing-lsm" title="Permalink to this headline">¶</a></h3>
 <p>None of the other in-tree LSMs have the capability to gate setid transitions, or
 even employ the security_task_fix_setuid hook at all. SELinux says of that hook:
 “Since setuid only affects the current process, and since the SELinux controls
 are not based on the Linux identity attributes, SELinux does not need to control
 this operation.”</p>
-</div>
-</div>
-<div class="section" id="directions-for-use">
+</section>
+</section>
+<section id="directions-for-use">
 <h2>Directions for use<a class="headerlink" href="#directions-for-use" title="Permalink to this headline">¶</a></h2>
 <p>This LSM hooks the setid syscalls to make sure transitions are allowed if an
 applicable restriction policy is in place. Policies are configured through
@@ -261,8 +170,8 @@ using literal numbers, and ending with a newline character such as ‘123:456n�
 Writing an empty string “” will flush the policy. Again, configuring a policy
 for a UID/GID will prevent that UID/GID from obtaining auxiliary setid
 privileges, such as allowing a user to set up user namespace UID/GID mappings.</p>
-</div>
-<div class="section" id="note-on-gid-policies-and-setgroups">
+</section>
+<section id="note-on-gid-policies-and-setgroups">
 <h2>Note on GID policies and setgroups()<a class="headerlink" href="#note-on-gid-policies-and-setgroups" title="Permalink to this headline">¶</a></h2>
 <p>In v5.9 we are adding support for limiting CAP_SETGID privileges as was done
 previously for CAP_SETUID. However, for compatibility with common sandboxing
@@ -272,51 +181,35 @@ support in a future release for restricting setgroups() calls, these GID
 policies add no meaningful security. setgroups() restrictions will be enforced
 once we have the policy checking code in place, which will rely on GID policy
 configuration code added in v5.9.</p>
-</div>
-</div>
+</section>
+</section>
 
 
            </div>
-           
           </div>
           <footer>
 
   <hr/>
 
   <div role="contentinfo">
-    <p>
-        &#169; Copyright The kernel development community.
-
-    </p>
+    <p>&#169; Copyright The kernel development community.</p>
   </div>
-    
-    
-    
-    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
-    
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
     <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
-    
-    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
 
 </footer>
         </div>
       </div>
-
     </section>
-
   </div>
-  
-
-  <script type="text/javascript">
+  <script>
       jQuery(function () {
           SphinxRtdTheme.Navigation.enable(true);
       });
-  </script>
-
-  
-  
-    
-   
+  </script> 
 
 </body>
 </html>

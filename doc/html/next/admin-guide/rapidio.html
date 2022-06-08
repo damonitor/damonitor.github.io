@@ -1,75 +1,36 @@
-
-
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8" />
-  
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  
-  <title>RapidIO Subsystem Guide &mdash; The Linux Kernel  documentation</title>
-  
-
-  
-  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
-  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="../_static/theme_overrides.css" type="text/css" />
-  <link rel="stylesheet" href="../_static/theme_rtd_colors.css" type="text/css" />
-
-  
-  
-
-  
-  
-
-  
-
-  
+  <title>RapidIO Subsystem Guide &mdash; The Linux Kernel  documentation</title><link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/theme_overrides.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/theme_rtd_colors.css" type="text/css" />
   <!--[if lt IE 9]>
     <script src="../_static/js/html5shiv.min.js"></script>
   <![endif]-->
-  
-    
-      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+  <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
         <script src="../_static/jquery.js"></script>
         <script src="../_static/underscore.js"></script>
         <script src="../_static/doctools.js"></script>
         <script src="../_static/language_data.js"></script>
-    
-    <script type="text/javascript" src="../_static/js/theme.js"></script>
-
-    
+    <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" /> 
 </head>
 
-<body class="wy-body-for-nav">
-
-   
+<body class="wy-body-for-nav"> 
   <div class="wy-grid-for-nav">
-    
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-          
-
-          
             <a href="../index.html" class="icon icon-home"> The Linux Kernel
-          
-
-          
           </a>
-
-          
-            
-            
               <div class="version">
-                5.16.0-rc7-mm1-damon
+                5.19.0-rc1-mm-unstable-damon
               </div>
-            
-          
-
-          
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
     <input type="text" name="q" placeholder="Search docs" />
@@ -77,18 +38,7 @@
     <input type="hidden" name="area" value="default" />
   </form>
 </div>
-
-          
-        </div>
-
-        
-        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
-          
-            
-            
-              
-            
-            
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <ul>
 <li class="toctree-l1"><a class="reference internal" href="mm/damon/index.html">Monitoring Data Accesses</a></li>
 </ul>
@@ -96,79 +46,38 @@
 <li class="toctree-l1"><a class="reference internal" href="../vm/damon/index.html">DAMON: Data Access MONitor</a></li>
 </ul>
 
-            
-          
         </div>
-        
       </div>
     </nav>
 
-    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
-
-      
-      <nav class="wy-nav-top" aria-label="top navigation">
-        
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
           <a href="../index.html">The Linux Kernel</a>
-        
       </nav>
 
-
       <div class="wy-nav-content">
-        
         <div class="rst-content">
-        
-          
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<div role="navigation" aria-label="breadcrumbs navigation">
-
+          <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-    
       <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
-        
       <li>RapidIO Subsystem Guide</li>
-    
-    
       <li class="wy-breadcrumbs-aside">
-        
-          
             <a href="../_sources/admin-guide/rapidio.rst.txt" rel="nofollow"> View page source</a>
-          
-        
       </li>
-    
   </ul>
-
-  
   <hr/>
 </div>
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
-            
-  <div class="section" id="rapidio-subsystem-guide">
+             
+  <section id="rapidio-subsystem-guide">
 <h1>RapidIO Subsystem Guide<a class="headerlink" href="#rapidio-subsystem-guide" title="Permalink to this headline">¶</a></h1>
 <dl class="field-list simple">
 <dt class="field-odd">Author</dt>
 <dd class="field-odd"><p>Matt Porter</p>
 </dd>
 </dl>
-<div class="section" id="introduction">
+<section id="introduction">
 <h2>Introduction<a class="headerlink" href="#introduction" title="Permalink to this headline">¶</a></h2>
 <p>RapidIO is a high speed switched fabric interconnect with features aimed
 at the embedded market. RapidIO provides support for memory-mapped I/O
@@ -178,27 +87,27 @@ standard that allows simple detection of devices in a network.</p>
 <p>This documentation is provided for developers intending to support
 RapidIO on new architectures, write new drivers, or to understand the
 subsystem internals.</p>
-</div>
-<div class="section" id="known-bugs-and-limitations">
+</section>
+<section id="known-bugs-and-limitations">
 <h2>Known Bugs and Limitations<a class="headerlink" href="#known-bugs-and-limitations" title="Permalink to this headline">¶</a></h2>
-<div class="section" id="bugs">
+<section id="bugs">
 <h3>Bugs<a class="headerlink" href="#bugs" title="Permalink to this headline">¶</a></h3>
 <p>None. ;)</p>
-</div>
-<div class="section" id="limitations">
+</section>
+<section id="limitations">
 <h3>Limitations<a class="headerlink" href="#limitations" title="Permalink to this headline">¶</a></h3>
 <ol class="arabic simple">
 <li><p>Access/management of RapidIO memory regions is not supported</p></li>
 <li><p>Multiple host enumeration is not supported</p></li>
 </ol>
-</div>
-</div>
-<div class="section" id="rapidio-driver-interface">
+</section>
+</section>
+<section id="rapidio-driver-interface">
 <h2>RapidIO driver interface<a class="headerlink" href="#rapidio-driver-interface" title="Permalink to this headline">¶</a></h2>
 <p>Drivers are provided a set of calls in order to interface with the
 subsystem to gather info on devices, request/map memory region
 resources, and manage mailboxes/doorbells.</p>
-<div class="section" id="functions">
+<section id="functions">
 <h3>Functions<a class="headerlink" href="#functions" title="Permalink to this headline">¶</a></h3>
 <dl class="function">
 <dt id="c.rio_local_read_config_32">
@@ -1433,13 +1342,13 @@ the specified scan_ops)</p>
 <p>Removes enumeration or discovery method assigned to the specified mport
 device. If RIO_MPORT_ANY is specified, removes the specified operations from
 all mports that have them attached.</p>
-</div>
-</div>
-<div class="section" id="internals">
+</section>
+</section>
+<section id="internals">
 <h2>Internals<a class="headerlink" href="#internals" title="Permalink to this headline">¶</a></h2>
 <p>This chapter contains the autogenerated documentation of the RapidIO
 subsystem.</p>
-<div class="section" id="structures">
+<section id="structures">
 <h3>Structures<a class="headerlink" href="#structures" title="Permalink to this headline">¶</a></h3>
 <dl class="type">
 <dt id="c.rio_switch">
@@ -1983,8 +1892,8 @@ struct <code class="sig-name descname">rio_scan_node</code><a class="headerlink"
 <dt><code class="docutils literal notranslate"><span class="pre">ops</span></code></dt><dd><p>RIO enumeration and discovery operations</p>
 </dd>
 </dl>
-</div>
-<div class="section" id="enumeration-and-discovery">
+</section>
+<section id="enumeration-and-discovery">
 <h3>Enumeration and Discovery<a class="headerlink" href="#enumeration-and-discovery" title="Permalink to this headline">¶</a></h3>
 <dl class="function">
 <dt id="c.rio_destid_alloc">
@@ -2408,8 +2317,8 @@ the module to start RapidIO enumeration/discovery automatically.</p>
 <p>Returns 0 for success or -EIO if unable to register itself.</p>
 <p>This enumeration/discovery method cannot be unloaded and therefore does not
 provide a matching cleanup_module routine.</p>
-</div>
-<div class="section" id="driver-functionality">
+</section>
+<section id="driver-functionality">
 <h3>Driver functionality<a class="headerlink" href="#driver-functionality" title="Permalink to this headline">¶</a></h3>
 <dl class="function">
 <dt id="c.rio_setup_inb_dbell">
@@ -2655,8 +2564,8 @@ configuration space registers on the local device.</p>
 <p><strong>Description</strong></p>
 <p>Generates rio_mport_write_config_* functions used to access
 configuration space registers on the local device.</p>
-</div>
-<div class="section" id="device-model-support">
+</section>
+<section id="device-model-support">
 <h3>Device model support<a class="headerlink" href="#device-model-support" title="Permalink to this headline">¶</a></h3>
 <dl class="function">
 <dt id="c.rio_match_device">
@@ -2735,8 +2644,8 @@ int <code class="sig-name descname">rio_bus_init</code><span class="sig-paren">(
 <div><p>Registers the RIO mport device class and RIO bus type with the Linux
 device model.</p>
 </div></blockquote>
-</div>
-<div class="section" id="ppc32-support">
+</section>
+<section id="ppc32-support">
 <h3>PPC32 support<a class="headerlink" href="#ppc32-support" title="Permalink to this headline">¶</a></h3>
 <dl class="function">
 <dt id="c.fsl_local_config_read">
@@ -2849,9 +2758,9 @@ int <code class="sig-name descname">fsl_rio_setup</code><span class="sig-paren">
 <p>Initializes MPC85xx RapidIO hardware interface, configures
 master port with system-specific info, and registers the
 master port with the RapidIO subsystem.</p>
-</div>
-</div>
-<div class="section" id="credits">
+</section>
+</section>
+<section id="credits">
 <h2>Credits<a class="headerlink" href="#credits" title="Permalink to this headline">¶</a></h2>
 <p>The following people have contributed to the RapidIO subsystem directly
 or indirectly:</p>
@@ -2864,51 +2773,35 @@ or indirectly:</p>
 <ol class="arabic simple">
 <li><p>Matt Porter<a class="reference external" href="mailto:mporter&#37;&#52;&#48;kernel&#46;crashing&#46;org">mporter<span>&#64;</span>kernel<span>&#46;</span>crashing<span>&#46;</span>org</a></p></li>
 </ol>
-</div>
-</div>
+</section>
+</section>
 
 
            </div>
-           
           </div>
           <footer>
 
   <hr/>
 
   <div role="contentinfo">
-    <p>
-        &#169; Copyright The kernel development community.
-
-    </p>
+    <p>&#169; Copyright The kernel development community.</p>
   </div>
-    
-    
-    
-    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
-    
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
     <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
-    
-    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
 
 </footer>
         </div>
       </div>
-
     </section>
-
   </div>
-  
-
-  <script type="text/javascript">
+  <script>
       jQuery(function () {
           SphinxRtdTheme.Navigation.enable(true);
       });
-  </script>
-
-  
-  
-    
-   
+  </script> 
 
 </body>
 </html>

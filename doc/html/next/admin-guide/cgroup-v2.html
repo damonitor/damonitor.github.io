@@ -1,75 +1,36 @@
-
-
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8" />
-  
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  
-  <title>Control Group v2 &mdash; The Linux Kernel  documentation</title>
-  
-
-  
-  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
-  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="../_static/theme_overrides.css" type="text/css" />
-  <link rel="stylesheet" href="../_static/theme_rtd_colors.css" type="text/css" />
-
-  
-  
-
-  
-  
-
-  
-
-  
+  <title>Control Group v2 &mdash; The Linux Kernel  documentation</title><link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/theme_overrides.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/theme_rtd_colors.css" type="text/css" />
   <!--[if lt IE 9]>
     <script src="../_static/js/html5shiv.min.js"></script>
   <![endif]-->
-  
-    
-      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+  <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
         <script src="../_static/jquery.js"></script>
         <script src="../_static/underscore.js"></script>
         <script src="../_static/doctools.js"></script>
         <script src="../_static/language_data.js"></script>
-    
-    <script type="text/javascript" src="../_static/js/theme.js"></script>
-
-    
+    <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" /> 
 </head>
 
-<body class="wy-body-for-nav">
-
-   
+<body class="wy-body-for-nav"> 
   <div class="wy-grid-for-nav">
-    
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-          
-
-          
             <a href="../index.html" class="icon icon-home"> The Linux Kernel
-          
-
-          
           </a>
-
-          
-            
-            
               <div class="version">
-                5.16.0-rc7-mm1-damon
+                5.19.0-rc1-mm-unstable-damon
               </div>
-            
-          
-
-          
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
     <input type="text" name="q" placeholder="Search docs" />
@@ -77,18 +38,7 @@
     <input type="hidden" name="area" value="default" />
   </form>
 </div>
-
-          
-        </div>
-
-        
-        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
-          
-            
-            
-              
-            
-            
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <ul>
 <li class="toctree-l1"><a class="reference internal" href="mm/damon/index.html">Monitoring Data Accesses</a></li>
 </ul>
@@ -96,72 +46,31 @@
 <li class="toctree-l1"><a class="reference internal" href="../vm/damon/index.html">DAMON: Data Access MONitor</a></li>
 </ul>
 
-            
-          
         </div>
-        
       </div>
     </nav>
 
-    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
-
-      
-      <nav class="wy-nav-top" aria-label="top navigation">
-        
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
           <a href="../index.html">The Linux Kernel</a>
-        
       </nav>
 
-
       <div class="wy-nav-content">
-        
         <div class="rst-content">
-        
-          
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<div role="navigation" aria-label="breadcrumbs navigation">
-
+          <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-    
       <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
-        
       <li>Control Group v2</li>
-    
-    
       <li class="wy-breadcrumbs-aside">
-        
-          
             <a href="../_sources/admin-guide/cgroup-v2.rst.txt" rel="nofollow"> View page source</a>
-          
-        
       </li>
-    
   </ul>
-
-  
   <hr/>
 </div>
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
-            
-  <div class="section" id="control-group-v2">
+             
+  <section id="control-group-v2">
 <span id="cgroup-v2"></span><h1>Control Group v2<a class="headerlink" href="#control-group-v2" title="Permalink to this headline">¶</a></h1>
 <dl class="field-list simple">
 <dt class="field-odd">Date</dt>
@@ -175,17 +84,17 @@
 conventions of cgroup v2.  It describes all userland-visible aspects
 of cgroup including core and specific controller behaviors.  All
 future changes must be reflected in this document.  Documentation for
-v1 is available under <a class="reference internal" href="cgroup-v1/index.html#cgroup-v1"><span class="std std-ref"><a class="reference internal" href="cgroup-v1/index.html"><span class="doc">Control Groups version 1</span></a></span></a>.</p>
-<div class="section" id="introduction">
+v1 is available under <a class="reference internal" href="cgroup-v1/index.html#cgroup-v1"><span class="std std-ref">Documentation/admin-guide/cgroup-v1/index.rst</span></a>.</p>
+<section id="introduction">
 <h2>Introduction<a class="headerlink" href="#introduction" title="Permalink to this headline">¶</a></h2>
-<div class="section" id="terminology">
+<section id="terminology">
 <h3>Terminology<a class="headerlink" href="#terminology" title="Permalink to this headline">¶</a></h3>
 <p>“cgroup” stands for “control group” and is never capitalized.  The
 singular form is used to designate the whole feature and also as a
 qualifier as in “cgroup controllers”.  When explicitly referring to
 multiple individual control groups, the plural form “cgroups” is used.</p>
-</div>
-<div class="section" id="what-is-cgroup">
+</section>
+<section id="what-is-cgroup">
 <h3>What is cgroup?<a class="headerlink" href="#what-is-cgroup" title="Permalink to this headline">¶</a></h3>
 <p>cgroup is a mechanism to organize processes hierarchically and
 distribute system resources along the hierarchy in a controlled and
@@ -210,11 +119,11 @@ sub-hierarchy of the cgroup.  When a controller is enabled on a nested
 cgroup, it always restricts the resource distribution further.  The
 restrictions set closer to the root in the hierarchy can not be
 overridden from further away.</p>
-</div>
-</div>
-<div class="section" id="basic-operations">
+</section>
+</section>
+<section id="basic-operations">
 <h2>Basic Operations<a class="headerlink" href="#basic-operations" title="Permalink to this headline">¶</a></h2>
-<div class="section" id="mounting">
+<section id="mounting">
 <h3>Mounting<a class="headerlink" href="#mounting" title="Permalink to this headline">¶</a></h3>
 <p>Unlike v1, cgroup v2 has only single hierarchy.  The cgroup v2
 hierarchy can be mounted with the following mount command:</p>
@@ -274,10 +183,10 @@ high ‘bypass’ protection values at higher tree levels).</p>
 </dd>
 </dl>
 </div></blockquote>
-</div>
-<div class="section" id="organizing-processes-and-threads">
+</section>
+<section id="organizing-processes-and-threads">
 <h3>Organizing Processes and Threads<a class="headerlink" href="#organizing-processes-and-threads" title="Permalink to this headline">¶</a></h3>
-<div class="section" id="processes">
+<section id="processes">
 <h4>Processes<a class="headerlink" href="#processes" title="Permalink to this headline">¶</a></h4>
 <p>Initially, only the root cgroup exists to which all processes belong.
 A child cgroup can be created by creating a sub-directory:</p>
@@ -324,8 +233,8 @@ is removed subsequently, ” (deleted)” is appended to the path:</p>
 0::/test-cgroup/test-cgroup-nested (deleted)
 </pre></div>
 </div>
-</div>
-<div class="section" id="threads">
+</section>
+<section id="threads">
 <h4>Threads<a class="headerlink" href="#threads" title="Permalink to this headline">¶</a></h4>
 <p>cgroup v2 supports thread granularity for a subset of controllers to
 support use cases requiring hierarchical resource distribution across
@@ -409,9 +318,9 @@ aren’t tied to a specific thread belong to the threaded domain cgroup.</p>
 constraint, a threaded controller must be able to handle competition
 between threads in a non-leaf cgroup and its child cgroups.  Each
 threaded controller defines how such competitions are handled.</p>
-</div>
-</div>
-<div class="section" id="un-populated-notification">
+</section>
+</section>
+<section id="un-populated-notification">
 <h3>[Un]populated Notification<a class="headerlink" href="#un-populated-notification" title="Permalink to this headline">¶</a></h3>
 <p>Each non-root cgroup has a “cgroup.events” file which contains
 “populated” field indicating whether the cgroup’s sub-hierarchy has
@@ -431,10 +340,10 @@ in each cgroup:</p>
 process in C exits, B and C’s “populated” fields would flip to “0” and
 file modified events will be generated on the “cgroup.events” files of
 both cgroups.</p>
-</div>
-<div class="section" id="controlling-controllers">
+</section>
+<section id="controlling-controllers">
 <h3>Controlling Controllers<a class="headerlink" href="#controlling-controllers" title="Permalink to this headline">¶</a></h3>
-<div class="section" id="enabling-and-disabling">
+<section id="enabling-and-disabling">
 <h4>Enabling and Disabling<a class="headerlink" href="#enabling-and-disabling" title="Permalink to this headline">¶</a></h4>
 <p>Each cgroup has a “cgroup.controllers” file which lists all
 controllers available for the cgroup to enable:</p>
@@ -471,8 +380,8 @@ D.  Likewise, disabling “memory” from B would remove the “memory.”
 prefixed controller interface files from C and D.  This means that the
 controller interface files - anything which doesn’t start with
 “cgroup.” are owned by the parent rather than the cgroup itself.</p>
-</div>
-<div class="section" id="top-down-constraint">
+</section>
+<section id="top-down-constraint">
 <h4>Top-down Constraint<a class="headerlink" href="#top-down-constraint" title="Permalink to this headline">¶</a></h4>
 <p>Resources are distributed top-down and a cgroup can further distribute
 a resource only if the resource has been distributed to it from the
@@ -481,8 +390,8 @@ can only contain controllers which are enabled in the parent’s
 “cgroup.subtree_control” file.  A controller can be enabled only if
 the parent has the controller enabled and a controller can’t be
 disabled if one or more children have it enabled.</p>
-</div>
-<div class="section" id="no-internal-process-constraint">
+</section>
+<section id="no-internal-process-constraint">
 <h4>No Internal Process Constraint<a class="headerlink" href="#no-internal-process-constraint" title="Permalink to this headline">¶</a></h4>
 <p>Non-root cgroups can distribute domain resources to their children
 only when they don’t have any processes of their own.  In other words,
@@ -506,11 +415,11 @@ populated cgroup.  To control resource distribution of a cgroup, the
 cgroup must create children and transfer all its processes to the
 children before enabling controllers in its “cgroup.subtree_control”
 file.</p>
-</div>
-</div>
-<div class="section" id="delegation">
+</section>
+</section>
+<section id="delegation">
 <h3>Delegation<a class="headerlink" href="#delegation" title="Permalink to this headline">¶</a></h3>
-<div class="section" id="model-of-delegation">
+<section id="model-of-delegation">
 <h4>Model of Delegation<a class="headerlink" href="#model-of-delegation" title="Permalink to this headline">¶</a></h4>
 <p>A cgroup can be delegated in two ways.  First, to a less privileged
 user by granting write access of the directory and its “cgroup.procs”,
@@ -534,8 +443,8 @@ resource restrictions imposed by the parent.</p>
 <p>Currently, cgroup doesn’t impose any restrictions on the number of
 cgroups in or nesting depth of a delegated sub-hierarchy; however,
 this may be limited explicitly in the future.</p>
-</div>
-<div class="section" id="delegation-containment">
+</section>
+<section id="delegation-containment">
 <h4>Delegation Containment<a class="headerlink" href="#delegation-containment" title="Permalink to this headline">¶</a></h4>
 <p>A delegated sub-hierarchy is contained in the sense that processes
 can’t be moved into or out of the sub-hierarchy by the delegatee.</p>
@@ -570,11 +479,11 @@ will be denied with -EACCES.</p>
 that both the source and destination cgroups are reachable from the
 namespace of the process which is attempting the migration.  If either
 is not reachable, the migration is rejected with -ENOENT.</p>
-</div>
-</div>
-<div class="section" id="guidelines">
+</section>
+</section>
+<section id="guidelines">
 <h3>Guidelines<a class="headerlink" href="#guidelines" title="Permalink to this headline">¶</a></h3>
-<div class="section" id="organize-once-and-control">
+<section id="organize-once-and-control">
 <h4>Organize Once and Control<a class="headerlink" href="#organize-once-and-control" title="Permalink to this headline">¶</a></h4>
 <p>Migrating a process across cgroups is a relatively expensive operation
 and stateful resources such as memory are not moved together with the
@@ -587,8 +496,8 @@ should be assigned to a cgroup according to the system’s logical and
 resource structure once on start-up.  Dynamic adjustments to resource
 distribution can be made by changing controller configuration through
 the interface files.</p>
-</div>
-<div class="section" id="avoid-name-collisions">
+</section>
+<section id="avoid-name-collisions">
 <h4>Avoid Name Collisions<a class="headerlink" href="#avoid-name-collisions" title="Permalink to this headline">¶</a></h4>
 <p>Interface files for a cgroup and its children cgroups occupy the same
 directory and it is possible to create children cgroups which collide
@@ -602,15 +511,15 @@ start or end with terms which are often used in categorizing workloads
 such as job, service, slice, unit or workload.</p>
 <p>cgroup doesn’t do anything to prevent name collisions and it’s the
 user’s responsibility to avoid them.</p>
-</div>
-</div>
-</div>
-<div class="section" id="resource-distribution-models">
+</section>
+</section>
+</section>
+<section id="resource-distribution-models">
 <h2>Resource Distribution Models<a class="headerlink" href="#resource-distribution-models" title="Permalink to this headline">¶</a></h2>
 <p>cgroup controllers implement several resource distribution schemes
 depending on the resource type and expected use cases.  This section
 describes major schemes in use along with their expected behaviors.</p>
-<div class="section" id="weights">
+<section id="weights">
 <h3>Weights<a class="headerlink" href="#weights" title="Permalink to this headline">¶</a></h3>
 <p>A parent’s resource is distributed by adding up the weights of all
 active children and giving each the fraction matching the ratio of its
@@ -626,8 +535,8 @@ valid and there is no reason to reject configuration changes or
 process migrations.</p>
 <p>“cpu.weight” proportionally distributes CPU cycles to active children
 and is an example of this type.</p>
-</div>
-<div class="section" id="limits">
+</section>
+<section id="limits">
 <h3>Limits<a class="headerlink" href="#limits" title="Permalink to this headline">¶</a></h3>
 <p>A child can only consume upto the configured amount of the resource.
 Limits can be over-committed - the sum of the limits of children can
@@ -638,8 +547,8 @@ valid and there is no reason to reject configuration changes or
 process migrations.</p>
 <p>“io.max” limits the maximum BPS and/or IOPS that a cgroup can consume
 on an IO device and is an example of this type.</p>
-</div>
-<div class="section" id="protections">
+</section>
+<section id="protections">
 <h3>Protections<a class="headerlink" href="#protections" title="Permalink to this headline">¶</a></h3>
 <p>A cgroup is protected upto the configured amount of the resource
 as long as the usages of all its ancestors are under their
@@ -654,8 +563,8 @@ are valid and there is no reason to reject configuration changes or
 process migrations.</p>
 <p>“memory.low” implements best-effort memory protection and is an
 example of this type.</p>
-</div>
-<div class="section" id="allocations">
+</section>
+<section id="allocations">
 <h3>Allocations<a class="headerlink" href="#allocations" title="Permalink to this headline">¶</a></h3>
 <p>A cgroup is exclusively allocated a certain amount of a finite
 resource.  Allocations can’t be over-committed - the sum of the
@@ -669,11 +578,11 @@ resource is mandatory for execution of processes, process migrations
 may be rejected.</p>
 <p>“cpu.rt.max” hard-allocates realtime slices and is an example of this
 type.</p>
-</div>
-</div>
-<div class="section" id="interface-files">
+</section>
+</section>
+<section id="interface-files">
 <h2>Interface Files<a class="headerlink" href="#interface-files" title="Permalink to this headline">¶</a></h2>
-<div class="section" id="format">
+<section id="format">
 <h3>Format<a class="headerlink" href="#format" title="Permalink to this headline">¶</a></h3>
 <p>All interface files should be in one of the following formats whenever
 possible:</p>
@@ -708,8 +617,8 @@ implement restricted shortcuts for most common use cases.</p>
 <p>For both flat and nested keyed files, only the values for a single key
 can be written at a time.  For nested keyed files, the sub key pairs
 may be specified in any order and not all pairs have to be specified.</p>
-</div>
-<div class="section" id="conventions">
+</section>
+<section id="conventions">
 <h3>Conventions<a class="headerlink" href="#conventions" title="Permalink to this headline">¶</a></h3>
 <ul>
 <li><p>Settings for a single feature should be contained in a single file.</p></li>
@@ -772,8 +681,8 @@ default 125
 Whenever a notifiable event happens, file modified event should be
 generated on the file.</p></li>
 </ul>
-</div>
-<div class="section" id="core-interface-files">
+</section>
+<section id="core-interface-files">
 <h3>Core Interface Files<a class="headerlink" href="#core-interface-files" title="Permalink to this headline">¶</a></h3>
 <p>All cgroup core files are prefixed with “cgroup.”</p>
 <blockquote>
@@ -846,9 +755,9 @@ cgroups.  Starts out empty.</p>
 <p>When read, it shows space separated list of the controllers
 which are enabled to control resource distribution from the
 cgroup to its children.</p>
-<p>Space separated list of controllers prefixed with ‘+’ or ‘-‘
+<p>Space separated list of controllers prefixed with ‘+’ or ‘-’
 can be written to enable or disable controllers.  A controller
-name prefixed with ‘+’ enables the controller and ‘-‘
+name prefixed with ‘+’ enables the controller and ‘-’
 disables.  If a controller appears more than once on the list,
 the last one is effective.  When multiple enable and disable
 operations are specified, either all succeed or all fail.</p>
@@ -928,11 +837,11 @@ the whole thread-group.</p>
 </dd>
 </dl>
 </div></blockquote>
-</div>
-</div>
-<div class="section" id="controllers">
+</section>
+</section>
+<section id="controllers">
 <h2>Controllers<a class="headerlink" href="#controllers" title="Permalink to this headline">¶</a></h2>
-<div class="section" id="cpu">
+<section id="cpu">
 <span id="cgroup-v2-cpu"></span><h3>CPU<a class="headerlink" href="#cpu" title="Permalink to this headline">¶</a></h3>
 <p>The “cpu” controllers regulates distribution of CPU cycles.  This
 controller implements weight and absolute bandwidth limit models for
@@ -950,7 +859,7 @@ the root cgroup.  Be aware that system management software may already
 have placed RT processes into nonroot cgroups during the system boot
 process, and these processes may need to be moved to the root cgroup
 before the cpu controller can be enabled.</p>
-<div class="section" id="cpu-interface-files">
+<section id="cpu-interface-files">
 <h4>CPU Interface Files<a class="headerlink" href="#cpu-interface-files" title="Permalink to this headline">¶</a></h4>
 <p>All time durations are in microseconds.</p>
 <blockquote>
@@ -1001,7 +910,7 @@ cgroups.  The default is “0”.</p>
 </dd>
 <dt>cpu.pressure</dt><dd><p>A read-write nested-keyed file.</p>
 <p>Shows pressure stall information for CPU. See
-<a class="reference internal" href="../accounting/psi.html#psi"><span class="std std-ref"><a class="reference internal" href="../accounting/psi.html"><span class="doc">PSI - Pressure Stall Information</span></a></span></a> for details.</p>
+<a class="reference internal" href="../accounting/psi.html#psi"><span class="std std-ref">Documentation/accounting/psi.rst</span></a> for details.</p>
 </dd>
 <dt>cpu.uclamp.min</dt><dd><p>A read-write single value file which exists on non-root cgroups.
 The default is “0”, i.e. no utilization boosting.</p>
@@ -1024,9 +933,9 @@ value is used to clamp the task specific maximum utilization clamp.</p>
 </dd>
 </dl>
 </div></blockquote>
-</div>
-</div>
-<div class="section" id="memory">
+</section>
+</section>
+<section id="memory">
 <h3>Memory<a class="headerlink" href="#memory" title="Permalink to this headline">¶</a></h3>
 <p>The “memory” controller regulates distribution of memory.  Memory is
 stateful and implements both limit and protection models.  Due to the
@@ -1043,7 +952,7 @@ following types of memory usages are tracked.</p>
 <li><p>TCP socket buffers.</p></li>
 </ul>
 <p>The above list may expand in the future for better coverage.</p>
-<div class="section" id="memory-interface-files">
+<section id="memory-interface-files">
 <h4>Memory Interface Files<a class="headerlink" href="#memory-interface-files" title="Permalink to this headline">¶</a></h4>
 <p>All memory amounts are in bytes.  If a value which is not aligned to
 PAGE_SIZE is written, the value may be rounded up to the closest
@@ -1119,6 +1028,27 @@ as -ENOMEM or silently ignore in cases like disk readahead.</p>
 <p>This is the ultimate protection mechanism.  As long as the
 high limit is used and monitored properly, this limit’s
 utility is limited to providing the final safety net.</p>
+</dd>
+<dt>memory.reclaim</dt><dd><p>A write-only nested-keyed file which exists for all cgroups.</p>
+<p>This is a simple interface to trigger memory reclaim in the
+target cgroup.</p>
+<p>This file accepts a single key, the number of bytes to reclaim.
+No nested keys are currently supported.</p>
+<p>Example:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>echo &quot;1G&quot; &gt; memory.reclaim
+</pre></div>
+</div>
+<p>The interface can be later extended with nested keys to
+configure the reclaim behavior. For example, specify the
+type of memory to reclaim from (anon, file, ..).</p>
+<p>Please note that the kernel can over or under reclaim from
+the target cgroup. If less bytes are reclaimed than the
+specified amount, -EAGAIN is returned.</p>
+</dd>
+<dt>memory.peak</dt><dd><p>A read-only single value file which exists on non-root
+cgroups.</p>
+<p>The max memory usage recorded for the cgroup and its
+descendants since the creation of the cgroup.</p>
 </dd>
 <dt>memory.oom.group</dt><dd><p>A read-write single value file which exists on non-root
 cgroups.  The default value is “0”.</p>
@@ -1197,6 +1127,10 @@ brk(), sbrk(), and mmap(MAP_ANONYMOUS)</p>
 <dt>file</dt><dd><p>Amount of memory used to cache filesystem data,
 including tmpfs and shared memory.</p>
 </dd>
+<dt>kernel (npn)</dt><dd><p>Amount of total kernel memory, including
+(kernel_stack, pagetables, percpu, vmalloc, slab) in
+addition to other kernel memory use cases.</p>
+</dd>
 <dt>kernel_stack</dt><dd><p>Amount of memory allocated to kernel stacks.</p>
 </dd>
 <dt>pagetables</dt><dd><p>Amount of memory allocated for page tables.</p>
@@ -1210,6 +1144,10 @@ data structures.</p>
 </dd>
 <dt>shmem</dt><dd><p>Amount of cached filesystem data that is swap-backed,
 such as tmpfs, shm segments, shared anonymous mmap()s</p>
+</dd>
+<dt>zswap</dt><dd><p>Amount of memory consumed by the zswap compression backend.</p>
+</dd>
+<dt>zswapped</dt><dd><p>Amount of application memory swapped out to zswap.</p>
 </dd>
 <dt>file_mapped</dt><dd><p>Amount of cached filesystem data mapped with mmap()</p>
 </dd>
@@ -1273,7 +1211,15 @@ active workingset before they got reclaimed.</p>
 </dd>
 <dt>pgscan (npn)</dt><dd><p>Amount of scanned pages (in an inactive LRU list)</p>
 </dd>
+<dt>pgscan_kswapd (npn)</dt><dd><p>Amount of scanned pages by kswapd (in an inactive LRU list)</p>
+</dd>
+<dt>pgscan_direct (npn)</dt><dd><p>Amount of scanned pages directly  (in an inactive LRU list)</p>
+</dd>
 <dt>pgsteal (npn)</dt><dd><p>Amount of reclaimed pages</p>
+</dd>
+<dt>pgsteal_kswapd (npn)</dt><dd><p>Amount of reclaimed pages by kswapd</p>
+</dd>
+<dt>pgsteal_direct (npn)</dt><dd><p>Amount of reclaimed pages directly</p>
 </dd>
 <dt>pgactivate (npn)</dt><dd><p>Amount of pages moved to the active LRU list</p>
 </dd>
@@ -1359,14 +1305,25 @@ entries are reclaimed gradually and the swap usage may stay
 higher than the limit for an extended period of time.  This
 reduces the impact on the workload and memory management.</p>
 </dd>
+<dt>memory.zswap.current</dt><dd><p>A read-only single value file which exists on non-root
+cgroups.</p>
+<p>The total amount of memory consumed by the zswap compression
+backend.</p>
+</dd>
+<dt>memory.zswap.max</dt><dd><p>A read-write single value file which exists on non-root
+cgroups.  The default is “max”.</p>
+<p>Zswap usage hard limit. If a cgroup’s zswap pool reaches this
+limit, it will refuse to take any more stores before existing
+entries fault back in or are written out to disk.</p>
+</dd>
 <dt>memory.pressure</dt><dd><p>A read-only nested-keyed file.</p>
 <p>Shows pressure stall information for memory. See
-<a class="reference internal" href="../accounting/psi.html#psi"><span class="std std-ref"><a class="reference internal" href="../accounting/psi.html"><span class="doc">PSI - Pressure Stall Information</span></a></span></a> for details.</p>
+<a class="reference internal" href="../accounting/psi.html#psi"><span class="std std-ref">Documentation/accounting/psi.rst</span></a> for details.</p>
 </dd>
 </dl>
 </div></blockquote>
-</div>
-<div class="section" id="usage-guidelines">
+</section>
+<section id="usage-guidelines">
 <h4>Usage Guidelines<a class="headerlink" href="#usage-guidelines" title="Permalink to this headline">¶</a></h4>
 <p>“memory.high” is the main mechanism to control memory usage.
 Over-committing on high limit (sum of high limits &gt; available memory)
@@ -1385,8 +1342,8 @@ pressure - how much the workload is being impacted due to lack of
 memory - is necessary to determine whether a workload needs more
 memory; unfortunately, memory pressure monitoring mechanism isn’t
 implemented yet.</p>
-</div>
-<div class="section" id="memory-ownership">
+</section>
+<section id="memory-ownership">
 <h4>Memory Ownership<a class="headerlink" href="#memory-ownership" title="Permalink to this headline">¶</a></h4>
 <p>A memory area is charged to the cgroup which instantiated it and stays
 charged to the cgroup until the area is released.  Migrating a process
@@ -1400,16 +1357,16 @@ enough memory allowance to avoid high reclaim pressure.</p>
 to be accessed repeatedly by other cgroups, it may make sense to use
 POSIX_FADV_DONTNEED to relinquish the ownership of memory areas
 belonging to the affected files to ensure correct memory ownership.</p>
-</div>
-</div>
-<div class="section" id="io">
+</section>
+</section>
+<section id="io">
 <h3>IO<a class="headerlink" href="#io" title="Permalink to this headline">¶</a></h3>
 <p>The “io” controller regulates the distribution of IO resources.  This
 controller implements both weight based and absolute bandwidth or IOPS
 limit distribution; however, weight based distribution is available
 only if cfq-iosched is in use and neither scheme is available for
 blk-mq devices.</p>
-<div class="section" id="io-interface-files">
+<section id="io-interface-files">
 <h4>IO Interface Files<a class="headerlink" href="#io-interface-files" title="Permalink to this headline">¶</a></h4>
 <blockquote>
 <div><dl>
@@ -1650,12 +1607,12 @@ delayed if limit is reached.  Temporary bursts are allowed.</p>
 </dd>
 <dt>io.pressure</dt><dd><p>A read-only nested-keyed file.</p>
 <p>Shows pressure stall information for IO. See
-<a class="reference internal" href="../accounting/psi.html#psi"><span class="std std-ref"><a class="reference internal" href="../accounting/psi.html"><span class="doc">PSI - Pressure Stall Information</span></a></span></a> for details.</p>
+<a class="reference internal" href="../accounting/psi.html#psi"><span class="std std-ref">Documentation/accounting/psi.rst</span></a> for details.</p>
 </dd>
 </dl>
 </div></blockquote>
-</div>
-<div class="section" id="writeback">
+</section>
+<section id="writeback">
 <h4>Writeback<a class="headerlink" href="#writeback" title="Permalink to this headline">¶</a></h4>
 <p>Page cache is dirtied through buffered writes and shared mmaps and
 written asynchronously to the backing filesystem by the writeback
@@ -1708,8 +1665,8 @@ vm.dirty[_background]_ratio.</p>
 </dd>
 </dl>
 </div></blockquote>
-</div>
-<div class="section" id="io-latency">
+</section>
+<section id="io-latency">
 <h4>IO Latency<a class="headerlink" href="#io-latency" title="Permalink to this headline">¶</a></h4>
 <p>This is a cgroup v2 controller for IO workload protection.  You provide a group
 with a latency target, and if the average latency exceeds that target the
@@ -1732,8 +1689,8 @@ Start at higher than the expected latency for your device and watch the
 avg_lat value in io.stat for your workload group to get an idea of the
 latency you see during normal operation.  Use the avg_lat value as a basis for
 your real setting, setting at 10-15% higher than the value in io.stat.</p>
-</div>
-<div class="section" id="how-io-latency-throttling-works">
+</section>
+<section id="how-io-latency-throttling-works">
 <h4>How IO Latency Throttling Works<a class="headerlink" href="#how-io-latency-throttling-works" title="Permalink to this headline">¶</a></h4>
 <p>io.latency is work conserving; so as long as everybody is meeting their latency
 target the controller doesn’t do anything.  Once a group starts missing its
@@ -1756,14 +1713,14 @@ limit the individual delay events to 1 second at a time.</p></li>
 <p>Once the victimized group starts meeting its latency target again it will start
 unthrottling any peer groups that were throttled previously.  If the victimized
 group simply stops doing IO the global counter will unthrottle appropriately.</p>
-</div>
-<div class="section" id="io-latency-interface-files">
+</section>
+<section id="io-latency-interface-files">
 <h4>IO Latency Interface Files<a class="headerlink" href="#io-latency-interface-files" title="Permalink to this headline">¶</a></h4>
 <blockquote>
 <div><dl>
 <dt>io.latency</dt><dd><p>This takes a similar format as the other controllers.</p>
 <blockquote>
-<div><p>“MAJOR:MINOR target=&lt;target time in microseconds”</p>
+<div><p>“MAJOR:MINOR target=&lt;target time in microseconds&gt;”</p>
 </div></blockquote>
 </dd>
 <dt>io.stat</dt><dd><p>If the controller is enabled you will see extra stats in io.stat in
@@ -1786,8 +1743,8 @@ with IO activity.  Idle periods extend the most recent window.</p>
 </dd>
 </dl>
 </div></blockquote>
-</div>
-<div class="section" id="io-priority">
+</section>
+<section id="io-priority">
 <h4>IO Priority<a class="headerlink" href="#io-priority" title="Permalink to this headline">¶</a></h4>
 <p>A single attribute controls the behavior of the I/O priority cgroup policy,
 namely the blkio.prio.class attribute. The following values are accepted for
@@ -1857,9 +1814,9 @@ I/O priority class.</p>
 <li><p>Change the request I/O priority class into the maximum of the I/O priority
 class policy number and the numerical I/O priority class.</p></li>
 </ul>
-</div>
-</div>
-<div class="section" id="pid">
+</section>
+</section>
+<section id="pid">
 <h3>PID<a class="headerlink" href="#pid" title="Permalink to this headline">¶</a></h3>
 <p>The process number controller is used to allow a cgroup to stop any
 new tasks from being fork()’d or clone()’d after a specified limit is
@@ -1870,7 +1827,7 @@ example, a fork bomb is likely to exhaust the number of tasks before
 hitting memory restrictions.</p>
 <p>Note that PIDs used in this controller refer to TIDs, process IDs as
 used by the kernel.</p>
-<div class="section" id="pid-interface-files">
+<section id="pid-interface-files">
 <h4>PID Interface Files<a class="headerlink" href="#pid-interface-files" title="Permalink to this headline">¶</a></h4>
 <blockquote>
 <div><dl>
@@ -1891,9 +1848,9 @@ processes to the cgroup such that pids.current is larger than
 pids.max.  However, it is not possible to violate a cgroup PID policy
 through fork() or clone(). These will return -EAGAIN if the creation
 of a new process would cause a cgroup policy to be violated.</p>
-</div>
-</div>
-<div class="section" id="cpuset">
+</section>
+</section>
+<section id="cpuset">
 <h3>Cpuset<a class="headerlink" href="#cpuset" title="Permalink to this headline">¶</a></h3>
 <p>The “cpuset” controller provides a mechanism for constraining
 the CPU and memory node placement of tasks to only the resources
@@ -1904,7 +1861,7 @@ memory placement to reduce cross-node memory access and contention
 can improve overall system performance.</p>
 <p>The “cpuset” controller is hierarchical.  That means the controller
 cannot use CPUs or memory nodes not allowed in its parent.</p>
-<div class="section" id="cpuset-interface-files">
+<section id="cpuset-interface-files">
 <h4>Cpuset Interface Files<a class="headerlink" href="#cpuset-interface-files" title="Permalink to this headline">¶</a></h4>
 <blockquote>
 <div><dl>
@@ -2072,9 +2029,9 @@ Changing the partition state of an invalid partition root to
 </dd>
 </dl>
 </div></blockquote>
-</div>
-</div>
-<div class="section" id="device-controller">
+</section>
+</section>
+<section id="device-controller">
 <h3>Device controller<a class="headerlink" href="#device-controller" title="Permalink to this headline">¶</a></h3>
 <p>Device controller manages access to device files. It includes both
 creation of new device files (using mknod), and access to the
@@ -2092,12 +2049,12 @@ If the program returns 0, the attempt fails with -EPERM, otherwise it
 succeeds.</p>
 <p>An example of BPF_PROG_TYPE_CGROUP_DEVICE program may be found in
 tools/testing/selftests/bpf/progs/dev_cgroup.c in the kernel source tree.</p>
-</div>
-<div class="section" id="rdma">
+</section>
+<section id="rdma">
 <h3>RDMA<a class="headerlink" href="#rdma" title="Permalink to this headline">¶</a></h3>
 <p>The “rdma” controller regulates the distribution and accounting of
 RDMA resources.</p>
-<div class="section" id="rdma-interface-files">
+<section id="rdma-interface-files">
 <h4>RDMA Interface Files<a class="headerlink" href="#rdma-interface-files" title="Permalink to this headline">¶</a></h4>
 <blockquote>
 <div><dl>
@@ -2140,13 +2097,13 @@ ocrdma1 hca_handle=1 hca_object=23
 </dd>
 </dl>
 </div></blockquote>
-</div>
-</div>
-<div class="section" id="hugetlb">
+</section>
+</section>
+<section id="hugetlb">
 <h3>HugeTLB<a class="headerlink" href="#hugetlb" title="Permalink to this headline">¶</a></h3>
 <p>The HugeTLB controller allows to limit the HugeTLB usage per control group and
 enforces the controller limit during page fault.</p>
-<div class="section" id="hugetlb-interface-files">
+<section id="hugetlb-interface-files">
 <h4>HugeTLB Interface Files<a class="headerlink" href="#hugetlb-interface-files" title="Permalink to this headline">¶</a></h4>
 <blockquote>
 <div><dl>
@@ -2174,9 +2131,9 @@ use hugetlb pages are included.  The per-node values are in bytes.</p>
 </dd>
 </dl>
 </div></blockquote>
-</div>
-</div>
-<div class="section" id="misc">
+</section>
+</section>
+<section id="misc">
 <h3>Misc<a class="headerlink" href="#misc" title="Permalink to this headline">¶</a></h3>
 <p>The Miscellaneous cgroup provides the resource limiting and tracking
 mechanism for the scalar resources which cannot be abstracted like the other
@@ -2189,7 +2146,7 @@ capacity prior to using the resource by calling misc_cg_set_capacity().</p>
 <p>Once a capacity is set then the resource usage can be updated using charge and
 uncharge APIs. All of the APIs to interact with misc controller are in
 include/linux/misc_cgroup.h.</p>
-<div class="section" id="misc-interface-files">
+<section id="misc-interface-files">
 <h4>Misc Interface Files<a class="headerlink" href="#misc-interface-files" title="Permalink to this headline">¶</a></h4>
 <p>Miscellaneous controller provides 3 interface files. If two misc resources (res_a and res_b) are registered then:</p>
 <blockquote>
@@ -2243,30 +2200,30 @@ about to go over the max boundary.</p>
 </dd>
 </dl>
 </div></blockquote>
-</div>
-<div class="section" id="migration-and-ownership">
+</section>
+<section id="migration-and-ownership">
 <h4>Migration and Ownership<a class="headerlink" href="#migration-and-ownership" title="Permalink to this headline">¶</a></h4>
 <p>A miscellaneous scalar resource is charged to the cgroup in which it is used
 first, and stays charged to that cgroup until that resource is freed. Migrating
 a process to a different cgroup does not move the charge to the destination
 cgroup where the process has moved.</p>
-</div>
-</div>
-<div class="section" id="others">
+</section>
+</section>
+<section id="others">
 <h3>Others<a class="headerlink" href="#others" title="Permalink to this headline">¶</a></h3>
-<div class="section" id="perf-event">
+<section id="perf-event">
 <h4>perf_event<a class="headerlink" href="#perf-event" title="Permalink to this headline">¶</a></h4>
 <p>perf_event controller, if not mounted on a legacy hierarchy, is
 automatically enabled on the v2 hierarchy so that perf events can
 always be filtered by cgroup v2 path.  The controller can still be
 moved to a legacy hierarchy after v2 hierarchy is populated.</p>
-</div>
-</div>
-<div class="section" id="non-normative-information">
+</section>
+</section>
+<section id="non-normative-information">
 <h3>Non-normative information<a class="headerlink" href="#non-normative-information" title="Permalink to this headline">¶</a></h3>
 <p>This section contains information that isn’t considered to be a part of
 the stable kernel API and so is subject to change.</p>
-<div class="section" id="cpu-controller-root-cgroup-process-behaviour">
+<section id="cpu-controller-root-cgroup-process-behaviour">
 <h4>CPU controller root cgroup process behaviour<a class="headerlink" href="#cpu-controller-root-cgroup-process-behaviour" title="Permalink to this headline">¶</a></h4>
 <p>When distributing CPU cycles in the root cgroup each thread in this
 cgroup is treated as if it was hosted in a separate child cgroup of the
@@ -2275,19 +2232,19 @@ level.</p>
 <p>For details of this mapping see sched_prio_to_weight array in
 kernel/sched/core.c file (values from this array should be scaled
 appropriately so the neutral - nice 0 - value is 100 instead of 1024).</p>
-</div>
-<div class="section" id="io-controller-root-cgroup-process-behaviour">
+</section>
+<section id="io-controller-root-cgroup-process-behaviour">
 <h4>IO controller root cgroup process behaviour<a class="headerlink" href="#io-controller-root-cgroup-process-behaviour" title="Permalink to this headline">¶</a></h4>
 <p>Root cgroup processes are hosted in an implicit leaf child node.
 When distributing IO resources this implicit child node is taken into
 account as if it was a normal child cgroup of the root cgroup with a
 weight value of 200.</p>
-</div>
-</div>
-</div>
-<div class="section" id="namespace">
+</section>
+</section>
+</section>
+<section id="namespace">
 <h2>Namespace<a class="headerlink" href="#namespace" title="Permalink to this headline">¶</a></h2>
-<div class="section" id="basics">
+<section id="basics">
 <h3>Basics<a class="headerlink" href="#basics" title="Permalink to this headline">¶</a></h3>
 <p>cgroup namespace provides a mechanism to virtualize the view of the
 “/proc/$PID/cgroup” file and cgroup mounts.  The CLONE_NEWCGROUP clone
@@ -2330,8 +2287,8 @@ legacy hierarchies, this may be unexpected.</p>
 mounts pinning it.  When the last usage goes away, the cgroup
 namespace is destroyed.  The cgroupns root and the actual cgroups
 remain.</p>
-</div>
-<div class="section" id="the-root-and-views">
+</section>
+<section id="the-root-and-views">
 <h3>The Root and Views<a class="headerlink" href="#the-root-and-views" title="Permalink to this headline">¶</a></h3>
 <p>The ‘cgroupns root’ for a cgroup namespace is the cgroup in which the
 process calling unshare(2) is running.  For example, if a process in
@@ -2376,8 +2333,8 @@ namespace root is at ‘/batchjobs/container_id2’, then it will see:</p>
 </div>
 <p>Note that the relative path always starts with ‘/’ to indicate that
 its relative to the cgroup namespace root of the caller.</p>
-</div>
-<div class="section" id="migration-and-setns-2">
+</section>
+<section id="migration-and-setns-2">
 <h3>Migration and setns(2)<a class="headerlink" href="#migration-and-setns-2" title="Permalink to this headline">¶</a></h3>
 <p>Processes inside a cgroup namespace can move into and out of the
 namespace root if they have proper access to external cgroups.  For
@@ -2402,8 +2359,8 @@ namespace’s userns</p></li>
 <p>No implicit cgroup changes happen with attaching to another cgroup
 namespace.  It is expected that the someone moves the attaching
 process under the target cgroup namespace root.</p>
-</div>
-<div class="section" id="interaction-with-other-namespaces">
+</section>
+<section id="interaction-with-other-namespaces">
 <h3>Interaction with Other Namespaces<a class="headerlink" href="#interaction-with-other-namespaces" title="Permalink to this headline">¶</a></h3>
 <p>Namespace specific cgroup hierarchy can be mounted by a process
 running inside a non-init cgroup namespace:</p>
@@ -2416,14 +2373,14 @@ mount namespaces.</p>
 <p>The virtualization of /proc/self/cgroup file combined with restricting
 the view of cgroup hierarchy by namespace-private cgroupfs mount
 provides a properly isolated cgroup view inside the container.</p>
-</div>
-</div>
-<div class="section" id="information-on-kernel-programming">
+</section>
+</section>
+<section id="information-on-kernel-programming">
 <h2>Information on Kernel Programming<a class="headerlink" href="#information-on-kernel-programming" title="Permalink to this headline">¶</a></h2>
 <p>This section contains kernel programming information in the areas
 where interacting with cgroup is necessary.  cgroup core and
 controllers are not covered.</p>
-<div class="section" id="filesystem-support-for-writeback">
+<section id="filesystem-support-for-writeback">
 <h3>Filesystem Support for Writeback<a class="headerlink" href="#filesystem-support-for-writeback" title="Permalink to this headline">¶</a></h3>
 <p>A filesystem can support cgroup writeback by updating
 address_space_operations-&gt;writepage[s]() to annotate bio’s using the
@@ -2455,9 +2412,9 @@ entry, may lead to priority inversion.  There is no one easy solution
 for the problem.  Filesystems can try to work around specific problem
 cases by skipping wbc_init_bio() and using bio_associate_blkg()
 directly.</p>
-</div>
-</div>
-<div class="section" id="deprecated-v1-core-features">
+</section>
+</section>
+<section id="deprecated-v1-core-features">
 <h2>Deprecated v1 Core Features<a class="headerlink" href="#deprecated-v1-core-features" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
 <li><p>Multiple hierarchies including named ones are not supported.</p></li>
@@ -2467,10 +2424,10 @@ directly.</p>
 <li><p>/proc/cgroups is meaningless for v2.  Use “cgroup.controllers” file
 at the root instead.</p></li>
 </ul>
-</div>
-<div class="section" id="issues-with-v1-and-rationales-for-v2">
+</section>
+<section id="issues-with-v1-and-rationales-for-v2">
 <h2>Issues with v1 and Rationales for v2<a class="headerlink" href="#issues-with-v1-and-rationales-for-v2" title="Permalink to this headline">¶</a></h2>
-<div class="section" id="multiple-hierarchies">
+<section id="multiple-hierarchies">
 <h3>Multiple Hierarchies<a class="headerlink" href="#multiple-hierarchies" title="Permalink to this headline">¶</a></h3>
 <p>cgroup v1 allowed an arbitrary number of hierarchies and each
 hierarchy could host any number of controllers.  While this seemed to
@@ -2514,8 +2471,8 @@ be collapsed from leaf towards root when viewed from specific
 controllers.  For example, a given configuration might not care about
 how memory is distributed beyond a certain level while still wanting
 to control how CPU cycles are distributed.</p>
-</div>
-<div class="section" id="thread-granularity">
+</section>
+<section id="thread-granularity">
 <h3>Thread Granularity<a class="headerlink" href="#thread-granularity" title="Permalink to this headline">¶</a></h3>
 <p>cgroup v1 allowed threads of a process to belong to different cgroups.
 This didn’t make sense for some controllers and those controllers
@@ -2551,8 +2508,8 @@ without going through the required scrutiny.</p>
 <p>This was painful for both userland and kernel.  Userland ended up with
 misbehaving and poorly abstracted interfaces and kernel exposing and
 locked into constructs inadvertently.</p>
-</div>
-<div class="section" id="competition-between-inner-nodes-and-threads">
+</section>
+<section id="competition-between-inner-nodes-and-threads">
 <h3>Competition Between Inner Nodes and Threads<a class="headerlink" href="#competition-between-inner-nodes-and-threads" title="Permalink to this headline">¶</a></h3>
 <p>cgroup v1 allowed threads to be in any cgroups which created an
 interesting problem where threads belonging to a parent cgroup and its
@@ -2585,8 +2542,8 @@ severely flawed and, furthermore, the widely different behaviors
 made cgroup as a whole highly inconsistent.</p>
 <p>This clearly is a problem which needs to be addressed from cgroup core
 in a uniform way.</p>
-</div>
-<div class="section" id="other-interface-issues">
+</section>
+<section id="other-interface-issues">
 <h3>Other Interface Issues<a class="headerlink" href="#other-interface-issues" title="Permalink to this headline">¶</a></h3>
 <p>cgroup v1 grew without oversight and developed a large number of
 idiosyncrasies and inconsistencies.  One issue on the cgroup core side
@@ -2609,10 +2566,10 @@ and information knobs were named arbitrarily and used different
 formats and units even in the same controller.</p>
 <p>cgroup v2 establishes common conventions where appropriate and updates
 controllers so that they expose minimal and consistent interfaces.</p>
-</div>
-<div class="section" id="controller-issues-and-remedies">
+</section>
+<section id="controller-issues-and-remedies">
 <h3>Controller Issues and Remedies<a class="headerlink" href="#controller-issues-and-remedies" title="Permalink to this headline">¶</a></h3>
-<div class="section" id="id1">
+<section id="id1">
 <h4>Memory<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h4>
 <p>The original lower boundary, the soft limit, is defined as a limit
 that is per default unset.  As a result, the set of cgroups that
@@ -2676,53 +2633,37 @@ intuitive userspace interface, and it flies in the face of the idea
 that cgroup controllers should account and limit specific physical
 resources.  Swap space is a resource like all others in the system,
 and that’s why unified hierarchy allows distributing it separately.</p>
-</div>
-</div>
-</div>
-</div>
+</section>
+</section>
+</section>
+</section>
 
 
            </div>
-           
           </div>
           <footer>
 
   <hr/>
 
   <div role="contentinfo">
-    <p>
-        &#169; Copyright The kernel development community.
-
-    </p>
+    <p>&#169; Copyright The kernel development community.</p>
   </div>
-    
-    
-    
-    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
-    
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
     <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
-    
-    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
 
 </footer>
         </div>
       </div>
-
     </section>
-
   </div>
-  
-
-  <script type="text/javascript">
+  <script>
       jQuery(function () {
           SphinxRtdTheme.Navigation.enable(true);
       });
-  </script>
-
-  
-  
-    
-   
+  </script> 
 
 </body>
 </html>

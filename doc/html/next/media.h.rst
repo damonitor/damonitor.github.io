@@ -27,9 +27,6 @@ media.h
     \#ifndef \_\_LINUX\_MEDIA\_H
     \#define \_\_LINUX\_MEDIA\_H
 
-    \#ifndef \_\_KERNEL\_\_
-    \#include \<stdint.h\>
-    \#endif
     \#include \<linux\/ioctl.h\>
     \#include \<linux\/types.h\>
 
@@ -233,6 +230,7 @@ media.h
     \#define \ :ref:`MEDIA_LNK_FL_LINK_TYPE <media-lnk-fl-link-type>`                  (0xf \<\< 28)
     \#  define \ :ref:`MEDIA_LNK_FL_DATA_LINK <media-lnk-fl-data-link>`                (0 \<\< 28)
     \#  define \ :ref:`MEDIA_LNK_FL_INTERFACE_LINK <media-lnk-fl-interface-link>`           (1 \<\< 28)
+    \#  define \ :ref:`MEDIA_LNK_FL_ANCILLARY_LINK <media-lnk-fl-ancillary-link>`           (2 \<\< 28)
 
     struct media_link_desc \{
             struct media_pad_desc source;

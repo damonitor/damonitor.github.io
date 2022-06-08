@@ -1,75 +1,36 @@
-
-
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8" />
-  
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  
-  <title>Spectre Side Channels &mdash; The Linux Kernel  documentation</title>
-  
-
-  
-  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
-  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="../../_static/theme_overrides.css" type="text/css" />
-  <link rel="stylesheet" href="../../_static/theme_rtd_colors.css" type="text/css" />
-
-  
-  
-
-  
-  
-
-  
-
-  
+  <title>Spectre Side Channels &mdash; The Linux Kernel  documentation</title><link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/theme_overrides.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/theme_rtd_colors.css" type="text/css" />
   <!--[if lt IE 9]>
     <script src="../../_static/js/html5shiv.min.js"></script>
   <![endif]-->
-  
-    
-      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+  <script id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
         <script src="../../_static/jquery.js"></script>
         <script src="../../_static/underscore.js"></script>
         <script src="../../_static/doctools.js"></script>
         <script src="../../_static/language_data.js"></script>
-    
-    <script type="text/javascript" src="../../_static/js/theme.js"></script>
-
-    
+    <script src="../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" /> 
 </head>
 
-<body class="wy-body-for-nav">
-
-   
+<body class="wy-body-for-nav"> 
   <div class="wy-grid-for-nav">
-    
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-          
-
-          
             <a href="../../index.html" class="icon icon-home"> The Linux Kernel
-          
-
-          
           </a>
-
-          
-            
-            
               <div class="version">
-                5.16.0-rc7-mm1-damon
+                5.19.0-rc1-mm-unstable-damon
               </div>
-            
-          
-
-          
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
     <input type="text" name="q" placeholder="Search docs" />
@@ -77,18 +38,7 @@
     <input type="hidden" name="area" value="default" />
   </form>
 </div>
-
-          
-        </div>
-
-        
-        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
-          
-            
-            
-              
-            
-            
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <ul>
 <li class="toctree-l1"><a class="reference internal" href="../mm/damon/index.html">Monitoring Data Accesses</a></li>
 </ul>
@@ -96,79 +46,38 @@
 <li class="toctree-l1"><a class="reference internal" href="../../vm/damon/index.html">DAMON: Data Access MONitor</a></li>
 </ul>
 
-            
-          
         </div>
-        
       </div>
     </nav>
 
-    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
-
-      
-      <nav class="wy-nav-top" aria-label="top navigation">
-        
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
           <a href="../../index.html">The Linux Kernel</a>
-        
       </nav>
 
-
       <div class="wy-nav-content">
-        
         <div class="rst-content">
-        
-          
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<div role="navigation" aria-label="breadcrumbs navigation">
-
+          <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-    
       <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
-        
       <li>Spectre Side Channels</li>
-    
-    
       <li class="wy-breadcrumbs-aside">
-        
-          
             <a href="../../_sources/admin-guide/hw-vuln/spectre.rst.txt" rel="nofollow"> View page source</a>
-          
-        
       </li>
-    
   </ul>
-
-  
   <hr/>
 </div>
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
-            
-  <div class="section" id="spectre-side-channels">
+             
+  <section id="spectre-side-channels">
 <h1>Spectre Side Channels<a class="headerlink" href="#spectre-side-channels" title="Permalink to this headline">¶</a></h1>
 <p>Spectre is a class of side channel attacks that exploit branch prediction
 and speculative execution on modern CPUs to read memory, possibly
 bypassing access controls. Speculative execution side channel exploits
 do not modify memory but attempt to infer privileged data in the memory.</p>
 <p>This document covers Spectre variant 1 and Spectre variant 2.</p>
-<div class="section" id="affected-processors">
+<section id="affected-processors">
 <h2>Affected processors<a class="headerlink" href="#affected-processors" title="Permalink to this headline">¶</a></h2>
 <p>Speculative execution side channel methods affect a wide range of modern
 high performance processors, since most modern high speed processors
@@ -187,8 +96,8 @@ use branch prediction and speculative execution.</p>
 </div></blockquote>
 <p>Whether a processor is affected or not can be read out from the Spectre
 vulnerability files in sysfs. See <a class="reference internal" href="#spectre-sys-info"><span class="std std-ref">Spectre system information</span></a>.</p>
-</div>
-<div class="section" id="related-cves">
+</section>
+<section id="related-cves">
 <h2>Related CVEs<a class="headerlink" href="#related-cves" title="Permalink to this headline">¶</a></h2>
 <p>The following CVE entries describe Spectre variants:</p>
 <blockquote>
@@ -214,8 +123,8 @@ vulnerability files in sysfs. See <a class="reference internal" href="#spectre-s
 </tbody>
 </table>
 </div></blockquote>
-</div>
-<div class="section" id="problem">
+</section>
+<section id="problem">
 <h2>Problem<a class="headerlink" href="#problem" title="Permalink to this headline">¶</a></h2>
 <p>CPUs use speculative operations to improve performance. That may leave
 traces of memory accesses or computations in the processor’s caches,
@@ -226,10 +135,10 @@ privileged data touched during the speculative execution.</p>
 <p>Spectre variant 1 attacks take advantage of speculative execution of
 conditional branches, while Spectre variant 2 attacks use speculative
 execution of indirect branches to leak privileged memory.
-See <a class="reference internal" href="#spec-ref1"><span class="std std-ref">[1]</span></a> <a class="reference internal" href="#spec-ref5"><span class="std std-ref">[5]</span></a> <a class="reference internal" href="#spec-ref7"><span class="std std-ref">[7]</span></a>
-<a class="reference internal" href="#spec-ref10"><span class="std std-ref">[10]</span></a> <a class="reference internal" href="#spec-ref11"><span class="std std-ref">[11]</span></a>.</p>
-</div>
-<div class="section" id="spectre-variant-1-bounds-check-bypass">
+See <a class="reference internal" href="#spec-ref1"><span class="std std-ref">[1]</span></a> <a class="reference internal" href="#spec-ref5"><span class="std std-ref">[5]</span></a> <a class="reference internal" href="#spec-ref6"><span class="std std-ref">[6]</span></a>
+<a class="reference internal" href="#spec-ref7"><span class="std std-ref">[7]</span></a> <a class="reference internal" href="#spec-ref10"><span class="std std-ref">[10]</span></a> <a class="reference internal" href="#spec-ref11"><span class="std std-ref">[11]</span></a>.</p>
+</section>
+<section id="spectre-variant-1-bounds-check-bypass">
 <h2>Spectre variant 1 (Bounds Check Bypass)<a class="headerlink" href="#spectre-variant-1-bounds-check-bypass" title="Permalink to this headline">¶</a></h2>
 <p>The bounds check bypass attack <a class="reference internal" href="#spec-ref2"><span class="std std-ref">[2]</span></a> takes advantage
 of speculative execution that bypasses conditional branch instructions
@@ -248,8 +157,8 @@ conditional checks.  The kernel entry code interrupt, exception, and NMI
 handlers all have conditional swapgs checks.  Those may be problematic
 in the context of Spectre v1, as kernel code can speculatively run with
 a user GS.</p>
-</div>
-<div class="section" id="spectre-variant-2-branch-target-injection">
+</section>
+<section id="spectre-variant-2-branch-target-injection">
 <h2>Spectre variant 2 (Branch Target Injection)<a class="headerlink" href="#spectre-variant-2-branch-target-injection" title="Permalink to this headline">¶</a></h2>
 <p>The branch target injection attack takes advantage of speculative
 execution of indirect branches <a class="reference internal" href="#spec-ref3"><span class="std std-ref">[3]</span></a>.  The indirect
@@ -286,14 +195,25 @@ program running on the sibling thread may influence its peer’s BTB to
 steer its indirect branch speculations to gadget code, and measure the
 speculative execution’s side effects left in level 1 cache to infer the
 victim’s data.</p>
-</div>
-<div class="section" id="attack-scenarios">
+<p>Yet another variant 2 attack vector is for the attacker to poison the
+Branch History Buffer (BHB) to speculatively steer an indirect branch
+to a specific Branch Target Buffer (BTB) entry, even if the entry isn’t
+associated with the source address of the indirect branch. Specifically,
+the BHB might be shared across privilege levels even in the presence of
+Enhanced IBRS.</p>
+<p>Currently the only known real-world BHB attack vector is via
+unprivileged eBPF. Therefore, it’s highly recommended to not enable
+unprivileged eBPF, especially when eIBRS is used (without retpolines).
+For a full mitigation against BHB attacks, it’s recommended to use
+retpolines (or eIBRS combined with retpolines).</p>
+</section>
+<section id="attack-scenarios">
 <h2>Attack scenarios<a class="headerlink" href="#attack-scenarios" title="Permalink to this headline">¶</a></h2>
 <p>The following list of attack scenarios have been anticipated, but may
 not cover all possible attack vectors.</p>
-<div class="section" id="a-user-process-attacking-the-kernel">
+<section id="a-user-process-attacking-the-kernel">
 <h3>1. A user process attacking the kernel<a class="headerlink" href="#a-user-process-attacking-the-kernel" title="Permalink to this headline">¶</a></h3>
-<div class="section" id="spectre-variant-1">
+<section id="spectre-variant-1">
 <h4>Spectre variant 1<a class="headerlink" href="#spectre-variant-1" title="Permalink to this headline">¶</a></h4>
 <blockquote>
 <div><p>The attacker passes a parameter to the kernel via a register or
@@ -307,8 +227,8 @@ accessed and leaked.</p>
 potentially be influenced for Spectre attacks, new “nospec” accessor
 macros are used to prevent speculative loading of data.</p>
 </div></blockquote>
-</div>
-<div class="section" id="spectre-variant-1-swapgs">
+</section>
+<section id="spectre-variant-1-swapgs">
 <h4>Spectre variant 1 (swapgs)<a class="headerlink" href="#spectre-variant-1-swapgs" title="Permalink to this headline">¶</a></h4>
 <blockquote>
 <div><p>An attacker can train the branch predictor to speculatively skip the
@@ -334,8 +254,8 @@ become visible via an L1 side channel attack.</p>
 speculatively do the swapgs, causing the user GS to get used for the
 rest of the speculative window.</p>
 </div></blockquote>
-</div>
-<div class="section" id="spectre-variant-2">
+</section>
+<section id="spectre-variant-2">
 <h4>Spectre variant 2<a class="headerlink" href="#spectre-variant-2" title="Permalink to this headline">¶</a></h4>
 <blockquote>
 <div><p>A spectre variant 2 attacker can <a class="reference internal" href="#poison-btb"><span class="std std-ref">poison</span></a> the branch
@@ -361,9 +281,9 @@ Spectre variant 2 attack by a rogue user process. To mitigate such
 attacks on x86, Indirect Branch Restricted Speculation (IBRS) feature
 is turned on before the kernel invokes any firmware code.</p>
 </div></blockquote>
-</div>
-</div>
-<div class="section" id="a-user-process-attacking-another-user-process">
+</section>
+</section>
+<section id="a-user-process-attacking-another-user-process">
 <h3>2. A user process attacking another user process<a class="headerlink" href="#a-user-process-attacking-another-user-process" title="Permalink to this headline">¶</a></h3>
 <blockquote>
 <div><p>A malicious user process can try to attack another user process,
@@ -400,8 +320,8 @@ left by the previous process will also be cleared.</p>
 <p>User programs should use address space randomization to make attacks
 more difficult (Set /proc/sys/kernel/randomize_va_space = 1 or 2).</p>
 </div></blockquote>
-</div>
-<div class="section" id="a-virtualized-guest-attacking-the-host">
+</section>
+<section id="a-virtualized-guest-attacking-the-host">
 <h3>3. A virtualized guest attacking the host<a class="headerlink" href="#a-virtualized-guest-attacking-the-host" title="Permalink to this headline">¶</a></h3>
 <blockquote>
 <div><p>The attack mechanism is similar to how user processes attack the
@@ -422,8 +342,8 @@ guests from affecting indirect branching in the host kernel.</p>
 indirect branch speculation disabled via prctl().  The branch target
 buffer is cleared before context switching to such processes.</p>
 </div></blockquote>
-</div>
-<div class="section" id="a-virtualized-guest-attacking-other-guest">
+</section>
+<section id="a-virtualized-guest-attacking-other-guest">
 <h3>4. A virtualized guest attacking other guest<a class="headerlink" href="#a-virtualized-guest-attacking-other-guest" title="Permalink to this headline">¶</a></h3>
 <blockquote>
 <div><p>A rogue guest may attack another guest to get data accessible by the
@@ -446,9 +366,9 @@ by turning off the unsafe guest’s indirect branch speculation via
 prctl().  A guest can also protect itself by turning on microcode
 based mitigations (such as IBPB or STIBP on x86) within the guest.</p>
 </div></blockquote>
-</div>
-</div>
-<div class="section" id="spectre-system-information">
+</section>
+</section>
+<section id="spectre-system-information">
 <span id="spectre-sys-info"></span><h2>Spectre system information<a class="headerlink" href="#spectre-system-information" title="Permalink to this headline">¶</a></h2>
 <p>The Linux kernel provides a sysfs interface to enumerate the current
 mitigation status of the system for Spectre: whether the system is
@@ -508,24 +428,30 @@ per process on a case-by-case base.</p>
 </ul>
 <table class="docutils align-default">
 <colgroup>
-<col style="width: 52%" />
-<col style="width: 48%" />
+<col style="width: 55%" />
+<col style="width: 45%" />
 </colgroup>
 <tbody>
 <tr class="row-odd"><td><p>‘Not affected’</p></td>
 <td><p>The processor is not vulnerable</p></td>
 </tr>
-<tr class="row-even"><td><p>‘Vulnerable’</p></td>
+<tr class="row-even"><td><p>‘Mitigation: None’</p></td>
 <td><p>Vulnerable, no mitigation</p></td>
 </tr>
-<tr class="row-odd"><td><p>‘Mitigation: Full generic retpoline’</p></td>
-<td><p>Software-focused mitigation</p></td>
+<tr class="row-odd"><td><p>‘Mitigation: Retpolines’</p></td>
+<td><p>Use Retpoline thunks</p></td>
 </tr>
-<tr class="row-even"><td><p>‘Mitigation: Full AMD retpoline’</p></td>
-<td><p>AMD-specific software mitigation</p></td>
+<tr class="row-even"><td><p>‘Mitigation: LFENCE’</p></td>
+<td><p>Use LFENCE instructions</p></td>
 </tr>
 <tr class="row-odd"><td><p>‘Mitigation: Enhanced IBRS’</p></td>
 <td><p>Hardware-focused mitigation</p></td>
+</tr>
+<tr class="row-even"><td><p>‘Mitigation: Enhanced IBRS + Retpolines’</p></td>
+<td><p>Hardware-focused + Retpolines</p></td>
+</tr>
+<tr class="row-odd"><td><p>‘Mitigation: Enhanced IBRS + LFENCE’</p></td>
+<td><p>Hardware-focused + LFENCE</p></td>
 </tr>
 </tbody>
 </table>
@@ -608,12 +534,12 @@ only feature. For more details see below.</p></li>
 <p>Full mitigation might require a microcode update from the CPU
 vendor. When the necessary microcode is not available, the kernel will
 report vulnerability.</p>
-</div>
-<div class="section" id="turning-on-mitigation-for-spectre-variant-1-and-spectre-variant-2">
+</section>
+<section id="turning-on-mitigation-for-spectre-variant-1-and-spectre-variant-2">
 <h2>Turning on mitigation for Spectre variant 1 and Spectre variant 2<a class="headerlink" href="#turning-on-mitigation-for-spectre-variant-1-and-spectre-variant-2" title="Permalink to this headline">¶</a></h2>
-<div class="section" id="kernel-mitigation">
+<section id="kernel-mitigation">
 <h3>1. Kernel mitigation<a class="headerlink" href="#kernel-mitigation" title="Permalink to this headline">¶</a></h3>
-<div class="section" id="id1">
+<section id="id1">
 <h4>Spectre variant 1<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h4>
 <blockquote>
 <div><p>For the Spectre variant 1, vulnerable kernel code (as determined
@@ -628,8 +554,8 @@ added to interrupt, exception and NMI entry where needed.  These
 barriers are done by the FENCE_SWAPGS_KERNEL_ENTRY and
 FENCE_SWAPGS_USER_ENTRY macros.</p>
 </div></blockquote>
-</div>
-<div class="section" id="id2">
+</section>
+<section id="id2">
 <h4>Spectre variant 2<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h4>
 <blockquote>
 <div><p>For Spectre variant 2 mitigation, the compiler turns indirect calls or
@@ -656,13 +582,13 @@ via the kernel command line and sysfs control files. See
 <p>On x86, indirect branch restricted speculation is turned on by default
 before invoking any firmware code to prevent Spectre variant 2 exploits
 using the firmware.</p>
-<p>Using kernel address space randomization (CONFIG_RANDOMIZE_SLAB=y
+<p>Using kernel address space randomization (CONFIG_RANDOMIZE_BASE=y
 and CONFIG_SLAB_FREELIST_RANDOM=y in the kernel configuration) makes
 attacks on the kernel generally more difficult.</p>
 </div></blockquote>
-</div>
-</div>
-<div class="section" id="user-program-mitigation">
+</section>
+</section>
+<section id="user-program-mitigation">
 <h3>2. User program mitigation<a class="headerlink" href="#user-program-mitigation" title="Permalink to this headline">¶</a></h3>
 <blockquote>
 <div><p>User programs can mitigate Spectre variant 1 using LFENCE or “bounds
@@ -672,7 +598,7 @@ can be compiled with return trampolines for indirect branches.
 This protects them from consuming poisoned entries in the branch
 target buffer left by malicious software.  Alternatively, the
 programs can disable their indirect branch speculation via prctl()
-(See <a class="reference internal" href="../../userspace-api/spec_ctrl.html#set-spec-ctrl"><span class="std std-ref"><a class="reference internal" href="../../userspace-api/spec_ctrl.html"><span class="doc">Speculation Control</span></a></span></a>).
+(See <a class="reference internal" href="../../userspace-api/spec_ctrl.html#set-spec-ctrl"><span class="std std-ref">Documentation/userspace-api/spec_ctrl.rst</span></a>).
 On x86, this will turn on STIBP to guard against attacks from the
 sibling thread when the user program is running, and use IBPB to
 flush the branch target buffer when switching to/from the program.</p>
@@ -687,8 +613,8 @@ more overhead and run slower.</p>
 (/proc/sys/kernel/randomize_va_space = 1 or 2) to make attacks more
 difficult.</p>
 </div></blockquote>
-</div>
-<div class="section" id="vm-mitigation">
+</section>
+<section id="vm-mitigation">
 <h3>3. VM mitigation<a class="headerlink" href="#vm-mitigation" title="Permalink to this headline">¶</a></h3>
 <blockquote>
 <div><p>Within the kernel, Spectre variant 1 attacks from rogue guests are
@@ -712,9 +638,9 @@ its indirect branch speculation disabled by administrator via prctl().</p>
 <p>The kernel also allows guests to use any microcode based mitigation
 they choose to use (such as IBPB or STIBP on x86) to protect themselves.</p>
 </div></blockquote>
-</div>
-</div>
-<div class="section" id="mitigation-control-on-the-kernel-command-line">
+</section>
+</section>
+<section id="mitigation-control-on-the-kernel-command-line">
 <span id="spectre-mitigation-control-command-line"></span><h2>Mitigation control on the kernel command line<a class="headerlink" href="#mitigation-control-on-the-kernel-command-line" title="Permalink to this headline">¶</a></h2>
 <p>Spectre variant 2 mitigation can be disabled or force enabled at the
 kernel command line.</p>
@@ -759,14 +685,13 @@ against user space to user space task attacks.</p>
 <p>Selecting ‘off’ will disable both the kernel and
 the user space protections.</p>
 <p>Specific mitigations can also be selected manually:</p>
-<dl class="simple">
-<dt>retpoline</dt><dd><p>replace indirect branches</p>
-</dd>
-<dt>retpoline,generic</dt><dd><p>google’s original retpoline</p>
-</dd>
-<dt>retpoline,amd</dt><dd><p>AMD-specific minimal thunk</p>
-</dd>
-</dl>
+<p>retpoline               auto pick between generic,lfence
+retpoline,generic       Retpolines
+retpoline,lfence        LFENCE; indirect branch
+retpoline,amd           alias for retpoline,lfence
+eibrs                   enhanced IBRS
+eibrs,retpoline         enhanced IBRS + Retpolines
+eibrs,lfence            enhanced IBRS + LFENCE</p>
 <p>Not specifying this option is equivalent to
 spectre_v2=auto.</p>
 <p>In general the kernel by default selects
@@ -776,40 +701,40 @@ spectre_v2=off. Spectre variant 1 mitigations
 cannot be disabled.</p>
 </div></blockquote>
 </div></blockquote>
-<p>For spectre_v2_user see <a class="reference internal" href="../kernel-parameters.html"><span class="doc">The kernel’s command-line parameters</span></a>.</p>
-</div>
-<div class="section" id="mitigation-selection-guide">
+<p>For spectre_v2_user see <a class="reference internal" href="../kernel-parameters.html"><span class="doc">The kernel’s command-line parameters</span></a></p>
+</section>
+<section id="mitigation-selection-guide">
 <h2>Mitigation selection guide<a class="headerlink" href="#mitigation-selection-guide" title="Permalink to this headline">¶</a></h2>
-<div class="section" id="trusted-userspace">
+<section id="trusted-userspace">
 <h3>1. Trusted userspace<a class="headerlink" href="#trusted-userspace" title="Permalink to this headline">¶</a></h3>
 <blockquote>
 <div><p>If all userspace applications are from trusted sources and do not
 execute externally supplied untrusted code, then the mitigations can
 be disabled.</p>
 </div></blockquote>
-</div>
-<div class="section" id="protect-sensitive-programs">
+</section>
+<section id="protect-sensitive-programs">
 <h3>2. Protect sensitive programs<a class="headerlink" href="#protect-sensitive-programs" title="Permalink to this headline">¶</a></h3>
 <blockquote>
 <div><p>For security-sensitive programs that have secrets (e.g. crypto
 keys), protection against Spectre variant 2 can be put in place by
 disabling indirect branch speculation when the program is running
-(See <a class="reference internal" href="../../userspace-api/spec_ctrl.html#set-spec-ctrl"><span class="std std-ref"><a class="reference internal" href="../../userspace-api/spec_ctrl.html"><span class="doc">Speculation Control</span></a></span></a>).</p>
+(See <a class="reference internal" href="../../userspace-api/spec_ctrl.html#set-spec-ctrl"><span class="std std-ref">Documentation/userspace-api/spec_ctrl.rst</span></a>).</p>
 </div></blockquote>
-</div>
-<div class="section" id="sandbox-untrusted-programs">
+</section>
+<section id="sandbox-untrusted-programs">
 <h3>3. Sandbox untrusted programs<a class="headerlink" href="#sandbox-untrusted-programs" title="Permalink to this headline">¶</a></h3>
 <blockquote>
 <div><p>Untrusted programs that could be a source of attacks can be cordoned
 off by disabling their indirect branch speculation when they are run
-(See <a class="reference internal" href="../../userspace-api/spec_ctrl.html#set-spec-ctrl"><span class="std std-ref"><a class="reference internal" href="../../userspace-api/spec_ctrl.html"><span class="doc">Speculation Control</span></a></span></a>).
+(See <a class="reference internal" href="../../userspace-api/spec_ctrl.html#set-spec-ctrl"><span class="std std-ref">Documentation/userspace-api/spec_ctrl.rst</span></a>).
 This prevents untrusted programs from polluting the branch target
 buffer.  This behavior can be changed via the kernel command line
 and sysfs control files. See
 <a class="reference internal" href="#spectre-mitigation-control-command-line"><span class="std std-ref">Mitigation control on the kernel command line</span></a>.</p>
 </div></blockquote>
-</div>
-<div class="section" id="high-security-mode">
+</section>
+<section id="high-security-mode">
 <h3>3. High security mode<a class="headerlink" href="#high-security-mode" title="Permalink to this headline">¶</a></h3>
 <blockquote>
 <div><p>All Spectre variant 2 mitigations can be forced on
@@ -829,9 +754,9 @@ program to clear the branch target buffer (See “ibpb” option in
 has less performance cost than the “on” option, which leaves STIBP
 on all the time.</p>
 </div></blockquote>
-</div>
-</div>
-<div class="section" id="references-on-spectre">
+</section>
+</section>
+<section id="references-on-spectre">
 <h2>References on Spectre<a class="headerlink" href="#references-on-spectre" title="Permalink to this headline">¶</a></h2>
 <p>Intel white papers:</p>
 <p id="spec-ref1">[1] <a class="reference external" href="https://newsroom.intel.com/wp-content/uploads/sites/11/2018/01/Intel-Analysis-of-Speculative-Execution-Side-Channels.pdf">Intel analysis of speculative execution side channels</a>.</p>
@@ -840,7 +765,7 @@ on all the time.</p>
 <p id="spec-ref4">[4] <a class="reference external" href="https://software.intel.com/security-software-guidance/insights/deep-dive-single-thread-indirect-branch-predictors">Deep Dive: Single Thread Indirect Branch Predictors</a>.</p>
 <p>AMD white papers:</p>
 <p id="spec-ref5">[5] <a class="reference external" href="https://developer.amd.com/wp-content/resources/Architecture_Guidelines_Update_Indirect_Branch_Control.pdf">AMD64 technology indirect branch control extension</a>.</p>
-<p id="spec-ref6">[6] <a class="reference external" href="https://developer.amd.com/wp-content/resources/90343-B_SoftwareTechniquesforManagingSpeculation_WP_7-18Update_FNL.pdf">Software techniques for managing speculation on AMD processors</a>.</p>
+<p id="spec-ref6">[6] <a class="reference external" href="https://developer.amd.com/wp-content/resources/Managing-Speculation-on-AMD-Processors.pdf">Software techniques for managing speculation on AMD processors</a>.</p>
 <p>ARM white papers:</p>
 <p id="spec-ref7">[7] <a class="reference external" href="https://developer.arm.com/support/arm-security-updates/speculative-processor-vulnerability/download-the-whitepaper">Cache speculation side-channels</a>.</p>
 <p id="spec-ref8">[8] <a class="reference external" href="https://developer.arm.com/support/arm-security-updates/speculative-processor-vulnerability/latest-updates/cache-speculation-issues-update">Cache speculation issues update</a>.</p>
@@ -852,51 +777,35 @@ on all the time.</p>
 <p id="spec-ref11">[11] <a class="reference external" href="https://spectreattack.com/spectre.pdf">Spectre Attacks: Exploiting Speculative Execution</a>.</p>
 <p id="spec-ref12">[12] <a class="reference external" href="https://arxiv.org/abs/1807.10535">NetSpectre: Read Arbitrary Memory over Network</a>.</p>
 <p id="spec-ref13">[13] <a class="reference external" href="https://www.usenix.org/system/files/conference/woot18/woot18-paper-koruyeh.pdf">Spectre Returns! Speculation Attacks using the Return Stack Buffer</a>.</p>
-</div>
-</div>
+</section>
+</section>
 
 
            </div>
-           
           </div>
           <footer>
 
   <hr/>
 
   <div role="contentinfo">
-    <p>
-        &#169; Copyright The kernel development community.
-
-    </p>
+    <p>&#169; Copyright The kernel development community.</p>
   </div>
-    
-    
-    
-    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
-    
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
     <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
-    
-    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
 
 </footer>
         </div>
       </div>
-
     </section>
-
   </div>
-  
-
-  <script type="text/javascript">
+  <script>
       jQuery(function () {
           SphinxRtdTheme.Navigation.enable(true);
       });
-  </script>
-
-  
-  
-    
-   
+  </script> 
 
 </body>
 </html>

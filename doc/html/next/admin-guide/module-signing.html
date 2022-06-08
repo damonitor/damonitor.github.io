@@ -1,75 +1,36 @@
-
-
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8" />
-  
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  
-  <title>Kernel module signing facility &mdash; The Linux Kernel  documentation</title>
-  
-
-  
-  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
-  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="../_static/theme_overrides.css" type="text/css" />
-  <link rel="stylesheet" href="../_static/theme_rtd_colors.css" type="text/css" />
-
-  
-  
-
-  
-  
-
-  
-
-  
+  <title>Kernel module signing facility &mdash; The Linux Kernel  documentation</title><link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/theme_overrides.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/theme_rtd_colors.css" type="text/css" />
   <!--[if lt IE 9]>
     <script src="../_static/js/html5shiv.min.js"></script>
   <![endif]-->
-  
-    
-      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+  <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
         <script src="../_static/jquery.js"></script>
         <script src="../_static/underscore.js"></script>
         <script src="../_static/doctools.js"></script>
         <script src="../_static/language_data.js"></script>
-    
-    <script type="text/javascript" src="../_static/js/theme.js"></script>
-
-    
+    <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" /> 
 </head>
 
-<body class="wy-body-for-nav">
-
-   
+<body class="wy-body-for-nav"> 
   <div class="wy-grid-for-nav">
-    
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-          
-
-          
             <a href="../index.html" class="icon icon-home"> The Linux Kernel
-          
-
-          
           </a>
-
-          
-            
-            
               <div class="version">
-                5.16.0-rc7-mm1-damon
+                5.19.0-rc1-mm-unstable-damon
               </div>
-            
-          
-
-          
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
     <input type="text" name="q" placeholder="Search docs" />
@@ -77,18 +38,7 @@
     <input type="hidden" name="area" value="default" />
   </form>
 </div>
-
-          
-        </div>
-
-        
-        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
-          
-            
-            
-              
-            
-            
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <ul>
 <li class="toctree-l1"><a class="reference internal" href="mm/damon/index.html">Monitoring Data Accesses</a></li>
 </ul>
@@ -96,74 +46,33 @@
 <li class="toctree-l1"><a class="reference internal" href="../vm/damon/index.html">DAMON: Data Access MONitor</a></li>
 </ul>
 
-            
-          
         </div>
-        
       </div>
     </nav>
 
-    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
-
-      
-      <nav class="wy-nav-top" aria-label="top navigation">
-        
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
           <a href="../index.html">The Linux Kernel</a>
-        
       </nav>
 
-
       <div class="wy-nav-content">
-        
         <div class="rst-content">
-        
-          
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<div role="navigation" aria-label="breadcrumbs navigation">
-
+          <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-    
       <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
-        
       <li>Kernel module signing facility</li>
-    
-    
       <li class="wy-breadcrumbs-aside">
-        
-          
             <a href="../_sources/admin-guide/module-signing.rst.txt" rel="nofollow"> View page source</a>
-          
-        
       </li>
-    
   </ul>
-
-  
   <hr/>
 </div>
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
-            
-  <div class="section" id="kernel-module-signing-facility">
+             
+  <section id="kernel-module-signing-facility">
 <h1>Kernel module signing facility<a class="headerlink" href="#kernel-module-signing-facility" title="Permalink to this headline">¶</a></h1>
-<div class="section" id="overview">
+<section id="overview">
 <h2>Overview<a class="headerlink" href="#overview" title="Permalink to this headline">¶</a></h2>
 <p>The kernel module signing facility cryptographically signs modules during
 installation and then checks the signature upon loading the module.  This
@@ -178,8 +87,8 @@ type.  The facility currently only supports the RSA public key encryption
 standard (though it is pluggable and permits others to be used).  The possible
 hash algorithms that can be used are SHA-1, SHA-224, SHA-256, SHA-384, and
 SHA-512 (the algorithm is selected by data in the signature).</p>
-</div>
-<div class="section" id="configuring-module-signing">
+</section>
+<section id="configuring-module-signing">
 <h2>Configuring module signing<a class="headerlink" href="#configuring-module-signing" title="Permalink to this headline">¶</a></h2>
 <p>The module signing facility is enabled by going to the
 <span class="menuselection">Enable Loadable Module Support</span> section of
@@ -269,8 +178,8 @@ default.</p>
 </div></blockquote>
 <p>Note that enabling module signing adds a dependency on the OpenSSL devel
 packages to the kernel build processes for the tool that does the signing.</p>
-</div>
-<div class="section" id="generating-signing-keys">
+</section>
+<section id="generating-signing-keys">
 <h2>Generating signing keys<a class="headerlink" href="#generating-signing-keys" title="Permalink to this headline">¶</a></h2>
 <p>Cryptographic keypairs are required to generate and check signatures.  A
 private key is used to generate a signature and the corresponding public key is
@@ -316,8 +225,8 @@ generate the public/private key files:</p>
 <p>The full pathname for the resulting kernel_key.pem file can then be specified
 in the <code class="docutils literal notranslate"><span class="pre">CONFIG_MODULE_SIG_KEY</span></code> option, and the certificate and key therein will
 be used instead of an autogenerated keypair.</p>
-</div>
-<div class="section" id="public-keys-in-the-kernel">
+</section>
+<section id="public-keys-in-the-kernel">
 <h2>Public keys in the kernel<a class="headerlink" href="#public-keys-in-the-kernel" title="Permalink to this headline">¶</a></h2>
 <p>The kernel contains a ring of public keys that can be viewed by root.  They’re
 in a keyring called “.builtin_trusted_keys” that can be seen by:</p>
@@ -344,8 +253,8 @@ add those in also (e.g. from the UEFI key database).</p>
 <p>Note, however, that the kernel will only permit keys to be added to
 <code class="docutils literal notranslate"><span class="pre">.builtin_trusted_keys</span></code> <strong>if</strong> the new key’s X.509 wrapper is validly signed by a key
 that is already resident in the <code class="docutils literal notranslate"><span class="pre">.builtin_trusted_keys</span></code> at the time the key was added.</p>
-</div>
-<div class="section" id="manually-signing-modules">
+</section>
+<section id="manually-signing-modules">
 <h2>Manually signing modules<a class="headerlink" href="#manually-signing-modules" title="Permalink to this headline">¶</a></h2>
 <p>To manually sign a module, use the scripts/sign-file tool available in
 the Linux kernel source tree.  The script requires 4 arguments:</p>
@@ -367,8 +276,8 @@ doesn’t, you should make sure that hash algorithm is either built into the
 kernel or can be loaded without requiring itself.</p>
 <p>If the private key requires a passphrase or PIN, it can be provided in the
 $KBUILD_SIGN_PIN environment variable.</p>
-</div>
-<div class="section" id="signed-modules-and-stripping">
+</section>
+<section id="signed-modules-and-stripping">
 <h2>Signed modules and stripping<a class="headerlink" href="#signed-modules-and-stripping" title="Permalink to this headline">¶</a></h2>
 <p>A signed module has a digital signature simply appended at the end.  The string
 <code class="docutils literal notranslate"><span class="pre">~Module</span> <span class="pre">signature</span> <span class="pre">appended~.</span></code> at the end of the module’s file confirms that a
@@ -377,14 +286,14 @@ signature is present but it does not confirm that the signature is valid!</p>
 container.  Thus they MAY NOT be stripped once the signature is computed and
 attached.  Note the entire module is the signed payload, including any and all
 debug information present at the time of signing.</p>
-</div>
-<div class="section" id="loading-signed-modules">
+</section>
+<section id="loading-signed-modules">
 <h2>Loading signed modules<a class="headerlink" href="#loading-signed-modules" title="Permalink to this headline">¶</a></h2>
 <p>Modules are loaded with insmod, modprobe, <code class="docutils literal notranslate"><span class="pre">init_module()</span></code> or
 <code class="docutils literal notranslate"><span class="pre">finit_module()</span></code>, exactly as for unsigned modules as no processing is
 done in userspace.  The signature checking is all done within the kernel.</p>
-</div>
-<div class="section" id="non-valid-signatures-and-unsigned-modules">
+</section>
+<section id="non-valid-signatures-and-unsigned-modules">
 <h2>Non-valid signatures and unsigned modules<a class="headerlink" href="#non-valid-signatures-and-unsigned-modules" title="Permalink to this headline">¶</a></h2>
 <p>If <code class="docutils literal notranslate"><span class="pre">CONFIG_MODULE_SIG_FORCE</span></code> is enabled or module.sig_enforce=1 is supplied on
 the kernel command line, the kernel will only load validly signed modules
@@ -392,8 +301,8 @@ for which it has a public key.   Otherwise, it will also load modules that are
 unsigned.   Any module for which the kernel has a key, but which proves to have
 a signature mismatch will not be permitted to load.</p>
 <p>Any module that has an unparseable signature will be rejected.</p>
-</div>
-<div class="section" id="administering-protecting-the-private-key">
+</section>
+<section id="administering-protecting-the-private-key">
 <h2>Administering/protecting the private key<a class="headerlink" href="#administering-protecting-the-private-key" title="Permalink to this headline">¶</a></h2>
 <p>Since the private key is used to sign modules, viruses and malware could use
 the private key to sign modules and compromise the operating system.  The
@@ -404,51 +313,35 @@ configurations, you must ensure that the module version information is
 sufficient to prevent loading a module into a different kernel.  Either
 set <code class="docutils literal notranslate"><span class="pre">CONFIG_MODVERSIONS=y</span></code> or ensure that each configuration has a different
 kernel release string by changing <code class="docutils literal notranslate"><span class="pre">EXTRAVERSION</span></code> or <code class="docutils literal notranslate"><span class="pre">CONFIG_LOCALVERSION</span></code>.</p>
-</div>
-</div>
+</section>
+</section>
 
 
            </div>
-           
           </div>
           <footer>
 
   <hr/>
 
   <div role="contentinfo">
-    <p>
-        &#169; Copyright The kernel development community.
-
-    </p>
+    <p>&#169; Copyright The kernel development community.</p>
   </div>
-    
-    
-    
-    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
-    
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
     <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
-    
-    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
 
 </footer>
         </div>
       </div>
-
     </section>
-
   </div>
-  
-
-  <script type="text/javascript">
+  <script>
       jQuery(function () {
           SphinxRtdTheme.Navigation.enable(true);
       });
-  </script>
-
-  
-  
-    
-   
+  </script> 
 
 </body>
 </html>

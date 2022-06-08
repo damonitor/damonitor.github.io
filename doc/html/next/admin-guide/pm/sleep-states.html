@@ -1,75 +1,36 @@
-
-
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8" />
-  
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  
-  <title>System Sleep States &mdash; The Linux Kernel  documentation</title>
-  
-
-  
-  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
-  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="../../_static/theme_overrides.css" type="text/css" />
-  <link rel="stylesheet" href="../../_static/theme_rtd_colors.css" type="text/css" />
-
-  
-  
-
-  
-  
-
-  
-
-  
+  <title>System Sleep States &mdash; The Linux Kernel  documentation</title><link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/theme_overrides.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/theme_rtd_colors.css" type="text/css" />
   <!--[if lt IE 9]>
     <script src="../../_static/js/html5shiv.min.js"></script>
   <![endif]-->
-  
-    
-      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+  <script id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
         <script src="../../_static/jquery.js"></script>
         <script src="../../_static/underscore.js"></script>
         <script src="../../_static/doctools.js"></script>
         <script src="../../_static/language_data.js"></script>
-    
-    <script type="text/javascript" src="../../_static/js/theme.js"></script>
-
-    
+    <script src="../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" /> 
 </head>
 
-<body class="wy-body-for-nav">
-
-   
+<body class="wy-body-for-nav"> 
   <div class="wy-grid-for-nav">
-    
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-          
-
-          
             <a href="../../index.html" class="icon icon-home"> The Linux Kernel
-          
-
-          
           </a>
-
-          
-            
-            
               <div class="version">
-                5.16.0-rc7-mm1-damon
+                5.19.0-rc1-mm-unstable-damon
               </div>
-            
-          
-
-          
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
     <input type="text" name="q" placeholder="Search docs" />
@@ -77,18 +38,7 @@
     <input type="hidden" name="area" value="default" />
   </form>
 </div>
-
-          
-        </div>
-
-        
-        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
-          
-            
-            
-              
-            
-            
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <ul>
 <li class="toctree-l1"><a class="reference internal" href="../mm/damon/index.html">Monitoring Data Accesses</a></li>
 </ul>
@@ -96,72 +46,31 @@
 <li class="toctree-l1"><a class="reference internal" href="../../vm/damon/index.html">DAMON: Data Access MONitor</a></li>
 </ul>
 
-            
-          
         </div>
-        
       </div>
     </nav>
 
-    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
-
-      
-      <nav class="wy-nav-top" aria-label="top navigation">
-        
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
           <a href="../../index.html">The Linux Kernel</a>
-        
       </nav>
 
-
       <div class="wy-nav-content">
-        
         <div class="rst-content">
-        
-          
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<div role="navigation" aria-label="breadcrumbs navigation">
-
+          <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-    
       <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
-        
       <li>System Sleep States</li>
-    
-    
       <li class="wy-breadcrumbs-aside">
-        
-          
             <a href="../../_sources/admin-guide/pm/sleep-states.rst.txt" rel="nofollow"> View page source</a>
-          
-        
       </li>
-    
   </ul>
-
-  
   <hr/>
 </div>
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
-            
-  <div class="section" id="system-sleep-states">
+             
+  <section id="system-sleep-states">
 <h1>System Sleep States<a class="headerlink" href="#system-sleep-states" title="Permalink to this headline">¶</a></h1>
 <dl class="field-list simple">
 <dt class="field-odd">Copyright</dt>
@@ -174,13 +83,13 @@
 <p>Sleep states are global low-power states of the entire system in which user
 space code cannot be executed and the overall system activity is significantly
 reduced.</p>
-<div class="section" id="sleep-states-that-can-be-supported">
+<section id="sleep-states-that-can-be-supported">
 <h2>Sleep States That Can Be Supported<a class="headerlink" href="#sleep-states-that-can-be-supported" title="Permalink to this headline">¶</a></h2>
 <p>Depending on its configuration and the capabilities of the platform it runs on,
 the Linux kernel can support up to four system sleep states, including
 hibernation and up to three variants of system suspend.  The sleep states that
 can be supported by the kernel are listed below.</p>
-<div class="section" id="suspend-to-idle">
+<section id="suspend-to-idle">
 <span id="s2idle"></span><h3>Suspend-to-Idle<a class="headerlink" href="#suspend-to-idle" title="Permalink to this headline">¶</a></h3>
 <p>This is a generic, pure software, light-weight variant of system suspend (also
 referred to as S2I or S2Idle).  It allows more energy to be saved relative to
@@ -195,8 +104,8 @@ also be set up as wakeup devices for S2Idle.</p>
 or <a class="reference internal" href="#s2ram"><span class="std std-ref">suspend-to-RAM</span></a>, or it can be used in addition to any of the
 deeper system suspend variants to provide reduced resume latency.  It is always
 supported if the <code class="xref c c-macro docutils literal notranslate"><span class="pre">CONFIG_SUSPEND</span></code> kernel configuration option is set.</p>
-</div>
-<div class="section" id="standby">
+</section>
+<section id="standby">
 <span id="id1"></span><h3>Standby<a class="headerlink" href="#standby" title="Permalink to this headline">¶</a></h3>
 <p>This state, if supported, offers moderate, but real, energy savings, while
 providing a relatively straightforward transition back to the working state.  No
@@ -214,8 +123,8 @@ rely on the platform for setting up the wakeup functionality as appropriate.</p>
 option is set and the support for it is registered by the platform with the
 core system suspend subsystem.  On ACPI-based systems this state is mapped to
 the S1 system state defined by ACPI.</p>
-</div>
-<div class="section" id="suspend-to-ram">
+</section>
+<section id="suspend-to-ram">
 <span id="s2ram"></span><h3>Suspend-to-RAM<a class="headerlink" href="#suspend-to-ram" title="Permalink to this headline">¶</a></h3>
 <p>This state (also referred to as STR or S2RAM), if supported, offers significant
 energy savings as everything in the system is put into a low-power state, except
@@ -241,8 +150,8 @@ as appropriate.</p>
 is set and the support for it is registered by the platform with the core system
 suspend subsystem.  On ACPI-based systems it is mapped to the S3 system state
 defined by ACPI.</p>
-</div>
-<div class="section" id="hibernation">
+</section>
+<section id="hibernation">
 <span id="id2"></span><h3>Hibernation<a class="headerlink" href="#hibernation" title="Permalink to this headline">¶</a></h3>
 <p>This state (also referred to as Suspend-to-Disk or STD) offers the greatest
 energy savings and can be used even in the absence of low-level platform support
@@ -278,9 +187,9 @@ space to run again.</p>
 <p>Hibernation is supported if the <code class="xref c c-macro docutils literal notranslate"><span class="pre">CONFIG_HIBERNATION</span></code> kernel
 configuration option is set.  However, this option can only be set if support
 for the given CPU architecture includes the low-level code for system resume.</p>
-</div>
-</div>
-<div class="section" id="basic-sysfs-interfaces-for-system-suspend-and-hibernation">
+</section>
+</section>
+<section id="basic-sysfs-interfaces-for-system-suspend-and-hibernation">
 <h2>Basic <code class="docutils literal notranslate"><span class="pre">sysfs</span></code> Interfaces for System Suspend and Hibernation<a class="headerlink" href="#basic-sysfs-interfaces-for-system-suspend-and-hibernation" title="Permalink to this headline">¶</a></h2>
 <p>The power management subsystem provides userspace with a unified <code class="docutils literal notranslate"><span class="pre">sysfs</span></code>
 interface for system sleep regardless of the underlying system architecture or
@@ -394,51 +303,35 @@ by the value of the <code class="docutils literal notranslate"><span class="pre"
 On some systems with ACPI, depending on the information in the ACPI tables, the
 default may be “s2idle” even if <a class="reference internal" href="#s2ram"><span class="std std-ref">suspend-to-RAM</span></a> is supported in
 principle.</p>
-</div>
-</div>
+</section>
+</section>
 
 
            </div>
-           
           </div>
           <footer>
 
   <hr/>
 
   <div role="contentinfo">
-    <p>
-        &#169; Copyright The kernel development community.
-
-    </p>
+    <p>&#169; Copyright The kernel development community.</p>
   </div>
-    
-    
-    
-    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
-    
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
     <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
-    
-    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
 
 </footer>
         </div>
       </div>
-
     </section>
-
   </div>
-  
-
-  <script type="text/javascript">
+  <script>
       jQuery(function () {
           SphinxRtdTheme.Navigation.enable(true);
       });
-  </script>
-
-  
-  
-    
-   
+  </script> 
 
 </body>
 </html>

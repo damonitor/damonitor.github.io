@@ -1,75 +1,36 @@
-
-
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8" />
-  
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  
-  <title>A block layer cache (bcache) &mdash; The Linux Kernel  documentation</title>
-  
-
-  
-  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
-  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="../_static/theme_overrides.css" type="text/css" />
-  <link rel="stylesheet" href="../_static/theme_rtd_colors.css" type="text/css" />
-
-  
-  
-
-  
-  
-
-  
-
-  
+  <title>A block layer cache (bcache) &mdash; The Linux Kernel  documentation</title><link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/theme_overrides.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/theme_rtd_colors.css" type="text/css" />
   <!--[if lt IE 9]>
     <script src="../_static/js/html5shiv.min.js"></script>
   <![endif]-->
-  
-    
-      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+  <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
         <script src="../_static/jquery.js"></script>
         <script src="../_static/underscore.js"></script>
         <script src="../_static/doctools.js"></script>
         <script src="../_static/language_data.js"></script>
-    
-    <script type="text/javascript" src="../_static/js/theme.js"></script>
-
-    
+    <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" /> 
 </head>
 
-<body class="wy-body-for-nav">
-
-   
+<body class="wy-body-for-nav"> 
   <div class="wy-grid-for-nav">
-    
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-          
-
-          
             <a href="../index.html" class="icon icon-home"> The Linux Kernel
-          
-
-          
           </a>
-
-          
-            
-            
               <div class="version">
-                5.16.0-rc7-mm1-damon
+                5.19.0-rc1-mm-unstable-damon
               </div>
-            
-          
-
-          
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
     <input type="text" name="q" placeholder="Search docs" />
@@ -77,18 +38,7 @@
     <input type="hidden" name="area" value="default" />
   </form>
 </div>
-
-          
-        </div>
-
-        
-        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
-          
-            
-            
-              
-            
-            
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <ul>
 <li class="toctree-l1"><a class="reference internal" href="mm/damon/index.html">Monitoring Data Accesses</a></li>
 </ul>
@@ -96,72 +46,31 @@
 <li class="toctree-l1"><a class="reference internal" href="../vm/damon/index.html">DAMON: Data Access MONitor</a></li>
 </ul>
 
-            
-          
         </div>
-        
       </div>
     </nav>
 
-    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
-
-      
-      <nav class="wy-nav-top" aria-label="top navigation">
-        
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
           <a href="../index.html">The Linux Kernel</a>
-        
       </nav>
 
-
       <div class="wy-nav-content">
-        
         <div class="rst-content">
-        
-          
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<div role="navigation" aria-label="breadcrumbs navigation">
-
+          <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-    
       <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
-        
       <li>A block layer cache (bcache)</li>
-    
-    
       <li class="wy-breadcrumbs-aside">
-        
-          
             <a href="../_sources/admin-guide/bcache.rst.txt" rel="nofollow"> View page source</a>
-          
-        
       </li>
-    
   </ul>
-
-  
   <hr/>
 </div>
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
-            
-  <div class="section" id="a-block-layer-cache-bcache">
+             
+  <section id="a-block-layer-cache-bcache">
 <h1>A block layer cache (bcache)<a class="headerlink" href="#a-block-layer-cache-bcache" title="Permalink to this headline">¶</a></h1>
 <p>Say you’ve got a big slow raid 6, and an ssd or three. Wouldn’t it be
 nice if you could use them as cache… Hence bcache.</p>
@@ -245,7 +154,7 @@ You can also control them through /sys/fs//bcache/&lt;cset-uuid&gt;/ .</p>
 <p>Cache devices are managed as sets; multiple caches per set isn’t supported yet
 but will allow for mirroring of metadata and dirty data in the future. Your new
 cache set shows up as /sys/fs/bcache/&lt;UUID&gt;</p>
-<div class="section" id="attaching">
+<section id="attaching">
 <h2>Attaching<a class="headerlink" href="#attaching" title="Permalink to this headline">¶</a></h2>
 <p>After your cache device and backing device are registered, the backing device
 must be attached to your cache set to enable caching. Attaching a backing
@@ -270,8 +179,8 @@ partition, the bcache directory would be at /sys/block/sdb/sdb2/bcache)</p>
 but all the cached data will be invalidated. If there was dirty data in the
 cache, don’t expect the filesystem to be recoverable - you will have massive
 filesystem corruption, though ext4’s fsck does work miracles.</p>
-</div>
-<div class="section" id="error-handling">
+</section>
+<section id="error-handling">
 <h2>Error Handling<a class="headerlink" href="#error-handling" title="Permalink to this headline">¶</a></h2>
 <p>Bcache tries to transparently handle IO errors to/from the cache device without
 affecting normal operation; if it sees too many errors (the threshold is
@@ -292,8 +201,8 @@ writeback mode). It currently doesn’t do anything intelligent if it fails to
 read some of the dirty data, though.</p></li>
 </ul>
 </div></blockquote>
-</div>
-<div class="section" id="howto-cookbook">
+</section>
+<section id="howto-cookbook">
 <h2>Howto/cookbook<a class="headerlink" href="#howto-cookbook" title="Permalink to this headline">¶</a></h2>
 <ol class="upperalpha simple">
 <li><p>Starting a bcache with a missing caching device</p></li>
@@ -454,8 +363,8 @@ and stop the cache:</p>
 other purposes.</p>
 </li>
 </ol>
-</div>
-<div class="section" id="troubleshooting-performance">
+</section>
+<section id="troubleshooting-performance">
 <h2>Troubleshooting performance<a class="headerlink" href="#troubleshooting-performance" title="Permalink to this headline">¶</a></h2>
 <p>Bcache has a bunch of config options and tunables. The defaults are intended to
 be reasonable for typical desktop and server workloads, but they’re not what you
@@ -534,8 +443,8 @@ a fix for the issue there).</p>
 </li>
 </ul>
 </div></blockquote>
-</div>
-<div class="section" id="sysfs-backing-device">
+</section>
+<section id="sysfs-backing-device">
 <h2>Sysfs - backing device<a class="headerlink" href="#sysfs-backing-device" title="Permalink to this headline">¶</a></h2>
 <p>Available at /sys/block/&lt;bdev&gt;/bcache, /sys/block/bcache*/bcache and
 (if attached) /sys/fs/bcache/&lt;cset-uuid&gt;/bdev*</p>
@@ -600,7 +509,7 @@ still be added to the cache until it is mostly full; only meant for
 benchmarking. Defaults to on.</p>
 </dd>
 </dl>
-<div class="section" id="sysfs-backing-device-stats">
+<section id="sysfs-backing-device-stats">
 <h3>Sysfs - backing device stats<a class="headerlink" href="#sysfs-backing-device-stats" title="Permalink to this headline">¶</a></h3>
 <p>There are directories with these numbers for a running total, as well as
 versions that decay over the past day, hour and 5 minutes; they’re also
@@ -621,8 +530,8 @@ since the synchronization for cache misses was rewritten)</p>
 <dt>cache_readaheads</dt><dd><p>Count of times readahead occurred.</p>
 </dd>
 </dl>
-</div>
-<div class="section" id="sysfs-cache-set">
+</section>
+<section id="sysfs-cache-set">
 <h3>Sysfs - cache set<a class="headerlink" href="#sysfs-cache-set" title="Permalink to this headline">¶</a></h3>
 <p>Available at /sys/fs/bcache/&lt;cset-uuid&gt;</p>
 <dl class="simple">
@@ -669,8 +578,8 @@ backing devices have been shut down.</p>
 present it will disable writeback caching and wait for it to be flushed.</p>
 </dd>
 </dl>
-</div>
-<div class="section" id="sysfs-cache-set-internal">
+</section>
+<section id="sysfs-cache-set-internal">
 <h3>Sysfs - cache set internal<a class="headerlink" href="#sysfs-cache-set-internal" title="Permalink to this headline">¶</a></h3>
 <p>This directory also exposes timings for a number of internal operations, with
 separate files for average duration, average frequency, last occurrence and max
@@ -693,8 +602,8 @@ completed. When this occurs the data is reread from the backing device.</p>
 <dt>trigger_gc</dt><dd><p>Writing to this file forces garbage collection to run.</p>
 </dd>
 </dl>
-</div>
-<div class="section" id="sysfs-cache-device">
+</section>
+<section id="sysfs-cache-device">
 <h3>Sysfs - Cache device<a class="headerlink" href="#sysfs-cache-device" title="Permalink to this headline">¶</a></h3>
 <p>Available at /sys/block/&lt;cdev&gt;/bcache</p>
 <dl class="simple">
@@ -734,52 +643,36 @@ Next is a list of quantiles with the priority threshold of each.</p>
 btree_written gives the amount of write inflation in bcache.</p>
 </dd>
 </dl>
-</div>
-</div>
-</div>
+</section>
+</section>
+</section>
 
 
            </div>
-           
           </div>
           <footer>
 
   <hr/>
 
   <div role="contentinfo">
-    <p>
-        &#169; Copyright The kernel development community.
-
-    </p>
+    <p>&#169; Copyright The kernel development community.</p>
   </div>
-    
-    
-    
-    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
-    
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
     <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
-    
-    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
 
 </footer>
         </div>
       </div>
-
     </section>
-
   </div>
-  
-
-  <script type="text/javascript">
+  <script>
       jQuery(function () {
           SphinxRtdTheme.Navigation.enable(true);
       });
-  </script>
-
-  
-  
-    
-   
+  </script> 
 
 </body>
 </html>

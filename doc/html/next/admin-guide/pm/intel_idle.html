@@ -1,75 +1,36 @@
-
-
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8" />
-  
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  
-  <title>intel_idle CPU Idle Time Management Driver &mdash; The Linux Kernel  documentation</title>
-  
-
-  
-  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
-  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="../../_static/theme_overrides.css" type="text/css" />
-  <link rel="stylesheet" href="../../_static/theme_rtd_colors.css" type="text/css" />
-
-  
-  
-
-  
-  
-
-  
-
-  
+  <title>intel_idle CPU Idle Time Management Driver &mdash; The Linux Kernel  documentation</title><link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/theme_overrides.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/theme_rtd_colors.css" type="text/css" />
   <!--[if lt IE 9]>
     <script src="../../_static/js/html5shiv.min.js"></script>
   <![endif]-->
-  
-    
-      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+  <script id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
         <script src="../../_static/jquery.js"></script>
         <script src="../../_static/underscore.js"></script>
         <script src="../../_static/doctools.js"></script>
         <script src="../../_static/language_data.js"></script>
-    
-    <script type="text/javascript" src="../../_static/js/theme.js"></script>
-
-    
+    <script src="../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" /> 
 </head>
 
-<body class="wy-body-for-nav">
-
-   
+<body class="wy-body-for-nav"> 
   <div class="wy-grid-for-nav">
-    
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-          
-
-          
             <a href="../../index.html" class="icon icon-home"> The Linux Kernel
-          
-
-          
           </a>
-
-          
-            
-            
               <div class="version">
-                5.16.0-rc7-mm1-damon
+                5.19.0-rc1-mm-unstable-damon
               </div>
-            
-          
-
-          
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
     <input type="text" name="q" placeholder="Search docs" />
@@ -77,18 +38,7 @@
     <input type="hidden" name="area" value="default" />
   </form>
 </div>
-
-          
-        </div>
-
-        
-        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
-          
-            
-            
-              
-            
-            
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <ul>
 <li class="toctree-l1"><a class="reference internal" href="../mm/damon/index.html">Monitoring Data Accesses</a></li>
 </ul>
@@ -96,72 +46,31 @@
 <li class="toctree-l1"><a class="reference internal" href="../../vm/damon/index.html">DAMON: Data Access MONitor</a></li>
 </ul>
 
-            
-          
         </div>
-        
       </div>
     </nav>
 
-    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
-
-      
-      <nav class="wy-nav-top" aria-label="top navigation">
-        
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
           <a href="../../index.html">The Linux Kernel</a>
-        
       </nav>
 
-
       <div class="wy-nav-content">
-        
         <div class="rst-content">
-        
-          
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<div role="navigation" aria-label="breadcrumbs navigation">
-
+          <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-    
       <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
-        
       <li><code class="docutils literal notranslate"><span class="pre">intel_idle</span></code> CPU Idle Time Management Driver</li>
-    
-    
       <li class="wy-breadcrumbs-aside">
-        
-          
             <a href="../../_sources/admin-guide/pm/intel_idle.rst.txt" rel="nofollow"> View page source</a>
-          
-        
       </li>
-    
   </ul>
-
-  
   <hr/>
 </div>
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
-            
-  <div class="section" id="intel-idle-cpu-idle-time-management-driver">
+             
+  <section id="intel-idle-cpu-idle-time-management-driver">
 <h1><code class="docutils literal notranslate"><span class="pre">intel_idle</span></code> CPU Idle Time Management Driver<a class="headerlink" href="#intel-idle-cpu-idle-time-management-driver" title="Permalink to this headline">¶</a></h1>
 <dl class="field-list simple">
 <dt class="field-odd">Copyright</dt>
@@ -171,7 +80,7 @@
 <dd class="field-even"><p>Rafael J. Wysocki &lt;<a class="reference external" href="mailto:rafael&#46;j&#46;wysocki&#37;&#52;&#48;intel&#46;com">rafael<span>&#46;</span>j<span>&#46;</span>wysocki<span>&#64;</span>intel<span>&#46;</span>com</a>&gt;</p>
 </dd>
 </dl>
-<div class="section" id="general-information">
+<section id="general-information">
 <h2>General Information<a class="headerlink" href="#general-information" title="Permalink to this headline">¶</a></h2>
 <p><code class="docutils literal notranslate"><span class="pre">intel_idle</span></code> is a part of the
 <a class="reference internal" href="cpuidle.html"><span class="doc">CPU idle time management subsystem</span></a> in the Linux kernel
@@ -195,8 +104,8 @@ instruction at all.</p>
 <p><code class="docutils literal notranslate"><span class="pre">intel_idle</span></code> is not modular, so it cannot be unloaded, which means that the
 only way to pass early-configuration-time parameters to it is via the kernel
 command line.</p>
-</div>
-<div class="section" id="enumeration-of-idle-states">
+</section>
+<section id="enumeration-of-idle-states">
 <span id="intel-idle-enumeration-of-states"></span><h2>Enumeration of Idle States<a class="headerlink" href="#enumeration-of-idle-states" title="Permalink to this headline">¶</a></h2>
 <p>Each <code class="docutils literal notranslate"><span class="pre">MWAIT</span></code> hint value is interpreted by the processor as a license to
 reconfigure itself in a certain way in order to save energy.  The processor
@@ -270,8 +179,8 @@ state types (C2 and C3) the target residency value is 3 times the exit latency
 (again, that is because it reflects the target residency to exit latency ratio
 in the majority of cases for the processor models recognized by <code class="docutils literal notranslate"><span class="pre">intel_idle</span></code>).
 All of the idle states in the final list are enabled by default in this case.</p>
-</div>
-<div class="section" id="initialization">
+</section>
+<section id="initialization">
 <span id="intel-idle-initialization"></span><h2>Initialization<a class="headerlink" href="#initialization" title="Permalink to this headline">¶</a></h2>
 <p>The initialization of <code class="docutils literal notranslate"><span class="pre">intel_idle</span></code> starts with checking if the kernel command
 line options forbid the use of the <code class="docutils literal notranslate"><span class="pre">MWAIT</span></code> instruction.  If that is the case,
@@ -298,8 +207,8 @@ the callback routine).  That routine registers a <code class="docutils literal n
 running it (which enables the <code class="docutils literal notranslate"><span class="pre">CPUIdle</span></code> subsystem to operate that CPU) and
 optionally performs some CPU-specific initialization actions that may be
 required for the given processor model.</p>
-</div>
-<div class="section" id="kernel-command-line-options-and-module-parameters">
+</section>
+<section id="kernel-command-line-options-and-module-parameters">
 <span id="intel-idle-parameters"></span><h2>Kernel Command Line Options and Module Parameters<a class="headerlink" href="#kernel-command-line-options-and-module-parameters" title="Permalink to this headline">¶</a></h2>
 <p>The <em>x86</em> architecture support code recognizes three kernel command line
 options related to CPU idle time management: <code class="docutils literal notranslate"><span class="pre">idle=poll</span></code>, <code class="docutils literal notranslate"><span class="pre">idle=halt</span></code>,
@@ -345,8 +254,8 @@ disabled by default and so on (bit positions beyond the maximum idle state index
 are ignored).</p>
 <p>The idle states disabled this way can be enabled (on a per-CPU basis) from user
 space via <code class="docutils literal notranslate"><span class="pre">sysfs</span></code>.</p>
-</div>
-<div class="section" id="core-and-package-levels-of-idle-states">
+</section>
+<section id="core-and-package-levels-of-idle-states">
 <span id="intel-idle-core-and-package-idle-states"></span><h2>Core and Package Levels of Idle States<a class="headerlink" href="#core-and-package-levels-of-idle-states" title="Permalink to this headline">¶</a></h2>
 <p>Typically, in a processor supporting the <code class="docutils literal notranslate"><span class="pre">MWAIT</span></code> instruction there are (at
 least) two levels of idle states (or C-states).  One level, referred to as
@@ -384,8 +293,8 @@ C-states.]  If using package C-states is not desirable at all, either
 <code class="docutils literal notranslate"><span class="pre">intel_idle</span></code> described <a class="reference internal" href="#intel-idle-parameters">above</a> must be used to
 restrict the range of permissible idle states to the ones with core-level only
 <code class="docutils literal notranslate"><span class="pre">MWAIT</span></code> hint values (like <code class="docutils literal notranslate"><span class="pre">C1</span></code>).</p>
-</div>
-<div class="section" id="references">
+</section>
+<section id="references">
 <h2>References<a class="headerlink" href="#references" title="Permalink to this headline">¶</a></h2>
 <dl class="footnote brackets">
 <dt class="label" id="id3"><span class="brackets"><a class="fn-backref" href="#id1">1</a></span></dt>
@@ -397,51 +306,35 @@ restrict the range of permissible idle states to the ones with core-level only
 <a class="reference external" href="https://uefi.org/specifications">https://uefi.org/specifications</a></p>
 </dd>
 </dl>
-</div>
-</div>
+</section>
+</section>
 
 
            </div>
-           
           </div>
           <footer>
 
   <hr/>
 
   <div role="contentinfo">
-    <p>
-        &#169; Copyright The kernel development community.
-
-    </p>
+    <p>&#169; Copyright The kernel development community.</p>
   </div>
-    
-    
-    
-    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
-    
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
     <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
-    
-    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
 
 </footer>
         </div>
       </div>
-
     </section>
-
   </div>
-  
-
-  <script type="text/javascript">
+  <script>
       jQuery(function () {
           SphinxRtdTheme.Navigation.enable(true);
       });
-  </script>
-
-  
-  
-    
-   
+  </script> 
 
 </body>
 </html>

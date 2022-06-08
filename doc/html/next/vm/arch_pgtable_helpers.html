@@ -1,75 +1,36 @@
-
-
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8" />
-  
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  
-  <title>Architecture Page Table Helpers &mdash; The Linux Kernel  documentation</title>
-  
-
-  
-  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
-  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="../_static/theme_overrides.css" type="text/css" />
-  <link rel="stylesheet" href="../_static/theme_rtd_colors.css" type="text/css" />
-
-  
-  
-
-  
-  
-
-  
-
-  
+  <title>Architecture Page Table Helpers &mdash; The Linux Kernel  documentation</title><link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/theme_overrides.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/theme_rtd_colors.css" type="text/css" />
   <!--[if lt IE 9]>
     <script src="../_static/js/html5shiv.min.js"></script>
   <![endif]-->
-  
-    
-      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+  <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
         <script src="../_static/jquery.js"></script>
         <script src="../_static/underscore.js"></script>
         <script src="../_static/doctools.js"></script>
         <script src="../_static/language_data.js"></script>
-    
-    <script type="text/javascript" src="../_static/js/theme.js"></script>
-
-    
+    <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" /> 
 </head>
 
-<body class="wy-body-for-nav">
-
-   
+<body class="wy-body-for-nav"> 
   <div class="wy-grid-for-nav">
-    
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-          
-
-          
             <a href="../index.html" class="icon icon-home"> The Linux Kernel
-          
-
-          
           </a>
-
-          
-            
-            
               <div class="version">
-                5.16.0-rc7-mm1-damon
+                5.19.0-rc1-mm-unstable-damon
               </div>
-            
-          
-
-          
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
     <input type="text" name="q" placeholder="Search docs" />
@@ -77,18 +38,7 @@
     <input type="hidden" name="area" value="default" />
   </form>
 </div>
-
-          
-        </div>
-
-        
-        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
-          
-            
-            
-              
-            
-            
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <ul>
 <li class="toctree-l1"><a class="reference internal" href="../admin-guide/mm/damon/index.html">Monitoring Data Accesses</a></li>
 </ul>
@@ -96,72 +46,31 @@
 <li class="toctree-l1"><a class="reference internal" href="damon/index.html">DAMON: Data Access MONitor</a></li>
 </ul>
 
-            
-          
         </div>
-        
       </div>
     </nav>
 
-    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
-
-      
-      <nav class="wy-nav-top" aria-label="top navigation">
-        
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
           <a href="../index.html">The Linux Kernel</a>
-        
       </nav>
 
-
       <div class="wy-nav-content">
-        
         <div class="rst-content">
-        
-          
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<div role="navigation" aria-label="breadcrumbs navigation">
-
+          <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-    
       <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
-        
       <li>Architecture Page Table Helpers</li>
-    
-    
       <li class="wy-breadcrumbs-aside">
-        
-          
             <a href="../_sources/vm/arch_pgtable_helpers.rst.txt" rel="nofollow"> View page source</a>
-          
-        
       </li>
-    
   </ul>
-
-  
   <hr/>
 </div>
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
-            
-  <div class="section" id="architecture-page-table-helpers">
+             
+  <section id="architecture-page-table-helpers">
 <span id="arch-page-table-helpers"></span><h1>Architecture Page Table Helpers<a class="headerlink" href="#architecture-page-table-helpers" title="Permalink to this headline">¶</a></h1>
 <p>Generic MM expects architectures (with MMU) to provide helpers to create, access
 and modify page table entries at various level for different memory functions.
@@ -169,9 +78,8 @@ These page table helpers need to conform to a common semantics across platforms.
 Following tables describe the expected semantics which can also be tested during
 boot via CONFIG_DEBUG_VM_PGTABLE option. All future changes in here or the debug
 test need to be in sync.</p>
-</div>
-<div class="section" id="pte-page-table-helpers">
-<h1>PTE Page Table Helpers<a class="headerlink" href="#pte-page-table-helpers" title="Permalink to this headline">¶</a></h1>
+<section id="pte-page-table-helpers">
+<h2>PTE Page Table Helpers<a class="headerlink" href="#pte-page-table-helpers" title="Permalink to this headline">¶</a></h2>
 <table class="docutils align-default">
 <colgroup>
 <col style="width: 35%" />
@@ -270,9 +178,9 @@ test need to be in sync.</p>
 </tr>
 </tbody>
 </table>
-</div>
-<div class="section" id="pmd-page-table-helpers">
-<h1>PMD Page Table Helpers<a class="headerlink" href="#pmd-page-table-helpers" title="Permalink to this headline">¶</a></h1>
+</section>
+<section id="pmd-page-table-helpers">
+<h2>PMD Page Table Helpers<a class="headerlink" href="#pmd-page-table-helpers" title="Permalink to this headline">¶</a></h2>
 <table class="docutils align-default">
 <colgroup>
 <col style="width: 35%" />
@@ -383,9 +291,9 @@ test need to be in sync.</p>
 </tr>
 </tbody>
 </table>
-</div>
-<div class="section" id="pud-page-table-helpers">
-<h1>PUD Page Table Helpers<a class="headerlink" href="#pud-page-table-helpers" title="Permalink to this headline">¶</a></h1>
+</section>
+<section id="pud-page-table-helpers">
+<h2>PUD Page Table Helpers<a class="headerlink" href="#pud-page-table-helpers" title="Permalink to this headline">¶</a></h2>
 <table class="docutils align-default">
 <colgroup>
 <col style="width: 35%" />
@@ -469,9 +377,9 @@ test need to be in sync.</p>
 </tr>
 </tbody>
 </table>
-</div>
-<div class="section" id="hugetlb-page-table-helpers">
-<h1>HugeTLB Page Table Helpers<a class="headerlink" href="#hugetlb-page-table-helpers" title="Permalink to this headline">¶</a></h1>
+</section>
+<section id="hugetlb-page-table-helpers">
+<h2>HugeTLB Page Table Helpers<a class="headerlink" href="#hugetlb-page-table-helpers" title="Permalink to this headline">¶</a></h2>
 <table class="docutils align-default">
 <colgroup>
 <col style="width: 35%" />
@@ -509,86 +417,71 @@ test need to be in sync.</p>
 </tr>
 </tbody>
 </table>
-</div>
-<div class="section" id="swap-page-table-helpers">
-<h1>SWAP Page Table Helpers<a class="headerlink" href="#swap-page-table-helpers" title="Permalink to this headline">¶</a></h1>
+</section>
+<section id="swap-page-table-helpers">
+<h2>SWAP Page Table Helpers<a class="headerlink" href="#swap-page-table-helpers" title="Permalink to this headline">¶</a></h2>
 <table class="docutils align-default">
 <colgroup>
-<col style="width: 35%" />
-<col style="width: 65%" />
+<col style="width: 36%" />
+<col style="width: 4%" />
+<col style="width: 61%" />
 </colgroup>
 <tbody>
 <tr class="row-odd"><td><p>__pte_to_swp_entry</p></td>
-<td><p>Creates a swapped entry (arch) from a mapped PTE</p></td>
+<td colspan="2"><p>Creates a swapped entry (arch) from a mapped PTE</p></td>
 </tr>
 <tr class="row-even"><td><p>__swp_to_pte_entry</p></td>
-<td><p>Creates a mapped PTE from a swapped entry (arch)</p></td>
+<td colspan="2"><p>Creates a mapped PTE from a swapped entry (arch)</p></td>
 </tr>
 <tr class="row-odd"><td><p>__pmd_to_swp_entry</p></td>
-<td><p>Creates a swapped entry (arch) from a mapped PMD</p></td>
+<td colspan="2"><p>Creates a swapped entry (arch) from a mapped PMD</p></td>
 </tr>
 <tr class="row-even"><td><p>__swp_to_pmd_entry</p></td>
-<td><p>Creates a mapped PMD from a swapped entry (arch)</p></td>
+<td colspan="2"><p>Creates a mapped PMD from a swapped entry (arch)</p></td>
 </tr>
-<tr class="row-odd"><td><p>is_migration_entry</p></td>
-<td><p>Tests a migration (read or write) swapped entry</p></td>
+<tr class="row-odd"><td colspan="3"><p>is_migration_entry        | Tests a migration (read or write) swapped entry</p></td>
 </tr>
-<tr class="row-even"><td><p>is_write_migration_entry</p></td>
+<tr class="row-even"><td colspan="2"><p>is_writable_migration_entry</p></td>
 <td><p>Tests a write migration swapped entry</p></td>
 </tr>
-<tr class="row-odd"><td><p>make_migration_entry_read</p></td>
-<td><p>Converts into read migration swapped entry</p></td>
+<tr class="row-odd"><td colspan="2"><p>make_readable_migration_entry</p></td>
+<td><p>Creates a read migration swapped entry</p></td>
 </tr>
-<tr class="row-even"><td><p>make_migration_entry</p></td>
-<td><p>Creates a migration swapped entry (read or write)</p></td>
+<tr class="row-even"><td colspan="2"><p>make_writable_migration_entry</p></td>
+<td><p>Creates a write migration swapped entry</p></td>
 </tr>
 </tbody>
 </table>
 <p>[1] <a class="reference external" href="https://lore.kernel.org/linux-mm/20181017020930.GN30832&#64;redhat.com/">https://lore.kernel.org/linux-mm/20181017020930.GN30832&#64;redhat.com/</a></p>
-</div>
+</section>
+</section>
 
 
            </div>
-           
           </div>
           <footer>
 
   <hr/>
 
   <div role="contentinfo">
-    <p>
-        &#169; Copyright The kernel development community.
-
-    </p>
+    <p>&#169; Copyright The kernel development community.</p>
   </div>
-    
-    
-    
-    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
-    
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
     <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
-    
-    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
 
 </footer>
         </div>
       </div>
-
     </section>
-
   </div>
-  
-
-  <script type="text/javascript">
+  <script>
       jQuery(function () {
           SphinxRtdTheme.Navigation.enable(true);
       });
-  </script>
-
-  
-  
-    
-   
+  </script> 
 
 </body>
 </html>

@@ -1,75 +1,36 @@
-
-
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8" />
-  
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  
-  <title>Control Groups &mdash; The Linux Kernel  documentation</title>
-  
-
-  
-  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
-  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="../../_static/theme_overrides.css" type="text/css" />
-  <link rel="stylesheet" href="../../_static/theme_rtd_colors.css" type="text/css" />
-
-  
-  
-
-  
-  
-
-  
-
-  
+  <title>Control Groups &mdash; The Linux Kernel  documentation</title><link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/theme_overrides.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/theme_rtd_colors.css" type="text/css" />
   <!--[if lt IE 9]>
     <script src="../../_static/js/html5shiv.min.js"></script>
   <![endif]-->
-  
-    
-      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+  <script id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
         <script src="../../_static/jquery.js"></script>
         <script src="../../_static/underscore.js"></script>
         <script src="../../_static/doctools.js"></script>
         <script src="../../_static/language_data.js"></script>
-    
-    <script type="text/javascript" src="../../_static/js/theme.js"></script>
-
-    
+    <script src="../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" /> 
 </head>
 
-<body class="wy-body-for-nav">
-
-   
+<body class="wy-body-for-nav"> 
   <div class="wy-grid-for-nav">
-    
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-          
-
-          
             <a href="../../index.html" class="icon icon-home"> The Linux Kernel
-          
-
-          
           </a>
-
-          
-            
-            
               <div class="version">
-                5.16.0-rc7-mm1-damon
+                5.19.0-rc1-mm-unstable-damon
               </div>
-            
-          
-
-          
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
     <input type="text" name="q" placeholder="Search docs" />
@@ -77,18 +38,7 @@
     <input type="hidden" name="area" value="default" />
   </form>
 </div>
-
-          
-        </div>
-
-        
-        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
-          
-            
-            
-              
-            
-            
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <ul>
 <li class="toctree-l1"><a class="reference internal" href="../mm/damon/index.html">Monitoring Data Accesses</a></li>
 </ul>
@@ -96,72 +46,31 @@
 <li class="toctree-l1"><a class="reference internal" href="../../vm/damon/index.html">DAMON: Data Access MONitor</a></li>
 </ul>
 
-            
-          
         </div>
-        
       </div>
     </nav>
 
-    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
-
-      
-      <nav class="wy-nav-top" aria-label="top navigation">
-        
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
           <a href="../../index.html">The Linux Kernel</a>
-        
       </nav>
 
-
       <div class="wy-nav-content">
-        
         <div class="rst-content">
-        
-          
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<div role="navigation" aria-label="breadcrumbs navigation">
-
+          <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-    
       <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
-        
       <li>Control Groups</li>
-    
-    
       <li class="wy-breadcrumbs-aside">
-        
-          
             <a href="../../_sources/admin-guide/cgroup-v1/cgroups.rst.txt" rel="nofollow"> View page source</a>
-          
-        
       </li>
-    
   </ul>
-
-  
   <hr/>
 </div>
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
-            
-  <div class="section" id="control-groups">
+             
+  <section id="control-groups">
 <h1>Control Groups<a class="headerlink" href="#control-groups" title="Permalink to this headline">¶</a></h1>
 <p>Written by Paul Menage &lt;<a class="reference external" href="mailto:menage&#37;&#52;&#48;google&#46;com">menage<span>&#64;</span>google<span>&#46;</span>com</a>&gt; based on
 <a class="reference internal" href="cpusets.html"><span class="doc">CPUSETS</span></a></p>
@@ -170,9 +79,9 @@
 <p>Portions Copyright (c) 2004-2006 Silicon Graphics, Inc.</p>
 <p>Modified by Paul Jackson &lt;<a class="reference external" href="mailto:pj&#37;&#52;&#48;sgi&#46;com">pj<span>&#64;</span>sgi<span>&#46;</span>com</a>&gt;</p>
 <p>Modified by Christoph Lameter &lt;<a class="reference external" href="mailto:cl&#37;&#52;&#48;linux&#46;com">cl<span>&#64;</span>linux<span>&#46;</span>com</a>&gt;</p>
-<div class="section" id="id1">
+<section id="id1">
 <h2>1. Control Groups<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h2>
-<div class="section" id="what-are-cgroups">
+<section id="what-are-cgroups">
 <h3>1.1 What are cgroups ?<a class="headerlink" href="#what-are-cgroups" title="Permalink to this headline">¶</a></h3>
 <p>Control Groups provide a mechanism for aggregating/partitioning sets of
 tasks, and all their future children, into hierarchical groups with
@@ -205,8 +114,8 @@ accounting/limiting the resources which processes in a cgroup can
 access. For example, cpusets (see <a class="reference internal" href="cpusets.html"><span class="doc">CPUSETS</span></a>) allow
 you to associate a set of CPUs and a set of memory nodes with the
 tasks in each cgroup.</p>
-</div>
-<div class="section" id="why-are-cgroups-needed">
+</section>
+<section id="why-are-cgroups-needed">
 <h3>1.2 Why are cgroups needed ?<a class="headerlink" href="#why-are-cgroups-needed" title="Permalink to this headline">¶</a></h3>
 <p>There are multiple efforts to provide process aggregations in the
 Linux kernel, mainly for resource-tracking purposes. Such efforts
@@ -281,8 +190,8 @@ matter of:</p>
 <p>Without this ability, the administrator would have to split the cgroup into
 multiple separate ones and then associate the new cgroups with the
 new resource classes.</p>
-</div>
-<div class="section" id="how-are-cgroups-implemented">
+</section>
+<section id="how-are-cgroups-implemented">
 <h3>1.3 How are cgroups implemented ?<a class="headerlink" href="#how-are-cgroups-implemented" title="Permalink to this headline">¶</a></h3>
 <p>Control Groups extends the kernel as follows:</p>
 <blockquote>
@@ -385,8 +294,8 @@ each css_set’s task set.</p>
 <p>The use of a Linux virtual file system (vfs) to represent the
 cgroup hierarchy provides for a familiar permission and name space
 for cgroups, with a minimum of additional kernel code.</p>
-</div>
-<div class="section" id="what-does-notify-on-release-do">
+</section>
+<section id="what-does-notify-on-release-do">
 <h3>1.4 What does notify_on_release do ?<a class="headerlink" href="#what-does-notify-on-release-do" title="Permalink to this headline">¶</a></h3>
 <p>If the notify_on_release flag is enabled (1) in a cgroup, then
 whenever the last task in the cgroup leaves (exits or attaches to
@@ -400,14 +309,14 @@ notify_on_release in the root cgroup at system boot is disabled
 (0).  The default value of other cgroups at creation is the current
 value of their parents’ notify_on_release settings. The default value of
 a cgroup hierarchy’s release_agent path is empty.</p>
-</div>
-<div class="section" id="what-does-clone-children-do">
+</section>
+<section id="what-does-clone-children-do">
 <h3>1.5 What does clone_children do ?<a class="headerlink" href="#what-does-clone-children-do" title="Permalink to this headline">¶</a></h3>
 <p>This flag only affects the cpuset controller. If the clone_children
 flag is enabled (1) in a cgroup, a new cpuset cgroup will copy its
 configuration from the parent during initialization.</p>
-</div>
-<div class="section" id="how-do-i-use-cgroups">
+</section>
+<section id="how-do-i-use-cgroups">
 <h3>1.6 How do I use cgroups ?<a class="headerlink" href="#how-do-i-use-cgroups" title="Permalink to this headline">¶</a></h3>
 <p>To start a new job that is to be contained within a cgroup, using
 the “cpuset” cgroup subsystem, the steps are something like:</p>
@@ -440,11 +349,11 @@ sh
 cat /proc/self/cgroup
 </pre></div>
 </div>
-</div>
-</div>
-<div class="section" id="usage-examples-and-syntax">
+</section>
+</section>
+<section id="usage-examples-and-syntax">
 <h2>2. Usage Examples and Syntax<a class="headerlink" href="#usage-examples-and-syntax" title="Permalink to this headline">¶</a></h2>
-<div class="section" id="basic-usage">
+<section id="basic-usage">
 <h3>2.1 Basic Usage<a class="headerlink" href="#basic-usage" title="Permalink to this headline">¶</a></h3>
 <p>Creating, modifying, using cgroups can be done through the cgroup
 virtual filesystem.</p>
@@ -526,8 +435,8 @@ directory:</p>
 <p>This will fail if the cgroup is in use (has cgroups inside, or
 has processes attached, or is held alive by other subsystem-specific
 reference).</p>
-</div>
-<div class="section" id="attaching-processes">
+</section>
+<section id="attaching-processes">
 <h3>2.2 Attaching processes<a class="headerlink" href="#attaching-processes" title="Permalink to this headline">¶</a></h3>
 <div class="highlight-none notranslate"><div class="highlight"><pre><span></span># /bin/echo PID &gt; tasks
 </pre></div>
@@ -555,8 +464,8 @@ move it into a new cgroup (possibly the root cgroup) by writing to the
 new cgroup’s tasks file.</p>
 <p>Note: Due to some restrictions enforced by some cgroup subsystems, moving
 a process to another cgroup can fail.</p>
-</div>
-<div class="section" id="mounting-hierarchies-by-name">
+</section>
+<section id="mounting-hierarchies-by-name">
 <h3>2.3 Mounting hierarchies by name<a class="headerlink" href="#mounting-hierarchies-by-name" title="Permalink to this headline">¶</a></h3>
 <p>Passing the name=&lt;x&gt; option when mounting a cgroups hierarchy
 associates the given name with the hierarchy.  This can be used when
@@ -570,11 +479,11 @@ subsystems when none are explicitly specified is not supported when
 you give a subsystem a name.</p>
 <p>The name of the subsystem appears as part of the hierarchy description
 in /proc/mounts and /proc/&lt;pid&gt;/cgroups.</p>
-</div>
-</div>
-<div class="section" id="kernel-api">
+</section>
+</section>
+<section id="kernel-api">
 <h2>3. Kernel API<a class="headerlink" href="#kernel-api" title="Permalink to this headline">¶</a></h2>
-<div class="section" id="overview">
+<section id="overview">
 <h3>3.1 Overview<a class="headerlink" href="#overview" title="Permalink to this headline">¶</a></h3>
 <p>Each kernel subsystem that wants to hook into the generic cgroup
 system needs to create a cgroup_subsys object. This contains
@@ -592,8 +501,8 @@ at system boot.</p></li>
 <p>Each cgroup object created by the system has an array of pointers,
 indexed by subsystem ID; this pointer is entirely managed by the
 subsystem; the generic cgroup code will never touch this pointer.</p>
-</div>
-<div class="section" id="synchronization">
+</section>
+<section id="synchronization">
 <h3>3.2 Synchronization<a class="headerlink" href="#synchronization" title="Permalink to this headline">¶</a></h3>
 <p>There is a global mutex, cgroup_mutex, used by the cgroup
 system. This should be taken by anything that wants to modify a
@@ -607,8 +516,8 @@ cgroup_lock()/cgroup_unlock().</p>
 - while holding cgroup_mutex
 - while holding the task’s alloc_lock (via task_lock())
 - inside an <a class="reference internal" href="../../core-api/kernel-api.html#c.rcu_read_lock" title="rcu_read_lock"><code class="xref c c-func docutils literal notranslate"><span class="pre">rcu_read_lock()</span></code></a> section via <a class="reference internal" href="../../core-api/kernel-api.html#c.rcu_dereference" title="rcu_dereference"><code class="xref c c-func docutils literal notranslate"><span class="pre">rcu_dereference()</span></code></a></p>
-</div>
-<div class="section" id="subsystem-api">
+</section>
+<section id="subsystem-api">
 <h3>3.3 Subsystem API<a class="headerlink" href="#subsystem-api" title="Permalink to this headline">¶</a></h3>
 <p>Each subsystem should:</p>
 <ul class="simple">
@@ -711,9 +620,9 @@ The parameters are identical to can_attach().</p>
 and root cgroup. Currently this will only involve movement between
 the default hierarchy (which never has sub-cgroups) and a hierarchy
 that is being created/destroyed (and hence has no sub-cgroups).</p>
-</div>
-</div>
-<div class="section" id="extended-attribute-usage">
+</section>
+</section>
+<section id="extended-attribute-usage">
 <h2>4. Extended attribute usage<a class="headerlink" href="#extended-attribute-usage" title="Permalink to this headline">¶</a></h2>
 <p>cgroup filesystem supports certain types of extended attributes in its
 directories and files.  The current supported types are:</p>
@@ -731,8 +640,8 @@ any user can do it and there’s no limit in the value size.</p>
 <p>The current known users for this feature are SELinux to limit cgroup usage
 in containers and systemd for assorted meta data like main PID in a cgroup
 (systemd creates a cgroup per service).</p>
-</div>
-<div class="section" id="questions">
+</section>
+<section id="questions">
 <h2>5. Questions<a class="headerlink" href="#questions" title="Permalink to this headline">¶</a></h2>
 <div class="highlight-none notranslate"><div class="highlight"><pre><span></span>Q: what&#39;s up with this &#39;/bin/echo&#39; ?
 A: bash&#39;s builtin &#39;echo&#39; command does not check calls to write() against
@@ -744,51 +653,35 @@ A: We can only return one error code per call to write(). So you should also
    put only ONE PID.
 </pre></div>
 </div>
-</div>
-</div>
+</section>
+</section>
 
 
            </div>
-           
           </div>
           <footer>
 
   <hr/>
 
   <div role="contentinfo">
-    <p>
-        &#169; Copyright The kernel development community.
-
-    </p>
+    <p>&#169; Copyright The kernel development community.</p>
   </div>
-    
-    
-    
-    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
-    
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
     <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
-    
-    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
 
 </footer>
         </div>
       </div>
-
     </section>
-
   </div>
-  
-
-  <script type="text/javascript">
+  <script>
       jQuery(function () {
           SphinxRtdTheme.Navigation.enable(true);
       });
-  </script>
-
-  
-  
-    
-   
+  </script> 
 
 </body>
 </html>

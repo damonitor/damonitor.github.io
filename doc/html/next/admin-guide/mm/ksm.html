@@ -1,75 +1,36 @@
-
-
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8" />
-  
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  
-  <title>Kernel Samepage Merging &mdash; The Linux Kernel  documentation</title>
-  
-
-  
-  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
-  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="../../_static/theme_overrides.css" type="text/css" />
-  <link rel="stylesheet" href="../../_static/theme_rtd_colors.css" type="text/css" />
-
-  
-  
-
-  
-  
-
-  
-
-  
+  <title>Kernel Samepage Merging &mdash; The Linux Kernel  documentation</title><link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/theme_overrides.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/theme_rtd_colors.css" type="text/css" />
   <!--[if lt IE 9]>
     <script src="../../_static/js/html5shiv.min.js"></script>
   <![endif]-->
-  
-    
-      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+  <script id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
         <script src="../../_static/jquery.js"></script>
         <script src="../../_static/underscore.js"></script>
         <script src="../../_static/doctools.js"></script>
         <script src="../../_static/language_data.js"></script>
-    
-    <script type="text/javascript" src="../../_static/js/theme.js"></script>
-
-    
+    <script src="../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" /> 
 </head>
 
-<body class="wy-body-for-nav">
-
-   
+<body class="wy-body-for-nav"> 
   <div class="wy-grid-for-nav">
-    
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-          
-
-          
             <a href="../../index.html" class="icon icon-home"> The Linux Kernel
-          
-
-          
           </a>
-
-          
-            
-            
               <div class="version">
-                5.16.0-rc7-mm1-damon
+                5.19.0-rc1-mm-unstable-damon
               </div>
-            
-          
-
-          
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
     <input type="text" name="q" placeholder="Search docs" />
@@ -77,18 +38,7 @@
     <input type="hidden" name="area" value="default" />
   </form>
 </div>
-
-          
-        </div>
-
-        
-        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
-          
-            
-            
-              
-            
-            
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <ul>
 <li class="toctree-l1"><a class="reference internal" href="damon/index.html">Monitoring Data Accesses</a></li>
 </ul>
@@ -96,74 +46,33 @@
 <li class="toctree-l1"><a class="reference internal" href="../../vm/damon/index.html">DAMON: Data Access MONitor</a></li>
 </ul>
 
-            
-          
         </div>
-        
       </div>
     </nav>
 
-    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
-
-      
-      <nav class="wy-nav-top" aria-label="top navigation">
-        
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
           <a href="../../index.html">The Linux Kernel</a>
-        
       </nav>
 
-
       <div class="wy-nav-content">
-        
         <div class="rst-content">
-        
-          
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<div role="navigation" aria-label="breadcrumbs navigation">
-
+          <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-    
       <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
-        
       <li>Kernel Samepage Merging</li>
-    
-    
       <li class="wy-breadcrumbs-aside">
-        
-          
             <a href="../../_sources/admin-guide/mm/ksm.rst.txt" rel="nofollow"> View page source</a>
-          
-        
       </li>
-    
   </ul>
-
-  
   <hr/>
 </div>
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
-            
-  <div class="section" id="kernel-samepage-merging">
+             
+  <section id="kernel-samepage-merging">
 <span id="admin-guide-ksm"></span><h1>Kernel Samepage Merging<a class="headerlink" href="#kernel-samepage-merging" title="Permalink to this headline">¶</a></h1>
-<div class="section" id="overview">
+<section id="overview">
 <h2>Overview<a class="headerlink" href="#overview" title="Permalink to this headline">¶</a></h2>
 <p>KSM is a memory-saving de-duplication feature, enabled by CONFIG_KSM=y,
 added to the Linux kernel in 2.6.32.  See <code class="docutils literal notranslate"><span class="pre">mm/ksm.c</span></code> for its implementation,
@@ -183,8 +92,8 @@ intraface</span></a></p>
 KSM’s merged pages were originally locked into kernel memory, but can now
 be swapped out just like other user pages (but sharing is broken when they
 are swapped back in: ksmd must rediscover their identity and merge again).</p>
-</div>
-<div class="section" id="controlling-ksm-with-madvise">
+</section>
+<section id="controlling-ksm-with-madvise">
 <h2>Controlling KSM with madvise<a class="headerlink" href="#controlling-ksm-with-madvise" title="Permalink to this headline">¶</a></h2>
 <p>KSM only operates on those areas of address space which an application
 has advised to be likely candidates for merging, by using the madvise(2)
@@ -217,8 +126,8 @@ and might fail with EAGAIN if not enough memory for internal structures.</p>
 <p>Applications should be considerate in their use of MADV_MERGEABLE,
 restricting its use to areas likely to benefit.  KSM’s scans may use a lot
 of processing power: some installations will disable KSM for that reason.</p>
-</div>
-<div class="section" id="ksm-daemon-sysfs-interface">
+</section>
+<section id="ksm-daemon-sysfs-interface">
 <span id="ksm-sysfs"></span><h2>KSM daemon sysfs interface<a class="headerlink" href="#ksm-daemon-sysfs-interface" title="Permalink to this headline">¶</a></h2>
 <p>The KSM daemon is controlled by sysfs files in <code class="docutils literal notranslate"><span class="pre">/sys/kernel/mm/ksm/</span></code>,
 readable by all but writable only by root:</p>
@@ -318,54 +227,55 @@ indicate poor use of madvise MADV_MERGEABLE.</p>
 <p>The maximum possible <code class="docutils literal notranslate"><span class="pre">pages_sharing/pages_shared</span></code> ratio is limited by the
 <code class="docutils literal notranslate"><span class="pre">max_page_sharing</span></code> tunable. To increase the ratio <code class="docutils literal notranslate"><span class="pre">max_page_sharing</span></code> must
 be increased accordingly.</p>
+</section>
+<section id="monitoring-ksm-events">
+<h2>Monitoring KSM events<a class="headerlink" href="#monitoring-ksm-events" title="Permalink to this headline">¶</a></h2>
+<p>There are some counters in /proc/vmstat that may be used to monitor KSM events.
+KSM might help save memory, it’s a tradeoff by may suffering delay on KSM COW
+or on swapping in copy. Those events could help users evaluate whether or how
+to use KSM. For example, if cow_ksm increases too fast, user may decrease the
+range of madvise(, , MADV_MERGEABLE).</p>
+<dl class="simple">
+<dt>cow_ksm</dt><dd><p>is incremented every time a KSM page triggers copy on write (COW)
+when users try to write to a KSM page, we have to make a copy.</p>
+</dd>
+<dt>ksm_swpin_copy</dt><dd><p>is incremented every time a KSM page is copied when swapping in
+note that KSM page might be copied when swapping in because do_swap_page()
+cannot do all the locking needed to reconstitute a cross-anon_vma KSM page.</p>
+</dd>
+</dl>
 <p>–
 Izik Eidus,
 Hugh Dickins, 17 Nov 2009</p>
-</div>
-</div>
+</section>
+</section>
 
 
            </div>
-           
           </div>
           <footer>
 
   <hr/>
 
   <div role="contentinfo">
-    <p>
-        &#169; Copyright The kernel development community.
-
-    </p>
+    <p>&#169; Copyright The kernel development community.</p>
   </div>
-    
-    
-    
-    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
-    
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
     <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
-    
-    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
 
 </footer>
         </div>
       </div>
-
     </section>
-
   </div>
-  
-
-  <script type="text/javascript">
+  <script>
       jQuery(function () {
           SphinxRtdTheme.Navigation.enable(true);
       });
-  </script>
-
-  
-  
-    
-   
+  </script> 
 
 </body>
 </html>

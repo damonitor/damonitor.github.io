@@ -1,75 +1,36 @@
-
-
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8" />
-  
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  
-  <title>Heterogeneous Memory Management (HMM) &mdash; The Linux Kernel  documentation</title>
-  
-
-  
-  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
-  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="../_static/theme_overrides.css" type="text/css" />
-  <link rel="stylesheet" href="../_static/theme_rtd_colors.css" type="text/css" />
-
-  
-  
-
-  
-  
-
-  
-
-  
+  <title>Heterogeneous Memory Management (HMM) &mdash; The Linux Kernel  documentation</title><link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/theme_overrides.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/theme_rtd_colors.css" type="text/css" />
   <!--[if lt IE 9]>
     <script src="../_static/js/html5shiv.min.js"></script>
   <![endif]-->
-  
-    
-      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+  <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
         <script src="../_static/jquery.js"></script>
         <script src="../_static/underscore.js"></script>
         <script src="../_static/doctools.js"></script>
         <script src="../_static/language_data.js"></script>
-    
-    <script type="text/javascript" src="../_static/js/theme.js"></script>
-
-    
+    <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" /> 
 </head>
 
-<body class="wy-body-for-nav">
-
-   
+<body class="wy-body-for-nav"> 
   <div class="wy-grid-for-nav">
-    
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-          
-
-          
             <a href="../index.html" class="icon icon-home"> The Linux Kernel
-          
-
-          
           </a>
-
-          
-            
-            
               <div class="version">
-                5.16.0-rc7-mm1-damon
+                5.19.0-rc1-mm-unstable-damon
               </div>
-            
-          
-
-          
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
     <input type="text" name="q" placeholder="Search docs" />
@@ -77,18 +38,7 @@
     <input type="hidden" name="area" value="default" />
   </form>
 </div>
-
-          
-        </div>
-
-        
-        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
-          
-            
-            
-              
-            
-            
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <ul>
 <li class="toctree-l1"><a class="reference internal" href="../admin-guide/mm/damon/index.html">Monitoring Data Accesses</a></li>
 </ul>
@@ -96,72 +46,31 @@
 <li class="toctree-l1"><a class="reference internal" href="damon/index.html">DAMON: Data Access MONitor</a></li>
 </ul>
 
-            
-          
         </div>
-        
       </div>
     </nav>
 
-    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
-
-      
-      <nav class="wy-nav-top" aria-label="top navigation">
-        
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
           <a href="../index.html">The Linux Kernel</a>
-        
       </nav>
 
-
       <div class="wy-nav-content">
-        
         <div class="rst-content">
-        
-          
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<div role="navigation" aria-label="breadcrumbs navigation">
-
+          <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-    
       <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
-        
       <li>Heterogeneous Memory Management (HMM)</li>
-    
-    
       <li class="wy-breadcrumbs-aside">
-        
-          
             <a href="../_sources/vm/hmm.rst.txt" rel="nofollow"> View page source</a>
-          
-        
       </li>
-    
   </ul>
-
-  
   <hr/>
 </div>
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
-            
-  <div class="section" id="heterogeneous-memory-management-hmm">
+             
+  <section id="heterogeneous-memory-management-hmm">
 <span id="hmm"></span><h1>Heterogeneous Memory Management (HMM)<a class="headerlink" href="#heterogeneous-memory-management-hmm" title="Permalink to this headline">¶</a></h1>
 <p>Provide infrastructure and helpers to integrate non-conventional memory (device
 memory like GPU on board memory) into regular kernel path, with the cornerstone
@@ -194,7 +103,7 @@ leveraging the device DMA engine.</p>
 <li><p><a class="reference internal" href="#memory-cgroup-memcg-and-rss-accounting" id="id9">Memory cgroup (memcg) and rss accounting</a></p></li>
 </ul>
 </div>
-<div class="section" id="problems-of-using-a-device-specific-memory-allocator">
+<section id="problems-of-using-a-device-specific-memory-allocator">
 <h2><a class="toc-backref" href="#id1">Problems of using a device specific memory allocator</a><a class="headerlink" href="#problems-of-using-a-device-specific-memory-allocator" title="Permalink to this headline">¶</a></h2>
 <p>Devices with a large amount of on board memory (several gigabytes) like GPUs
 have historically managed their memory through dedicated driver specific APIs.
@@ -230,8 +139,8 @@ other languages too) it is now possible for the compiler to leverage GPUs and
 other devices without programmer knowledge. Some compiler identified patterns
 are only do-able with a shared address space. It is also more reasonable to use
 a shared address space for all other patterns.</p>
-</div>
-<div class="section" id="i-o-bus-device-memory-characteristics">
+</section>
+<section id="i-o-bus-device-memory-characteristics">
 <h2><a class="toc-backref" href="#id2">I/O bus, device memory characteristics</a><a class="headerlink" href="#i-o-bus-device-memory-characteristics" title="Permalink to this headline">¶</a></h2>
 <p>I/O buses cripple shared address spaces due to a few limitations. Most I/O
 buses only allow basic memory access from device to main memory; even cache
@@ -255,8 +164,8 @@ some major architectures are left without hardware solutions to these problems.<
 <p>So for shared address space to make sense, not only must we allow devices to
 access any memory but we must also permit any memory to be migrated to device
 memory while the device is using it (blocking CPU access while it happens).</p>
-</div>
-<div class="section" id="shared-address-space-and-migration">
+</section>
+<section id="shared-address-space-and-migration">
 <h2><a class="toc-backref" href="#id3">Shared address space and migration</a><a class="headerlink" href="#shared-address-space-and-migration" title="Permalink to this headline">¶</a></h2>
 <p>HMM intends to provide two main features. The first one is to share the address
 space by duplicating the CPU page table in the device page table so the same
@@ -287,8 +196,8 @@ address A triggers a page fault and initiates a migration back to main memory.</
 space and keeps both CPU and device page tables synchronized, but also
 leverages device memory by migrating the part of the data set that is actively being
 used by the device.</p>
-</div>
-<div class="section" id="address-space-mirroring-implementation-and-api">
+</section>
+<section id="address-space-mirroring-implementation-and-api">
 <h2><a class="toc-backref" href="#id4">Address space mirroring implementation and API</a><a class="headerlink" href="#address-space-mirroring-implementation-and-api" title="Permalink to this headline">¶</a></h2>
 <p>Address space mirroring’s main objective is to allow duplication of a range of
 CPU page table into a device page table; HMM helps keep both synchronized. A
@@ -361,8 +270,8 @@ again:
 invalidate() callback. That lock must be held before calling
 mmu_interval_read_retry() to avoid any race with a concurrent CPU page table
 update.</p>
-</div>
-<div class="section" id="leverage-default-flags-and-pfn-flags-mask">
+</section>
+<section id="leverage-default-flags-and-pfn-flags-mask">
 <h2><a class="toc-backref" href="#id5">Leverage default_flags and pfn_flags_mask</a><a class="headerlink" href="#leverage-default-flags-and-pfn-flags-mask" title="Permalink to this headline">¶</a></h2>
 <p>The hmm_range struct has 2 fields, default_flags and pfn_flags_mask, that specify
 fault or snapshot policy for the whole range instead of having to set them
@@ -389,8 +298,8 @@ will call handle_mm_fault().</p>
 <p>After hmm_range_fault completes the flag bits are set to the current state of
 the page tables, ie HMM_PFN_VALID | HMM_PFN_WRITE will be set if the page is
 writable.</p>
-</div>
-<div class="section" id="represent-and-manage-device-memory-from-core-kernel-point-of-view">
+</section>
+<section id="represent-and-manage-device-memory-from-core-kernel-point-of-view">
 <h2><a class="toc-backref" href="#id6">Represent and manage device memory from core kernel point of view</a><a class="headerlink" href="#represent-and-manage-device-memory-from-core-kernel-point-of-view" title="Permalink to this headline">¶</a></h2>
 <p>Several different designs were tried to support device memory. The first one
 used a device specific data structure to keep information about migrated memory
@@ -403,8 +312,8 @@ but only care about struct page contents. Because of this, HMM switched to
 directly using struct page for device memory which left most kernel code paths
 unaware of the difference. We only need to make sure that no one ever tries to
 map those pages from the CPU side.</p>
-</div>
-<div class="section" id="migration-to-and-from-device-memory">
+</section>
+<section id="migration-to-and-from-device-memory">
 <h2><a class="toc-backref" href="#id7">Migration to and from device memory</a><a class="headerlink" href="#migration-to-and-from-device-memory" title="Permalink to this headline">¶</a></h2>
 <p>Because the CPU cannot access device memory directly, the device driver must
 use hardware DMA or device specific load/store instructions to migrate data.
@@ -525,8 +434,8 @@ destination <code class="docutils literal notranslate"><span class="pre">struct<
 <p>The lock can now be released.</p>
 </li>
 </ol>
-</div>
-<div class="section" id="exclusive-access-memory">
+</section>
+<section id="exclusive-access-memory">
 <h2><a class="toc-backref" href="#id8">Exclusive access memory</a><a class="headerlink" href="#exclusive-access-memory" title="Permalink to this headline">¶</a></h2>
 <p>Some devices have features such as atomic PTE bits that can be used to implement
 atomic access to system memory. To support atomic operations to a shared virtual
@@ -540,8 +449,8 @@ notified that the mapping has been changed by MMU notifiers, after which point
 it will no longer have exclusive access to the page. Exclusive access is
 guranteed to last until the driver drops the page lock and page reference, at
 which point any CPU faults on the page may proceed as described.</p>
-</div>
-<div class="section" id="memory-cgroup-memcg-and-rss-accounting">
+</section>
+<section id="memory-cgroup-memcg-and-rss-accounting">
 <h2><a class="toc-backref" href="#id9">Memory cgroup (memcg) and rss accounting</a><a class="headerlink" href="#memory-cgroup-memcg-and-rss-accounting" title="Permalink to this headline">¶</a></h2>
 <p>For now, device memory is accounted as any regular page in rss counters (either
 anonymous if device page is used for anonymous, file if device page is used for
@@ -563,51 +472,35 @@ resource control.</p>
 <p>Note that device memory can never be pinned by a device driver nor through GUP
 and thus such memory is always free upon process exit. Or when last reference
 is dropped in case of shared memory or file backed memory.</p>
-</div>
-</div>
+</section>
+</section>
 
 
            </div>
-           
           </div>
           <footer>
 
   <hr/>
 
   <div role="contentinfo">
-    <p>
-        &#169; Copyright The kernel development community.
-
-    </p>
+    <p>&#169; Copyright The kernel development community.</p>
   </div>
-    
-    
-    
-    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
-    
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
     <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
-    
-    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
 
 </footer>
         </div>
       </div>
-
     </section>
-
   </div>
-  
-
-  <script type="text/javascript">
+  <script>
       jQuery(function () {
           SphinxRtdTheme.Navigation.enable(true);
       });
-  </script>
-
-  
-  
-    
-   
+  </script> 
 
 </body>
 </html>

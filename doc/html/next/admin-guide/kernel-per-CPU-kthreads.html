@@ -1,75 +1,36 @@
-
-
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8" />
-  
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  
-  <title>Reducing OS jitter due to per-cpu kthreads &mdash; The Linux Kernel  documentation</title>
-  
-
-  
-  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
-  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="../_static/theme_overrides.css" type="text/css" />
-  <link rel="stylesheet" href="../_static/theme_rtd_colors.css" type="text/css" />
-
-  
-  
-
-  
-  
-
-  
-
-  
+  <title>Reducing OS jitter due to per-cpu kthreads &mdash; The Linux Kernel  documentation</title><link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/theme_overrides.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/theme_rtd_colors.css" type="text/css" />
   <!--[if lt IE 9]>
     <script src="../_static/js/html5shiv.min.js"></script>
   <![endif]-->
-  
-    
-      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+  <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
         <script src="../_static/jquery.js"></script>
         <script src="../_static/underscore.js"></script>
         <script src="../_static/doctools.js"></script>
         <script src="../_static/language_data.js"></script>
-    
-    <script type="text/javascript" src="../_static/js/theme.js"></script>
-
-    
+    <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" /> 
 </head>
 
-<body class="wy-body-for-nav">
-
-   
+<body class="wy-body-for-nav"> 
   <div class="wy-grid-for-nav">
-    
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-          
-
-          
             <a href="../index.html" class="icon icon-home"> The Linux Kernel
-          
-
-          
           </a>
-
-          
-            
-            
               <div class="version">
-                5.16.0-rc7-mm1-damon
+                5.19.0-rc1-mm-unstable-damon
               </div>
-            
-          
-
-          
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
     <input type="text" name="q" placeholder="Search docs" />
@@ -77,18 +38,7 @@
     <input type="hidden" name="area" value="default" />
   </form>
 </div>
-
-          
-        </div>
-
-        
-        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
-          
-            
-            
-              
-            
-            
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <ul>
 <li class="toctree-l1"><a class="reference internal" href="mm/damon/index.html">Monitoring Data Accesses</a></li>
 </ul>
@@ -96,78 +46,37 @@
 <li class="toctree-l1"><a class="reference internal" href="../vm/damon/index.html">DAMON: Data Access MONitor</a></li>
 </ul>
 
-            
-          
         </div>
-        
       </div>
     </nav>
 
-    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
-
-      
-      <nav class="wy-nav-top" aria-label="top navigation">
-        
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
           <a href="../index.html">The Linux Kernel</a>
-        
       </nav>
 
-
       <div class="wy-nav-content">
-        
         <div class="rst-content">
-        
-          
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<div role="navigation" aria-label="breadcrumbs navigation">
-
+          <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-    
       <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
-        
       <li>Reducing OS jitter due to per-cpu kthreads</li>
-    
-    
       <li class="wy-breadcrumbs-aside">
-        
-          
             <a href="../_sources/admin-guide/kernel-per-CPU-kthreads.rst.txt" rel="nofollow"> View page source</a>
-          
-        
       </li>
-    
   </ul>
-
-  
   <hr/>
 </div>
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
-            
-  <div class="section" id="reducing-os-jitter-due-to-per-cpu-kthreads">
+             
+  <section id="reducing-os-jitter-due-to-per-cpu-kthreads">
 <h1>Reducing OS jitter due to per-cpu kthreads<a class="headerlink" href="#reducing-os-jitter-due-to-per-cpu-kthreads" title="Permalink to this headline">¶</a></h1>
 <p>This document lists per-CPU kthreads in the Linux kernel and presents
 options to control their OS jitter.  Note that non-per-CPU kthreads are
 not listed here.  To reduce OS jitter from non-per-CPU kthreads, bind
 them to a “housekeeping” CPU dedicated to such work.</p>
-<div class="section" id="references">
+<section id="references">
 <h2>References<a class="headerlink" href="#references" title="Permalink to this headline">¶</a></h2>
 <ul>
 <li><p><a class="reference internal" href="../core-api/irq/irq-affinity.html"><span class="doc">SMP IRQ affinity</span></a>:  Binding interrupts to sets of CPUs.</p></li>
@@ -188,8 +97,8 @@ cat per_cpu/cpuN/trace</p>
 </div></blockquote>
 </li>
 </ul>
-</div>
-<div class="section" id="kthreads">
+</section>
+<section id="kthreads">
 <h2>kthreads<a class="headerlink" href="#kthreads" title="Permalink to this headline">¶</a></h2>
 <dl class="simple">
 <dt>Name:</dt><dd><p>ehca_comp/%u</p>
@@ -242,7 +151,7 @@ Bluetooth activity on some other CPU.</p></li>
 </dl>
 <p>To reduce its OS jitter, each softirq vector must be handled
 separately as follows:</p>
-<div class="section" id="timer-softirq">
+<section id="timer-softirq">
 <h3>TIMER_SOFTIRQ<a class="headerlink" href="#timer-softirq" title="Permalink to this headline">¶</a></h3>
 <p>Do all of the following:</p>
 <ol class="arabic simple">
@@ -257,8 +166,8 @@ first one back online.  Once you have onlined the CPUs in question,
 do not offline any other CPUs, because doing so could force the
 timer back onto one of the CPUs in question.</p></li>
 </ol>
-</div>
-<div class="section" id="net-tx-softirq-and-net-rx-softirq">
+</section>
+<section id="net-tx-softirq-and-net-rx-softirq">
 <h3>NET_TX_SOFTIRQ and NET_RX_SOFTIRQ<a class="headerlink" href="#net-tx-softirq-and-net-rx-softirq" title="Permalink to this headline">¶</a></h3>
 <p>Do all of the following:</p>
 <ol class="arabic simple">
@@ -269,8 +178,8 @@ from being initiated from tasks that might run on the CPU to
 be de-jittered.  (It is OK to force this CPU offline and then
 bring it back online before you start your application.)</p></li>
 </ol>
-</div>
-<div class="section" id="block-softirq">
+</section>
+<section id="block-softirq">
 <h3>BLOCK_SOFTIRQ<a class="headerlink" href="#block-softirq" title="Permalink to this headline">¶</a></h3>
 <p>Do all of the following:</p>
 <ol class="arabic simple">
@@ -281,8 +190,8 @@ from being initiated from tasks that might run on the CPU to
 be de-jittered.  (It is OK to force this CPU offline and then
 bring it back online before you start your application.)</p></li>
 </ol>
-</div>
-<div class="section" id="irq-poll-softirq">
+</section>
+<section id="irq-poll-softirq">
 <h3>IRQ_POLL_SOFTIRQ<a class="headerlink" href="#irq-poll-softirq" title="Permalink to this headline">¶</a></h3>
 <p>Do all of the following:</p>
 <ol class="arabic simple">
@@ -293,8 +202,8 @@ from being initiated from tasks that might run on the CPU to
 be de-jittered.  (It is OK to force this CPU offline and then
 bring it back online before you start your application.)</p></li>
 </ol>
-</div>
-<div class="section" id="tasklet-softirq">
+</section>
+<section id="tasklet-softirq">
 <h3>TASKLET_SOFTIRQ<a class="headerlink" href="#tasklet-softirq" title="Permalink to this headline">¶</a></h3>
 <p>Do one or more of the following:</p>
 <ol class="arabic simple">
@@ -304,8 +213,8 @@ calls to things like tasklet_schedule().)</p></li>
 <li><p>Force interrupts for drivers using tasklets onto other CPUs,
 and also do I/O involving these drivers on other CPUs.</p></li>
 </ol>
-</div>
-<div class="section" id="sched-softirq">
+</section>
+<section id="sched-softirq">
 <h3>SCHED_SOFTIRQ<a class="headerlink" href="#sched-softirq" title="Permalink to this headline">¶</a></h3>
 <p>Do all of the following:</p>
 <ol class="arabic simple">
@@ -326,8 +235,8 @@ forcing both kernel threads and interrupts to execute elsewhere.
 This further reduces the number of scheduler-clock interrupts
 received by the de-jittered CPU.</p></li>
 </ol>
-</div>
-<div class="section" id="hrtimer-softirq">
+</section>
+<section id="hrtimer-softirq">
 <h3>HRTIMER_SOFTIRQ<a class="headerlink" href="#hrtimer-softirq" title="Permalink to this headline">¶</a></h3>
 <p>Do all of the following:</p>
 <ol class="arabic simple">
@@ -342,8 +251,8 @@ back online.  Once you have onlined the CPUs in question, do not
 offline any other CPUs, because doing so could force the timer
 back onto one of the CPUs in question.</p></li>
 </ol>
-</div>
-<div class="section" id="rcu-softirq">
+</section>
+<section id="rcu-softirq">
 <h3>RCU_SOFTIRQ<a class="headerlink" href="#rcu-softirq" title="Permalink to this headline">¶</a></h3>
 <p>Do at least one of the following:</p>
 <ol class="arabic simple">
@@ -492,52 +401,36 @@ kthreads from being created in the first place.  However, please
 note that this will not eliminate OS jitter, but will instead
 shift it to RCU_SOFTIRQ.</p></li>
 </ol>
-</div>
-</div>
-</div>
+</section>
+</section>
+</section>
 
 
            </div>
-           
           </div>
           <footer>
 
   <hr/>
 
   <div role="contentinfo">
-    <p>
-        &#169; Copyright The kernel development community.
-
-    </p>
+    <p>&#169; Copyright The kernel development community.</p>
   </div>
-    
-    
-    
-    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
-    
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
     <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
-    
-    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
 
 </footer>
         </div>
       </div>
-
     </section>
-
   </div>
-  
-
-  <script type="text/javascript">
+  <script>
       jQuery(function () {
           SphinxRtdTheme.Navigation.enable(true);
       });
-  </script>
-
-  
-  
-    
-   
+  </script> 
 
 </body>
 </html>

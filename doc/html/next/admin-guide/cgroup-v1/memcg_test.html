@@ -1,75 +1,36 @@
-
-
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8" />
-  
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  
-  <title>Memory Resource Controller(Memcg) Implementation Memo &mdash; The Linux Kernel  documentation</title>
-  
-
-  
-  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
-  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="../../_static/theme_overrides.css" type="text/css" />
-  <link rel="stylesheet" href="../../_static/theme_rtd_colors.css" type="text/css" />
-
-  
-  
-
-  
-  
-
-  
-
-  
+  <title>Memory Resource Controller(Memcg) Implementation Memo &mdash; The Linux Kernel  documentation</title><link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/theme_overrides.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/theme_rtd_colors.css" type="text/css" />
   <!--[if lt IE 9]>
     <script src="../../_static/js/html5shiv.min.js"></script>
   <![endif]-->
-  
-    
-      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+  <script id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
         <script src="../../_static/jquery.js"></script>
         <script src="../../_static/underscore.js"></script>
         <script src="../../_static/doctools.js"></script>
         <script src="../../_static/language_data.js"></script>
-    
-    <script type="text/javascript" src="../../_static/js/theme.js"></script>
-
-    
+    <script src="../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" /> 
 </head>
 
-<body class="wy-body-for-nav">
-
-   
+<body class="wy-body-for-nav"> 
   <div class="wy-grid-for-nav">
-    
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-          
-
-          
             <a href="../../index.html" class="icon icon-home"> The Linux Kernel
-          
-
-          
           </a>
-
-          
-            
-            
               <div class="version">
-                5.16.0-rc7-mm1-damon
+                5.19.0-rc1-mm-unstable-damon
               </div>
-            
-          
-
-          
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
     <input type="text" name="q" placeholder="Search docs" />
@@ -77,18 +38,7 @@
     <input type="hidden" name="area" value="default" />
   </form>
 </div>
-
-          
-        </div>
-
-        
-        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
-          
-            
-            
-              
-            
-            
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <ul>
 <li class="toctree-l1"><a class="reference internal" href="../mm/damon/index.html">Monitoring Data Accesses</a></li>
 </ul>
@@ -96,72 +46,31 @@
 <li class="toctree-l1"><a class="reference internal" href="../../vm/damon/index.html">DAMON: Data Access MONitor</a></li>
 </ul>
 
-            
-          
         </div>
-        
       </div>
     </nav>
 
-    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
-
-      
-      <nav class="wy-nav-top" aria-label="top navigation">
-        
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
           <a href="../../index.html">The Linux Kernel</a>
-        
       </nav>
 
-
       <div class="wy-nav-content">
-        
         <div class="rst-content">
-        
-          
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<div role="navigation" aria-label="breadcrumbs navigation">
-
+          <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-    
       <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
-        
       <li>Memory Resource Controller(Memcg) Implementation Memo</li>
-    
-    
       <li class="wy-breadcrumbs-aside">
-        
-          
             <a href="../../_sources/admin-guide/cgroup-v1/memcg_test.rst.txt" rel="nofollow"> View page source</a>
-          
-        
       </li>
-    
   </ul>
-
-  
   <hr/>
 </div>
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
-            
-  <div class="section" id="memory-resource-controller-memcg-implementation-memo">
+             
+  <section id="memory-resource-controller-memcg-implementation-memo">
 <h1>Memory Resource Controller(Memcg) Implementation Memo<a class="headerlink" href="#memory-resource-controller-memcg-implementation-memo" title="Permalink to this headline">¶</a></h1>
 <p>Last Updated: 2010/2</p>
 <p>Base Kernel Version: based on 2.6.33-rc7-mm(candidate for 34).</p>
@@ -169,7 +78,7 @@
 is complex. This is a document for memcg’s internal behavior.
 Please note that implementation details can be changed.</p>
 <p>(*) Topics on API should be in <a class="reference internal" href="memory.html"><span class="doc">Memory Resource Controller</span></a>)</p>
-<div class="section" id="how-to-record-usage">
+<section id="how-to-record-usage">
 <h2>0. How to record usage ?<a class="headerlink" href="#how-to-record-usage" title="Permalink to this headline">¶</a></h2>
 <blockquote>
 <div><p>2 objects are used.</p>
@@ -184,8 +93,8 @@ Please note that implementation details can be changed.</p>
 <p>The page_cgroup has USED bit and double count against a page_cgroup never
 occurs. swap_cgroup is used only when a charged page is swapped-out.</p>
 </div></blockquote>
-</div>
-<div class="section" id="charge">
+</section>
+<section id="charge">
 <h2>1. Charge<a class="headerlink" href="#charge" title="Permalink to this headline">¶</a></h2>
 <blockquote>
 <div><p>a page/swp_entry may be charged (usage += PAGE_SIZE) at</p>
@@ -193,8 +102,8 @@ occurs. swap_cgroup is used only when a charged page is swapped-out.</p>
 <div><p>mem_cgroup_try_charge()</p>
 </div></blockquote>
 </div></blockquote>
-</div>
-<div class="section" id="uncharge">
+</section>
+<section id="uncharge">
 <h2>2. Uncharge<a class="headerlink" href="#uncharge" title="Permalink to this headline">¶</a></h2>
 <blockquote>
 <div><p>a page/swp_entry may be uncharged (usage -= PAGE_SIZE) by</p>
@@ -208,8 +117,8 @@ disappears.</p>
 </dl>
 </div></blockquote>
 </div></blockquote>
-</div>
-<div class="section" id="charge-commit-cancel">
+</section>
+<section id="charge-commit-cancel">
 <h2>3. charge-commit-cancel<a class="headerlink" href="#charge-commit-cancel" title="Permalink to this headline">¶</a></h2>
 <blockquote>
 <div><p>Memcg pages are charged in two steps:</p>
@@ -225,8 +134,8 @@ at this point, usage += PAGE_SIZE.</p>
 <p>At cancel(), simply usage -= PAGE_SIZE.</p>
 </div></blockquote>
 <p>Under below explanation, we assume CONFIG_MEM_RES_CTRL_SWAP=y.</p>
-</div>
-<div class="section" id="anonymous">
+</section>
+<section id="anonymous">
 <h2>4. Anonymous<a class="headerlink" href="#anonymous" title="Permalink to this headline">¶</a></h2>
 <blockquote>
 <div><dl class="simple">
@@ -257,8 +166,8 @@ swp_entry’s refcnt -= 1.</p></li>
 <p>Finally, at task exit,
 (e) zap_pte() is called and swp_entry’s refcnt -=1 -&gt; 0.</p>
 </div></blockquote>
-</div>
-<div class="section" id="page-cache">
+</section>
+<section id="page-cache">
 <h2>5. Page Cache<a class="headerlink" href="#page-cache" title="Permalink to this headline">¶</a></h2>
 <blockquote>
 <div><p>Page Cache is charged at
@@ -270,8 +179,8 @@ and __remove_mapping().</p>
 </dd>
 </dl>
 </div></blockquote>
-</div>
-<div class="section" id="shmem-tmpfs-page-cache">
+</section>
+<section id="shmem-tmpfs-page-cache">
 <h2>6. Shmem(tmpfs) Page Cache<a class="headerlink" href="#shmem-tmpfs-page-cache" title="Permalink to this headline">¶</a></h2>
 <blockquote>
 <div><p>The best way to understand shmem’s page state transition is to read
@@ -293,27 +202,27 @@ and swap-out,</p></li>
 <li><p>A swp page is read. (move a charge from swap_cgroup to page_cgroup)</p></li>
 </ul>
 </div></blockquote>
-</div>
-<div class="section" id="page-migration">
+</section>
+<section id="page-migration">
 <h2>7. Page Migration<a class="headerlink" href="#page-migration" title="Permalink to this headline">¶</a></h2>
 <blockquote>
 <div><p>mem_cgroup_migrate()</p>
 </div></blockquote>
-</div>
-<div class="section" id="lru">
+</section>
+<section id="lru">
 <h2>8. LRU<a class="headerlink" href="#lru" title="Permalink to this headline">¶</a></h2>
 <blockquote>
 <div><p>Each memcg has its own vector of LRUs (inactive anon, active anon,
 inactive file, active file, unevictable) of pages from each node,
 each LRU handled under a single lru_lock for that memcg and node.</p>
 </div></blockquote>
-</div>
-<div class="section" id="typical-tests">
+</section>
+<section id="typical-tests">
 <h2>9. Typical Tests.<a class="headerlink" href="#typical-tests" title="Permalink to this headline">¶</a></h2>
 <blockquote>
 <div><p>Tests for racy cases.</p>
 </div></blockquote>
-<div class="section" id="small-limit-to-memcg">
+<section id="small-limit-to-memcg">
 <h3>9.1 Small limit to memcg.<a class="headerlink" href="#small-limit-to-memcg" title="Permalink to this headline">¶</a></h3>
 <blockquote>
 <div><p>When you do test to do racy case, it’s good test to set memcg’s limit
@@ -322,16 +231,16 @@ xKB or xxMB limits.</p>
 <p>(Memory behavior under GB and Memory behavior under MB shows very
 different situation.)</p>
 </div></blockquote>
-</div>
-<div class="section" id="shmem">
+</section>
+<section id="shmem">
 <h3>9.2 Shmem<a class="headerlink" href="#shmem" title="Permalink to this headline">¶</a></h3>
 <blockquote>
 <div><p>Historically, memcg’s shmem handling was poor and we saw some amount
 of troubles here. This is because shmem is page-cache but can be
 SwapCache. Test with shmem/tmpfs is always good test.</p>
 </div></blockquote>
-</div>
-<div class="section" id="migration">
+</section>
+<section id="migration">
 <h3>9.3 Migration<a class="headerlink" href="#migration" title="Permalink to this headline">¶</a></h3>
 <blockquote>
 <div><p>For NUMA, migration is an another special case. To do easy test, cpuset
@@ -370,8 +279,8 @@ move_task &quot;${G1_TASK}&quot; ${G2} &amp;
 </pre></div>
 </div>
 </div></blockquote>
-</div>
-<div class="section" id="memory-hotplug">
+</section>
+<section id="memory-hotplug">
 <h3>9.4 Memory hotplug<a class="headerlink" href="#memory-hotplug" title="Permalink to this headline">¶</a></h3>
 <blockquote>
 <div><p>memory hotplug test is one of good test.</p>
@@ -382,8 +291,8 @@ move_task &quot;${G1_TASK}&quot; ${G2} &amp;
 <p>(XXX is the place of memory)</p>
 <p>This is an easy way to test page migration, too.</p>
 </div></blockquote>
-</div>
-<div class="section" id="nested-cgroups">
+</section>
+<section id="nested-cgroups">
 <h3>9.5 nested cgroups<a class="headerlink" href="#nested-cgroups" title="Permalink to this headline">¶</a></h3>
 <blockquote>
 <div><p>Use tests like the following for testing nested cgroups:</p>
@@ -403,8 +312,8 @@ run jobs under child_a and child_b
 </div>
 <p>running new jobs in new group is also good.</p>
 </div></blockquote>
-</div>
-<div class="section" id="mount-with-other-subsystems">
+</section>
+<section id="mount-with-other-subsystems">
 <h3>9.6 Mount with other subsystems<a class="headerlink" href="#mount-with-other-subsystems" title="Permalink to this headline">¶</a></h3>
 <blockquote>
 <div><p>Mounting with other subsystems is a good test because there is a
@@ -415,8 +324,8 @@ race and lock dependency with other cgroup subsystems.</p>
 </div>
 <p>and do task move, mkdir, rmdir etc…under this.</p>
 </div></blockquote>
-</div>
-<div class="section" id="swapoff">
+</section>
+<section id="swapoff">
 <h3>9.7 swapoff<a class="headerlink" href="#swapoff" title="Permalink to this headline">¶</a></h3>
 <blockquote>
 <div><p>Besides management of swap is one of complicated parts of memcg,
@@ -440,8 +349,8 @@ It’s worth to be tested explicitly.</p>
 </div>
 <p>Of course, tmpfs v.s. swapoff test should be tested, too.</p>
 </div></blockquote>
-</div>
-<div class="section" id="oom-killer">
+</section>
+<section id="oom-killer">
 <h3>9.8 OOM-Killer<a class="headerlink" href="#oom-killer" title="Permalink to this headline">¶</a></h3>
 <blockquote>
 <div><p>Out-of-memory caused by memcg’s limit will kill tasks under
@@ -463,8 +372,8 @@ in other groups shouldn’t be killed.</p>
 </div>
 <p>run 51M of malloc</p>
 </div></blockquote>
-</div>
-<div class="section" id="move-charges-at-task-migration">
+</section>
+<section id="move-charges-at-task-migration">
 <h3>9.9 Move charges at task migration<a class="headerlink" href="#move-charges-at-task-migration" title="Permalink to this headline">¶</a></h3>
 <blockquote>
 <div><p>Charges associated with a task can be moved along with task migration.</p>
@@ -485,8 +394,8 @@ memory.stat of both A and B.</p>
 <p>See 8.2 of <a class="reference internal" href="memory.html"><span class="doc">Memory Resource Controller</span></a> to see what value should
 be written to move_charge_at_immigrate.</p>
 </div></blockquote>
-</div>
-<div class="section" id="memory-thresholds">
+</section>
+<section id="memory-thresholds">
 <h3>9.10 Memory thresholds<a class="headerlink" href="#memory-thresholds" title="Permalink to this headline">¶</a></h3>
 <blockquote>
 <div><p>Memory controller implements memory thresholds using cgroups notification
@@ -507,52 +416,36 @@ the thresholds.</p>
 <p>Use /cgroup/A/memory.memsw.usage_in_bytes to test memsw thresholds.</p>
 <p>It’s good idea to test root cgroup as well.</p>
 </div></blockquote>
-</div>
-</div>
-</div>
+</section>
+</section>
+</section>
 
 
            </div>
-           
           </div>
           <footer>
 
   <hr/>
 
   <div role="contentinfo">
-    <p>
-        &#169; Copyright The kernel development community.
-
-    </p>
+    <p>&#169; Copyright The kernel development community.</p>
   </div>
-    
-    
-    
-    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
-    
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
     <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
-    
-    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
 
 </footer>
         </div>
       </div>
-
     </section>
-
   </div>
-  
-
-  <script type="text/javascript">
+  <script>
       jQuery(function () {
           SphinxRtdTheme.Navigation.enable(true);
       });
-  </script>
-
-  
-  
-    
-   
+  </script> 
 
 </body>
 </html>

@@ -1,75 +1,36 @@
-
-
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8" />
-  
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  
-  <title>hwpoison &mdash; The Linux Kernel  documentation</title>
-  
-
-  
-  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
-  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="../_static/theme_overrides.css" type="text/css" />
-  <link rel="stylesheet" href="../_static/theme_rtd_colors.css" type="text/css" />
-
-  
-  
-
-  
-  
-
-  
-
-  
+  <title>hwpoison &mdash; The Linux Kernel  documentation</title><link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/theme_overrides.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/theme_rtd_colors.css" type="text/css" />
   <!--[if lt IE 9]>
     <script src="../_static/js/html5shiv.min.js"></script>
   <![endif]-->
-  
-    
-      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+  <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
         <script src="../_static/jquery.js"></script>
         <script src="../_static/underscore.js"></script>
         <script src="../_static/doctools.js"></script>
         <script src="../_static/language_data.js"></script>
-    
-    <script type="text/javascript" src="../_static/js/theme.js"></script>
-
-    
+    <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" /> 
 </head>
 
-<body class="wy-body-for-nav">
-
-   
+<body class="wy-body-for-nav"> 
   <div class="wy-grid-for-nav">
-    
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-          
-
-          
             <a href="../index.html" class="icon icon-home"> The Linux Kernel
-          
-
-          
           </a>
-
-          
-            
-            
               <div class="version">
-                5.16.0-rc7-mm1-damon
+                5.19.0-rc1-mm-unstable-damon
               </div>
-            
-          
-
-          
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
     <input type="text" name="q" placeholder="Search docs" />
@@ -77,18 +38,7 @@
     <input type="hidden" name="area" value="default" />
   </form>
 </div>
-
-          
-        </div>
-
-        
-        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
-          
-            
-            
-              
-            
-            
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <ul>
 <li class="toctree-l1"><a class="reference internal" href="../admin-guide/mm/damon/index.html">Monitoring Data Accesses</a></li>
 </ul>
@@ -96,74 +46,33 @@
 <li class="toctree-l1"><a class="reference internal" href="damon/index.html">DAMON: Data Access MONitor</a></li>
 </ul>
 
-            
-          
         </div>
-        
       </div>
     </nav>
 
-    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
-
-      
-      <nav class="wy-nav-top" aria-label="top navigation">
-        
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
           <a href="../index.html">The Linux Kernel</a>
-        
       </nav>
 
-
       <div class="wy-nav-content">
-        
         <div class="rst-content">
-        
-          
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<div role="navigation" aria-label="breadcrumbs navigation">
-
+          <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-    
       <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
-        
       <li>hwpoison</li>
-    
-    
       <li class="wy-breadcrumbs-aside">
-        
-          
             <a href="../_sources/vm/hwpoison.rst.txt" rel="nofollow"> View page source</a>
-          
-        
       </li>
-    
   </ul>
-
-  
   <hr/>
 </div>
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
-            
-  <div class="section" id="hwpoison">
+             
+  <section id="hwpoison">
 <h1>hwpoison<a class="headerlink" href="#hwpoison" title="Permalink to this headline">¶</a></h1>
-<div class="section" id="what-is-hwpoison">
+<section id="what-is-hwpoison">
 <h2>What is hwpoison?<a class="headerlink" href="#what-is-hwpoison" title="Permalink to this headline">¶</a></h2>
 <p>Upcoming Intel CPUs have support for recovering from some memory errors
 (<code class="docutils literal notranslate"><span class="pre">MCA</span> <span class="pre">recovery</span></code>). This requires the OS to declare a page “poisoned”,
@@ -206,14 +115,12 @@ KVM can inject the machine check into the guest with the proper
 address. This in theory allows other applications to handle
 memory failures too. The expection is that near all applications
 won’t do that, but some very specialized ones might.</p>
-</div>
-<div class="section" id="failure-recovery-modes">
+</section>
+<section id="failure-recovery-modes">
 <h2>Failure recovery modes<a class="headerlink" href="#failure-recovery-modes" title="Permalink to this headline">¶</a></h2>
 <p>There are two (actually three) modes memory failure recovery can be in:</p>
 <dl class="simple">
-<dt>vm.memory_failure_recovery sysctl set to zero:</dt><dd><p>All memory failures cause a panic. Do not attempt recovery.
-(on x86 this can be also affected by the tolerant level of the
-MCE subsystem)</p>
+<dt>vm.memory_failure_recovery sysctl set to zero:</dt><dd><p>All memory failures cause a panic. Do not attempt recovery.</p>
 </dd>
 <dt>early kill</dt><dd><p>(can be controlled globally and per process)
 Send SIGBUS to the application as soon as the error is detected
@@ -226,8 +133,8 @@ This is best for memory error unaware applications and default
 Note some pages are always handled as late kill.</p>
 </dd>
 </dl>
-</div>
-<div class="section" id="user-control">
+</section>
+<section id="user-control">
 <h2>User control<a class="headerlink" href="#user-control" title="Permalink to this headline">¶</a></h2>
 <dl>
 <dt>vm.memory_failure_recovery</dt><dd><p>See sysctl.txt</p>
@@ -257,8 +164,8 @@ the SIGBUS is sent to the main thread.</p>
 <dt>PR_MCE_KILL_GET</dt><dd><p>return current mode</p>
 </dd>
 </dl>
-</div>
-<div class="section" id="testing">
+</section>
+<section id="testing">
 <h2>Testing<a class="headerlink" href="#testing" title="Permalink to this headline">¶</a></h2>
 <ul>
 <li><p>madvise(MADV_HWPOISON, ….) (as root) - Poison a page in the
@@ -310,8 +217,8 @@ documented in <a class="reference internal" href="../admin-guide/mm/pagemap.html
 <p>Some portable hwpoison test programs in mce-test, see below.</p>
 </li>
 </ul>
-</div>
-<div class="section" id="references">
+</section>
+<section id="references">
 <h2>References<a class="headerlink" href="#references" title="Permalink to this headline">¶</a></h2>
 <dl class="simple">
 <dt><a class="reference external" href="http://halobates.de/mce-lc09-2.pdf">http://halobates.de/mce-lc09-2.pdf</a></dt><dd><p>Overview presentation from LinuxCon 09</p>
@@ -321,8 +228,8 @@ documented in <a class="reference internal" href="../admin-guide/mm/pagemap.html
 <dt>git://git.kernel.org/pub/scm/utils/cpu/mce/mce-inject.git</dt><dd><p>x86 specific injector</p>
 </dd>
 </dl>
-</div>
-<div class="section" id="limitations">
+</section>
+<section id="limitations">
 <h2>Limitations<a class="headerlink" href="#limitations" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
 <li><p>Not all page types are supported and never will. Most kernel internal
@@ -330,51 +237,35 @@ objects cannot be recovered, only LRU pages for now.</p></li>
 </ul>
 <p>—
 Andi Kleen, Oct 2009</p>
-</div>
-</div>
+</section>
+</section>
 
 
            </div>
-           
           </div>
           <footer>
 
   <hr/>
 
   <div role="contentinfo">
-    <p>
-        &#169; Copyright The kernel development community.
-
-    </p>
+    <p>&#169; Copyright The kernel development community.</p>
   </div>
-    
-    
-    
-    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
-    
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
     <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
-    
-    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
 
 </footer>
         </div>
       </div>
-
     </section>
-
   </div>
-  
-
-  <script type="text/javascript">
+  <script>
       jQuery(function () {
           SphinxRtdTheme.Navigation.enable(true);
       });
-  </script>
-
-  
-  
-    
-   
+  </script> 
 
 </body>
 </html>

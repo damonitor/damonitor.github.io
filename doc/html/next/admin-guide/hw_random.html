@@ -1,75 +1,36 @@
-
-
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8" />
-  
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  
-  <title>Linux support for random number generator in i8xx chipsets &mdash; The Linux Kernel  documentation</title>
-  
-
-  
-  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
-  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="../_static/theme_overrides.css" type="text/css" />
-  <link rel="stylesheet" href="../_static/theme_rtd_colors.css" type="text/css" />
-
-  
-  
-
-  
-  
-
-  
-
-  
+  <title>Linux support for random number generator in i8xx chipsets &mdash; The Linux Kernel  documentation</title><link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/theme_overrides.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/theme_rtd_colors.css" type="text/css" />
   <!--[if lt IE 9]>
     <script src="../_static/js/html5shiv.min.js"></script>
   <![endif]-->
-  
-    
-      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+  <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
         <script src="../_static/jquery.js"></script>
         <script src="../_static/underscore.js"></script>
         <script src="../_static/doctools.js"></script>
         <script src="../_static/language_data.js"></script>
-    
-    <script type="text/javascript" src="../_static/js/theme.js"></script>
-
-    
+    <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" /> 
 </head>
 
-<body class="wy-body-for-nav">
-
-   
+<body class="wy-body-for-nav"> 
   <div class="wy-grid-for-nav">
-    
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-          
-
-          
             <a href="../index.html" class="icon icon-home"> The Linux Kernel
-          
-
-          
           </a>
-
-          
-            
-            
               <div class="version">
-                5.16.0-rc7-mm1-damon
+                5.19.0-rc1-mm-unstable-damon
               </div>
-            
-          
-
-          
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
     <input type="text" name="q" placeholder="Search docs" />
@@ -77,18 +38,7 @@
     <input type="hidden" name="area" value="default" />
   </form>
 </div>
-
-          
-        </div>
-
-        
-        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
-          
-            
-            
-              
-            
-            
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <ul>
 <li class="toctree-l1"><a class="reference internal" href="mm/damon/index.html">Monitoring Data Accesses</a></li>
 </ul>
@@ -96,74 +46,33 @@
 <li class="toctree-l1"><a class="reference internal" href="../vm/damon/index.html">DAMON: Data Access MONitor</a></li>
 </ul>
 
-            
-          
         </div>
-        
       </div>
     </nav>
 
-    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
-
-      
-      <nav class="wy-nav-top" aria-label="top navigation">
-        
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
           <a href="../index.html">The Linux Kernel</a>
-        
       </nav>
 
-
       <div class="wy-nav-content">
-        
         <div class="rst-content">
-        
-          
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<div role="navigation" aria-label="breadcrumbs navigation">
-
+          <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-    
       <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
-        
       <li>Linux support for random number generator in i8xx chipsets</li>
-    
-    
       <li class="wy-breadcrumbs-aside">
-        
-          
             <a href="../_sources/admin-guide/hw_random.rst.txt" rel="nofollow"> View page source</a>
-          
-        
       </li>
-    
   </ul>
-
-  
   <hr/>
 </div>
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
-            
-  <div class="section" id="linux-support-for-random-number-generator-in-i8xx-chipsets">
+             
+  <section id="linux-support-for-random-number-generator-in-i8xx-chipsets">
 <h1>Linux support for random number generator in i8xx chipsets<a class="headerlink" href="#linux-support-for-random-number-generator-in-i8xx-chipsets" title="Permalink to this headline">¶</a></h1>
-<div class="section" id="introduction">
+<section id="introduction">
 <h2>Introduction<a class="headerlink" href="#introduction" title="Permalink to this headline">¶</a></h2>
 <p>The hw_random framework is software that makes use of a
 special hardware feature on your CPU or motherboard,
@@ -181,8 +90,8 @@ hw_random driver’s official Web site:</p>
 <p>Those tools use /dev/hwrng to fill the kernel entropy pool,
 which is used internally and exported by the /dev/urandom and
 /dev/random special files.</p>
-</div>
-<div class="section" id="theory-of-operation">
+</section>
+<section id="theory-of-operation">
 <h2>Theory of operation<a class="headerlink" href="#theory-of-operation" title="Permalink to this headline">¶</a></h2>
 <p>CHARACTER DEVICE.  Using the standard open()
 and read() system calls, you can read random data from
@@ -210,8 +119,8 @@ the list in “rng_available” into “rng_current”.</p>
 </ul>
 </dd>
 </dl>
-</div>
-<div class="section" id="about-the-intel-rng-hardware-from-the-firmware-hub-datasheet">
+</section>
+<section id="about-the-intel-rng-hardware-from-the-firmware-hub-datasheet">
 <h2>About the Intel RNG hardware, from the firmware hub datasheet<a class="headerlink" href="#about-the-intel-rng-hardware-from-the-firmware-hub-datasheet" title="Permalink to this headline">¶</a></h2>
 <p>The Firmware Hub integrates a Random Number Generator (RNG)
 using thermal noise generated from inherently random quantum
@@ -220,8 +129,8 @@ bits the RNG circuitry will enter a low power state. Intel will
 provide a binary software driver to give third party software
 access to our RNG for use as a security feature. At this time,
 the RNG is only to be used with a system in an OS-present state.</p>
-</div>
-<div class="section" id="intel-rng-driver-notes">
+</section>
+<section id="intel-rng-driver-notes">
 <h2>Intel RNG Driver notes<a class="headerlink" href="#intel-rng-driver-notes" title="Permalink to this headline">¶</a></h2>
 <p>FIXME: support poll(2)</p>
 <div class="admonition note">
@@ -239,8 +148,8 @@ However, for people who use mem=XX, BIOS e820 information is
 succeed.</p></li>
 </ol>
 </div>
-</div>
-<div class="section" id="driver-details">
+</section>
+<section id="driver-details">
 <h2>Driver details<a class="headerlink" href="#driver-details" title="Permalink to this headline">¶</a></h2>
 <dl class="simple">
 <dt>Based on:</dt><dd><p>Intel 82802AB/82802AC Firmware Hub (FWH) Datasheet
@@ -255,51 +164,35 @@ December 1999 Order Number: 298029-001 R</p>
 </dl>
 <p>Special thanks to Matt Sottek.  I did the “guts”, he
 did the “brains” and all the testing.</p>
-</div>
-</div>
+</section>
+</section>
 
 
            </div>
-           
           </div>
           <footer>
 
   <hr/>
 
   <div role="contentinfo">
-    <p>
-        &#169; Copyright The kernel development community.
-
-    </p>
+    <p>&#169; Copyright The kernel development community.</p>
   </div>
-    
-    
-    
-    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
-    
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
     <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
-    
-    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
 
 </footer>
         </div>
       </div>
-
     </section>
-
   </div>
-  
-
-  <script type="text/javascript">
+  <script>
       jQuery(function () {
           SphinxRtdTheme.Navigation.enable(true);
       });
-  </script>
-
-  
-  
-    
-   
+  </script> 
 
 </body>
 </html>

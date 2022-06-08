@@ -1,75 +1,36 @@
-
-
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8" />
-  
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  
-  <title>Hugetlbfs Reservation &mdash; The Linux Kernel  documentation</title>
-  
-
-  
-  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
-  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="../_static/theme_overrides.css" type="text/css" />
-  <link rel="stylesheet" href="../_static/theme_rtd_colors.css" type="text/css" />
-
-  
-  
-
-  
-  
-
-  
-
-  
+  <title>Hugetlbfs Reservation &mdash; The Linux Kernel  documentation</title><link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/theme_overrides.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/theme_rtd_colors.css" type="text/css" />
   <!--[if lt IE 9]>
     <script src="../_static/js/html5shiv.min.js"></script>
   <![endif]-->
-  
-    
-      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+  <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
         <script src="../_static/jquery.js"></script>
         <script src="../_static/underscore.js"></script>
         <script src="../_static/doctools.js"></script>
         <script src="../_static/language_data.js"></script>
-    
-    <script type="text/javascript" src="../_static/js/theme.js"></script>
-
-    
+    <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" /> 
 </head>
 
-<body class="wy-body-for-nav">
-
-   
+<body class="wy-body-for-nav"> 
   <div class="wy-grid-for-nav">
-    
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-          
-
-          
             <a href="../index.html" class="icon icon-home"> The Linux Kernel
-          
-
-          
           </a>
-
-          
-            
-            
               <div class="version">
-                5.16.0-rc7-mm1-damon
+                5.19.0-rc1-mm-unstable-damon
               </div>
-            
-          
-
-          
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
     <input type="text" name="q" placeholder="Search docs" />
@@ -77,18 +38,7 @@
     <input type="hidden" name="area" value="default" />
   </form>
 </div>
-
-          
-        </div>
-
-        
-        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
-          
-            
-            
-              
-            
-            
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <ul>
 <li class="toctree-l1"><a class="reference internal" href="../admin-guide/mm/damon/index.html">Monitoring Data Accesses</a></li>
 </ul>
@@ -96,74 +46,33 @@
 <li class="toctree-l1"><a class="reference internal" href="damon/index.html">DAMON: Data Access MONitor</a></li>
 </ul>
 
-            
-          
         </div>
-        
       </div>
     </nav>
 
-    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
-
-      
-      <nav class="wy-nav-top" aria-label="top navigation">
-        
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
           <a href="../index.html">The Linux Kernel</a>
-        
       </nav>
 
-
       <div class="wy-nav-content">
-        
         <div class="rst-content">
-        
-          
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<div role="navigation" aria-label="breadcrumbs navigation">
-
+          <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-    
       <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
-        
       <li>Hugetlbfs Reservation</li>
-    
-    
       <li class="wy-breadcrumbs-aside">
-        
-          
             <a href="../_sources/vm/hugetlbfs_reserv.rst.txt" rel="nofollow"> View page source</a>
-          
-        
       </li>
-    
   </ul>
-
-  
   <hr/>
 </div>
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
-            
-  <div class="section" id="hugetlbfs-reservation">
+             
+  <section id="hugetlbfs-reservation">
 <span id="hugetlbfs-reserve"></span><h1>Hugetlbfs Reservation<a class="headerlink" href="#hugetlbfs-reservation" title="Permalink to this headline">¶</a></h1>
-<div class="section" id="overview">
+<section id="overview">
 <h2>Overview<a class="headerlink" href="#overview" title="Permalink to this headline">¶</a></h2>
 <p>Huge pages as described at <a class="reference internal" href="../admin-guide/mm/hugetlbpage.html#hugetlbpage"><span class="std std-ref">HugeTLB Pages</span></a> are typically
 preallocated for application use.  These huge pages are instantiated in a
@@ -179,13 +88,13 @@ kernel, the code has evolved over time.  However, the basic idea was to
 ‘reserve’ huge pages at mmap() time to ensure that huge pages would be
 available for page faults in that mapping.  The description below attempts to
 describe how huge page reserve processing is done in the v4.10 kernel.</p>
-</div>
-<div class="section" id="audience">
+</section>
+<section id="audience">
 <h2>Audience<a class="headerlink" href="#audience" title="Permalink to this headline">¶</a></h2>
 <p>This description is primarily targeted at kernel developers who are modifying
 hugetlbfs code.</p>
-</div>
-<div class="section" id="the-data-structures">
+</section>
+<section id="the-data-structures">
 <h2>The Data Structures<a class="headerlink" href="#the-data-structures" title="Permalink to this headline">¶</a></h2>
 <dl>
 <dt>resv_huge_pages</dt><dd><p>This is a global (per-hstate) count of reserved huge pages.  Reserved
@@ -235,8 +144,8 @@ reservation must be restored when the huge page is freed.  More
 details will be discussed in the “Freeing huge pages” section.</p>
 </dd>
 </dl>
-</div>
-<div class="section" id="reservation-map-location-private-or-shared">
+</section>
+<section id="reservation-map-location-private-or-shared">
 <h2>Reservation Map Location (Private or Shared)<a class="headerlink" href="#reservation-map-location-private-or-shared" title="Permalink to this headline">¶</a></h2>
 <p>A huge page mapping or segment is either private or shared.  If private,
 it is typically only available to a single address space (task).  If shared,
@@ -253,8 +162,8 @@ by files in the hugetlbfs filesystem, the hugetlbfs code ensures each inode
 contains a reservation map.  As a result, the reservation map is allocated
 when the inode is created.</p></li>
 </ul>
-</div>
-<div class="section" id="creating-reservations">
+</section>
+<section id="creating-reservations">
 <h2>Creating Reservations<a class="headerlink" href="#creating-reservations" title="Permalink to this headline">¶</a></h2>
 <p>Reservations are created when a huge page backed shared memory segment is
 created (shmget(SHM_HUGETLB)) or a mapping is created via mmap(MAP_HUGETLB).
@@ -322,8 +231,8 @@ entry indicates a reservation exists.</p>
 <p>If hugetlb_reserve_pages() was successful, the global reservation count and
 reservation map associated with the mapping will be modified as required to
 ensure reservations exist for the range ‘from’ - ‘to’.</p>
-</div>
-<div class="section" id="consuming-reservations-allocating-a-huge-page">
+</section>
+<section id="consuming-reservations-allocating-a-huge-page">
 <span id="consume-resv"></span><h2>Consuming Reservations/Allocating a Huge Page<a class="headerlink" href="#consuming-reservations-allocating-a-huge-page" title="Permalink to this headline">¶</a></h2>
 <p>Reservations are consumed when huge pages associated with the reservations
 are allocated and instantiated in the corresponding mapping.  The allocation
@@ -398,8 +307,8 @@ a race is detected, the subpool and global reserve counts are adjusted to
 compensate.  See the section
 <a class="reference internal" href="#resv-map-helpers"><span class="std std-ref">Reservation Map Helper Routines</span></a> for more
 information on these routines.</p>
-</div>
-<div class="section" id="instantiate-huge-pages">
+</section>
+<section id="instantiate-huge-pages">
 <h2>Instantiate Huge Pages<a class="headerlink" href="#instantiate-huge-pages" title="Permalink to this headline">¶</a></h2>
 <p>After huge page allocation, the page is typically added to the page tables
 of the allocating task.  Before this, pages in a shared mapping are added
@@ -407,8 +316,8 @@ to the page cache and pages in private mappings are added to an anonymous
 reverse mapping.  In both cases, the PagePrivate flag is cleared.  Therefore,
 when a huge page that has been instantiated is freed no adjustment is made
 to the global reservation count (resv_huge_pages).</p>
-</div>
-<div class="section" id="freeing-huge-pages">
+</section>
+<section id="freeing-huge-pages">
 <h2>Freeing Huge Pages<a class="headerlink" href="#freeing-huge-pages" title="Permalink to this headline">¶</a></h2>
 <p>Huge page freeing is performed by the routine free_huge_page().  This routine
 is the destructor for hugetlbfs compound pages.  As a result, it is only
@@ -428,8 +337,8 @@ must be used to keep the number of subpool reserves above the minimum size.
 Therefore, the global resv_huge_pages counter is incremented in this case.</p>
 <p>If the PagePrivate flag was set in the page, the global resv_huge_pages counter
 will always be incremented.</p>
-</div>
-<div class="section" id="subpool-reservations">
+</section>
+<section id="subpool-reservations">
 <span id="sub-pool-resv"></span><h2>Subpool Reservations<a class="headerlink" href="#subpool-reservations" title="Permalink to this headline">¶</a></h2>
 <p>There is a struct hstate associated with each huge page size.  The hstate
 tracks all huge pages of the specified size.  A subpool represents a subset
@@ -458,8 +367,8 @@ of the request.  But, 2 pages must be obtained from the global pools.  To
 relay this information to the caller, the value 2 is returned.  The caller
 is then responsible for attempting to obtain the additional two pages from
 the global pools.</p>
-</div>
-<div class="section" id="cow-and-reservations">
+</section>
+<section id="cow-and-reservations">
 <h2>COW and Reservations<a class="headerlink" href="#cow-and-reservations" title="Permalink to this headline">¶</a></h2>
 <p>Since shared mappings all point to and use the same underlying pages, the
 biggest reservation concern for COW is private mappings.  In this case,
@@ -485,8 +394,8 @@ In addition, the HPAGE_RESV_UNMAPPED bit is set in the reservation map pointer
 of the non-owning task.  The non-owning task may receive a SIGBUS if it later
 faults on a non-present page.  But, the original owner of the
 mapping/reservation will behave as expected.</p>
-</div>
-<div class="section" id="reservation-map-modifications">
+</section>
+<section id="reservation-map-modifications">
 <span id="resv-map-modifications"></span><h2>Reservation Map Modifications<a class="headerlink" href="#reservation-map-modifications" title="Permalink to this headline">¶</a></h2>
 <p>The following low level routines are used to make modifications to a
 reservation map.  Typically, these routines are not called directly.  Rather,
@@ -565,8 +474,8 @@ reservation map we know how many reservations were consumed and how many are
 outstanding (outstanding = (end - start) - region_count(resv, start, end)).
 Since the mapping is going away, the subpool and global reservation counts
 are decremented by the number of outstanding reservations.</p>
-</div>
-<div class="section" id="reservation-map-helper-routines">
+</section>
+<section id="reservation-map-helper-routines">
 <span id="resv-map-helpers"></span><h2>Reservation Map Helper Routines<a class="headerlink" href="#reservation-map-helper-routines" title="Permalink to this headline">¶</a></h2>
 <p>Several helper routines exist to query and modify the reservation maps.
 These routines are only interested with reservations for a specific huge
@@ -620,8 +529,8 @@ indicates a reservation), and region_del is called for private mappings (as
 the absence of an entry in the map indicates a reservation).  See the section
 “Reservation cleanup in error paths” for more information on what needs to
 be done on error paths.</p>
-</div>
-<div class="section" id="reservation-cleanup-in-error-paths">
+</section>
+<section id="reservation-cleanup-in-error-paths">
 <h2>Reservation Cleanup in Error Paths<a class="headerlink" href="#reservation-cleanup-in-error-paths" title="Permalink to this headline">¶</a></h2>
 <p>As mentioned in the section
 <a class="reference internal" href="#resv-map-helpers"><span class="std std-ref">Reservation Map Helper Routines</span></a>, reservation
@@ -656,8 +565,8 @@ page as originally intended.</p>
 <p>There is some code (most notably userfaultfd) which can not call
 restore_reserve_on_error.  In this case, it simply modifies the PagePrivate
 so that a reservation will not be leaked when the huge page is freed.</p>
-</div>
-<div class="section" id="reservations-and-memory-policy">
+</section>
+<section id="reservations-and-memory-policy">
 <h2>Reservations and Memory Policy<a class="headerlink" href="#reservations-and-memory-policy" title="Permalink to this headline">¶</a></h2>
 <p>Per-node huge page lists existed in struct hstate when git was first used
 to manage Linux code.  The concept of reservations was added some time later.
@@ -689,8 +598,8 @@ failures (OOM) at page fault time.  However, if an application makes use
 of cpusets or memory policy there is no guarantee that huge pages will be
 available on the required nodes.  This is true even if there are a sufficient
 number of global reservations.</p>
-</div>
-<div class="section" id="hugetlbfs-regression-testing">
+</section>
+<section id="hugetlbfs-regression-testing">
 <h2>Hugetlbfs regression testing<a class="headerlink" href="#hugetlbfs-regression-testing" title="Permalink to this headline">¶</a></h2>
 <p>The most complete set of hugetlb tests are in the libhugetlbfs repository.
 If you modify any hugetlb related code, use the libhugetlbfs test suite
@@ -698,51 +607,35 @@ to check for regressions.  In addition, if you add any new hugetlb
 functionality, please add appropriate tests to libhugetlbfs.</p>
 <p>–
 Mike Kravetz, 7 April 2017</p>
-</div>
-</div>
+</section>
+</section>
 
 
            </div>
-           
           </div>
           <footer>
 
   <hr/>
 
   <div role="contentinfo">
-    <p>
-        &#169; Copyright The kernel development community.
-
-    </p>
+    <p>&#169; Copyright The kernel development community.</p>
   </div>
-    
-    
-    
-    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
-    
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
     <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
-    
-    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
 
 </footer>
         </div>
       </div>
-
     </section>
-
   </div>
-  
-
-  <script type="text/javascript">
+  <script>
       jQuery(function () {
           SphinxRtdTheme.Navigation.enable(true);
       });
-  </script>
-
-  
-  
-    
-   
+  </script> 
 
 </body>
 </html>

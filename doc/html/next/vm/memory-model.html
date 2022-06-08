@@ -1,75 +1,36 @@
-
-
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8" />
-  
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  
-  <title>Physical Memory Model &mdash; The Linux Kernel  documentation</title>
-  
-
-  
-  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
-  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="../_static/theme_overrides.css" type="text/css" />
-  <link rel="stylesheet" href="../_static/theme_rtd_colors.css" type="text/css" />
-
-  
-  
-
-  
-  
-
-  
-
-  
+  <title>Physical Memory Model &mdash; The Linux Kernel  documentation</title><link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/theme_overrides.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/theme_rtd_colors.css" type="text/css" />
   <!--[if lt IE 9]>
     <script src="../_static/js/html5shiv.min.js"></script>
   <![endif]-->
-  
-    
-      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+  <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
         <script src="../_static/jquery.js"></script>
         <script src="../_static/underscore.js"></script>
         <script src="../_static/doctools.js"></script>
         <script src="../_static/language_data.js"></script>
-    
-    <script type="text/javascript" src="../_static/js/theme.js"></script>
-
-    
+    <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" /> 
 </head>
 
-<body class="wy-body-for-nav">
-
-   
+<body class="wy-body-for-nav"> 
   <div class="wy-grid-for-nav">
-    
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-          
-
-          
             <a href="../index.html" class="icon icon-home"> The Linux Kernel
-          
-
-          
           </a>
-
-          
-            
-            
               <div class="version">
-                5.16.0-rc7-mm1-damon
+                5.19.0-rc1-mm-unstable-damon
               </div>
-            
-          
-
-          
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
     <input type="text" name="q" placeholder="Search docs" />
@@ -77,18 +38,7 @@
     <input type="hidden" name="area" value="default" />
   </form>
 </div>
-
-          
-        </div>
-
-        
-        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
-          
-            
-            
-              
-            
-            
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <ul>
 <li class="toctree-l1"><a class="reference internal" href="../admin-guide/mm/damon/index.html">Monitoring Data Accesses</a></li>
 </ul>
@@ -96,72 +46,31 @@
 <li class="toctree-l1"><a class="reference internal" href="damon/index.html">DAMON: Data Access MONitor</a></li>
 </ul>
 
-            
-          
         </div>
-        
       </div>
     </nav>
 
-    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
-
-      
-      <nav class="wy-nav-top" aria-label="top navigation">
-        
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
           <a href="../index.html">The Linux Kernel</a>
-        
       </nav>
 
-
       <div class="wy-nav-content">
-        
         <div class="rst-content">
-        
-          
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<div role="navigation" aria-label="breadcrumbs navigation">
-
+          <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-    
       <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
-        
       <li>Physical Memory Model</li>
-    
-    
       <li class="wy-breadcrumbs-aside">
-        
-          
             <a href="../_sources/vm/memory-model.rst.txt" rel="nofollow"> View page source</a>
-          
-        
       </li>
-    
   </ul>
-
-  
   <hr/>
 </div>
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
-            
-  <div class="section" id="physical-memory-model">
+             
+  <section id="physical-memory-model">
 <span id="id1"></span><h1>Physical Memory Model<a class="headerlink" href="#physical-memory-model" title="Permalink to this headline">¶</a></h1>
 <p>Physical memory in a system may be addressed in different ways. The
 simplest case is when the physical memory starts at address 0 and
@@ -182,7 +91,7 @@ corresponding <cite>struct page</cite>.</p>
 <p>Each memory model defines <code class="xref c c-func docutils literal notranslate"><span class="pre">pfn_to_page()</span></code> and <code class="xref c c-func docutils literal notranslate"><span class="pre">page_to_pfn()</span></code>
 helpers that allow the conversion from PFN to <cite>struct page</cite> and vice
 versa.</p>
-<div class="section" id="flatmem">
+<section id="flatmem">
 <h2>FLATMEM<a class="headerlink" href="#flatmem" title="Permalink to this headline">¶</a></h2>
 <p>The simplest memory model is FLATMEM. This model is suitable for
 non-NUMA systems with contiguous, or mostly contiguous, physical
@@ -204,8 +113,8 @@ straightforward: <cite>PFN - ARCH_PFN_OFFSET</cite> is an index to the
 <cite>mem_map</cite> array.</p>
 <p>The <cite>ARCH_PFN_OFFSET</cite> defines the first page frame number for
 systems with physical memory starting at address different from 0.</p>
-</div>
-<div class="section" id="sparsemem">
+</section>
+<section id="sparsemem">
 <h2>SPARSEMEM<a class="headerlink" href="#sparsemem" title="Permalink to this headline">¶</a></h2>
 <p>SPARSEMEM is the most versatile memory model available in Linux and it
 is the only memory model that supports several advanced features such
@@ -225,7 +134,7 @@ physical address that an architecture supports, the
 <p>The maximal number of sections is denoted <cite>NR_MEM_SECTIONS</cite> and
 defined as</p>
 <div class="math">
-<p><img src="../_images/math/d99368220bfdedf1a888b1c09eb7236a8c87d079.png" alt="NR\_MEM\_SECTIONS = 2 ^ {(MAX\_PHYSMEM\_BITS - SECTION\_SIZE\_BITS)}"/></p>
+<p><span class="math">NR\_MEM\_SECTIONS = 2 ^ {(MAX\_PHYSMEM\_BITS - SECTION\_SIZE\_BITS)}</span></p>
 </div><p>The <cite>mem_section</cite> objects are arranged in a two-dimensional array
 called <cite>mem_sections</cite>. The size and placement of this array depend
 on <cite>CONFIG_SPARSEMEM_EXTREME</cite> and the maximal possible number of
@@ -270,8 +179,8 @@ that is eventually passed to vmemmap_populate() through a long chain
 of function calls. The vmemmap_populate() implementation may use the
 <cite>vmem_altmap</cite> along with <code class="xref c c-func docutils literal notranslate"><span class="pre">vmemmap_alloc_block_buf()</span></code> helper to
 allocate memory map on the persistent memory device.</p>
-</div>
-<div class="section" id="zone-device">
+</section>
+<section id="zone-device">
 <h2>ZONE_DEVICE<a class="headerlink" href="#zone-device" title="Permalink to this headline">¶</a></h2>
 <p>The <cite>ZONE_DEVICE</cite> facility builds upon <cite>SPARSEMEM_VMEMMAP</cite> to offer
 <cite>struct page</cite> <cite>mem_map</cite> services for device driver identified physical
@@ -307,51 +216,35 @@ events related to device-memory, typically GPU memory. See
 PCI/-E topology to coordinate direct-DMA operations between themselves,
 i.e. bypass host memory.</p></li>
 </ul>
-</div>
-</div>
+</section>
+</section>
 
 
            </div>
-           
           </div>
           <footer>
 
   <hr/>
 
   <div role="contentinfo">
-    <p>
-        &#169; Copyright The kernel development community.
-
-    </p>
+    <p>&#169; Copyright The kernel development community.</p>
   </div>
-    
-    
-    
-    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
-    
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
     <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
-    
-    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
 
 </footer>
         </div>
       </div>
-
     </section>
-
   </div>
-  
-
-  <script type="text/javascript">
+  <script>
       jQuery(function () {
           SphinxRtdTheme.Navigation.enable(true);
       });
-  </script>
-
-  
-  
-    
-   
+  </script> 
 
 </body>
 </html>
