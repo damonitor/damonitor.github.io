@@ -31,7 +31,7 @@
             <a href="../../../index.html" class="icon icon-home"> The Linux Kernel
           </a>
               <div class="version">
-                5.19.0-rc1-mm-unstable-damon
+                5.19.0-rc2-mm-unstable-damon
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -48,6 +48,7 @@
 <li class="toctree-l2"><a class="reference internal" href="usage.html">Detailed Usages</a></li>
 <li class="toctree-l2"><a class="reference internal" href="reclaim.html">DAMON-based Reclamation</a></li>
 <li class="toctree-l2 current"><a class="current reference internal" href="#">DAMON-based LRU-lists Sorting</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#where-proactive-lru-lists-sorting-is-required">Where Proactive LRU-lists Sorting is Required?</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#how-it-works">How It Works?</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#interface-module-parameters">Interface: Module Parameters</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#enabled">enabled</a></li>
@@ -117,20 +118,40 @@
   <section id="damon-based-lru-lists-sorting">
 <h1>DAMON-based LRU-lists Sorting<a class="headerlink" href="#damon-based-lru-lists-sorting" title="Permalink to this headline">¶</a></h1>
 <p>DAMON-based LRU-lists Sorting (DAMON_LRU_SORT) is a static kernel module that
-aimed to be used for proactive and lightweight (de)prioritization of pages on
-their LRU-lists under a level of memory pressure.</p>
+aimed to be used for proactive and lightweight data access pattern based
+(de)prioritization of pages on their LRU-lists for making LRU-lists a more
+trusworthy data access pattern source.</p>
+<section id="where-proactive-lru-lists-sorting-is-required">
+<h2>Where Proactive LRU-lists Sorting is Required?<a class="headerlink" href="#where-proactive-lru-lists-sorting-is-required" title="Permalink to this headline">¶</a></h2>
+<p>As page-granularity access checking overhead could be significant on huge
+systems, LRU lists are normally not proactively sorted but partially and
+reactively sorted for special events including specific user requests, system
+calls and memory pressure.  As a result, LRU lists are sometimes not so
+perfectly prepared to be used as a trustworthy access pattern source for some
+situations including reclamation target pages selection under sudden memory
+pressure.</p>
+<p>Because DAMON can identify access patterns of best-effort accuracy while
+inducing only user-specified range of overhead, proactively running
+DAMON_LRU_SORT could be helpful for making LRU lists more trustworthy access
+pattern source with low and controlled overhead.</p>
+</section>
 <section id="how-it-works">
 <h2>How It Works?<a class="headerlink" href="#how-it-works" title="Permalink to this headline">¶</a></h2>
 <p>DAMON_LRU_SORT finds hot pages (pages of memory regions that showing access
 rates that higher than a user-specified threshold) and cold pages (pages of
 memory regions that showing no access for a time that longer than a
-user-specified threshold) using DAMON, and prioritize hot pages while
+user-specified threshold) using DAMON, and prioritizes hot pages while
 deprioritizing cold pages on their LRU-lists.  To avoid it consuming too much
-CPU for the prioritizations, a speed limit can be configured.  Under the speed
-limit, it prioritizes and deprioritizes more hot and cold pages first,
+CPU for the prioritizations, a CPU time usage limit can be configured.  Under
+the limit, it prioritizes and deprioritizes more hot and cold pages first,
 respectively.  System administrators can also configure under what situation
 this scheme should automatically activated and deactivated with three memory
 pressure watermarks.</p>
+<p>Its default parameters for hotness/coldness thresholds and CPU quota limit are
+conservatively chosen.  That is, the module under its default parameters could
+be widely used without harm for common situations while providing a level of
+benefits for systems having clear hot/cold access patterns under memory
+pressure while consuming only a limited small portion of CPU time.</p>
 </section>
 <section id="interface-module-parameters">
 <h2>Interface: Module Parameters<a class="headerlink" href="#interface-module-parameters" title="Permalink to this headline">¶</a></h2>
@@ -201,21 +222,21 @@ enabled but inactive due to its watermarks rule.  5 seconds by default.</p>
 <p>Free memory rate (per thousand) for the high watermark.</p>
 <p>If free memory of the system in bytes per thousand bytes is higher than this,
 DAMON_LRU_SORT becomes inactive, so it does nothing but periodically checks the
-watermarks.  500 (50%) by default.</p>
+watermarks.  200 (20%) by default.</p>
 </section>
 <section id="wmarks-mid">
 <h3>wmarks_mid<a class="headerlink" href="#wmarks-mid" title="Permalink to this headline">¶</a></h3>
 <p>Free memory rate (per thousand) for the middle watermark.</p>
 <p>If free memory of the system in bytes per thousand bytes is between this and
 the low watermark, DAMON_LRU_SORT becomes active, so starts the monitoring and
-the LRU-lists sorting.  400 (40%) by default.</p>
+the LRU-lists sorting.  150 (15%) by default.</p>
 </section>
 <section id="wmarks-low">
 <h3>wmarks_low<a class="headerlink" href="#wmarks-low" title="Permalink to this headline">¶</a></h3>
 <p>Free memory rate (per thousand) for the low watermark.</p>
 <p>If free memory of the system in bytes per thousand bytes is lower than this,
 DAMON_LRU_SORT becomes inactive, so it does nothing but periodically checks the
-watermarks.  200 (20%) by default.</p>
+watermarks.  50 (5%) by default.</p>
 </section>
 <section id="sample-interval">
 <h3>sample_interval<a class="headerlink" href="#sample-interval" title="Permalink to this headline">¶</a></h3>
