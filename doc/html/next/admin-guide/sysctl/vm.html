@@ -29,7 +29,7 @@
             <a href="../../index.html" class="icon icon-home"> The Linux Kernel
           </a>
               <div class="version">
-                5.19.0-rc2-mm-unstable-damon
+                5.19.0-rc4-mm-unstable-damon
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
@@ -41,9 +41,6 @@
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <ul>
 <li class="toctree-l1"><a class="reference internal" href="../mm/damon/index.html">Monitoring Data Accesses</a></li>
-</ul>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="../../vm/damon/index.html">DAMON: Data Access MONitor</a></li>
 </ul>
 
         </div>
@@ -534,8 +531,7 @@ architecture’s minimum and maximum supported values.</p>
 <p>This knob is not available when the size of ‘struct page’ (a structure defined
 in include/linux/mm_types.h) is not power of two (an unusual system config could
 result in this).</p>
-<p>Enable (set to 1) or disable (set to 0) the feature of optimizing vmemmap pages
-associated with each HugeTLB page.</p>
+<p>Enable (set to 1) or disable (set to 0) HugeTLB Vmemmap Optimization (HVO).</p>
 <p>Once enabled, the vmemmap pages of subsequent allocation of HugeTLB pages from
 buddy allocator will be optimized (7 pages per 2MB HugeTLB page and 4095 pages
 per 1GB HugeTLB page), whereas already allocated HugeTLB pages will not be
@@ -674,7 +670,7 @@ Note that user_reserve_kbytes affects this policy.</p>
 programs that malloc() huge amounts of memory “just-in-case”
 and don’t use much of it.</p>
 <p>The default value is 0.</p>
-<p>See <a class="reference internal" href="../../vm/overcommit-accounting.html"><span class="doc">Overcommit Accounting</span></a> and
+<p>See <a class="reference internal" href="../../mm/overcommit-accounting.html"><span class="doc">Overcommit Accounting</span></a> and
 mm/util.c::__vm_enough_memory() for more information.</p>
 </section>
 <section id="overcommit-ratio">
@@ -804,6 +800,9 @@ mode may make certain vulnerabilities more difficult to exploit.</p>
 <p>Set this to 1 to allow unprivileged users to use the userfaultfd system
 calls without any restrictions.</p>
 <p>The default value is 0.</p>
+<p>An alternative to this sysctl / the userfaultfd(2) syscall is to create
+userfaultfds via /dev/userfaultfd. See
+<a class="reference internal" href="../mm/userfaultfd.html"><span class="doc">Userfaultfd</span></a>.</p>
 </section>
 <section id="user-reserve-kbytes">
 <h2>user_reserve_kbytes<a class="headerlink" href="#user-reserve-kbytes" title="Permalink to this headline">¶</a></h2>

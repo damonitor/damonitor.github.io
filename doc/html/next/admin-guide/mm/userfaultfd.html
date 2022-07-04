@@ -29,7 +29,7 @@
             <a href="../../index.html" class="icon icon-home"> The Linux Kernel
           </a>
               <div class="version">
-                5.19.0-rc2-mm-unstable-damon
+                5.19.0-rc4-mm-unstable-damon
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
@@ -41,9 +41,6 @@
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <ul>
 <li class="toctree-l1"><a class="reference internal" href="damon/index.html">Monitoring Data Accesses</a></li>
-</ul>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="../../vm/damon/index.html">DAMON: Data Access MONitor</a></li>
 </ul>
 
         </div>
@@ -82,7 +79,10 @@ of the <code class="docutils literal notranslate"><span class="pre">PROT_NONE+SI
 </section>
 <section id="design">
 <h2>Design<a class="headerlink" href="#design" title="Permalink to this headline">¶</a></h2>
-<p>Userfaults are delivered and resolved through the <code class="docutils literal notranslate"><span class="pre">userfaultfd</span></code> syscall.</p>
+<p>Userspace creates a new userfaultfd, initializes it, and registers one or more
+regions of virtual memory with it. Then, any page faults which occur within the
+region(s) result in a message being delivered to the userfaultfd, notifying
+userspace of the fault.</p>
 <p>The <code class="docutils literal notranslate"><span class="pre">userfaultfd</span></code> (aside from registering and unregistering virtual
 memory ranges) provides two primary functionalities:</p>
 <ol class="arabic simple">
@@ -96,11 +96,11 @@ memory in the background</p></li>
 <p>The real advantage of userfaults if compared to regular virtual memory
 management of mremap/mprotect is that the userfaults in all their
 operations never involve heavyweight structures like vmas (in fact the
-<code class="docutils literal notranslate"><span class="pre">userfaultfd</span></code> runtime load never takes the mmap_lock for writing).</p>
-<p>Vmas are not suitable for page- (or hugepage) granular fault tracking
+<code class="docutils literal notranslate"><span class="pre">userfaultfd</span></code> runtime load never takes the mmap_lock for writing).
+Vmas are not suitable for page- (or hugepage) granular fault tracking
 when dealing with virtual address spaces that could span
 Terabytes. Too many vmas would be needed for that.</p>
-<p>The <code class="docutils literal notranslate"><span class="pre">userfaultfd</span></code> once opened by invoking the syscall, can also be
+<p>The <code class="docutils literal notranslate"><span class="pre">userfaultfd</span></code>, once created, can also be
 passed using unix domain sockets to a manager process, so the same
 manager process could handle the userfaults of a multitude of
 different processes without them being aware about what is going on
@@ -110,6 +110,32 @@ is a corner case that would currently return <code class="docutils literal notra
 </section>
 <section id="api">
 <h2>API<a class="headerlink" href="#api" title="Permalink to this headline">¶</a></h2>
+<section id="creating-a-userfaultfd">
+<h3>Creating a userfaultfd<a class="headerlink" href="#creating-a-userfaultfd" title="Permalink to this headline">¶</a></h3>
+<p>There are two ways to create a new userfaultfd, each of which provide ways to
+restrict access to this functionality (since historically userfaultfds which
+handle kernel page faults have been a useful tool for exploiting the kernel).</p>
+<p>The first way, supported by older kernels, is the userfaultfd(2) syscall.
+Access to this is controlled in several ways:</p>
+<ul class="simple">
+<li><p>By default, the userfaultfd will be able to handle kernel page faults. This
+can be disabled by passing in UFFD_USER_MODE_ONLY.</p></li>
+<li><p>If vm.unprivileged_userfaultfd is 0, then the caller must <em>either</em> have
+CAP_SYS_PTRACE, or pass in UFFD_USER_MODE_ONLY.</p></li>
+<li><p>If vm.unprivileged_userfaultfd is 1, then no particular privilege is needed to
+use this syscall, even if UFFD_USER_MODE_ONLY is <em>not</em> set.</p></li>
+</ul>
+<p>The second way, added to the kernel more recently, is by opening and issuing a
+USERFAULTFD_IOC_NEW ioctl to /dev/userfaultfd. This method yields equivalent
+userfaultfds to the userfaultfd(2) syscall; its benefit is in how access to
+creating userfaultfds is controlled.</p>
+<p>Access to /dev/userfaultfd is controlled via normal filesystem permissions
+(user/group/mode for example), which gives fine grained access to userfaultfd
+specifically, without also granting other unrelated privileges at the same time
+(as e.g. granting CAP_SYS_PTRACE would do).</p>
+</section>
+<section id="initializing-up-a-userfaultfd">
+<h3>Initializing up a userfaultfd<a class="headerlink" href="#initializing-up-a-userfaultfd" title="Permalink to this headline">¶</a></h3>
 <p>When first opened the <code class="docutils literal notranslate"><span class="pre">userfaultfd</span></code> must be enabled invoking the
 <code class="docutils literal notranslate"><span class="pre">UFFDIO_API</span></code> ioctl specifying a <code class="docutils literal notranslate"><span class="pre">uffdio_api.api</span></code> value set to <code class="docutils literal notranslate"><span class="pre">UFFD_API</span></code> (or
 a later API version) which will specify the <code class="docutils literal notranslate"><span class="pre">read/POLLIN</span></code> protocol
@@ -155,6 +181,7 @@ address space in the background (to add or potentially also remove
 memory from the <code class="docutils literal notranslate"><span class="pre">userfaultfd</span></code> registered range). This means a userfault
 could be triggering just before userland maps in the background the
 user-faulted page.</p>
+</section>
 <section id="resolving-userfaults">
 <h3>Resolving Userfaults<a class="headerlink" href="#resolving-userfaults" title="Permalink to this headline">¶</a></h3>
 <p>There are three basic ways to resolve userfaults:</p>

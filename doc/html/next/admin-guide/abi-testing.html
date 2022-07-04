@@ -29,7 +29,7 @@
             <a href="../index.html" class="icon icon-home"> The Linux Kernel
           </a>
               <div class="version">
-                5.19.0-rc2-mm-unstable-damon
+                5.19.0-rc4-mm-unstable-damon
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
@@ -41,9 +41,6 @@
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <ul>
 <li class="toctree-l1"><a class="reference internal" href="mm/damon/index.html">Monitoring Data Accesses</a></li>
-</ul>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="../vm/damon/index.html">DAMON: Data Access MONitor</a></li>
 </ul>
 
         </div>
@@ -2769,6 +2766,7 @@ KernelPageSize:        4 kB
 MMUPageSize:           4 kB
 Rss:                 884 kB
 Pss:                 385 kB
+Pss_Dirty:            68 kB
 Pss_Anon:            301 kB
 Pss_File:             80 kB
 Pss_Shmem:             4 kB
@@ -11449,19 +11447,6 @@ the current one is returned. Units are seconds.</p>
 <p>The range of available values in seconds represented as the
 minimum value, the step and the maximum value, all enclosed in
 square brackets.</p>
-<table class="docutils align-default" id="abi-sys-bus-iio-devices-iio-devicex-conversion-mode">
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<tbody>
-<tr class="row-odd"><td><p><strong>/sys/bus/iio/devices/iio:deviceX/conversion_mode</strong></p></td>
-</tr>
-</tbody>
-</table>
-<p>Defined on file <a class="reference internal" href="#abi-file-testing-sysfs-bus-iio-vf610"><span class="std std-ref">sysfs-bus-iio-vf610</span></a></p>
-<p>Specifies the hardware conversion mode used. The three
-available modes are “normal”, “high-speed” and “low-power”,
-where the last is the default mode.</p>
 <table class="docutils align-default" id="abi-sys-bus-iio-devices-iio-devicex-current-timestamp-clock">
 <colgroup>
 <col style="width: 100%" />
@@ -12274,6 +12259,19 @@ This value has little application outside of calibration.</p>
 <p>Defined on file <a class="reference internal" href="#abi-file-testing-sysfs-bus-iio"><span class="std std-ref">sysfs-bus-iio</span></a></p>
 <p>Raw (unscaled no offset etc.) reading of a substance. Units
 after application of scale and offset are percents.</p>
+<table class="docutils align-default" id="abi-sys-bus-iio-devices-iio-devicex-in-conversion-mode">
+<colgroup>
+<col style="width: 100%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><strong>/sys/bus/iio/devices/iio:deviceX/in_conversion_mode</strong></p></td>
+</tr>
+</tbody>
+</table>
+<p>Defined on file <a class="reference internal" href="#abi-file-testing-sysfs-bus-iio-vf610"><span class="std std-ref">sysfs-bus-iio-vf610</span></a></p>
+<p>Specifies the hardware conversion mode used. The three
+available modes are “normal”, “high-speed” and “low-power”,
+where the last is the default mode.</p>
 <table class="docutils align-default" id="abi-sys-bus-iio-devices-iio-devicex-in-count0-enable-mode">
 <colgroup>
 <col style="width: 100%" />
@@ -54208,7 +54206,7 @@ in a tree.</p>
 </div></blockquote>
 <p>sleep_millisecs: how many milliseconds ksm should sleep between
 scans.</p>
-<p>See <a class="reference internal" href="../vm/ksm.html"><span class="doc">Kernel Samepage Merging</span></a> for more information.</p>
+<p>See <a class="reference internal" href="../mm/ksm.html"><span class="doc">Kernel Samepage Merging</span></a> for more information.</p>
 <table class="docutils align-default" id="abi-sys-kernel-mm-ksm-merge-across-nodes">
 <colgroup>
 <col style="width: 100%" />
@@ -54735,7 +54733,7 @@ alignment in bytes.</p>
 <p>The alloc_calls file is read-only and lists the kernel code
 locations from which allocations for this cache were performed.
 The alloc_calls file only contains information if debugging is
-enabled for that cache (see <a class="reference internal" href="../vm/slub.html"><span class="doc">Short users guide for SLUB</span></a>).</p>
+enabled for that cache (see <a class="reference internal" href="../mm/slub.html"><span class="doc">Short users guide for SLUB</span></a>).</p>
 <table class="docutils align-default" id="abi-sys-kernel-slab-cache-alloc-fastpath">
 <colgroup>
 <col style="width: 100%" />
@@ -54980,7 +54978,7 @@ Available when CONFIG_SLUB_STATS is enabled.</p>
 <p>Defined on file <a class="reference internal" href="#abi-file-testing-sysfs-kernel-slab"><span class="std std-ref">sysfs-kernel-slab</span></a></p>
 <p>The free_calls file is read-only and lists the locations of
 object frees if slab debugging is enabled (see
-<a class="reference internal" href="../vm/slub.html"><span class="doc">Short users guide for SLUB</span></a>).</p>
+<a class="reference internal" href="../mm/slub.html"><span class="doc">Short users guide for SLUB</span></a>).</p>
 <table class="docutils align-default" id="abi-sys-kernel-slab-cache-free-fastpath">
 <colgroup>
 <col style="width: 100%" />
@@ -58832,7 +58830,7 @@ the EFI secret area”.</p>
 <span id="abi-file-testing-sysfs-bus-iio-vf610"></span><h2>File /home/ANT.AMAZON.COM/sjpark/linux/testing/sysfs-bus-iio-vf610<a class="headerlink" href="#file-home-ant-amazon-com-sjpark-linux-testing-sysfs-bus-iio-vf610" title="Permalink to this headline">¶</a></h2>
 <p>Has the following ABI:</p>
 <ul class="simple">
-<li><p><a class="reference internal" href="#abi-sys-bus-iio-devices-iio-devicex-conversion-mode"><span class="std std-ref">/sys/bus/iio/devices/iio:deviceX/conversion_mode</span></a></p></li>
+<li><p><a class="reference internal" href="#abi-sys-bus-iio-devices-iio-devicex-in-conversion-mode"><span class="std std-ref">/sys/bus/iio/devices/iio:deviceX/in_conversion_mode</span></a></p></li>
 <li><p><a class="reference internal" href="#abi-sys-bus-iio-devices-iio-devicex-out-conversion-mode"><span class="std std-ref">/sys/bus/iio/devices/iio:deviceX/out_conversion_mode</span></a></p></li>
 </ul>
 </section>
