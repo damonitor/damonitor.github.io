@@ -10,7 +10,7 @@ do
 
 	for dir in *
 	do
-		if [ ! -d "$dir" ] || [ "$dir" = "vm" ] ||
+		if [ ! -d "$dir" ] || [ "$dir" = "mm" ] ||
 			[ "$dir" = "admin-guide" ] || [ "$dir" = "_static" ] ||
 			[ "$dir" = "_images" ]
 		then
@@ -24,7 +24,7 @@ do
 	cd ".doctrees"
 	for dir in *
 	do
-		if [ ! -d "$dir" ] || [ "$dir" = "vm" ] ||
+		if [ ! -d "$dir" ] || [ "$dir" = "mm" ] ||
 			[ "$dir" = "admin-guide" ] || [ "$dir" = "_static" ]
 		then
 			continue
