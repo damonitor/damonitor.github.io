@@ -29,7 +29,7 @@
             <a href="../index.html" class="icon icon-home"> The Linux Kernel
           </a>
               <div class="version">
-                5.19.0-rc4-mm-unstable-damon
+                6.0.0-rc3-mm-unstable-damon
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
@@ -40,7 +40,10 @@
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <ul>
-<li class="toctree-l1"><a class="reference internal" href="mm/damon/index.html">Monitoring Data Accesses</a></li>
+<li class="toctree-l1"><a class="reference internal" href="mm/damon/index.html">DAMON: Data Access MONitor</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../mm/damon/index.html">DAMON: Data Access MONitor</a></li>
 </ul>
 
         </div>
@@ -666,6 +669,12 @@ bytes respectively. Such letter suffixes can also be entirely omitted:</p>
         arm64.nomte     [ARM64] Unconditionally disable Memory Tagging Extension
                         support
 
+        arm64.nosve     [ARM64] Unconditionally disable Scalable Vector
+                        Extension support
+
+        arm64.nosme     [ARM64] Unconditionally disable Scalable Matrix
+                        Extension support
+
         ataflop=        [HW,M68k]
 
         atarimouse=     [HW,MOUSE] Atari Mouse
@@ -816,7 +825,7 @@ bytes respectively. Such letter suffixes can also be entirely omitted:</p>
                         nosocket -- Disable socket memory accounting.
                         nokmem -- Disable kernel memory accounting.
 
-        checkreqprot    [SELINUX] Set initial checkreqprot flag value.
+        checkreqprot=   [SELINUX] Set initial checkreqprot flag value.
                         Format: { &quot;0&quot; | &quot;1&quot; }
                         See security/selinux/Kconfig help text.
                         0 -- check protection applied by kernel (includes
@@ -1418,8 +1427,12 @@ bytes respectively. Such letter suffixes can also be entirely omitted:</p>
         nopku           [X86] Disable Memory Protection Keys CPU feature found
                         in some Intel CPUs.
 
-        &lt;module&gt;.async_probe [KNL]
-                        Enable asynchronous probe on this module.
+        &lt;module&gt;.async_probe[=&lt;bool&gt;] [KNL]
+                        If no &lt;bool&gt; value is specified or if the value
+                        specified is not a valid &lt;bool&gt;, enable asynchronous
+                        probe on this module.  Otherwise, enable/disable
+                        asynchronous probe on this module as indicated by the
+                        &lt;bool&gt; value. See also: module.async_probe
 
         early_ioremap_debug [KNL]
                         Enable debug messages in early_ioremap support. This
@@ -1705,7 +1718,7 @@ bytes respectively. Such letter suffixes can also be entirely omitted:</p>
                         (in particular on some ATI chipsets).
                         The kernel tries to set a reasonable default.
 
-        enforcing       [SELINUX] Set initial enforcing status.
+        enforcing=      [SELINUX] Set initial enforcing status.
                         Format: {&quot;0&quot; | &quot;1&quot;}
                         See security/selinux/Kconfig help text.
                         0 -- permissive (log only, no denials).
@@ -1726,6 +1739,14 @@ bytes respectively. Such letter suffixes can also be entirely omitted:</p>
                         Format: { &quot;fix&quot; }
                         Permit 'security.evm' to be updated regardless of
                         current integrity status.
+
+        early_page_ext [KNL] Enforces page_ext initialization to earlier
+                        stages so cover more early boot allocations.
+                        Please note that as side effect some optimizations
+                        might be disabled to achieve that (e.g. parallelized
+                        memory initialization is disabled) so the boot process
+                        might take longer, especially on systems with a lot of
+                        memory. Available with CONFIG_PAGE_EXTENSION=y.
 
         failslab=
         fail_usercopy=
@@ -1932,6 +1953,19 @@ bytes respectively. Such letter suffixes can also be entirely omitted:</p>
                         Default: &quot;on&quot;
 
         hlt             [BUGS=ARM,SH]
+
+        hostname=       [KNL] Set the hostname (aka UTS nodename).
+                        Format: &lt;string&gt;
+                        This allows setting the system's hostname during early
+                        startup. This sets the name returned by gethostname.
+                        Using this parameter to set the hostname makes it
+                        possible to ensure the hostname is correctly set before
+                        any userspace processes run, avoiding the possibility
+                        that a process may call gethostname before the hostname
+                        has been explicitly set, resulting in the calling
+                        process getting an incorrect result. The string must
+                        not exceed the maximum allowed hostname length (usually
+                        64 characters) and will be truncated otherwise.
 
         hpet=           [X86-32,HPET] option to control HPET usage
                         Format: { enable (default) | disable | force |
@@ -2535,23 +2569,39 @@ bytes respectively. Such letter suffixes can also be entirely omitted:</p>
 
         ivrs_ioapic     [HW,X86-64]
                         Provide an override to the IOAPIC-ID&lt;-&gt;DEVICE-ID
-                        mapping provided in the IVRS ACPI table. For
-                        example, to map IOAPIC-ID decimal 10 to
-                        PCI device 00:14.0 write the parameter as:
+                        mapping provided in the IVRS ACPI table.
+                        By default, PCI segment is 0, and can be omitted.
+                        For example:
+                        * To map IOAPIC-ID decimal 10 to PCI device 00:14.0
+                          write the parameter as:
                                 ivrs_ioapic[10]=00:14.0
+                        * To map IOAPIC-ID decimal 10 to PCI segment 0x1 and
+                          PCI device 00:14.0 write the parameter as:
+                                ivrs_ioapic[10]=0001:00:14.0
 
         ivrs_hpet       [HW,X86-64]
                         Provide an override to the HPET-ID&lt;-&gt;DEVICE-ID
-                        mapping provided in the IVRS ACPI table. For
-                        example, to map HPET-ID decimal 0 to
-                        PCI device 00:14.0 write the parameter as:
+                        mapping provided in the IVRS ACPI table.
+                        By default, PCI segment is 0, and can be omitted.
+                        For example:
+                        * To map HPET-ID decimal 0 to PCI device 00:14.0
+                          write the parameter as:
                                 ivrs_hpet[0]=00:14.0
+                        * To map HPET-ID decimal 10 to PCI segment 0x1 and
+                          PCI device 00:14.0 write the parameter as:
+                                ivrs_ioapic[10]=0001:00:14.0
 
         ivrs_acpihid    [HW,X86-64]
                         Provide an override to the ACPI-HID:UID&lt;-&gt;DEVICE-ID
-                        mapping provided in the IVRS ACPI table. For
-                        example, to map UART-HID:UID AMD0020:0 to
-                        PCI device 00:14.5 write the parameter as:
+                        mapping provided in the IVRS ACPI table.
+
+                        For example, to map UART-HID:UID AMD0020:0 to
+                        PCI segment 0x1 and PCI device ID 00:14.5,
+                        write the parameter as:
+                                ivrs_acpihid[0001:00:14.5]=AMD0020:0
+
+                        By default, PCI segment is 0, and can be omitted.
+                        For example, PCI device 00:14.5 write the parameter as:
                                 ivrs_acpihid[00:14.5]=AMD0020:0
 
         js=             [HW,JOY] Analog joystick
@@ -2687,8 +2737,7 @@ bytes respectively. Such letter suffixes can also be entirely omitted:</p>
                         the KVM_CLEAR_DIRTY ioctl, and only for the pages being
                         cleared.
 
-                        Eager page splitting currently only supports splitting
-                        huge pages mapped by the TDP MMU.
+                        Eager page splitting is only supported when kvm.tdp_mmu=Y.
 
                         Default is Y (on).
 
@@ -3370,7 +3419,7 @@ bytes respectively. Such letter suffixes can also be entirely omitted:</p>
                         mem_encrypt=on:         Activate SME
                         mem_encrypt=off:        Do not activate SME
 
-                        Refer to Documentation/virt/kvm/amd-memory-encryption.rst
+                        Refer to Documentation/virt/kvm/x86/amd-memory-encryption.rst
                         for details on when memory encryption can be activated.
 
         mem_sleep_default=      [SUSPEND] Default system suspend mode:
@@ -3428,7 +3477,7 @@ bytes respectively. Such letter suffixes can also be entirely omitted:</p>
                                 improves system performance, but it may also
                                 expose users to several CPU vulnerabilities.
                                 Equivalent to: nopti [X86,PPC]
-                                               kpti=0 [ARM64]
+                                               if nokaslr then kpti=0 [ARM64]
                                                nospectre_v1 [X86,PPC]
                                                nobp=0 [S390]
                                                nospectre_v2 [X86,PPC,S390,ARM64]
@@ -3443,6 +3492,7 @@ bytes respectively. Such letter suffixes can also be entirely omitted:</p>
                                                no_entry_flush [PPC]
                                                no_uaccess_flush [PPC]
                                                mmio_stale_data=off [X86]
+                                               retbleed=off [X86]
 
                                 Exceptions:
                                                This does not have any effect on
@@ -3465,6 +3515,7 @@ bytes respectively. Such letter suffixes can also be entirely omitted:</p>
                                                mds=full,nosmt [X86]
                                                tsx_async_abort=full,nosmt [X86]
                                                mmio_stale_data=full,nosmt [X86]
+                                               retbleed=auto,nosmt [X86]
 
         mminit_loglevel=
                         [KNL] When CONFIG_DEBUG_MEMORY_INIT is set, this
@@ -3507,6 +3558,15 @@ bytes respectively. Such letter suffixes can also be entirely omitted:</p>
 
                         For details see:
                         Documentation/admin-guide/hw-vuln/processor_mmio_stale_data.rst
+
+        module.async_probe=&lt;bool&gt;
+                        [KNL] When set to true, modules will use async probing
+                        by default. To enable/disable async probing for a
+                        specific module, use the module specific control that
+                        is documented under &lt;module&gt;.async_probe. When both
+                        module.async_probe and &lt;module&gt;.async_probe are
+                        specified, &lt;module&gt;.async_probe takes precedence for
+                        the specific module.
 
         module.sig_enforce
                         [KNL] When CONFIG_MODULE_SIG is set, this means that
@@ -3797,9 +3857,6 @@ bytes respectively. Such letter suffixes can also be entirely omitted:</p>
 
         noautogroup     Disable scheduler automatic task group creation.
 
-        nobats          [PPC] Do not use BATs for mapping kernel lowmem
-                        on &quot;Classic&quot; PPC cores.
-
         nocache         [ARM]
 
         nodsp           [SH] Disable hardware DSP at boot time.
@@ -3926,6 +3983,9 @@ bytes respectively. Such letter suffixes can also be entirely omitted:</p>
                         just as if they had also been called out in the
                         rcu_nocbs= boot parameter.
 
+                        Note that this argument takes precedence over
+                        the CONFIG_RCU_NOCB_CPU_DEFAULT_ALL option.
+
         noiotrap        [SH] Disables trapped I/O port accesses.
 
         noirqdebug      [X86-32] Disables the code which attempts to detect and
@@ -3966,9 +4026,6 @@ bytes respectively. Such letter suffixes can also be entirely omitted:</p>
 
         nolapic_timer   [X86-32,APIC] Do not use the local APIC timer.
 
-        noltlbs         [PPC] Do not use large page/tlb entries for kernel
-                        lowmem mapping on PPC40x and PPC8xx
-
         nomca           [IA-64] Disable machine check abort handling
 
         nomce           [X86-32] Disable Machine Check Exception
@@ -3999,11 +4056,6 @@ bytes respectively. Such letter suffixes can also be entirely omitted:</p>
 
         noreplace-smp   [X86-32,SMP] Don't replace SMP instructions
                         with UP alternatives
-
-        nordrand        [X86] Disable kernel use of the RDRAND and
-                        RDSEED instructions even if they are supported
-                        by the processor.  RDRAND and RDSEED are still
-                        available to user space applications.
 
         noresume        [SWSUSP] Disables resume and restores original swap
                         space.
@@ -4824,6 +4876,9 @@ bytes respectively. Such letter suffixes can also be entirely omitted:</p>
                         no-callback mode from boot but the mode may be
                         toggled at runtime via cpusets.
 
+                        Note that this argument takes precedence over
+                        the CONFIG_RCU_NOCB_CPU_DEFAULT_ALL option.
+
         rcu_nocb_poll   [KNL]
                         Rather than requiring that offloaded CPUs
                         (specified by rcu_nocbs= above) explicitly
@@ -4932,6 +4987,34 @@ bytes respectively. Such letter suffixes can also be entirely omitted:</p>
                         the default is zero (non-realtime operation).
                         When RCU_NOCB_CPU is set, also adjust the
                         priority of NOCB callback kthreads.
+
+        rcutree.rcu_divisor= [KNL]
+                        Set the shift-right count to use to compute
+                        the callback-invocation batch limit bl from
+                        the number of callbacks queued on this CPU.
+                        The result will be bounded below by the value of
+                        the rcutree.blimit kernel parameter.  Every bl
+                        callbacks, the softirq handler will exit in
+                        order to allow the CPU to do other work.
+
+                        Please note that this callback-invocation batch
+                        limit applies only to non-offloaded callback
+                        invocation.  Offloaded callbacks are instead
+                        invoked in the context of an rcuoc kthread, which
+                        scheduler will preempt as it does any other task.
+
+        rcutree.nocb_nobypass_lim_per_jiffy= [KNL]
+                        On callback-offloaded (rcu_nocbs) CPUs,
+                        RCU reduces the lock contention that would
+                        otherwise be caused by callback floods through
+                        use of the -&gt;nocb_bypass list.  However, in the
+                        common non-flooded case, RCU queues directly to
+                        the main -&gt;cblist in order to avoid the extra
+                        overhead of the -&gt;nocb_bypass list and its lock.
+                        But if there are too many callbacks queued during
+                        a single jiffy, RCU pre-queues the callbacks into
+                        the -&gt;nocb_bypass queue.  The definition of &quot;too
+                        many&quot; is supplied by this kernel boot parameter.
 
         rcutree.rcu_nocb_gp_stride= [KNL]
                         Set the number of NOCB callback kthreads in
@@ -5464,6 +5547,43 @@ bytes respectively. Such letter suffixes can also be entirely omitted:</p>
 
         retain_initrd   [RAM] Keep initrd memory after extraction
 
+        retbleed=       [X86] Control mitigation of RETBleed (Arbitrary
+                        Speculative Code Execution with Return Instructions)
+                        vulnerability.
+
+                        AMD-based UNRET and IBPB mitigations alone do not stop
+                        sibling threads from influencing the predictions of other
+                        sibling threads. For that reason, STIBP is used on pro-
+                        cessors that support it, and mitigate SMT on processors
+                        that don't.
+
+                        off          - no mitigation
+                        auto         - automatically select a migitation
+                        auto,nosmt   - automatically select a mitigation,
+                                       disabling SMT if necessary for
+                                       the full mitigation (only on Zen1
+                                       and older without STIBP).
+                        ibpb         - On AMD, mitigate short speculation
+                                       windows on basic block boundaries too.
+                                       Safe, highest perf impact. It also
+                                       enables STIBP if present. Not suitable
+                                       on Intel.
+                        ibpb,nosmt   - Like &quot;ibpb&quot; above but will disable SMT
+                                       when STIBP is not available. This is
+                                       the alternative for systems which do not
+                                       have STIBP.
+                        unret        - Force enable untrained return thunks,
+                                       only effective on AMD f15h-f17h based
+                                       systems.
+                        unret,nosmt  - Like unret, but will disable SMT when STIBP
+                                       is not available. This is the alternative for
+                                       systems which do not have STIBP.
+
+                        Selecting 'auto' will choose a mitigation method at run
+                        time according to the CPU.
+
+                        Not specifying this option is equivalent to retbleed=auto.
+
         rfkill.default_state=
                 0       &quot;airplane mode&quot;.  All wifi, bluetooth, wimax, gps, fm,
                         etc. communication is blocked by default.
@@ -5488,6 +5608,8 @@ bytes respectively. Such letter suffixes can also be entirely omitted:</p>
         rodata=         [KNL]
                 on      Mark read-only kernel memory as read-only (default).
                 off     Leave read-only kernel memory writable for debugging.
+                full    Mark read-only kernel memory and aliases as read-only
+                        [arm64]
 
         rockchip.usb_uart
                         Enable the uart passthrough on the designated usb port
@@ -5835,6 +5957,7 @@ bytes respectively. Such letter suffixes can also be entirely omitted:</p>
                         eibrs             - enhanced IBRS
                         eibrs,retpoline   - enhanced IBRS + Retpolines
                         eibrs,lfence      - enhanced IBRS + LFENCE
+                        ibrs              - use IBRS to protect kernel
 
                         Not specifying this option is equivalent to
                         spectre_v2=auto.
@@ -6038,6 +6161,24 @@ bytes respectively. Such letter suffixes can also be entirely omitted:</p>
                         expediting.  Set to zero to disable automatic
                         expediting.
 
+        srcutree.srcu_max_nodelay [KNL]
+                        Specifies the number of no-delay instances
+                        per jiffy for which the SRCU grace period
+                        worker thread will be rescheduled with zero
+                        delay. Beyond this limit, worker thread will
+                        be rescheduled with a sleep delay of one jiffy.
+
+        srcutree.srcu_max_nodelay_phase [KNL]
+                        Specifies the per-grace-period phase, number of
+                        non-sleeping polls of readers. Beyond this limit,
+                        grace period worker thread will be rescheduled
+                        with a sleep delay of one jiffy, between each
+                        rescan of the readers, for a grace period phase.
+
+        srcutree.srcu_retry_check_delay [KNL]
+                        Specifies number of microseconds of non-sleeping
+                        delay between each non-sleeping poll of readers.
+
         srcutree.small_contention_lim [KNL]
                         Specifies the number of update-side contention
                         events per jiffy will be tolerated before
@@ -6171,8 +6312,11 @@ bytes respectively. Such letter suffixes can also be entirely omitted:</p>
                         it if 0 is given (See Documentation/admin-guide/cgroup-v1/memory.rst)
 
         swiotlb=        [ARM,IA-64,PPC,MIPS,X86]
-                        Format: { &lt;int&gt; | force | noforce }
+                        Format: { &lt;int&gt; [,&lt;int&gt;] | force | noforce }
                         &lt;int&gt; -- Number of I/O TLB slabs
+                        &lt;int&gt; -- Second integer after comma. Number of swiotlb
+                                 areas with their own lock. Will be rounded up
+                                 to a power of 2.
                         force -- force using of bounce buffers even if they
                                  wouldn't be automatically used by the kernel
                         noforce -- Never use bounce buffers (for debugging)

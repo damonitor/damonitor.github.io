@@ -29,7 +29,7 @@
             <a href="../index.html" class="icon icon-home"> The Linux Kernel
           </a>
               <div class="version">
-                5.19.0-rc4-mm-unstable-damon
+                6.0.0-rc3-mm-unstable-damon
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
@@ -40,7 +40,10 @@
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <ul>
-<li class="toctree-l1"><a class="reference internal" href="mm/damon/index.html">Monitoring Data Accesses</a></li>
+<li class="toctree-l1"><a class="reference internal" href="mm/damon/index.html">DAMON: Data Access MONitor</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../mm/damon/index.html">DAMON: Data Access MONitor</a></li>
 </ul>
 
         </div>
@@ -80,6 +83,77 @@ be marked stable.</p>
 <p>Programs that use these interfaces are strongly encouraged to add their
 name to the description of these interfaces, so that the kernel
 developers can easily notify them if any changes occur.</p>
+<section id="xxxxxxx-ipa-endpoint-id">
+<h2>…/XXXXXXX.ipa/endpoint_id/<a class="headerlink" href="#xxxxxxx-ipa-endpoint-id" title="Permalink to this headline">¶</a></h2>
+<table class="docutils align-default" id="abi-xxxxxxx-ipa-endpoint-id">
+<colgroup>
+<col style="width: 100%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><strong>…/XXXXXXX.ipa/endpoint_id/</strong></p></td>
+</tr>
+</tbody>
+</table>
+<p>Defined on file <a class="reference internal" href="#abi-file-testing-sysfs-devices-platform-soc-ipa"><span class="std std-ref">sysfs-devices-platform-soc-ipa</span></a></p>
+<p>The …/XXXXXXX.ipa/endpoint_id/ directory contains
+attributes that define IDs associated with IPA
+endpoints.  The “rx” or “tx” in an endpoint name is
+from the perspective of the AP.  An endpoint ID is a
+small unsigned integer.</p>
+</section>
+<section id="xxxxxxx-ipa-endpoint-id-modem-rx">
+<h2>…/XXXXXXX.ipa/endpoint_id/modem_rx<a class="headerlink" href="#xxxxxxx-ipa-endpoint-id-modem-rx" title="Permalink to this headline">¶</a></h2>
+<table class="docutils align-default" id="abi-xxxxxxx-ipa-endpoint-id-modem-rx">
+<colgroup>
+<col style="width: 100%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><strong>…/XXXXXXX.ipa/endpoint_id/modem_rx</strong></p></td>
+</tr>
+</tbody>
+</table>
+<p>Defined on file <a class="reference internal" href="#abi-file-testing-sysfs-devices-platform-soc-ipa"><span class="std std-ref">sysfs-devices-platform-soc-ipa</span></a></p>
+<p>The …/XXXXXXX.ipa/endpoint_id/modem_rx file contains
+the ID of the AP endpoint on which packets originating
+from the embedded modem are received.</p>
+</section>
+<section id="xxxxxxx-ipa-endpoint-id-modem-tx">
+<h2>…/XXXXXXX.ipa/endpoint_id/modem_tx<a class="headerlink" href="#xxxxxxx-ipa-endpoint-id-modem-tx" title="Permalink to this headline">¶</a></h2>
+<table class="docutils align-default" id="abi-xxxxxxx-ipa-endpoint-id-modem-tx">
+<colgroup>
+<col style="width: 100%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><strong>…/XXXXXXX.ipa/endpoint_id/modem_tx</strong></p></td>
+</tr>
+</tbody>
+</table>
+<p>Defined on file <a class="reference internal" href="#abi-file-testing-sysfs-devices-platform-soc-ipa"><span class="std std-ref">sysfs-devices-platform-soc-ipa</span></a></p>
+<p>The …/XXXXXXX.ipa/endpoint_id/modem_tx file contains
+the ID of the AP endpoint on which packets destined
+for the embedded modem are sent.</p>
+</section>
+<section id="xxxxxxx-ipa-endpoint-id-monitor-rx">
+<h2>…/XXXXXXX.ipa/endpoint_id/monitor_rx<a class="headerlink" href="#xxxxxxx-ipa-endpoint-id-monitor-rx" title="Permalink to this headline">¶</a></h2>
+<table class="docutils align-default" id="abi-xxxxxxx-ipa-endpoint-id-monitor-rx">
+<colgroup>
+<col style="width: 100%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><strong>…/XXXXXXX.ipa/endpoint_id/monitor_rx</strong></p></td>
+</tr>
+</tbody>
+</table>
+<p>Defined on file <a class="reference internal" href="#abi-file-testing-sysfs-devices-platform-soc-ipa"><span class="std std-ref">sysfs-devices-platform-soc-ipa</span></a></p>
+<p>The …/XXXXXXX.ipa/endpoint_id/monitor_rx file contains
+the ID of the AP endpoint on which IPA “monitor” data is
+received.  The monitor endpoint supplies replicas of
+packets that enter the IPA hardware for processing.
+Each replicated packet is preceded by a fixed-size “ODL”
+header (see …/XXXXXXX.ipa/feature/monitor, above).
+Large packets are truncated, to reduce the bandwidth
+required to provide the monitor function.</p>
+</section>
 <section id="xxxxxxx-ipa-feature">
 <h2>…/XXXXXXX.ipa/feature/<a class="headerlink" href="#xxxxxxx-ipa-feature" title="Permalink to this headline">¶</a></h2>
 <table class="docutils align-default" id="abi-xxxxxxx-ipa-feature">
@@ -142,9 +216,8 @@ are “MAPv4” or “MAPv5”.</p>
 </tbody>
 </table>
 <p>Defined on file <a class="reference internal" href="#abi-file-testing-sysfs-devices-platform-soc-ipa"><span class="std std-ref">sysfs-devices-platform-soc-ipa</span></a></p>
-<p>The …/XXXXXXX.ipa/modem/ directory contains a set of
-attributes describing properties of the modem execution
-environment reachable by the IPA hardware.</p>
+<p>The …/XXXXXXX.ipa/modem/ directory contains attributes
+describing properties of the modem embedded in the SoC.</p>
 </section>
 <section id="xxxxxxx-ipa-modem-rx-endpoint-id">
 <h2>…/XXXXXXX.ipa/modem/rx_endpoint_id<a class="headerlink" href="#xxxxxxx-ipa-modem-rx-endpoint-id" title="Permalink to this headline">¶</a></h2>
@@ -158,11 +231,8 @@ environment reachable by the IPA hardware.</p>
 </tbody>
 </table>
 <p>Defined on file <a class="reference internal" href="#abi-file-testing-sysfs-devices-platform-soc-ipa"><span class="std std-ref">sysfs-devices-platform-soc-ipa</span></a></p>
-<p>The …/XXXXXXX.ipa/feature/rx_endpoint_id file contains
-the AP endpoint ID that receives packets originating from
-the modem execution environment.  The “rx” is from the
-perspective of the AP; this endpoint is considered an “IPA
-producer”.  An endpoint ID is a small unsigned integer.</p>
+<p>The …/XXXXXXX.ipa/modem/rx_endpoint_id file duplicates
+the value found in …/XXXXXXX.ipa/endpoint_id/modem_rx.</p>
 </section>
 <section id="xxxxxxx-ipa-modem-tx-endpoint-id">
 <h2>…/XXXXXXX.ipa/modem/tx_endpoint_id<a class="headerlink" href="#xxxxxxx-ipa-modem-tx-endpoint-id" title="Permalink to this headline">¶</a></h2>
@@ -176,11 +246,8 @@ producer”.  An endpoint ID is a small unsigned integer.</p>
 </tbody>
 </table>
 <p>Defined on file <a class="reference internal" href="#abi-file-testing-sysfs-devices-platform-soc-ipa"><span class="std std-ref">sysfs-devices-platform-soc-ipa</span></a></p>
-<p>The …/XXXXXXX.ipa/feature/tx_endpoint_id file contains
-the AP endpoint ID used to transmit packets destined for
-the modem execution environment.  The “tx” is from the
-perspective of the AP; this endpoint is considered an “IPA
-consumer”.  An endpoint ID is a small unsigned integer.</p>
+<p>The …/XXXXXXX.ipa/modem/tx_endpoint_id file duplicates
+the value found in …/XXXXXXX.ipa/endpoint_id/modem_tx.</p>
 </section>
 <section id="xxxxxxx-ipa-version">
 <h2>…/XXXXXXX.ipa/version<a class="headerlink" href="#xxxxxxx-ipa-version" title="Permalink to this headline">¶</a></h2>
@@ -1095,8 +1162,8 @@ CONFIG_USB_GADGET_DEBUG_FILES is set.</p></td>
 <p>The attributes:</p>
 <table class="docutils align-default">
 <colgroup>
-<col style="width: 19%" />
-<col style="width: 81%" />
+<col style="width: 21%" />
+<col style="width: 79%" />
 </colgroup>
 <tbody>
 <tr class="row-odd"><td><p>file</p></td>
@@ -1120,6 +1187,14 @@ being a CD-ROM.</p></td>
 <tr class="row-odd"><td><p>nofua</p></td>
 <td><p>Flag specifying that FUA flag
 in SCSI WRITE(10,12)</p></td>
+</tr>
+<tr class="row-even"><td><p>forced_eject</p></td>
+<td><p>This write-only file is useful only when
+the function is active. It causes the backing
+file to be forcibly detached from the LUN,
+regardless of whether the host has allowed it.
+Any non-zero number of bytes written will
+result in ejection.</p></td>
 </tr>
 </tbody>
 </table>
@@ -8810,9 +8885,9 @@ in sync with the values current in the channel subsystem).</p>
 </tbody>
 </table>
 <p>Defined on file <a class="reference internal" href="#abi-file-testing-sysfs-bus-cxl"><span class="std std-ref">sysfs-bus-cxl</span></a></p>
-<p>CXL device objects export the devtype attribute which mirrors
-the same value communicated in the DEVTYPE environment variable
-for uevents for devices on the “cxl” bus.</p>
+<p>(RO) CXL device objects export the devtype attribute which
+mirrors the same value communicated in the DEVTYPE environment
+variable for uevents for devices on the “cxl” bus.</p>
 <table class="docutils align-default" id="abi-sys-bus-cxl-devices-modalias">
 <colgroup>
 <col style="width: 100%" />
@@ -8823,9 +8898,9 @@ for uevents for devices on the “cxl” bus.</p>
 </tbody>
 </table>
 <p>Defined on file <a class="reference internal" href="#abi-file-testing-sysfs-bus-cxl"><span class="std std-ref">sysfs-bus-cxl</span></a></p>
-<p>CXL device objects export the modalias attribute which mirrors
-the same value communicated in the MODALIAS environment variable
-for uevents for devices on the “cxl” bus.</p>
+<p>(RO) CXL device objects export the modalias attribute which
+mirrors the same value communicated in the MODALIAS environment
+variable for uevents for devices on the “cxl” bus.</p>
 <table class="docutils align-default" id="abi-sys-bus-cxl-devices-decoderx-y">
 <colgroup>
 <col style="width: 100%" />
@@ -8836,7 +8911,7 @@ for uevents for devices on the “cxl” bus.</p>
 </tbody>
 </table>
 <p>Defined on file <a class="reference internal" href="#abi-file-testing-sysfs-bus-cxl"><span class="std std-ref">sysfs-bus-cxl</span></a></p>
-<p>CXL decoder objects are enumerated from either a platform
+<p>(RO) CXL decoder objects are enumerated from either a platform
 firmware description, or a CXL HDM decoder register set in a
 PCIe device (see CXL 2.0 section 8.2.5.12 CXL HDM Decoder
 Capability Structure). The ‘X’ in decoderX.Y represents the
@@ -8852,12 +8927,113 @@ instance id of a given decoder resource.</p>
 </tbody>
 </table>
 <p>Defined on file <a class="reference internal" href="#abi-file-testing-sysfs-bus-cxl"><span class="std std-ref">sysfs-bus-cxl</span></a></p>
-<p>When a CXL decoder is of devtype “cxl_decoder_root”, it
+<p>(RO) When a CXL decoder is of devtype “cxl_decoder_root”, it
 represents a fixed memory window identified by platform
 firmware. A fixed window may only support a subset of memory
 types. The ‘cap_*’ attributes indicate whether persistent
 memory, volatile memory, accelerator memory, and / or expander
 memory may be mapped behind this decoder’s memory window.</p>
+<table class="docutils align-default" id="abi-sys-bus-cxl-devices-decoderx-y-create-pmem-region">
+<colgroup>
+<col style="width: 100%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><strong>/sys/bus/cxl/devices/decoderX.Y/create_pmem_region</strong></p></td>
+</tr>
+</tbody>
+</table>
+<p>Defined on file <a class="reference internal" href="#abi-file-testing-sysfs-bus-cxl"><span class="std std-ref">sysfs-bus-cxl</span></a></p>
+<p>(RW) Write a string in the form ‘regionZ’ to start the process
+of defining a new persistent memory region (interleave-set)
+within the decode range bounded by root decoder ‘decoderX.Y’.
+The value written must match the current value returned from
+reading this attribute. An atomic compare exchange operation is
+done on write to assign the requested id to a region and
+allocate the region-id for the next creation attempt. EBUSY is
+returned if the region name written does not match the current
+cached value.</p>
+<table class="docutils align-default" id="abi-sys-bus-cxl-devices-decoderx-y-delete-region">
+<colgroup>
+<col style="width: 100%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><strong>/sys/bus/cxl/devices/decoderX.Y/delete_region</strong></p></td>
+</tr>
+</tbody>
+</table>
+<p>Defined on file <a class="reference internal" href="#abi-file-testing-sysfs-bus-cxl"><span class="std std-ref">sysfs-bus-cxl</span></a></p>
+<p>(WO) Write a string in the form ‘regionZ’ to delete that region,
+provided it is currently idle / not bound to a driver.</p>
+<table class="docutils align-default" id="abi-sys-bus-cxl-devices-decoderx-y-dpa-resource">
+<colgroup>
+<col style="width: 100%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><strong>/sys/bus/cxl/devices/decoderX.Y/dpa_resource</strong></p></td>
+</tr>
+</tbody>
+</table>
+<p>Defined on file <a class="reference internal" href="#abi-file-testing-sysfs-bus-cxl"><span class="std std-ref">sysfs-bus-cxl</span></a></p>
+<p>(RO) When a CXL decoder is of devtype “cxl_decoder_endpoint”,
+and its ‘dpa_size’ attribute is non-zero, this attribute
+indicates the device physical address (DPA) base address of the
+allocation.</p>
+<table class="docutils align-default" id="abi-sys-bus-cxl-devices-decoderx-y-dpa-size">
+<colgroup>
+<col style="width: 100%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><strong>/sys/bus/cxl/devices/decoderX.Y/dpa_size</strong></p></td>
+</tr>
+</tbody>
+</table>
+<p>Defined on file <a class="reference internal" href="#abi-file-testing-sysfs-bus-cxl"><span class="std std-ref">sysfs-bus-cxl</span></a></p>
+<p>(RW) When a CXL decoder is of devtype “cxl_decoder_endpoint” it
+translates from a host physical address range, to a device local
+address range. The range, base address plus length in bytes, of
+DPA allocated to this decoder is conveyed in these 2 attributes.
+Allocations can be mutated as long as the decoder is in the
+disabled state. A write to ‘dpa_size’ releases the previous DPA
+allocation and then attempts to allocate from the free capacity
+in the device partition referred to by ‘decoderX.Y/mode’.
+Allocate and free requests can only be performed on the highest
+instance number disabled decoder with non-zero size. I.e.
+allocations are enforced to occur in increasing ‘decoderX.Y/id’
+order and frees are enforced to occur in decreasing
+‘decoderX.Y/id’ order.</p>
+<table class="docutils align-default" id="abi-sys-bus-cxl-devices-decoderx-y-interleave-granularity">
+<colgroup>
+<col style="width: 100%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><strong>/sys/bus/cxl/devices/decoderX.Y/interleave_granularity</strong></p></td>
+</tr>
+</tbody>
+</table>
+<p>Defined on file <a class="reference internal" href="#abi-file-testing-sysfs-bus-cxl"><span class="std std-ref">sysfs-bus-cxl</span></a></p>
+<p>(RO) The number of consecutive bytes of host physical address
+space this decoder claims at address N before the decode rotates
+to the next target in the interleave at address N +
+interleave_granularity (assuming N is aligned to
+interleave_granularity).</p>
+<table class="docutils align-default" id="abi-sys-bus-cxl-devices-decoderx-y-interleave-ways">
+<colgroup>
+<col style="width: 100%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><strong>/sys/bus/cxl/devices/decoderX.Y/interleave_ways</strong></p></td>
+</tr>
+</tbody>
+</table>
+<p>Defined on file <a class="reference internal" href="#abi-file-testing-sysfs-bus-cxl"><span class="std std-ref">sysfs-bus-cxl</span></a></p>
+<p>(RO) The number of targets across which this decoder’s host
+physical address (HPA) memory range is interleaved. The device
+maps every Nth block of HPA (of size ==
+‘interleave_granularity’) to consecutive DPA addresses. The
+decoder’s position in the interleave is determined by the
+device’s (endpoint or switch) switch ancestry. For root
+decoders their interleave is specified by platform firmware and
+they only specify a downstream target order for host bridges.</p>
 <table class="docutils align-default" id="abi-sys-bus-cxl-devices-decoderx-y-locked">
 <colgroup>
 <col style="width: 100%" />
@@ -8868,12 +9044,34 @@ memory may be mapped behind this decoder’s memory window.</p>
 </tbody>
 </table>
 <p>Defined on file <a class="reference internal" href="#abi-file-testing-sysfs-bus-cxl"><span class="std std-ref">sysfs-bus-cxl</span></a></p>
-<p>CXL HDM decoders have the capability to lock the configuration
-until the next device reset. For decoders of devtype
-“cxl_decoder_root” there is no standard facility to unlock them.
-For decoders of devtype “cxl_decoder_switch” a secondary bus
-reset, of the PCIe bridge that provides the bus for this
-decoders uport, unlocks / resets the decoder.</p>
+<p>(RO) CXL HDM decoders have the capability to lock the
+configuration until the next device reset. For decoders of
+devtype “cxl_decoder_root” there is no standard facility to
+unlock them.  For decoders of devtype “cxl_decoder_switch” a
+secondary bus reset, of the PCIe bridge that provides the bus
+for this decoders uport, unlocks / resets the decoder.</p>
+<table class="docutils align-default" id="abi-sys-bus-cxl-devices-decoderx-y-mode">
+<colgroup>
+<col style="width: 100%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><strong>/sys/bus/cxl/devices/decoderX.Y/mode</strong></p></td>
+</tr>
+</tbody>
+</table>
+<p>Defined on file <a class="reference internal" href="#abi-file-testing-sysfs-bus-cxl"><span class="std std-ref">sysfs-bus-cxl</span></a></p>
+<p>(RW) When a CXL decoder is of devtype “cxl_decoder_endpoint” it
+translates from a host physical address range, to a device local
+address range. Device-local address ranges are further split
+into a ‘ram’ (volatile memory) range and ‘pmem’ (persistent
+memory) range. The ‘mode’ attribute emits one of ‘ram’, ‘pmem’,
+‘mixed’, or ‘none’. The ‘mixed’ indication is for error cases
+when a decoder straddles the volatile/persistent partition
+boundary, and ‘none’ indicates the decoder is not actively
+decoding, or no DPA allocation policy has been set.</p>
+<p>‘mode’ can be written, when the decoder is in the ‘disabled’
+state, with either ‘ram’ or ‘pmem’ to set the boundaries for the
+next allocation.</p>
 <table class="docutils align-default" id="abi-sys-bus-cxl-devices-decoderx-y-target-list">
 <colgroup>
 <col style="width: 100%" />
@@ -8884,10 +9082,10 @@ decoders uport, unlocks / resets the decoder.</p>
 </tbody>
 </table>
 <p>Defined on file <a class="reference internal" href="#abi-file-testing-sysfs-bus-cxl"><span class="std std-ref">sysfs-bus-cxl</span></a></p>
-<p>Display a comma separated list of the current decoder target
-configuration. The list is ordered by the current configured
-interleave order of the decoder’s dport instances. Each entry in
-the list is a dport id.</p>
+<p>(RO) Display a comma separated list of the current decoder
+target configuration. The list is ordered by the current
+configured interleave order of the decoder’s dport instances.
+Each entry in the list is a dport id.</p>
 <table class="docutils align-default" id="abi-sys-bus-cxl-devices-decoderx-y-target-type">
 <colgroup>
 <col style="width: 100%" />
@@ -8898,10 +9096,10 @@ the list is a dport id.</p>
 </tbody>
 </table>
 <p>Defined on file <a class="reference internal" href="#abi-file-testing-sysfs-bus-cxl"><span class="std std-ref">sysfs-bus-cxl</span></a></p>
-<p>When a CXL decoder is of devtype “cxl_decoder_switch”, it can
-optionally decode either accelerator memory (type-2) or expander
-memory (type-3). The ‘target_type’ attribute indicates the
-current setting which may dynamically change based on what
+<p>(RO) When a CXL decoder is of devtype “cxl_decoder_switch”, it
+can optionally decode either accelerator memory (type-2) or
+expander memory (type-3). The ‘target_type’ attribute indicates
+the current setting which may dynamically change based on what
 memory regions are activated in this decode hierarchy.</p>
 <table class="docutils align-default" id="abi-sys-bus-cxl-devices-decoderx-y-start-size">
 <colgroup>
@@ -8913,13 +9111,28 @@ memory regions are activated in this decode hierarchy.</p>
 </tbody>
 </table>
 <p>Defined on file <a class="reference internal" href="#abi-file-testing-sysfs-bus-cxl"><span class="std std-ref">sysfs-bus-cxl</span></a></p>
-<p>The ‘start’ and ‘size’ attributes together convey the physical
-address base and number of bytes mapped in the decoder’s decode
-window. For decoders of devtype “cxl_decoder_root” the address
-range is fixed. For decoders of devtype “cxl_decoder_switch” the
-address is bounded by the decode range of the cxl_port ancestor
-of the decoder’s cxl_port, and dynamically updates based on the
-active memory regions in that address space.</p>
+<p>(RO) The ‘start’ and ‘size’ attributes together convey the
+physical address base and number of bytes mapped in the
+decoder’s decode window. For decoders of devtype
+“cxl_decoder_root” the address range is fixed. For decoders of
+devtype “cxl_decoder_switch” the address is bounded by the
+decode range of the cxl_port ancestor of the decoder’s cxl_port,
+and dynamically updates based on the active memory regions in
+that address space.</p>
+<table class="docutils align-default" id="abi-sys-bus-cxl-devices-endpointx-cdat">
+<colgroup>
+<col style="width: 100%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><strong>/sys/bus/cxl/devices/endpointX/CDAT</strong></p></td>
+</tr>
+</tbody>
+</table>
+<p>Defined on file <a class="reference internal" href="#abi-file-testing-sysfs-bus-cxl"><span class="std std-ref">sysfs-bus-cxl</span></a></p>
+<p>(RO) If this sysfs entry is not present no DOE mailbox was
+found to support CDAT data.  If it is present and the length of
+the data is 0 reading the CDAT data failed.  Otherwise the CDAT
+data is reported.</p>
 <table class="docutils align-default" id="abi-sys-bus-cxl-devices-memx-firmware-version">
 <colgroup>
 <col style="width: 100%" />
@@ -8995,13 +9208,13 @@ Memory Device PCIe Capabilities and Extended Capabilities.</p>
 </tbody>
 </table>
 <p>Defined on file <a class="reference internal" href="#abi-file-testing-sysfs-bus-cxl"><span class="std std-ref">sysfs-bus-cxl</span></a></p>
-<p>CXL port objects are enumerated from either a platform firmware
-device (ACPI0017 and ACPI0016) or PCIe switch upstream port with
-CXL component registers. The ‘dportY’ symlink identifies one or
-more downstream ports that the upstream port may target in its
-decode of CXL memory resources.  The ‘Y’ integer reflects the
-hardware port unique-id used in the hardware decoder target
-list.</p>
+<p>(RO) CXL port objects are enumerated from either a platform
+firmware device (ACPI0017 and ACPI0016) or PCIe switch upstream
+port with CXL component registers. The ‘dportY’ symlink
+identifies one or more downstream ports that the upstream port
+may target in its decode of CXL memory resources.  The ‘Y’
+integer reflects the hardware port unique-id used in the
+hardware decoder target list.</p>
 <table class="docutils align-default" id="abi-sys-bus-cxl-devices-portx-uport">
 <colgroup>
 <col style="width: 100%" />
@@ -9012,11 +9225,127 @@ list.</p>
 </tbody>
 </table>
 <p>Defined on file <a class="reference internal" href="#abi-file-testing-sysfs-bus-cxl"><span class="std std-ref">sysfs-bus-cxl</span></a></p>
-<p>CXL port objects are enumerated from either a platform firmware
-device (ACPI0017 and ACPI0016) or PCIe switch upstream port with
-CXL component registers. The ‘uport’ symlink connects the CXL
-portX object to the device that published the CXL port
+<p>(RO) CXL port objects are enumerated from either a platform
+firmware device (ACPI0017 and ACPI0016) or PCIe switch upstream
+port with CXL component registers. The ‘uport’ symlink connects
+the CXL portX object to the device that published the CXL port
 capability.</p>
+<table class="docutils align-default" id="abi-sys-bus-cxl-devices-regionz-commit">
+<colgroup>
+<col style="width: 100%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><strong>/sys/bus/cxl/devices/regionZ/commit</strong></p></td>
+</tr>
+</tbody>
+</table>
+<p>Defined on file <a class="reference internal" href="#abi-file-testing-sysfs-bus-cxl"><span class="std std-ref">sysfs-bus-cxl</span></a></p>
+<p>(RW) Write a boolean ‘true’ string value to this attribute to
+trigger the region to transition from the software programmed
+state to the actively decoding in hardware state. The commit
+operation in addition to validating that the region is in proper
+configured state, validates that the decoders are being
+committed in spec mandated order (last committed decoder id +
+1), and checks that the hardware accepts the commit request.
+Reading this value indicates whether the region is committed or
+not.</p>
+<table class="docutils align-default" id="abi-sys-bus-cxl-devices-regionz-interleave-granularity">
+<colgroup>
+<col style="width: 100%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><strong>/sys/bus/cxl/devices/regionZ/interleave_granularity</strong></p></td>
+</tr>
+</tbody>
+</table>
+<p>Defined on file <a class="reference internal" href="#abi-file-testing-sysfs-bus-cxl"><span class="std std-ref">sysfs-bus-cxl</span></a></p>
+<p>(RW) Set the number of consecutive bytes each device in the
+interleave set will claim. The possible interleave granularity
+values are determined by the CXL spec and the participating
+devices.</p>
+<table class="docutils align-default" id="abi-sys-bus-cxl-devices-regionz-interleave-ways">
+<colgroup>
+<col style="width: 100%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><strong>/sys/bus/cxl/devices/regionZ/interleave_ways</strong></p></td>
+</tr>
+</tbody>
+</table>
+<p>Defined on file <a class="reference internal" href="#abi-file-testing-sysfs-bus-cxl"><span class="std std-ref">sysfs-bus-cxl</span></a></p>
+<p>(RW) Configures the number of devices participating in the
+region is set by writing this value. Each device will provide
+1/interleave_ways of storage for the region.</p>
+<table class="docutils align-default" id="abi-sys-bus-cxl-devices-regionz-resource">
+<colgroup>
+<col style="width: 100%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><strong>/sys/bus/cxl/devices/regionZ/resource</strong></p></td>
+</tr>
+</tbody>
+</table>
+<p>Defined on file <a class="reference internal" href="#abi-file-testing-sysfs-bus-cxl"><span class="std std-ref">sysfs-bus-cxl</span></a></p>
+<p>(RO) A region is a contiguous partition of a CXL root decoder
+address space. Region capacity is allocated by writing to the
+size attribute, the resulting physical address space determined
+by the driver is reflected here. It is therefore not useful to
+read this before writing a value to the size attribute.</p>
+<table class="docutils align-default" id="abi-sys-bus-cxl-devices-regionz-size">
+<colgroup>
+<col style="width: 100%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><strong>/sys/bus/cxl/devices/regionZ/size</strong></p></td>
+</tr>
+</tbody>
+</table>
+<p>Defined on file <a class="reference internal" href="#abi-file-testing-sysfs-bus-cxl"><span class="std std-ref">sysfs-bus-cxl</span></a></p>
+<p>(RW) System physical address space to be consumed by the region.
+When written trigger the driver to allocate space out of the
+parent root decoder’s address space. When read the size of the
+address space is reported and should match the span of the
+region’s resource attribute. Size shall be set after the
+interleave configuration parameters. Once set it cannot be
+changed, only freed by writing 0. The kernel makes no guarantees
+that data is maintained over an address space freeing event, and
+there is no guarantee that a free followed by an allocate
+results in the same address being allocated.</p>
+<table class="docutils align-default" id="abi-sys-bus-cxl-devices-regionz-target-0-n">
+<colgroup>
+<col style="width: 100%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><strong>/sys/bus/cxl/devices/regionZ/target[0..N]</strong></p></td>
+</tr>
+</tbody>
+</table>
+<p>Defined on file <a class="reference internal" href="#abi-file-testing-sysfs-bus-cxl"><span class="std std-ref">sysfs-bus-cxl</span></a></p>
+<p>(RW) Write an endpoint decoder object name to ‘targetX’ where X
+is the intended position of the endpoint device in the region
+interleave and N is the ‘interleave_ways’ setting for the
+region. ENXIO is returned if the write results in an impossible
+to map decode scenario, like the endpoint is unreachable at that
+position relative to the root decoder interleave. EBUSY is
+returned if the position in the region is already occupied, or
+if the region is not in a state to accept interleave
+configuration changes. EINVAL is returned if the object name is
+not an endpoint decoder. Once all positions have been
+successfully written a final validation for decode conflicts is
+performed before activating the region.</p>
+<table class="docutils align-default" id="abi-sys-bus-cxl-devices-regionz-uuid">
+<colgroup>
+<col style="width: 100%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><strong>/sys/bus/cxl/devices/regionZ/uuid</strong></p></td>
+</tr>
+</tbody>
+</table>
+<p>Defined on file <a class="reference internal" href="#abi-file-testing-sysfs-bus-cxl"><span class="std std-ref">sysfs-bus-cxl</span></a></p>
+<p>(RW) Write a unique identifier for the region. This field must
+be set for persistent regions and it must not conflict with the
+UUID of another region.</p>
 <table class="docutils align-default" id="abi-sys-bus-cxl-flush">
 <colgroup>
 <col style="width: 100%" />
@@ -9190,6 +9519,27 @@ supports 2 FIU types, 0 for FME, 1 for PORT.</p>
 where G-keys triggers their regular key codes. “HW” for
 hardware playback mode where the G-keys play their macro
 from the on-board memory.</p>
+<table class="docutils align-default" id="abi-sys-bus-event-source-devices-dev-caps">
+<colgroup>
+<col style="width: 100%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><strong>/sys/bus/event_source/devices/&lt;dev&gt;/caps</strong></p></td>
+</tr>
+</tbody>
+</table>
+<p>Defined on file <a class="reference internal" href="#abi-file-testing-sysfs-bus-event-source-devices-caps"><span class="std std-ref">sysfs-bus-event_source-devices-caps</span></a></p>
+<p>Attribute group to describe the capabilities exposed
+for a particular pmu. Each attribute of this group can
+expose information specific to a PMU, say pmu_name, so that
+userspace can understand some of the feature which the
+platform specific PMU supports.</p>
+<p>One of the example available capability in supported platform
+like Intel is pmu_name, which exposes underlying CPU name known
+to the PMU driver.</p>
+<p>Example output in powerpc:
+grep . /sys/bus/event_source/devices/cpu/caps/*
+/sys/bus/event_source/devices/cpu/caps/pmu_name:POWER9</p>
 <table class="docutils align-default" id="abi-sys-bus-event-source-devices-dev-format">
 <colgroup>
 <col style="width: 100%" />
@@ -11567,25 +11917,10 @@ threshold is automatically appended by one.</p>
 </tr>
 </tbody>
 </table>
-<p>Defined on file <a class="reference internal" href="#abi-file-testing-sysfs-bus-iio-temperature-max31856"><span class="std std-ref">sysfs-bus-iio-temperature-max31856</span></a></p>
+<p>Defined on file <a class="reference internal" href="#abi-file-testing-sysfs-bus-iio-thermocouple"><span class="std std-ref">sysfs-bus-iio-thermocouple</span></a></p>
 <p>Open-circuit fault. The detection of open-circuit faults,
 such as those caused by broken thermocouple wires.
-Reading returns either ‘1’ or ‘0’.</p>
-<table class="docutils align-default">
-<colgroup>
-<col style="width: 5%" />
-<col style="width: 95%" />
-</colgroup>
-<tbody>
-<tr class="row-odd"><td><p>‘1’</p></td>
-<td><p>An open circuit such as broken thermocouple wires
-has been detected.</p></td>
-</tr>
-<tr class="row-even"><td><p>‘0’</p></td>
-<td><p>No open circuit or broken thermocouple wires are detected</p></td>
-</tr>
-</tbody>
-</table>
+Reading returns ‘1’ if fault, ‘0’ otherwise.</p>
 <table class="docutils align-default" id="abi-sys-bus-iio-devices-iio-devicex-fault-ovuv">
 <colgroup>
 <col style="width: 100%" />
@@ -11595,33 +11930,10 @@ has been detected.</p></td>
 </tr>
 </tbody>
 </table>
-<p>Defined on file <a class="reference internal" href="#abi-file-testing-sysfs-bus-iio-temperature-max31856"><span class="std std-ref">sysfs-bus-iio-temperature-max31856</span></a></p>
-<p>Defined on file <a class="reference internal" href="#abi-file-testing-sysfs-bus-iio-temperature-max31865"><span class="std std-ref">sysfs-bus-iio-temperature-max31865</span></a></p>
+<p>Defined on file <a class="reference internal" href="#abi-file-testing-sysfs-bus-iio-thermocouple"><span class="std std-ref">sysfs-bus-iio-thermocouple</span></a></p>
 <p>Overvoltage or Undervoltage Input Fault. The internal circuitry
 is protected from excessive voltages applied to the thermocouple
-cables by integrated MOSFETs at the T+ and T- inputs, and the
-BIAS output. These MOSFETs turn off when the input voltage is
-negative or greater than VDD.</p>
-<p>Reading returns either ‘1’ or ‘0’.</p>
-<table class="docutils align-default">
-<colgroup>
-<col style="width: 5%" />
-<col style="width: 95%" />
-</colgroup>
-<tbody>
-<tr class="row-odd"><td><p>‘1’</p></td>
-<td><p>The input voltage is negative or greater than VDD.</p></td>
-</tr>
-<tr class="row-even"><td><p>‘0’</p></td>
-<td><p>The input voltage is positive and less than VDD (normal
-state).</p></td>
-</tr>
-</tbody>
-</table>
-<p>Overvoltage or Undervoltage Input fault. The internal circuitry
-is protected from excessive voltages applied to the thermocouple
-cables at FORCE+, FORCE2, RTDIN+ &amp; RTDIN-. This circuitry turn
-off when the input voltage is negative or greater than VDD.</p>
+cables. The device can also detect if such a condition occurs.</p>
 <p>Reading returns ‘1’ if input voltage is negative or greater
 than VDD, otherwise ‘0’.</p>
 <table class="docutils align-default" id="abi-sys-bus-iio-devices-iio-devicex-filter-mode">
@@ -12515,12 +12827,8 @@ to compute the calories burnt by the user.</p>
 </tbody>
 </table>
 <p>Defined on file <a class="reference internal" href="#abi-file-testing-sysfs-bus-iio"><span class="std std-ref">sysfs-bus-iio</span></a></p>
-<p>Defined on file <a class="reference internal" href="#abi-file-testing-sysfs-bus-iio-temperature-max31865"><span class="std std-ref">sysfs-bus-iio-temperature-max31865</span></a></p>
 <p>Center frequency in Hz for a notch filter. Used i.e. for line
 noise suppression.</p>
-<p>Notch frequency in Hz for a noise rejection filter. Used i.e for
-line noise rejection.</p>
-<p>Valid notch filter values are 50 Hz and 60 Hz.</p>
 <table class="docutils align-default" id="abi-sys-bus-iio-devices-iio-devicex-in-gravity-x-raw">
 <colgroup>
 <col style="width: 100%" />
@@ -13009,13 +13317,13 @@ physical sensors.</p>
 </table>
 <p>Defined on file <a class="reference internal" href="#abi-file-testing-sysfs-bus-iio-sx9324"><span class="std std-ref">sysfs-bus-iio-sx9324</span></a></p>
 <p>SX9324 has 3 inputs, CS0, CS1 and CS2. Hardware layout
-defines if the input is
-+ not connected (HZ),
-+ grounded (GD),
-+ connected to an antenna where it can act as a base</p>
-<blockquote>
-<div><p>(DS - data shield), or measured input (MI).</p>
-</div></blockquote>
+defines if the input is</p>
+<ul class="simple">
+<li><p>not connected (HZ),</p></li>
+<li><p>grounded (GD),</p></li>
+<li><p>connected to an antenna where it can act as a base
+(DS - data shield), or measured input (MI).</p></li>
+</ul>
 <p>The sensor rotates measurement across 4 phases
 (PH0, PH1, PH2, PH3), where the inputs are configured
 and then measured.</p>
@@ -13741,6 +14049,11 @@ the following standardized labels are used:</p>
 <ul class="simple">
 <li><p>“accel-base”</p></li>
 <li><p>“accel-display”</p></li>
+</ul>
+<p>For devices where an accelerometer is housed in the swivel camera subassembly
+(for AR application), the following standardized label is used:</p>
+<ul class="simple">
+<li><p>“accel-camera”</p></li>
 </ul>
 <table class="docutils align-default" id="abi-sys-bus-iio-devices-iio-devicex-location">
 <colgroup>
@@ -14529,6 +14842,8 @@ affects data ready triggers, hardware buffers and the sysfs
 direct access interfaces, it may be found in any of the
 relevant directories.  If it affects all of the above
 then it is to be found in the base device directory.</p>
+<p>The stm32-timer-trigger has the additional characteristic that
+a sampling_frequency of 0 is defined to stop sampling.</p>
 <table class="docutils align-default" id="abi-sys-bus-iio-devices-iio-devicex-sensor-max-range">
 <colgroup>
 <col style="width: 100%" />
@@ -14873,19 +15188,6 @@ only when there is any motion.</p>
 <p>The BMG160 gyro kernel module provides an additional trigger,
 which sets driver in a mode, where data is pushed to the buffer
 only when there is any motion.</p>
-<table class="docutils align-default" id="abi-sys-bus-iio-devices-triggerx-sampling-frequency">
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
-<tbody>
-<tr class="row-odd"><td><p><strong>/sys/bus/iio/devices/triggerX/sampling_frequency</strong></p></td>
-</tr>
-</tbody>
-</table>
-<p>Defined on file <a class="reference internal" href="#abi-file-testing-sysfs-bus-iio-timer-stm32"><span class="std std-ref">sysfs-bus-iio-timer-stm32</span></a></p>
-<p>Reading returns the current sampling frequency.
-Writing an value different of 0 set and start sampling.
-Writing 0 stop sampling.</p>
 <table class="docutils align-default" id="abi-sys-bus-iio-devices-triggerx-trigger-now">
 <colgroup>
 <col style="width: 100%" />
@@ -16904,6 +17206,61 @@ whether the HSP TPM has been activated.
 Possible values:
 0: Not activated or present
 1: Activated</p>
+<table class="docutils align-default" id="abi-sys-bus-pci-devices-bdf-qat-cfg-services">
+<colgroup>
+<col style="width: 100%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><strong>/sys/bus/pci/devices/&lt;BDF&gt;/qat/cfg_services</strong></p></td>
+</tr>
+</tbody>
+</table>
+<p>Defined on file <a class="reference internal" href="#abi-file-testing-sysfs-driver-qat"><span class="std std-ref">sysfs-driver-qat</span></a></p>
+<p>(RW) Reports the current configuration of the QAT device.
+Write to the file to change the configured services.</p>
+<p>The values are:</p>
+<ul class="simple">
+<li><p>sym;asym: the device is configured for running crypto
+services</p></li>
+<li><p>dc: the device is configured for running compression services</p></li>
+</ul>
+<p>It is possible to set the configuration only if the device
+is in the <cite>down</cite> state (see <a class="reference internal" href="#abi-sys-bus-pci-devices-bdf-qat-state"><span class="std std-ref">/sys/bus/pci/devices/&lt;BDF&gt;/qat/state</span></a>)</p>
+<p>The following example shows how to change the configuration of
+a device configured for running crypto services in order to
+run data compression:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span># cat /sys/bus/pci/devices/&lt;BDF&gt;/qat/state
+up
+# cat /sys/bus/pci/devices/&lt;BDF&gt;/qat/cfg_services
+sym;asym
+# echo down &gt; /sys/bus/pci/devices/&lt;BDF&gt;/qat/state
+# echo dc &gt; /sys/bus/pci/devices/&lt;BDF&gt;/qat/cfg_services
+# echo up &gt; /sys/bus/pci/devices/&lt;BDF&gt;/qat/state
+# cat /sys/bus/pci/devices/&lt;BDF&gt;/qat/cfg_services
+dc
+</pre></div>
+</div>
+<p>This attribute is only available for qat_4xxx devices.</p>
+<table class="docutils align-default" id="abi-sys-bus-pci-devices-bdf-qat-state">
+<colgroup>
+<col style="width: 100%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><strong>/sys/bus/pci/devices/&lt;BDF&gt;/qat/state</strong></p></td>
+</tr>
+</tbody>
+</table>
+<p>Defined on file <a class="reference internal" href="#abi-file-testing-sysfs-driver-qat"><span class="std std-ref">sysfs-driver-qat</span></a></p>
+<p>(RW) Reports the current state of the QAT device. Write to
+the file to start or stop the device.</p>
+<p>The values are:</p>
+<ul class="simple">
+<li><p>up: the device is up and running</p></li>
+<li><p>down: the device is down</p></li>
+</ul>
+<p>It is possible to transition the device from up to down only
+if the device is up and vice versa.</p>
+<p>This attribute is only available for qat_4xxx devices.</p>
 <table class="docutils align-default" id="abi-sys-bus-pci-devices-bdf-rom-armor-enforced">
 <colgroup>
 <col style="width: 100%" />
@@ -17688,6 +18045,18 @@ addition the slave freezes its internal error register for
 debugging purposes.  This command is also needed to abort any
 ongoing operation in case of an expired ‘Master Time Out’
 timer.</p>
+<table class="docutils align-default" id="abi-sys-bus-platform-devices-dev-always-powered-in-suspend">
+<colgroup>
+<col style="width: 100%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><strong>/sys/bus/platform/devices/&lt;dev&gt;/always_powered_in_suspend</strong></p></td>
+</tr>
+</tbody>
+</table>
+<p>Defined on file <a class="reference internal" href="#abi-file-testing-sysfs-bus-platform-onboard-usb-hub"><span class="std std-ref">sysfs-bus-platform-onboard-usb-hub</span></a></p>
+<p>(RW) Controls whether the USB hub remains always powered
+during system suspend or not.</p>
 <table class="docutils align-default" id="abi-sys-bus-platform-devices-acpi000e-00-ac-alarm">
 <colgroup>
 <col style="width: 100%" />
@@ -17757,7 +18126,7 @@ Section 9.18.5):</p>
 </table>
 <p>The other bits are reserved.</p>
 <p>Reads also cause the AC alarm timer status to be reset.</p>
-<p>Another way to reset the the status of the AC alarm timer is to
+<p>Another way to reset the status of the AC alarm timer is to
 write (the number) 0 to this file.</p>
 <p>If the status return value indicates that the timer has expired,
 it will immediately wake up the system from the S3 sleep state
@@ -19559,6 +19928,103 @@ USB Debugger(EUD). This enables and disables the
 EUD based on a 1 or a 0 value. By enabling EUD,
 the user is able to activate the mini-usb hub of
 EUD for debug and trace capabilities.</p>
+<table class="docutils align-default" id="abi-sys-bus-platform-drivers-intel-m10bmc-sec-update-security-bmc-canceled-csks">
+<colgroup>
+<col style="width: 100%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><strong>/sys/bus/platform/drivers/intel-m10bmc-sec-update/…/security/bmc_canceled_csks</strong></p></td>
+</tr>
+</tbody>
+</table>
+<p>Defined on file <a class="reference internal" href="#abi-file-testing-sysfs-driver-intel-m10-bmc-sec-update"><span class="std std-ref">sysfs-driver-intel-m10-bmc-sec-update</span></a></p>
+<p>Read only. Returns a list of indices for canceled code
+signing keys for the BMC.  The standard bitmap list format
+is used (e.g. “1,2-6,9”).</p>
+<table class="docutils align-default" id="abi-sys-bus-platform-drivers-intel-m10bmc-sec-update-security-bmc-root-entry-hash">
+<colgroup>
+<col style="width: 100%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><strong>/sys/bus/platform/drivers/intel-m10bmc-sec-update/…/security/bmc_root_entry_hash</strong></p></td>
+</tr>
+</tbody>
+</table>
+<p>Defined on file <a class="reference internal" href="#abi-file-testing-sysfs-driver-intel-m10-bmc-sec-update"><span class="std std-ref">sysfs-driver-intel-m10-bmc-sec-update</span></a></p>
+<p>Read only. Returns the root entry hash for the BMC image
+if one is programmed, else it returns the string:
+“hash not programmed”.  This file is only visible if the
+underlying device supports it.
+Format: string.</p>
+<table class="docutils align-default" id="abi-sys-bus-platform-drivers-intel-m10bmc-sec-update-security-flash-count">
+<colgroup>
+<col style="width: 100%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><strong>/sys/bus/platform/drivers/intel-m10bmc-sec-update/…/security/flash_count</strong></p></td>
+</tr>
+</tbody>
+</table>
+<p>Defined on file <a class="reference internal" href="#abi-file-testing-sysfs-driver-intel-m10-bmc-sec-update"><span class="std std-ref">sysfs-driver-intel-m10-bmc-sec-update</span></a></p>
+<p>Read only. Returns number of times the secure update
+staging area has been flashed.
+Format: “%u”.</p>
+<table class="docutils align-default" id="abi-sys-bus-platform-drivers-intel-m10bmc-sec-update-security-pr-canceled-csks">
+<colgroup>
+<col style="width: 100%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><strong>/sys/bus/platform/drivers/intel-m10bmc-sec-update/…/security/pr_canceled_csks</strong></p></td>
+</tr>
+</tbody>
+</table>
+<p>Defined on file <a class="reference internal" href="#abi-file-testing-sysfs-driver-intel-m10-bmc-sec-update"><span class="std std-ref">sysfs-driver-intel-m10-bmc-sec-update</span></a></p>
+<p>Read only. Returns a list of indices for canceled code
+signing keys for the partial reconfiguration region. The
+standard bitmap list format is used (e.g. “1,2-6,9”).</p>
+<table class="docutils align-default" id="abi-sys-bus-platform-drivers-intel-m10bmc-sec-update-security-pr-root-entry-hash">
+<colgroup>
+<col style="width: 100%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><strong>/sys/bus/platform/drivers/intel-m10bmc-sec-update/…/security/pr_root_entry_hash</strong></p></td>
+</tr>
+</tbody>
+</table>
+<p>Defined on file <a class="reference internal" href="#abi-file-testing-sysfs-driver-intel-m10-bmc-sec-update"><span class="std std-ref">sysfs-driver-intel-m10-bmc-sec-update</span></a></p>
+<p>Read only. Returns the root entry hash for the partial
+reconfiguration region if one is programmed, else it
+returns the string: “hash not programmed”.  This file
+is only visible if the underlying device supports it.
+Format: string.</p>
+<table class="docutils align-default" id="abi-sys-bus-platform-drivers-intel-m10bmc-sec-update-security-sr-canceled-csks">
+<colgroup>
+<col style="width: 100%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><strong>/sys/bus/platform/drivers/intel-m10bmc-sec-update/…/security/sr_canceled_csks</strong></p></td>
+</tr>
+</tbody>
+</table>
+<p>Defined on file <a class="reference internal" href="#abi-file-testing-sysfs-driver-intel-m10-bmc-sec-update"><span class="std std-ref">sysfs-driver-intel-m10-bmc-sec-update</span></a></p>
+<p>Read only. Returns a list of indices for canceled code
+signing keys for the static region. The standard bitmap
+list format is used (e.g. “1,2-6,9”).</p>
+<table class="docutils align-default" id="abi-sys-bus-platform-drivers-intel-m10bmc-sec-update-security-sr-root-entry-hash">
+<colgroup>
+<col style="width: 100%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><strong>/sys/bus/platform/drivers/intel-m10bmc-sec-update/…/security/sr_root_entry_hash</strong></p></td>
+</tr>
+</tbody>
+</table>
+<p>Defined on file <a class="reference internal" href="#abi-file-testing-sysfs-driver-intel-m10-bmc-sec-update"><span class="std std-ref">sysfs-driver-intel-m10-bmc-sec-update</span></a></p>
+<p>Read only. Returns the root entry hash for the static
+region if one is programmed, else it returns the
+string: “hash not programmed”.  This file is only
+visible if the underlying device supports it.
+Format: string.</p>
 <table class="docutils align-default" id="abi-sys-bus-platform-drivers-ufshcd-attributes-active-icc-level">
 <colgroup>
 <col style="width: 100%" />
@@ -22793,6 +23259,63 @@ flash device.</p>
 device supports the “Read SFDP” command (5Ah).</p>
 <p>If present, it contains the complete SFDP (serial flash
 discoverable parameters) binary data of the flash.</p>
+<table class="docutils align-default" id="abi-sys-bus-surface-aggregator-devices-01-0e-01-00-01-state">
+<colgroup>
+<col style="width: 100%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><strong>/sys/bus/surface_aggregator/devices/01:0e:01:00:01/state</strong></p></td>
+</tr>
+</tbody>
+</table>
+<p>Defined on file <a class="reference internal" href="#abi-file-testing-sysfs-bus-surface-aggregator-tabletsw"><span class="std std-ref">sysfs-bus-surface_aggregator-tabletsw</span></a></p>
+<p>This attribute returns a string with the current type-cover
+or device posture, as indicated by the embedded controller.
+Currently returned posture states are:</p>
+<ul class="simple">
+<li><p>“disconnected”: The type-cover has been disconnected.</p></li>
+<li><p>“closed”: The type-cover has been folded closed and lies on
+top of the display.</p></li>
+<li><p>“laptop”: The type-cover is open and in laptop-mode, i.e.,
+ready for normal use.</p></li>
+<li><p>“folded-canvas”: The type-cover has been folded back
+part-ways, but does not lie flush with the back side of the
+device. In general, this means that the kick-stand is used
+and extended atop of the cover.</p></li>
+<li><p>“folded-back”: The type cover has been fully folded back and
+lies flush with the back side of the device.</p></li>
+<li><p>“&lt;unknown&gt;”: The current state is unknown to the driver, for
+example due to newer as-of-yet unsupported hardware.</p></li>
+</ul>
+<p>New states may be introduced with new hardware. Users therefore
+must not rely on this list of states being exhaustive and
+gracefully handle unknown states.</p>
+<table class="docutils align-default" id="abi-sys-bus-surface-aggregator-devices-01-26-01-00-01-state">
+<colgroup>
+<col style="width: 100%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><strong>/sys/bus/surface_aggregator/devices/01:26:01:00:01/state</strong></p></td>
+</tr>
+</tbody>
+</table>
+<p>Defined on file <a class="reference internal" href="#abi-file-testing-sysfs-bus-surface-aggregator-tabletsw"><span class="std std-ref">sysfs-bus-surface_aggregator-tabletsw</span></a></p>
+<p>This attribute returns a string with the current device posture, as indicated by the embedded controller. Currently
+returned posture states are:</p>
+<ul class="simple">
+<li><p>“closed”: The lid of the device is closed.</p></li>
+<li><p>“laptop”: The lid of the device is opened and the device
+operates as a normal laptop.</p></li>
+<li><p>“slate”: The screen covers the keyboard or has been flipped
+back and the device operates mainly based on touch input.</p></li>
+<li><p>“tablet”: The device operates as tablet and exclusively
+relies on touch input (or external peripherals).</p></li>
+<li><p>“&lt;unknown&gt;”: The current state is unknown to the driver, for
+example due to newer as-of-yet unsupported hardware.</p></li>
+</ul>
+<p>New states may be introduced with new hardware. Users therefore
+must not rely on this list of states being exhaustive and
+gracefully handle unknown states.</p>
 <table class="docutils align-default" id="abi-sys-bus-tee-devices-optee-ta-uuid">
 <colgroup>
 <col style="width: 100%" />
@@ -23743,6 +24266,22 @@ information is available, and “unknown” otherwise.</p>
 only created when USB Type-C Connector Class is enabled, and
 only if the system firmware is capable of describing the
 connection between a port and its connector.</p>
+<table class="docutils align-default" id="abi-sys-bus-usb-devices-hub-interface-port-x-disable">
+<colgroup>
+<col style="width: 100%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><strong>/sys/bus/usb/devices/…/&lt;hub_interface&gt;/port&lt;X&gt;/disable</strong></p></td>
+</tr>
+</tbody>
+</table>
+<p>Defined on file <a class="reference internal" href="#abi-file-testing-sysfs-bus-usb"><span class="std std-ref">sysfs-bus-usb</span></a></p>
+<p>This file controls the state of a USB port, including
+Vbus power output (but only on hubs that support
+power switching – most hubs don’t support it). If
+a port is disabled, the port is unusable: Devices
+attached to the port will not be detected, initialized,
+or enumerated.</p>
 <table class="docutils align-default" id="abi-sys-bus-usb-devices-hub-interface-port-x-location">
 <colgroup>
 <col style="width: 100%" />
@@ -29763,6 +30302,22 @@ RO</p>
 <p>Defined on file <a class="reference internal" href="#abi-file-testing-sysfs-class-hwmon"><span class="std std-ref">sysfs-class-hwmon</span></a></p>
 <p>Reset currX_lowest and currX_highest for all sensors</p>
 <p>WO</p>
+<table class="docutils align-default" id="abi-sys-class-hwmon-hwmonx-device-pec">
+<colgroup>
+<col style="width: 100%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><strong>/sys/class/hwmon/hwmonX/device/pec</strong></p></td>
+</tr>
+</tbody>
+</table>
+<p>Defined on file <a class="reference internal" href="#abi-file-testing-sysfs-class-hwmon"><span class="std std-ref">sysfs-class-hwmon</span></a></p>
+<p>PEC support on I2C devices</p>
+<ul class="simple">
+<li><p>0, off, n: disable</p></li>
+<li><p>1, on, y: enable</p></li>
+</ul>
+<p>RW</p>
 <table class="docutils align-default" id="abi-sys-class-hwmon-hwmonx-energyy-enable">
 <colgroup>
 <col style="width: 100%" />
@@ -37597,7 +38152,7 @@ Operation blocks until RTRS path is disconnected.</p>
 </tbody>
 </table>
 <p>Defined on file <a class="reference internal" href="#abi-file-testing-sysfs-class-rtrs-client"><span class="std std-ref">sysfs-class-rtrs-client</span></a></p>
-<p>RO, Contains the the name of HCA the connection established on.</p>
+<p>RO, Contains the name of HCA the connection established on.</p>
 <table class="docutils align-default" id="abi-sys-class-rtrs-client-session-name-paths-src-dst-hca-port">
 <colgroup>
 <col style="width: 100%" />
@@ -37775,7 +38330,7 @@ Operations is non-blocking and returns control immediately to the caller.</p>
 </tbody>
 </table>
 <p>Defined on file <a class="reference internal" href="#abi-file-testing-sysfs-class-rtrs-server"><span class="std std-ref">sysfs-class-rtrs-server</span></a></p>
-<p>RO, Contains the the name of HCA the connection established on.</p>
+<p>RO, Contains the name of HCA the connection established on.</p>
 <table class="docutils align-default" id="abi-sys-class-rtrs-server-session-name-paths-src-dst-hca-port">
 <colgroup>
 <col style="width: 100%" />
@@ -40427,7 +40982,6 @@ Valid values:
 - “normal”: CC1 orientation
 - “reverse”: CC2 orientation
 - “unknown”: Orientation cannot be determined.</p>
-<p>USB Type-C partner devices (eg. /sys/class/typec/port0-partner/)</p>
 <table class="docutils align-default" id="abi-sys-class-typec-port-port-type">
 <colgroup>
 <col style="width: 100%" />
@@ -40516,6 +41070,20 @@ It should be handled as enabling of Try.SRC or Try.SNK, as
 defined in USB Type-C specification, in the port drivers. By
 default the preferred role should come from the platform.</p>
 <p>Valid values: source, sink, none (to remove preference)</p>
+<table class="docutils align-default" id="abi-sys-class-typec-port-select-usb-power-delivery">
+<colgroup>
+<col style="width: 100%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><strong>/sys/class/typec/&lt;port&gt;/select_usb_power_delivery</strong></p></td>
+</tr>
+</tbody>
+</table>
+<p>Defined on file <a class="reference internal" href="#abi-file-testing-sysfs-class-typec"><span class="std std-ref">sysfs-class-typec</span></a></p>
+<p>Lists the USB Power Delivery Capabilities that the port can
+advertise to the partner. The currently used capabilities are in
+brackets. Selection happens by writing to the file.</p>
+<p>USB Type-C partner devices (eg. /sys/class/typec/port0-partner/)</p>
 <table class="docutils align-default" id="abi-sys-class-typec-port-supported-accessory-modes">
 <colgroup>
 <col style="width: 100%" />
@@ -40659,6 +41227,397 @@ Return -ENODEV if uacce_ops get_available_instances is not provided</p>
 </table>
 <p>Defined on file <a class="reference internal" href="#abi-file-testing-configfs-usb-gadget-uvc"><span class="std std-ref">configfs-usb-gadget-uvc</span></a></p>
 <p>UVC configfs function instance name</p>
+<table class="docutils align-default" id="abi-sys-class-usb-power-delivery">
+<colgroup>
+<col style="width: 100%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><strong>/sys/class/usb_power_delivery</strong></p></td>
+</tr>
+</tbody>
+</table>
+<p>Defined on file <a class="reference internal" href="#abi-file-testing-sysfs-class-usb-power-delivery"><span class="std std-ref">sysfs-class-usb_power_delivery</span></a></p>
+<p>Directory for USB Power Delivery devices.</p>
+<table class="docutils align-default" id="abi-sys-class-usb-power-delivery-capability-1-fixed-supply-dual-role-data">
+<colgroup>
+<col style="width: 100%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><strong>/sys/class/usb_power_delivery/…/&lt;capability&gt;/1:fixed_supply/dual_role_data</strong></p></td>
+</tr>
+</tbody>
+</table>
+<p>Defined on file <a class="reference internal" href="#abi-file-testing-sysfs-class-usb-power-delivery"><span class="std std-ref">sysfs-class-usb_power_delivery</span></a></p>
+<p>This file shows the value of the Dual-Role Data bit in vSafe5V
+Fixed Supply Object. Dual role data means ability act as both
+USB host and USB device.</p>
+<table class="docutils align-default" id="abi-sys-class-usb-power-delivery-capability-1-fixed-supply-dual-role-power">
+<colgroup>
+<col style="width: 100%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><strong>/sys/class/usb_power_delivery/…/&lt;capability&gt;/1:fixed_supply/dual_role_power</strong></p></td>
+</tr>
+</tbody>
+</table>
+<p>Defined on file <a class="reference internal" href="#abi-file-testing-sysfs-class-usb-power-delivery"><span class="std std-ref">sysfs-class-usb_power_delivery</span></a></p>
+<p>This file contains boolean value that tells does the device
+support both source and sink power roles.</p>
+<table class="docutils align-default" id="abi-sys-class-usb-power-delivery-capability-1-fixed-supply-unchunked-extended-messages-supported">
+<colgroup>
+<col style="width: 100%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><strong>/sys/class/usb_power_delivery/…/&lt;capability&gt;/1:fixed_supply/unchunked_extended_messages_supported</strong></p></td>
+</tr>
+</tbody>
+</table>
+<p>Defined on file <a class="reference internal" href="#abi-file-testing-sysfs-class-usb-power-delivery"><span class="std std-ref">sysfs-class-usb_power_delivery</span></a></p>
+<p>This file shows the value of the Unchunked Extended Messages
+Supported bit in vSafe5V Fixed Supply Object.</p>
+<table class="docutils align-default" id="abi-sys-class-usb-power-delivery-capability-1-fixed-supply-unconstrained-power">
+<colgroup>
+<col style="width: 100%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><strong>/sys/class/usb_power_delivery/…/&lt;capability&gt;/1:fixed_supply/unconstrained_power</strong></p></td>
+</tr>
+</tbody>
+</table>
+<p>Defined on file <a class="reference internal" href="#abi-file-testing-sysfs-class-usb-power-delivery"><span class="std std-ref">sysfs-class-usb_power_delivery</span></a></p>
+<p>This file shows the value of the Unconstrained Power bit in
+vSafe5V Fixed Supply Object. The bit is set when an external
+source of power, powerful enough to power the entire system on
+its own, is available for the device.</p>
+<table class="docutils align-default" id="abi-sys-class-usb-power-delivery-capability-1-fixed-supply-usb-communication-capable">
+<colgroup>
+<col style="width: 100%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><strong>/sys/class/usb_power_delivery/…/&lt;capability&gt;/1:fixed_supply/usb_communication_capable</strong></p></td>
+</tr>
+</tbody>
+</table>
+<p>Defined on file <a class="reference internal" href="#abi-file-testing-sysfs-class-usb-power-delivery"><span class="std std-ref">sysfs-class-usb_power_delivery</span></a></p>
+<p>This file shows the value of the USB Communication Capable bit in
+vSafe5V Fixed Supply Object.</p>
+<table class="docutils align-default" id="abi-sys-class-usb-power-delivery-capability-1-fixed-supply-usb-suspend-supported">
+<colgroup>
+<col style="width: 100%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><strong>/sys/class/usb_power_delivery/…/&lt;capability&gt;/1:fixed_supply/usb_suspend_supported</strong></p></td>
+</tr>
+</tbody>
+</table>
+<p>Defined on file <a class="reference internal" href="#abi-file-testing-sysfs-class-usb-power-delivery"><span class="std std-ref">sysfs-class-usb_power_delivery</span></a></p>
+<p>This file shows the value of the USB Suspend Supported bit in
+vSafe5V Fixed Supply Object. If the bit is set then the device
+will follow the USB 2.0 and USB 3.2 rules for suspend and
+resume.</p>
+<table class="docutils align-default" id="abi-sys-class-usb-power-delivery-capability-position-battery">
+<colgroup>
+<col style="width: 100%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><strong>/sys/class/usb_power_delivery/…/&lt;capability&gt;/&lt;position&gt;:battery</strong></p></td>
+</tr>
+</tbody>
+</table>
+<p>Defined on file <a class="reference internal" href="#abi-file-testing-sysfs-class-usb-power-delivery"><span class="std std-ref">sysfs-class-usb_power_delivery</span></a></p>
+<p>Battery PDO.</p>
+<table class="docutils align-default" id="abi-sys-class-usb-power-delivery-capability-position-battery-maximum-voltage">
+<colgroup>
+<col style="width: 100%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><strong>/sys/class/usb_power_delivery/…/&lt;capability&gt;/&lt;position&gt;:battery/maximum_voltage</strong></p></td>
+</tr>
+</tbody>
+</table>
+<p>Defined on file <a class="reference internal" href="#abi-file-testing-sysfs-class-usb-power-delivery"><span class="std std-ref">sysfs-class-usb_power_delivery</span></a></p>
+<p>Maximum Voltage in millivolts.</p>
+<table class="docutils align-default" id="abi-sys-class-usb-power-delivery-capability-position-battery-minimum-voltage">
+<colgroup>
+<col style="width: 100%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><strong>/sys/class/usb_power_delivery/…/&lt;capability&gt;/&lt;position&gt;:battery/minimum_voltage</strong></p></td>
+</tr>
+</tbody>
+</table>
+<p>Defined on file <a class="reference internal" href="#abi-file-testing-sysfs-class-usb-power-delivery"><span class="std std-ref">sysfs-class-usb_power_delivery</span></a></p>
+<p>Minimum Voltage in millivolts.</p>
+<table class="docutils align-default" id="abi-sys-class-usb-power-delivery-capability-position-fixed-supply">
+<colgroup>
+<col style="width: 100%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><strong>/sys/class/usb_power_delivery/…/&lt;capability&gt;/&lt;position&gt;:fixed_supply</strong></p></td>
+</tr>
+</tbody>
+</table>
+<p>Defined on file <a class="reference internal" href="#abi-file-testing-sysfs-class-usb-power-delivery"><span class="std std-ref">sysfs-class-usb_power_delivery</span></a></p>
+<p>Devices containing the attributes (the bit fields) defined for
+Fixed Supplies.</p>
+<p>The device “1:fixed_supply” is special. USB Power Delivery
+Specification dictates that the first PDO (at object position
+1), and the only mandatory PDO, is always the vSafe5V Fixed
+Supply Object. vSafe5V Object has additional fields defined for
+it that the other Fixed Supply Objects do not have and that are
+related to the USB capabilities rather than power capabilities.</p>
+<table class="docutils align-default" id="abi-sys-class-usb-power-delivery-capability-position-fixed-supply-voltage">
+<colgroup>
+<col style="width: 100%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><strong>/sys/class/usb_power_delivery/…/&lt;capability&gt;/&lt;position&gt;:fixed_supply/voltage</strong></p></td>
+</tr>
+</tbody>
+</table>
+<p>Defined on file <a class="reference internal" href="#abi-file-testing-sysfs-class-usb-power-delivery"><span class="std std-ref">sysfs-class-usb_power_delivery</span></a></p>
+<p>The voltage the supply supports in millivolts.</p>
+<table class="docutils align-default" id="abi-sys-class-usb-power-delivery-capability-position-programmable-supply">
+<colgroup>
+<col style="width: 100%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><strong>/sys/class/usb_power_delivery/…/&lt;capability&gt;/&lt;position&gt;:programmable_supply</strong></p></td>
+</tr>
+</tbody>
+</table>
+<p>Defined on file <a class="reference internal" href="#abi-file-testing-sysfs-class-usb-power-delivery"><span class="std std-ref">sysfs-class-usb_power_delivery</span></a></p>
+<p>Programmable Power Supply (PPS) Augmented PDO (APDO).</p>
+<table class="docutils align-default" id="abi-sys-class-usb-power-delivery-capability-position-programmable-supply-maximum-current">
+<colgroup>
+<col style="width: 100%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><strong>/sys/class/usb_power_delivery/…/&lt;capability&gt;/&lt;position&gt;:programmable_supply/maximum_current</strong></p></td>
+</tr>
+</tbody>
+</table>
+<p>Defined on file <a class="reference internal" href="#abi-file-testing-sysfs-class-usb-power-delivery"><span class="std std-ref">sysfs-class-usb_power_delivery</span></a></p>
+<p>Maximum Current in milliamperes.</p>
+<table class="docutils align-default" id="abi-sys-class-usb-power-delivery-capability-position-programmable-supply-maximum-voltage">
+<colgroup>
+<col style="width: 100%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><strong>/sys/class/usb_power_delivery/…/&lt;capability&gt;/&lt;position&gt;:programmable_supply/maximum_voltage</strong></p></td>
+</tr>
+</tbody>
+</table>
+<p>Defined on file <a class="reference internal" href="#abi-file-testing-sysfs-class-usb-power-delivery"><span class="std std-ref">sysfs-class-usb_power_delivery</span></a></p>
+<p>Maximum Voltage in millivolts.</p>
+<table class="docutils align-default" id="abi-sys-class-usb-power-delivery-capability-position-programmable-supply-minimum-voltage">
+<colgroup>
+<col style="width: 100%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><strong>/sys/class/usb_power_delivery/…/&lt;capability&gt;/&lt;position&gt;:programmable_supply/minimum_voltage</strong></p></td>
+</tr>
+</tbody>
+</table>
+<p>Defined on file <a class="reference internal" href="#abi-file-testing-sysfs-class-usb-power-delivery"><span class="std std-ref">sysfs-class-usb_power_delivery</span></a></p>
+<p>Minimum Voltage in millivolts.</p>
+<table class="docutils align-default" id="abi-sys-class-usb-power-delivery-capability-position-variable-supply">
+<colgroup>
+<col style="width: 100%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><strong>/sys/class/usb_power_delivery/…/&lt;capability&gt;/&lt;position&gt;:variable_supply</strong></p></td>
+</tr>
+</tbody>
+</table>
+<p>Defined on file <a class="reference internal" href="#abi-file-testing-sysfs-class-usb-power-delivery"><span class="std std-ref">sysfs-class-usb_power_delivery</span></a></p>
+<p>Variable Power Supply PDO.</p>
+<table class="docutils align-default" id="abi-sys-class-usb-power-delivery-capability-position-variable-supply-maximum-voltage">
+<colgroup>
+<col style="width: 100%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><strong>/sys/class/usb_power_delivery/…/&lt;capability&gt;/&lt;position&gt;:variable_supply/maximum_voltage</strong></p></td>
+</tr>
+</tbody>
+</table>
+<p>Defined on file <a class="reference internal" href="#abi-file-testing-sysfs-class-usb-power-delivery"><span class="std std-ref">sysfs-class-usb_power_delivery</span></a></p>
+<p>Maximum Voltage in millivolts.</p>
+<table class="docutils align-default" id="abi-sys-class-usb-power-delivery-capability-position-variable-supply-minimum-voltage">
+<colgroup>
+<col style="width: 100%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><strong>/sys/class/usb_power_delivery/…/&lt;capability&gt;/&lt;position&gt;:variable_supply/minimum_voltage</strong></p></td>
+</tr>
+</tbody>
+</table>
+<p>Defined on file <a class="reference internal" href="#abi-file-testing-sysfs-class-usb-power-delivery"><span class="std std-ref">sysfs-class-usb_power_delivery</span></a></p>
+<p>Minimum Voltage in millivolts.</p>
+<table class="docutils align-default" id="abi-sys-class-usb-power-delivery-revision">
+<colgroup>
+<col style="width: 100%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><strong>/sys/class/usb_power_delivery/…/revision</strong></p></td>
+</tr>
+</tbody>
+</table>
+<p>Defined on file <a class="reference internal" href="#abi-file-testing-sysfs-class-usb-power-delivery"><span class="std std-ref">sysfs-class-usb_power_delivery</span></a></p>
+<p>File showing the USB Power Delivery Specification Revision used
+in communication.</p>
+<table class="docutils align-default" id="abi-sys-class-usb-power-delivery-sink-capabilities">
+<colgroup>
+<col style="width: 100%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><strong>/sys/class/usb_power_delivery/…/sink-capabilities</strong></p></td>
+</tr>
+</tbody>
+</table>
+<p>Defined on file <a class="reference internal" href="#abi-file-testing-sysfs-class-usb-power-delivery"><span class="std std-ref">sysfs-class-usb_power_delivery</span></a></p>
+<p>The sink capability message “Sink_Capabilities” contains a set
+of Power Data Objects (PDO) just like with source capabilities,
+but instead of describing the power capabilities, these objects
+describe the power requirements.</p>
+<p>The order of the objects in the sink capability message is the
+same as with the source capabilities message.</p>
+<p>Fixed Supplies</p>
+<table class="docutils align-default" id="abi-sys-class-usb-power-delivery-sink-capabilities-position-battery-operational-power">
+<colgroup>
+<col style="width: 100%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><strong>/sys/class/usb_power_delivery/…/sink-capabilities/&lt;position&gt;:battery/operational_power</strong></p></td>
+</tr>
+</tbody>
+</table>
+<p>Defined on file <a class="reference internal" href="#abi-file-testing-sysfs-class-usb-power-delivery"><span class="std std-ref">sysfs-class-usb_power_delivery</span></a></p>
+<p>The operational power that the sink requires at the given
+voltage range.</p>
+<p>Standard Power Range (SPR) Programmable Power Supplies</p>
+<table class="docutils align-default" id="abi-sys-class-usb-power-delivery-sink-capabilities-position-fixed-supply-fast-role-swap-current">
+<colgroup>
+<col style="width: 100%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><strong>/sys/class/usb_power_delivery/…/sink-capabilities/&lt;position&gt;:fixed_supply/fast_role_swap_current</strong></p></td>
+</tr>
+</tbody>
+</table>
+<p>Defined on file <a class="reference internal" href="#abi-file-testing-sysfs-class-usb-power-delivery"><span class="std std-ref">sysfs-class-usb_power_delivery</span></a></p>
+<p>This file contains the value of the “Fast Role Swap USB Type-C
+Current” field that tells the current level the sink requires
+after a Fast Role Swap.
+0 - Fast Swap not supported”
+1 - Default USB Power”
+2 - <a class="reference external" href="mailto:1&#46;5A&#37;&#52;&#48;5V">1<span>&#46;</span>5A<span>&#64;</span>5V</a>”
+3 - <a class="reference external" href="mailto:3&#46;0A&#37;&#52;&#48;5V">3<span>&#46;</span>0A<span>&#64;</span>5V</a>”</p>
+<p>Variable Supplies</p>
+<table class="docutils align-default" id="abi-sys-class-usb-power-delivery-sink-capabilities-position-fixed-supply-operational-current">
+<colgroup>
+<col style="width: 100%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><strong>/sys/class/usb_power_delivery/…/sink-capabilities/&lt;position&gt;:fixed_supply/operational_current</strong></p></td>
+</tr>
+</tbody>
+</table>
+<p>Defined on file <a class="reference internal" href="#abi-file-testing-sysfs-class-usb-power-delivery"><span class="std std-ref">sysfs-class-usb_power_delivery</span></a></p>
+<p>Operational current of the sink in milliamperes.</p>
+<table class="docutils align-default" id="abi-sys-class-usb-power-delivery-sink-capabilities-position-variable-supply-operational-current">
+<colgroup>
+<col style="width: 100%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><strong>/sys/class/usb_power_delivery/…/sink-capabilities/&lt;position&gt;:variable_supply/operational_current</strong></p></td>
+</tr>
+</tbody>
+</table>
+<p>Defined on file <a class="reference internal" href="#abi-file-testing-sysfs-class-usb-power-delivery"><span class="std std-ref">sysfs-class-usb_power_delivery</span></a></p>
+<p>The operational current in milliamperes that the sink requires
+at the given Voltage range.</p>
+<p>Battery Supplies</p>
+<table class="docutils align-default" id="abi-sys-class-usb-power-delivery-source-capabilities">
+<colgroup>
+<col style="width: 100%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><strong>/sys/class/usb_power_delivery/…/source-capabilities</strong></p></td>
+</tr>
+</tbody>
+</table>
+<p>Defined on file <a class="reference internal" href="#abi-file-testing-sysfs-class-usb-power-delivery"><span class="std std-ref">sysfs-class-usb_power_delivery</span></a></p>
+<p>The source capabilities message “Source_Capabilities” contains a
+set of Power Data Objects (PDO), each representing a type of
+power supply. The order of the PDO objects is defined in the USB
+Power Delivery Specification. Each PDO - power supply - will
+have its own device, and the PDO device name will start with the
+object position number as the first character followed by the
+power supply type name (“:” as delimiter).</p>
+<blockquote>
+<div><p>/sys/class/usb_power_delivery/…/source_capabilities/&lt;position&gt;:&lt;type&gt;</p>
+</div></blockquote>
+<table class="docutils align-default" id="abi-sys-class-usb-power-delivery-source-capabilities-position-battery-maximum-power">
+<colgroup>
+<col style="width: 100%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><strong>/sys/class/usb_power_delivery/…/source-capabilities/&lt;position&gt;:battery/maximum_power</strong></p></td>
+</tr>
+</tbody>
+</table>
+<p>Defined on file <a class="reference internal" href="#abi-file-testing-sysfs-class-usb-power-delivery"><span class="std std-ref">sysfs-class-usb_power_delivery</span></a></p>
+<p>Maximum allowable Power in milliwatts.</p>
+<table class="docutils align-default" id="abi-sys-class-usb-power-delivery-source-capabilities-position-fixed-supply-maximum-current">
+<colgroup>
+<col style="width: 100%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><strong>/sys/class/usb_power_delivery/…/source-capabilities/&lt;position&gt;:fixed_supply/maximum_current</strong></p></td>
+</tr>
+</tbody>
+</table>
+<p>Defined on file <a class="reference internal" href="#abi-file-testing-sysfs-class-usb-power-delivery"><span class="std std-ref">sysfs-class-usb_power_delivery</span></a></p>
+<p>Maximum current of the fixed source supply in milliamperes.</p>
+<table class="docutils align-default" id="abi-sys-class-usb-power-delivery-source-capabilities-position-programmable-supply-pps-power-limited">
+<colgroup>
+<col style="width: 100%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><strong>/sys/class/usb_power_delivery/…/source-capabilities/&lt;position&gt;:programmable_supply/pps_power_limited</strong></p></td>
+</tr>
+</tbody>
+</table>
+<p>Defined on file <a class="reference internal" href="#abi-file-testing-sysfs-class-usb-power-delivery"><span class="std std-ref">sysfs-class-usb_power_delivery</span></a></p>
+<p>The PPS Power Limited bit indicates whether or not the source
+supply will exceed the rated output power if requested.</p>
+<table class="docutils align-default" id="abi-sys-class-usb-power-delivery-source-capabilities-position-variable-supply-maximum-current">
+<colgroup>
+<col style="width: 100%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><strong>/sys/class/usb_power_delivery/…/source-capabilities/&lt;position&gt;:variable_supply/maximum_current</strong></p></td>
+</tr>
+</tbody>
+</table>
+<p>Defined on file <a class="reference internal" href="#abi-file-testing-sysfs-class-usb-power-delivery"><span class="std std-ref">sysfs-class-usb_power_delivery</span></a></p>
+<p>The maximum current in milliamperes that the source can supply
+at the given Voltage range.</p>
+<table class="docutils align-default" id="abi-sys-class-usb-power-delivery-version">
+<colgroup>
+<col style="width: 100%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><strong>/sys/class/usb_power_delivery/…/version</strong></p></td>
+</tr>
+</tbody>
+</table>
+<p>Defined on file <a class="reference internal" href="#abi-file-testing-sysfs-class-usb-power-delivery"><span class="std std-ref">sysfs-class-usb_power_delivery</span></a></p>
+<p>This is an optional attribute file showing the version of the
+specific revision of the USB Power Delivery Specification. In
+most cases the specification version is not known and the file
+is not available.</p>
 <table class="docutils align-default" id="abi-sys-class-usb-role">
 <colgroup>
 <col style="width: 100%" />
@@ -40991,6 +41950,56 @@ specification.</p>
 <p>Since this relates to security (specifically, the
 lifetime of PTKs and GTKs) it should not be changed
 from the default.</p>
+<table class="docutils align-default" id="abi-sys-class-vduse">
+<colgroup>
+<col style="width: 100%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><strong>/sys/class/vduse/</strong></p></td>
+</tr>
+</tbody>
+</table>
+<p>Defined on file <a class="reference internal" href="#abi-file-testing-sysfs-class-vduse"><span class="std std-ref">sysfs-class-vduse</span></a></p>
+<p>The vduse/ class sub-directory belongs to the VDUSE
+framework and provides a sysfs interface for configuring
+VDUSE devices.</p>
+<table class="docutils align-default" id="abi-sys-class-vduse-device-name">
+<colgroup>
+<col style="width: 100%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><strong>/sys/class/vduse/&lt;device-name&gt;/</strong></p></td>
+</tr>
+</tbody>
+</table>
+<p>Defined on file <a class="reference internal" href="#abi-file-testing-sysfs-class-vduse"><span class="std std-ref">sysfs-class-vduse</span></a></p>
+<p>This directory entry is created when a VDUSE device is
+created via the control device.</p>
+<table class="docutils align-default" id="abi-sys-class-vduse-device-name-msg-timeout">
+<colgroup>
+<col style="width: 100%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><strong>/sys/class/vduse/&lt;device-name&gt;/msg_timeout</strong></p></td>
+</tr>
+</tbody>
+</table>
+<p>Defined on file <a class="reference internal" href="#abi-file-testing-sysfs-class-vduse"><span class="std std-ref">sysfs-class-vduse</span></a></p>
+<p>(RW) The timeout (in seconds) for waiting for the control
+message’s response from userspace. Default value is 30s.
+Writing a ‘0’ to the file means to disable the timeout.</p>
+<table class="docutils align-default" id="abi-sys-class-vduse-control">
+<colgroup>
+<col style="width: 100%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><strong>/sys/class/vduse/control/</strong></p></td>
+</tr>
+</tbody>
+</table>
+<p>Defined on file <a class="reference internal" href="#abi-file-testing-sysfs-class-vduse"><span class="std std-ref">sysfs-class-vduse</span></a></p>
+<p>This directory entry is created for the control device
+of VDUSE framework.</p>
 <table class="docutils align-default" id="abi-sys-class-wakeup">
 <colgroup>
 <col style="width: 100%" />
@@ -41960,7 +42969,7 @@ hibernation.</p>
 </table>
 <p>Defined on file <a class="reference internal" href="#abi-file-testing-sysfs-devices-power"><span class="std std-ref">sysfs-devices-power</span></a></p>
 <p>Reports the runtime PM children usage count of a device, or
-0 if the the children will be ignored.</p>
+0 if the children will be ignored.</p>
 <table class="docutils align-default" id="abi-sys-devices-power-runtime-active-time">
 <colgroup>
 <col style="width: 100%" />
@@ -45801,7 +46810,7 @@ exposes the number of PURR ticks for cpuX.</p>
 <p>Defined on file <a class="reference internal" href="#abi-file-testing-sysfs-devices-system-cpu"><span class="std std-ref">sysfs-devices-system-cpu</span></a></p>
 <p>AArch64 CPU registers</p>
 <p>‘identification’ directory exposes the CPU ID registers for
-identifying model and revision of the CPU.</p>
+identifying model and revision of the CPU and SMCU.</p>
 <table class="docutils align-default" id="abi-sys-devices-system-cpu-cpux-spurr">
 <colgroup>
 <col style="width: 100%" />
@@ -45819,12 +46828,12 @@ invariant estimate of the resources used by the CPU
 thread. The contents of this register increases
 monotonically. This sysfs interface exposes the number
 of SPURR ticks for cpuX.</p>
-<table class="docutils align-default" id="abi-sys-devices-system-cpu-cpux-topology-core-id">
+<table class="docutils align-default" id="abi-sys-devices-system-cpu-cpux-topology-core-siblings">
 <colgroup>
 <col style="width: 100%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td><p><strong>/sys/devices/system/cpu/cpuX/topology/core_id</strong></p></td>
+<tr class="row-odd"><td><p><strong>/sys/devices/system/cpu/cpuX/topology/core_siblings</strong></p></td>
 </tr>
 </tbody>
 </table>
@@ -45834,9 +46843,6 @@ to other cores and threads in the same physical package.</p>
 <p>One cpuX directory is created per logical CPU in the system,
 e.g. /sys/devices/system/cpu/cpu42/.</p>
 <p>Briefly, the files above are:</p>
-<p>core_id: the CPU core ID of cpuX. Typically it is the
-hardware platform’s identifier (rather than the kernel’s).
-The actual value is architecture and platform dependent.</p>
 <p>core_siblings: internal kernel map of cpuX’s hardware threads
 within the same physical_package_id.</p>
 <p>core_siblings_list: human-readable list of the logical CPU
@@ -46801,6 +47807,50 @@ IIO PMU 0 on die 2 belongs to PCI RP on bus 0x80, domain 0x0000
 IIO PMU 0 on die 3 belongs to PCI RP on bus 0xc0, domain 0x0000
 </pre></div>
 </div>
+<table class="docutils align-default" id="abi-sys-devices-virtual-memory-tiering">
+<colgroup>
+<col style="width: 100%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><strong>/sys/devices/virtual/memory_tiering/</strong></p></td>
+</tr>
+</tbody>
+</table>
+<p>Defined on file <a class="reference internal" href="#abi-file-testing-sysfs-kernel-mm-memory-tiers"><span class="std std-ref">sysfs-kernel-mm-memory-tiers</span></a></p>
+<p>A collection of all the memory tiers allocated.</p>
+<p>Individual memory tier details are contained in subdirectories
+named by the abstract distance of the memory tier.</p>
+<p><a class="reference internal" href="#abi-sys-devices-virtual-memory-tiering-memory-tiern"><span class="std std-ref">/sys/devices/virtual/memory_tiering/memory_tierN/</span></a></p>
+<table class="docutils align-default" id="abi-sys-devices-virtual-memory-tiering-memory-tiern">
+<colgroup>
+<col style="width: 100%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><strong>/sys/devices/virtual/memory_tiering/memory_tierN/</strong></p></td>
+</tr>
+</tbody>
+</table>
+<p>Defined on file <a class="reference internal" href="#abi-file-testing-sysfs-kernel-mm-memory-tiers"><span class="std std-ref">sysfs-kernel-mm-memory-tiers</span></a></p>
+<p>Directory with details of a specific memory tier</p>
+<p>This is the directory containing information about a particular
+memory tier, memtierN, where N is derived based on abstract distance.</p>
+<p>A smaller value of N implies a higher (faster) memory tier in the
+hierarchy.</p>
+<p>nodes: NUMA nodes that are part of this memory tier.</p>
+<table class="docutils align-default" id="abi-sys-devices-virtual-memory-tiering-toptier-nodes">
+<colgroup>
+<col style="width: 100%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><strong>/sys/devices/virtual/memory_tiering/toptier_nodes</strong></p></td>
+</tr>
+</tbody>
+</table>
+<p>Defined on file <a class="reference internal" href="#abi-file-testing-sysfs-kernel-mm-memory-tiers"><span class="std std-ref">sysfs-kernel-mm-memory-tiers</span></a></p>
+<p>Toptier node mask</p>
+<p>A toptier is defined as the memory tier from which memory promotion
+is not done by the kernel.</p>
+<p>toptier_nodes: Union of NUMA nodes that are part of each toptier.</p>
 <table class="docutils align-default" id="abi-sys-devices-virtual-misc-intel-ifs-n-details">
 <colgroup>
 <col style="width: 100%" />
@@ -48208,8 +49258,9 @@ by the user on the command line, which makes fw_cfg additionally
 useful as an out-of-band, asynchronous mechanism for providing
 configuration data to the guest userspace.</p>
 <p>The authoritative guest-side hardware interface documentation
-to the fw_cfg device can be found in “docs/specs/fw_cfg.txt”
-in the QEMU source tree.</p>
+to the fw_cfg device can be found in “docs/specs/fw_cfg.rst”
+in the QEMU source tree, or online at:
+<a class="reference external" href="https://qemu-project.gitlab.io/qemu/specs/fw_cfg.html">https://qemu-project.gitlab.io/qemu/specs/fw_cfg.html</a></p>
 <p><strong>SysFS fw_cfg Interface</strong></p>
 <p>The fw_cfg sysfs interface described in this document is only
 intended to display discoverable blobs (i.e., those registered
@@ -48915,6 +49966,18 @@ Its default value is “be,3”, which means “BE” I/O class and
 I/O priority “3”. We can select the class between “rt” and “be”,
 and set the I/O priority within valid range of it. “,” delimiter
 is necessary in between I/O class and priority number.</p>
+<table class="docutils align-default" id="abi-sys-fs-f2fs-disk-committed-atomic-block">
+<colgroup>
+<col style="width: 100%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><strong>/sys/fs/f2fs/&lt;disk&gt;/committed_atomic_block</strong></p></td>
+</tr>
+</tbody>
+</table>
+<p>Defined on file <a class="reference internal" href="#abi-file-testing-sysfs-fs-f2fs"><span class="std std-ref">sysfs-fs-f2fs</span></a></p>
+<p>Show the accumulated total committed atomic write block count after boot.
+If you write “0” here, you can initialize to “0”.</p>
 <table class="docutils align-default" id="abi-sys-fs-f2fs-disk-compr-new-inode">
 <colgroup>
 <col style="width: 100%" />
@@ -48992,6 +50055,18 @@ CONFIG_F2FS_STAT_FS=y.</p>
 </table>
 <p>Defined on file <a class="reference internal" href="#abi-file-testing-sysfs-fs-f2fs"><span class="std std-ref">sysfs-fs-f2fs</span></a></p>
 <p>Controls the checkpoint timing, set to 60 seconds by default.</p>
+<table class="docutils align-default" id="abi-sys-fs-f2fs-disk-current-atomic-write">
+<colgroup>
+<col style="width: 100%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><strong>/sys/fs/f2fs/&lt;disk&gt;/current_atomic_write</strong></p></td>
+</tr>
+</tbody>
+</table>
+<p>Defined on file <a class="reference internal" href="#abi-file-testing-sysfs-fs-f2fs"><span class="std std-ref">sysfs-fs-f2fs</span></a></p>
+<p>Show the total current atomic write block count, which is not committed yet.
+This is a read-only entry.</p>
 <table class="docutils align-default" id="abi-sys-fs-f2fs-disk-current-reserved-blocks">
 <colgroup>
 <col style="width: 100%" />
@@ -49785,6 +50860,18 @@ given temperature-based bits. Now the bits indicate:</p>
 </table>
 <p>Defined on file <a class="reference internal" href="#abi-file-testing-sysfs-fs-f2fs"><span class="std std-ref">sysfs-fs-f2fs</span></a></p>
 <p>Shows the number of overprovision segments.</p>
+<table class="docutils align-default" id="abi-sys-fs-f2fs-disk-peak-atomic-write">
+<colgroup>
+<col style="width: 100%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><strong>/sys/fs/f2fs/&lt;disk&gt;/peak_atomic_write</strong></p></td>
+</tr>
+</tbody>
+</table>
+<p>Defined on file <a class="reference internal" href="#abi-file-testing-sysfs-fs-f2fs"><span class="std std-ref">sysfs-fs-f2fs</span></a></p>
+<p>Show the peak value of total current atomic write block count after boot.
+If you write “0” here, you can initialize to “0”.</p>
 <table class="docutils align-default" id="abi-sys-fs-f2fs-disk-pending-discard">
 <colgroup>
 <col style="width: 100%" />
@@ -49861,6 +50948,18 @@ By default, 5% over total # of segments.</p>
 <p>Defined on file <a class="reference internal" href="#abi-file-testing-sysfs-fs-f2fs"><span class="std std-ref">sysfs-fs-f2fs</span></a></p>
 <p>Controls target reserved blocks in system, the threshold
 is soft, it could exceed current available user space.</p>
+<table class="docutils align-default" id="abi-sys-fs-f2fs-disk-revoked-atomic-block">
+<colgroup>
+<col style="width: 100%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><strong>/sys/fs/f2fs/&lt;disk&gt;/revoked_atomic_block</strong></p></td>
+</tr>
+</tbody>
+</table>
+<p>Defined on file <a class="reference internal" href="#abi-file-testing-sysfs-fs-f2fs"><span class="std std-ref">sysfs-fs-f2fs</span></a></p>
+<p>Show the accumulated total revoked atomic write block count after boot.
+If you write “0” here, you can initialize to “0”.</p>
 <table class="docutils align-default" id="abi-sys-fs-f2fs-disk-seq-file-ra-mul">
 <colgroup>
 <col style="width: 100%" />
@@ -49983,6 +51082,18 @@ Default: 5 secs</p>
 are unusable.
 If checkpoint=enable it displays the number of blocks that
 would be unusable if checkpoint=disable were to be set.</p>
+<table class="docutils align-default" id="abi-sys-fs-f2fs-disk-unusable-blocks-per-sec">
+<colgroup>
+<col style="width: 100%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><strong>/sys/fs/f2fs/&lt;disk&gt;/unusable_blocks_per_sec</strong></p></td>
+</tr>
+</tbody>
+</table>
+<p>Defined on file <a class="reference internal" href="#abi-file-testing-sysfs-fs-f2fs"><span class="std std-ref">sysfs-fs-f2fs</span></a></p>
+<p>Shows the number of unusable blocks in a section which was defined by
+the zone capacity reported by underlying zoned device.</p>
 <table class="docutils align-default" id="abi-sys-fs-f2fs-features">
 <colgroup>
 <col style="width: 100%" />
@@ -51608,6 +52719,20 @@ from the device’s internal memory. The value can not be larger
 than 128MB. Writing to this value initiates the DMA transfer.
 When the write is finished, the user can read the “data_dma”
 blob</p>
+<table class="docutils align-default" id="abi-sys-kernel-debug-habanalabs-hl-n-dump-razwi-events">
+<colgroup>
+<col style="width: 100%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><strong>/sys/kernel/debug/habanalabs/hl&lt;n&gt;/dump_razwi_events</strong></p></td>
+</tr>
+</tbody>
+</table>
+<p>Defined on file <a class="reference internal" href="#abi-file-testing-debugfs-driver-habanalabs"><span class="std std-ref">debugfs-driver-habanalabs</span></a></p>
+<p>Dumps all razwi events to dmesg if exist.
+After reading the status register of an existing event
+the routine will clear the status register.
+Usage: cat dump_razwi_events</p>
 <table class="docutils align-default" id="abi-sys-kernel-debug-habanalabs-hl-n-dump-security-violations">
 <colgroup>
 <col style="width: 100%" />
@@ -51644,7 +52769,8 @@ their derived idle status</p>
 </table>
 <p>Defined on file <a class="reference internal" href="#abi-file-testing-debugfs-driver-habanalabs"><span class="std std-ref">debugfs-driver-habanalabs</span></a></p>
 <p>Sets I2C device address for I2C transaction that is generated
-by the device’s CPU</p>
+by the device’s CPU, Not available when device is loaded with secured
+firmware</p>
 <table class="docutils align-default" id="abi-sys-kernel-debug-habanalabs-hl-n-i2c-bus">
 <colgroup>
 <col style="width: 100%" />
@@ -51656,7 +52782,8 @@ by the device’s CPU</p>
 </table>
 <p>Defined on file <a class="reference internal" href="#abi-file-testing-debugfs-driver-habanalabs"><span class="std std-ref">debugfs-driver-habanalabs</span></a></p>
 <p>Sets I2C bus address for I2C transaction that is generated by
-the device’s CPU</p>
+the device’s CPU, Not available when device is loaded with secured
+firmware</p>
 <table class="docutils align-default" id="abi-sys-kernel-debug-habanalabs-hl-n-i2c-data">
 <colgroup>
 <col style="width: 100%" />
@@ -51669,7 +52796,8 @@ the device’s CPU</p>
 <p>Defined on file <a class="reference internal" href="#abi-file-testing-debugfs-driver-habanalabs"><span class="std std-ref">debugfs-driver-habanalabs</span></a></p>
 <p>Triggers an I2C transaction that is generated by the device’s
 CPU. Writing to this file generates a write transaction while
-reading from the file generates a read transaction</p>
+reading from the file generates a read transaction, Not available
+when device is loaded with secured firmware</p>
 <table class="docutils align-default" id="abi-sys-kernel-debug-habanalabs-hl-n-i2c-len">
 <colgroup>
 <col style="width: 100%" />
@@ -51681,7 +52809,8 @@ reading from the file generates a read transaction</p>
 </table>
 <p>Defined on file <a class="reference internal" href="#abi-file-testing-debugfs-driver-habanalabs"><span class="std std-ref">debugfs-driver-habanalabs</span></a></p>
 <p>Sets I2C length in bytes for I2C transaction that is generated by
-the device’s CPU</p>
+the device’s CPU, Not available when device is loaded with secured
+firmware</p>
 <table class="docutils align-default" id="abi-sys-kernel-debug-habanalabs-hl-n-i2c-reg">
 <colgroup>
 <col style="width: 100%" />
@@ -51693,7 +52822,8 @@ the device’s CPU</p>
 </table>
 <p>Defined on file <a class="reference internal" href="#abi-file-testing-debugfs-driver-habanalabs"><span class="std std-ref">debugfs-driver-habanalabs</span></a></p>
 <p>Sets I2C register id for I2C transaction that is generated by
-the device’s CPU</p>
+the device’s CPU, Not available when device is loaded with secured
+firmware</p>
 <table class="docutils align-default" id="abi-sys-kernel-debug-habanalabs-hl-n-led0">
 <colgroup>
 <col style="width: 100%" />
@@ -51704,7 +52834,8 @@ the device’s CPU</p>
 </tbody>
 </table>
 <p>Defined on file <a class="reference internal" href="#abi-file-testing-debugfs-driver-habanalabs"><span class="std std-ref">debugfs-driver-habanalabs</span></a></p>
-<p>Sets the state of the first S/W led on the device</p>
+<p>Sets the state of the first S/W led on the device, Not available
+when device is loaded with secured firmware</p>
 <table class="docutils align-default" id="abi-sys-kernel-debug-habanalabs-hl-n-led1">
 <colgroup>
 <col style="width: 100%" />
@@ -51715,7 +52846,8 @@ the device’s CPU</p>
 </tbody>
 </table>
 <p>Defined on file <a class="reference internal" href="#abi-file-testing-debugfs-driver-habanalabs"><span class="std std-ref">debugfs-driver-habanalabs</span></a></p>
-<p>Sets the state of the second S/W led on the device</p>
+<p>Sets the state of the second S/W led on the device, Not available
+when device is loaded with secured firmware</p>
 <table class="docutils align-default" id="abi-sys-kernel-debug-habanalabs-hl-n-led2">
 <colgroup>
 <col style="width: 100%" />
@@ -51726,7 +52858,8 @@ the device’s CPU</p>
 </tbody>
 </table>
 <p>Defined on file <a class="reference internal" href="#abi-file-testing-debugfs-driver-habanalabs"><span class="std std-ref">debugfs-driver-habanalabs</span></a></p>
-<p>Sets the state of the third S/W led on the device</p>
+<p>Sets the state of the third S/W led on the device, Not available
+when device is loaded with secured firmware</p>
 <table class="docutils align-default" id="abi-sys-kernel-debug-habanalabs-hl-n-memory-scrub">
 <colgroup>
 <col style="width: 100%" />
@@ -51750,7 +52883,8 @@ value can be set using the debugfs file memory_scrub_val.</p>
 </table>
 <p>Defined on file <a class="reference internal" href="#abi-file-testing-debugfs-driver-habanalabs"><span class="std std-ref">debugfs-driver-habanalabs</span></a></p>
 <p>The value to which the dram will be set to when the user
-scrubs the dram using ‘memory_scrub’ debugfs file</p>
+scrubs the dram using ‘memory_scrub’ debugfs file and
+the scrubbing value when using module param ‘memory_scrub’</p>
 <table class="docutils align-default" id="abi-sys-kernel-debug-habanalabs-hl-n-mmu">
 <colgroup>
 <col style="width: 100%" />
@@ -53602,7 +54736,7 @@ alloc_pages_fail</p>
 <p>Defined on file <a class="reference internal" href="#abi-file-testing-sysfs-kernel-mm-damon"><span class="std std-ref">sysfs-kernel-mm-damon</span></a></p>
 <p>Interface for Data Access MONitoring (DAMON).  Contains files
 for controlling DAMON.  For more details on DAMON itself,
-please refer to <a class="reference internal" href="mm/damon/index.html"><span class="doc">Monitoring Data Accesses</span></a>.</p>
+please refer to <a class="reference internal" href="mm/damon/index.html"><span class="doc">DAMON: Data Access MONitor</span></a>.</p>
 <table class="docutils align-default" id="abi-sys-kernel-mm-damon-admin">
 <colgroup>
 <col style="width: 100%" />
@@ -55507,7 +56641,7 @@ The default is 10ms.</p>
 </table>
 <p>Defined on file <a class="reference internal" href="#abi-file-testing-sysfs-driver-xen-blkback"><span class="std std-ref">sysfs-driver-xen-blkback</span></a></p>
 <p>Whether to enable the persistent grants feature or not.  Note
-that this option only takes effect on newly created backends.
+that this option only takes effect on newly connected backends.
 The default is Y (enable).</p>
 <table class="docutils align-default" id="abi-sys-module-xen-blkback-parameters-max-buffer-pages">
 <colgroup>
@@ -55560,7 +56694,7 @@ The default is 60 seconds.</p>
 </table>
 <p>Defined on file <a class="reference internal" href="#abi-file-testing-sysfs-driver-xen-blkfront"><span class="std std-ref">sysfs-driver-xen-blkfront</span></a></p>
 <p>Whether to enable the persistent grants feature or not.  Note
-that this option only takes effect on newly created frontends.
+that this option only takes effect on newly connected frontends.
 The default is Y (enable).</p>
 <table class="docutils align-default" id="abi-sys-module-xen-blkfront-parameters-max-indirect-segments">
 <colgroup>
@@ -56632,6 +57766,7 @@ the EFI secret area”.</p>
 <li><p><a class="reference internal" href="#abi-sys-kernel-debug-habanalabs-hl-n-data-dma"><span class="std std-ref">/sys/kernel/debug/habanalabs/hl&lt;n&gt;/data_dma</span></a></p></li>
 <li><p><a class="reference internal" href="#abi-sys-kernel-debug-habanalabs-hl-n-device"><span class="std std-ref">/sys/kernel/debug/habanalabs/hl&lt;n&gt;/device</span></a></p></li>
 <li><p><a class="reference internal" href="#abi-sys-kernel-debug-habanalabs-hl-n-dma-size"><span class="std std-ref">/sys/kernel/debug/habanalabs/hl&lt;n&gt;/dma_size</span></a></p></li>
+<li><p><a class="reference internal" href="#abi-sys-kernel-debug-habanalabs-hl-n-dump-razwi-events"><span class="std std-ref">/sys/kernel/debug/habanalabs/hl&lt;n&gt;/dump_razwi_events</span></a></p></li>
 <li><p><a class="reference internal" href="#abi-sys-kernel-debug-habanalabs-hl-n-dump-security-violations"><span class="std std-ref">/sys/kernel/debug/habanalabs/hl&lt;n&gt;/dump_security_violations</span></a></p></li>
 <li><p><a class="reference internal" href="#abi-sys-kernel-debug-habanalabs-hl-n-engines"><span class="std std-ref">/sys/kernel/debug/habanalabs/hl&lt;n&gt;/engines</span></a></p></li>
 <li><p><a class="reference internal" href="#abi-sys-kernel-debug-habanalabs-hl-n-i2c-addr"><span class="std std-ref">/sys/kernel/debug/habanalabs/hl&lt;n&gt;/i2c_addr</span></a></p></li>
@@ -57419,6 +58554,21 @@ the EFI secret area”.</p>
 <li><p><a class="reference internal" href="#abi-sys-bus-cxl-devices-decoderx-y-target-list"><span class="std std-ref">/sys/bus/cxl/devices/decoderX.Y/target_list</span></a></p></li>
 <li><p><a class="reference internal" href="#abi-sys-bus-cxl-devices-decoderx-y-cap-pmem-ram-type2-type3"><span class="std std-ref">/sys/bus/cxl/devices/decoderX.Y/cap_{pmem,ram,type2,type3}</span></a></p></li>
 <li><p><a class="reference internal" href="#abi-sys-bus-cxl-devices-decoderx-y-target-type"><span class="std std-ref">/sys/bus/cxl/devices/decoderX.Y/target_type</span></a></p></li>
+<li><p><a class="reference internal" href="#abi-sys-bus-cxl-devices-endpointx-cdat"><span class="std std-ref">/sys/bus/cxl/devices/endpointX/CDAT</span></a></p></li>
+<li><p><a class="reference internal" href="#abi-sys-bus-cxl-devices-decoderx-y-mode"><span class="std std-ref">/sys/bus/cxl/devices/decoderX.Y/mode</span></a></p></li>
+<li><p><a class="reference internal" href="#abi-sys-bus-cxl-devices-decoderx-y-dpa-resource"><span class="std std-ref">/sys/bus/cxl/devices/decoderX.Y/dpa_resource</span></a></p></li>
+<li><p><a class="reference internal" href="#abi-sys-bus-cxl-devices-decoderx-y-dpa-size"><span class="std std-ref">/sys/bus/cxl/devices/decoderX.Y/dpa_size</span></a></p></li>
+<li><p><a class="reference internal" href="#abi-sys-bus-cxl-devices-decoderx-y-interleave-ways"><span class="std std-ref">/sys/bus/cxl/devices/decoderX.Y/interleave_ways</span></a></p></li>
+<li><p><a class="reference internal" href="#abi-sys-bus-cxl-devices-decoderx-y-interleave-granularity"><span class="std std-ref">/sys/bus/cxl/devices/decoderX.Y/interleave_granularity</span></a></p></li>
+<li><p><a class="reference internal" href="#abi-sys-bus-cxl-devices-decoderx-y-create-pmem-region"><span class="std std-ref">/sys/bus/cxl/devices/decoderX.Y/create_pmem_region</span></a></p></li>
+<li><p><a class="reference internal" href="#abi-sys-bus-cxl-devices-decoderx-y-delete-region"><span class="std std-ref">/sys/bus/cxl/devices/decoderX.Y/delete_region</span></a></p></li>
+<li><p><a class="reference internal" href="#abi-sys-bus-cxl-devices-regionz-uuid"><span class="std std-ref">/sys/bus/cxl/devices/regionZ/uuid</span></a></p></li>
+<li><p><a class="reference internal" href="#abi-sys-bus-cxl-devices-regionz-interleave-granularity"><span class="std std-ref">/sys/bus/cxl/devices/regionZ/interleave_granularity</span></a></p></li>
+<li><p><a class="reference internal" href="#abi-sys-bus-cxl-devices-regionz-interleave-ways"><span class="std std-ref">/sys/bus/cxl/devices/regionZ/interleave_ways</span></a></p></li>
+<li><p><a class="reference internal" href="#abi-sys-bus-cxl-devices-regionz-size"><span class="std std-ref">/sys/bus/cxl/devices/regionZ/size</span></a></p></li>
+<li><p><a class="reference internal" href="#abi-sys-bus-cxl-devices-regionz-resource"><span class="std std-ref">/sys/bus/cxl/devices/regionZ/resource</span></a></p></li>
+<li><p><a class="reference internal" href="#abi-sys-bus-cxl-devices-regionz-target-0-n"><span class="std std-ref">/sys/bus/cxl/devices/regionZ/target[0..N]</span></a></p></li>
+<li><p><a class="reference internal" href="#abi-sys-bus-cxl-devices-regionz-commit"><span class="std std-ref">/sys/bus/cxl/devices/regionZ/commit</span></a></p></li>
 </ul>
 </section>
 <section id="file-home-ant-amazon-com-sjpark-linux-testing-sysfs-bus-dfl">
@@ -57446,6 +58596,13 @@ the EFI secret area”.</p>
 <li><p><a class="reference internal" href="#abi-sys-bus-dfl-devices-dfl-dev-x-retimer-a-mode"><span class="std std-ref">/sys/bus/dfl/devices/dfl_dev.X/retimer_A_mode</span></a></p></li>
 <li><p><a class="reference internal" href="#abi-sys-bus-dfl-devices-dfl-dev-x-retimer-b-mode"><span class="std std-ref">/sys/bus/dfl/devices/dfl_dev.X/retimer_B_mode</span></a></p></li>
 <li><p><a class="reference internal" href="#abi-sys-bus-dfl-devices-dfl-dev-x-nios-fw-version"><span class="std std-ref">/sys/bus/dfl/devices/dfl_dev.X/nios_fw_version</span></a></p></li>
+</ul>
+</section>
+<section id="file-home-ant-amazon-com-sjpark-linux-testing-sysfs-bus-event-source-devices-caps">
+<span id="abi-file-testing-sysfs-bus-event-source-devices-caps"></span><h2>File /home/ANT.AMAZON.COM/sjpark/linux/testing/sysfs-bus-event_source-devices-caps<a class="headerlink" href="#file-home-ant-amazon-com-sjpark-linux-testing-sysfs-bus-event-source-devices-caps" title="Permalink to this headline">¶</a></h2>
+<p>Has the following ABI:</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="#abi-sys-bus-event-source-devices-dev-caps"><span class="std std-ref">/sys/bus/event_source/devices/&lt;dev&gt;/caps</span></a></p></li>
 </ul>
 </section>
 <section id="file-home-ant-amazon-com-sjpark-linux-testing-sysfs-bus-event-source-devices-dfl-fme">
@@ -57637,7 +58794,7 @@ the EFI secret area”.</p>
 <li><p><a class="reference internal" href="#abi-sys-bus-iio-devices-iio-devicex-sampling-frequency"><span class="std std-ref">/sys/bus/iio/devices/iio:deviceX/sampling_frequency</span></a></p></li>
 <li><p><a class="reference internal" href="#abi-sys-bus-iio-devices-iio-devicex-sampling-frequency"><span class="std std-ref">/sys/bus/iio/devices/iio:deviceX/in_intensity_sampling_frequency</span></a></p></li>
 <li><p><a class="reference internal" href="#abi-sys-bus-iio-devices-iio-devicex-sampling-frequency"><span class="std std-ref">/sys/bus/iio/devices/iio:deviceX/buffer/sampling_frequency</span></a></p></li>
-<li><p><a class="reference internal" href="#abi-sys-bus-iio-devices-triggerx-sampling-frequency"><span class="std std-ref">/sys/bus/iio/devices/triggerX/sampling_frequency</span></a></p></li>
+<li><p><a class="reference internal" href="#abi-sys-bus-iio-devices-iio-devicex-sampling-frequency"><span class="std std-ref">/sys/bus/iio/devices/triggerX/sampling_frequency</span></a></p></li>
 <li><p><a class="reference internal" href="#abi-sys-bus-iio-devices-iio-devicex-sampling-frequency-available"><span class="std std-ref">/sys/bus/iio/devices/iio:deviceX/sampling_frequency_available</span></a></p></li>
 <li><p><a class="reference internal" href="#abi-sys-bus-iio-devices-iio-devicex-sampling-frequency-available"><span class="std std-ref">/sys/bus/iio/devices/iio:deviceX/in_intensity_sampling_frequency_available</span></a></p></li>
 <li><p><a class="reference internal" href="#abi-sys-bus-iio-devices-iio-devicex-sampling-frequency-available"><span class="std std-ref">/sys/bus/iio/devices/iio:deviceX/in_proximity_sampling_frequency_available</span></a></p></li>
@@ -58786,20 +59943,12 @@ the EFI secret area”.</p>
 <li><p><a class="reference internal" href="#abi-sys-bus-iio-devices-iio-devicex-in-proximity-id-setup"><span class="std std-ref">/sys/bus/iio/devices/iio:deviceX/in_proximity&lt;id&gt;_setup</span></a></p></li>
 </ul>
 </section>
-<section id="file-home-ant-amazon-com-sjpark-linux-testing-sysfs-bus-iio-temperature-max31856">
-<span id="abi-file-testing-sysfs-bus-iio-temperature-max31856"></span><h2>File /home/ANT.AMAZON.COM/sjpark/linux/testing/sysfs-bus-iio-temperature-max31856<a class="headerlink" href="#file-home-ant-amazon-com-sjpark-linux-testing-sysfs-bus-iio-temperature-max31856" title="Permalink to this headline">¶</a></h2>
+<section id="file-home-ant-amazon-com-sjpark-linux-testing-sysfs-bus-iio-thermocouple">
+<span id="abi-file-testing-sysfs-bus-iio-thermocouple"></span><h2>File /home/ANT.AMAZON.COM/sjpark/linux/testing/sysfs-bus-iio-thermocouple<a class="headerlink" href="#file-home-ant-amazon-com-sjpark-linux-testing-sysfs-bus-iio-thermocouple" title="Permalink to this headline">¶</a></h2>
 <p>Has the following ABI:</p>
 <ul class="simple">
+<li><p><a class="reference internal" href="#abi-sys-bus-iio-devices-iio-devicex-fault-ovuv"><span class="std std-ref">/sys/bus/iio/devices/iio:deviceX/fault_ovuv</span></a></p></li>
 <li><p><a class="reference internal" href="#abi-sys-bus-iio-devices-iio-devicex-fault-oc"><span class="std std-ref">/sys/bus/iio/devices/iio:deviceX/fault_oc</span></a></p></li>
-<li><p><a class="reference internal" href="#abi-sys-bus-iio-devices-iio-devicex-fault-ovuv"><span class="std std-ref">/sys/bus/iio/devices/iio:deviceX/fault_ovuv</span></a></p></li>
-</ul>
-</section>
-<section id="file-home-ant-amazon-com-sjpark-linux-testing-sysfs-bus-iio-temperature-max31865">
-<span id="abi-file-testing-sysfs-bus-iio-temperature-max31865"></span><h2>File /home/ANT.AMAZON.COM/sjpark/linux/testing/sysfs-bus-iio-temperature-max31865<a class="headerlink" href="#file-home-ant-amazon-com-sjpark-linux-testing-sysfs-bus-iio-temperature-max31865" title="Permalink to this headline">¶</a></h2>
-<p>Has the following ABI:</p>
-<ul class="simple">
-<li><p><a class="reference internal" href="#abi-sys-bus-iio-devices-iio-devicex-fault-ovuv"><span class="std std-ref">/sys/bus/iio/devices/iio:deviceX/fault_ovuv</span></a></p></li>
-<li><p><a class="reference internal" href="#abi-sys-bus-iio-devices-iio-devicex-in-filter-notch-center-frequency"><span class="std std-ref">/sys/bus/iio/devices/iio:deviceX/in_filter_notch_center_frequency</span></a></p></li>
 </ul>
 </section>
 <section id="file-home-ant-amazon-com-sjpark-linux-testing-sysfs-bus-iio-timer-stm32">
@@ -58808,7 +59957,6 @@ the EFI secret area”.</p>
 <ul class="simple">
 <li><p><a class="reference internal" href="#abi-sys-bus-iio-devices-triggerx-master-mode-available"><span class="std std-ref">/sys/bus/iio/devices/triggerX/master_mode_available</span></a></p></li>
 <li><p><a class="reference internal" href="#abi-sys-bus-iio-devices-triggerx-master-mode"><span class="std std-ref">/sys/bus/iio/devices/triggerX/master_mode</span></a></p></li>
-<li><p><a class="reference internal" href="#abi-sys-bus-iio-devices-triggerx-sampling-frequency"><span class="std std-ref">/sys/bus/iio/devices/triggerX/sampling_frequency</span></a></p></li>
 <li><p><a class="reference internal" href="#abi-sys-bus-iio-devices-iio-devicex-in-count0-preset"><span class="std std-ref">/sys/bus/iio/devices/iio:deviceX/in_count0_preset</span></a></p></li>
 <li><p><a class="reference internal" href="#abi-sys-bus-iio-devices-iio-devicex-in-count-enable-mode-available"><span class="std std-ref">/sys/bus/iio/devices/iio:deviceX/in_count_enable_mode_available</span></a></p></li>
 <li><p><a class="reference internal" href="#abi-sys-bus-iio-devices-iio-devicex-in-count0-enable-mode"><span class="std std-ref">/sys/bus/iio/devices/iio:deviceX/in_count0_enable_mode</span></a></p></li>
@@ -59191,6 +60339,13 @@ saw any problems).</p>
 <li><p><a class="reference internal" href="#abi-sys-bus-platform-devices-occ-hwmon-x-ffdc"><span class="std std-ref">/sys/bus/platform/devices/occ-hwmon.X/ffdc</span></a></p></li>
 </ul>
 </section>
+<section id="file-home-ant-amazon-com-sjpark-linux-testing-sysfs-bus-platform-onboard-usb-hub">
+<span id="abi-file-testing-sysfs-bus-platform-onboard-usb-hub"></span><h2>File /home/ANT.AMAZON.COM/sjpark/linux/testing/sysfs-bus-platform-onboard-usb-hub<a class="headerlink" href="#file-home-ant-amazon-com-sjpark-linux-testing-sysfs-bus-platform-onboard-usb-hub" title="Permalink to this headline">¶</a></h2>
+<p>Has the following ABI:</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="#abi-sys-bus-platform-devices-dev-always-powered-in-suspend"><span class="std std-ref">/sys/bus/platform/devices/&lt;dev&gt;/always_powered_in_suspend</span></a></p></li>
+</ul>
+</section>
 <section id="file-home-ant-amazon-com-sjpark-linux-testing-sysfs-bus-rapidio">
 <span id="abi-file-testing-sysfs-bus-rapidio"></span><h2>File /home/ANT.AMAZON.COM/sjpark/linux/testing/sysfs-bus-rapidio<a class="headerlink" href="#file-home-ant-amazon-com-sjpark-linux-testing-sysfs-bus-rapidio" title="Permalink to this headline">¶</a></h2>
 <p>Has the following ABI:</p>
@@ -59296,6 +60451,14 @@ saw any problems).</p>
 <li><p><a class="reference internal" href="#abi-sys-bus-spi-devices-spi-nor-sfdp"><span class="std std-ref">/sys/bus/spi/devices/…/spi-nor/sfdp</span></a></p></li>
 </ul>
 </section>
+<section id="file-home-ant-amazon-com-sjpark-linux-testing-sysfs-bus-surface-aggregator-tabletsw">
+<span id="abi-file-testing-sysfs-bus-surface-aggregator-tabletsw"></span><h2>File /home/ANT.AMAZON.COM/sjpark/linux/testing/sysfs-bus-surface_aggregator-tabletsw<a class="headerlink" href="#file-home-ant-amazon-com-sjpark-linux-testing-sysfs-bus-surface-aggregator-tabletsw" title="Permalink to this headline">¶</a></h2>
+<p>Has the following ABI:</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="#abi-sys-bus-surface-aggregator-devices-01-0e-01-00-01-state"><span class="std std-ref">/sys/bus/surface_aggregator/devices/01:0e:01:00:01/state</span></a></p></li>
+<li><p><a class="reference internal" href="#abi-sys-bus-surface-aggregator-devices-01-26-01-00-01-state"><span class="std std-ref">/sys/bus/surface_aggregator/devices/01:26:01:00:01/state</span></a></p></li>
+</ul>
+</section>
 <section id="file-home-ant-amazon-com-sjpark-linux-testing-sysfs-bus-thunderbolt">
 <span id="abi-file-testing-sysfs-bus-thunderbolt"></span><h2>File /home/ANT.AMAZON.COM/sjpark/linux/testing/sysfs-bus-thunderbolt<a class="headerlink" href="#file-home-ant-amazon-com-sjpark-linux-testing-sysfs-bus-thunderbolt" title="Permalink to this headline">¶</a></h2>
 <p>Has the following ABI:</p>
@@ -59380,6 +60543,7 @@ saw any problems).</p>
 <li><p><a class="reference internal" href="#abi-sys-bus-usb-devices-hub-interface-port-x-over-current-count"><span class="std std-ref">/sys/bus/usb/devices/…/&lt;hub_interface&gt;/port&lt;X&gt;/over_current_count</span></a></p></li>
 <li><p><a class="reference internal" href="#abi-sys-bus-usb-devices-hub-interface-port-x-usb3-lpm-permit"><span class="std std-ref">/sys/bus/usb/devices/…/&lt;hub_interface&gt;/port&lt;X&gt;/usb3_lpm_permit</span></a></p></li>
 <li><p><a class="reference internal" href="#abi-sys-bus-usb-devices-hub-interface-port-x-connector"><span class="std std-ref">/sys/bus/usb/devices/…/&lt;hub_interface&gt;/port&lt;X&gt;/connector</span></a></p></li>
+<li><p><a class="reference internal" href="#abi-sys-bus-usb-devices-hub-interface-port-x-disable"><span class="std std-ref">/sys/bus/usb/devices/…/&lt;hub_interface&gt;/port&lt;X&gt;/disable</span></a></p></li>
 <li><p><a class="reference internal" href="#abi-sys-bus-usb-devices-power-usb2-lpm-l1-timeout"><span class="std std-ref">/sys/bus/usb/devices/…/power/usb2_lpm_l1_timeout</span></a></p></li>
 <li><p><a class="reference internal" href="#abi-sys-bus-usb-devices-power-usb2-lpm-besl"><span class="std std-ref">/sys/bus/usb/devices/…/power/usb2_lpm_besl</span></a></p></li>
 <li><p><a class="reference internal" href="#abi-sys-bus-usb-devices-rx-lanes"><span class="std std-ref">/sys/bus/usb/devices/…/rx_lanes</span></a></p></li>
@@ -59883,6 +61047,7 @@ For example, the real path of the attribute /sys/class/cxl/afu0.0s/irqs_max is
 <li><p><a class="reference internal" href="#abi-sys-class-hwmon-hwmonx-humidityy-rated-max"><span class="std std-ref">/sys/class/hwmon/hwmonX/humidityY_rated_max</span></a></p></li>
 <li><p><a class="reference internal" href="#abi-sys-class-hwmon-hwmonx-intrusiony-alarm"><span class="std std-ref">/sys/class/hwmon/hwmonX/intrusionY_alarm</span></a></p></li>
 <li><p><a class="reference internal" href="#abi-sys-class-hwmon-hwmonx-intrusiony-beep"><span class="std std-ref">/sys/class/hwmon/hwmonX/intrusionY_beep</span></a></p></li>
+<li><p><a class="reference internal" href="#abi-sys-class-hwmon-hwmonx-device-pec"><span class="std std-ref">/sys/class/hwmon/hwmonX/device/pec</span></a></p></li>
 </ul>
 </section>
 <section id="file-home-ant-amazon-com-sjpark-linux-testing-sysfs-class-intel-pmt">
@@ -60732,6 +61897,7 @@ sysfs: (&lt;devid&gt; is in the format major:minor)</p>
 <li><p><a class="reference internal" href="#abi-sys-class-typec-port-partner-cable-usb-power-delivery-revision"><span class="std std-ref">/sys/class/typec/&lt;port&gt;-{partner|cable}/usb_power_delivery_revision</span></a></p></li>
 <li><p><a class="reference internal" href="#abi-sys-class-typec-port-usb-typec-revision"><span class="std std-ref">/sys/class/typec/&lt;port&gt;/usb_typec_revision</span></a></p></li>
 <li><p><a class="reference internal" href="#abi-sys-class-typec-port-orientation"><span class="std std-ref">/sys/class/typec/&lt;port&gt;/orientation</span></a></p></li>
+<li><p><a class="reference internal" href="#abi-sys-class-typec-port-select-usb-power-delivery"><span class="std std-ref">/sys/class/typec/&lt;port&gt;/select_usb_power_delivery</span></a></p></li>
 <li><p><a class="reference internal" href="#abi-sys-class-typec-port-partner-accessory-mode"><span class="std std-ref">/sys/class/typec/&lt;port&gt;-partner/accessory_mode</span></a></p></li>
 <li><p><a class="reference internal" href="#abi-sys-class-typec-port-partner-supports-usb-power-delivery"><span class="std std-ref">/sys/class/typec/&lt;port&gt;-partner/supports_usb_power_delivery</span></a></p></li>
 <li><p><a class="reference internal" href="#abi-sys-class-typec-port-partner-number-of-alternate-modes"><span class="std std-ref">/sys/class/typec/&lt;port&gt;-partner/number_of_alternate_modes</span></a></p></li>
@@ -60748,6 +61914,43 @@ sysfs: (&lt;devid&gt; is in the format major:minor)</p>
 <li><p><a class="reference internal" href="#abi-sys-class-typec-port-partner-cable-identity-product-type-vdo2"><span class="std std-ref">/sys/class/typec/&lt;port&gt;-{partner|cable}/identity/product_type_vdo2</span></a></p></li>
 <li><p><a class="reference internal" href="#abi-sys-class-typec-port-partner-cable-identity-product-type-vdo3"><span class="std std-ref">/sys/class/typec/&lt;port&gt;-{partner|cable}/identity/product_type_vdo3</span></a></p></li>
 <li><p><a class="reference internal" href="#abi-sys-class-typec-port-alt-mode-supported-roles"><span class="std std-ref">/sys/class/typec/&lt;port&gt;/&lt;alt mode&gt;/supported_roles</span></a></p></li>
+</ul>
+</section>
+<section id="file-home-ant-amazon-com-sjpark-linux-testing-sysfs-class-usb-power-delivery">
+<span id="abi-file-testing-sysfs-class-usb-power-delivery"></span><h2>File /home/ANT.AMAZON.COM/sjpark/linux/testing/sysfs-class-usb_power_delivery<a class="headerlink" href="#file-home-ant-amazon-com-sjpark-linux-testing-sysfs-class-usb-power-delivery" title="Permalink to this headline">¶</a></h2>
+<p>Has the following ABI:</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="#abi-sys-class-usb-power-delivery"><span class="std std-ref">/sys/class/usb_power_delivery</span></a></p></li>
+<li><p><a class="reference internal" href="#abi-sys-class-usb-power-delivery-revision"><span class="std std-ref">/sys/class/usb_power_delivery/…/revision</span></a></p></li>
+<li><p><a class="reference internal" href="#abi-sys-class-usb-power-delivery-version"><span class="std std-ref">/sys/class/usb_power_delivery/…/version</span></a></p></li>
+<li><p><a class="reference internal" href="#abi-sys-class-usb-power-delivery-source-capabilities"><span class="std std-ref">/sys/class/usb_power_delivery/…/source-capabilities</span></a></p></li>
+<li><p><a class="reference internal" href="#abi-sys-class-usb-power-delivery-sink-capabilities"><span class="std std-ref">/sys/class/usb_power_delivery/…/sink-capabilities</span></a></p></li>
+<li><p><a class="reference internal" href="#abi-sys-class-usb-power-delivery-capability-position-fixed-supply"><span class="std std-ref">/sys/class/usb_power_delivery/…/&lt;capability&gt;/&lt;position&gt;:fixed_supply</span></a></p></li>
+<li><p><a class="reference internal" href="#abi-sys-class-usb-power-delivery-capability-1-fixed-supply-dual-role-power"><span class="std std-ref">/sys/class/usb_power_delivery/…/&lt;capability&gt;/1:fixed_supply/dual_role_power</span></a></p></li>
+<li><p><a class="reference internal" href="#abi-sys-class-usb-power-delivery-capability-1-fixed-supply-usb-suspend-supported"><span class="std std-ref">/sys/class/usb_power_delivery/…/&lt;capability&gt;/1:fixed_supply/usb_suspend_supported</span></a></p></li>
+<li><p><a class="reference internal" href="#abi-sys-class-usb-power-delivery-capability-1-fixed-supply-unconstrained-power"><span class="std std-ref">/sys/class/usb_power_delivery/…/&lt;capability&gt;/1:fixed_supply/unconstrained_power</span></a></p></li>
+<li><p><a class="reference internal" href="#abi-sys-class-usb-power-delivery-capability-1-fixed-supply-usb-communication-capable"><span class="std std-ref">/sys/class/usb_power_delivery/…/&lt;capability&gt;/1:fixed_supply/usb_communication_capable</span></a></p></li>
+<li><p><a class="reference internal" href="#abi-sys-class-usb-power-delivery-capability-1-fixed-supply-dual-role-data"><span class="std std-ref">/sys/class/usb_power_delivery/…/&lt;capability&gt;/1:fixed_supply/dual_role_data</span></a></p></li>
+<li><p><a class="reference internal" href="#abi-sys-class-usb-power-delivery-capability-1-fixed-supply-unchunked-extended-messages-supported"><span class="std std-ref">/sys/class/usb_power_delivery/…/&lt;capability&gt;/1:fixed_supply/unchunked_extended_messages_supported</span></a></p></li>
+<li><p><a class="reference internal" href="#abi-sys-class-usb-power-delivery-capability-position-fixed-supply-voltage"><span class="std std-ref">/sys/class/usb_power_delivery/…/&lt;capability&gt;/&lt;position&gt;:fixed_supply/voltage</span></a></p></li>
+<li><p><a class="reference internal" href="#abi-sys-class-usb-power-delivery-source-capabilities-position-fixed-supply-maximum-current"><span class="std std-ref">/sys/class/usb_power_delivery/…/source-capabilities/&lt;position&gt;:fixed_supply/maximum_current</span></a></p></li>
+<li><p><a class="reference internal" href="#abi-sys-class-usb-power-delivery-sink-capabilities-position-fixed-supply-operational-current"><span class="std std-ref">/sys/class/usb_power_delivery/…/sink-capabilities/&lt;position&gt;:fixed_supply/operational_current</span></a></p></li>
+<li><p><a class="reference internal" href="#abi-sys-class-usb-power-delivery-sink-capabilities-position-fixed-supply-fast-role-swap-current"><span class="std std-ref">/sys/class/usb_power_delivery/…/sink-capabilities/&lt;position&gt;:fixed_supply/fast_role_swap_current</span></a></p></li>
+<li><p><a class="reference internal" href="#abi-sys-class-usb-power-delivery-capability-position-variable-supply"><span class="std std-ref">/sys/class/usb_power_delivery/…/&lt;capability&gt;/&lt;position&gt;:variable_supply</span></a></p></li>
+<li><p><a class="reference internal" href="#abi-sys-class-usb-power-delivery-capability-position-variable-supply-maximum-voltage"><span class="std std-ref">/sys/class/usb_power_delivery/…/&lt;capability&gt;/&lt;position&gt;:variable_supply/maximum_voltage</span></a></p></li>
+<li><p><a class="reference internal" href="#abi-sys-class-usb-power-delivery-capability-position-variable-supply-minimum-voltage"><span class="std std-ref">/sys/class/usb_power_delivery/…/&lt;capability&gt;/&lt;position&gt;:variable_supply/minimum_voltage</span></a></p></li>
+<li><p><a class="reference internal" href="#abi-sys-class-usb-power-delivery-source-capabilities-position-variable-supply-maximum-current"><span class="std std-ref">/sys/class/usb_power_delivery/…/source-capabilities/&lt;position&gt;:variable_supply/maximum_current</span></a></p></li>
+<li><p><a class="reference internal" href="#abi-sys-class-usb-power-delivery-sink-capabilities-position-variable-supply-operational-current"><span class="std std-ref">/sys/class/usb_power_delivery/…/sink-capabilities/&lt;position&gt;:variable_supply/operational_current</span></a></p></li>
+<li><p><a class="reference internal" href="#abi-sys-class-usb-power-delivery-capability-position-battery"><span class="std std-ref">/sys/class/usb_power_delivery/…/&lt;capability&gt;/&lt;position&gt;:battery</span></a></p></li>
+<li><p><a class="reference internal" href="#abi-sys-class-usb-power-delivery-capability-position-battery-maximum-voltage"><span class="std std-ref">/sys/class/usb_power_delivery/…/&lt;capability&gt;/&lt;position&gt;:battery/maximum_voltage</span></a></p></li>
+<li><p><a class="reference internal" href="#abi-sys-class-usb-power-delivery-capability-position-battery-minimum-voltage"><span class="std std-ref">/sys/class/usb_power_delivery/…/&lt;capability&gt;/&lt;position&gt;:battery/minimum_voltage</span></a></p></li>
+<li><p><a class="reference internal" href="#abi-sys-class-usb-power-delivery-source-capabilities-position-battery-maximum-power"><span class="std std-ref">/sys/class/usb_power_delivery/…/source-capabilities/&lt;position&gt;:battery/maximum_power</span></a></p></li>
+<li><p><a class="reference internal" href="#abi-sys-class-usb-power-delivery-sink-capabilities-position-battery-operational-power"><span class="std std-ref">/sys/class/usb_power_delivery/…/sink-capabilities/&lt;position&gt;:battery/operational_power</span></a></p></li>
+<li><p><a class="reference internal" href="#abi-sys-class-usb-power-delivery-capability-position-programmable-supply"><span class="std std-ref">/sys/class/usb_power_delivery/…/&lt;capability&gt;/&lt;position&gt;:programmable_supply</span></a></p></li>
+<li><p><a class="reference internal" href="#abi-sys-class-usb-power-delivery-capability-position-programmable-supply-maximum-voltage"><span class="std std-ref">/sys/class/usb_power_delivery/…/&lt;capability&gt;/&lt;position&gt;:programmable_supply/maximum_voltage</span></a></p></li>
+<li><p><a class="reference internal" href="#abi-sys-class-usb-power-delivery-capability-position-programmable-supply-minimum-voltage"><span class="std std-ref">/sys/class/usb_power_delivery/…/&lt;capability&gt;/&lt;position&gt;:programmable_supply/minimum_voltage</span></a></p></li>
+<li><p><a class="reference internal" href="#abi-sys-class-usb-power-delivery-capability-position-programmable-supply-maximum-current"><span class="std std-ref">/sys/class/usb_power_delivery/…/&lt;capability&gt;/&lt;position&gt;:programmable_supply/maximum_current</span></a></p></li>
+<li><p><a class="reference internal" href="#abi-sys-class-usb-power-delivery-source-capabilities-position-programmable-supply-pps-power-limited"><span class="std std-ref">/sys/class/usb_power_delivery/…/source-capabilities/&lt;position&gt;:programmable_supply/pps_power_limited</span></a></p></li>
 </ul>
 </section>
 <section id="file-home-ant-amazon-com-sjpark-linux-testing-sysfs-class-usb-role">
@@ -60788,6 +61991,16 @@ sysfs: (&lt;devid&gt; is in the format major:minor)</p>
 <li><p><a class="reference internal" href="#abi-sys-class-uwb-rc-uwb-n-wusbhc-wusb-phy-rate"><span class="std std-ref">/sys/class/uwb_rc/uwb&lt;N&gt;/wusbhc/wusb_phy_rate</span></a></p></li>
 <li><p><a class="reference internal" href="#abi-sys-class-uwb-rc-uwb-n-wusbhc-wusb-dnts"><span class="std std-ref">/sys/class/uwb_rc/uwb&lt;N&gt;/wusbhc/wusb_dnts</span></a></p></li>
 <li><p><a class="reference internal" href="#abi-sys-class-uwb-rc-uwb-n-wusbhc-wusb-retry-count"><span class="std std-ref">/sys/class/uwb_rc/uwb&lt;N&gt;/wusbhc/wusb_retry_count</span></a></p></li>
+</ul>
+</section>
+<section id="file-home-ant-amazon-com-sjpark-linux-testing-sysfs-class-vduse">
+<span id="abi-file-testing-sysfs-class-vduse"></span><h2>File /home/ANT.AMAZON.COM/sjpark/linux/testing/sysfs-class-vduse<a class="headerlink" href="#file-home-ant-amazon-com-sjpark-linux-testing-sysfs-class-vduse" title="Permalink to this headline">¶</a></h2>
+<p>Has the following ABI:</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="#abi-sys-class-vduse"><span class="std std-ref">/sys/class/vduse/</span></a></p></li>
+<li><p><a class="reference internal" href="#abi-sys-class-vduse-control"><span class="std std-ref">/sys/class/vduse/control/</span></a></p></li>
+<li><p><a class="reference internal" href="#abi-sys-class-vduse-device-name"><span class="std std-ref">/sys/class/vduse/&lt;device-name&gt;/</span></a></p></li>
+<li><p><a class="reference internal" href="#abi-sys-class-vduse-device-name-msg-timeout"><span class="std std-ref">/sys/class/vduse/&lt;device-name&gt;/msg_timeout</span></a></p></li>
 </ul>
 </section>
 <section id="file-home-ant-amazon-com-sjpark-linux-testing-sysfs-class-wakeup">
@@ -61055,6 +62268,10 @@ sysfs: (&lt;devid&gt; is in the format major:minor)</p>
 <li><p><a class="reference internal" href="#abi-xxxxxxx-ipa-feature"><span class="std std-ref">…/XXXXXXX.ipa/feature/</span></a></p></li>
 <li><p><a class="reference internal" href="#abi-xxxxxxx-ipa-feature-rx-offload"><span class="std std-ref">…/XXXXXXX.ipa/feature/rx_offload</span></a></p></li>
 <li><p><a class="reference internal" href="#abi-xxxxxxx-ipa-feature-tx-offload"><span class="std std-ref">…/XXXXXXX.ipa/feature/tx_offload</span></a></p></li>
+<li><p><a class="reference internal" href="#abi-xxxxxxx-ipa-endpoint-id"><span class="std std-ref">…/XXXXXXX.ipa/endpoint_id/</span></a></p></li>
+<li><p><a class="reference internal" href="#abi-xxxxxxx-ipa-endpoint-id-modem-rx"><span class="std std-ref">…/XXXXXXX.ipa/endpoint_id/modem_rx</span></a></p></li>
+<li><p><a class="reference internal" href="#abi-xxxxxxx-ipa-endpoint-id-modem-tx"><span class="std std-ref">…/XXXXXXX.ipa/endpoint_id/modem_tx</span></a></p></li>
+<li><p><a class="reference internal" href="#abi-xxxxxxx-ipa-endpoint-id-monitor-rx"><span class="std std-ref">…/XXXXXXX.ipa/endpoint_id/monitor_rx</span></a></p></li>
 <li><p><a class="reference internal" href="#abi-xxxxxxx-ipa-modem"><span class="std std-ref">…/XXXXXXX.ipa/modem/</span></a></p></li>
 <li><p><a class="reference internal" href="#abi-xxxxxxx-ipa-modem-rx-endpoint-id"><span class="std std-ref">…/XXXXXXX.ipa/modem/rx_endpoint_id</span></a></p></li>
 <li><p><a class="reference internal" href="#abi-xxxxxxx-ipa-modem-tx-endpoint-id"><span class="std std-ref">…/XXXXXXX.ipa/modem/tx_endpoint_id</span></a></p></li>
@@ -61243,7 +62460,7 @@ sysfs: (&lt;devid&gt; is in the format major:minor)</p>
 <li><p><a class="reference internal" href="#abi-sys-devices-system-cpu-kernel-max"><span class="std std-ref">/sys/devices/system/cpu/kernel_max</span></a></p></li>
 <li><p><a class="reference internal" href="#abi-sys-devices-system-cpu-probe"><span class="std std-ref">/sys/devices/system/cpu/probe</span></a></p></li>
 <li><p><a class="reference internal" href="#abi-sys-devices-system-cpu-cpux-node"><span class="std std-ref">/sys/devices/system/cpu/cpuX/node</span></a></p></li>
-<li><p><a class="reference internal" href="#abi-sys-devices-system-cpu-cpux-topology-core-id"><span class="std std-ref">/sys/devices/system/cpu/cpuX/topology/core_id</span></a></p></li>
+<li><p><a class="reference internal" href="#abi-sys-devices-system-cpu-cpux-topology-core-siblings"><span class="std std-ref">/sys/devices/system/cpu/cpuX/topology/core_siblings</span></a></p></li>
 <li><p><a class="reference internal" href="#abi-sys-devices-system-cpu-cpuidle-available-governors"><span class="std std-ref">/sys/devices/system/cpu/cpuidle/available_governors</span></a></p></li>
 <li><p><a class="reference internal" href="#abi-sys-devices-system-cpu-cpux-cpuidle-state-n-name"><span class="std std-ref">/sys/devices/system/cpu/cpuX/cpuidle/state&lt;N&gt;/name</span></a></p></li>
 <li><p><a class="reference internal" href="#abi-sys-devices-system-cpu-cpux-cpuidle-state-n-desc"><span class="std std-ref">/sys/devices/system/cpu/cpuX/cpuidle/state&lt;N&gt;/desc</span></a></p></li>
@@ -61632,6 +62849,19 @@ sysfs: (&lt;devid&gt; is in the format major:minor)</p>
 <li><p><a class="reference internal" href="#abi-sys-bus-spi-devices-mac-count"><span class="std std-ref">/sys/bus/spi/devices/…/mac_count</span></a></p></li>
 </ul>
 </section>
+<section id="file-home-ant-amazon-com-sjpark-linux-testing-sysfs-driver-intel-m10-bmc-sec-update">
+<span id="abi-file-testing-sysfs-driver-intel-m10-bmc-sec-update"></span><h2>File /home/ANT.AMAZON.COM/sjpark/linux/testing/sysfs-driver-intel-m10-bmc-sec-update<a class="headerlink" href="#file-home-ant-amazon-com-sjpark-linux-testing-sysfs-driver-intel-m10-bmc-sec-update" title="Permalink to this headline">¶</a></h2>
+<p>Has the following ABI:</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="#abi-sys-bus-platform-drivers-intel-m10bmc-sec-update-security-sr-root-entry-hash"><span class="std std-ref">/sys/bus/platform/drivers/intel-m10bmc-sec-update/…/security/sr_root_entry_hash</span></a></p></li>
+<li><p><a class="reference internal" href="#abi-sys-bus-platform-drivers-intel-m10bmc-sec-update-security-pr-root-entry-hash"><span class="std std-ref">/sys/bus/platform/drivers/intel-m10bmc-sec-update/…/security/pr_root_entry_hash</span></a></p></li>
+<li><p><a class="reference internal" href="#abi-sys-bus-platform-drivers-intel-m10bmc-sec-update-security-bmc-root-entry-hash"><span class="std std-ref">/sys/bus/platform/drivers/intel-m10bmc-sec-update/…/security/bmc_root_entry_hash</span></a></p></li>
+<li><p><a class="reference internal" href="#abi-sys-bus-platform-drivers-intel-m10bmc-sec-update-security-sr-canceled-csks"><span class="std std-ref">/sys/bus/platform/drivers/intel-m10bmc-sec-update/…/security/sr_canceled_csks</span></a></p></li>
+<li><p><a class="reference internal" href="#abi-sys-bus-platform-drivers-intel-m10bmc-sec-update-security-pr-canceled-csks"><span class="std std-ref">/sys/bus/platform/drivers/intel-m10bmc-sec-update/…/security/pr_canceled_csks</span></a></p></li>
+<li><p><a class="reference internal" href="#abi-sys-bus-platform-drivers-intel-m10bmc-sec-update-security-bmc-canceled-csks"><span class="std std-ref">/sys/bus/platform/drivers/intel-m10bmc-sec-update/…/security/bmc_canceled_csks</span></a></p></li>
+<li><p><a class="reference internal" href="#abi-sys-bus-platform-drivers-intel-m10bmc-sec-update-security-flash-count"><span class="std std-ref">/sys/bus/platform/drivers/intel-m10bmc-sec-update/…/security/flash_count</span></a></p></li>
+</ul>
+</section>
 <section id="file-home-ant-amazon-com-sjpark-linux-testing-sysfs-driver-intel-rapid-start">
 <span id="abi-file-testing-sysfs-driver-intel-rapid-start"></span><h2>File /home/ANT.AMAZON.COM/sjpark/linux/testing/sysfs-driver-intel-rapid-start<a class="headerlink" href="#file-home-ant-amazon-com-sjpark-linux-testing-sysfs-driver-intel-rapid-start" title="Permalink to this headline">¶</a></h2>
 <p>Has the following ABI:</p>
@@ -61678,6 +62908,14 @@ sysfs: (&lt;devid&gt; is in the format major:minor)</p>
 <li><p><a class="reference internal" href="#abi-sys-class-tpm-tpmx-ppi-transition-action"><span class="std std-ref">/sys/class/tpm/tpmX/ppi/transition_action</span></a></p></li>
 <li><p><a class="reference internal" href="#abi-sys-class-tpm-tpmx-ppi-tcg-operations"><span class="std std-ref">/sys/class/tpm/tpmX/ppi/tcg_operations</span></a></p></li>
 <li><p><a class="reference internal" href="#abi-sys-class-tpm-tpmx-ppi-vs-operations"><span class="std std-ref">/sys/class/tpm/tpmX/ppi/vs_operations</span></a></p></li>
+</ul>
+</section>
+<section id="file-home-ant-amazon-com-sjpark-linux-testing-sysfs-driver-qat">
+<span id="abi-file-testing-sysfs-driver-qat"></span><h2>File /home/ANT.AMAZON.COM/sjpark/linux/testing/sysfs-driver-qat<a class="headerlink" href="#file-home-ant-amazon-com-sjpark-linux-testing-sysfs-driver-qat" title="Permalink to this headline">¶</a></h2>
+<p>Has the following ABI:</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="#abi-sys-bus-pci-devices-bdf-qat-state"><span class="std std-ref">/sys/bus/pci/devices/&lt;BDF&gt;/qat/state</span></a></p></li>
+<li><p><a class="reference internal" href="#abi-sys-bus-pci-devices-bdf-qat-cfg-services"><span class="std std-ref">/sys/bus/pci/devices/&lt;BDF&gt;/qat/cfg_services</span></a></p></li>
 </ul>
 </section>
 <section id="file-home-ant-amazon-com-sjpark-linux-testing-sysfs-driver-samsung-laptop">
@@ -62385,6 +63623,11 @@ sysfs: (&lt;devid&gt; is in the format major:minor)</p>
 <li><p><a class="reference internal" href="#abi-sys-fs-f2fs-disk-max-fragment-hole"><span class="std std-ref">/sys/fs/f2fs/&lt;disk&gt;/max_fragment_hole</span></a></p></li>
 <li><p><a class="reference internal" href="#abi-sys-fs-f2fs-disk-gc-urgent-high-remaining"><span class="std std-ref">/sys/fs/f2fs/&lt;disk&gt;/gc_urgent_high_remaining</span></a></p></li>
 <li><p><a class="reference internal" href="#abi-sys-fs-f2fs-disk-max-roll-forward-node-blocks"><span class="std std-ref">/sys/fs/f2fs/&lt;disk&gt;/max_roll_forward_node_blocks</span></a></p></li>
+<li><p><a class="reference internal" href="#abi-sys-fs-f2fs-disk-unusable-blocks-per-sec"><span class="std std-ref">/sys/fs/f2fs/&lt;disk&gt;/unusable_blocks_per_sec</span></a></p></li>
+<li><p><a class="reference internal" href="#abi-sys-fs-f2fs-disk-current-atomic-write"><span class="std std-ref">/sys/fs/f2fs/&lt;disk&gt;/current_atomic_write</span></a></p></li>
+<li><p><a class="reference internal" href="#abi-sys-fs-f2fs-disk-peak-atomic-write"><span class="std std-ref">/sys/fs/f2fs/&lt;disk&gt;/peak_atomic_write</span></a></p></li>
+<li><p><a class="reference internal" href="#abi-sys-fs-f2fs-disk-committed-atomic-block"><span class="std std-ref">/sys/fs/f2fs/&lt;disk&gt;/committed_atomic_block</span></a></p></li>
+<li><p><a class="reference internal" href="#abi-sys-fs-f2fs-disk-revoked-atomic-block"><span class="std std-ref">/sys/fs/f2fs/&lt;disk&gt;/revoked_atomic_block</span></a></p></li>
 </ul>
 </section>
 <section id="file-home-ant-amazon-com-sjpark-linux-testing-sysfs-fs-nilfs2">
@@ -62638,6 +63881,15 @@ sysfs: (&lt;devid&gt; is in the format major:minor)</p>
 <li><p><a class="reference internal" href="#abi-sys-kernel-mm-ksm-full-scans"><span class="std std-ref">/sys/kernel/mm/ksm/run</span></a></p></li>
 <li><p><a class="reference internal" href="#abi-sys-kernel-mm-ksm-full-scans"><span class="std std-ref">/sys/kernel/mm/ksm/sleep_millisecs</span></a></p></li>
 <li><p><a class="reference internal" href="#abi-sys-kernel-mm-ksm-merge-across-nodes"><span class="std std-ref">/sys/kernel/mm/ksm/merge_across_nodes</span></a></p></li>
+</ul>
+</section>
+<section id="file-home-ant-amazon-com-sjpark-linux-testing-sysfs-kernel-mm-memory-tiers">
+<span id="abi-file-testing-sysfs-kernel-mm-memory-tiers"></span><h2>File /home/ANT.AMAZON.COM/sjpark/linux/testing/sysfs-kernel-mm-memory-tiers<a class="headerlink" href="#file-home-ant-amazon-com-sjpark-linux-testing-sysfs-kernel-mm-memory-tiers" title="Permalink to this headline">¶</a></h2>
+<p>Has the following ABI:</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="#abi-sys-devices-virtual-memory-tiering"><span class="std std-ref">/sys/devices/virtual/memory_tiering/</span></a></p></li>
+<li><p><a class="reference internal" href="#abi-sys-devices-virtual-memory-tiering-memory-tiern"><span class="std std-ref">/sys/devices/virtual/memory_tiering/memory_tierN/</span></a></p></li>
+<li><p><a class="reference internal" href="#abi-sys-devices-virtual-memory-tiering-toptier-nodes"><span class="std std-ref">/sys/devices/virtual/memory_tiering/toptier_nodes</span></a></p></li>
 </ul>
 </section>
 <section id="file-home-ant-amazon-com-sjpark-linux-testing-sysfs-kernel-mm-numa">

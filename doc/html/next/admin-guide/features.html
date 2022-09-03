@@ -29,7 +29,7 @@
             <a href="../index.html" class="icon icon-home"> The Linux Kernel
           </a>
               <div class="version">
-                5.19.0-rc4-mm-unstable-damon
+                6.0.0-rc3-mm-unstable-damon
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
@@ -40,7 +40,10 @@
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <ul>
-<li class="toctree-l1"><a class="reference internal" href="mm/damon/index.html">Monitoring Data Accesses</a></li>
+<li class="toctree-l1"><a class="reference internal" href="mm/damon/index.html">DAMON: Data Access MONitor</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../mm/damon/index.html">DAMON: Data Access MONitor</a></li>
 </ul>
 
         </div>
@@ -225,11 +228,12 @@ coverage profiling</p>
 <td><ul class="simple">
 <li><p><strong>ok</strong>: arm, arm64, csky
 microblaze, mips, powerpc
-riscv, s390, sh, um, x86</p></li>
+riscv, s390, sh, um, x86
+xtensa</p></li>
 <li><p><strong>TODO</strong>: alpha, arc
 hexagon, ia64, loong, m68k
 nios2, openrisc, parisc
-sparc, xtensa</p></li>
+sparc</p></li>
 </ul>
 </td>
 </tr>
@@ -257,11 +261,11 @@ coverage-guided fuzzing</p>
 <td><ul class="simple">
 <li><p><strong>ok</strong>: arm, arm64, mips
 powerpc, riscv, s390, um
-x86</p></li>
+x86, xtensa</p></li>
 <li><p><strong>TODO</strong>: alpha, arc, csky
 hexagon, ia64, loong, m68k
 microblaze, nios2, openrisc
-parisc, sh, sparc, xtensa</p></li>
+parisc, sh, sparc</p></li>
 </ul>
 </td>
 </tr>
@@ -722,23 +726,7 @@ parisc</p></li>
 </ul>
 </td>
 </tr>
-<tr class="row-even"><td><p>context-tracking</p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">HAVE_CONTEXT_TRACKING</span></code></p>
-<p>arch supports context tracking for
-NO_HZ_FULL</p>
-</td>
-<td><ul class="simple">
-<li><p><strong>ok</strong>: arm, arm64, csky
-loong, mips, powerpc, riscv
-sparc, x86, xtensa</p></li>
-<li><p><strong>TODO</strong>: alpha, arc
-hexagon, ia64, m68k
-microblaze, nios2, openrisc
-parisc, s390, sh, um</p></li>
-</ul>
-</td>
-</tr>
-<tr class="row-odd"><td><p>irq-time-acct</p></td>
+<tr class="row-even"><td><p>irq-time-acct</p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">HAVE_IRQ_TIME_ACCOUNTING</span></code></p>
 <p>arch supports precise IRQ time
 accounting</p>
@@ -752,6 +740,22 @@ hexagon, m68k, microblaze
 nios2, openrisc, sh, um</p></li>
 <li><p><strong>Not compatible</strong>: alpha
 ia64, parisc, s390, sparc</p></li>
+</ul>
+</td>
+</tr>
+<tr class="row-odd"><td><p>user-context-tracking</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">HAVE_CONTEXT_TRACKING_USER</span></code></p>
+<p>arch supports user context tracking
+for NO_HZ_FULL</p>
+</td>
+<td><ul class="simple">
+<li><p><strong>ok</strong>: arm, arm64, csky
+loong, mips, powerpc, riscv
+sparc, x86, xtensa</p></li>
+<li><p><strong>TODO</strong>: alpha, arc
+hexagon, ia64, m68k
+microblaze, nios2, openrisc
+parisc, s390, sh, um</p></li>
 </ul>
 </td>
 </tr>
@@ -846,10 +850,11 @@ xtensa</p></li>
 <p>arch has ioremap_prot()</p>
 </td>
 <td><ul class="simple">
-<li><p><strong>ok</strong>: arc, loong, mips
-powerpc, s390, sh, x86</p></li>
-<li><p><strong>TODO</strong>: alpha, arm, arm64
-csky, hexagon, ia64, m68k
+<li><p><strong>ok</strong>: arc, arm64, loong
+mips, powerpc, s390, sh
+x86</p></li>
+<li><p><strong>TODO</strong>: alpha, arm, csky
+hexagon, ia64, m68k
 microblaze, nios2, openrisc
 parisc, riscv, sparc, um
 xtensa</p></li>

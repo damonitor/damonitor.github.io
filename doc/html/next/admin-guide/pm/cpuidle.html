@@ -29,7 +29,7 @@
             <a href="../../index.html" class="icon icon-home"> The Linux Kernel
           </a>
               <div class="version">
-                5.19.0-rc4-mm-unstable-damon
+                6.0.0-rc3-mm-unstable-damon
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
@@ -40,7 +40,10 @@
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <ul>
-<li class="toctree-l1"><a class="reference internal" href="../mm/damon/index.html">Monitoring Data Accesses</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../mm/damon/index.html">DAMON: Data Access MONitor</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../mm/damon/index.html">DAMON: Data Access MONitor</a></li>
 </ul>
 
         </div>
@@ -671,8 +674,8 @@ governor will be used instead of the default one.  It is possible to force
 the <code class="docutils literal notranslate"><span class="pre">menu</span></code> governor to be used on the systems that use the <code class="docutils literal notranslate"><span class="pre">ladder</span></code> governor
 by default this way, for example.</p>
 <p>The other kernel command line parameters controlling CPU idle time management
-described below are only relevant for the <em>x86</em> architecture and some of
-them affect Intel processors only.</p>
+described below are only relevant for the <em>x86</em> architecture and references
+to <code class="docutils literal notranslate"><span class="pre">intel_idle</span></code> affect Intel processors only.</p>
 <p>The <em>x86</em> architecture support code recognizes three kernel command line
 options related to CPU idle time management: <code class="docutils literal notranslate"><span class="pre">idle=poll</span></code>, <code class="docutils literal notranslate"><span class="pre">idle=halt</span></code>,
 and <code class="docutils literal notranslate"><span class="pre">idle=nomwait</span></code>.  The first two of them disable the <code class="docutils literal notranslate"><span class="pre">acpi_idle</span></code> and
@@ -692,10 +695,13 @@ P-states (see <a class="reference internal" href="cpufreq.html"><span class="doc
 idle, so it very well may hurt single-thread computations performance as well as
 energy-efficiency.  Thus using it for performance reasons may not be a good idea
 at all.]</p>
-<p>The <code class="docutils literal notranslate"><span class="pre">idle=nomwait</span></code> option disables the <code class="docutils literal notranslate"><span class="pre">intel_idle</span></code> driver and causes
-<code class="docutils literal notranslate"><span class="pre">acpi_idle</span></code> to be used (as long as all of the information needed by it is
-there in the system’s ACPI tables), but it is not allowed to use the
-<code class="docutils literal notranslate"><span class="pre">MWAIT</span></code> instruction of the CPUs to ask the hardware to enter idle states.</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">idle=nomwait</span></code> option prevents the use of <code class="docutils literal notranslate"><span class="pre">MWAIT</span></code> instruction of
+the CPU to enter idle states. When this option is used, the <code class="docutils literal notranslate"><span class="pre">acpi_idle</span></code>
+driver will use the <code class="docutils literal notranslate"><span class="pre">HLT</span></code> instruction instead of <code class="docutils literal notranslate"><span class="pre">MWAIT</span></code>. On systems
+running Intel processors, this option disables the <code class="docutils literal notranslate"><span class="pre">intel_idle</span></code> driver
+and forces the use of the <code class="docutils literal notranslate"><span class="pre">acpi_idle</span></code> driver instead. Note that in either
+case, <code class="docutils literal notranslate"><span class="pre">acpi_idle</span></code> driver will function only if all the information needed
+by it is in the system’s ACPI tables.</p>
 <p>In addition to the architecture-level kernel command line options affecting CPU
 idle time management, there are parameters affecting individual <code class="docutils literal notranslate"><span class="pre">CPUIdle</span></code>
 drivers that can be passed to them via the kernel command line.  Specifically,

@@ -29,7 +29,7 @@
             <a href="../index.html" class="icon icon-home"> The Linux Kernel
           </a>
               <div class="version">
-                5.19.0-rc4-mm-unstable-damon
+                6.0.0-rc3-mm-unstable-damon
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
@@ -40,7 +40,10 @@
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <ul>
-<li class="toctree-l1"><a class="reference internal" href="../admin-guide/mm/damon/index.html">Monitoring Data Accesses</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../admin-guide/mm/damon/index.html">DAMON: Data Access MONitor</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="damon/index.html">DAMON: Data Access MONitor</a></li>
 </ul>
 
         </div>
@@ -122,14 +125,33 @@ It can be invoked from any context (including interrupts) but the mappings
 can only be used in the context which acquired them.</p>
 <p>This function should be preferred, where feasible, over all the others.</p>
 <p>These mappings are thread-local and CPU-local, meaning that the mapping
-can only be accessed from within this thread and the thread is bound the
-CPU while the mapping is active. Even if the thread is preempted (since
-preemption is never disabled by the function) the CPU can not be
-unplugged from the system via CPU-hotplug until the mapping is disposed.</p>
+can only be accessed from within this thread and the thread is bound to the
+CPU while the mapping is active. Although preemption is never disabled by
+this function, the CPU can not be unplugged from the system via
+CPU-hotplug until the mapping is disposed.</p>
 <p>It’s valid to take pagefaults in a local kmap region, unless the context
 in which the local mapping is acquired does not allow it for other reasons.</p>
+<p>As said, pagefaults and preemption are never disabled. There is no need to
+disable preemption because, when context switches to a different task, the
+maps of the outgoing task are saved and those of the incoming one are
+restored.</p>
 <p><a class="reference internal" href="#c.kmap_local_page" title="kmap_local_page"><code class="xref c c-func docutils literal notranslate"><span class="pre">kmap_local_page()</span></code></a> always returns a valid virtual address and it is assumed
 that <a class="reference internal" href="#c.kunmap_local" title="kunmap_local"><code class="xref c c-func docutils literal notranslate"><span class="pre">kunmap_local()</span></code></a> will never fail.</p>
+<p>On CONFIG_HIGHMEM=n kernels and for low memory pages this returns the
+virtual address of the direct mapping. Only real highmem pages are
+temporarily mapped. Therefore, users may call a plain page_address()
+for pages which are known to not come from ZONE_HIGHMEM. However, it is
+always safe to use <a class="reference internal" href="#c.kmap_local_page" title="kmap_local_page"><code class="xref c c-func docutils literal notranslate"><span class="pre">kmap_local_page()</span></code></a> / <a class="reference internal" href="#c.kunmap_local" title="kunmap_local"><code class="xref c c-func docutils literal notranslate"><span class="pre">kunmap_local()</span></code></a>.</p>
+<p>While it is significantly faster than <a class="reference internal" href="#c.kmap" title="kmap"><code class="xref c c-func docutils literal notranslate"><span class="pre">kmap()</span></code></a>, for the higmem case it
+comes with restrictions about the pointers validity. Contrary to <a class="reference internal" href="#c.kmap" title="kmap"><code class="xref c c-func docutils literal notranslate"><span class="pre">kmap()</span></code></a>
+mappings, the local mappings are only valid in the context of the caller
+and cannot be handed to other contexts. This implies that users must
+be absolutely sure to keep the use of the return address local to the
+thread which mapped it.</p>
+<p>Most code can be designed to use thread local mappings. User should
+therefore try to design their code to avoid the use of <a class="reference internal" href="#c.kmap" title="kmap"><code class="xref c c-func docutils literal notranslate"><span class="pre">kmap()</span></code></a> by mapping
+pages in the same thread the address will be used and prefer
+<a class="reference internal" href="#c.kmap_local_page" title="kmap_local_page"><code class="xref c c-func docutils literal notranslate"><span class="pre">kmap_local_page()</span></code></a>.</p>
 <p>Nesting <a class="reference internal" href="#c.kmap_local_page" title="kmap_local_page"><code class="xref c c-func docutils literal notranslate"><span class="pre">kmap_local_page()</span></code></a> and <a class="reference internal" href="#c.kmap_atomic" title="kmap_atomic"><code class="xref c c-func docutils literal notranslate"><span class="pre">kmap_atomic()</span></code></a> mappings is allowed to a certain
 extent (up to KMAP_TYPE_NR) but their invocations have to be strictly ordered
 because the map implementation is stack based. See <a class="reference internal" href="#c.kmap_local_page" title="kmap_local_page"><code class="xref c c-func docutils literal notranslate"><span class="pre">kmap_local_page()</span></code></a> kdocs
@@ -284,7 +306,7 @@ void * <code class="sig-name descname">kmap_local_page</code><span class="sig-pa
 <p><strong>Return</strong></p>
 <p>The virtual address of the mapping</p>
 <p><strong>Description</strong></p>
-<p>Can be invoked from any context.</p>
+<p>Can be invoked from any context, including interrupts.</p>
 <p>Requires careful handling when nesting multiple mappings because the map
 management is stack based. The unmap has to be in the reverse order of
 the map operation:</p>
@@ -300,8 +322,7 @@ the caller and cannot be handed to other contexts.</p>
 virtual address of the direct mapping. Only real highmem pages are
 temporarily mapped.</p>
 <p>While it is significantly faster than <a class="reference internal" href="#c.kmap" title="kmap"><code class="xref c c-func docutils literal notranslate"><span class="pre">kmap()</span></code></a> for the higmem case it
-comes with restrictions about the pointer validity. Only use when really
-necessary.</p>
+comes with restrictions about the pointer validity.</p>
 <p>On HIGHMEM enabled systems mapping a highmem page has the side effect of
 disabling migration in order to keep the virtual address stable across
 preemption. No caller of <a class="reference internal" href="#c.kmap_local_page" title="kmap_local_page"><code class="xref c c-func docutils literal notranslate"><span class="pre">kmap_local_page()</span></code></a> can rely on this side effect.</p>

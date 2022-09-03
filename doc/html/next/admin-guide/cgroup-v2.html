@@ -29,7 +29,7 @@
             <a href="../index.html" class="icon icon-home"> The Linux Kernel
           </a>
               <div class="version">
-                5.19.0-rc4-mm-unstable-damon
+                6.0.0-rc3-mm-unstable-damon
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
@@ -40,7 +40,10 @@
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <ul>
-<li class="toctree-l1"><a class="reference internal" href="mm/damon/index.html">Monitoring Data Accesses</a></li>
+<li class="toctree-l1"><a class="reference internal" href="mm/damon/index.html">DAMON: Data Access MONitor</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../mm/damon/index.html">DAMON: Data Access MONitor</a></li>
 </ul>
 
         </div>
@@ -161,6 +164,13 @@ option is system wide and can only be set on mount or modified
 through remount from the init namespace.  The mount option is
 ignored on non-init namespace mounts.  Please refer to the
 Delegation section for details.</p>
+</dd>
+<dt>favordynmods</dt><dd><p>Reduce the latencies of dynamic cgroup modifications such as
+task migrations and controller on/offs at the cost of making
+hot path operations such as forks and exits more expensive.
+The static usage pattern of creating a cgroup, enabling
+controllers, and then seeding it with CLONE_INTO_CGROUP is
+not affected by this option.</p>
 </dd>
 <dt>memory_localevents</dt><dd><p>Only populate memory.events with data for the current cgroup,
 and not any subtrees. This is legacy behaviour, the default
@@ -1041,6 +1051,12 @@ type of memory to reclaim from (anon, file, ..).</p>
 <p>Please note that the kernel can over or under reclaim from
 the target cgroup. If less bytes are reclaimed than the
 specified amount, -EAGAIN is returned.</p>
+<p>Please note that the proactive reclaim (triggered by this
+interface) is not meant to indicate memory pressure on the
+memory cgroup. Therefore socket memory balancing triggered by
+the memory reclaim normally is not exercised in this case.
+This means that the networking layer will not adapt based on
+reclaim induced by memory.reclaim.</p>
 </dd>
 <dt>memory.peak</dt><dd><p>A read-only single value file which exists on non-root
 cgroups.</p>

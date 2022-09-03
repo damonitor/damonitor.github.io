@@ -29,7 +29,7 @@
             <a href="../../index.html" class="icon icon-home"> The Linux Kernel
           </a>
               <div class="version">
-                5.19.0-rc4-mm-unstable-damon
+                6.0.0-rc3-mm-unstable-damon
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
@@ -40,7 +40,10 @@
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <ul>
-<li class="toctree-l1"><a class="reference internal" href="../mm/damon/index.html">Monitoring Data Accesses</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../mm/damon/index.html">DAMON: Data Access MONitor</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../mm/damon/index.html">DAMON: Data Access MONitor</a></li>
 </ul>
 
         </div>
@@ -111,6 +114,24 @@ Exposes:</p>
 <li><p>1 Pad source</p></li>
 </ul>
 </dd>
+<dt>vimc-lens:</dt><dd><p>Ancillary lens for a sensor. Supports auto focus control. Linked to
+a vimc-sensor using an ancillary link. The lens supports FOCUS_ABSOLUTE
+control.</p>
+</dd>
+</dl>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>media-ctl -p
+...
+- entity <span class="m">28</span>: Lens A <span class="o">(</span><span class="m">0</span> pad, <span class="m">0</span> link<span class="o">)</span>
+                <span class="nb">type</span> V4L2 subdev subtype Lens flags <span class="m">0</span>
+                device node name /dev/v4l-subdev6
+- entity <span class="m">29</span>: Lens B <span class="o">(</span><span class="m">0</span> pad, <span class="m">0</span> link<span class="o">)</span>
+                <span class="nb">type</span> V4L2 subdev subtype Lens flags <span class="m">0</span>
+                device node name /dev/v4l-subdev7
+v4l2-ctl -d /dev/v4l-subdev7 -C focus_absolute
+focus_absolute: <span class="m">0</span>
+</pre></div>
+</div>
+<dl class="simple">
 <dt>vimc-debayer:</dt><dd><p>Transforms images in bayer format into a non-bayer format.
 Exposes:</p>
 <ul class="simple">

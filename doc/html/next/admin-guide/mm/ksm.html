@@ -29,7 +29,7 @@
             <a href="../../index.html" class="icon icon-home"> The Linux Kernel
           </a>
               <div class="version">
-                5.19.0-rc4-mm-unstable-damon
+                6.0.0-rc3-mm-unstable-damon
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
@@ -40,7 +40,10 @@
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <ul>
-<li class="toctree-l1"><a class="reference internal" href="damon/index.html">Monitoring Data Accesses</a></li>
+<li class="toctree-l1"><a class="reference internal" href="damon/index.html">DAMON: Data Access MONitor</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../mm/damon/index.html">DAMON: Data Access MONitor</a></li>
 </ul>
 
         </div>
@@ -224,6 +227,42 @@ indicate poor use of madvise MADV_MERGEABLE.</p>
 <p>The maximum possible <code class="docutils literal notranslate"><span class="pre">pages_sharing/pages_shared</span></code> ratio is limited by the
 <code class="docutils literal notranslate"><span class="pre">max_page_sharing</span></code> tunable. To increase the ratio <code class="docutils literal notranslate"><span class="pre">max_page_sharing</span></code> must
 be increased accordingly.</p>
+</section>
+<section id="monitoring-ksm-profit">
+<h2>Monitoring KSM profit<a class="headerlink" href="#monitoring-ksm-profit" title="Permalink to this headline">¶</a></h2>
+<p>KSM can save memory by merging identical pages, but also can consume
+additional memory, because it needs to generate a number of rmap_items to
+save each scanned page’s brief rmap information. Some of these pages may
+be merged, but some may not be abled to be merged after being checked
+several times, which are unprofitable memory consumed.</p>
+<ol class="arabic">
+<li><p>How to determine whether KSM save memory or consume memory in system-wide
+range? Here is a simple approximate calculation for reference:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>general_profit =~ pages_sharing * sizeof(page) - (all_rmap_items) *
+                  sizeof(rmap_item);
+</pre></div>
+</div>
+<p>where all_rmap_items can be easily obtained by summing <code class="docutils literal notranslate"><span class="pre">pages_sharing</span></code>,
+<code class="docutils literal notranslate"><span class="pre">pages_shared</span></code>, <code class="docutils literal notranslate"><span class="pre">pages_unshared</span></code> and <code class="docutils literal notranslate"><span class="pre">pages_volatile</span></code>.</p>
+</li>
+<li><p>The KSM profit inner a single process can be similarly obtained by the
+following approximate calculation:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>process_profit =~ ksm_merging_pages * sizeof(page) -
+                  ksm_rmap_items * sizeof(rmap_item).
+</pre></div>
+</div>
+<p>where ksm_merging_pages is shown under the directory <code class="docutils literal notranslate"><span class="pre">/proc/&lt;pid&gt;/</span></code>,
+and ksm_rmap_items is shown in <code class="docutils literal notranslate"><span class="pre">/proc/&lt;pid&gt;/ksm_stat</span></code>.</p>
+</li>
+</ol>
+<p>From the perspective of application, a high ratio of <code class="docutils literal notranslate"><span class="pre">ksm_rmap_items</span></code> to
+<code class="docutils literal notranslate"><span class="pre">ksm_merging_pages</span></code> means a bad madvise-applied policy, so developers or
+administrators have to rethink how to change madvise policy. Giving an example
+for reference, a page’s size is usually 4K, and the rmap_item’s size is
+separately 32B on 32-bit CPU architecture and 64B on 64-bit CPU architecture.
+so if the <code class="docutils literal notranslate"><span class="pre">ksm_rmap_items/ksm_merging_pages</span></code> ratio exceeds 64 on 64-bit CPU
+or exceeds 128 on 32-bit CPU, then the app’s madvise policy should be dropped,
+because the ksm profit is approximately zero or negative.</p>
 </section>
 <section id="monitoring-ksm-events">
 <h2>Monitoring KSM events<a class="headerlink" href="#monitoring-ksm-events" title="Permalink to this headline">¶</a></h2>

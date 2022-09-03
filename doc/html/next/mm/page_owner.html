@@ -29,7 +29,7 @@
             <a href="../index.html" class="icon icon-home"> The Linux Kernel
           </a>
               <div class="version">
-                5.19.0-rc4-mm-unstable-damon
+                6.0.0-rc3-mm-unstable-damon
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
@@ -40,7 +40,10 @@
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <ul>
-<li class="toctree-l1"><a class="reference internal" href="../admin-guide/mm/damon/index.html">Monitoring Data Accesses</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../admin-guide/mm/damon/index.html">DAMON: Data Access MONitor</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="damon/index.html">DAMON: Data Access MONitor</a></li>
 </ul>
 
         </div>
@@ -148,13 +151,18 @@ make page_owner_sort
 </pre></div>
 </div>
 <p>The general output of <code class="docutils literal notranslate"><span class="pre">page_owner_full.txt</span></code> is as follows:</p>
-<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>Page allocated via order XXX, ...
-PFN XXX ...
-// Detailed stack
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>    Page allocated via order XXX, ...
+    PFN XXX ...
+    // Detailed stack
 
-Page allocated via order XXX, ...
-PFN XXX ...
-// Detailed stack
+    Page allocated via order XXX, ...
+    PFN XXX ...
+    // Detailed stack
+By default, it will do full pfn dump, to start with a given pfn,
+page_owner supports fseek.
+
+FILE *fp = fopen(&quot;/sys/kernel/debug/page_owner&quot;, &quot;r&quot;);
+fseek(fp, pfn_start, SEEK_SET);
 </pre></div>
 </div>
 <p>The <code class="docutils literal notranslate"><span class="pre">page_owner_sort</span></code> tool ignores <code class="docutils literal notranslate"><span class="pre">PFN</span></code> rows, puts the remaining rows

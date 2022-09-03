@@ -29,7 +29,7 @@
             <a href="../../index.html" class="icon icon-home"> The Linux Kernel
           </a>
               <div class="version">
-                5.19.0-rc4-mm-unstable-damon
+                6.0.0-rc3-mm-unstable-damon
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
@@ -40,7 +40,10 @@
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <ul>
-<li class="toctree-l1"><a class="reference internal" href="damon/index.html">Monitoring Data Accesses</a></li>
+<li class="toctree-l1"><a class="reference internal" href="damon/index.html">DAMON: Data Access MONitor</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../mm/damon/index.html">DAMON: Data Access MONitor</a></li>
 </ul>
 
         </div>
@@ -71,10 +74,10 @@
 <h1>CMA Debugfs Interface<a class="headerlink" href="#cma-debugfs-interface" title="Permalink to this headline">¶</a></h1>
 <p>The CMA debugfs interface is useful to retrieve basic information out of the
 different CMA areas and to test allocation/release in each of the areas.</p>
-<p>Each CMA zone represents a directory under &lt;debugfs&gt;/cma/, indexed by the
-kernel’s CMA index. So the first CMA zone would be:</p>
+<p>Each CMA area represents a directory under &lt;debugfs&gt;/cma/, represented by
+its CMA name like below:</p>
 <blockquote>
-<div><p>&lt;debugfs&gt;/cma/cma-0</p>
+<div><p>&lt;debugfs&gt;/cma/&lt;cma_name&gt;</p>
 </div></blockquote>
 <p>The structure of the files created under that directory is as follows:</p>
 <blockquote>
@@ -84,13 +87,13 @@ kernel’s CMA index. So the first CMA zone would be:</p>
 <li><p>[RO] order_per_bit: Order of pages represented by one bit.</p></li>
 <li><p>[RO] bitmap: The bitmap of page states in the zone.</p></li>
 <li><p>[WO] alloc: Allocate N pages from that CMA area. For example:</p>
-<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>echo 5 &gt; &lt;debugfs&gt;/cma/cma-2/alloc
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>echo 5 &gt; &lt;debugfs&gt;/cma/&lt;cma_name&gt;/alloc
 </pre></div>
 </div>
 </li>
 </ul>
 </div></blockquote>
-<p>would try to allocate 5 pages from the cma-2 area.</p>
+<p>would try to allocate 5 pages from the ‘cma_name’ area.</p>
 <blockquote>
 <div><ul class="simple">
 <li><p>[WO] free: Free N pages from that CMA area, similar to the above.</p></li>

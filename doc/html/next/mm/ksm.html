@@ -29,7 +29,7 @@
             <a href="../index.html" class="icon icon-home"> The Linux Kernel
           </a>
               <div class="version">
-                5.19.0-rc4-mm-unstable-damon
+                6.0.0-rc3-mm-unstable-damon
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
@@ -40,7 +40,10 @@
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <ul>
-<li class="toctree-l1"><a class="reference internal" href="../admin-guide/mm/damon/index.html">Monitoring Data Accesses</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../admin-guide/mm/damon/index.html">DAMON: Data Access MONitor</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="damon/index.html">DAMON: Data Access MONitor</a></li>
 </ul>
 
         </div>
@@ -100,7 +103,7 @@ write protected memory content, but each “dup” corresponds to a
 different KSM page copy of that content</p></li>
 </ul>
 <p>Internally, the regular nodes, “dups” and “chains” are represented
-using the same <a class="reference internal" href="#c.stable_node" title="stable_node"><code class="xref c c-type docutils literal notranslate"><span class="pre">struct</span> <span class="pre">stable_node</span></code></a> structure.</p>
+using the same struct ksm_stable_node structure.</p>
 <p>In addition to the stable tree, KSM uses a second data structure called the
 unstable tree: this tree holds pointers to pages which have been found to
 be “unchanged for a period of time”.  The unstable tree sorts these pages
@@ -132,7 +135,7 @@ stable trees and multiple unstable trees: one of each for each NUMA node.</p>
 tree.</p>
 <p>If a KSM page is shared between less than <code class="docutils literal notranslate"><span class="pre">max_page_sharing</span></code> VMAs,
 the node of the stable tree that represents such KSM page points to a
-list of <a class="reference internal" href="#c.rmap_item" title="rmap_item"><code class="xref c c-type docutils literal notranslate"><span class="pre">struct</span> <span class="pre">rmap_item</span></code></a> and the <code class="docutils literal notranslate"><span class="pre">page-&gt;mapping</span></code> of the
+list of struct ksm_rmap_item and the <code class="docutils literal notranslate"><span class="pre">page-&gt;mapping</span></code> of the
 KSM page points to the stable tree node.</p>
 <p>When the sharing passes this threshold, KSM adds a second dimension to
 the stable tree. The tree node becomes a “chain” that links one or
@@ -179,32 +182,6 @@ The frequency of such scans is defined by
 <section id="reference">
 <h3>Reference<a class="headerlink" href="#reference" title="Permalink to this headline">¶</a></h3>
 <dl class="type">
-<dt id="c.mm_slot">
-struct <code class="sig-name descname">mm_slot</code><a class="headerlink" href="#c.mm_slot" title="Permalink to this definition">¶</a></dt>
-<dd><p>ksm information per mm that is being scanned</p>
-</dd></dl>
-
-<p><strong>Definition</strong></p>
-<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>struct mm_slot {
-  struct hlist_node link;
-  struct list_head mm_list;
-  struct rmap_item *rmap_list;
-  struct mm_struct *mm;
-};
-</pre></div>
-</div>
-<p><strong>Members</strong></p>
-<dl class="simple">
-<dt><code class="docutils literal notranslate"><span class="pre">link</span></code></dt><dd><p>link to the mm_slots hash list</p>
-</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">mm_list</span></code></dt><dd><p>link into the mm_slots list, rooted in ksm_mm_head</p>
-</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">rmap_list</span></code></dt><dd><p>head for this mm_slot’s singly-linked list of rmap_items</p>
-</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">mm</span></code></dt><dd><p>the mm that this information is valid for</p>
-</dd>
-</dl>
-<dl class="type">
 <dt id="c.ksm_scan">
 struct <code class="sig-name descname">ksm_scan</code><a class="headerlink" href="#c.ksm_scan" title="Permalink to this definition">¶</a></dt>
 <dd><p>cursor for scanning</p>
@@ -212,9 +189,9 @@ struct <code class="sig-name descname">ksm_scan</code><a class="headerlink" href
 
 <p><strong>Definition</strong></p>
 <div class="highlight-none notranslate"><div class="highlight"><pre><span></span>struct ksm_scan {
-  struct mm_slot *mm_slot;
+  struct ksm_mm_slot *mm_slot;
   unsigned long address;
-  struct rmap_item **rmap_list;
+  struct ksm_rmap_item **rmap_list;
   unsigned long seqnr;
 };
 </pre></div>
@@ -232,121 +209,6 @@ struct <code class="sig-name descname">ksm_scan</code><a class="headerlink" href
 </dl>
 <p><strong>Description</strong></p>
 <p>There is only the one ksm_scan instance of this cursor structure.</p>
-<dl class="type">
-<dt id="c.stable_node">
-struct <code class="sig-name descname">stable_node</code><a class="headerlink" href="#c.stable_node" title="Permalink to this definition">¶</a></dt>
-<dd><p>node of the stable rbtree</p>
-</dd></dl>
-
-<p><strong>Definition</strong></p>
-<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>struct stable_node {
-  union {
-    struct rb_node node;
-    struct {
-      struct list_head *head;
-      struct {
-        struct hlist_node hlist_dup;
-        struct list_head list;
-      };
-    };
-  };
-  struct hlist_head hlist;
-  union {
-    unsigned long kpfn;
-    unsigned long chain_prune_time;
-  };
-#define STABLE_NODE_CHAIN -1024;
-  int rmap_hlist_len;
-#ifdef CONFIG_NUMA;
-  int nid;
-#endif;
-};
-</pre></div>
-</div>
-<p><strong>Members</strong></p>
-<dl class="simple">
-<dt><code class="docutils literal notranslate"><span class="pre">{unnamed_union}</span></code></dt><dd><p>anonymous</p>
-</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">node</span></code></dt><dd><p>rb node of this ksm page in the stable tree</p>
-</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">{unnamed_struct}</span></code></dt><dd><p>anonymous</p>
-</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">head</span></code></dt><dd><p>(overlaying parent) <code class="xref c c-type docutils literal notranslate"><span class="pre">migrate_nodes</span></code> indicates temporarily on that list</p>
-</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">{unnamed_struct}</span></code></dt><dd><p>anonymous</p>
-</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">hlist_dup</span></code></dt><dd><p>linked into the stable_node-&gt;hlist with a stable_node chain</p>
-</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">list</span></code></dt><dd><p>linked into migrate_nodes, pending placement in the proper node tree</p>
-</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">hlist</span></code></dt><dd><p>hlist head of rmap_items using this ksm page</p>
-</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">{unnamed_union}</span></code></dt><dd><p>anonymous</p>
-</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">kpfn</span></code></dt><dd><p>page frame number of this ksm page (perhaps temporarily on wrong nid)</p>
-</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">chain_prune_time</span></code></dt><dd><p>time of the last full garbage collection</p>
-</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">rmap_hlist_len</span></code></dt><dd><p>number of rmap_item entries in hlist or STABLE_NODE_CHAIN</p>
-</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">nid</span></code></dt><dd><p>NUMA node id of stable tree in which linked (may not match kpfn)</p>
-</dd>
-</dl>
-<dl class="type">
-<dt id="c.rmap_item">
-struct <code class="sig-name descname">rmap_item</code><a class="headerlink" href="#c.rmap_item" title="Permalink to this definition">¶</a></dt>
-<dd><p>reverse mapping item for virtual addresses</p>
-</dd></dl>
-
-<p><strong>Definition</strong></p>
-<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>struct rmap_item {
-  struct rmap_item *rmap_list;
-  union {
-    struct anon_vma *anon_vma;
-#ifdef CONFIG_NUMA;
-    int nid;
-#endif;
-  };
-  struct mm_struct *mm;
-  unsigned long address;
-  unsigned int oldchecksum;
-  union {
-    struct rb_node node;
-    struct {
-      struct stable_node *head;
-      struct hlist_node hlist;
-    };
-  };
-};
-</pre></div>
-</div>
-<p><strong>Members</strong></p>
-<dl class="simple">
-<dt><code class="docutils literal notranslate"><span class="pre">rmap_list</span></code></dt><dd><p>next rmap_item in mm_slot’s singly-linked rmap_list</p>
-</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">{unnamed_union}</span></code></dt><dd><p>anonymous</p>
-</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">anon_vma</span></code></dt><dd><p>pointer to anon_vma for this mm,address, when in stable tree</p>
-</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">nid</span></code></dt><dd><p>NUMA node id of unstable tree in which linked (may not match page)</p>
-</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">mm</span></code></dt><dd><p>the memory structure this rmap_item is pointing into</p>
-</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">address</span></code></dt><dd><p>the virtual address this rmap_item tracks (+ flags in low bits)</p>
-</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">oldchecksum</span></code></dt><dd><p>previous checksum of the page at that virtual address</p>
-</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">{unnamed_union}</span></code></dt><dd><p>anonymous</p>
-</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">node</span></code></dt><dd><p>rb node of this rmap_item in the unstable tree</p>
-</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">{unnamed_struct}</span></code></dt><dd><p>anonymous</p>
-</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">head</span></code></dt><dd><p>pointer to stable_node heading this list in the stable tree</p>
-</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">hlist</span></code></dt><dd><p>link into hlist of rmap_items hanging off that stable_node</p>
-</dd>
-</dl>
 <p>–
 Izik Eidus,
 Hugh Dickins, 17 Nov 2009</p>

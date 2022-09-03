@@ -29,7 +29,7 @@
             <a href="../index.html" class="icon icon-home"> The Linux Kernel
           </a>
               <div class="version">
-                5.19.0-rc4-mm-unstable-damon
+                6.0.0-rc3-mm-unstable-damon
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
@@ -40,7 +40,10 @@
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <ul>
-<li class="toctree-l1"><a class="reference internal" href="mm/damon/index.html">Monitoring Data Accesses</a></li>
+<li class="toctree-l1"><a class="reference internal" href="mm/damon/index.html">DAMON: Data Access MONitor</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../mm/damon/index.html">DAMON: Data Access MONitor</a></li>
 </ul>
 
         </div>
@@ -1241,6 +1244,19 @@ support discard functionality.</p>
 <p>Defined on file <a class="reference internal" href="#abi-file-stable-sysfs-block"><span class="std std-ref">sysfs-block</span></a></p>
 <p>[RO] Will always return 0.  Don’t rely on any specific behavior
 for discards, and don’t read this file.</p>
+<table class="docutils align-default" id="abi-sys-block-disk-queue-dma-alignment">
+<colgroup>
+<col style="width: 100%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><strong>/sys/block/&lt;disk&gt;/queue/dma_alignment</strong></p></td>
+</tr>
+</tbody>
+</table>
+<p>Defined on file <a class="reference internal" href="#abi-file-stable-sysfs-block"><span class="std std-ref">sysfs-block</span></a></p>
+<p>Reports the alignment that user space addresses must have to be
+used for raw block device access with O_DIRECT and other driver
+specific passthrough mechanisms.</p>
 <table class="docutils align-default" id="abi-sys-block-disk-queue-fua">
 <colgroup>
 <col style="width: 100%" />
@@ -6437,6 +6453,19 @@ be allowed.
 The purpose if this file is to allow line card VPD burning
 during production flow.</p>
 <p>The file is read/write.</p>
+<table class="docutils align-default" id="abi-sys-devices-platform-mlxplat-mlxreg-io-hwmon-hwmon-asic2-health">
+<colgroup>
+<col style="width: 100%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><strong>/sys/devices/platform/mlxplat/mlxreg-io/hwmon/hwmon*/asic2_health</strong></p></td>
+</tr>
+</tbody>
+</table>
+<p>Defined on file <a class="reference internal" href="#abi-file-stable-sysfs-driver-mlxreg-io"><span class="std std-ref">sysfs-driver-mlxreg-io</span></a></p>
+<p>This file shows 2-nd ASIC health status. The possible values are:
+0 - health failed, 2 - health OK, 3 - ASIC in booting state.</p>
+<p>The file is read only.</p>
 <table class="docutils align-default" id="abi-sys-devices-platform-mlxplat-mlxreg-io-hwmon-hwmon-asic-health">
 <colgroup>
 <col style="width: 100%" />
@@ -6450,6 +6479,20 @@ during production flow.</p>
 <p>This file shows ASIC health status. The possible values are:
 0 - health failed, 2 - health OK, 3 - ASIC in booting state.</p>
 <p>The files are read only.</p>
+<table class="docutils align-default" id="abi-sys-devices-platform-mlxplat-mlxreg-io-hwmon-hwmon-asic-reset">
+<colgroup>
+<col style="width: 100%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><strong>/sys/devices/platform/mlxplat/mlxreg-io/hwmon/hwmon*/asic_reset</strong></p></td>
+</tr>
+<tr class="row-even"><td><p><strong>/sys/devices/platform/mlxplat/mlxreg-io/hwmon/hwmon*/asic2_reset</strong></p></td>
+</tr>
+</tbody>
+</table>
+<p>Defined on file <a class="reference internal" href="#abi-file-stable-sysfs-driver-mlxreg-io"><span class="std std-ref">sysfs-driver-mlxreg-io</span></a></p>
+<p>These files allow to each of ASICs by writing 1.</p>
+<p>The files are write only.</p>
 <table class="docutils align-default" id="abi-sys-devices-platform-mlxplat-mlxreg-io-hwmon-hwmon-bios-active-image">
 <colgroup>
 <col style="width: 100%" />
@@ -6476,6 +6519,20 @@ image is not signed correctly.</p>
 reason not because authentication. For example due to
 physical SPI flash problem.</p>
 <p>The files are read only.</p>
+<table class="docutils align-default" id="abi-sys-devices-platform-mlxplat-mlxreg-io-hwmon-hwmon-comm-chnl-ready">
+<colgroup>
+<col style="width: 100%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><strong>/sys/devices/platform/mlxplat/mlxreg-io/hwmon/hwmon*/comm_chnl_ready</strong></p></td>
+</tr>
+</tbody>
+</table>
+<p>Defined on file <a class="reference internal" href="#abi-file-stable-sysfs-driver-mlxreg-io"><span class="std std-ref">sysfs-driver-mlxreg-io</span></a></p>
+<p>This file is used to indicate remote end (for example BMC) that system
+host CPU is ready for sending telemetry data to remote end.
+For indication the file should be written 1.</p>
+<p>The file is write only.</p>
 <table class="docutils align-default" id="abi-sys-devices-platform-mlxplat-mlxreg-io-hwmon-hwmon-config1">
 <colgroup>
 <col style="width: 100%" />
@@ -6492,6 +6549,20 @@ physical SPI flash problem.</p>
 like system’s static I2C topology, number and type of FPGA
 devices within the system and so on.</p>
 <p>The files are read only.</p>
+<table class="docutils align-default" id="abi-sys-devices-platform-mlxplat-mlxreg-io-hwmon-hwmon-config3">
+<colgroup>
+<col style="width: 100%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><strong>/sys/devices/platform/mlxplat/mlxreg-io/hwmon/hwmon*/config3</strong></p></td>
+</tr>
+</tbody>
+</table>
+<p>Defined on file <a class="reference internal" href="#abi-file-stable-sysfs-driver-mlxreg-io"><span class="std std-ref">sysfs-driver-mlxreg-io</span></a></p>
+<p>The file indicates COME module hardware configuration.
+The value is pushed by hardware through GPIO pins.
+The purpose is to expose some minor BOM changes for the same system SKU.</p>
+<p>The file is read only.</p>
 <table class="docutils align-default" id="abi-sys-devices-platform-mlxplat-mlxreg-io-hwmon-hwmon-cpld1-pn">
 <colgroup>
 <col style="width: 100%" />
@@ -8468,7 +8539,7 @@ this file will not be present.</p>
 </table>
 <p>Defined on file <a class="reference internal" href="#abi-file-stable-sysfs-module"><span class="std std-ref">sysfs-module</span></a></p>
 <p>If the module source has MODULE_VERSION, this file will contain
-the checksum of the the source code.</p>
+the checksum of the source code.</p>
 <table class="docutils align-default" id="abi-sys-module-modulename-version">
 <colgroup>
 <col style="width: 100%" />
@@ -8662,6 +8733,7 @@ that it is correct for their architecture.</p>
 <li><p><a class="reference internal" href="#abi-sys-block-disk-queue-discard-max-bytes"><span class="std std-ref">/sys/block/&lt;disk&gt;/queue/discard_max_bytes</span></a></p></li>
 <li><p><a class="reference internal" href="#abi-sys-block-disk-queue-discard-max-hw-bytes"><span class="std std-ref">/sys/block/&lt;disk&gt;/queue/discard_max_hw_bytes</span></a></p></li>
 <li><p><a class="reference internal" href="#abi-sys-block-disk-queue-discard-zeroes-data"><span class="std std-ref">/sys/block/&lt;disk&gt;/queue/discard_zeroes_data</span></a></p></li>
+<li><p><a class="reference internal" href="#abi-sys-block-disk-queue-dma-alignment"><span class="std std-ref">/sys/block/&lt;disk&gt;/queue/dma_alignment</span></a></p></li>
 <li><p><a class="reference internal" href="#abi-sys-block-disk-queue-fua"><span class="std std-ref">/sys/block/&lt;disk&gt;/queue/fua</span></a></p></li>
 <li><p><a class="reference internal" href="#abi-sys-block-disk-queue-hw-sector-size"><span class="std std-ref">/sys/block/&lt;disk&gt;/queue/hw_sector_size</span></a></p></li>
 <li><p><a class="reference internal" href="#abi-sys-block-disk-queue-independent-access-ranges"><span class="std std-ref">/sys/block/&lt;disk&gt;/queue/independent_access_ranges/</span></a></p></li>
@@ -9098,7 +9170,7 @@ is documented in <a class="reference internal" href="sysfs-rules.html"><span cla
 <li><p><a class="reference internal" href="#abi-sys-devices-system-cpu-cpu-0-9-dscr"><span class="std std-ref">/sys/devices/system/cpu/cpu[0-9]+/dscr</span></a></p></li>
 <li><p><a class="reference internal" href="#abi-sys-devices-system-cpu-cpux-topology-physical-package-id"><span class="std std-ref">/sys/devices/system/cpu/cpuX/topology/physical_package_id</span></a></p></li>
 <li><p><a class="reference internal" href="#abi-sys-devices-system-cpu-cpux-topology-die-id"><span class="std std-ref">/sys/devices/system/cpu/cpuX/topology/die_id</span></a></p></li>
-<li><p><a class="reference internal" href="abi-testing.html#abi-sys-devices-system-cpu-cpux-topology-core-id"><span class="std std-ref">/sys/devices/system/cpu/cpuX/topology/core_id</span></a></p></li>
+<li><p><a class="reference internal" href="#abi-sys-devices-system-cpu-cpux-topology-core-id"><span class="std std-ref">/sys/devices/system/cpu/cpuX/topology/core_id</span></a></p></li>
 <li><p><a class="reference internal" href="#abi-sys-devices-system-cpu-cpux-topology-cluster-id"><span class="std std-ref">/sys/devices/system/cpu/cpuX/topology/cluster_id</span></a></p></li>
 <li><p><a class="reference internal" href="#abi-sys-devices-system-cpu-cpux-topology-book-id"><span class="std std-ref">/sys/devices/system/cpu/cpuX/topology/book_id</span></a></p></li>
 <li><p><a class="reference internal" href="#abi-sys-devices-system-cpu-cpux-topology-drawer-id"><span class="std std-ref">/sys/devices/system/cpu/cpuX/topology/drawer_id</span></a></p></li>
@@ -9339,6 +9411,11 @@ is documented in <a class="reference internal" href="sysfs-rules.html"><span cla
 <li><p><a class="reference internal" href="#abi-sys-devices-platform-mlxplat-mlxreg-io-hwmon-hwmon-phy-reset"><span class="std std-ref">/sys/devices/platform/mlxplat/mlxreg-io/hwmon/hwmon*/phy_reset</span></a></p></li>
 <li><p><a class="reference internal" href="#abi-sys-devices-platform-mlxplat-mlxreg-io-hwmon-hwmon-mac-reset"><span class="std std-ref">/sys/devices/platform/mlxplat/mlxreg-io/hwmon/hwmon*/mac_reset</span></a></p></li>
 <li><p><a class="reference internal" href="#abi-sys-devices-platform-mlxplat-mlxreg-io-hwmon-hwmon-qsfp-pwr-good"><span class="std std-ref">/sys/devices/platform/mlxplat/mlxreg-io/hwmon/hwmon*/qsfp_pwr_good</span></a></p></li>
+<li><p><a class="reference internal" href="#abi-sys-devices-platform-mlxplat-mlxreg-io-hwmon-hwmon-asic2-health"><span class="std std-ref">/sys/devices/platform/mlxplat/mlxreg-io/hwmon/hwmon*/asic2_health</span></a></p></li>
+<li><p><a class="reference internal" href="#abi-sys-devices-platform-mlxplat-mlxreg-io-hwmon-hwmon-asic-reset"><span class="std std-ref">/sys/devices/platform/mlxplat/mlxreg-io/hwmon/hwmon*/asic_reset</span></a></p></li>
+<li><p><a class="reference internal" href="#abi-sys-devices-platform-mlxplat-mlxreg-io-hwmon-hwmon-asic-reset"><span class="std std-ref">/sys/devices/platform/mlxplat/mlxreg-io/hwmon/hwmon*/asic2_reset</span></a></p></li>
+<li><p><a class="reference internal" href="#abi-sys-devices-platform-mlxplat-mlxreg-io-hwmon-hwmon-comm-chnl-ready"><span class="std std-ref">/sys/devices/platform/mlxplat/mlxreg-io/hwmon/hwmon*/comm_chnl_ready</span></a></p></li>
+<li><p><a class="reference internal" href="#abi-sys-devices-platform-mlxplat-mlxreg-io-hwmon-hwmon-config3"><span class="std std-ref">/sys/devices/platform/mlxplat/mlxreg-io/hwmon/hwmon*/config3</span></a></p></li>
 </ul>
 </section>
 <section id="file-home-ant-amazon-com-sjpark-linux-stable-sysfs-driver-qla2xxx">

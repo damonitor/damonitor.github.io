@@ -252,6 +252,14 @@ videodev2.h
 
             \/\* DCI-P3 colorspace, used by cinema projectors \*\/
             :c:type:`V4L2_COLORSPACE_DCI_P3 <v4l2_colorspace>`        = 12,
+
+    \#ifdef \_\_KERNEL\_\_
+            \/\*
+             \* Largest supported colorspace value, assigned by the compiler, used
+             \* by the framework to check for invalid values.
+             \*\/
+            :c:type:`V4L2_COLORSPACE_LAST <v4l2_colorspace>`,
+    \#endif
     \};
 
     \/\*
@@ -290,6 +298,13 @@ videodev2.h
             :c:type:`V4L2_XFER_FUNC_NONE <v4l2_xfer_func>`        = 5,
             :c:type:`V4L2_XFER_FUNC_DCI_P3 <v4l2_xfer_func>`      = 6,
             :c:type:`V4L2_XFER_FUNC_SMPTE2084 <v4l2_xfer_func>`   = 7,
+    \#ifdef \_\_KERNEL\_\_
+            \/\*
+             \* Largest supported transfer function value, assigned by the compiler,
+             \* used by the framework to check for invalid values.
+             \*\/
+            :c:type:`V4L2_XFER_FUNC_LAST <v4l2_xfer_func>`,
+    \#endif
     \};
 
     \/\*
@@ -350,6 +365,13 @@ videodev2.h
 
             \/\* SMPTE 240M -- Obsolete HDTV \*\/
             :c:type:`V4L2_YCBCR_ENC_SMPTE240M <v4l2_ycbcr_encoding>`      = 8,
+    \#ifdef \_\_KERNEL\_\_
+            \/\*
+             \* Largest supported encoding value, assigned by the compiler, used by
+             \* the framework to check for invalid values.
+             \*\/
+            :c:type:`V4L2_YCBCR_ENC_LAST <v4l2_ycbcr_encoding>`,
+    \#endif
     \};
 
     \/\*
@@ -600,6 +622,8 @@ videodev2.h
     \#define \ :ref:`V4L2_PIX_FMT_XYUV32 <v4l2-pix-fmt-xyuv32>`  v4l2\_fourcc('X', 'Y', 'U', 'V') \/\* 32  XYUV-8-8-8-8  \*\/
     \#define \ :ref:`V4L2_PIX_FMT_VUYA32 <v4l2-pix-fmt-vuya32>`  v4l2\_fourcc('V', 'U', 'Y', 'A') \/\* 32  VUYA-8-8-8-8  \*\/
     \#define \ :ref:`V4L2_PIX_FMT_VUYX32 <v4l2-pix-fmt-vuyx32>`  v4l2\_fourcc('V', 'U', 'Y', 'X') \/\* 32  VUYX-8-8-8-8  \*\/
+    \#define \ :ref:`V4L2_PIX_FMT_YUVA32 <v4l2-pix-fmt-yuva32>`  v4l2\_fourcc('Y', 'U', 'V', 'A') \/\* 32  YUVA-8-8-8-8  \*\/
+    \#define \ :ref:`V4L2_PIX_FMT_YUVX32 <v4l2-pix-fmt-yuvx32>`  v4l2\_fourcc('Y', 'U', 'V', 'X') \/\* 32  YUVX-8-8-8-8  \*\/
     \#define \ :ref:`V4L2_PIX_FMT_M420 <v4l2-pix-fmt-m420>`    v4l2\_fourcc('M', '4', '2', '0') \/\* 12  YUV 4\:2\:0 2 lines y, 1 line uv interleaved \*\/
 
     \/\* two planes -- one Y, one Cr + Cb interleaved  \*\/
@@ -609,6 +633,7 @@ videodev2.h
     \#define \ :ref:`V4L2_PIX_FMT_NV61 <v4l2-pix-fmt-nv61>`    v4l2\_fourcc('N', 'V', '6', '1') \/\* 16  Y\/CrCb 4\:2\:2  \*\/
     \#define \ :ref:`V4L2_PIX_FMT_NV24 <v4l2-pix-fmt-nv24>`    v4l2\_fourcc('N', 'V', '2', '4') \/\* 24  Y\/CbCr 4\:4\:4  \*\/
     \#define \ :ref:`V4L2_PIX_FMT_NV42 <v4l2-pix-fmt-nv42>`    v4l2\_fourcc('N', 'V', '4', '2') \/\* 24  Y\/CrCb 4\:4\:4  \*\/
+    \#define \ :ref:`V4L2_PIX_FMT_P010 <v4l2-pix-fmt-p010>`    v4l2\_fourcc('P', '0', '1', '0') \/\* 24  Y\/CbCr 4\:2\:0 10-bit per component \*\/
 
     \/\* two non contiguous planes - one Y, one Cr + Cb interleaved  \*\/
     \#define \ :ref:`V4L2_PIX_FMT_NV12M <v4l2-pix-fmt-nv12m>`   v4l2\_fourcc('N', 'M', '1', '2') \/\* 12  Y\/CbCr 4\:2\:0  \*\/
@@ -636,6 +661,7 @@ videodev2.h
     \#define \ :ref:`V4L2_PIX_FMT_NV12_4L4 <v4l2-pix-fmt-nv12-4l4>` v4l2\_fourcc('V', 'T', '1', '2')   \/\* 12  Y\/CbCr 4\:2\:0  4x4 tiles \*\/
     \#define \ :ref:`V4L2_PIX_FMT_NV12_16L16 <v4l2-pix-fmt-nv12-16l16>` v4l2\_fourcc('H', 'M', '1', '2') \/\* 12  Y\/CbCr 4\:2\:0 16x16 tiles \*\/
     \#define \ :ref:`V4L2_PIX_FMT_NV12_32L32 <v4l2-pix-fmt-nv12-32l32>` v4l2\_fourcc('S', 'T', '1', '2') \/\* 12  Y\/CbCr 4\:2\:0 32x32 tiles \*\/
+    \#define \ :ref:`V4L2_PIX_FMT_P010_4L4 <v4l2-pix-fmt-p010-4l4>` v4l2\_fourcc('T', '0', '1', '0') \/\* 12  Y\/CbCr 4\:2\:0 10-bit 4x4 macroblocks \*\/
 
     \/\* Tiled YUV formats, non contiguous planes \*\/
     \#define \ :ref:`V4L2_PIX_FMT_NV12MT <v4l2-pix-fmt-nv12mt>`  v4l2\_fourcc('T', 'M', '1', '2') \/\* 12  Y\/CbCr 4\:2\:0 64x32 tiles \*\/
@@ -718,6 +744,7 @@ videodev2.h
     \#define \ :ref:`V4L2_PIX_FMT_FWHT <v4l2-pix-fmt-fwht>`     v4l2\_fourcc('F', 'W', 'H', 'T') \/\* Fast Walsh Hadamard Transform (vicodec) \*\/
     \#define \ :ref:`V4L2_PIX_FMT_FWHT_STATELESS <v4l2-pix-fmt-fwht-stateless>`     v4l2\_fourcc('S', 'F', 'W', 'H') \/\* Stateless FWHT (vicodec) \*\/
     \#define \ :ref:`V4L2_PIX_FMT_H264_SLICE <v4l2-pix-fmt-h264-slice>` v4l2\_fourcc('S', '2', '6', '4') \/\* H264 parsed slices \*\/
+    \#define \ :ref:`V4L2_PIX_FMT_HEVC_SLICE <v4l2-pix-fmt-hevc-slice>` v4l2\_fourcc('S', '2', '6', '5') \/\* HEVC parsed slices \*\/
 
     \/\*  Vendor-specific formats   \*\/
     \#define \ :ref:`V4L2_PIX_FMT_CPIA1 <v4l2-pix-fmt-cpia1>`    v4l2\_fourcc('C', 'P', 'I', 'A') \/\* cpia1 YUV \*\/
@@ -1771,6 +1798,11 @@ videodev2.h
                     struct v4l2\_ctrl\_mpeg2\_quantisation \_\_user \*p\_mpeg2\_quantisation;
                     struct v4l2\_ctrl\_vp9\_compressed\_hdr \_\_user \*p\_vp9\_compressed\_hdr\_probs;
                     struct v4l2\_ctrl\_vp9\_frame \_\_user \*p\_vp9\_frame;
+                    struct v4l2\_ctrl\_hevc\_sps \_\_user \*p\_hevc\_sps;
+                    struct v4l2\_ctrl\_hevc\_pps \_\_user \*p\_hevc\_pps;
+                    struct v4l2\_ctrl\_hevc\_slice\_params \_\_user \*p\_hevc\_slice\_params;
+                    struct v4l2\_ctrl\_hevc\_scaling\_matrix \_\_user \*p\_hevc\_scaling\_matrix;
+                    struct v4l2\_ctrl\_hevc\_decode\_params \_\_user \*p\_hevc\_decode\_params;
                     void \_\_user \*ptr;
             \};
     \} \_\_attribute\_\_ ((packed));
@@ -1838,6 +1870,12 @@ videodev2.h
 
             :c:type:`V4L2_CTRL_TYPE_VP9_COMPRESSED_HDR <v4l2_ctrl_type>`       = 0x0260,
             :c:type:`V4L2_CTRL_TYPE_VP9_FRAME <v4l2_ctrl_type>`                = 0x0261,
+
+            :c:type:`V4L2_CTRL_TYPE_HEVC_SPS <v4l2_ctrl_type>`                 = 0x0270,
+            :c:type:`V4L2_CTRL_TYPE_HEVC_PPS <v4l2_ctrl_type>`                 = 0x0271,
+            :c:type:`V4L2_CTRL_TYPE_HEVC_SLICE_PARAMS <v4l2_ctrl_type>`        = 0x0272,
+            :c:type:`V4L2_CTRL_TYPE_HEVC_SCALING_MATRIX <v4l2_ctrl_type>`      = 0x0273,
+            :c:type:`V4L2_CTRL_TYPE_HEVC_DECODE_PARAMS <v4l2_ctrl_type>`       = 0x0274,
     \};
 
     \/\*  Used in the \ :ref:`VIDIOC_QUERYCTRL <vidioc_queryctrl>` ioctl for querying controls \*\/
@@ -1893,6 +1931,7 @@ videodev2.h
     \#define :ref:`V4L2_CTRL_FLAG_HAS_PAYLOAD <control-flags>`      0x0100
     \#define :ref:`V4L2_CTRL_FLAG_EXECUTE_ON_WRITE <control-flags>` 0x0200
     \#define :ref:`V4L2_CTRL_FLAG_MODIFY_LAYOUT <control-flags>`    0x0400
+    \#define :ref:`V4L2_CTRL_FLAG_DYNAMIC_ARRAY <control-flags>`    0x0800
 
     \/\*  Query flags, to be ORed with the control ID \*\/
     \#define :ref:`V4L2_CTRL_FLAG_NEXT_CTRL <control>`        0x80000000
