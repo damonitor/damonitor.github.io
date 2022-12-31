@@ -1,75 +1,39 @@
+
 <!DOCTYPE html>
-<html class="writer-html5" lang="en" >
-<head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Multi-Gen LRU &mdash; The Linux Kernel  documentation</title><link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+  <head>
+    <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>Multi-Gen LRU &#8212; The Linux Kernel  documentation</title>
+    <link rel="stylesheet" href="../_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-      <link rel="stylesheet" href="../_static/theme_overrides.css" type="text/css" />
-      <link rel="stylesheet" href="../_static/theme_rtd_colors.css" type="text/css" />
-  <!--[if lt IE 9]>
-    <script src="../_static/js/html5shiv.min.js"></script>
-  <![endif]-->
-  <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
-        <script src="../_static/jquery.js"></script>
-        <script src="../_static/underscore.js"></script>
-        <script src="../_static/doctools.js"></script>
-        <script src="../_static/language_data.js"></script>
-    <script src="../_static/js/theme.js"></script>
+    <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/language_data.js"></script>
+    <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
     <link rel="index" title="Index" href="../genindex.html" />
-    <link rel="search" title="Search" href="../search.html" /> 
-</head>
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="What is NUMA?" href="numa.html" />
+    <link rel="prev" title="When do you need to notify inside page table lock ?" href="mmu_notifier.html" />
+   
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
 
-<body class="wy-body-for-nav"> 
-  <div class="wy-grid-for-nav">
-    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
-      <div class="wy-side-scroll">
-        <div class="wy-side-nav-search" >
-            <a href="../index.html" class="icon icon-home"> The Linux Kernel
-          </a>
-              <div class="version">
-                6.0.0-rc3-mm-unstable-damon
-              </div>
-<div role="search">
-  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" />
-    <input type="hidden" name="check_keywords" value="yes" />
-    <input type="hidden" name="area" value="default" />
-  </form>
-</div>
-        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
-              <ul>
-<li class="toctree-l1"><a class="reference internal" href="../admin-guide/mm/damon/index.html">DAMON: Data Access MONitor</a></li>
-</ul>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="damon/index.html">DAMON: Data Access MONitor</a></li>
-</ul>
+  </head><body>
+  
 
-        </div>
-      </div>
-    </nav>
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
 
-    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
-          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../index.html">The Linux Kernel</a>
-      </nav>
-
-      <div class="wy-nav-content">
-        <div class="rst-content">
-          <div role="navigation" aria-label="Page navigation">
-  <ul class="wy-breadcrumbs">
-      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
-      <li>Multi-Gen LRU</li>
-      <li class="wy-breadcrumbs-aside">
-            <a href="../_sources/mm/multigen_lru.rst.txt" rel="nofollow"> View page source</a>
-      </li>
-  </ul>
-  <hr/>
-</div>
-          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
-           <div itemprop="articleBody">
-             
+          <div class="body" role="main">
+            
   <section id="multi-gen-lru">
 <h1>Multi-Gen LRU<a class="headerlink" href="#multi-gen-lru" title="Permalink to this headline">¶</a></h1>
 <p>The multi-gen LRU is an alternative LRU implementation that optimizes
@@ -154,14 +118,14 @@ pages can be evicted regardless of swap constraints. These three
 variables are monotonically increasing.</p>
 <p>Generation numbers are truncated into <code class="docutils literal notranslate"><span class="pre">order_base_2(MAX_NR_GENS+1)</span></code>
 bits in order to fit into the gen counter in <code class="docutils literal notranslate"><span class="pre">folio-&gt;flags</span></code>. Each
-truncated generation number is an index to <code class="docutils literal notranslate"><span class="pre">lrugen-&gt;lists[]</span></code>. The
+truncated generation number is an index to <code class="docutils literal notranslate"><span class="pre">lrugen-&gt;folios[]</span></code>. The
 sliding window technique is used to track at least <code class="docutils literal notranslate"><span class="pre">MIN_NR_GENS</span></code> and
 at most <code class="docutils literal notranslate"><span class="pre">MAX_NR_GENS</span></code> generations. The gen counter stores a value
 within <code class="docutils literal notranslate"><span class="pre">[1,</span> <span class="pre">MAX_NR_GENS]</span></code> while a page is on one of
-<code class="docutils literal notranslate"><span class="pre">lrugen-&gt;lists[]</span></code>; otherwise it stores zero.</p>
+<code class="docutils literal notranslate"><span class="pre">lrugen-&gt;folios[]</span></code>; otherwise it stores zero.</p>
 <p>Each generation is divided into multiple tiers. A page accessed <code class="docutils literal notranslate"><span class="pre">N</span></code>
 times through file descriptors is in tier <code class="docutils literal notranslate"><span class="pre">order_base_2(N)</span></code>. Unlike
-generations, tiers do not have dedicated <code class="docutils literal notranslate"><span class="pre">lrugen-&gt;lists[]</span></code>. In
+generations, tiers do not have dedicated <code class="docutils literal notranslate"><span class="pre">lrugen-&gt;folios[]</span></code>. In
 contrast to moving across generations, which requires the LRU lock,
 moving across tiers only involves atomic operations on
 <code class="docutils literal notranslate"><span class="pre">folio-&gt;flags</span></code> and therefore has a negligible cost. A feedback loop
@@ -189,7 +153,7 @@ page mapped by this PTE to <code class="docutils literal notranslate"><span clas
 <section id="eviction">
 <h3>Eviction<a class="headerlink" href="#eviction" title="Permalink to this headline">¶</a></h3>
 <p>The eviction consumes old generations. Given an <code class="docutils literal notranslate"><span class="pre">lruvec</span></code>, it
-increments <code class="docutils literal notranslate"><span class="pre">min_seq</span></code> when <code class="docutils literal notranslate"><span class="pre">lrugen-&gt;lists[]</span></code> indexed by
+increments <code class="docutils literal notranslate"><span class="pre">min_seq</span></code> when <code class="docutils literal notranslate"><span class="pre">lrugen-&gt;folios[]</span></code> indexed by
 <code class="docutils literal notranslate"><span class="pre">min_seq%MAX_NR_GENS</span></code> becomes empty. To select a type and a tier to
 evict from, it first compares <code class="docutils literal notranslate"><span class="pre">min_seq[]</span></code> to select the older type.
 If both types are equally old, it selects the one whose first tier has
@@ -224,31 +188,77 @@ to select types to evict and tiers to protect.</p>
 </section>
 
 
-           </div>
           </div>
-          <footer>
-
-  <hr/>
-
-  <div role="contentinfo">
-    <p>&#169; Copyright The kernel development community.</p>
-  </div>
-
-  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
-    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
-    provided by <a href="https://readthedocs.org">Read the Docs</a>.
-   
-
-</footer>
+          
         </div>
       </div>
-    </section>
-  </div>
-  <script>
-      jQuery(function () {
-          SphinxRtdTheme.Navigation.enable(true);
-      });
-  </script> 
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../index.html">The Linux Kernel</a></h1>
 
-</body>
+
+
+<p class="blurb">6.1.0-mm-unstable-damon</p>
+
+
+
+
+
+
+
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+  <h3><a href="../index.html">Table of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Multi-Gen LRU</a><ul>
+<li><a class="reference internal" href="#design-overview">Design overview</a><ul>
+<li><a class="reference internal" href="#objectives">Objectives</a></li>
+<li><a class="reference internal" href="#assumptions">Assumptions</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#workflow-overview">Workflow overview</a><ul>
+<li><a class="reference internal" href="#aging">Aging</a></li>
+<li><a class="reference internal" href="#eviction">Eviction</a></li>
+<li><a class="reference internal" href="#summary">Summary</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/mm/multigen_lru.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;The kernel development community.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 2.4.4</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="../_sources/mm/multigen_lru.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
 </html>

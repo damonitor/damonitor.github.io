@@ -1,75 +1,39 @@
+
 <!DOCTYPE html>
-<html class="writer-html5" lang="en" >
-<head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>pstore block oops/panic logger &mdash; The Linux Kernel  documentation</title><link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+  <head>
+    <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>pstore block oops/panic logger &#8212; The Linux Kernel  documentation</title>
+    <link rel="stylesheet" href="../_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-      <link rel="stylesheet" href="../_static/theme_overrides.css" type="text/css" />
-      <link rel="stylesheet" href="../_static/theme_rtd_colors.css" type="text/css" />
-  <!--[if lt IE 9]>
-    <script src="../_static/js/html5shiv.min.js"></script>
-  <![endif]-->
-  <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
-        <script src="../_static/jquery.js"></script>
-        <script src="../_static/underscore.js"></script>
-        <script src="../_static/doctools.js"></script>
-        <script src="../_static/language_data.js"></script>
-    <script src="../_static/js/theme.js"></script>
+    <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/language_data.js"></script>
+    <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
     <link rel="index" title="Index" href="../genindex.html" />
-    <link rel="search" title="Search" href="../search.html" /> 
-</head>
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Rules on how to access information in sysfs" href="sysfs-rules.html" />
+    <link rel="prev" title="Amlogic SoC DDR Bandwidth Performance Monitoring Unit (PMU)" href="perf/meson-ddr-pmu.html" />
+   
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
 
-<body class="wy-body-for-nav"> 
-  <div class="wy-grid-for-nav">
-    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
-      <div class="wy-side-scroll">
-        <div class="wy-side-nav-search" >
-            <a href="../index.html" class="icon icon-home"> The Linux Kernel
-          </a>
-              <div class="version">
-                6.0.0-rc3-mm-unstable-damon
-              </div>
-<div role="search">
-  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" />
-    <input type="hidden" name="check_keywords" value="yes" />
-    <input type="hidden" name="area" value="default" />
-  </form>
-</div>
-        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
-              <ul>
-<li class="toctree-l1"><a class="reference internal" href="mm/damon/index.html">DAMON: Data Access MONitor</a></li>
-</ul>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="../mm/damon/index.html">DAMON: Data Access MONitor</a></li>
-</ul>
+  </head><body>
+  
 
-        </div>
-      </div>
-    </nav>
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
 
-    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
-          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../index.html">The Linux Kernel</a>
-      </nav>
-
-      <div class="wy-nav-content">
-        <div class="rst-content">
-          <div role="navigation" aria-label="Page navigation">
-  <ul class="wy-breadcrumbs">
-      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
-      <li>pstore block oops/panic logger</li>
-      <li class="wy-breadcrumbs-aside">
-            <a href="../_sources/admin-guide/pstore-blk.rst.txt" rel="nofollow"> View page source</a>
-      </li>
-  </ul>
-  <hr/>
-</div>
-          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
-           <div itemprop="articleBody">
-             
+          <div class="body" role="main">
+            
   <section id="pstore-block-oops-panic-logger">
 <h1>pstore block oops/panic logger<a class="headerlink" href="#pstore-block-oops-panic-logger" title="Permalink to this headline">¶</a></h1>
 <section id="introduction">
@@ -210,6 +174,7 @@ int <code class="sig-name descname">register_pstore_device</code><span class="si
 <dd><p>register non-block device to pstore/blk</p>
 </dd></dl>
 
+<div class="kernelindent docutils container">
 <p><strong>Parameters</strong></p>
 <dl class="simple">
 <dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">pstore_device_info</span> <span class="pre">*dev</span></code></dt><dd><p>non-block device information</p>
@@ -220,17 +185,20 @@ int <code class="sig-name descname">register_pstore_device</code><span class="si
 <li><p>0          - OK</p></li>
 <li><p>Others     - something error.</p></li>
 </ul>
+</div>
 <dl class="function">
 <dt id="c.unregister_pstore_device">
 void <code class="sig-name descname">unregister_pstore_device</code><span class="sig-paren">(</span>struct <a class="reference internal" href="#c.pstore_device_info" title="pstore_device_info">pstore_device_info</a><em> *dev</em><span class="sig-paren">)</span><a class="headerlink" href="#c.unregister_pstore_device" title="Permalink to this definition">¶</a></dt>
 <dd><p>unregister non-block device from pstore/blk</p>
 </dd></dl>
 
+<div class="kernelindent docutils container">
 <p><strong>Parameters</strong></p>
 <dl class="simple">
 <dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">pstore_device_info</span> <span class="pre">*dev</span></code></dt><dd><p>non-block device information</p>
 </dd>
 </dl>
+</div>
 </section>
 <section id="compression-and-header">
 <h2>Compression and header<a class="headerlink" href="#compression-and-header" title="Permalink to this headline">¶</a></h2>
@@ -295,13 +263,14 @@ struct <code class="sig-name descname">psz_buffer</code><a class="headerlink" hr
 <dd><p>header of zone to flush to storage</p>
 </dd></dl>
 
-<p><strong>Definition</strong></p>
+<div class="kernelindent docutils container">
+<p><strong>Definition</strong>:</p>
 <div class="highlight-none notranslate"><div class="highlight"><pre><span></span>struct psz_buffer {
 #define PSZ_SIG (0x43474244) ;
-  uint32_t sig;
-  atomic_t datalen;
-  atomic_t start;
-  uint8_t data[];
+    uint32_t sig;
+    atomic_t datalen;
+    atomic_t start;
+    uint8_t data[];
 };
 </pre></div>
 </div>
@@ -316,21 +285,23 @@ struct <code class="sig-name descname">psz_buffer</code><a class="headerlink" hr
 <dt><code class="docutils literal notranslate"><span class="pre">data</span></code></dt><dd><p>zone data.</p>
 </dd>
 </dl>
+</div>
 <dl class="type">
 <dt id="c.psz_kmsg_header">
 struct <code class="sig-name descname">psz_kmsg_header</code><a class="headerlink" href="#c.psz_kmsg_header" title="Permalink to this definition">¶</a></dt>
 <dd><p>kmsg dump-specific header to flush to storage</p>
 </dd></dl>
 
-<p><strong>Definition</strong></p>
+<div class="kernelindent docutils container">
+<p><strong>Definition</strong>:</p>
 <div class="highlight-none notranslate"><div class="highlight"><pre><span></span>struct psz_kmsg_header {
 #define PSTORE_KMSG_HEADER_MAGIC 0x4dfc3ae5 ;
-  uint32_t magic;
-  struct timespec64 time;
-  bool compressed;
-  uint32_t counter;
-  enum kmsg_dump_reason reason;
-  uint8_t data[];
+    uint32_t magic;
+    struct timespec64 time;
+    bool compressed;
+    uint32_t counter;
+    enum kmsg_dump_reason reason;
+    uint8_t data[];
 };
 </pre></div>
 </div>
@@ -349,6 +320,7 @@ struct <code class="sig-name descname">psz_kmsg_header</code><a class="headerlin
 <dt><code class="docutils literal notranslate"><span class="pre">data</span></code></dt><dd><p>pointer to log data</p>
 </dd>
 </dl>
+</div>
 <p><strong>Description</strong></p>
 <p>This is a sub-header for a kmsg dump, trailing after <a class="reference internal" href="#c.psz_buffer" title="psz_buffer"><code class="xref c c-type docutils literal notranslate"><span class="pre">psz_buffer</span></code></a>.</p>
 <dl class="type">
@@ -357,16 +329,17 @@ struct <code class="sig-name descname">pstore_zone</code><a class="headerlink" h
 <dd><p>single stored buffer</p>
 </dd></dl>
 
-<p><strong>Definition</strong></p>
+<div class="kernelindent docutils container">
+<p><strong>Definition</strong>:</p>
 <div class="highlight-none notranslate"><div class="highlight"><pre><span></span>struct pstore_zone {
-  loff_t off;
-  const char *name;
-  enum pstore_type_id type;
-  struct psz_buffer *buffer;
-  struct psz_buffer *oldbuf;
-  size_t buffer_size;
-  bool should_recover;
-  atomic_t dirty;
+    loff_t off;
+    const char *name;
+    enum pstore_type_id type;
+    struct psz_buffer *buffer;
+    struct psz_buffer *oldbuf;
+    size_t buffer_size;
+    bool should_recover;
+    atomic_t dirty;
 };
 </pre></div>
 </div>
@@ -389,6 +362,7 @@ struct <code class="sig-name descname">pstore_zone</code><a class="headerlink" h
 <dt><code class="docutils literal notranslate"><span class="pre">dirty</span></code></dt><dd><p>whether the data in <strong>buffer</strong> dirty</p>
 </dd>
 </dl>
+</div>
 <p><strong>Description</strong></p>
 <p>zone structure in memory.</p>
 <dl class="type">
@@ -397,26 +371,27 @@ struct <code class="sig-name descname">psz_context</code><a class="headerlink" h
 <dd><p>all about running state of pstore/zone</p>
 </dd></dl>
 
-<p><strong>Definition</strong></p>
+<div class="kernelindent docutils container">
+<p><strong>Definition</strong>:</p>
 <div class="highlight-none notranslate"><div class="highlight"><pre><span></span>struct psz_context {
-  struct pstore_zone **kpszs;
-  struct pstore_zone *ppsz;
-  struct pstore_zone *cpsz;
-  struct pstore_zone **fpszs;
-  unsigned int kmsg_max_cnt;
-  unsigned int kmsg_read_cnt;
-  unsigned int kmsg_write_cnt;
-  unsigned int pmsg_read_cnt;
-  unsigned int console_read_cnt;
-  unsigned int ftrace_max_cnt;
-  unsigned int ftrace_read_cnt;
-  unsigned int oops_counter;
-  unsigned int panic_counter;
-  atomic_t recovered;
-  atomic_t on_panic;
-  struct mutex pstore_zone_info_lock;
-  struct pstore_zone_info *pstore_zone_info;
-  struct pstore_info pstore;
+    struct pstore_zone **kpszs;
+    struct pstore_zone *ppsz;
+    struct pstore_zone *cpsz;
+    struct pstore_zone **fpszs;
+    unsigned int kmsg_max_cnt;
+    unsigned int kmsg_read_cnt;
+    unsigned int kmsg_write_cnt;
+    unsigned int pmsg_read_cnt;
+    unsigned int console_read_cnt;
+    unsigned int ftrace_max_cnt;
+    unsigned int ftrace_read_cnt;
+    unsigned int oops_counter;
+    unsigned int panic_counter;
+    atomic_t recovered;
+    atomic_t on_panic;
+    struct mutex pstore_zone_info_lock;
+    struct pstore_zone_info *pstore_zone_info;
+    struct pstore_info pstore;
 };
 </pre></div>
 </div>
@@ -459,12 +434,14 @@ struct <code class="sig-name descname">psz_context</code><a class="headerlink" h
 <dt><code class="docutils literal notranslate"><span class="pre">pstore</span></code></dt><dd><p>structure for pstore</p>
 </dd>
 </dl>
+</div>
 <dl class="type">
 <dt id="c.psz_flush_mode">
 enum <code class="sig-name descname">psz_flush_mode</code><a class="headerlink" href="#c.psz_flush_mode" title="Permalink to this definition">¶</a></dt>
 <dd><p>flush mode for psz_zone_write()</p>
 </dd></dl>
 
+<div class="kernelindent docutils container">
 <p><strong>Constants</strong></p>
 <dl class="simple">
 <dt><code class="docutils literal notranslate"><span class="pre">FLUSH_NONE</span></code></dt><dd><p>do not flush to storage but update data on memory</p>
@@ -476,12 +453,14 @@ enum <code class="sig-name descname">psz_flush_mode</code><a class="headerlink" 
 <dt><code class="docutils literal notranslate"><span class="pre">FLUSH_ALL</span></code></dt><dd><p>flush all of zone</p>
 </dd>
 </dl>
+</div>
 <dl class="function">
 <dt id="c.psz_recovery">
 int <code class="sig-name descname">psz_recovery</code><span class="sig-paren">(</span>struct <a class="reference internal" href="#c.psz_context" title="psz_context">psz_context</a><em> *cxt</em><span class="sig-paren">)</span><a class="headerlink" href="#c.psz_recovery" title="Permalink to this definition">¶</a></dt>
 <dd><p>recover data from storage</p>
 </dd></dl>
 
+<div class="kernelindent docutils container">
 <p><strong>Parameters</strong></p>
 <dl class="simple">
 <dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">psz_context</span> <span class="pre">*cxt</span></code></dt><dd><p>the context of pstore/zone</p>
@@ -491,26 +470,28 @@ int <code class="sig-name descname">psz_recovery</code><span class="sig-paren">(
 <p>recovery means reading data back from storage after rebooting</p>
 <p><strong>Return</strong></p>
 <p>0 on success, others on failure.</p>
+</div>
 <dl class="type">
 <dt id="c.pstore_zone_info">
 struct <code class="sig-name descname">pstore_zone_info</code><a class="headerlink" href="#c.pstore_zone_info" title="Permalink to this definition">¶</a></dt>
 <dd><p>pstore/zone back-end driver structure</p>
 </dd></dl>
 
-<p><strong>Definition</strong></p>
+<div class="kernelindent docutils container">
+<p><strong>Definition</strong>:</p>
 <div class="highlight-none notranslate"><div class="highlight"><pre><span></span>struct pstore_zone_info {
-  struct module *owner;
-  const char *name;
-  unsigned long total_size;
-  unsigned long kmsg_size;
-  int max_reason;
-  unsigned long pmsg_size;
-  unsigned long console_size;
-  unsigned long ftrace_size;
-  pstore_zone_read_op read;
-  pstore_zone_write_op write;
-  pstore_zone_erase_op erase;
-  pstore_zone_write_op panic_write;
+    struct module *owner;
+    const char *name;
+    unsigned long total_size;
+    unsigned long kmsg_size;
+    int max_reason;
+    unsigned long pmsg_size;
+    unsigned long console_size;
+    unsigned long ftrace_size;
+    pstore_zone_read_op read;
+    pstore_zone_write_op write;
+    pstore_zone_erase_op erase;
+    pstore_zone_write_op panic_write;
 };
 </pre></div>
 </div>
@@ -555,16 +536,18 @@ On success, the number of bytes should be returned, others
 excluding -ENOMSG mean error. -ENOMSG means to try next zone.</p>
 </dd>
 </dl>
+</div>
 <dl class="type">
 <dt id="c.pstore_device_info">
 struct <code class="sig-name descname">pstore_device_info</code><a class="headerlink" href="#c.pstore_device_info" title="Permalink to this definition">¶</a></dt>
 <dd><p>back-end pstore/blk driver structure.</p>
 </dd></dl>
 
-<p><strong>Definition</strong></p>
+<div class="kernelindent docutils container">
+<p><strong>Definition</strong>:</p>
 <div class="highlight-none notranslate"><div class="highlight"><pre><span></span>struct pstore_device_info {
-  unsigned int flags;
-  struct pstore_zone_info zone;
+    unsigned int flags;
+    struct pstore_zone_info zone;
 };
 </pre></div>
 </div>
@@ -577,20 +560,22 @@ Zero means all backends for compatible.</p>
 <dt><code class="docutils literal notranslate"><span class="pre">zone</span></code></dt><dd><p>The <a class="reference internal" href="#c.pstore_zone_info" title="pstore_zone_info"><code class="xref c c-type docutils literal notranslate"><span class="pre">struct</span> <span class="pre">pstore_zone_info</span></code></a> details.</p>
 </dd>
 </dl>
+</div>
 <dl class="type">
 <dt id="c.pstore_blk_config">
 struct <code class="sig-name descname">pstore_blk_config</code><a class="headerlink" href="#c.pstore_blk_config" title="Permalink to this definition">¶</a></dt>
 <dd><p>the pstore_blk backend configuration</p>
 </dd></dl>
 
-<p><strong>Definition</strong></p>
+<div class="kernelindent docutils container">
+<p><strong>Definition</strong>:</p>
 <div class="highlight-none notranslate"><div class="highlight"><pre><span></span>struct pstore_blk_config {
-  char device[80];
-  enum kmsg_dump_reason max_reason;
-  unsigned long kmsg_size;
-  unsigned long pmsg_size;
-  unsigned long console_size;
-  unsigned long ftrace_size;
+    char device[80];
+    enum kmsg_dump_reason max_reason;
+    unsigned long kmsg_size;
+    unsigned long pmsg_size;
+    unsigned long console_size;
+    unsigned long ftrace_size;
 };
 </pre></div>
 </div>
@@ -609,12 +594,14 @@ struct <code class="sig-name descname">pstore_blk_config</code><a class="headerl
 <dt><code class="docutils literal notranslate"><span class="pre">ftrace_size</span></code></dt><dd><p>Total size for ftrace logging data (for all CPUs)</p>
 </dd>
 </dl>
+</div>
 <dl class="function">
 <dt id="c.pstore_blk_get_config">
 int <code class="sig-name descname">pstore_blk_get_config</code><span class="sig-paren">(</span>struct <a class="reference internal" href="#c.pstore_blk_config" title="pstore_blk_config">pstore_blk_config</a><em> *info</em><span class="sig-paren">)</span><a class="headerlink" href="#c.pstore_blk_get_config" title="Permalink to this definition">¶</a></dt>
 <dd><p>get a copy of the pstore_blk backend configuration</p>
 </dd></dl>
 
+<div class="kernelindent docutils container">
 <p><strong>Parameters</strong></p>
 <dl class="simple">
 <dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">pstore_blk_config</span> <span class="pre">*info</span></code></dt><dd><p>The sturct pstore_blk_config to be filled in</p>
@@ -622,35 +609,87 @@ int <code class="sig-name descname">pstore_blk_get_config</code><span class="sig
 </dl>
 <p><strong>Description</strong></p>
 <p>Failure returns negative error code, and success returns 0.</p>
+</div>
 </section>
 </section>
 
 
-           </div>
           </div>
-          <footer>
-
-  <hr/>
-
-  <div role="contentinfo">
-    <p>&#169; Copyright The kernel development community.</p>
-  </div>
-
-  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
-    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
-    provided by <a href="https://readthedocs.org">Read the Docs</a>.
-   
-
-</footer>
+          
         </div>
       </div>
-    </section>
-  </div>
-  <script>
-      jQuery(function () {
-          SphinxRtdTheme.Navigation.enable(true);
-      });
-  </script> 
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../index.html">The Linux Kernel</a></h1>
 
-</body>
+
+
+<p class="blurb">6.1.0-mm-unstable-damon</p>
+
+
+
+
+
+
+
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+  <h3><a href="../index.html">Table of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">pstore block oops/panic logger</a><ul>
+<li><a class="reference internal" href="#introduction">Introduction</a></li>
+<li><a class="reference internal" href="#pstore-block-concepts">pstore block concepts</a></li>
+<li><a class="reference internal" href="#configurations-for-user">Configurations for user</a><ul>
+<li><a class="reference internal" href="#blkdev">blkdev</a></li>
+<li><a class="reference internal" href="#kmsg-size">kmsg_size</a></li>
+<li><a class="reference internal" href="#pmsg-size">pmsg_size</a></li>
+<li><a class="reference internal" href="#console-size">console_size</a></li>
+<li><a class="reference internal" href="#ftrace-size">ftrace_size</a></li>
+<li><a class="reference internal" href="#max-reason">max_reason</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#configurations-for-driver">Configurations for driver</a></li>
+<li><a class="reference internal" href="#compression-and-header">Compression and header</a></li>
+<li><a class="reference internal" href="#reading-the-data">Reading the data</a></li>
+<li><a class="reference internal" href="#attentions-in-panic-read-write-apis">Attentions in panic read/write APIs</a></li>
+<li><a class="reference internal" href="#pstore-block-internals">pstore block internals</a></li>
+</ul>
+</li>
+</ul>
+
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/admin-guide/pstore-blk.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;The kernel development community.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 2.4.4</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="../_sources/admin-guide/pstore-blk.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
 </html>

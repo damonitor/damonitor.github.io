@@ -1,75 +1,39 @@
+
 <!DOCTYPE html>
-<html class="writer-html5" lang="en" >
-<head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Transparent Hugepage Support &mdash; The Linux Kernel  documentation</title><link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+  <head>
+    <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>Transparent Hugepage Support &#8212; The Linux Kernel  documentation</title>
+    <link rel="stylesheet" href="../../_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
-      <link rel="stylesheet" href="../../_static/theme_overrides.css" type="text/css" />
-      <link rel="stylesheet" href="../../_static/theme_rtd_colors.css" type="text/css" />
-  <!--[if lt IE 9]>
-    <script src="../../_static/js/html5shiv.min.js"></script>
-  <![endif]-->
-  <script id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
-        <script src="../../_static/jquery.js"></script>
-        <script src="../../_static/underscore.js"></script>
-        <script src="../../_static/doctools.js"></script>
-        <script src="../../_static/language_data.js"></script>
-    <script src="../../_static/js/theme.js"></script>
+    <script id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/jquery.js"></script>
+    <script src="../../_static/underscore.js"></script>
+    <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/language_data.js"></script>
+    <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
-    <link rel="search" title="Search" href="../../search.html" /> 
-</head>
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Userfaultfd" href="userfaultfd.html" />
+    <link rel="prev" title="Automatically bind swap device to numa node" href="swap_numa.html" />
+   
+  <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
 
-<body class="wy-body-for-nav"> 
-  <div class="wy-grid-for-nav">
-    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
-      <div class="wy-side-scroll">
-        <div class="wy-side-nav-search" >
-            <a href="../../index.html" class="icon icon-home"> The Linux Kernel
-          </a>
-              <div class="version">
-                6.0.0-rc3-mm-unstable-damon
-              </div>
-<div role="search">
-  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" />
-    <input type="hidden" name="check_keywords" value="yes" />
-    <input type="hidden" name="area" value="default" />
-  </form>
-</div>
-        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
-              <ul>
-<li class="toctree-l1"><a class="reference internal" href="damon/index.html">DAMON: Data Access MONitor</a></li>
-</ul>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="../../mm/damon/index.html">DAMON: Data Access MONitor</a></li>
-</ul>
+  </head><body>
+  
 
-        </div>
-      </div>
-    </nav>
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
 
-    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
-          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../../index.html">The Linux Kernel</a>
-      </nav>
-
-      <div class="wy-nav-content">
-        <div class="rst-content">
-          <div role="navigation" aria-label="Page navigation">
-  <ul class="wy-breadcrumbs">
-      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
-      <li>Transparent Hugepage Support</li>
-      <li class="wy-breadcrumbs-aside">
-            <a href="../../_sources/admin-guide/mm/transhuge.rst.txt" rel="nofollow"> View page source</a>
-      </li>
-  </ul>
-  <hr/>
-</div>
-          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
-           <div itemprop="articleBody">
-             
+          <div class="body" role="main">
+            
   <section id="transparent-hugepage-support">
 <span id="admin-guide-transhuge"></span><h1>Transparent Hugepage Support<a class="headerlink" href="#transparent-hugepage-support" title="Permalink to this headline">¶</a></h1>
 <section id="objective">
@@ -240,7 +204,14 @@ allocation failure to throttle the next allocation attempt:</p>
 <div class="highlight-none notranslate"><div class="highlight"><pre><span></span>/sys/kernel/mm/transparent_hugepage/khugepaged/alloc_sleep_millisecs
 </pre></div>
 </div>
-<p>The khugepaged progress can be seen in the number of pages collapsed:</p>
+<p>The khugepaged progress can be seen in the number of pages collapsed (note
+that this counter may not be an exact count of the number of pages
+collapsed, since “collapsed” could mean multiple things: (1) A PTE mapping
+being replaced by a PMD mapping, or (2) All 4K physical pages replaced by
+one 2M hugepage. Each may happen independently, or together, depending on
+the type of memory and the failures that occur. As such, this value should
+be interpreted roughly as a sign of progress, and counters in /proc/vmstat
+consulted for more accurate accounting):</p>
 <div class="highlight-none notranslate"><div class="highlight"><pre><span></span>/sys/kernel/mm/transparent_hugepage/khugepaged/pages_collapsed
 </pre></div>
 </div>
@@ -388,10 +359,9 @@ This can happen, for instance, when application calls mprotect() or
 munmap() on part of huge page. It doesn’t split huge page, only
 page table entry.</p>
 </dd>
-<dt>thp_zero_page_alloc</dt><dd><p>is incremented every time a huge zero page is
-successfully allocated. It includes allocations which where
-dropped due race with other allocation. Note, it doesn’t count
-every map of the huge zero page, only its allocation.</p>
+<dt>thp_zero_page_alloc</dt><dd><p>is incremented every time a huge zero page used for thp is
+successfully allocated. Note, it doesn’t count every map of
+the huge zero page, only its allocation.</p>
 </dd>
 <dt>thp_zero_page_alloc_failed</dt><dd><p>is incremented if kernel fails to allocate
 huge zero page and falls back to using small pages.</p>
@@ -441,31 +411,78 @@ unaffected. libhugetlbfs will also work fine as usual.</p>
 </section>
 
 
-           </div>
           </div>
-          <footer>
-
-  <hr/>
-
-  <div role="contentinfo">
-    <p>&#169; Copyright The kernel development community.</p>
-  </div>
-
-  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
-    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
-    provided by <a href="https://readthedocs.org">Read the Docs</a>.
-   
-
-</footer>
+          
         </div>
       </div>
-    </section>
-  </div>
-  <script>
-      jQuery(function () {
-          SphinxRtdTheme.Navigation.enable(true);
-      });
-  </script> 
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../../index.html">The Linux Kernel</a></h1>
 
-</body>
+
+
+<p class="blurb">6.1.0-mm-unstable-damon</p>
+
+
+
+
+
+
+
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+  <h3><a href="../../index.html">Table of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Transparent Hugepage Support</a><ul>
+<li><a class="reference internal" href="#objective">Objective</a></li>
+<li><a class="reference internal" href="#sysfs">sysfs</a><ul>
+<li><a class="reference internal" href="#global-thp-controls">Global THP controls</a></li>
+<li><a class="reference internal" href="#khugepaged-controls">Khugepaged controls</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#boot-parameter">Boot parameter</a></li>
+<li><a class="reference internal" href="#hugepages-in-tmpfs-shmem">Hugepages in tmpfs/shmem</a></li>
+<li><a class="reference internal" href="#need-of-application-restart">Need of application restart</a></li>
+<li><a class="reference internal" href="#monitoring-usage">Monitoring usage</a></li>
+<li><a class="reference internal" href="#optimizing-the-applications">Optimizing the applications</a></li>
+<li><a class="reference internal" href="#hugetlbfs">Hugetlbfs</a></li>
+</ul>
+</li>
+</ul>
+
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../../_sources/admin-guide/mm/transhuge.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;The kernel development community.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 2.4.4</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="../../_sources/admin-guide/mm/transhuge.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
 </html>

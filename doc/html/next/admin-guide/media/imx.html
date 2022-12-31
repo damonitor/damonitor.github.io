@@ -1,79 +1,43 @@
+
 <!DOCTYPE html>
-<html class="writer-html5" lang="en" >
-<head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>6.7. i.MX Video Capture Driver &mdash; The Linux Kernel  documentation</title><link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+  <head>
+    <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>7.7. i.MX Video Capture Driver &#8212; The Linux Kernel  documentation</title>
+    <link rel="stylesheet" href="../../_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
-      <link rel="stylesheet" href="../../_static/theme_overrides.css" type="text/css" />
-      <link rel="stylesheet" href="../../_static/theme_rtd_colors.css" type="text/css" />
-  <!--[if lt IE 9]>
-    <script src="../../_static/js/html5shiv.min.js"></script>
-  <![endif]-->
-  <script id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
-        <script src="../../_static/jquery.js"></script>
-        <script src="../../_static/underscore.js"></script>
-        <script src="../../_static/doctools.js"></script>
-        <script src="../../_static/language_data.js"></script>
-    <script src="../../_static/js/theme.js"></script>
+    <script id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/jquery.js"></script>
+    <script src="../../_static/underscore.js"></script>
+    <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/language_data.js"></script>
+    <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
-    <link rel="search" title="Search" href="../../search.html" /> 
-</head>
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="7.8. i.MX7 Video Capture Driver" href="imx7.html" />
+    <link rel="prev" title="7.6. The Samsung S5P/Exynos4 FIMC driver" href="fimc.html" />
+   
+  <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
 
-<body class="wy-body-for-nav"> 
-  <div class="wy-grid-for-nav">
-    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
-      <div class="wy-side-scroll">
-        <div class="wy-side-nav-search" >
-            <a href="../../index.html" class="icon icon-home"> The Linux Kernel
-          </a>
-              <div class="version">
-                6.0.0-rc3-mm-unstable-damon
-              </div>
-<div role="search">
-  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" />
-    <input type="hidden" name="check_keywords" value="yes" />
-    <input type="hidden" name="area" value="default" />
-  </form>
-</div>
-        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
-              <ul>
-<li class="toctree-l1"><a class="reference internal" href="../mm/damon/index.html">DAMON: Data Access MONitor</a></li>
-</ul>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="../../mm/damon/index.html">DAMON: Data Access MONitor</a></li>
-</ul>
+  </head><body>
+  
 
-        </div>
-      </div>
-    </nav>
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
 
-    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
-          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../../index.html">The Linux Kernel</a>
-      </nav>
-
-      <div class="wy-nav-content">
-        <div class="rst-content">
-          <div role="navigation" aria-label="Page navigation">
-  <ul class="wy-breadcrumbs">
-      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
-      <li><span class="section-number">6.7. </span>i.MX Video Capture Driver</li>
-      <li class="wy-breadcrumbs-aside">
-            <a href="../../_sources/admin-guide/media/imx.rst.txt" rel="nofollow"> View page source</a>
-      </li>
-  </ul>
-  <hr/>
-</div>
-          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
-           <div itemprop="articleBody">
-             
+          <div class="body" role="main">
+            
   <section id="i-mx-video-capture-driver">
-<h1><span class="section-number">6.7. </span>i.MX Video Capture Driver<a class="headerlink" href="#i-mx-video-capture-driver" title="Permalink to this headline">¶</a></h1>
+<h1><span class="section-number">7.7. </span>i.MX Video Capture Driver<a class="headerlink" href="#i-mx-video-capture-driver" title="Permalink to this headline">¶</a></h1>
 <section id="introduction">
-<h2><span class="section-number">6.7.1. </span>Introduction<a class="headerlink" href="#introduction" title="Permalink to this headline">¶</a></h2>
+<h2><span class="section-number">7.7.1. </span>Introduction<a class="headerlink" href="#introduction" title="Permalink to this headline">¶</a></h2>
 <p>The Freescale i.MX5/6 contains an Image Processing Unit (IPU), which
 handles the flow of image frames to and from capture devices and
 display devices.</p>
@@ -131,7 +95,7 @@ to send to a CSI.</p></li>
 manuals <a class="footnote-reference brackets" href="#f1" id="id1">1</a> and <a class="footnote-reference brackets" href="#f2" id="id2">2</a>.</p>
 </section>
 <section id="features">
-<h2><span class="section-number">6.7.2. </span>Features<a class="headerlink" href="#features" title="Permalink to this headline">¶</a></h2>
+<h2><span class="section-number">7.7.2. </span>Features<a class="headerlink" href="#features" title="Permalink to this headline">¶</a></h2>
 <p>Some of the features of this driver include:</p>
 <ul class="simple">
 <li><p>Many different pipelines can be configured via media controller API,
@@ -154,7 +118,7 @@ problems with the ADV718x video decoders.</p></li>
 </ul>
 </section>
 <section id="topology">
-<h2><span class="section-number">6.7.3. </span>Topology<a class="headerlink" href="#topology" title="Permalink to this headline">¶</a></h2>
+<h2><span class="section-number">7.7.3. </span>Topology<a class="headerlink" href="#topology" title="Permalink to this headline">¶</a></h2>
 <p>The following shows the media topologies for the i.MX6Q SabreSD and
 i.MX6Q SabreAuto. Refer to these diagrams in the entity descriptions
 in the next section.</p>
@@ -177,10 +141,10 @@ its graph.</p>
 </figure>
 </section>
 <section id="entities">
-<h2><span class="section-number">6.7.4. </span>Entities<a class="headerlink" href="#entities" title="Permalink to this headline">¶</a></h2>
+<h2><span class="section-number">7.7.4. </span>Entities<a class="headerlink" href="#entities" title="Permalink to this headline">¶</a></h2>
 </section>
 <section id="imx6-mipi-csi2">
-<h2><span class="section-number">6.7.5. </span>imx6-mipi-csi2<a class="headerlink" href="#imx6-mipi-csi2" title="Permalink to this headline">¶</a></h2>
+<h2><span class="section-number">7.7.5. </span>imx6-mipi-csi2<a class="headerlink" href="#imx6-mipi-csi2" title="Permalink to this headline">¶</a></h2>
 <p>This is the MIPI CSI-2 receiver entity. It has one sink pad to receive
 the MIPI CSI-2 stream (usually from a MIPI CSI-2 camera sensor). It has
 four source pads, corresponding to the four MIPI CSI-2 demuxed virtual
@@ -201,7 +165,7 @@ and IPU2-CSI0, respectively, and virtual channel 3 is routed to
 IPU2-CSI1 (again selected by a video mux).</p>
 </section>
 <section id="ipux-csiy-mux">
-<h2><span class="section-number">6.7.6. </span>ipuX_csiY_mux<a class="headerlink" href="#ipux-csiy-mux" title="Permalink to this headline">¶</a></h2>
+<h2><span class="section-number">7.7.6. </span>ipuX_csiY_mux<a class="headerlink" href="#ipux-csiy-mux" title="Permalink to this headline">¶</a></h2>
 <p>These are the video multiplexers. They have two or more sink pads to
 select from either camera sensors with a parallel interface, or from
 MIPI CSI-2 virtual channels from imx6-mipi-csi2 entity. They have a
@@ -219,7 +183,7 @@ select between a parallel sensor and MIPI CSI-2 virtual channel 3 (two
 sink pads).</p>
 </section>
 <section id="ipux-csiy">
-<h2><span class="section-number">6.7.7. </span>ipuX_csiY<a class="headerlink" href="#ipux-csiy" title="Permalink to this headline">¶</a></h2>
+<h2><span class="section-number">7.7.7. </span>ipuX_csiY<a class="headerlink" href="#ipux-csiy" title="Permalink to this headline">¶</a></h2>
 <p>These are the CSI entities. They have a single sink pad receiving from
 either a video mux or from a MIPI CSI-2 virtual channel as described
 above.</p>
@@ -253,7 +217,7 @@ is seq-bt, interlaced-tb if source pad is seq-tb).</p>
 <p>For events produced by ipuX_csiY, see ref:<cite>imx_api_ipuX_csiY</cite>.</p>
 </section>
 <section id="cropping-in-ipux-csiy">
-<h2><span class="section-number">6.7.8. </span>Cropping in ipuX_csiY<a class="headerlink" href="#cropping-in-ipux-csiy" title="Permalink to this headline">¶</a></h2>
+<h2><span class="section-number">7.7.8. </span>Cropping in ipuX_csiY<a class="headerlink" href="#cropping-in-ipux-csiy" title="Permalink to this headline">¶</a></h2>
 <p>The CSI supports cropping the incoming raw sensor frames. This is
 implemented in the ipuX_csiY entities at the sink pad, using the
 crop selection subdev API.</p>
@@ -275,7 +239,7 @@ media-ctl -V &quot;&#39;ipu1_csi0&#39;:0[compose:(0,0)/320x240]&quot;
 </div>
 </section>
 <section id="frame-skipping-in-ipux-csiy">
-<h2><span class="section-number">6.7.9. </span>Frame Skipping in ipuX_csiY<a class="headerlink" href="#frame-skipping-in-ipux-csiy" title="Permalink to this headline">¶</a></h2>
+<h2><span class="section-number">7.7.9. </span>Frame Skipping in ipuX_csiY<a class="headerlink" href="#frame-skipping-in-ipux-csiy" title="Permalink to this headline">¶</a></h2>
 <p>The CSI supports frame rate decimation, via frame skipping. Frame
 rate decimation is specified by setting the frame intervals at
 sink and source pads. The ipuX_csiY entity then applies the best
@@ -289,11 +253,11 @@ media-ctl -V &quot;&#39;ipu1_csi0&#39;:2[fmt:UYVY2X8/640x480@1/30]&quot;
 </div>
 </section>
 <section id="frame-interval-monitor-in-ipux-csiy">
-<h2><span class="section-number">6.7.10. </span>Frame Interval Monitor in ipuX_csiY<a class="headerlink" href="#frame-interval-monitor-in-ipux-csiy" title="Permalink to this headline">¶</a></h2>
+<h2><span class="section-number">7.7.10. </span>Frame Interval Monitor in ipuX_csiY<a class="headerlink" href="#frame-interval-monitor-in-ipux-csiy" title="Permalink to this headline">¶</a></h2>
 <p>See ref:<cite>imx_api_FIM</cite>.</p>
 </section>
 <section id="ipux-vdic">
-<h2><span class="section-number">6.7.11. </span>ipuX_vdic<a class="headerlink" href="#ipux-vdic" title="Permalink to this headline">¶</a></h2>
+<h2><span class="section-number">7.7.11. </span>ipuX_vdic<a class="headerlink" href="#ipux-vdic" title="Permalink to this headline">¶</a></h2>
 <p>The VDIC carries out motion compensated de-interlacing, with three
 motion compensation modes: low, medium, and high motion. The mode is
 specified with the menu control V4L2_CID_DEINTERLACING_MODE. The VDIC
@@ -308,7 +272,7 @@ is not implemented yet, so this sink pad currently has no links.</p>
 <p>The source pad routes to the IC pre-processing entity ipuX_ic_prp.</p>
 </section>
 <section id="ipux-ic-prp">
-<h2><span class="section-number">6.7.12. </span>ipuX_ic_prp<a class="headerlink" href="#ipux-ic-prp" title="Permalink to this headline">¶</a></h2>
+<h2><span class="section-number">7.7.12. </span>ipuX_ic_prp<a class="headerlink" href="#ipux-ic-prp" title="Permalink to this headline">¶</a></h2>
 <p>This is the IC pre-processing entity. It acts as a router, routing
 data from its sink pad to one or both of its source pads.</p>
 <p>This entity has a single sink pad. The sink pad can receive from the
@@ -322,7 +286,7 @@ can be activated if the sink pad is receiving from ipuX_vdic (frames
 from the VDIC can only be processed by the pre-process viewfinder task).</p>
 </section>
 <section id="ipux-ic-prpenc">
-<h2><span class="section-number">6.7.13. </span>ipuX_ic_prpenc<a class="headerlink" href="#ipux-ic-prpenc" title="Permalink to this headline">¶</a></h2>
+<h2><span class="section-number">7.7.13. </span>ipuX_ic_prpenc<a class="headerlink" href="#ipux-ic-prpenc" title="Permalink to this headline">¶</a></h2>
 <p>This is the IC pre-processing encode entity. It has a single sink
 pad from ipuX_ic_prp, and a single source pad. The source pad is
 routed to a capture device node, with a node name of the format
@@ -335,7 +299,7 @@ and rotation are provided via standard V4L2 controls.</p>
 de-interlace without motion compensation, and pixel reordering.</p>
 </section>
 <section id="ipux-ic-prpvf">
-<h2><span class="section-number">6.7.14. </span>ipuX_ic_prpvf<a class="headerlink" href="#ipux-ic-prpvf" title="Permalink to this headline">¶</a></h2>
+<h2><span class="section-number">7.7.14. </span>ipuX_ic_prpvf<a class="headerlink" href="#ipux-ic-prpvf" title="Permalink to this headline">¶</a></h2>
 <p>This is the IC pre-processing viewfinder entity. It has a single sink
 pad from ipuX_ic_prp, and a single source pad. The source pad is routed
 to a capture device node, with a node name of the format
@@ -353,7 +317,7 @@ motion compensation) and therefore the field type output from
 ipuX_vdic can only be none (progressive).</p>
 </section>
 <section id="capture-pipelines">
-<h2><span class="section-number">6.7.15. </span>Capture Pipelines<a class="headerlink" href="#capture-pipelines" title="Permalink to this headline">¶</a></h2>
+<h2><span class="section-number">7.7.15. </span>Capture Pipelines<a class="headerlink" href="#capture-pipelines" title="Permalink to this headline">¶</a></h2>
 <p>The following describe the various use-cases supported by the pipelines.</p>
 <p>The links shown do not include the backend sensor, video mux, or mipi
 csi-2 receiver links. This depends on the type of sensor interface
@@ -367,27 +331,27 @@ on the mipi csi-2 virtual channel, hence ipuX_csiY_mux is shown in
 parenthesis.</p>
 </section>
 <section id="unprocessed-video-capture">
-<h2><span class="section-number">6.7.16. </span>Unprocessed Video Capture:<a class="headerlink" href="#unprocessed-video-capture" title="Permalink to this headline">¶</a></h2>
+<h2><span class="section-number">7.7.16. </span>Unprocessed Video Capture:<a class="headerlink" href="#unprocessed-video-capture" title="Permalink to this headline">¶</a></h2>
 <p>Send frames directly from sensor to camera device interface node, with
 no conversions, via ipuX_csiY IDMAC source pad:</p>
 <p>-&gt; ipuX_csiY:2 -&gt; ipuX_csiY capture</p>
 </section>
 <section id="ic-direct-conversions">
-<h2><span class="section-number">6.7.17. </span>IC Direct Conversions:<a class="headerlink" href="#ic-direct-conversions" title="Permalink to this headline">¶</a></h2>
+<h2><span class="section-number">7.7.17. </span>IC Direct Conversions:<a class="headerlink" href="#ic-direct-conversions" title="Permalink to this headline">¶</a></h2>
 <p>This pipeline uses the preprocess encode entity to route frames directly
 from the CSI to the IC, to carry out scaling up to 1024x1024 resolution,
 CSC, flipping, and image rotation:</p>
 <p>-&gt; ipuX_csiY:1 -&gt; 0:ipuX_ic_prp:1 -&gt; 0:ipuX_ic_prpenc:1 -&gt; ipuX_ic_prpenc capture</p>
 </section>
 <section id="motion-compensated-de-interlace">
-<h2><span class="section-number">6.7.18. </span>Motion Compensated De-interlace:<a class="headerlink" href="#motion-compensated-de-interlace" title="Permalink to this headline">¶</a></h2>
+<h2><span class="section-number">7.7.18. </span>Motion Compensated De-interlace:<a class="headerlink" href="#motion-compensated-de-interlace" title="Permalink to this headline">¶</a></h2>
 <p>This pipeline routes frames from the CSI direct pad to the VDIC entity to
 support motion-compensated de-interlacing (high motion mode only),
 scaling up to 1024x1024, CSC, flip, and rotation:</p>
 <p>-&gt; ipuX_csiY:1 -&gt; 0:ipuX_vdic:2 -&gt; 0:ipuX_ic_prp:2 -&gt; 0:ipuX_ic_prpvf:1 -&gt; ipuX_ic_prpvf capture</p>
 </section>
 <section id="usage-notes">
-<h2><span class="section-number">6.7.19. </span>Usage Notes<a class="headerlink" href="#usage-notes" title="Permalink to this headline">¶</a></h2>
+<h2><span class="section-number">7.7.19. </span>Usage Notes<a class="headerlink" href="#usage-notes" title="Permalink to this headline">¶</a></h2>
 <p>To aid in configuration and for backward compatibility with V4L2
 applications that access controls only from video device nodes, the
 capture device interfaces inherit controls from the active entities
@@ -399,7 +363,7 @@ subdevs or from the active capture device.</p>
 boards:</p>
 </section>
 <section id="i-mx6q-sabrelite-with-ov5642-and-ov5640">
-<h2><span class="section-number">6.7.20. </span>i.MX6Q SabreLite with OV5642 and OV5640<a class="headerlink" href="#i-mx6q-sabrelite-with-ov5642-and-ov5640" title="Permalink to this headline">¶</a></h2>
+<h2><span class="section-number">7.7.20. </span>i.MX6Q SabreLite with OV5642 and OV5640<a class="headerlink" href="#i-mx6q-sabrelite-with-ov5642-and-ov5640" title="Permalink to this headline">¶</a></h2>
 <p>This platform requires the OmniVision OV5642 module with a parallel
 camera interface, and the OV5640 module with a MIPI CSI-2
 interface. Both modules are available from Boundary Devices:</p>
@@ -447,7 +411,7 @@ be used to select any supported YUV pixelformat on the capture device
 nodes, including planar.</p>
 </section>
 <section id="i-mx6q-sabreauto-with-adv7180-decoder">
-<h2><span class="section-number">6.7.21. </span>i.MX6Q SabreAuto with ADV7180 decoder<a class="headerlink" href="#i-mx6q-sabreauto-with-adv7180-decoder" title="Permalink to this headline">¶</a></h2>
+<h2><span class="section-number">7.7.21. </span>i.MX6Q SabreAuto with ADV7180 decoder<a class="headerlink" href="#i-mx6q-sabreauto-with-adv7180-decoder" title="Permalink to this headline">¶</a></h2>
 <p>On the i.MX6Q SabreAuto, an on-board ADV7180 SD decoder is connected to the
 parallel bus input on the internal video mux to IPU1 CSI0.</p>
 <p>The following example configures a pipeline to capture from the ADV7180
@@ -497,7 +461,7 @@ used to select any supported YUV pixelformat on /dev/video2.</p>
 Ain1 (connector J42).</p>
 </section>
 <section id="i-mx6dl-sabreauto-with-adv7180-decoder">
-<h2><span class="section-number">6.7.22. </span>i.MX6DL SabreAuto with ADV7180 decoder<a class="headerlink" href="#i-mx6dl-sabreauto-with-adv7180-decoder" title="Permalink to this headline">¶</a></h2>
+<h2><span class="section-number">7.7.22. </span>i.MX6DL SabreAuto with ADV7180 decoder<a class="headerlink" href="#i-mx6dl-sabreauto-with-adv7180-decoder" title="Permalink to this headline">¶</a></h2>
 <p>On the i.MX6DL SabreAuto, an on-board ADV7180 SD decoder is connected to the
 parallel bus input on the internal video mux to IPU1 CSI0.</p>
 <p>The following example configures a pipeline to capture from the ADV7180
@@ -547,7 +511,7 @@ used to select any supported YUV pixelformat on /dev/video2.</p>
 Ain1 (connector J42).</p>
 </section>
 <section id="i-mx6q-sabresd-with-mipi-csi-2-ov5640">
-<h2><span class="section-number">6.7.23. </span>i.MX6Q SabreSD with MIPI CSI-2 OV5640<a class="headerlink" href="#i-mx6q-sabresd-with-mipi-csi-2-ov5640" title="Permalink to this headline">¶</a></h2>
+<h2><span class="section-number">7.7.23. </span>i.MX6Q SabreSD with MIPI CSI-2 OV5640<a class="headerlink" href="#i-mx6q-sabresd-with-mipi-csi-2-ov5640" title="Permalink to this headline">¶</a></h2>
 <p>Similarly to i.MX6Q SabreLite, the i.MX6Q SabreSD supports a parallel
 interface OV5642 module on IPU1 CSI0, and a MIPI CSI-2 OV5640
 module. The OV5642 connects to i2c bus 1 and the OV5640 to i2c bus 2.</p>
@@ -627,7 +591,7 @@ v4l2-ctl -d /dev/video1 --set-fmt-video=pixelformat=RGB3
 </div>
 </section>
 <section id="known-issues">
-<h2><span class="section-number">6.7.24. </span>Known Issues<a class="headerlink" href="#known-issues" title="Permalink to this headline">¶</a></h2>
+<h2><span class="section-number">7.7.24. </span>Known Issues<a class="headerlink" href="#known-issues" title="Permalink to this headline">¶</a></h2>
 <ol class="arabic simple">
 <li><p>When using 90 or 270 degree rotation control at capture resolutions
 near the IC resizer limit of 1024x1024, and combined with planar
@@ -638,13 +602,13 @@ when 90 or 270 rotations are needed.</p></li>
 </ol>
 </section>
 <section id="file-list">
-<h2><span class="section-number">6.7.25. </span>File list<a class="headerlink" href="#file-list" title="Permalink to this headline">¶</a></h2>
+<h2><span class="section-number">7.7.25. </span>File list<a class="headerlink" href="#file-list" title="Permalink to this headline">¶</a></h2>
 <p>drivers/staging/media/imx/
 include/media/imx.h
 include/linux/imx-media.h</p>
 </section>
 <section id="references">
-<h2><span class="section-number">6.7.26. </span>References<a class="headerlink" href="#references" title="Permalink to this headline">¶</a></h2>
+<h2><span class="section-number">7.7.26. </span>References<a class="headerlink" href="#references" title="Permalink to this headline">¶</a></h2>
 <dl class="footnote brackets">
 <dt class="label" id="f1"><span class="brackets"><a class="fn-backref" href="#id1">1</a></span></dt>
 <dd><p><a class="reference external" href="http://www.nxp.com/assets/documents/data/en/reference-manuals/IMX6DQRM.pdf">http://www.nxp.com/assets/documents/data/en/reference-manuals/IMX6DQRM.pdf</a></p>
@@ -655,7 +619,7 @@ include/linux/imx-media.h</p>
 </dl>
 </section>
 <section id="authors">
-<h2><span class="section-number">6.7.27. </span>Authors<a class="headerlink" href="#authors" title="Permalink to this headline">¶</a></h2>
+<h2><span class="section-number">7.7.27. </span>Authors<a class="headerlink" href="#authors" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
 <li><p>Steve Longerbeam &lt;<a class="reference external" href="mailto:steve_longerbeam&#37;&#52;&#48;mentor&#46;com">steve_longerbeam<span>&#64;</span>mentor<span>&#46;</span>com</a>&gt;</p></li>
 <li><p>Philipp Zabel &lt;<a class="reference external" href="mailto:kernel&#37;&#52;&#48;pengutronix&#46;de">kernel<span>&#64;</span>pengutronix<span>&#46;</span>de</a>&gt;</p></li>
@@ -666,31 +630,93 @@ include/linux/imx-media.h</p>
 </section>
 
 
-           </div>
           </div>
-          <footer>
-
-  <hr/>
-
-  <div role="contentinfo">
-    <p>&#169; Copyright The kernel development community.</p>
-  </div>
-
-  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
-    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
-    provided by <a href="https://readthedocs.org">Read the Docs</a>.
-   
-
-</footer>
+          
         </div>
       </div>
-    </section>
-  </div>
-  <script>
-      jQuery(function () {
-          SphinxRtdTheme.Navigation.enable(true);
-      });
-  </script> 
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../../index.html">The Linux Kernel</a></h1>
 
-</body>
+
+
+<p class="blurb">6.1.0-mm-unstable-damon</p>
+
+
+
+
+
+
+
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+  <h3><a href="../../index.html">Table of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">7.7. i.MX Video Capture Driver</a><ul>
+<li><a class="reference internal" href="#introduction">7.7.1. Introduction</a></li>
+<li><a class="reference internal" href="#features">7.7.2. Features</a></li>
+<li><a class="reference internal" href="#topology">7.7.3. Topology</a></li>
+<li><a class="reference internal" href="#entities">7.7.4. Entities</a></li>
+<li><a class="reference internal" href="#imx6-mipi-csi2">7.7.5. imx6-mipi-csi2</a></li>
+<li><a class="reference internal" href="#ipux-csiy-mux">7.7.6. ipuX_csiY_mux</a></li>
+<li><a class="reference internal" href="#ipux-csiy">7.7.7. ipuX_csiY</a></li>
+<li><a class="reference internal" href="#cropping-in-ipux-csiy">7.7.8. Cropping in ipuX_csiY</a></li>
+<li><a class="reference internal" href="#frame-skipping-in-ipux-csiy">7.7.9. Frame Skipping in ipuX_csiY</a></li>
+<li><a class="reference internal" href="#frame-interval-monitor-in-ipux-csiy">7.7.10. Frame Interval Monitor in ipuX_csiY</a></li>
+<li><a class="reference internal" href="#ipux-vdic">7.7.11. ipuX_vdic</a></li>
+<li><a class="reference internal" href="#ipux-ic-prp">7.7.12. ipuX_ic_prp</a></li>
+<li><a class="reference internal" href="#ipux-ic-prpenc">7.7.13. ipuX_ic_prpenc</a></li>
+<li><a class="reference internal" href="#ipux-ic-prpvf">7.7.14. ipuX_ic_prpvf</a></li>
+<li><a class="reference internal" href="#capture-pipelines">7.7.15. Capture Pipelines</a></li>
+<li><a class="reference internal" href="#unprocessed-video-capture">7.7.16. Unprocessed Video Capture:</a></li>
+<li><a class="reference internal" href="#ic-direct-conversions">7.7.17. IC Direct Conversions:</a></li>
+<li><a class="reference internal" href="#motion-compensated-de-interlace">7.7.18. Motion Compensated De-interlace:</a></li>
+<li><a class="reference internal" href="#usage-notes">7.7.19. Usage Notes</a></li>
+<li><a class="reference internal" href="#i-mx6q-sabrelite-with-ov5642-and-ov5640">7.7.20. i.MX6Q SabreLite with OV5642 and OV5640</a></li>
+<li><a class="reference internal" href="#i-mx6q-sabreauto-with-adv7180-decoder">7.7.21. i.MX6Q SabreAuto with ADV7180 decoder</a></li>
+<li><a class="reference internal" href="#i-mx6dl-sabreauto-with-adv7180-decoder">7.7.22. i.MX6DL SabreAuto with ADV7180 decoder</a></li>
+<li><a class="reference internal" href="#i-mx6q-sabresd-with-mipi-csi-2-ov5640">7.7.23. i.MX6Q SabreSD with MIPI CSI-2 OV5640</a></li>
+<li><a class="reference internal" href="#known-issues">7.7.24. Known Issues</a></li>
+<li><a class="reference internal" href="#file-list">7.7.25. File list</a></li>
+<li><a class="reference internal" href="#references">7.7.26. References</a></li>
+<li><a class="reference internal" href="#authors">7.7.27. Authors</a></li>
+</ul>
+</li>
+</ul>
+
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../../_sources/admin-guide/media/imx.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;The kernel development community.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 2.4.4</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="../../_sources/admin-guide/media/imx.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
 </html>

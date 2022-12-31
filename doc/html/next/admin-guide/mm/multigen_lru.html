@@ -1,75 +1,39 @@
+
 <!DOCTYPE html>
-<html class="writer-html5" lang="en" >
-<head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Multi-Gen LRU &mdash; The Linux Kernel  documentation</title><link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+  <head>
+    <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>Multi-Gen LRU &#8212; The Linux Kernel  documentation</title>
+    <link rel="stylesheet" href="../../_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
-      <link rel="stylesheet" href="../../_static/theme_overrides.css" type="text/css" />
-      <link rel="stylesheet" href="../../_static/theme_rtd_colors.css" type="text/css" />
-  <!--[if lt IE 9]>
-    <script src="../../_static/js/html5shiv.min.js"></script>
-  <![endif]-->
-  <script id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
-        <script src="../../_static/jquery.js"></script>
-        <script src="../../_static/underscore.js"></script>
-        <script src="../../_static/doctools.js"></script>
-        <script src="../../_static/language_data.js"></script>
-    <script src="../../_static/js/theme.js"></script>
+    <script id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/jquery.js"></script>
+    <script src="../../_static/underscore.js"></script>
+    <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/language_data.js"></script>
+    <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
-    <link rel="search" title="Search" href="../../search.html" /> 
-</head>
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="No-MMU memory mapping support" href="nommu-mmap.html" />
+    <link rel="prev" title="Memory Hot(Un)Plug" href="memory-hotplug.html" />
+   
+  <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
 
-<body class="wy-body-for-nav"> 
-  <div class="wy-grid-for-nav">
-    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
-      <div class="wy-side-scroll">
-        <div class="wy-side-nav-search" >
-            <a href="../../index.html" class="icon icon-home"> The Linux Kernel
-          </a>
-              <div class="version">
-                6.0.0-rc3-mm-unstable-damon
-              </div>
-<div role="search">
-  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" />
-    <input type="hidden" name="check_keywords" value="yes" />
-    <input type="hidden" name="area" value="default" />
-  </form>
-</div>
-        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
-              <ul>
-<li class="toctree-l1"><a class="reference internal" href="damon/index.html">DAMON: Data Access MONitor</a></li>
-</ul>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="../../mm/damon/index.html">DAMON: Data Access MONitor</a></li>
-</ul>
+  </head><body>
+  
 
-        </div>
-      </div>
-    </nav>
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
 
-    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
-          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../../index.html">The Linux Kernel</a>
-      </nav>
-
-      <div class="wy-nav-content">
-        <div class="rst-content">
-          <div role="navigation" aria-label="Page navigation">
-  <ul class="wy-breadcrumbs">
-      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
-      <li>Multi-Gen LRU</li>
-      <li class="wy-breadcrumbs-aside">
-            <a href="../../_sources/admin-guide/mm/multigen_lru.rst.txt" rel="nofollow"> View page source</a>
-      </li>
-  </ul>
-  <hr/>
-</div>
-          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
-           <div itemprop="articleBody">
-             
+          <div class="body" role="main">
+            
   <section id="multi-gen-lru">
 <h1>Multi-Gen LRU<a class="headerlink" href="#multi-gen-lru" title="Permalink to this headline">¶</a></h1>
 <p>The multi-gen LRU is an alternative LRU implementation that optimizes
@@ -194,14 +158,17 @@ histograms are noncumulative.</p>
 within <code class="docutils literal notranslate"><span class="pre">age_in_ms</span></code>. E.g., <code class="docutils literal notranslate"><span class="pre">min_gen_nr</span></code> contains the coldest pages
 and <code class="docutils literal notranslate"><span class="pre">max_gen_nr</span></code> contains the hottest pages, since <code class="docutils literal notranslate"><span class="pre">age_in_ms</span></code> of
 the former is the largest and that of the latter is the smallest.</p>
-<p>Users can write <code class="docutils literal notranslate"><span class="pre">+</span> <span class="pre">memcg_id</span> <span class="pre">node_id</span> <span class="pre">max_gen_nr</span>
-<span class="pre">[can_swap</span> <span class="pre">[force_scan]]</span></code> to <code class="docutils literal notranslate"><span class="pre">lru_gen</span></code> to create a new generation
-<code class="docutils literal notranslate"><span class="pre">max_gen_nr+1</span></code>. <code class="docutils literal notranslate"><span class="pre">can_swap</span></code> defaults to the swap setting and, if it
-is set to <code class="docutils literal notranslate"><span class="pre">1</span></code>, it forces the scan of anon pages when swap is off,
-and vice versa. <code class="docutils literal notranslate"><span class="pre">force_scan</span></code> defaults to <code class="docutils literal notranslate"><span class="pre">1</span></code> and, if it is set to
-<code class="docutils literal notranslate"><span class="pre">0</span></code>, it employs heuristics to reduce the overhead, which is likely
-to reduce the coverage as well.</p>
-<p>A typical use case is that a job scheduler writes to <code class="docutils literal notranslate"><span class="pre">lru_gen</span></code> at a
+<p>Users can write the following command to <code class="docutils literal notranslate"><span class="pre">lru_gen</span></code> to create a new
+generation <code class="docutils literal notranslate"><span class="pre">max_gen_nr+1</span></code>:</p>
+<blockquote>
+<div><p><code class="docutils literal notranslate"><span class="pre">+</span> <span class="pre">memcg_id</span> <span class="pre">node_id</span> <span class="pre">max_gen_nr</span> <span class="pre">[can_swap</span> <span class="pre">[force_scan]]</span></code></p>
+</div></blockquote>
+<p><code class="docutils literal notranslate"><span class="pre">can_swap</span></code> defaults to the swap setting and, if it is set to <code class="docutils literal notranslate"><span class="pre">1</span></code>,
+it forces the scan of anon pages when swap is off, and vice versa.
+<code class="docutils literal notranslate"><span class="pre">force_scan</span></code> defaults to <code class="docutils literal notranslate"><span class="pre">1</span></code> and, if it is set to <code class="docutils literal notranslate"><span class="pre">0</span></code>, it
+employs heuristics to reduce the overhead, which is likely to reduce
+the coverage as well.</p>
+<p>A typical use case is that a job scheduler runs this command at a
 certain time interval to create new generations, and it ranks the
 servers it manages based on the sizes of their cold pages defined by
 this time interval.</p>
@@ -211,51 +178,100 @@ this time interval.</p>
 <p>Proactive reclaim induces page reclaim when there is no memory
 pressure. It usually targets cold pages only. E.g., when a new job
 comes in, the job scheduler wants to proactively reclaim cold pages on
-the server it selected to improve the chance of successfully landing
+the server it selected, to improve the chance of successfully landing
 this new job.</p>
-<p>Users can write <code class="docutils literal notranslate"><span class="pre">-</span> <span class="pre">memcg_id</span> <span class="pre">node_id</span> <span class="pre">min_gen_nr</span> <span class="pre">[swappiness</span>
-<span class="pre">[nr_to_reclaim]]</span></code> to <code class="docutils literal notranslate"><span class="pre">lru_gen</span></code> to evict generations less than or
-equal to <code class="docutils literal notranslate"><span class="pre">min_gen_nr</span></code>. Note that <code class="docutils literal notranslate"><span class="pre">min_gen_nr</span></code> should be less than
-<code class="docutils literal notranslate"><span class="pre">max_gen_nr-1</span></code> as <code class="docutils literal notranslate"><span class="pre">max_gen_nr</span></code> and <code class="docutils literal notranslate"><span class="pre">max_gen_nr-1</span></code> are not fully
-aged and therefore cannot be evicted. <code class="docutils literal notranslate"><span class="pre">swappiness</span></code> overrides the
-default value in <code class="docutils literal notranslate"><span class="pre">/proc/sys/vm/swappiness</span></code>. <code class="docutils literal notranslate"><span class="pre">nr_to_reclaim</span></code> limits
-the number of pages to evict.</p>
-<p>A typical use case is that a job scheduler writes to <code class="docutils literal notranslate"><span class="pre">lru_gen</span></code>
-before it tries to land a new job on a server. If it fails to
-materialize enough cold pages because of the overestimation, it
-retries on the next server according to the ranking result obtained
-from the working set estimation step. This less forceful approach
-limits the impacts on the existing jobs.</p>
+<p>Users can write the following command to <code class="docutils literal notranslate"><span class="pre">lru_gen</span></code> to evict
+generations less than or equal to <code class="docutils literal notranslate"><span class="pre">min_gen_nr</span></code>.</p>
+<blockquote>
+<div><p><code class="docutils literal notranslate"><span class="pre">-</span> <span class="pre">memcg_id</span> <span class="pre">node_id</span> <span class="pre">min_gen_nr</span> <span class="pre">[swappiness</span> <span class="pre">[nr_to_reclaim]]</span></code></p>
+</div></blockquote>
+<p><code class="docutils literal notranslate"><span class="pre">min_gen_nr</span></code> should be less than <code class="docutils literal notranslate"><span class="pre">max_gen_nr-1</span></code>, since
+<code class="docutils literal notranslate"><span class="pre">max_gen_nr</span></code> and <code class="docutils literal notranslate"><span class="pre">max_gen_nr-1</span></code> are not fully aged (equivalent to
+the active list) and therefore cannot be evicted. <code class="docutils literal notranslate"><span class="pre">swappiness</span></code>
+overrides the default value in <code class="docutils literal notranslate"><span class="pre">/proc/sys/vm/swappiness</span></code>.
+<code class="docutils literal notranslate"><span class="pre">nr_to_reclaim</span></code> limits the number of pages to evict.</p>
+<p>A typical use case is that a job scheduler runs this command before it
+tries to land a new job on a server. If it fails to materialize enough
+cold pages because of the overestimation, it retries on the next
+server according to the ranking result obtained from the working set
+estimation step. This less forceful approach limits the impacts on the
+existing jobs.</p>
 </section>
 </section>
 </section>
 
 
-           </div>
           </div>
-          <footer>
-
-  <hr/>
-
-  <div role="contentinfo">
-    <p>&#169; Copyright The kernel development community.</p>
-  </div>
-
-  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
-    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
-    provided by <a href="https://readthedocs.org">Read the Docs</a>.
-   
-
-</footer>
+          
         </div>
       </div>
-    </section>
-  </div>
-  <script>
-      jQuery(function () {
-          SphinxRtdTheme.Navigation.enable(true);
-      });
-  </script> 
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../../index.html">The Linux Kernel</a></h1>
 
-</body>
+
+
+<p class="blurb">6.1.0-mm-unstable-damon</p>
+
+
+
+
+
+
+
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+  <h3><a href="../../index.html">Table of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Multi-Gen LRU</a><ul>
+<li><a class="reference internal" href="#quick-start">Quick start</a></li>
+<li><a class="reference internal" href="#runtime-options">Runtime options</a><ul>
+<li><a class="reference internal" href="#kill-switch">Kill switch</a></li>
+<li><a class="reference internal" href="#thrashing-prevention">Thrashing prevention</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#experimental-features">Experimental features</a><ul>
+<li><a class="reference internal" href="#working-set-estimation">Working set estimation</a></li>
+<li><a class="reference internal" href="#proactive-reclaim">Proactive reclaim</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../../_sources/admin-guide/mm/multigen_lru.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;The kernel development community.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 2.4.4</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="../../_sources/admin-guide/mm/multigen_lru.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
 </html>

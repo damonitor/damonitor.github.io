@@ -770,6 +770,7 @@ cec.h
     \#define CEC\_OP\_FEAT\_DEV\_HAS\_SET\_AUDIO\_RATE              0x08
     \#define CEC\_OP\_FEAT\_DEV\_SINK\_HAS\_ARC\_TX                 0x04
     \#define CEC\_OP\_FEAT\_DEV\_SOURCE\_HAS\_ARC\_RX               0x02
+    \#define CEC\_OP\_FEAT\_DEV\_HAS\_SET\_AUDIO\_VOLUME\_LEVEL      0x01
 
     \#define CEC\_MSG\_GIVE\_FEATURES                           0xa5    \/\* HDMI 2.0 \*\/
 
@@ -1050,6 +1051,8 @@ cec.h
     \/\* Audio Format ID Operand (audio\_format\_id) \*\/
     \#define CEC\_OP\_AUD\_FMT\_ID\_CEA861                        0
     \#define CEC\_OP\_AUD\_FMT\_ID\_CEA861\_CXT                    1
+
+    \#define CEC\_MSG\_SET\_AUDIO\_VOLUME\_LEVEL                  0x73
 
     \/\* Audio Rate Control Feature \*\/
     \#define CEC\_MSG\_SET\_AUDIO\_RATE                          0x9a

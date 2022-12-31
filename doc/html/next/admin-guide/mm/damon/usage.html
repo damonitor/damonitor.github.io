@@ -1,118 +1,39 @@
-<!DOCTYPE html>
-<html class="writer-html5" lang="en" >
-<head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Detailed Usages &mdash; The Linux Kernel  documentation</title><link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+  <head>
+    <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>Detailed Usages &#8212; The Linux Kernel  documentation</title>
+    <link rel="stylesheet" href="../../../_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
-      <link rel="stylesheet" href="../../../_static/theme_overrides.css" type="text/css" />
-      <link rel="stylesheet" href="../../../_static/theme_rtd_colors.css" type="text/css" />
-  <!--[if lt IE 9]>
-    <script src="../../../_static/js/html5shiv.min.js"></script>
-  <![endif]-->
-  <script id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
-        <script src="../../../_static/jquery.js"></script>
-        <script src="../../../_static/underscore.js"></script>
-        <script src="../../../_static/doctools.js"></script>
-        <script src="../../../_static/language_data.js"></script>
-    <script src="../../../_static/js/theme.js"></script>
+    <script id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+    <script src="../../../_static/jquery.js"></script>
+    <script src="../../../_static/underscore.js"></script>
+    <script src="../../../_static/doctools.js"></script>
+    <script src="../../../_static/language_data.js"></script>
+    <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" />
     <link rel="next" title="DAMON-based Reclamation" href="reclaim.html" />
-    <link rel="prev" title="Optimization Guide" href="guide.html" /> 
-</head>
+    <link rel="prev" title="Optimization Guide" href="guide.html" />
+   
+  <link rel="stylesheet" href="../../../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
 
-<body class="wy-body-for-nav"> 
-  <div class="wy-grid-for-nav">
-    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
-      <div class="wy-side-scroll">
-        <div class="wy-side-nav-search" >
-            <a href="../../../index.html" class="icon icon-home"> The Linux Kernel
-          </a>
-              <div class="version">
-                6.0.0-rc3-mm-unstable-damon
-              </div>
-<div role="search">
-  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" />
-    <input type="hidden" name="check_keywords" value="yes" />
-    <input type="hidden" name="area" value="default" />
-  </form>
-</div>
-        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
-              <ul class="current">
-<li class="toctree-l1 current"><a class="reference internal" href="index.html">DAMON: Data Access MONitor</a><ul class="current">
-<li class="toctree-l2"><a class="reference internal" href="start.html">Getting Started</a></li>
-<li class="toctree-l2"><a class="reference internal" href="guide.html">Optimization Guide</a></li>
-<li class="toctree-l2 current"><a class="current reference internal" href="#">Detailed Usages</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#sysfs-interface">sysfs Interface</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#files-hierarchy">Files Hierarchy</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#root">Root</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#kdamonds">kdamonds/</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#kdamonds-n">kdamonds/&lt;N&gt;/</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#kdamonds-n-contexts">kdamonds/&lt;N&gt;/contexts/</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#contexts-n">contexts/&lt;N&gt;/</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#contexts-n-monitoring-attrs">contexts/&lt;N&gt;/monitoring_attrs/</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#contexts-n-targets">contexts/&lt;N&gt;/targets/</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#targets-n">targets/&lt;N&gt;/</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#targets-n-regions">targets/&lt;N&gt;/regions</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#regions-n">regions/&lt;N&gt;/</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#contexts-n-schemes">contexts/&lt;N&gt;/schemes/</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#schemes-n">schemes/&lt;N&gt;/</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#schemes-n-access-pattern">schemes/&lt;N&gt;/access_pattern/</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#schemes-n-quotas">schemes/&lt;N&gt;/quotas/</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#schemes-n-watermarks">schemes/&lt;N&gt;/watermarks/</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#schemes-n-stats">schemes/&lt;N&gt;/stats/</a></li>
-</ul>
-</li>
-<li class="toctree-l3"><a class="reference internal" href="#debugfs-interface">debugfs Interface</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#attributes">Attributes</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#target-ids">Target IDs</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#initial-monitoring-target-regions">Initial Monitoring Target Regions</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#schemes">Schemes</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#turning-on-off">Turning On/Off</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#monitoring-thread-pid">Monitoring Thread PID</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#using-multiple-monitoring-threads">Using Multiple Monitoring Threads</a></li>
-</ul>
-</li>
-<li class="toctree-l3"><a class="reference internal" href="#tracepoint-for-monitoring-results">Tracepoint for Monitoring Results</a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="reclaim.html">DAMON-based Reclamation</a></li>
-<li class="toctree-l2"><a class="reference internal" href="lru_sort.html">DAMON-based LRU-lists Sorting</a></li>
-</ul>
-</li>
-</ul>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="../../../mm/damon/index.html">DAMON: Data Access MONitor</a></li>
-</ul>
+  </head><body>
+  
 
-        </div>
-      </div>
-    </nav>
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
 
-    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
-          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../../../index.html">The Linux Kernel</a>
-      </nav>
-
-      <div class="wy-nav-content">
-        <div class="rst-content">
-          <div role="navigation" aria-label="Page navigation">
-  <ul class="wy-breadcrumbs">
-      <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
-          <li><a href="index.html">DAMON: Data Access MONitor</a> &raquo;</li>
-      <li>Detailed Usages</li>
-      <li class="wy-breadcrumbs-aside">
-            <a href="../../../_sources/admin-guide/mm/damon/usage.rst.txt" rel="nofollow"> View page source</a>
-      </li>
-  </ul>
-  <hr/>
-</div>
-          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
-           <div itemprop="articleBody">
-             
+          <div class="body" role="main">
+            
   <section id="detailed-usages">
 <h1>Detailed Usages<a class="headerlink" href="#detailed-usages" title="Permalink to this headline">¶</a></h1>
 <p>DAMON provides below interfaces for different users.</p>
@@ -134,9 +55,9 @@ supports both virtual and physical address spaces monitoring.  Note that this
 interface provides only simple <a class="reference internal" href="#damos-stats"><span class="std std-ref">statistics</span></a> for the
 monitoring results.  For detailed monitoring results, DAMON provides a
 <a class="reference internal" href="#tracepoint"><span class="std std-ref">tracepoint</span></a>.</p></li>
-<li><p><em>debugfs interface.</em>
-<a class="reference internal" href="#debugfs-interface"><span class="std std-ref">This</span></a> is almost identical to <a class="reference internal" href="#sysfs-interface"><span class="std std-ref">sysfs interface</span></a>.  This will be removed after next LTS kernel is released,
-so users should move to the <a class="reference internal" href="#sysfs-interface"><span class="std std-ref">sysfs interface</span></a>.</p></li>
+<li><p><em>debugfs interface. (DEPRECATED!)</em>
+<a class="reference internal" href="#debugfs-interface"><span class="std std-ref">This</span></a> is almost identical to <a class="reference internal" href="#sysfs-interface"><span class="std std-ref">sysfs interface</span></a>.  This is deprecated, so users should move to the
+<a class="reference internal" href="#sysfs-interface"><span class="std std-ref">sysfs interface</span></a>.</p></li>
 <li><p><em>Kernel Space Programming Interface.</em>
 <a class="reference internal" href="../../../mm/damon/api.html"><span class="doc">This</span></a> is for kernel space programmers.  Using this,
 users can utilize every feature of DAMON most flexibly and efficiently by
@@ -153,10 +74,10 @@ from the files under the directory.</p>
 <p>For a short example, users can monitor the virtual address space of a given
 workload as below.</p>
 <div class="highlight-none notranslate"><div class="highlight"><pre><span></span># cd /sys/kernel/mm/damon/admin/
-# echo 1 &gt; kdamonds/nr &amp;&amp; echo 1 &gt; kdamonds/0/contexts/nr
+# echo 1 &gt; kdamonds/nr_kdamonds &amp;&amp; echo 1 &gt; kdamonds/0/contexts/nr_contexts
 # echo vaddr &gt; kdamonds/0/contexts/0/operations
-# echo 1 &gt; kdamonds/0/contexts/0/targets/nr
-# echo $(pidof &lt;workload&gt;) &gt; kdamonds/0/contexts/0/targets/0/pid
+# echo 1 &gt; kdamonds/0/contexts/0/targets/nr_targets
+# echo $(pidof &lt;workload&gt;) &gt; kdamonds/0/contexts/0/targets/0/pid_target
 # echo on &gt; kdamonds/0/state
 </pre></div>
 </div>
@@ -189,7 +110,12 @@ comma (“,”).</p>
 │ │ │ │ │ │ │ quotas/ms,bytes,reset_interval_ms
 │ │ │ │ │ │ │ │ weights/sz_permil,nr_accesses_permil,age_permil
 │ │ │ │ │ │ │ watermarks/metric,interval_us,high,mid,low
+│ │ │ │ │ │ │ filters/nr_filters
+│ │ │ │ │ │ │ │ 0/type,matching,memcg_id
 │ │ │ │ │ │ │ stats/nr_tried,sz_tried,nr_applied,sz_applied,qt_exceeds
+│ │ │ │ │ │ │ tried_regions/
+│ │ │ │ │ │ │ │ 0/start,end,nr_accesses,age
+│ │ │ │ │ │ │ │ ...
 │ │ │ │ │ │ ...
 │ │ │ │ ...
 │ │ ...
@@ -224,7 +150,14 @@ in the state.  Writing <code class="docutils literal notranslate"><span class="p
 user inputs in the sysfs files except <code class="docutils literal notranslate"><span class="pre">state</span></code> file again.  Writing
 <code class="docutils literal notranslate"><span class="pre">update_schemes_stats</span></code> to <code class="docutils literal notranslate"><span class="pre">state</span></code> file updates the contents of stats files
 for each DAMON-based operation scheme of the kdamond.  For details of the
-stats, please refer to <a class="reference internal" href="#sysfs-schemes-stats"><span class="std std-ref">stats section</span></a>.</p>
+stats, please refer to <a class="reference internal" href="#sysfs-schemes-stats"><span class="std std-ref">stats section</span></a>.  Writing
+<code class="docutils literal notranslate"><span class="pre">update_schemes_tried_regions</span></code> to <code class="docutils literal notranslate"><span class="pre">state</span></code> file updates the DAMON-based
+operation scheme action tried regions directory for each DAMON-based operation
+scheme of the kdamond.  Writing <code class="docutils literal notranslate"><span class="pre">clear_schemes_tried_regions</span></code> to <code class="docutils literal notranslate"><span class="pre">state</span></code>
+file clears the DAMON-based operating scheme action tried regions directory for
+each DAMON-based operation scheme of the kdamond.  For details of the
+DAMON-based operation scheme action tried regions directory, please refer to
+:ref:tried_regions section &lt;sysfs_schemes_tried_regions&gt;`.</p>
 <p>If the state is <code class="docutils literal notranslate"><span class="pre">on</span></code>, reading <code class="docutils literal notranslate"><span class="pre">pid</span></code> shows the pid of the kdamond thread.</p>
 <p><code class="docutils literal notranslate"><span class="pre">contexts</span></code> directory contains files for controlling the monitoring contexts
 that this kdamond will execute.</p>
@@ -238,7 +171,7 @@ moment, only one context per kdamond is supported, so only <code class="docutils
 be written to the file.</p>
 </section>
 <section id="contexts-n">
-<h3>contexts/&lt;N&gt;/<a class="headerlink" href="#contexts-n" title="Permalink to this headline">¶</a></h3>
+<span id="sysfs-contexts"></span><h3>contexts/&lt;N&gt;/<a class="headerlink" href="#contexts-n" title="Permalink to this headline">¶</a></h3>
 <p>In each context directory, two files (<code class="docutils literal notranslate"><span class="pre">avail_operations</span></code> and <code class="docutils literal notranslate"><span class="pre">operations</span></code>)
 and three directories (<code class="docutils literal notranslate"><span class="pre">monitoring_attrs</span></code>, <code class="docutils literal notranslate"><span class="pre">targets</span></code>, and <code class="docutils literal notranslate"><span class="pre">schemes</span></code>)
 exist.</p>
@@ -262,7 +195,7 @@ context by writing one of the keywords listed in <code class="docutils literal n
 reading from the <code class="docutils literal notranslate"><span class="pre">operations</span></code> file.</p>
 </section>
 <section id="contexts-n-monitoring-attrs">
-<h3>contexts/&lt;N&gt;/monitoring_attrs/<a class="headerlink" href="#contexts-n-monitoring-attrs" title="Permalink to this headline">¶</a></h3>
+<span id="sysfs-monitoring-attrs"></span><h3>contexts/&lt;N&gt;/monitoring_attrs/<a class="headerlink" href="#contexts-n-monitoring-attrs" title="Permalink to this headline">¶</a></h3>
 <p>Files for specifying attributes of the monitoring including required quality
 and efficiency of the monitoring are in <code class="docutils literal notranslate"><span class="pre">monitoring_attrs</span></code> directory.
 Specifically, two directories, <code class="docutils literal notranslate"><span class="pre">intervals</span></code> and <code class="docutils literal notranslate"><span class="pre">nr_regions</span></code> exist in this
@@ -315,6 +248,8 @@ to <code class="docutils literal notranslate"><span class="pre">N-1</span></code
 <p>In each region directory, you will find two files (<code class="docutils literal notranslate"><span class="pre">start</span></code> and <code class="docutils literal notranslate"><span class="pre">end</span></code>).  You
 can set and get the start and end addresses of the initial monitoring target
 region by writing to and reading from the files, respectively.</p>
+<p>Each region should not overlap with others.  <code class="docutils literal notranslate"><span class="pre">end</span></code> of directory <code class="docutils literal notranslate"><span class="pre">N</span></code> should
+be equal or smaller than <code class="docutils literal notranslate"><span class="pre">start</span></code> of directory <code class="docutils literal notranslate"><span class="pre">N+1</span></code>.</p>
 </section>
 <section id="contexts-n-schemes">
 <h3>contexts/&lt;N&gt;/schemes/<a class="headerlink" href="#contexts-n-schemes" title="Permalink to this headline">¶</a></h3>
@@ -330,21 +265,32 @@ to <code class="docutils literal notranslate"><span class="pre">N-1</span></code
 </section>
 <section id="schemes-n">
 <h3>schemes/&lt;N&gt;/<a class="headerlink" href="#schemes-n" title="Permalink to this headline">¶</a></h3>
-<p>In each scheme directory, four directories (<code class="docutils literal notranslate"><span class="pre">access_pattern</span></code>, <code class="docutils literal notranslate"><span class="pre">quotas</span></code>,
-<code class="docutils literal notranslate"><span class="pre">watermarks</span></code>, and <code class="docutils literal notranslate"><span class="pre">stats</span></code>) and one file (<code class="docutils literal notranslate"><span class="pre">action</span></code>) exist.</p>
+<p>In each scheme directory, five directories (<code class="docutils literal notranslate"><span class="pre">access_pattern</span></code>, <code class="docutils literal notranslate"><span class="pre">quotas</span></code>,
+<code class="docutils literal notranslate"><span class="pre">watermarks</span></code>, <code class="docutils literal notranslate"><span class="pre">filters</span></code>, <code class="docutils literal notranslate"><span class="pre">stats</span></code>, and <code class="docutils literal notranslate"><span class="pre">tried_regions</span></code>) and one file
+(<code class="docutils literal notranslate"><span class="pre">action</span></code>) exist.</p>
 <p>The <code class="docutils literal notranslate"><span class="pre">action</span></code> file is for setting and getting what action you want to apply to
 memory regions having specific access pattern of the interest.  The keywords
 that can be written to and read from the file and their meaning are as below.</p>
+<p>Note that some actions could be unsupported depending on the running DAMON
+operations set <cite>implementation &lt;sysfs_contexts&gt;</cite>.</p>
 <blockquote>
 <div><ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">willneed</span></code>: Call <code class="docutils literal notranslate"><span class="pre">madvise()</span></code> for the region with <code class="docutils literal notranslate"><span class="pre">MADV_WILLNEED</span></code></p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">cold</span></code>: Call <code class="docutils literal notranslate"><span class="pre">madvise()</span></code> for the region with <code class="docutils literal notranslate"><span class="pre">MADV_COLD</span></code></p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">pageout</span></code>: Call <code class="docutils literal notranslate"><span class="pre">madvise()</span></code> for the region with <code class="docutils literal notranslate"><span class="pre">MADV_PAGEOUT</span></code></p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">hugepage</span></code>: Call <code class="docutils literal notranslate"><span class="pre">madvise()</span></code> for the region with <code class="docutils literal notranslate"><span class="pre">MADV_HUGEPAGE</span></code></p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">nohugepage</span></code>: Call <code class="docutils literal notranslate"><span class="pre">madvise()</span></code> for the region with <code class="docutils literal notranslate"><span class="pre">MADV_NOHUGEPAGE</span></code></p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">lru_prio</span></code>: Prioritize the region on its LRU lists.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">lru_deprio</span></code>: Deprioritize the region on its LRU lists.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">stat</span></code>: Do nothing but count the statistics</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">willneed</span></code>: Call <code class="docutils literal notranslate"><span class="pre">madvise()</span></code> for the region with <code class="docutils literal notranslate"><span class="pre">MADV_WILLNEED</span></code>.
+Supported by <code class="docutils literal notranslate"><span class="pre">vaddr</span></code> and <code class="docutils literal notranslate"><span class="pre">fvaddr</span></code> operations set.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">cold</span></code>: Call <code class="docutils literal notranslate"><span class="pre">madvise()</span></code> for the region with <code class="docutils literal notranslate"><span class="pre">MADV_COLD</span></code>.
+Supported by <code class="docutils literal notranslate"><span class="pre">vaddr</span></code> and <code class="docutils literal notranslate"><span class="pre">fvaddr</span></code> operations set.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">pageout</span></code>: Call <code class="docutils literal notranslate"><span class="pre">madvise()</span></code> for the region with <code class="docutils literal notranslate"><span class="pre">MADV_PAGEOUT</span></code>.
+Supported by <code class="docutils literal notranslate"><span class="pre">vaddr</span></code>, <code class="docutils literal notranslate"><span class="pre">fvaddr</span></code> and <code class="docutils literal notranslate"><span class="pre">paddr</span></code> operations set.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">hugepage</span></code>: Call <code class="docutils literal notranslate"><span class="pre">madvise()</span></code> for the region with <code class="docutils literal notranslate"><span class="pre">MADV_HUGEPAGE</span></code>.
+Supported by <code class="docutils literal notranslate"><span class="pre">vaddr</span></code> and <code class="docutils literal notranslate"><span class="pre">fvaddr</span></code> operations set.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">nohugepage</span></code>: Call <code class="docutils literal notranslate"><span class="pre">madvise()</span></code> for the region with <code class="docutils literal notranslate"><span class="pre">MADV_NOHUGEPAGE</span></code>.
+Supported by <code class="docutils literal notranslate"><span class="pre">vaddr</span></code> and <code class="docutils literal notranslate"><span class="pre">fvaddr</span></code> operations set.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">lru_prio</span></code>: Prioritize the region on its LRU lists.
+Supported by <code class="docutils literal notranslate"><span class="pre">paddr</span></code> operations set.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">lru_deprio</span></code>: Deprioritize the region on its LRU lists.
+Supported by <code class="docutils literal notranslate"><span class="pre">paddr</span></code> operations set.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">stat</span></code>: Do nothing but count the statistics.
+Supported by all operations sets.</p></li>
 </ul>
 </div></blockquote>
 </section>
@@ -404,6 +350,42 @@ as below.</p>
 </div></blockquote>
 <p>The <code class="docutils literal notranslate"><span class="pre">interval</span></code> should written in microseconds unit.</p>
 </section>
+<section id="schemes-n-filters">
+<h3>schemes/&lt;N&gt;/filters/<a class="headerlink" href="#schemes-n-filters" title="Permalink to this headline">¶</a></h3>
+<p>Users could know something more than the kernel for specific types of memory.
+In the case, users could do their own management for the memory and hence
+doesn’t want DAMOS bothers that.  Users could limit DAMOS by setting the access
+pattern of the scheme and/or the monitoring regions for the purpose, but that
+can be inefficient in some cases.  In such cases, users could set non-access
+pattern driven filters using files in this directory.</p>
+<p>In the beginning, this directory has only one file, <code class="docutils literal notranslate"><span class="pre">nr_filters</span></code>.  Writing a
+number (<code class="docutils literal notranslate"><span class="pre">N</span></code>) to the file creates the number of child directories named <code class="docutils literal notranslate"><span class="pre">0</span></code>
+to <code class="docutils literal notranslate"><span class="pre">N-1</span></code>.  Each directory represents each filter.  The filters are evaluated
+in the numeric order.</p>
+<p>Each filter directory contains three files, namely <code class="docutils literal notranslate"><span class="pre">type</span></code>, <code class="docutils literal notranslate"><span class="pre">matcing</span></code>, and
+<code class="docutils literal notranslate"><span class="pre">memcg_path</span></code>.  You can write one of two special keywords, <code class="docutils literal notranslate"><span class="pre">anon</span></code> for
+anonymous pages, or <code class="docutils literal notranslate"><span class="pre">memcg</span></code> for specific memory cgroup filtering.  In case of
+the memory cgroup filtering, you can specify the memory cgroup of the interest
+by writing the path of the memory cgroup from the cgroups mount point to
+<code class="docutils literal notranslate"><span class="pre">memcg_path</span></code> file.  You can write <code class="docutils literal notranslate"><span class="pre">Y</span></code> or <code class="docutils literal notranslate"><span class="pre">N</span></code> to <code class="docutils literal notranslate"><span class="pre">matching</span></code> file to
+filter out pages that does or does not match to the type, respectively.  Then,
+the scheme’s action will not be applied to the pages that specified to be
+filtered out.</p>
+<p>For example, below restricts a DAMOS action to be applied to only non-anonymous
+pages of all memory cgroups except <code class="docutils literal notranslate"><span class="pre">/having_care_already</span></code>.:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span># echo 2 &gt; nr_filters
+# # filter out anonymous pages
+echo anon &gt; 0/type
+echo Y &gt; 0/matching
+# # further filter out all cgroups except one at &#39;/having_care_already&#39;
+echo memcg &gt; 1/type
+echo /having_care_already &gt; 1/memcg_path
+echo N &gt; 1/matching
+</pre></div>
+</div>
+<p>Note that filters are currently supported only when <code class="docutils literal notranslate"><span class="pre">paddr</span></code>
+<cite>implementation &lt;sysfs_contexts&gt;</cite> is being used.</p>
+</section>
 <section id="schemes-n-stats">
 <span id="sysfs-schemes-stats"></span><h3>schemes/&lt;N&gt;/stats/<a class="headerlink" href="#schemes-n-stats" title="Permalink to this headline">¶</a></h3>
 <p>DAMON counts the total number and bytes of regions that each scheme is tried to
@@ -416,6 +398,27 @@ be used for online analysis or tuning of the schemes.</p>
 should ask DAMON sysfs interface to updte the content of the files for the
 stats by writing a special keyword, <code class="docutils literal notranslate"><span class="pre">update_schemes_stats</span></code> to the relevant
 <code class="docutils literal notranslate"><span class="pre">kdamonds/&lt;N&gt;/state</span></code> file.</p>
+</section>
+<section id="schemes-n-tried-regions">
+<span id="sysfs-schemes-tried-regions"></span><h3>schemes/&lt;N&gt;/tried_regions/<a class="headerlink" href="#schemes-n-tried-regions" title="Permalink to this headline">¶</a></h3>
+<p>When a special keyword, <code class="docutils literal notranslate"><span class="pre">update_schemes_tried_regions</span></code>, is written to the
+relevant <code class="docutils literal notranslate"><span class="pre">kdamonds/&lt;N&gt;/state</span></code> file, DAMON creates directories named integer
+starting from <code class="docutils literal notranslate"><span class="pre">0</span></code> under this directory.  Each directory contains files
+exposing detailed information about each of the memory region that the
+corresponding scheme’s <code class="docutils literal notranslate"><span class="pre">action</span></code> has tried to be applied under this directory,
+during next <a class="reference internal" href="#sysfs-monitoring-attrs"><span class="std std-ref">aggregation interval</span></a>.  The
+information includes address range, <code class="docutils literal notranslate"><span class="pre">nr_accesses</span></code>, , and <code class="docutils literal notranslate"><span class="pre">age</span></code> of the
+region.</p>
+<p>The directories will be removed when another special keyword,
+<code class="docutils literal notranslate"><span class="pre">clear_schemes_tried_regions</span></code>, is written to the relevant
+<code class="docutils literal notranslate"><span class="pre">kdamonds/&lt;N&gt;/state</span></code> file.</p>
+</section>
+<section id="tried-regions-n">
+<h3>tried_regions/&lt;N&gt;/<a class="headerlink" href="#tried-regions-n" title="Permalink to this headline">¶</a></h3>
+<p>In each region directory, you will find four files (<code class="docutils literal notranslate"><span class="pre">start</span></code>, <code class="docutils literal notranslate"><span class="pre">end</span></code>,
+<code class="docutils literal notranslate"><span class="pre">nr_accesses</span></code>, and <code class="docutils literal notranslate"><span class="pre">age</span></code>).  Reading the files will show the start and end
+addresses, <code class="docutils literal notranslate"><span class="pre">nr_accesses</span></code>, and <code class="docutils literal notranslate"><span class="pre">age</span></code> of the region that corresponding
+DAMON-based operation scheme <code class="docutils literal notranslate"><span class="pre">action</span></code> has tried to be applied.</p>
 <section id="example">
 <h4>Example<a class="headerlink" href="#example" title="Permalink to this headline">¶</a></h4>
 <p>Below commands applies a scheme saying “If a memory region of size in [4KiB,
@@ -432,12 +435,12 @@ memory rate becomes larger than 60%, or lower than 30%”.</p>
 # echo 1 &gt; kdamonds/0/contexts/0/schemes/nr_schemes
 # cd kdamonds/0/contexts/0/schemes/0
 # # set the basic access pattern and the action
-# echo 4096 &gt; access_patterns/sz/min
-# echo 8192 &gt; access_patterns/sz/max
-# echo 0 &gt; access_patterns/nr_accesses/min
-# echo 5 &gt; access_patterns/nr_accesses/max
-# echo 10 &gt; access_patterns/age/min
-# echo 20 &gt; access_patterns/age/max
+# echo 4096 &gt; access_pattern/sz/min
+# echo 8192 &gt; access_pattern/sz/max
+# echo 0 &gt; access_pattern/nr_accesses/min
+# echo 5 &gt; access_pattern/nr_accesses/max
+# echo 10 &gt; access_pattern/age/min
+# echo 20 &gt; access_pattern/age/max
 # echo pageout &gt; action
 # # set quotas
 # echo 10 &gt; quotas/ms
@@ -456,12 +459,13 @@ the files as above.  Above is only for an example.</p>
 </section>
 </section>
 </section>
-<section id="debugfs-interface">
-<span id="id2"></span><h2>debugfs Interface<a class="headerlink" href="#debugfs-interface" title="Permalink to this headline">¶</a></h2>
+<section id="debugfs-interface-deprecated">
+<span id="debugfs-interface"></span><h2>debugfs Interface (DEPRECATED!)<a class="headerlink" href="#debugfs-interface-deprecated" title="Permalink to this headline">¶</a></h2>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p>DAMON debugfs interface will be removed after next LTS kernel is released, so
-users should move to the <a class="reference internal" href="#sysfs-interface"><span class="std std-ref">sysfs interface</span></a>.</p>
+<p>THIS IS DEPRECATED!</p>
+<p>DAMON debugfs interface is deprecated, so users should move to the
+<a class="reference internal" href="#sysfs-interface"><span class="std std-ref">sysfs interface</span></a>.</p>
 </div>
 <p>DAMON exports eight files, <code class="docutils literal notranslate"><span class="pre">attrs</span></code>, <code class="docutils literal notranslate"><span class="pre">target_ids</span></code>, <code class="docutils literal notranslate"><span class="pre">init_regions</span></code>,
 <code class="docutils literal notranslate"><span class="pre">schemes</span></code>, <code class="docutils literal notranslate"><span class="pre">monitor_on</span></code>, <code class="docutils literal notranslate"><span class="pre">kdamond_pid</span></code>, <code class="docutils literal notranslate"><span class="pre">mk_contexts</span></code> and
@@ -522,8 +526,9 @@ regions adjustment’.</p>
 regions in case of physical memory monitoring.  Therefore, users should set the
 monitoring target regions by themselves.</p>
 <p>In such cases, users can explicitly set the initial monitoring target regions
-as they want, by writing proper values to the <code class="docutils literal notranslate"><span class="pre">init_regions</span></code> file.  Each line
-of the input should represent one region in below form.:</p>
+as they want, by writing proper values to the <code class="docutils literal notranslate"><span class="pre">init_regions</span></code> file.  The input
+should be a sequence of three integers separated by white spaces that represent
+one region in below form.:</p>
 <div class="highlight-none notranslate"><div class="highlight"><pre><span></span>&lt;target idx&gt; &lt;start address&gt; &lt;end address&gt;
 </pre></div>
 </div>
@@ -537,9 +542,9 @@ ranges, <code class="docutils literal notranslate"><span class="pre">20-40</span
 <div class="highlight-none notranslate"><div class="highlight"><pre><span></span># cd &lt;debugfs&gt;/damon
 # cat target_ids
 42 4242
-# echo &quot;0   1       100
-        0   100     200
-        1   20      40
+# echo &quot;0   1       100 \
+        0   100     200 \
+        1   20      40  \
         1   50      100&quot; &gt; init_regions
 </pre></div>
 </div>
@@ -583,11 +588,15 @@ DAMON will apply to the regions having the target access pattern.  The
 supported numbers and their meanings are as below.</p>
 <blockquote>
 <div><ul class="simple">
-<li><p>0: Call <code class="docutils literal notranslate"><span class="pre">madvise()</span></code> for the region with <code class="docutils literal notranslate"><span class="pre">MADV_WILLNEED</span></code></p></li>
-<li><p>1: Call <code class="docutils literal notranslate"><span class="pre">madvise()</span></code> for the region with <code class="docutils literal notranslate"><span class="pre">MADV_COLD</span></code></p></li>
-<li><p>2: Call <code class="docutils literal notranslate"><span class="pre">madvise()</span></code> for the region with <code class="docutils literal notranslate"><span class="pre">MADV_PAGEOUT</span></code></p></li>
-<li><p>3: Call <code class="docutils literal notranslate"><span class="pre">madvise()</span></code> for the region with <code class="docutils literal notranslate"><span class="pre">MADV_HUGEPAGE</span></code></p></li>
-<li><p>4: Call <code class="docutils literal notranslate"><span class="pre">madvise()</span></code> for the region with <code class="docutils literal notranslate"><span class="pre">MADV_NOHUGEPAGE</span></code></p></li>
+<li><p>0: Call <code class="docutils literal notranslate"><span class="pre">madvise()</span></code> for the region with <code class="docutils literal notranslate"><span class="pre">MADV_WILLNEED</span></code>.  Ignored if
+<code class="docutils literal notranslate"><span class="pre">target</span></code> is <code class="docutils literal notranslate"><span class="pre">paddr</span></code>.</p></li>
+<li><p>1: Call <code class="docutils literal notranslate"><span class="pre">madvise()</span></code> for the region with <code class="docutils literal notranslate"><span class="pre">MADV_COLD</span></code>.  Ignored if
+<code class="docutils literal notranslate"><span class="pre">target</span></code> is <code class="docutils literal notranslate"><span class="pre">paddr</span></code>.</p></li>
+<li><p>2: Call <code class="docutils literal notranslate"><span class="pre">madvise()</span></code> for the region with <code class="docutils literal notranslate"><span class="pre">MADV_PAGEOUT</span></code>.</p></li>
+<li><p>3: Call <code class="docutils literal notranslate"><span class="pre">madvise()</span></code> for the region with <code class="docutils literal notranslate"><span class="pre">MADV_HUGEPAGE</span></code>.  Ignored if
+<code class="docutils literal notranslate"><span class="pre">target</span></code> is <code class="docutils literal notranslate"><span class="pre">paddr</span></code>.</p></li>
+<li><p>4: Call <code class="docutils literal notranslate"><span class="pre">madvise()</span></code> for the region with <code class="docutils literal notranslate"><span class="pre">MADV_NOHUGEPAGE</span></code>.  Ignored if
+<code class="docutils literal notranslate"><span class="pre">target</span></code> is <code class="docutils literal notranslate"><span class="pre">paddr</span></code>.</p></li>
 <li><p>5: Do nothing but count the statistics</p></li>
 </ul>
 </div></blockquote>
@@ -645,8 +654,8 @@ be used for online analysis or tuning of the schemes.</p>
 will show each scheme you entered in each line, and the five numbers for the
 statistics will be added at the end of each line.</p>
 </section>
-<section id="id3">
-<h4>Example<a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h4>
+<section id="id2">
+<h4>Example<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h4>
 <p>Below commands applies a scheme saying “If a memory region of size in [4KiB,
 8KiB] is showing accesses per aggregate interval in [0, 5] for aggregate
 interval in [10, 20], page out the region.  For the paging out, use only up to
@@ -746,34 +755,111 @@ like <code class="docutils literal notranslate"><span class="pre">perf</span></c
 </section>
 
 
-           </div>
           </div>
-          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="guide.html" class="btn btn-neutral float-left" title="Optimization Guide" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="reclaim.html" class="btn btn-neutral float-right" title="DAMON-based Reclamation" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
-    </div>
-
-  <hr/>
-
-  <div role="contentinfo">
-    <p>&#169; Copyright The kernel development community.</p>
-  </div>
-
-  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
-    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
-    provided by <a href="https://readthedocs.org">Read the Docs</a>.
-   
-
-</footer>
+          
         </div>
       </div>
-    </section>
-  </div>
-  <script>
-      jQuery(function () {
-          SphinxRtdTheme.Navigation.enable(true);
-      });
-  </script> 
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../../../index.html">The Linux Kernel</a></h1>
 
-</body>
+
+
+<p class="blurb">6.1.0-mm-unstable-damon</p>
+
+
+
+
+
+
+
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+  <h3><a href="../../../index.html">Table of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Detailed Usages</a><ul>
+<li><a class="reference internal" href="#sysfs-interface">sysfs Interface</a><ul>
+<li><a class="reference internal" href="#files-hierarchy">Files Hierarchy</a></li>
+<li><a class="reference internal" href="#root">Root</a></li>
+<li><a class="reference internal" href="#kdamonds">kdamonds/</a></li>
+<li><a class="reference internal" href="#kdamonds-n">kdamonds/&lt;N&gt;/</a></li>
+<li><a class="reference internal" href="#kdamonds-n-contexts">kdamonds/&lt;N&gt;/contexts/</a></li>
+<li><a class="reference internal" href="#contexts-n">contexts/&lt;N&gt;/</a></li>
+<li><a class="reference internal" href="#contexts-n-monitoring-attrs">contexts/&lt;N&gt;/monitoring_attrs/</a></li>
+<li><a class="reference internal" href="#contexts-n-targets">contexts/&lt;N&gt;/targets/</a></li>
+<li><a class="reference internal" href="#targets-n">targets/&lt;N&gt;/</a></li>
+<li><a class="reference internal" href="#targets-n-regions">targets/&lt;N&gt;/regions</a></li>
+<li><a class="reference internal" href="#regions-n">regions/&lt;N&gt;/</a></li>
+<li><a class="reference internal" href="#contexts-n-schemes">contexts/&lt;N&gt;/schemes/</a></li>
+<li><a class="reference internal" href="#schemes-n">schemes/&lt;N&gt;/</a></li>
+<li><a class="reference internal" href="#schemes-n-access-pattern">schemes/&lt;N&gt;/access_pattern/</a></li>
+<li><a class="reference internal" href="#schemes-n-quotas">schemes/&lt;N&gt;/quotas/</a></li>
+<li><a class="reference internal" href="#schemes-n-watermarks">schemes/&lt;N&gt;/watermarks/</a></li>
+<li><a class="reference internal" href="#schemes-n-filters">schemes/&lt;N&gt;/filters/</a></li>
+<li><a class="reference internal" href="#schemes-n-stats">schemes/&lt;N&gt;/stats/</a></li>
+<li><a class="reference internal" href="#schemes-n-tried-regions">schemes/&lt;N&gt;/tried_regions/</a></li>
+<li><a class="reference internal" href="#tried-regions-n">tried_regions/&lt;N&gt;/</a><ul>
+<li><a class="reference internal" href="#example">Example</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a class="reference internal" href="#debugfs-interface-deprecated">debugfs Interface (DEPRECATED!)</a><ul>
+<li><a class="reference internal" href="#attributes">Attributes</a></li>
+<li><a class="reference internal" href="#target-ids">Target IDs</a></li>
+<li><a class="reference internal" href="#initial-monitoring-target-regions">Initial Monitoring Target Regions</a></li>
+<li><a class="reference internal" href="#schemes">Schemes</a><ul>
+<li><a class="reference internal" href="#target-access-pattern">Target Access Pattern</a></li>
+<li><a class="reference internal" href="#action">Action</a></li>
+<li><a class="reference internal" href="#quota">Quota</a></li>
+<li><a class="reference internal" href="#watermarks">Watermarks</a></li>
+<li><a class="reference internal" href="#statistics">Statistics</a></li>
+<li><a class="reference internal" href="#id2">Example</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#turning-on-off">Turning On/Off</a></li>
+<li><a class="reference internal" href="#monitoring-thread-pid">Monitoring Thread PID</a></li>
+<li><a class="reference internal" href="#using-multiple-monitoring-threads">Using Multiple Monitoring Threads</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#tracepoint-for-monitoring-results">Tracepoint for Monitoring Results</a></li>
+</ul>
+</li>
+</ul>
+
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../../../_sources/admin-guide/mm/damon/usage.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;The kernel development community.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 2.4.4</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="../../../_sources/admin-guide/mm/damon/usage.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
 </html>

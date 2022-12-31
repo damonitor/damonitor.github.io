@@ -1,75 +1,39 @@
+
 <!DOCTYPE html>
-<html class="writer-html5" lang="en" >
-<head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>High Memory Handling &mdash; The Linux Kernel  documentation</title><link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+  <head>
+    <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>High Memory Handling &#8212; The Linux Kernel  documentation</title>
+    <link rel="stylesheet" href="../_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-      <link rel="stylesheet" href="../_static/theme_overrides.css" type="text/css" />
-      <link rel="stylesheet" href="../_static/theme_rtd_colors.css" type="text/css" />
-  <!--[if lt IE 9]>
-    <script src="../_static/js/html5shiv.min.js"></script>
-  <![endif]-->
-  <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
-        <script src="../_static/jquery.js"></script>
-        <script src="../_static/underscore.js"></script>
-        <script src="../_static/doctools.js"></script>
-        <script src="../_static/language_data.js"></script>
-    <script src="../_static/js/theme.js"></script>
+    <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/language_data.js"></script>
+    <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
     <link rel="index" title="Index" href="../genindex.html" />
-    <link rel="search" title="Search" href="../search.html" /> 
-</head>
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Page Reclaim" href="page_reclaim.html" />
+    <link rel="prev" title="Slab Allocation" href="slab.html" />
+   
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
 
-<body class="wy-body-for-nav"> 
-  <div class="wy-grid-for-nav">
-    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
-      <div class="wy-side-scroll">
-        <div class="wy-side-nav-search" >
-            <a href="../index.html" class="icon icon-home"> The Linux Kernel
-          </a>
-              <div class="version">
-                6.0.0-rc3-mm-unstable-damon
-              </div>
-<div role="search">
-  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" />
-    <input type="hidden" name="check_keywords" value="yes" />
-    <input type="hidden" name="area" value="default" />
-  </form>
-</div>
-        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
-              <ul>
-<li class="toctree-l1"><a class="reference internal" href="../admin-guide/mm/damon/index.html">DAMON: Data Access MONitor</a></li>
-</ul>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="damon/index.html">DAMON: Data Access MONitor</a></li>
-</ul>
+  </head><body>
+  
 
-        </div>
-      </div>
-    </nav>
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
 
-    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
-          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../index.html">The Linux Kernel</a>
-      </nav>
-
-      <div class="wy-nav-content">
-        <div class="rst-content">
-          <div role="navigation" aria-label="Page navigation">
-  <ul class="wy-breadcrumbs">
-      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
-      <li>High Memory Handling</li>
-      <li class="wy-breadcrumbs-aside">
-            <a href="../_sources/mm/highmem.rst.txt" rel="nofollow"> View page source</a>
-      </li>
-  </ul>
-  <hr/>
-</div>
-          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
-           <div itemprop="articleBody">
-             
+          <div class="body" role="main">
+            
   <section id="high-memory-handling">
 <span id="highmem"></span><h1>High Memory Handling<a class="headerlink" href="#high-memory-handling" title="Permalink to this headline">¶</a></h1>
 <p>By: Peter Zijlstra &lt;<a class="reference external" href="mailto:a&#46;p&#46;zijlstra&#37;&#52;&#48;chello&#46;nl">a<span>&#46;</span>p<span>&#46;</span>zijlstra<span>&#64;</span>chello<span>&#46;</span>nl</a>&gt;</p>
@@ -123,7 +87,8 @@ list shows them in order of preference of use.</p>
 <li><p><a class="reference internal" href="#c.kmap_local_page" title="kmap_local_page"><code class="xref c c-func docutils literal notranslate"><span class="pre">kmap_local_page()</span></code></a>.  This function is used to require short term mappings.
 It can be invoked from any context (including interrupts) but the mappings
 can only be used in the context which acquired them.</p>
-<p>This function should be preferred, where feasible, over all the others.</p>
+<p>This function should always be used. <a class="reference internal" href="#c.kmap_atomic" title="kmap_atomic"><code class="xref c c-func docutils literal notranslate"><span class="pre">kmap_atomic()</span></code></a> and <a class="reference internal" href="#c.kmap" title="kmap"><code class="xref c c-func docutils literal notranslate"><span class="pre">kmap()</span></code></a> have been
+deprecated.</p>
 <p>These mappings are thread-local and CPU-local, meaning that the mapping
 can only be accessed from within this thread and the thread is bound to the
 CPU while the mapping is active. Although preemption is never disabled by
@@ -158,10 +123,18 @@ because the map implementation is stack based. See <a class="reference internal"
 (included in the “Functions” section) for details on how to manage nested
 mappings.</p>
 </li>
-<li><p><a class="reference internal" href="#c.kmap_atomic" title="kmap_atomic"><code class="xref c c-func docutils literal notranslate"><span class="pre">kmap_atomic()</span></code></a>.  This permits a very short duration mapping of a single
-page.  Since the mapping is restricted to the CPU that issued it, it
-performs well, but the issuing task is therefore required to stay on that
-CPU until it has finished, lest some other task displace its mappings.</p>
+<li><p><a class="reference internal" href="#c.kmap_atomic" title="kmap_atomic"><code class="xref c c-func docutils literal notranslate"><span class="pre">kmap_atomic()</span></code></a>. This function has been deprecated; use <a class="reference internal" href="#c.kmap_local_page" title="kmap_local_page"><code class="xref c c-func docutils literal notranslate"><span class="pre">kmap_local_page()</span></code></a>.</p>
+<p>NOTE: Conversions to <a class="reference internal" href="#c.kmap_local_page" title="kmap_local_page"><code class="xref c c-func docutils literal notranslate"><span class="pre">kmap_local_page()</span></code></a> must take care to follow the mapping
+restrictions imposed on <a class="reference internal" href="#c.kmap_local_page" title="kmap_local_page"><code class="xref c c-func docutils literal notranslate"><span class="pre">kmap_local_page()</span></code></a>. Furthermore, the code between
+calls to <a class="reference internal" href="#c.kmap_atomic" title="kmap_atomic"><code class="xref c c-func docutils literal notranslate"><span class="pre">kmap_atomic()</span></code></a> and <a class="reference internal" href="#c.kunmap_atomic" title="kunmap_atomic"><code class="xref c c-func docutils literal notranslate"><span class="pre">kunmap_atomic()</span></code></a> may implicitly depend on the side
+effects of atomic mappings, i.e. disabling page faults or preemption, or both.
+In that case, explicit calls to pagefault_disable() or preempt_disable() or
+both must be made in conjunction with the use of <a class="reference internal" href="#c.kmap_local_page" title="kmap_local_page"><code class="xref c c-func docutils literal notranslate"><span class="pre">kmap_local_page()</span></code></a>.</p>
+<p>[Legacy documentation]</p>
+<p>This permits a very short duration mapping of a single page.  Since the
+mapping is restricted to the CPU that issued it, it performs well, but
+the issuing task is therefore required to stay on that CPU until it has
+finished, lest some other task displace its mappings.</p>
 <p><a class="reference internal" href="#c.kmap_atomic" title="kmap_atomic"><code class="xref c c-func docutils literal notranslate"><span class="pre">kmap_atomic()</span></code></a> may also be used by interrupt contexts, since it does not
 sleep and the callers too may not sleep until after <a class="reference internal" href="#c.kunmap_atomic" title="kunmap_atomic"><code class="xref c c-func docutils literal notranslate"><span class="pre">kunmap_atomic()</span></code></a> is
 called.</p>
@@ -170,11 +143,17 @@ and disable pagefaults. This could be a source of unwanted latency. Therefore
 users should prefer <a class="reference internal" href="#c.kmap_local_page" title="kmap_local_page"><code class="xref c c-func docutils literal notranslate"><span class="pre">kmap_local_page()</span></code></a> instead of <a class="reference internal" href="#c.kmap_atomic" title="kmap_atomic"><code class="xref c c-func docutils literal notranslate"><span class="pre">kmap_atomic()</span></code></a>.</p>
 <p>It is assumed that k[un]map_atomic() won’t fail.</p>
 </li>
-<li><p><a class="reference internal" href="#c.kmap" title="kmap"><code class="xref c c-func docutils literal notranslate"><span class="pre">kmap()</span></code></a>.  This should be used to make short duration mapping of a single
-page with no restrictions on preemption or migration. It comes with an
-overhead as mapping space is restricted and protected by a global lock
-for synchronization. When mapping is no longer needed, the address that
-the page was mapped to must be released with <a class="reference internal" href="#c.kunmap" title="kunmap"><code class="xref c c-func docutils literal notranslate"><span class="pre">kunmap()</span></code></a>.</p>
+<li><p><a class="reference internal" href="#c.kmap" title="kmap"><code class="xref c c-func docutils literal notranslate"><span class="pre">kmap()</span></code></a>. This function has been deprecated; use <a class="reference internal" href="#c.kmap_local_page" title="kmap_local_page"><code class="xref c c-func docutils literal notranslate"><span class="pre">kmap_local_page()</span></code></a>.</p>
+<p>NOTE: Conversions to <a class="reference internal" href="#c.kmap_local_page" title="kmap_local_page"><code class="xref c c-func docutils literal notranslate"><span class="pre">kmap_local_page()</span></code></a> must take care to follow the mapping
+restrictions imposed on <a class="reference internal" href="#c.kmap_local_page" title="kmap_local_page"><code class="xref c c-func docutils literal notranslate"><span class="pre">kmap_local_page()</span></code></a>. In particular, it is necessary to
+make sure that the kernel virtual memory pointer is only valid in the thread
+that obtained it.</p>
+<p>[Legacy documentation]</p>
+<p>This should be used to make short duration mapping of a single page with no
+restrictions on preemption or migration. It comes with an overhead as mapping
+space is restricted and protected by a global lock for synchronization. When
+mapping is no longer needed, the address that the page was mapped to must be
+released with <a class="reference internal" href="#c.kunmap" title="kunmap"><code class="xref c c-func docutils literal notranslate"><span class="pre">kunmap()</span></code></a>.</p>
 <p>Mapping changes must be propagated across all the CPUs. <a class="reference internal" href="#c.kmap" title="kmap"><code class="xref c c-func docutils literal notranslate"><span class="pre">kmap()</span></code></a> also
 requires global TLB invalidation when the kmap’s pool wraps and it might
 block when the mapping space is fully utilized until a slot becomes
@@ -235,6 +214,7 @@ void * <code class="sig-name descname">kmap</code><span class="sig-paren">(</spa
 <dd><p>Map a page for long term usage</p>
 </dd></dl>
 
+<div class="kernelindent docutils container">
 <p><strong>Parameters</strong></p>
 <dl class="simple">
 <dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">page</span> <span class="pre">*page</span></code></dt><dd><p>Pointer to the page to be mapped</p>
@@ -254,12 +234,14 @@ other contexts.</p>
 is limited and protected by a global lock. In case that there is no
 mapping slot available the function blocks until a slot is released via
 <a class="reference internal" href="#c.kunmap" title="kunmap"><code class="xref c c-func docutils literal notranslate"><span class="pre">kunmap()</span></code></a>.</p>
+</div>
 <dl class="function">
 <dt id="c.kunmap">
 void <code class="sig-name descname">kunmap</code><span class="sig-paren">(</span>struct page<em> *page</em><span class="sig-paren">)</span><a class="headerlink" href="#c.kunmap" title="Permalink to this definition">¶</a></dt>
 <dd><p>Unmap the virtual address mapped by <a class="reference internal" href="#c.kmap" title="kmap"><code class="xref c c-func docutils literal notranslate"><span class="pre">kmap()</span></code></a></p>
 </dd></dl>
 
+<div class="kernelindent docutils container">
 <p><strong>Parameters</strong></p>
 <dl class="simple">
 <dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">page</span> <span class="pre">*page</span></code></dt><dd><p>Pointer to the page which was mapped by <a class="reference internal" href="#c.kmap" title="kmap"><code class="xref c c-func docutils literal notranslate"><span class="pre">kmap()</span></code></a></p>
@@ -268,12 +250,14 @@ void <code class="sig-name descname">kunmap</code><span class="sig-paren">(</spa
 <p><strong>Description</strong></p>
 <p>Counterpart to <a class="reference internal" href="#c.kmap" title="kmap"><code class="xref c c-func docutils literal notranslate"><span class="pre">kmap()</span></code></a>. A NOOP for CONFIG_HIGHMEM=n and for mappings of
 pages in the low memory area.</p>
+</div>
 <dl class="function">
 <dt id="c.kmap_to_page">
 struct page * <code class="sig-name descname">kmap_to_page</code><span class="sig-paren">(</span>void<em> *addr</em><span class="sig-paren">)</span><a class="headerlink" href="#c.kmap_to_page" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get the page for a kmap’ed address</p>
 </dd></dl>
 
+<div class="kernelindent docutils container">
 <p><strong>Parameters</strong></p>
 <dl class="simple">
 <dt><code class="docutils literal notranslate"><span class="pre">void</span> <span class="pre">*addr</span></code></dt><dd><p>The address to look up</p>
@@ -281,23 +265,27 @@ struct page * <code class="sig-name descname">kmap_to_page</code><span class="si
 </dl>
 <p><strong>Return</strong></p>
 <p>The page which is mapped to <strong>addr</strong>.</p>
+</div>
 <dl class="function">
 <dt id="c.kmap_flush_unused">
 void <code class="sig-name descname">kmap_flush_unused</code><span class="sig-paren">(</span>void<span class="sig-paren">)</span><a class="headerlink" href="#c.kmap_flush_unused" title="Permalink to this definition">¶</a></dt>
 <dd><p>Flush all unused kmap mappings in order to remove stray mappings</p>
 </dd></dl>
 
+<div class="kernelindent docutils container">
 <p><strong>Parameters</strong></p>
 <dl class="simple">
 <dt><code class="docutils literal notranslate"><span class="pre">void</span></code></dt><dd><p>no arguments</p>
 </dd>
 </dl>
+</div>
 <dl class="function">
 <dt id="c.kmap_local_page">
 void * <code class="sig-name descname">kmap_local_page</code><span class="sig-paren">(</span>struct page<em> *page</em><span class="sig-paren">)</span><a class="headerlink" href="#c.kmap_local_page" title="Permalink to this definition">¶</a></dt>
 <dd><p>Map a page for temporary usage</p>
 </dd></dl>
 
+<div class="kernelindent docutils container">
 <p><strong>Parameters</strong></p>
 <dl class="simple">
 <dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">page</span> <span class="pre">*page</span></code></dt><dd><p>Pointer to the page to be mapped</p>
@@ -326,12 +314,14 @@ comes with restrictions about the pointer validity.</p>
 <p>On HIGHMEM enabled systems mapping a highmem page has the side effect of
 disabling migration in order to keep the virtual address stable across
 preemption. No caller of <a class="reference internal" href="#c.kmap_local_page" title="kmap_local_page"><code class="xref c c-func docutils literal notranslate"><span class="pre">kmap_local_page()</span></code></a> can rely on this side effect.</p>
+</div>
 <dl class="function">
 <dt id="c.kmap_local_folio">
 void * <code class="sig-name descname">kmap_local_folio</code><span class="sig-paren">(</span>struct <a class="reference internal" href="../core-api/mm-api.html#c.folio" title="folio">folio</a><em> *folio</em>, size_t<em> offset</em><span class="sig-paren">)</span><a class="headerlink" href="#c.kmap_local_folio" title="Permalink to this definition">¶</a></dt>
 <dd><p>Map a page in this folio for temporary usage</p>
 </dd></dl>
 
+<div class="kernelindent docutils container">
 <p><strong>Parameters</strong></p>
 <dl class="simple">
 <dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">folio</span> <span class="pre">*folio</span></code></dt><dd><p>The folio containing the page.</p>
@@ -366,12 +356,14 @@ preemption. No caller of <a class="reference internal" href="#c.kmap_local_folio
 <p>Can be invoked from any context.</p>
 <p><strong>Return</strong></p>
 <p>The virtual address of <strong>offset</strong>.</p>
+</div>
 <dl class="function">
 <dt id="c.kmap_atomic">
 void * <code class="sig-name descname">kmap_atomic</code><span class="sig-paren">(</span>struct page<em> *page</em><span class="sig-paren">)</span><a class="headerlink" href="#c.kmap_atomic" title="Permalink to this definition">¶</a></dt>
 <dd><p>Atomically map a page for temporary usage - Deprecated!</p>
 </dd></dl>
 
+<div class="kernelindent docutils container">
 <p><strong>Parameters</strong></p>
 <dl class="simple">
 <dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">page</span> <span class="pre">*page</span></code></dt><dd><p>Pointer to the page to be mapped</p>
@@ -411,12 +403,14 @@ vaddr2 = kmap_atomic(page2);</p>
 <p>memcpy(vaddr1, vaddr2, PAGE_SIZE);</p>
 <p>kunmap_atomic(vaddr2);
 kunmap_atomic(vaddr1);</p>
+</div>
 <dl class="function">
 <dt id="c.alloc_zeroed_user_highpage_movable">
 struct page * <code class="sig-name descname">alloc_zeroed_user_highpage_movable</code><span class="sig-paren">(</span>struct vm_area_struct<em> *vma</em>, unsigned long<em> vaddr</em><span class="sig-paren">)</span><a class="headerlink" href="#c.alloc_zeroed_user_highpage_movable" title="Permalink to this definition">¶</a></dt>
 <dd><p>Allocate a zeroed HIGHMEM page for a VMA that the caller knows can move</p>
 </dd></dl>
 
+<div class="kernelindent docutils container">
 <p><strong>Parameters</strong></p>
 <dl class="simple">
 <dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">vm_area_struct</span> <span class="pre">*vma</span></code></dt><dd><p>The VMA the page is to be allocated for</p>
@@ -432,12 +426,14 @@ be able to migrate in the future using move_pages() or reclaimed</p>
 <p>An architecture may override this function by defining
 __HAVE_ARCH_ALLOC_ZEROED_USER_HIGHPAGE_MOVABLE and providing their own
 implementation.</p>
+</div>
 <dl class="function">
 <dt id="c.folio_zero_segments">
 void <code class="sig-name descname">folio_zero_segments</code><span class="sig-paren">(</span>struct <a class="reference internal" href="../core-api/mm-api.html#c.folio" title="folio">folio</a><em> *folio</em>, size_t<em> start1</em>, size_t<em> xend1</em>, size_t<em> start2</em>, size_t<em> xend2</em><span class="sig-paren">)</span><a class="headerlink" href="#c.folio_zero_segments" title="Permalink to this definition">¶</a></dt>
 <dd><p>Zero two byte ranges in a folio.</p>
 </dd></dl>
 
+<div class="kernelindent docutils container">
 <p><strong>Parameters</strong></p>
 <dl class="simple">
 <dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">folio</span> <span class="pre">*folio</span></code></dt><dd><p>The folio to write to.</p>
@@ -451,12 +447,14 @@ void <code class="sig-name descname">folio_zero_segments</code><span class="sig-
 <dt><code class="docutils literal notranslate"><span class="pre">size_t</span> <span class="pre">xend2</span></code></dt><dd><p>One more than the last byte in the second range.</p>
 </dd>
 </dl>
+</div>
 <dl class="function">
 <dt id="c.folio_zero_segment">
 void <code class="sig-name descname">folio_zero_segment</code><span class="sig-paren">(</span>struct <a class="reference internal" href="../core-api/mm-api.html#c.folio" title="folio">folio</a><em> *folio</em>, size_t<em> start</em>, size_t<em> xend</em><span class="sig-paren">)</span><a class="headerlink" href="#c.folio_zero_segment" title="Permalink to this definition">¶</a></dt>
 <dd><p>Zero a byte range in a folio.</p>
 </dd></dl>
 
+<div class="kernelindent docutils container">
 <p><strong>Parameters</strong></p>
 <dl class="simple">
 <dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">folio</span> <span class="pre">*folio</span></code></dt><dd><p>The folio to write to.</p>
@@ -466,12 +464,14 @@ void <code class="sig-name descname">folio_zero_segment</code><span class="sig-p
 <dt><code class="docutils literal notranslate"><span class="pre">size_t</span> <span class="pre">xend</span></code></dt><dd><p>One more than the last byte to zero.</p>
 </dd>
 </dl>
+</div>
 <dl class="function">
 <dt id="c.folio_zero_range">
 void <code class="sig-name descname">folio_zero_range</code><span class="sig-paren">(</span>struct <a class="reference internal" href="../core-api/mm-api.html#c.folio" title="folio">folio</a><em> *folio</em>, size_t<em> start</em>, size_t<em> length</em><span class="sig-paren">)</span><a class="headerlink" href="#c.folio_zero_range" title="Permalink to this definition">¶</a></dt>
 <dd><p>Zero a byte range in a folio.</p>
 </dd></dl>
 
+<div class="kernelindent docutils container">
 <p><strong>Parameters</strong></p>
 <dl class="simple">
 <dt><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">folio</span> <span class="pre">*folio</span></code></dt><dd><p>The folio to write to.</p>
@@ -481,12 +481,14 @@ void <code class="sig-name descname">folio_zero_range</code><span class="sig-par
 <dt><code class="docutils literal notranslate"><span class="pre">size_t</span> <span class="pre">length</span></code></dt><dd><p>The number of bytes to zero.</p>
 </dd>
 </dl>
+</div>
 <dl class="function">
 <dt id="c.kunmap_atomic">
 <code class="sig-name descname">kunmap_atomic</code><span class="sig-paren">(</span><em>__addr</em><span class="sig-paren">)</span><a class="headerlink" href="#c.kunmap_atomic" title="Permalink to this definition">¶</a></dt>
 <dd><p>Unmap the virtual address mapped by <a class="reference internal" href="#c.kmap_atomic" title="kmap_atomic"><code class="xref c c-func docutils literal notranslate"><span class="pre">kmap_atomic()</span></code></a> - deprecated!</p>
 </dd></dl>
 
+<div class="kernelindent docutils container">
 <p><strong>Parameters</strong></p>
 <dl class="simple">
 <dt><code class="docutils literal notranslate"><span class="pre">__addr</span></code></dt><dd><p>Virtual address to be unmapped</p>
@@ -502,12 +504,14 @@ See <a class="reference internal" href="#c.kmap_local_page" title="kmap_local_pa
 to subtract any offset that has been added. In contrast to <a class="reference internal" href="#c.kunmap" title="kunmap"><code class="xref c c-func docutils literal notranslate"><span class="pre">kunmap()</span></code></a>,
 this function takes the address returned from <a class="reference internal" href="#c.kmap_atomic" title="kmap_atomic"><code class="xref c c-func docutils literal notranslate"><span class="pre">kmap_atomic()</span></code></a>, not the
 page passed to it. The compiler will warn you if you pass the page.</p>
+</div>
 <dl class="function">
 <dt id="c.kunmap_local">
 <code class="sig-name descname">kunmap_local</code><span class="sig-paren">(</span><em>__addr</em><span class="sig-paren">)</span><a class="headerlink" href="#c.kunmap_local" title="Permalink to this definition">¶</a></dt>
 <dd><p>Unmap a page mapped via <a class="reference internal" href="#c.kmap_local_page" title="kmap_local_page"><code class="xref c c-func docutils literal notranslate"><span class="pre">kmap_local_page()</span></code></a>.</p>
 </dd></dl>
 
+<div class="kernelindent docutils container">
 <p><strong>Parameters</strong></p>
 <dl class="simple">
 <dt><code class="docutils literal notranslate"><span class="pre">__addr</span></code></dt><dd><p>An address within the page mapped</p>
@@ -518,35 +522,76 @@ page passed to it. The compiler will warn you if you pass the page.</p>
 address return from <a class="reference internal" href="#c.kmap_local_page" title="kmap_local_page"><code class="xref c c-func docutils literal notranslate"><span class="pre">kmap_local_page()</span></code></a>, but it can also include offsets.</p>
 <p>Unmapping should be done in the reverse order of the mapping.  See
 <a class="reference internal" href="#c.kmap_local_page" title="kmap_local_page"><code class="xref c c-func docutils literal notranslate"><span class="pre">kmap_local_page()</span></code></a> for details.</p>
+</div>
 </section>
 </section>
 
 
-           </div>
           </div>
-          <footer>
-
-  <hr/>
-
-  <div role="contentinfo">
-    <p>&#169; Copyright The kernel development community.</p>
-  </div>
-
-  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
-    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
-    provided by <a href="https://readthedocs.org">Read the Docs</a>.
-   
-
-</footer>
+          
         </div>
       </div>
-    </section>
-  </div>
-  <script>
-      jQuery(function () {
-          SphinxRtdTheme.Navigation.enable(true);
-      });
-  </script> 
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../index.html">The Linux Kernel</a></h1>
 
-</body>
+
+
+<p class="blurb">6.1.0-mm-unstable-damon</p>
+
+
+
+
+
+
+
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+  <h3><a href="../index.html">Table of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">High Memory Handling</a><ul>
+<li><a class="reference internal" href="#what-is-high-memory">What Is High Memory?</a></li>
+<li><a class="reference internal" href="#temporary-virtual-mappings">Temporary Virtual Mappings</a></li>
+<li><a class="reference internal" href="#cost-of-temporary-mappings">Cost of Temporary Mappings</a></li>
+<li><a class="reference internal" href="#i386-pae">i386 PAE</a></li>
+<li><a class="reference internal" href="#functions">Functions</a></li>
+</ul>
+</li>
+</ul>
+
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/mm/highmem.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;The kernel development community.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 2.4.4</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="../_sources/mm/highmem.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
 </html>

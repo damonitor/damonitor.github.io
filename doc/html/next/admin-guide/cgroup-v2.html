@@ -1,75 +1,39 @@
+
 <!DOCTYPE html>
-<html class="writer-html5" lang="en" >
-<head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Control Group v2 &mdash; The Linux Kernel  documentation</title><link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+  <head>
+    <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>Control Group v2 &#8212; The Linux Kernel  documentation</title>
+    <link rel="stylesheet" href="../_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-      <link rel="stylesheet" href="../_static/theme_overrides.css" type="text/css" />
-      <link rel="stylesheet" href="../_static/theme_rtd_colors.css" type="text/css" />
-  <!--[if lt IE 9]>
-    <script src="../_static/js/html5shiv.min.js"></script>
-  <![endif]-->
-  <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
-        <script src="../_static/jquery.js"></script>
-        <script src="../_static/underscore.js"></script>
-        <script src="../_static/doctools.js"></script>
-        <script src="../_static/language_data.js"></script>
-    <script src="../_static/js/theme.js"></script>
+    <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/language_data.js"></script>
+    <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
     <link rel="index" title="Index" href="../genindex.html" />
-    <link rel="search" title="Search" href="../search.html" /> 
-</head>
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="CIFS" href="cifs/index.html" />
+    <link rel="prev" title="RDMA Controller" href="cgroup-v1/rdma.html" />
+   
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
 
-<body class="wy-body-for-nav"> 
-  <div class="wy-grid-for-nav">
-    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
-      <div class="wy-side-scroll">
-        <div class="wy-side-nav-search" >
-            <a href="../index.html" class="icon icon-home"> The Linux Kernel
-          </a>
-              <div class="version">
-                6.0.0-rc3-mm-unstable-damon
-              </div>
-<div role="search">
-  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" />
-    <input type="hidden" name="check_keywords" value="yes" />
-    <input type="hidden" name="area" value="default" />
-  </form>
-</div>
-        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
-              <ul>
-<li class="toctree-l1"><a class="reference internal" href="mm/damon/index.html">DAMON: Data Access MONitor</a></li>
-</ul>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="../mm/damon/index.html">DAMON: Data Access MONitor</a></li>
-</ul>
+  </head><body>
+  
 
-        </div>
-      </div>
-    </nav>
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
 
-    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
-          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../index.html">The Linux Kernel</a>
-      </nav>
-
-      <div class="wy-nav-content">
-        <div class="rst-content">
-          <div role="navigation" aria-label="Page navigation">
-  <ul class="wy-breadcrumbs">
-      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
-      <li>Control Group v2</li>
-      <li class="wy-breadcrumbs-aside">
-            <a href="../_sources/admin-guide/cgroup-v2.rst.txt" rel="nofollow"> View page source</a>
-      </li>
-  </ul>
-  <hr/>
-</div>
-          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
-           <div itemprop="articleBody">
-             
+          <div class="body" role="main">
+            
   <section id="control-group-v2">
 <span id="cgroup-v2"></span><h1>Control Group v2<a class="headerlink" href="#control-group-v2" title="Permalink to this headline">¶</a></h1>
 <dl class="field-list simple">
@@ -842,6 +806,23 @@ is protected against migrations.</p>
 killing cgroups is a process directed operation, i.e. it affects
 the whole thread-group.</p>
 </dd>
+<dt>cgroup.pressure</dt><dd><p>A read-write single value file that allowed values are “0” and “1”.
+The default is “1”.</p>
+<p>Writing “0” to the file will disable the cgroup PSI accounting.
+Writing “1” to the file will re-enable the cgroup PSI accounting.</p>
+<p>This control attribute is not hierarchical, so disable or enable PSI
+accounting in a cgroup does not affect PSI accounting in descendants
+and doesn’t need pass enablement via ancestors from root.</p>
+<p>The reason this control attribute exists is that PSI accounts stalls for
+each cgroup separately and aggregates it at each level of the hierarchy.
+This may cause non-negligible overhead for some workloads when under
+deep level of the hierarchy, in which case this control attribute can
+be used to disable PSI accounting in the non-leaf cgroups.</p>
+</dd>
+<dt>irq.pressure</dt><dd><p>A read-write nested-keyed file.</p>
+<p>Shows pressure stall information for IRQ/SOFTIRQ. See
+<a class="reference internal" href="../accounting/psi.html#psi"><span class="std std-ref">Documentation/accounting/psi.rst</span></a> for details.</p>
+</dd>
 </dl>
 </div></blockquote>
 </section>
@@ -1148,6 +1129,10 @@ addition to other kernel memory use cases.</p>
 </dd>
 <dt>pagetables</dt><dd><p>Amount of memory allocated for page tables.</p>
 </dd>
+<dt>sec_pagetables</dt><dd><p>Amount of memory allocated for secondary page tables,
+this currently includes KVM mmu allocations on x86
+and arm64.</p>
+</dd>
 <dt>percpu (npn)</dt><dd><p>Amount of memory used for storing per-cpu kernel
 data structures.</p>
 </dd>
@@ -1224,9 +1209,13 @@ active workingset before they got reclaimed.</p>
 </dd>
 <dt>pgscan_direct (npn)</dt><dd><p>Amount of scanned pages directly  (in an inactive LRU list)</p>
 </dd>
+<dt>pgscan_khugepaged (npn)</dt><dd><p>Amount of scanned pages by khugepaged  (in an inactive LRU list)</p>
+</dd>
 <dt>pgsteal_kswapd (npn)</dt><dd><p>Amount of reclaimed pages by kswapd</p>
 </dd>
 <dt>pgsteal_direct (npn)</dt><dd><p>Amount of reclaimed pages directly</p>
+</dd>
+<dt>pgsteal_khugepaged (npn)</dt><dd><p>Amount of reclaimed pages by khugepaged</p>
 </dd>
 <dt>pgfault (npn)</dt><dd><p>Total number of page faults incurred</p>
 </dd>
@@ -1956,58 +1945,8 @@ and is not delegatable.</p>
 <blockquote>
 <div><table class="docutils align-default">
 <colgroup>
-<col style="width: 20%" />
-<col style="width: 80%" />
-</colgroup>
-<tbody>
-<tr class="row-odd"><td><p>“root”</p></td>
-<td><p>a partition root</p></td>
-</tr>
-<tr class="row-even"><td><p>“member”</p></td>
-<td><p>a non-root member of a partition</p></td>
-</tr>
-</tbody>
-</table>
-</div></blockquote>
-<p>When set to be a partition root, the current cgroup is the
-root of a new partition or scheduling domain that comprises
-itself and all its descendants except those that are separate
-partition roots themselves and their descendants.  The root
-cgroup is always a partition root.</p>
-<p>There are constraints on where a partition root can be set.
-It can only be set in a cgroup if all the following conditions
-are true.</p>
-<ol class="arabic simple">
-<li><p>The “cpuset.cpus” is not empty and the list of CPUs are
-exclusive, i.e. they are not shared by any of its siblings.</p></li>
-<li><p>The parent cgroup is a partition root.</p></li>
-<li><p>The “cpuset.cpus” is also a proper subset of the parent’s
-“cpuset.cpus.effective”.</p></li>
-<li><p>There is no child cgroups with cpuset enabled.  This is for
-eliminating corner cases that have to be handled if such a
-condition is allowed.</p></li>
-</ol>
-<p>Setting it to partition root will take the CPUs away from the
-effective CPUs of the parent cgroup.  Once it is set, this
-file cannot be reverted back to “member” if there are any child
-cgroups with cpuset enabled.</p>
-<p>A parent partition cannot distribute all its CPUs to its
-child partitions.  There must be at least one cpu left in the
-parent partition.</p>
-<p>Once becoming a partition root, changes to “cpuset.cpus” is
-generally allowed as long as the first condition above is true,
-the change will not take away all the CPUs from the parent
-partition and the new “cpuset.cpus” value is a superset of its
-children’s “cpuset.cpus” values.</p>
-<p>Sometimes, external factors like changes to ancestors’
-“cpuset.cpus” or cpu hotplug can cause the state of the partition
-root to change.  On read, the “cpuset.sched.partition” file
-can show the following values.</p>
-<blockquote>
-<div><table class="docutils align-default">
-<colgroup>
-<col style="width: 32%" />
-<col style="width: 68%" />
+<col style="width: 21%" />
+<col style="width: 79%" />
 </colgroup>
 <tbody>
 <tr class="row-odd"><td><p>“member”</p></td>
@@ -2016,29 +1955,98 @@ can show the following values.</p>
 <tr class="row-even"><td><p>“root”</p></td>
 <td><p>Partition root</p></td>
 </tr>
-<tr class="row-odd"><td><p>“root invalid”</p></td>
-<td><p>Invalid partition root</p></td>
+<tr class="row-odd"><td><p>“isolated”</p></td>
+<td><p>Partition root without load balancing</p></td>
 </tr>
 </tbody>
 </table>
 </div></blockquote>
-<p>It is a partition root if the first 2 partition root conditions
-above are true and at least one CPU from “cpuset.cpus” is
-granted by the parent cgroup.</p>
-<p>A partition root can become invalid if none of CPUs requested
-in “cpuset.cpus” can be granted by the parent cgroup or the
-parent cgroup is no longer a partition root itself.  In this
-case, it is not a real partition even though the restriction
-of the first partition root condition above will still apply.
-The cpu affinity of all the tasks in the cgroup will then be
-associated with CPUs in the nearest ancestor partition.</p>
-<p>An invalid partition root can be transitioned back to a
-real partition root if at least one of the requested CPUs
-can now be granted by its parent.  In this case, the cpu
-affinity of all the tasks in the formerly invalid partition
-will be associated to the CPUs of the newly formed partition.
-Changing the partition state of an invalid partition root to
-“member” is always allowed even if child cpusets are present.</p>
+<p>The root cgroup is always a partition root and its state
+cannot be changed.  All other non-root cgroups start out as
+“member”.</p>
+<p>When set to “root”, the current cgroup is the root of a new
+partition or scheduling domain that comprises itself and all
+its descendants except those that are separate partition roots
+themselves and their descendants.</p>
+<p>When set to “isolated”, the CPUs in that partition root will
+be in an isolated state without any load balancing from the
+scheduler.  Tasks placed in such a partition with multiple
+CPUs should be carefully distributed and bound to each of the
+individual CPUs for optimal performance.</p>
+<p>The value shown in “cpuset.cpus.effective” of a partition root
+is the CPUs that the partition root can dedicate to a potential
+new child partition root. The new child subtracts available
+CPUs from its parent “cpuset.cpus.effective”.</p>
+<p>A partition root (“root” or “isolated”) can be in one of the
+two possible states - valid or invalid.  An invalid partition
+root is in a degraded state where some state information may
+be retained, but behaves more like a “member”.</p>
+<p>All possible state transitions among “member”, “root” and
+“isolated” are allowed.</p>
+<p>On read, the “cpuset.cpus.partition” file can show the following
+values.</p>
+<blockquote>
+<div><table class="docutils align-default">
+<colgroup>
+<col style="width: 44%" />
+<col style="width: 56%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p>“member”</p></td>
+<td><p>Non-root member of a partition</p></td>
+</tr>
+<tr class="row-even"><td><p>“root”</p></td>
+<td><p>Partition root</p></td>
+</tr>
+<tr class="row-odd"><td><p>“isolated”</p></td>
+<td><p>Partition root without load balancing</p></td>
+</tr>
+<tr class="row-even"><td><p>“root invalid (&lt;reason&gt;)”</p></td>
+<td><p>Invalid partition root</p></td>
+</tr>
+<tr class="row-odd"><td><p>“isolated invalid (&lt;reason&gt;)”</p></td>
+<td><p>Invalid isolated partition root</p></td>
+</tr>
+</tbody>
+</table>
+</div></blockquote>
+<p>In the case of an invalid partition root, a descriptive string on
+why the partition is invalid is included within parentheses.</p>
+<p>For a partition root to become valid, the following conditions
+must be met.</p>
+<ol class="arabic simple">
+<li><p>The “cpuset.cpus” is exclusive with its siblings , i.e. they
+are not shared by any of its siblings (exclusivity rule).</p></li>
+<li><p>The parent cgroup is a valid partition root.</p></li>
+<li><p>The “cpuset.cpus” is not empty and must contain at least
+one of the CPUs from parent’s “cpuset.cpus”, i.e. they overlap.</p></li>
+<li><p>The “cpuset.cpus.effective” cannot be empty unless there is
+no task associated with this partition.</p></li>
+</ol>
+<p>External events like hotplug or changes to “cpuset.cpus” can
+cause a valid partition root to become invalid and vice versa.
+Note that a task cannot be moved to a cgroup with empty
+“cpuset.cpus.effective”.</p>
+<p>For a valid partition root with the sibling cpu exclusivity
+rule enabled, changes made to “cpuset.cpus” that violate the
+exclusivity rule will invalidate the partition as well as its
+sibiling partitions with conflicting cpuset.cpus values. So
+care must be taking in changing “cpuset.cpus”.</p>
+<p>A valid non-root parent partition may distribute out all its CPUs
+to its child partitions when there is no task associated with it.</p>
+<p>Care must be taken to change a valid partition root to
+“member” as all its child partitions, if present, will become
+invalid causing disruption to tasks running in those child
+partitions. These inactivated partitions could be recovered if
+their parent is switched back to a partition root with a proper
+set of “cpuset.cpus”.</p>
+<p>Poll and inotify events are triggered whenever the state of
+“cpuset.cpus.partition” changes.  That includes changes caused
+by write to “cpuset.cpus.partition”, cpu hotplug or other
+changes that modify the validity status of the partition.
+This will allow user space agents to monitor unexpected changes
+to “cpuset.cpus.partition” without the need to do continuous
+polling.</p>
 </dd>
 </dl>
 </div></blockquote>
@@ -2652,31 +2660,186 @@ and that’s why unified hierarchy allows distributing it separately.</p>
 </section>
 
 
-           </div>
           </div>
-          <footer>
-
-  <hr/>
-
-  <div role="contentinfo">
-    <p>&#169; Copyright The kernel development community.</p>
-  </div>
-
-  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
-    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
-    provided by <a href="https://readthedocs.org">Read the Docs</a>.
-   
-
-</footer>
+          
         </div>
       </div>
-    </section>
-  </div>
-  <script>
-      jQuery(function () {
-          SphinxRtdTheme.Navigation.enable(true);
-      });
-  </script> 
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../index.html">The Linux Kernel</a></h1>
 
-</body>
+
+
+<p class="blurb">6.1.0-mm-unstable-damon</p>
+
+
+
+
+
+
+
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+  <h3><a href="../index.html">Table of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Control Group v2</a><ul>
+<li><a class="reference internal" href="#introduction">Introduction</a><ul>
+<li><a class="reference internal" href="#terminology">Terminology</a></li>
+<li><a class="reference internal" href="#what-is-cgroup">What is cgroup?</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#basic-operations">Basic Operations</a><ul>
+<li><a class="reference internal" href="#mounting">Mounting</a></li>
+<li><a class="reference internal" href="#organizing-processes-and-threads">Organizing Processes and Threads</a><ul>
+<li><a class="reference internal" href="#processes">Processes</a></li>
+<li><a class="reference internal" href="#threads">Threads</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#un-populated-notification">[Un]populated Notification</a></li>
+<li><a class="reference internal" href="#controlling-controllers">Controlling Controllers</a><ul>
+<li><a class="reference internal" href="#enabling-and-disabling">Enabling and Disabling</a></li>
+<li><a class="reference internal" href="#top-down-constraint">Top-down Constraint</a></li>
+<li><a class="reference internal" href="#no-internal-process-constraint">No Internal Process Constraint</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#delegation">Delegation</a><ul>
+<li><a class="reference internal" href="#model-of-delegation">Model of Delegation</a></li>
+<li><a class="reference internal" href="#delegation-containment">Delegation Containment</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#guidelines">Guidelines</a><ul>
+<li><a class="reference internal" href="#organize-once-and-control">Organize Once and Control</a></li>
+<li><a class="reference internal" href="#avoid-name-collisions">Avoid Name Collisions</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a class="reference internal" href="#resource-distribution-models">Resource Distribution Models</a><ul>
+<li><a class="reference internal" href="#weights">Weights</a></li>
+<li><a class="reference internal" href="#limits">Limits</a></li>
+<li><a class="reference internal" href="#protections">Protections</a></li>
+<li><a class="reference internal" href="#allocations">Allocations</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#interface-files">Interface Files</a><ul>
+<li><a class="reference internal" href="#format">Format</a></li>
+<li><a class="reference internal" href="#conventions">Conventions</a></li>
+<li><a class="reference internal" href="#core-interface-files">Core Interface Files</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#controllers">Controllers</a><ul>
+<li><a class="reference internal" href="#cpu">CPU</a><ul>
+<li><a class="reference internal" href="#cpu-interface-files">CPU Interface Files</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#memory">Memory</a><ul>
+<li><a class="reference internal" href="#memory-interface-files">Memory Interface Files</a></li>
+<li><a class="reference internal" href="#usage-guidelines">Usage Guidelines</a></li>
+<li><a class="reference internal" href="#memory-ownership">Memory Ownership</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#io">IO</a><ul>
+<li><a class="reference internal" href="#io-interface-files">IO Interface Files</a></li>
+<li><a class="reference internal" href="#writeback">Writeback</a></li>
+<li><a class="reference internal" href="#io-latency">IO Latency</a></li>
+<li><a class="reference internal" href="#how-io-latency-throttling-works">How IO Latency Throttling Works</a></li>
+<li><a class="reference internal" href="#io-latency-interface-files">IO Latency Interface Files</a></li>
+<li><a class="reference internal" href="#io-priority">IO Priority</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#pid">PID</a><ul>
+<li><a class="reference internal" href="#pid-interface-files">PID Interface Files</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#cpuset">Cpuset</a><ul>
+<li><a class="reference internal" href="#cpuset-interface-files">Cpuset Interface Files</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#device-controller">Device controller</a></li>
+<li><a class="reference internal" href="#rdma">RDMA</a><ul>
+<li><a class="reference internal" href="#rdma-interface-files">RDMA Interface Files</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#hugetlb">HugeTLB</a><ul>
+<li><a class="reference internal" href="#hugetlb-interface-files">HugeTLB Interface Files</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#misc">Misc</a><ul>
+<li><a class="reference internal" href="#misc-interface-files">Misc Interface Files</a></li>
+<li><a class="reference internal" href="#migration-and-ownership">Migration and Ownership</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#others">Others</a><ul>
+<li><a class="reference internal" href="#perf-event">perf_event</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#non-normative-information">Non-normative information</a><ul>
+<li><a class="reference internal" href="#cpu-controller-root-cgroup-process-behaviour">CPU controller root cgroup process behaviour</a></li>
+<li><a class="reference internal" href="#io-controller-root-cgroup-process-behaviour">IO controller root cgroup process behaviour</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a class="reference internal" href="#namespace">Namespace</a><ul>
+<li><a class="reference internal" href="#basics">Basics</a></li>
+<li><a class="reference internal" href="#the-root-and-views">The Root and Views</a></li>
+<li><a class="reference internal" href="#migration-and-setns-2">Migration and setns(2)</a></li>
+<li><a class="reference internal" href="#interaction-with-other-namespaces">Interaction with Other Namespaces</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#information-on-kernel-programming">Information on Kernel Programming</a><ul>
+<li><a class="reference internal" href="#filesystem-support-for-writeback">Filesystem Support for Writeback</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#deprecated-v1-core-features">Deprecated v1 Core Features</a></li>
+<li><a class="reference internal" href="#issues-with-v1-and-rationales-for-v2">Issues with v1 and Rationales for v2</a><ul>
+<li><a class="reference internal" href="#multiple-hierarchies">Multiple Hierarchies</a></li>
+<li><a class="reference internal" href="#thread-granularity">Thread Granularity</a></li>
+<li><a class="reference internal" href="#competition-between-inner-nodes-and-threads">Competition Between Inner Nodes and Threads</a></li>
+<li><a class="reference internal" href="#other-interface-issues">Other Interface Issues</a></li>
+<li><a class="reference internal" href="#controller-issues-and-remedies">Controller Issues and Remedies</a><ul>
+<li><a class="reference internal" href="#id1">Memory</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/admin-guide/cgroup-v2.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;The kernel development community.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 2.4.4</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="../_sources/admin-guide/cgroup-v2.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
 </html>

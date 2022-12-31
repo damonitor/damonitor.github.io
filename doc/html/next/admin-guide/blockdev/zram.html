@@ -1,75 +1,39 @@
+
 <!DOCTYPE html>
-<html class="writer-html5" lang="en" >
-<head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>zram: Compressed RAM-based block devices &mdash; The Linux Kernel  documentation</title><link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+  <head>
+    <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>zram: Compressed RAM-based block devices &#8212; The Linux Kernel  documentation</title>
+    <link rel="stylesheet" href="../../_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
-      <link rel="stylesheet" href="../../_static/theme_overrides.css" type="text/css" />
-      <link rel="stylesheet" href="../../_static/theme_rtd_colors.css" type="text/css" />
-  <!--[if lt IE 9]>
-    <script src="../../_static/js/html5shiv.min.js"></script>
-  <![endif]-->
-  <script id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
-        <script src="../../_static/jquery.js"></script>
-        <script src="../../_static/underscore.js"></script>
-        <script src="../../_static/doctools.js"></script>
-        <script src="../../_static/language_data.js"></script>
-    <script src="../../_static/js/theme.js"></script>
+    <script id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/jquery.js"></script>
+    <script src="../../_static/underscore.js"></script>
+    <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/language_data.js"></script>
+    <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
-    <link rel="search" title="Search" href="../../search.html" /> 
-</head>
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Distributed Replicated Block Device - DRBD" href="drbd/index.html" />
+    <link rel="prev" title="Using the RAM disk block device with Linux" href="ramdisk.html" />
+   
+  <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
 
-<body class="wy-body-for-nav"> 
-  <div class="wy-grid-for-nav">
-    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
-      <div class="wy-side-scroll">
-        <div class="wy-side-nav-search" >
-            <a href="../../index.html" class="icon icon-home"> The Linux Kernel
-          </a>
-              <div class="version">
-                6.0.0-rc3-mm-unstable-damon
-              </div>
-<div role="search">
-  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" />
-    <input type="hidden" name="check_keywords" value="yes" />
-    <input type="hidden" name="area" value="default" />
-  </form>
-</div>
-        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
-              <ul>
-<li class="toctree-l1"><a class="reference internal" href="../mm/damon/index.html">DAMON: Data Access MONitor</a></li>
-</ul>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="../../mm/damon/index.html">DAMON: Data Access MONitor</a></li>
-</ul>
+  </head><body>
+  
 
-        </div>
-      </div>
-    </nav>
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
 
-    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
-          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../../index.html">The Linux Kernel</a>
-      </nav>
-
-      <div class="wy-nav-content">
-        <div class="rst-content">
-          <div role="navigation" aria-label="Page navigation">
-  <ul class="wy-breadcrumbs">
-      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
-      <li>zram: Compressed RAM-based block devices</li>
-      <li class="wy-breadcrumbs-aside">
-            <a href="../../_sources/admin-guide/blockdev/zram.rst.txt" rel="nofollow"> View page source</a>
-      </li>
-  </ul>
-  <hr/>
-</div>
-          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
-           <div itemprop="articleBody">
-             
+          <div class="body" role="main">
+            
   <section id="zram-compressed-ram-based-block-devices">
 <h1>zram: Compressed RAM-based block devices<a class="headerlink" href="#zram-compressed-ram-based-block-devices" title="Permalink to this headline">¶</a></h1>
 <section id="introduction">
@@ -498,11 +462,16 @@ this can be accomplished with:</p>
 <div class="highlight-none notranslate"><div class="highlight"><pre><span></span>echo huge_idle &gt; /sys/block/zramX/writeback
 </pre></div>
 </div>
+<p>If a user chooses to writeback only incompressible pages (pages that none of
+algorithms can compress) this can be accomplished with:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>echo incompressible &gt; /sys/block/zramX/writeback
+</pre></div>
+</div>
 <p>If an admin wants to write a specific page in zram device to the backing device,
-they could write a page index into the interface.</p>
-<blockquote>
-<div><p>echo “page_index=1251” &gt; /sys/block/zramX/writeback</p>
-</div></blockquote>
+they could write a page index into the interface:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>echo &quot;page_index=1251&quot; &gt; /sys/block/zramX/writeback
+</pre></div>
+</div>
 <p>If there are lots of write IO with flash device, potentially, it has
 flash wearout problem so that admin needs to design write limitation
 to guarantee storage health for entire product life.</p>
@@ -547,6 +516,82 @@ budget in next setting is user’s job.</p>
 <p>If admin wants to measure writeback count in a certain period, they could
 know it via /sys/block/zram0/bd_stat’s 3rd column.</p>
 </section>
+<section id="recompression">
+<h3>recompression<a class="headerlink" href="#recompression" title="Permalink to this headline">¶</a></h3>
+<p>With CONFIG_ZRAM_MULTI_COMP, zram can recompress pages using alternative
+(secondary) compression algorithms. The basic idea is that alternative
+compression algorithm can provide better compression ratio at a price of
+(potentially) slower compression/decompression speeds. Alternative compression
+algorithm can, for example, be more successful compressing huge pages (those
+that default algorithm failed to compress). Another application is idle pages
+recompression - pages that are cold and sit in the memory can be recompressed
+using more effective algorithm and, hence, reduce zsmalloc memory usage.</p>
+<p>With CONFIG_ZRAM_MULTI_COMP, zram supports up to 4 compression algorithms:
+one primary and up to 3 secondary ones. Primary zram compressor is explained
+in “3) Select compression algorithm”, secondary algorithms are configured
+using recomp_algorithm device attribute.</p>
+<p>Example::</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>#show supported recompression algorithms
+cat /sys/block/zramX/recomp_algorithm
+#1: lzo lzo-rle lz4 lz4hc [zstd]
+#2: lzo lzo-rle lz4 [lz4hc] zstd
+</pre></div>
+</div>
+<p>Alternative compression algorithms are sorted by priority. In the example
+above, zstd is used as the first alternative algorithm, which has priority
+of 1, while lz4hc is configured as a compression algorithm with priority 2.
+Alternative compression algorithm’s priority is provided during algorithms
+configuration::</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>#select zstd recompression algorithm, priority 1
+echo &quot;algo=zstd priority=1&quot; &gt; /sys/block/zramX/recomp_algorithm
+
+#select deflate recompression algorithm, priority 2
+echo &quot;algo=deflate priority=2&quot; &gt; /sys/block/zramX/recomp_algorithm
+</pre></div>
+</div>
+<p>Another device attribute that CONFIG_ZRAM_MULTI_COMP enables is recompress,
+which controls recompression.</p>
+<p>Examples::</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>#IDLE pages recompression is activated by `idle` mode
+echo &quot;type=idle&quot; &gt; /sys/block/zramX/recompress
+
+#HUGE pages recompression is activated by `huge` mode
+echo &quot;type=huge&quot; &gt; /sys/block/zram0/recompress
+
+#HUGE_IDLE pages recompression is activated by `huge_idle` mode
+echo &quot;type=huge_idle&quot; &gt; /sys/block/zramX/recompress
+</pre></div>
+</div>
+<p>The number of idle pages can be significant, so user-space can pass a size
+threshold (in bytes) to the recompress knob: zram will recompress only pages
+of equal or greater size::</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>#recompress all pages larger than 3000 bytes
+echo &quot;threshold=3000&quot; &gt; /sys/block/zramX/recompress
+
+#recompress idle pages larger than 2000 bytes
+echo &quot;type=idle threshold=2000&quot; &gt; /sys/block/zramX/recompress
+</pre></div>
+</div>
+<p>Recompression of idle pages requires memory tracking.</p>
+<p>During re-compression for every page, that matches re-compression criteria,
+ZRAM iterates the list of registered alternative compression algorithms in
+order of their priorities. ZRAM stops either when re-compression was
+successful (re-compressed object is smaller in size than the original one)
+and matches re-compression criteria (e.g. size threshold) or when there are
+no secondary algorithms left to try. If none of the secondary algorithms can
+successfully re-compressed the page such a page is marked as incompressible,
+so ZRAM will not attempt to re-compress it in the future.</p>
+<p>This re-compression behaviour, when it iterates through the list of
+registered compression algorithms, increases our chances of finding the
+algorithm that successfully compresses a particular page. Sometimes, however,
+it is convenient (and sometimes even necessary) to limit recompression to
+only one particular algorithm so that it will not try any other algorithms.
+This can be achieved by providing a algo=NAME parameter::</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>#use zstd algorithm only (if registered)
+echo &quot;type=huge algo=zstd&quot; &gt; /sys/block/zramX/recompress
+</pre></div>
+</div>
+</section>
 </section>
 <section id="memory-tracking">
 <h2>memory tracking<a class="headerlink" href="#memory-tracking" title="Permalink to this headline">¶</a></h2>
@@ -555,9 +600,11 @@ zram block. It could be useful to catch cold or incompressible
 pages of the process with*pagemap.</p>
 <p>If you enable the feature, you could see block state via
 /sys/kernel/debug/zram/zram0/block_state”. The output is as follows:</p>
-<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>300    75.033841 .wh.
-301    63.806904 s...
-302    63.806919 ..hi
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>300    75.033841 .wh...
+301    63.806904 s.....
+302    63.806919 ..hi..
+303    62.801919 ....r.
+304   146.781902 ..hi.n
 </pre></div>
 </div>
 <dl>
@@ -575,6 +622,10 @@ pages of the process with*pagemap.</p>
 </dd>
 <dt>i:</dt><dd><p>idle page</p>
 </dd>
+<dt>r:</dt><dd><p>recompressed page (secondary compression algorithm)</p>
+</dd>
+<dt>n:</dt><dd><p>none (including secondary) of algorithms could compress it</p>
+</dd>
 </dl>
 </dd>
 </dl>
@@ -588,31 +639,85 @@ properly.</p>
 </section>
 
 
-           </div>
           </div>
-          <footer>
-
-  <hr/>
-
-  <div role="contentinfo">
-    <p>&#169; Copyright The kernel development community.</p>
-  </div>
-
-  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
-    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
-    provided by <a href="https://readthedocs.org">Read the Docs</a>.
-   
-
-</footer>
+          
         </div>
       </div>
-    </section>
-  </div>
-  <script>
-      jQuery(function () {
-          SphinxRtdTheme.Navigation.enable(true);
-      });
-  </script> 
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../../index.html">The Linux Kernel</a></h1>
 
-</body>
+
+
+<p class="blurb">6.1.0-mm-unstable-damon</p>
+
+
+
+
+
+
+
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+  <h3><a href="../../index.html">Table of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">zram: Compressed RAM-based block devices</a><ul>
+<li><a class="reference internal" href="#introduction">Introduction</a></li>
+<li><a class="reference internal" href="#usage">Usage</a></li>
+<li><a class="reference internal" href="#warning">WARNING</a></li>
+<li><a class="reference internal" href="#load-module">1) Load Module</a></li>
+<li><a class="reference internal" href="#set-max-number-of-compression-streams">2) Set max number of compression streams</a></li>
+<li><a class="reference internal" href="#select-compression-algorithm">3) Select compression algorithm</a></li>
+<li><a class="reference internal" href="#set-disksize">4) Set Disksize</a></li>
+<li><a class="reference internal" href="#set-memory-limit-optional">5) Set memory limit: Optional</a></li>
+<li><a class="reference internal" href="#activate">6) Activate</a></li>
+<li><a class="reference internal" href="#add-remove-zram-devices">7) Add/remove zram devices</a></li>
+<li><a class="reference internal" href="#stats">8) Stats</a></li>
+<li><a class="reference internal" href="#deactivate">9) Deactivate</a></li>
+<li><a class="reference internal" href="#reset">10) Reset</a></li>
+<li><a class="reference internal" href="#optional-feature">Optional Feature</a><ul>
+<li><a class="reference internal" href="#writeback">writeback</a></li>
+<li><a class="reference internal" href="#recompression">recompression</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#memory-tracking">memory tracking</a></li>
+</ul>
+</li>
+</ul>
+
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../../_sources/admin-guide/blockdev/zram.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;The kernel development community.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 2.4.4</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="../../_sources/admin-guide/blockdev/zram.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
 </html>

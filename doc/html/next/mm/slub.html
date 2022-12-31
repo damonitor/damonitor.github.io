@@ -1,75 +1,39 @@
+
 <!DOCTYPE html>
-<html class="writer-html5" lang="en" >
-<head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Short users guide for SLUB &mdash; The Linux Kernel  documentation</title><link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+  <head>
+    <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>Short users guide for SLUB &#8212; The Linux Kernel  documentation</title>
+    <link rel="stylesheet" href="../_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-      <link rel="stylesheet" href="../_static/theme_overrides.css" type="text/css" />
-      <link rel="stylesheet" href="../_static/theme_rtd_colors.css" type="text/css" />
-  <!--[if lt IE 9]>
-    <script src="../_static/js/html5shiv.min.js"></script>
-  <![endif]-->
-  <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
-        <script src="../_static/jquery.js"></script>
-        <script src="../_static/underscore.js"></script>
-        <script src="../_static/doctools.js"></script>
-        <script src="../_static/language_data.js"></script>
-    <script src="../_static/js/theme.js"></script>
+    <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/language_data.js"></script>
+    <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
     <link rel="index" title="Index" href="../genindex.html" />
-    <link rel="search" title="Search" href="../search.html" /> 
-</head>
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Split page table lock" href="split_page_table_lock.html" />
+    <link rel="prev" title="remap_file_pages() system call" href="remap_file_pages.html" />
+   
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
 
-<body class="wy-body-for-nav"> 
-  <div class="wy-grid-for-nav">
-    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
-      <div class="wy-side-scroll">
-        <div class="wy-side-nav-search" >
-            <a href="../index.html" class="icon icon-home"> The Linux Kernel
-          </a>
-              <div class="version">
-                6.0.0-rc3-mm-unstable-damon
-              </div>
-<div role="search">
-  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" />
-    <input type="hidden" name="check_keywords" value="yes" />
-    <input type="hidden" name="area" value="default" />
-  </form>
-</div>
-        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
-              <ul>
-<li class="toctree-l1"><a class="reference internal" href="../admin-guide/mm/damon/index.html">DAMON: Data Access MONitor</a></li>
-</ul>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="damon/index.html">DAMON: Data Access MONitor</a></li>
-</ul>
+  </head><body>
+  
 
-        </div>
-      </div>
-    </nav>
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
 
-    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
-          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../index.html">The Linux Kernel</a>
-      </nav>
-
-      <div class="wy-nav-content">
-        <div class="rst-content">
-          <div role="navigation" aria-label="Page navigation">
-  <ul class="wy-breadcrumbs">
-      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
-      <li>Short users guide for SLUB</li>
-      <li class="wy-breadcrumbs-aside">
-            <a href="../_sources/mm/slub.rst.txt" rel="nofollow"> View page source</a>
-      </li>
-  </ul>
-  <hr/>
-</div>
-          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
-           <div itemprop="articleBody">
-             
+          <div class="body" role="main">
+            
   <section id="short-users-guide-for-slub">
 <span id="slub"></span><h1>Short users guide for SLUB<a class="headerlink" href="#short-users-guide-for-slub" title="Permalink to this headline">¶</a></h1>
 <p>The basic philosophy of SLUB is very different from SLAB. SLAB
@@ -177,7 +141,9 @@ T       trace
 A       failslab
 </pre></div>
 </div>
-<p>Careful with tracing: It may spew out lots of information and never stop if
+<p>failslab file is writable, so writing 1 or 0 will enable or disable
+the option at runtime. Write returns -EINVAL if cache is an alias.
+Careful with tracing: It may spew out lots of information and never stop if
 used on the wrong slab.</p>
 <section id="slab-merging">
 <h3>Slab merging<a class="headerlink" href="#slab-merging" title="Permalink to this headline">¶</a></h3>
@@ -446,20 +412,30 @@ information:</p>
 allocated objects. The output is sorted by frequency of each trace.
 
 Information in the output:
-Number of objects, allocating function, minimal/average/maximal jiffies since alloc,
-pid range of the allocating processes, cpu mask of allocating cpus, and stack trace.
+Number of objects, allocating function, possible memory wastage of
+kmalloc objects(total/per-object), minimal/average/maximal jiffies
+since alloc, pid range of the allocating processes, cpu mask of
+allocating cpus, numa node mask of origins of memory, and stack trace.
 
 Example:::
 
-1085 populate_error_injection_list+0x97/0x110 age=166678/166680/166682 pid=1 cpus=1::
-    __slab_alloc+0x6d/0x90
-    kmem_cache_alloc_trace+0x2eb/0x300
-    populate_error_injection_list+0x97/0x110
-    init_error_injection+0x1b/0x71
-    do_one_initcall+0x5f/0x2d0
-    kernel_init_freeable+0x26f/0x2d7
-    kernel_init+0xe/0x118
-    ret_from_fork+0x22/0x30
+338 pci_alloc_dev+0x2c/0xa0 waste=521872/1544 age=290837/291891/293509 pid=1 cpus=106 nodes=0-1
+    __kmem_cache_alloc_node+0x11f/0x4e0
+    kmalloc_trace+0x26/0xa0
+    pci_alloc_dev+0x2c/0xa0
+    pci_scan_single_device+0xd2/0x150
+    pci_scan_slot+0xf7/0x2d0
+    pci_scan_child_bus_extend+0x4e/0x360
+    acpi_pci_root_create+0x32e/0x3b0
+    pci_acpi_scan_root+0x2b9/0x2d0
+    acpi_pci_root_add.cold.11+0x110/0xb0a
+    acpi_bus_attach+0x262/0x3f0
+    device_for_each_child+0xb7/0x110
+    acpi_dev_for_each_child+0x77/0xa0
+    acpi_bus_attach+0x108/0x3f0
+    device_for_each_child+0xb7/0x110
+    acpi_dev_for_each_child+0x77/0xa0
+    acpi_bus_attach+0x108/0x3f0
 </pre></div>
 </div>
 </li>
@@ -504,31 +480,76 @@ Sergey Senozhatsky, October 23, 2015</p>
 </section>
 
 
-           </div>
           </div>
-          <footer>
-
-  <hr/>
-
-  <div role="contentinfo">
-    <p>&#169; Copyright The kernel development community.</p>
-  </div>
-
-  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
-    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
-    provided by <a href="https://readthedocs.org">Read the Docs</a>.
-   
-
-</footer>
+          
         </div>
       </div>
-    </section>
-  </div>
-  <script>
-      jQuery(function () {
-          SphinxRtdTheme.Navigation.enable(true);
-      });
-  </script> 
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../index.html">The Linux Kernel</a></h1>
 
-</body>
+
+
+<p class="blurb">6.1.0-mm-unstable-damon</p>
+
+
+
+
+
+
+
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+  <h3><a href="../index.html">Table of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Short users guide for SLUB</a><ul>
+<li><a class="reference internal" href="#some-more-sophisticated-uses-of-slub-debug">Some more sophisticated uses of slub_debug:</a><ul>
+<li><a class="reference internal" href="#slab-merging">Slab merging</a></li>
+<li><a class="reference internal" href="#slab-validation">Slab validation</a></li>
+<li><a class="reference internal" href="#getting-more-performance">Getting more performance</a></li>
+<li><a class="reference internal" href="#slub-debug-output">SLUB Debug output</a></li>
+<li><a class="reference internal" href="#emergency-operations">Emergency operations</a></li>
+<li><a class="reference internal" href="#extended-slabinfo-mode-and-plotting">Extended slabinfo mode and plotting</a></li>
+<li><a class="reference internal" href="#debugfs-files-for-slub">DebugFS files for SLUB</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/mm/slub.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;The kernel development community.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 2.4.4</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="../_sources/mm/slub.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
 </html>

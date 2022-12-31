@@ -1,75 +1,39 @@
+
 <!DOCTYPE html>
-<html class="writer-html5" lang="en" >
-<head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>VMCOREINFO &mdash; The Linux Kernel  documentation</title><link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+  <head>
+    <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>VMCOREINFO &#8212; The Linux Kernel  documentation</title>
+    <link rel="stylesheet" href="../../_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
-      <link rel="stylesheet" href="../../_static/theme_overrides.css" type="text/css" />
-      <link rel="stylesheet" href="../../_static/theme_rtd_colors.css" type="text/css" />
-  <!--[if lt IE 9]>
-    <script src="../../_static/js/html5shiv.min.js"></script>
-  <![endif]-->
-  <script id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
-        <script src="../../_static/jquery.js"></script>
-        <script src="../../_static/underscore.js"></script>
-        <script src="../../_static/doctools.js"></script>
-        <script src="../../_static/language_data.js"></script>
-    <script src="../../_static/js/theme.js"></script>
+    <script id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/jquery.js"></script>
+    <script src="../../_static/underscore.js"></script>
+    <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/language_data.js"></script>
+    <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
-    <link rel="search" title="Search" href="../../search.html" /> 
-</head>
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Performance monitor support" href="../perf/index.html" />
+    <link rel="prev" title="Documentation for Kdump - The kexec-based Crash Dumping Solution" href="kdump.html" />
+   
+  <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
 
-<body class="wy-body-for-nav"> 
-  <div class="wy-grid-for-nav">
-    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
-      <div class="wy-side-scroll">
-        <div class="wy-side-nav-search" >
-            <a href="../../index.html" class="icon icon-home"> The Linux Kernel
-          </a>
-              <div class="version">
-                6.0.0-rc3-mm-unstable-damon
-              </div>
-<div role="search">
-  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" />
-    <input type="hidden" name="check_keywords" value="yes" />
-    <input type="hidden" name="area" value="default" />
-  </form>
-</div>
-        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
-              <ul>
-<li class="toctree-l1"><a class="reference internal" href="../mm/damon/index.html">DAMON: Data Access MONitor</a></li>
-</ul>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="../../mm/damon/index.html">DAMON: Data Access MONitor</a></li>
-</ul>
+  </head><body>
+  
 
-        </div>
-      </div>
-    </nav>
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
 
-    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
-          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../../index.html">The Linux Kernel</a>
-      </nav>
-
-      <div class="wy-nav-content">
-        <div class="rst-content">
-          <div role="navigation" aria-label="Page navigation">
-  <ul class="wy-breadcrumbs">
-      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
-      <li>VMCOREINFO</li>
-      <li class="wy-breadcrumbs-aside">
-            <a href="../../_sources/admin-guide/kdump/vmcoreinfo.rst.txt" rel="nofollow"> View page source</a>
-      </li>
-  </ul>
-  <hr/>
-</div>
-          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
-           <div itemprop="articleBody">
-             
+          <div class="body" role="main">
+            
   <section id="vmcoreinfo">
 <h1>VMCOREINFO<a class="headerlink" href="#vmcoreinfo" title="Permalink to this headline">¶</a></h1>
 <section id="what-is-it">
@@ -235,7 +199,7 @@ free_area ranges. MAX_ORDER is used by the zone buddy allocator.</p>
 <h3>prb<a class="headerlink" href="#prb" title="Permalink to this headline">¶</a></h3>
 <p>A pointer to the printk ringbuffer (struct printk_ringbuffer). This
 may be pointing to the static boot ringbuffer or the dynamically
-allocated ringbuffer, depending on when the the core dump occurred.
+allocated ringbuffer, depending on when the core dump occurred.
 Used by user-space tools to read the active kernel log buffer.</p>
 </section>
 <section id="printk-rb-static">
@@ -572,34 +536,212 @@ member.</p>
 <p>Indicates whether the crashed kernel enabled SH extended mode.</p>
 </section>
 </section>
+<section id="riscv64">
+<h2>RISCV64<a class="headerlink" href="#riscv64" title="Permalink to this headline">¶</a></h2>
+<section id="id4">
+<h3>VA_BITS<a class="headerlink" href="#id4" title="Permalink to this headline">¶</a></h3>
+<p>The maximum number of bits for virtual addresses. Used to compute the
+virtual memory ranges.</p>
+</section>
+<section id="page-offset">
+<h3>PAGE_OFFSET<a class="headerlink" href="#page-offset" title="Permalink to this headline">¶</a></h3>
+<p>Indicates the virtual kernel start address of the direct-mapped RAM region.</p>
+</section>
+<section id="phys-ram-base">
+<h3>phys_ram_base<a class="headerlink" href="#phys-ram-base" title="Permalink to this headline">¶</a></h3>
+<p>Indicates the start physical RAM address.</p>
+</section>
+<section id="modules-vaddr-modules-end-vmalloc-start-vmalloc-end-vmemmap-start-vmemmap-end-kernel-link-addr">
+<h3>MODULES_VADDR|MODULES_END|VMALLOC_START|VMALLOC_END|VMEMMAP_START|VMEMMAP_END|KERNEL_LINK_ADDR<a class="headerlink" href="#modules-vaddr-modules-end-vmalloc-start-vmalloc-end-vmemmap-start-vmemmap-end-kernel-link-addr" title="Permalink to this headline">¶</a></h3>
+<p>Used to get the correct ranges:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>MODULES_VADDR ~ MODULES_END : Kernel module space.</p></li>
+<li><p>VMALLOC_START ~ VMALLOC_END : <a class="reference internal" href="../../core-api/mm-api.html#c.vmalloc" title="vmalloc"><code class="xref c c-func docutils literal notranslate"><span class="pre">vmalloc()</span></code></a> / <a class="reference internal" href="../../driver-api/device-io.html#c.ioremap" title="ioremap"><code class="xref c c-func docutils literal notranslate"><span class="pre">ioremap()</span></code></a> space.</p></li>
+<li><p>VMEMMAP_START ~ VMEMMAP_END : vmemmap space, used for struct page array.</p></li>
+<li><p>KERNEL_LINK_ADDR : start address of Kernel link and BPF</p></li>
+</ul>
+</div></blockquote>
+</section>
+</section>
 </section>
 
 
-           </div>
           </div>
-          <footer>
-
-  <hr/>
-
-  <div role="contentinfo">
-    <p>&#169; Copyright The kernel development community.</p>
-  </div>
-
-  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
-    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
-    provided by <a href="https://readthedocs.org">Read the Docs</a>.
-   
-
-</footer>
+          
         </div>
       </div>
-    </section>
-  </div>
-  <script>
-      jQuery(function () {
-          SphinxRtdTheme.Navigation.enable(true);
-      });
-  </script> 
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../../index.html">The Linux Kernel</a></h1>
 
-</body>
+
+
+<p class="blurb">6.1.0-mm-unstable-damon</p>
+
+
+
+
+
+
+
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+  <h3><a href="../../index.html">Table of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">VMCOREINFO</a><ul>
+<li><a class="reference internal" href="#what-is-it">What is it?</a></li>
+<li><a class="reference internal" href="#common-variables">Common variables</a><ul>
+<li><a class="reference internal" href="#init-uts-ns-name-release">init_uts_ns.name.release</a></li>
+<li><a class="reference internal" href="#page-size">PAGE_SIZE</a></li>
+<li><a class="reference internal" href="#init-uts-ns">init_uts_ns</a></li>
+<li><a class="reference internal" href="#uts-namespace-name">(uts_namespace, name)</a></li>
+<li><a class="reference internal" href="#node-online-map">node_online_map</a></li>
+<li><a class="reference internal" href="#swapper-pg-dir">swapper_pg_dir</a></li>
+<li><a class="reference internal" href="#stext">_stext</a></li>
+<li><a class="reference internal" href="#vmap-area-list">vmap_area_list</a></li>
+<li><a class="reference internal" href="#mem-map">mem_map</a></li>
+<li><a class="reference internal" href="#contig-page-data">contig_page_data</a></li>
+<li><a class="reference internal" href="#mem-section-mem-section-nr-section-roots-mem-section-section-mem-map">mem_section|(mem_section, NR_SECTION_ROOTS)|(mem_section, section_mem_map)</a></li>
+<li><a class="reference internal" href="#max-physmem-bits">MAX_PHYSMEM_BITS</a></li>
+<li><a class="reference internal" href="#page">page</a></li>
+<li><a class="reference internal" href="#pglist-data">pglist_data</a></li>
+<li><a class="reference internal" href="#zone">zone</a></li>
+<li><a class="reference internal" href="#free-area">free_area</a></li>
+<li><a class="reference internal" href="#list-head">list_head</a></li>
+<li><a class="reference internal" href="#nodemask-t">nodemask_t</a></li>
+<li><a class="reference internal" href="#page-flags-refcount-mapping-lru-mapcount-private-compound-dtor-compound-order-compound-head">(page, flags|_refcount|mapping|lru|_mapcount|private|compound_dtor|compound_order|compound_head)</a></li>
+<li><a class="reference internal" href="#pglist-data-node-zones-nr-zones-node-mem-map-node-start-pfn-node-spanned-pages-node-id">(pglist_data, node_zones|nr_zones|node_mem_map|node_start_pfn|node_spanned_pages|node_id)</a></li>
+<li><a class="reference internal" href="#zone-free-area-vm-stat-spanned-pages">(zone, free_area|vm_stat|spanned_pages)</a></li>
+<li><a class="reference internal" href="#free-area-free-list">(free_area, free_list)</a></li>
+<li><a class="reference internal" href="#list-head-next-prev">(list_head, next|prev)</a></li>
+<li><a class="reference internal" href="#vmap-area-va-start-list">(vmap_area, va_start|list)</a></li>
+<li><a class="reference internal" href="#zone-free-area-max-order">(zone.free_area, MAX_ORDER)</a></li>
+<li><a class="reference internal" href="#prb">prb</a></li>
+<li><a class="reference internal" href="#printk-rb-static">printk_rb_static</a></li>
+<li><a class="reference internal" href="#clear-seq">clear_seq</a></li>
+<li><a class="reference internal" href="#printk-ringbuffer">printk_ringbuffer</a></li>
+<li><a class="reference internal" href="#printk-ringbuffer-desc-ring-text-data-ring-dict-data-ring-fail">(printk_ringbuffer, desc_ring|text_data_ring|dict_data_ring|fail)</a></li>
+<li><a class="reference internal" href="#prb-desc-ring">prb_desc_ring</a></li>
+<li><a class="reference internal" href="#prb-desc-ring-count-bits-descs-head-id-tail-id">(prb_desc_ring, count_bits|descs|head_id|tail_id)</a></li>
+<li><a class="reference internal" href="#prb-desc">prb_desc</a></li>
+<li><a class="reference internal" href="#prb-desc-info-state-var-text-blk-lpos-dict-blk-lpos">(prb_desc, info|state_var|text_blk_lpos|dict_blk_lpos)</a></li>
+<li><a class="reference internal" href="#prb-data-blk-lpos">prb_data_blk_lpos</a></li>
+<li><a class="reference internal" href="#prb-data-blk-lpos-begin-next">(prb_data_blk_lpos, begin|next)</a></li>
+<li><a class="reference internal" href="#printk-info">printk_info</a></li>
+<li><a class="reference internal" href="#printk-info-seq-ts-nsec-text-len-dict-len-caller-id">(printk_info, seq|ts_nsec|text_len|dict_len|caller_id)</a></li>
+<li><a class="reference internal" href="#prb-data-ring">prb_data_ring</a></li>
+<li><a class="reference internal" href="#prb-data-ring-size-bits-data-head-lpos-tail-lpos">(prb_data_ring, size_bits|data|head_lpos|tail_lpos)</a></li>
+<li><a class="reference internal" href="#atomic-long-t">atomic_long_t</a></li>
+<li><a class="reference internal" href="#atomic-long-t-counter">(atomic_long_t, counter)</a></li>
+<li><a class="reference internal" href="#free-area-free-list-migrate-types">(free_area.free_list, MIGRATE_TYPES)</a></li>
+<li><a class="reference internal" href="#nr-free-pages">NR_FREE_PAGES</a></li>
+<li><a class="reference internal" href="#pg-lru-pg-private-pg-swapcache-pg-swapbacked-pg-slab-pg-hwpoision-pg-head-mask">PG_lru|PG_private|PG_swapcache|PG_swapbacked|PG_slab|PG_hwpoision|PG_head_mask</a></li>
+<li><a class="reference internal" href="#page-buddy-mapcount-value-pg-buddy-page-offline-mapcount-value-pg-offline">PAGE_BUDDY_MAPCOUNT_VALUE(~PG_buddy)|PAGE_OFFLINE_MAPCOUNT_VALUE(~PG_offline)</a></li>
+<li><a class="reference internal" href="#hugetlb-page-dtor">HUGETLB_PAGE_DTOR</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#x86-64">x86_64</a><ul>
+<li><a class="reference internal" href="#phys-base">phys_base</a></li>
+<li><a class="reference internal" href="#init-top-pgt">init_top_pgt</a></li>
+<li><a class="reference internal" href="#pgtable-l5-enabled">pgtable_l5_enabled</a></li>
+<li><a class="reference internal" href="#node-data">node_data</a></li>
+<li><a class="reference internal" href="#node-data-max-numnodes">(node_data, MAX_NUMNODES)</a></li>
+<li><a class="reference internal" href="#kerneloffset">KERNELOFFSET</a></li>
+<li><a class="reference internal" href="#kernel-image-size">KERNEL_IMAGE_SIZE</a></li>
+<li><a class="reference internal" href="#sme-mask">sme_mask</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#x86-32">x86_32</a><ul>
+<li><a class="reference internal" href="#x86-pae">X86_PAE</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#ia64">ia64</a><ul>
+<li><a class="reference internal" href="#pgdat-list-pgdat-list-max-numnodes">pgdat_list|(pgdat_list, MAX_NUMNODES)</a></li>
+<li><a class="reference internal" href="#node-memblk-node-memblk-nr-node-memblks">node_memblk|(node_memblk, NR_NODE_MEMBLKS)</a></li>
+<li><a class="reference internal" href="#node-memblk-s-node-memblk-s-start-paddr-node-memblk-s-size">node_memblk_s|(node_memblk_s, start_paddr)|(node_memblk_s, size)</a></li>
+<li><a class="reference internal" href="#pgtable-3-pgtable-4">PGTABLE_3|PGTABLE_4</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#arm64">ARM64</a><ul>
+<li><a class="reference internal" href="#va-bits">VA_BITS</a></li>
+<li><a class="reference internal" href="#kimage-voffset">kimage_voffset</a></li>
+<li><a class="reference internal" href="#phys-offset">PHYS_OFFSET</a></li>
+<li><a class="reference internal" href="#id1">KERNELOFFSET</a></li>
+<li><a class="reference internal" href="#kernelpacmask">KERNELPACMASK</a></li>
+<li><a class="reference internal" href="#tcr-el1-t1sz">TCR_EL1.T1SZ</a></li>
+<li><a class="reference internal" href="#modules-vaddr-modules-end-vmalloc-start-vmalloc-end-vmemmap-start-vmemmap-end">MODULES_VADDR|MODULES_END|VMALLOC_START|VMALLOC_END|VMEMMAP_START|VMEMMAP_END</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#arm">arm</a><ul>
+<li><a class="reference internal" href="#arm-lpae">ARM_LPAE</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#s390">s390</a><ul>
+<li><a class="reference internal" href="#lowcore-ptr">lowcore_ptr</a></li>
+<li><a class="reference internal" href="#high-memory">high_memory</a></li>
+<li><a class="reference internal" href="#lowcore-ptr-nr-cpus">(lowcore_ptr, NR_CPUS)</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#powerpc">powerpc</a><ul>
+<li><a class="reference internal" href="#node-data-node-data-max-numnodes">node_data|(node_data, MAX_NUMNODES)</a></li>
+<li><a class="reference internal" href="#id2">contig_page_data</a></li>
+<li><a class="reference internal" href="#vmemmap-list">vmemmap_list</a></li>
+<li><a class="reference internal" href="#mmu-vmemmap-psize">mmu_vmemmap_psize</a></li>
+<li><a class="reference internal" href="#mmu-psize-defs">mmu_psize_defs</a></li>
+<li><a class="reference internal" href="#vmemmap-backing-vmemmap-backing-list-vmemmap-backing-phys-vmemmap-backing-virt-addr">vmemmap_backing|(vmemmap_backing, list)|(vmemmap_backing, phys)|(vmemmap_backing, virt_addr)</a></li>
+<li><a class="reference internal" href="#mmu-psize-def-mmu-psize-def-shift">mmu_psize_def|(mmu_psize_def, shift)</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#sh">sh</a><ul>
+<li><a class="reference internal" href="#id3">node_data|(node_data, MAX_NUMNODES)</a></li>
+<li><a class="reference internal" href="#x2tlb">X2TLB</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#riscv64">RISCV64</a><ul>
+<li><a class="reference internal" href="#id4">VA_BITS</a></li>
+<li><a class="reference internal" href="#page-offset">PAGE_OFFSET</a></li>
+<li><a class="reference internal" href="#phys-ram-base">phys_ram_base</a></li>
+<li><a class="reference internal" href="#modules-vaddr-modules-end-vmalloc-start-vmalloc-end-vmemmap-start-vmemmap-end-kernel-link-addr">MODULES_VADDR|MODULES_END|VMALLOC_START|VMALLOC_END|VMEMMAP_START|VMEMMAP_END|KERNEL_LINK_ADDR</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../../_sources/admin-guide/kdump/vmcoreinfo.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;The kernel development community.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 2.4.4</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="../../_sources/admin-guide/kdump/vmcoreinfo.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
 </html>

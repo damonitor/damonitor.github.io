@@ -14,21 +14,6 @@ frontend.h
      \*                  Holger Waechtler \<holger@convergence.de\>
      \*                  Andre Draszik \<ad@convergence.de\>
      \*                  for convergence integrated media GmbH
-     \*
-     \* This program is free software; you can redistribute it and\/or
-     \* modify it under the terms of the GNU Lesser General Public License
-     \* as published by the Free Software Foundation; either version 2.1
-     \* of the License, or (at your option) any later version.
-     \*
-     \* This program is distributed in the hope that it will be useful,
-     \* but WITHOUT ANY WARRANTY; without even the implied warranty of
-     \* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-     \* GNU General Public License for more details.
-     \*
-     \* You should have received a copy of the GNU Lesser General Public License
-     \* along with this program; if not, write to the Free Software
-     \* Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
-     \*
      \*\/
 
     \#ifndef \_DVBFRONTEND\_H\_
@@ -289,7 +274,6 @@ frontend.h
     \/\*\*
      \* enum :c:type:`fe_code_rate` - Type of Forward Error Correction (FEC)
      \*
-     \*
      \* @FEC\_NONE\: No Forward Error Correction Code
      \* @FEC\_1\_2\:  Forward Error Correction Code 1\/2
      \* @FEC\_2\_3\:  Forward Error Correction Code 2\/3
@@ -303,6 +287,22 @@ frontend.h
      \* @FEC\_3\_5\:  Forward Error Correction Code 3\/5
      \* @FEC\_9\_10\: Forward Error Correction Code 9\/10
      \* @FEC\_2\_5\:  Forward Error Correction Code 2\/5
+     \* @FEC\_1\_3\:  Forward Error Correction Code 1\/3
+     \* @FEC\_1\_4\:  Forward Error Correction Code 1\/4
+     \* @FEC\_5\_9\:  Forward Error Correction Code 5\/9
+     \* @FEC\_7\_9\:  Forward Error Correction Code 7\/9
+     \* @FEC\_8\_15\:  Forward Error Correction Code 8\/15
+     \* @FEC\_11\_15\: Forward Error Correction Code 11\/15
+     \* @FEC\_13\_18\: Forward Error Correction Code 13\/18
+     \* @FEC\_9\_20\:  Forward Error Correction Code 9\/20
+     \* @FEC\_11\_20\: Forward Error Correction Code 11\/20
+     \* @FEC\_23\_36\: Forward Error Correction Code 23\/36
+     \* @FEC\_25\_36\: Forward Error Correction Code 25\/36
+     \* @FEC\_13\_45\: Forward Error Correction Code 13\/45
+     \* @FEC\_26\_45\: Forward Error Correction Code 26\/45
+     \* @FEC\_28\_45\: Forward Error Correction Code 28\/45
+     \* @FEC\_32\_45\: Forward Error Correction Code 32\/45
+     \* @FEC\_77\_90\: Forward Error Correction Code 77\/90
      \*
      \* Please note that not all FEC types are supported by a given standard.
      \*\/
@@ -320,6 +320,22 @@ frontend.h
             FEC\_3\_5,
             FEC\_9\_10,
             FEC\_2\_5,
+            FEC\_1\_3,
+            FEC\_1\_4,
+            FEC\_5\_9,
+            FEC\_7\_9,
+            FEC\_8\_15,
+            FEC\_11\_15,
+            FEC\_13\_18,
+            FEC\_9\_20,
+            FEC\_11\_20,
+            FEC\_23\_36,
+            FEC\_25\_36,
+            FEC\_13\_45,
+            FEC\_26\_45,
+            FEC\_28\_45,
+            FEC\_32\_45,
+            FEC\_77\_90,
     \};
 
     \/\*\*
@@ -338,6 +354,13 @@ frontend.h
      \* @APSK\_32\:    32-APSK modulation
      \* @DQPSK\:      DQPSK modulation
      \* @QAM\_4\_NR\:   4-QAM-NR modulation
+     \* @QAM\_1024\:   1024-QAM modulation
+     \* @QAM\_4096\:   4096-QAM modulation
+     \* @APSK\_8\_L\:   8APSK-L modulation
+     \* @APSK\_16\_L\:  16APSK-L modulation
+     \* @APSK\_32\_L\:  32APSK-L modulation
+     \* @APSK\_64\:    64APSK modulation
+     \* @APSK\_64\_L\:  64APSK-L modulation
      \*
      \* Please note that not all modulations are supported by a given standard.
      \*
@@ -357,6 +380,13 @@ frontend.h
             APSK\_32,
             DQPSK,
             QAM\_4\_NR,
+            QAM\_1024,
+            QAM\_4096,
+            APSK\_8\_L,
+            APSK\_16\_L,
+            APSK\_32\_L,
+            APSK\_64,
+            APSK\_64\_L,
     \};
 
     \/\*\*
@@ -411,6 +441,7 @@ frontend.h
      \* @GUARD\_INTERVAL\_PN420\:       PN length 420 (1\/4)
      \* @GUARD\_INTERVAL\_PN595\:       PN length 595 (1\/6)
      \* @GUARD\_INTERVAL\_PN945\:       PN length 945 (1\/9)
+     \* @GUARD\_INTERVAL\_1\_64\:        Guard interval 1\/64
      \*
      \* Please note that not all guard intervals are supported by a given standard.
      \*\/
@@ -426,6 +457,7 @@ frontend.h
             GUARD\_INTERVAL\_PN420,
             GUARD\_INTERVAL\_PN595,
             GUARD\_INTERVAL\_PN945,
+            GUARD\_INTERVAL\_1\_64,
     \};
 
     \/\*\*
@@ -578,6 +610,9 @@ frontend.h
      \* @ROLLOFF\_20\:         Roloff factor\: α=20\%
      \* @ROLLOFF\_25\:         Roloff factor\: α=25\%
      \* @ROLLOFF\_AUTO\:       Auto-detect the roloff factor.
+     \* @ROLLOFF\_15\:         Rolloff factor\: α=15\%
+     \* @ROLLOFF\_10\:         Rolloff factor\: α=10\%
+     \* @ROLLOFF\_5\:          Rolloff factor\: α=5\%
      \*
      \* .. note\:
      \*
@@ -588,6 +623,9 @@ frontend.h
             ROLLOFF\_20,
             ROLLOFF\_25,
             ROLLOFF\_AUTO,
+            ROLLOFF\_15,
+            ROLLOFF\_10,
+            ROLLOFF\_5,
     \};
 
     \/\*\*
@@ -601,6 +639,8 @@ frontend.h
      \*      Cable TV\: DVB-C following ITU-T J.83 Annex B spec (ClearQAM)
      \* @SYS\_DVBC\_ANNEX\_C\:
      \*      Cable TV\: DVB-C following ITU-T J.83 Annex C spec
+     \* @SYS\_DVBC2\:
+     \*      Cable TV\: DVB-C2
      \* @SYS\_ISDBC\:
      \*      Cable TV\: ISDB-C (no drivers yet)
      \* @SYS\_DVBT\:
@@ -618,7 +658,7 @@ frontend.h
      \* @SYS\_DVBS\:
      \*      Satellite TV\: DVB-S
      \* @SYS\_DVBS2\:
-     \*      Satellite TV\: DVB-S2
+     \*      Satellite TV\: DVB-S2 and DVB-S2X
      \* @SYS\_TURBO\:
      \*      Satellite TV\: DVB-S Turbo
      \* @SYS\_ISDBS\:
@@ -652,6 +692,7 @@ frontend.h
             SYS\_DVBT2,
             SYS\_TURBO,
             SYS\_DVBC\_ANNEX\_C,
+            SYS\_DVBC2,
     \};
 
     \/\* backward compatibility definitions for delivery systems \*\/
@@ -727,7 +768,7 @@ frontend.h
     \};
 
     \/\*\*
-     \* enum :c:type:`atscmh_rs_code_mode`
+     \* enum :c:type:`atscmh_rs_code_mode` - ATSC-M\/H Reed Solomon modes
      \* @ATSCMH\_RSCODE\_211\_187\:      Reed Solomon code (211,187).
      \* @ATSCMH\_RSCODE\_223\_187\:      Reed Solomon code (223,187).
      \* @ATSCMH\_RSCODE\_235\_187\:      Reed Solomon code (235,187).

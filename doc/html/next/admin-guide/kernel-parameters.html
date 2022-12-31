@@ -1,75 +1,39 @@
+
 <!DOCTYPE html>
-<html class="writer-html5" lang="en" >
-<head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>The kernel’s command-line parameters &mdash; The Linux Kernel  documentation</title><link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+  <head>
+    <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>The kernel’s command-line parameters &#8212; The Linux Kernel  documentation</title>
+    <link rel="stylesheet" href="../_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-      <link rel="stylesheet" href="../_static/theme_overrides.css" type="text/css" />
-      <link rel="stylesheet" href="../_static/theme_rtd_colors.css" type="text/css" />
-  <!--[if lt IE 9]>
-    <script src="../_static/js/html5shiv.min.js"></script>
-  <![endif]-->
-  <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
-        <script src="../_static/jquery.js"></script>
-        <script src="../_static/underscore.js"></script>
-        <script src="../_static/doctools.js"></script>
-        <script src="../_static/language_data.js"></script>
-    <script src="../_static/js/theme.js"></script>
+    <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/language_data.js"></script>
+    <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
     <link rel="index" title="Index" href="../genindex.html" />
-    <link rel="search" title="Search" href="../search.html" /> 
-</head>
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Linux allocated devices (4.x+ version)" href="devices.html" />
+    <link rel="prev" title="Linux kernel release 6.x &lt;http://kernel.org/&gt;" href="README.html" />
+   
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
 
-<body class="wy-body-for-nav"> 
-  <div class="wy-grid-for-nav">
-    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
-      <div class="wy-side-scroll">
-        <div class="wy-side-nav-search" >
-            <a href="../index.html" class="icon icon-home"> The Linux Kernel
-          </a>
-              <div class="version">
-                6.0.0-rc3-mm-unstable-damon
-              </div>
-<div role="search">
-  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" />
-    <input type="hidden" name="check_keywords" value="yes" />
-    <input type="hidden" name="area" value="default" />
-  </form>
-</div>
-        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
-              <ul>
-<li class="toctree-l1"><a class="reference internal" href="mm/damon/index.html">DAMON: Data Access MONitor</a></li>
-</ul>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="../mm/damon/index.html">DAMON: Data Access MONitor</a></li>
-</ul>
+  </head><body>
+  
 
-        </div>
-      </div>
-    </nav>
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
 
-    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
-          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../index.html">The Linux Kernel</a>
-      </nav>
-
-      <div class="wy-nav-content">
-        <div class="rst-content">
-          <div role="navigation" aria-label="Page navigation">
-  <ul class="wy-breadcrumbs">
-      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
-      <li>The kernel’s command-line parameters</li>
-      <li class="wy-breadcrumbs-aside">
-            <a href="../_sources/admin-guide/kernel-parameters.rst.txt" rel="nofollow"> View page source</a>
-      </li>
-  </ul>
-  <hr/>
-</div>
-          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
-           <div itemprop="articleBody">
-             
+          <div class="body" role="main">
+            
   <section id="the-kernel-s-command-line-parameters">
 <span id="kernelparameters"></span><h1>The kernel’s command-line parameters<a class="headerlink" href="#the-kernel-s-command-line-parameters" title="Permalink to this headline">¶</a></h1>
 <p>The following is a consolidated list of the kernel parameters as implemented
@@ -590,6 +554,8 @@ bytes respectively. Such letter suffixes can also be entirely omitted:</p>
                         force_enable - Force enable the IOMMU on platforms known
                                        to be buggy with IOMMU enabled. Use this
                                        option with care.
+                        pgtbl_v1     - Use v1 page table for DMA-API (Default).
+                        pgtbl_v2     - Use v2 page table for DMA-API.
 
         amd_iommu_dump= [HW,X86-64]
                         Enable AMD IOMMU driver option to dump the ACPI table
@@ -970,6 +936,17 @@ bytes respectively. Such letter suffixes can also be entirely omitted:</p>
         condev=         [HW,S390] console device
         conmode=
 
+        con3215_drop=   [S390] 3215 console drop mode.
+                        Format: y|n|Y|N|1|0
+                        When set to true, drop data on the 3215 console when
+                        the console buffer is full. In this case the
+                        operator using a 3270 terminal emulator (for example
+                        x3270) does not have to enter the clear key for the
+                        console output to advance and the kernel to continue.
+                        This leads to a much faster boot time when a 3270
+                        terminal emulator is active. If no 3270 terminal
+                        emulator is used, this parameter has no effect.
+
         console=        [KNL] Output console device and options.
 
                 tty&lt;n&gt;  Use the virtual console device &lt;n&gt;.
@@ -1098,7 +1075,7 @@ bytes respectively. Such letter suffixes can also be entirely omitted:</p>
                         memory region [offset, offset + size] for that kernel
                         image. If '&#64;offset' is omitted, then a suitable offset
                         is selected automatically.
-                        [KNL, X86-64] Select a region under 4G first, and
+                        [KNL, X86-64, ARM64] Select a region under 4G first, and
                         fall back to reserve region above 4G when '&#64;offset'
                         hasn't been specified.
                         See Documentation/admin-guide/kdump/kdump.rst for further details.
@@ -1118,25 +1095,22 @@ bytes respectively. Such letter suffixes can also be entirely omitted:</p>
                         available.
                         It will be ignored if crashkernel=X is specified.
         crashkernel=size[KMG],low
-                        [KNL, X86-64] range under 4G. When crashkernel=X,high
+                        [KNL, X86-64, ARM64] range under 4G. When crashkernel=X,high
                         is passed, kernel could allocate physical memory region
                         above 4G, that cause second kernel crash on system
                         that require some amount of low memory, e.g. swiotlb
                         requires at least 64M+32K low memory, also enough extra
                         low memory is needed to make sure DMA buffers for 32-bit
                         devices won't run out. Kernel would try to allocate
-                        at least 256M below 4G automatically.
+                        default size of memory below 4G automatically. The default
+                        size is platform dependent.
+                          --&gt; x86: max(swiotlb_size_or_default() + 8MiB, 256MiB)
+                          --&gt; arm64: 128MiB
                         This one lets the user specify own low range under 4G
                         for second kernel instead.
                         0: to disable low allocation.
                         It will be ignored when crashkernel=X,high is not used
                         or memory reserved is below 4G.
-
-                        [KNL, ARM64] range in low memory.
-                        This one lets the user specify a low range in the
-                        DMA zone for the crash dump kernel.
-                        It will be ignored when crashkernel=X,high is not used
-                        or memory reserved is located in the DMA zones.
 
         cryptomgr.notests
                         [KNL] Disable crypto self-tests
@@ -1235,10 +1209,6 @@ bytes respectively. Such letter suffixes can also be entirely omitted:</p>
 
         debugpat        [X86] Enable PAT debugging
 
-        decnet.addr=    [HW,NET]
-                        Format: &lt;area&gt;[,&lt;node&gt;]
-                        See also Documentation/networking/decnet.rst.
-
         default_hugepagesz=
                         [HW] The size of the default HugeTLB page. This is
                         the size represented by the legacy /proc/ hugepages
@@ -1312,6 +1282,11 @@ bytes respectively. Such letter suffixes can also be entirely omitted:</p>
                         Limits the number of kernel SLB entries, and flushes
                         them frequently to increase the rate of SLB faults
                         on kernel addresses.
+
+        stress_hpt      [PPC]
+                        Limits the number of kernel HPT entries in the hash
+                        page table to increase the rate of hash page table
+                        faults on kernel addresses.
 
         disable=        [IPV6]
                         See Documentation/networking/ipv6.rst.
@@ -2571,7 +2546,13 @@ bytes respectively. Such letter suffixes can also be entirely omitted:</p>
                         Provide an override to the IOAPIC-ID&lt;-&gt;DEVICE-ID
                         mapping provided in the IVRS ACPI table.
                         By default, PCI segment is 0, and can be omitted.
-                        For example:
+
+                        For example, to map IOAPIC-ID decimal 10 to
+                        PCI segment 0x1 and PCI device 00:14.0,
+                        write the parameter as:
+                                ivrs_ioapic=10&#64;0001:00:14.0
+
+                        Deprecated formats:
                         * To map IOAPIC-ID decimal 10 to PCI device 00:14.0
                           write the parameter as:
                                 ivrs_ioapic[10]=00:14.0
@@ -2583,7 +2564,13 @@ bytes respectively. Such letter suffixes can also be entirely omitted:</p>
                         Provide an override to the HPET-ID&lt;-&gt;DEVICE-ID
                         mapping provided in the IVRS ACPI table.
                         By default, PCI segment is 0, and can be omitted.
-                        For example:
+
+                        For example, to map HPET-ID decimal 10 to
+                        PCI segment 0x1 and PCI device 00:14.0,
+                        write the parameter as:
+                                ivrs_hpet=10&#64;0001:00:14.0
+
+                        Deprecated formats:
                         * To map HPET-ID decimal 0 to PCI device 00:14.0
                           write the parameter as:
                                 ivrs_hpet[0]=00:14.0
@@ -2594,15 +2581,20 @@ bytes respectively. Such letter suffixes can also be entirely omitted:</p>
         ivrs_acpihid    [HW,X86-64]
                         Provide an override to the ACPI-HID:UID&lt;-&gt;DEVICE-ID
                         mapping provided in the IVRS ACPI table.
+                        By default, PCI segment is 0, and can be omitted.
 
                         For example, to map UART-HID:UID AMD0020:0 to
                         PCI segment 0x1 and PCI device ID 00:14.5,
                         write the parameter as:
-                                ivrs_acpihid[0001:00:14.5]=AMD0020:0
+                                ivrs_acpihid=AMD0020:0&#64;0001:00:14.5
 
-                        By default, PCI segment is 0, and can be omitted.
-                        For example, PCI device 00:14.5 write the parameter as:
+                        Deprecated formats:
+                        * To map UART-HID:UID AMD0020:0 to PCI segment is 0,
+                          PCI device ID 00:14.5, write the parameter as:
                                 ivrs_acpihid[00:14.5]=AMD0020:0
+                        * To map UART-HID:UID AMD0020:0 to PCI segment 0x1 and
+                          PCI device ID 00:14.5, write the parameter as:
+                                ivrs_acpihid[0001:00:14.5]=AMD0020:0
 
         js=             [HW,JOY] Analog joystick
                         See Documentation/input/joydev/joystick.rst.
@@ -2712,6 +2704,12 @@ bytes respectively. Such letter suffixes can also be entirely omitted:</p>
                         Default: enabled on cores which need mitigation.
                         0: force disabled
                         1: force enabled
+
+        kunit.enable=   [KUNIT] Enable executing KUnit tests. Requires
+                        CONFIG_KUNIT to be set to be fully enabled. The
+                        default value can be overridden via
+                        KUNIT_DEFAULT_ENABLED.
+                        Default is 1 (enabled)
 
         kvm.ignore_msrs=[KVM] Ignore guest accesses to unhandled MSRs.
                         Default is 0 (don't ignore, but inject #GP)
@@ -3484,6 +3482,7 @@ bytes respectively. Such letter suffixes can also be entirely omitted:</p>
                                                spectre_v2_user=off [X86]
                                                spec_store_bypass_disable=off [X86,PPC]
                                                ssbd=force-off [ARM64]
+                                               nospectre_bhb [ARM64]
                                                l1tf=off [X86]
                                                mds=off [X86]
                                                tsx_async_abort=off [X86]
@@ -3890,7 +3889,7 @@ bytes respectively. Such letter suffixes can also be entirely omitted:</p>
 
         nohugeiomap     [KNL,X86,PPC,ARM64] Disable kernel huge I/O mappings.
 
-        nohugevmalloc   [PPC] Disable kernel huge vmalloc mappings.
+        nohugevmalloc   [KNL,X86,PPC,ARM64] Disable kernel huge vmalloc mappings.
 
         nosmt           [KNL,S390] Disable symmetric multithreading (SMT).
                         Equivalent to smt=1.
@@ -3903,10 +3902,14 @@ bytes respectively. Such letter suffixes can also be entirely omitted:</p>
                         (bounds check bypass). With this option data leaks are
                         possible in the system.
 
-        nospectre_v2    [X86,PPC_FSL_BOOK3E,ARM64] Disable all mitigations for
+        nospectre_v2    [X86,PPC_E500,ARM64] Disable all mitigations for
                         the Spectre variant 2 (indirect branch prediction)
                         vulnerability. System may allow data leaks with this
                         option.
+
+        nospectre_bhb   [ARM64] Disable all mitigations for Spectre-BHB (branch
+                        history injection) vulnerability. System may allow data leaks
+                        with this option.
 
         nospec_store_bypass_disable
                         [HW] Disable all mitigations for the Speculative Store Bypass vulnerability
@@ -4018,9 +4021,9 @@ bytes respectively. Such letter suffixes can also be entirely omitted:</p>
                         [X86,PV_OPS] Disable paravirtualized VMware scheduler
                         clock and use the default one.
 
-        no-steal-acc    [X86,PV_OPS,ARM64] Disable paravirtualized steal time
-                        accounting. steal time is computed, but won't
-                        influence scheduler behaviour
+        no-steal-acc    [X86,PV_OPS,ARM64,PPC/PSERIES] Disable paravirtualized
+                        steal time accounting. steal time is computed, but
+                        won't influence scheduler behaviour
 
         nolapic         [X86-32,APIC] Do not enable or use the local APIC.
 
@@ -4037,12 +4040,15 @@ bytes respectively. Such letter suffixes can also be entirely omitted:</p>
                         shutdown the other cpus.  Instead use the REBOOT_VECTOR
                         irq.
 
-        nomodeset       Disable kernel modesetting. DRM drivers will not perform
-                        display-mode changes or accelerated rendering. Only the
-                        system framebuffer will be available for use if this was
-                        set-up by the firmware or boot loader.
+        nomodeset       Disable kernel modesetting. Most systems' firmware
+                        sets up a display mode and provides framebuffer memory
+                        for output. With nomodeset, DRM and fbdev drivers will
+                        not load if they could possibly displace the pre-
+                        initialized output. Only the system framebuffer will
+                        be available for use. The respective drivers will not
+                        perform display-mode changes or accelerated rendering.
 
-                        Useful as fallback, or for testing and debugging.
+                        Useful as error fallback, or for testing and debugging.
 
         nomodule        Disable module load
 
@@ -4081,6 +4087,10 @@ bytes respectively. Such letter suffixes can also be entirely omitted:</p>
         nowb            [ARM]
 
         nox2apic        [X86-64,APIC] Do not enable x2APIC mode.
+
+                        NOTE: this parameter will be ignored on systems with the
+                        LEGACY_XAPIC_DISABLED bit set in the
+                        IA32_XAPIC_DISABLE_STATUS MSR.
 
         nps_mtm_hs_ctr= [KNL,ARC]
                         This parameter sets the maximum duration, in
@@ -4822,17 +4832,15 @@ bytes respectively. Such letter suffixes can also be entirely omitted:</p>
 
         ramdisk_start=  [RAM] RAM disk image start address
 
-        random.trust_cpu={on,off}
-                        [KNL] Enable or disable trusting the use of the
-                        CPU's random number generator (if available) to
-                        fully seed the kernel's CRNG. Default is controlled
-                        by CONFIG_RANDOM_TRUST_CPU.
+        random.trust_cpu=off
+                        [KNL] Disable trusting the use of the CPU's
+                        random number generator (if available) to
+                        initialize the kernel's RNG.
 
-        random.trust_bootloader={on,off}
-                        [KNL] Enable or disable trusting the use of a
-                        seed passed by the bootloader (if available) to
-                        fully seed the kernel's CRNG. Default is controlled
-                        by CONFIG_RANDOM_TRUST_BOOTLOADER.
+        random.trust_bootloader=off
+                        [KNL] Disable trusting the use of the a seed
+                        passed by the bootloader (if available) to
+                        initialize the kernel's RNG.
 
         randomize_kstack_offset=
                         [KNL] Enable or disable kernel stack offset
@@ -6305,12 +6313,6 @@ bytes respectively. Such letter suffixes can also be entirely omitted:</p>
                         This parameter controls use of the Protected
                         Execution Facility on pSeries.
 
-        swapaccount=    [KNL]
-                        Format: [0|1]
-                        Enable accounting of swap in memory resource
-                        controller if no parameter or 1 is given or disable
-                        it if 0 is given (See Documentation/admin-guide/cgroup-v1/memory.rst)
-
         swiotlb=        [ARM,IA-64,PPC,MIPS,X86]
                         Format: { &lt;int&gt; [,&lt;int&gt;] | force | noforce }
                         &lt;int&gt; -- Number of I/O TLB slabs
@@ -6518,6 +6520,25 @@ bytes respectively. Such letter suffixes can also be entirely omitted:</p>
 
                         See also Documentation/trace/ftrace.rst &quot;trace options&quot;
                         section.
+
+        trace_trigger=[trigger-list]
+                        [FTRACE] Add a event trigger on specific events.
+                        Set a trigger on top of a specific event, with an optional
+                        filter.
+
+                        The format is is &quot;trace_trigger=&lt;event&gt;.&lt;trigger&gt;[ if &lt;filter&gt;],...&quot;
+                        Where more than one trigger may be specified that are comma deliminated.
+
+                        For example:
+
+                          trace_trigger=&quot;sched_switch.stacktrace if prev_state == 2&quot;
+
+                        The above will enable the &quot;stacktrace&quot; trigger on the &quot;sched_switch&quot;
+                        event but only trigger it if the &quot;prev_state&quot; of the &quot;sched_switch&quot;
+                        event is &quot;2&quot; (TASK_UNINTERUPTIBLE).
+
+                        See also &quot;Event triggers&quot; in Documentation/trace/events.rst
+
 
         traceoff_on_warning
                         [FTRACE] enable this option to disable tracing when a
@@ -7113,6 +7134,12 @@ bytes respectively. Such letter suffixes can also be entirely omitted:</p>
                         Crash from Xen panic notifier, without executing late
                         panic() code such as dumping handler.
 
+        xen_msr_safe=   [X86,XEN]
+                        Format: &lt;bool&gt;
+                        Select whether to always use non-faulting (safe) MSR
+                        access functions when running as Xen PV guest. The
+                        default value is controlled by CONFIG_XEN_PV_MSR_SAFE.
+
         xen_nopvspin    [X86,XEN]
                         Disables the qspinlock slowpath using Xen PV optimizations.
                         This parameter is obsoleted by &quot;nopvspin&quot; parameter, which
@@ -7215,6 +7242,17 @@ bytes respectively. Such letter suffixes can also be entirely omitted:</p>
                                 memory, and other data can't be written using
                                 xmon commands.
                         off     xmon is disabled.
+
+        amd_pstate=     [X86]
+                        disable
+                          Do not enable amd_pstate as the default
+                          scaling driver for the supported processors
+                        passive
+                          Use amd_pstate as a scaling driver, driver requests a
+                          desired performance on this abstract scale and the power
+                          management firmware translates the requests into actual
+                          hardware states (core frequency, data fabric and memory
+                          clocks etc.)
 </pre>
 </section>
 <section id="todo">
@@ -7226,31 +7264,68 @@ bytes respectively. Such letter suffixes can also be entirely omitted:</p>
 </section>
 
 
-           </div>
           </div>
-          <footer>
-
-  <hr/>
-
-  <div role="contentinfo">
-    <p>&#169; Copyright The kernel development community.</p>
-  </div>
-
-  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
-    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
-    provided by <a href="https://readthedocs.org">Read the Docs</a>.
-   
-
-</footer>
+          
         </div>
       </div>
-    </section>
-  </div>
-  <script>
-      jQuery(function () {
-          SphinxRtdTheme.Navigation.enable(true);
-      });
-  </script> 
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../index.html">The Linux Kernel</a></h1>
 
-</body>
+
+
+<p class="blurb">6.1.0-mm-unstable-damon</p>
+
+
+
+
+
+
+
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+  <h3><a href="../index.html">Table of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">The kernel’s command-line parameters</a><ul>
+<li><a class="reference internal" href="#cpu-lists">cpu lists:</a></li>
+<li><a class="reference internal" href="#todo">Todo</a></li>
+</ul>
+</li>
+</ul>
+
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/admin-guide/kernel-parameters.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;The kernel development community.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 2.4.4</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="../_sources/admin-guide/kernel-parameters.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
 </html>

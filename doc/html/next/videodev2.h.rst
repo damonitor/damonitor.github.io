@@ -509,7 +509,6 @@ videodev2.h
     \#define :ref:`V4L2_CAP_META_CAPTURE <device-capabilities>`           0x00800000  \/\* Is a metadata capture device \*\/
 
     \#define :ref:`V4L2_CAP_READWRITE <device-capabilities>`              0x01000000  \/\* read\/write systemcalls \*\/
-    \#define :ref:`V4L2_CAP_ASYNCIO <device-capabilities>`                0x02000000  \/\* async I\/O \*\/
     \#define :ref:`V4L2_CAP_STREAMING <device-capabilities>`              0x04000000  \/\* streaming I\/O ioctls \*\/
     \#define :ref:`V4L2_CAP_META_OUTPUT <device-capabilities>`            0x08000000  \/\* Is a metadata output device \*\/
 
@@ -662,6 +661,8 @@ videodev2.h
     \#define \ :ref:`V4L2_PIX_FMT_NV12_16L16 <v4l2-pix-fmt-nv12-16l16>` v4l2\_fourcc('H', 'M', '1', '2') \/\* 12  Y\/CbCr 4\:2\:0 16x16 tiles \*\/
     \#define \ :ref:`V4L2_PIX_FMT_NV12_32L32 <v4l2-pix-fmt-nv12-32l32>` v4l2\_fourcc('S', 'T', '1', '2') \/\* 12  Y\/CbCr 4\:2\:0 32x32 tiles \*\/
     \#define \ :ref:`V4L2_PIX_FMT_P010_4L4 <v4l2-pix-fmt-p010-4l4>` v4l2\_fourcc('T', '0', '1', '0') \/\* 12  Y\/CbCr 4\:2\:0 10-bit 4x4 macroblocks \*\/
+    \#define \ :ref:`V4L2_PIX_FMT_NV12_8L128 <v4l2-pix-fmt-nv12-8l128>`       v4l2\_fourcc('A', 'T', '1', '2') \/\* Y\/CbCr 4\:2\:0 8x128 tiles \*\/
+    \#define \ :ref:`V4L2_PIX_FMT_NV12_10BE_8L128 <v4l2-pix-fmt-nv12-10be-8l128>`  v4l2\_fourcc\_be('A', 'X', '1', '2') \/\* Y\/CbCr 4\:2\:0 10-bit 8x128 tiles \*\/
 
     \/\* Tiled YUV formats, non contiguous planes \*\/
     \#define \ :ref:`V4L2_PIX_FMT_NV12MT <v4l2-pix-fmt-nv12mt>`  v4l2\_fourcc('T', 'M', '1', '2') \/\* 12  Y\/CbCr 4\:2\:0 64x32 tiles \*\/
@@ -783,6 +784,7 @@ videodev2.h
     \#define \ :ref:`V4L2_PIX_FMT_HI240 <v4l2-pix-fmt-hi240>`    v4l2\_fourcc('H', 'I', '2', '4') \/\* BTTV 8-bit dithered RGB \*\/
     \#define \ :ref:`V4L2_PIX_FMT_QC08C <v4l2-pix-fmt-qc08c>`    v4l2\_fourcc('Q', '0', '8', 'C') \/\* Qualcomm 8-bit compressed \*\/
     \#define \ :ref:`V4L2_PIX_FMT_QC10C <v4l2-pix-fmt-qc10c>`    v4l2\_fourcc('Q', '1', '0', 'C') \/\* Qualcomm 10-bit compressed \*\/
+    \#define \ :ref:`V4L2_PIX_FMT_AJPG <v4l2-pix-fmt-ajpg>`     v4l2\_fourcc('A', 'J', 'P', 'G') \/\* Aspeed JPEG \*\/
 
     \/\* 10bit raw packed, 32 bytes for every 25 pixels, last LSB 6 bits unused \*\/
     \#define \ :ref:`V4L2_PIX_FMT_IPU3_SBGGR10 <v4l2-pix-fmt-ipu3-sbggr10>`       v4l2\_fourcc('i', 'p', '3', 'b') \/\* IPU3 packed 10-bit BGGR bayer \*\/
@@ -1608,7 +1610,8 @@ videodev2.h
             ((bt)-\>width + V4L2\_DV\_BT\_BLANKING\_WIDTH(bt))
     \#define V4L2\_DV\_BT\_BLANKING\_HEIGHT(bt) \\
             ((bt)-\>vfrontporch + (bt)-\>vsync + (bt)-\>vbackporch + \\
-             (bt)-\>il\_vfrontporch + (bt)-\>il\_vsync + (bt)-\>il\_vbackporch)
+             ((bt)-\>interlaced ? \\
+              ((bt)-\>il\_vfrontporch + (bt)-\>il\_vsync + (bt)-\>il\_vbackporch) \: 0))
     \#define V4L2\_DV\_BT\_FRAME\_HEIGHT(bt) \\
             ((bt)-\>height + V4L2\_DV\_BT\_BLANKING\_HEIGHT(bt))
 
@@ -1784,6 +1787,8 @@ videodev2.h
                     \_\_u8 \_\_user \*p\_u8;
                     \_\_u16 \_\_user \*p\_u16;
                     \_\_u32 \_\_user \*p\_u32;
+                    \_\_u32 \_\_user \*p\_s32;
+                    \_\_u32 \_\_user \*p\_s64;
                     struct v4l2_area \_\_user \*p\_area;
                     struct v4l2\_ctrl\_h264\_sps \_\_user \*p\_h264\_sps;
                     struct v4l2\_ctrl\_h264\_pps \*p\_h264\_pps;
@@ -2436,6 +2441,7 @@ videodev2.h
     \#define :ref:`V4L2_EVENT_CTRL_CH_VALUE <ctrl-changes-flags>`                (1 \<\< 0)
     \#define :ref:`V4L2_EVENT_CTRL_CH_FLAGS <ctrl-changes-flags>`                (1 \<\< 1)
     \#define :ref:`V4L2_EVENT_CTRL_CH_RANGE <ctrl-changes-flags>`                (1 \<\< 2)
+    \#define :ref:`V4L2_EVENT_CTRL_CH_DIMENSIONS <ctrl-changes-flags>`           (1 \<\< 3)
 
     struct v4l2_event_ctrl \{
             \_\_u32 changes;
@@ -2683,6 +2689,11 @@ videodev2.h
     \#ifndef \_\_KERNEL\_\_
     \#define :c:type:`V4L2_PIX_FMT_HM12 <v4l2_pix_format>` \ :ref:`V4L2_PIX_FMT_NV12_16L16 <v4l2-pix-fmt-nv12-16l16>`
     \#define :c:type:`V4L2_PIX_FMT_SUNXI_TILED_NV12 <v4l2_pix_format>` \ :ref:`V4L2_PIX_FMT_NV12_32L32 <v4l2-pix-fmt-nv12-32l32>`
+    \/\*
+     \* This capability was never implemented, anyone using this cap should drop it
+     \* from their code.
+     \*\/
+    \#define :ref:`V4L2_CAP_ASYNCIO <device-capabilities>` 0x02000000
     \#endif
 
     \#endif \/\* \_UAPI\_\_LINUX\_VIDEODEV2\_H \*\/

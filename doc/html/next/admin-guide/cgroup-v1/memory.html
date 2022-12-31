@@ -1,75 +1,39 @@
+
 <!DOCTYPE html>
-<html class="writer-html5" lang="en" >
-<head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Memory Resource Controller &mdash; The Linux Kernel  documentation</title><link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+  <head>
+    <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>Memory Resource Controller &#8212; The Linux Kernel  documentation</title>
+    <link rel="stylesheet" href="../../_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
-      <link rel="stylesheet" href="../../_static/theme_overrides.css" type="text/css" />
-      <link rel="stylesheet" href="../../_static/theme_rtd_colors.css" type="text/css" />
-  <!--[if lt IE 9]>
-    <script src="../../_static/js/html5shiv.min.js"></script>
-  <![endif]-->
-  <script id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
-        <script src="../../_static/jquery.js"></script>
-        <script src="../../_static/underscore.js"></script>
-        <script src="../../_static/doctools.js"></script>
-        <script src="../../_static/language_data.js"></script>
-    <script src="../../_static/js/theme.js"></script>
+    <script id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/jquery.js"></script>
+    <script src="../../_static/underscore.js"></script>
+    <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/language_data.js"></script>
+    <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
-    <link rel="search" title="Search" href="../../search.html" /> 
-</head>
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Misc controller" href="misc.html" />
+    <link rel="prev" title="Memory Resource Controller(Memcg) Implementation Memo" href="memcg_test.html" />
+   
+  <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
 
-<body class="wy-body-for-nav"> 
-  <div class="wy-grid-for-nav">
-    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
-      <div class="wy-side-scroll">
-        <div class="wy-side-nav-search" >
-            <a href="../../index.html" class="icon icon-home"> The Linux Kernel
-          </a>
-              <div class="version">
-                6.0.0-rc3-mm-unstable-damon
-              </div>
-<div role="search">
-  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" />
-    <input type="hidden" name="check_keywords" value="yes" />
-    <input type="hidden" name="area" value="default" />
-  </form>
-</div>
-        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
-              <ul>
-<li class="toctree-l1"><a class="reference internal" href="../mm/damon/index.html">DAMON: Data Access MONitor</a></li>
-</ul>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="../../mm/damon/index.html">DAMON: Data Access MONitor</a></li>
-</ul>
+  </head><body>
+  
 
-        </div>
-      </div>
-    </nav>
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
 
-    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
-          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../../index.html">The Linux Kernel</a>
-      </nav>
-
-      <div class="wy-nav-content">
-        <div class="rst-content">
-          <div role="navigation" aria-label="Page navigation">
-  <ul class="wy-breadcrumbs">
-      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
-      <li>Memory Resource Controller</li>
-      <li class="wy-breadcrumbs-aside">
-            <a href="../../_sources/admin-guide/cgroup-v1/memory.rst.txt" rel="nofollow"> View page source</a>
-      </li>
-  </ul>
-  <hr/>
-</div>
-          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
-           <div itemprop="articleBody">
-             
+          <div class="body" role="main">
+            
   <section id="memory-resource-controller">
 <h1>Memory Resource Controller<a class="headerlink" href="#memory-resource-controller" title="Permalink to this headline">¶</a></h1>
 <dl class="simple">
@@ -192,7 +156,9 @@ used.</p></td>
 (See sysctl’s vm.swappiness)</p></td>
 </tr>
 <tr class="row-even"><td><p>memory.move_charge_at_immigrate</p></td>
-<td><p>set/show controls of moving charges</p></td>
+<td><p>set/show controls of moving charges
+This knob is deprecated and shouldn’t be
+used.</p></td>
 </tr>
 <tr class="row-odd"><td><p>memory.oom_control</p></td>
 <td><p>set/show oom controls.</p></td>
@@ -410,8 +376,8 @@ limits on the root cgroup.</p>
 lruvec-&gt;lru_lock; PG_lru bit of page-&gt;flags is cleared before
 isolating a page from its LRU under lruvec-&gt;lru_lock.</p>
 </section>
-<section id="kernel-memory-extension-config-memcg-kmem">
-<h3>2.7 Kernel Memory Extension (CONFIG_MEMCG_KMEM)<a class="headerlink" href="#kernel-memory-extension-config-memcg-kmem" title="Permalink to this headline">¶</a></h3>
+<section id="kernel-memory-extension">
+<h3>2.7 Kernel Memory Extension<a class="headerlink" href="#kernel-memory-extension" title="Permalink to this headline">¶</a></h3>
 <p>With the Kernel memory extension, the Memory Controller is able to limit
 the amount of kernel memory used by the system. Kernel memory is fundamentally
 different than user memory, since it can’t be swapped out, which makes it
@@ -487,8 +453,6 @@ want to track kernel memory usage.</p>
 <ol class="loweralpha simple">
 <li><p>Enable CONFIG_CGROUPS</p></li>
 <li><p>Enable CONFIG_MEMCG</p></li>
-<li><p>Enable CONFIG_MEMCG_SWAP (to use swap extension)</p></li>
-<li><p>Enable CONFIG_MEMCG_KMEM (to use kmem extension)</p></li>
 </ol>
 </section>
 <section id="prepare-the-cgroups-see-cgroups-txt-why-are-cgroups-needed">
@@ -657,7 +621,8 @@ LRU list.</p></td>
 LRU list.</p></td>
 </tr>
 <tr class="row-even"><td><p>inactive_file</p></td>
-<td><p># of bytes of file-backed memory on inactive LRU list.</p></td>
+<td><p># of bytes of file-backed memory and MADV_FREE anonymous memory(
+LazyFree pages) on inactive LRU list.</p></td>
 </tr>
 <tr class="row-odd"><td><p>active_file</p></td>
 <td><p># of bytes of file-backed memory on active LRU list.</p></td>
@@ -849,8 +814,13 @@ otherwise the hard limit will take precedence.</p>
 </dl>
 </section>
 </section>
-<section id="move-charges-at-task-migration">
-<h2>8. Move charges at task migration<a class="headerlink" href="#move-charges-at-task-migration" title="Permalink to this headline">¶</a></h2>
+<section id="move-charges-at-task-migration-deprecated">
+<h2>8. Move charges at task migration (DEPRECATED!)<a class="headerlink" href="#move-charges-at-task-migration-deprecated" title="Permalink to this headline">¶</a></h2>
+<p>THIS IS DEPRECATED!</p>
+<p>It’s expensive and unreliable! It’s better practice to launch workload
+tasks directly from inside their target cgroup. Use dedicated workload
+cgroups to allow fine-grained policy adjustments without having to
+move physical pages between control domains.</p>
 <p>Users can move charges associated with a task along with task migration, that
 is, uncharge task’s pages from the old cgroup and charge them to the new cgroup.
 This feature is not supported in !CONFIG_MMU environments because of lack of
@@ -1118,31 +1088,126 @@ subsystem (v3), <a class="reference external" href="http://lwn.net/Articles/2355
 </section>
 
 
-           </div>
           </div>
-          <footer>
-
-  <hr/>
-
-  <div role="contentinfo">
-    <p>&#169; Copyright The kernel development community.</p>
-  </div>
-
-  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
-    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
-    provided by <a href="https://readthedocs.org">Read the Docs</a>.
-   
-
-</footer>
+          
         </div>
       </div>
-    </section>
-  </div>
-  <script>
-      jQuery(function () {
-          SphinxRtdTheme.Navigation.enable(true);
-      });
-  </script> 
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../../index.html">The Linux Kernel</a></h1>
 
-</body>
+
+
+<p class="blurb">6.1.0-mm-unstable-damon</p>
+
+
+
+
+
+
+
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+  <h3><a href="../../index.html">Table of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Memory Resource Controller</a><ul>
+<li><a class="reference internal" href="#benefits-and-purpose-of-the-memory-controller">Benefits and Purpose of the memory controller</a></li>
+<li><a class="reference internal" href="#history">1. History</a></li>
+<li><a class="reference internal" href="#memory-control">2. Memory Control</a><ul>
+<li><a class="reference internal" href="#design">2.1. Design</a></li>
+<li><a class="reference internal" href="#accounting">2.2. Accounting</a></li>
+<li><a class="reference internal" href="#accounting-details">2.2.1 Accounting details</a></li>
+<li><a class="reference internal" href="#shared-page-accounting">2.3 Shared Page Accounting</a></li>
+<li><a class="reference internal" href="#swap-extension">2.4 Swap Extension</a></li>
+<li><a class="reference internal" href="#reclaim">2.5 Reclaim</a></li>
+<li><a class="reference internal" href="#locking">2.6 Locking</a></li>
+<li><a class="reference internal" href="#kernel-memory-extension">2.7 Kernel Memory Extension</a></li>
+<li><a class="reference internal" href="#current-kernel-memory-resources-accounted">2.7.1 Current Kernel Memory resources accounted</a></li>
+<li><a class="reference internal" href="#common-use-cases">2.7.2 Common use cases</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#user-interface">3. User Interface</a><ul>
+<li><a class="reference internal" href="#configuration">3.0. Configuration</a></li>
+<li><a class="reference internal" href="#prepare-the-cgroups-see-cgroups-txt-why-are-cgroups-needed">3.1. Prepare the cgroups (see cgroups.txt, Why are cgroups needed?)</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#testing">4. Testing</a><ul>
+<li><a class="reference internal" href="#troubleshooting">4.1 Troubleshooting</a></li>
+<li><a class="reference internal" href="#task-migration">4.2 Task migration</a></li>
+<li><a class="reference internal" href="#removing-a-cgroup">4.3 Removing a cgroup</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#misc-interfaces">5. Misc. interfaces</a><ul>
+<li><a class="reference internal" href="#force-empty">5.1 force_empty</a></li>
+<li><a class="reference internal" href="#stat-file">5.2 stat file</a><ul>
+<li><a class="reference internal" href="#per-memory-cgroup-local-status">per-memory cgroup local status</a></li>
+<li><a class="reference internal" href="#status-considering-hierarchy-see-memory-use-hierarchy-settings">status considering hierarchy (see memory.use_hierarchy settings)</a></li>
+<li><a class="reference internal" href="#the-following-additional-stats-are-dependent-on-config-debug-vm">The following additional stats are dependent on CONFIG_DEBUG_VM</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#swappiness">5.3 swappiness</a></li>
+<li><a class="reference internal" href="#failcnt">5.4 failcnt</a></li>
+<li><a class="reference internal" href="#usage-in-bytes">5.5 usage_in_bytes</a></li>
+<li><a class="reference internal" href="#numa-stat">5.6 numa_stat</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#hierarchy-support">6. Hierarchy support</a><ul>
+<li><a class="reference internal" href="#hierarchical-accounting-and-reclaim">6.1 Hierarchical accounting and reclaim</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#soft-limits">7. Soft limits</a><ul>
+<li><a class="reference internal" href="#interface">7.1 Interface</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#move-charges-at-task-migration-deprecated">8. Move charges at task migration (DEPRECATED!)</a><ul>
+<li><a class="reference internal" href="#id1">8.1 Interface</a></li>
+<li><a class="reference internal" href="#type-of-charges-which-can-be-moved">8.2 Type of charges which can be moved</a></li>
+<li><a class="reference internal" href="#todo">8.3 TODO</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#memory-thresholds">9. Memory thresholds</a></li>
+<li><a class="reference internal" href="#oom-control">10. OOM Control</a></li>
+<li><a class="reference internal" href="#memory-pressure">11. Memory Pressure</a></li>
+<li><a class="reference internal" href="#id2">12. TODO</a></li>
+<li><a class="reference internal" href="#summary">Summary</a></li>
+<li><a class="reference internal" href="#references">References</a></li>
+</ul>
+</li>
+</ul>
+
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../../_sources/admin-guide/cgroup-v1/memory.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;The kernel development community.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 2.4.4</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="../../_sources/admin-guide/cgroup-v1/memory.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
 </html>

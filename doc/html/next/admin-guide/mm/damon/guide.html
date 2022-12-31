@@ -1,97 +1,39 @@
-<!DOCTYPE html>
-<html class="writer-html5" lang="en" >
-<head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Optimization Guide &mdash; The Linux Kernel  documentation</title><link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+  <head>
+    <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>Optimization Guide &#8212; The Linux Kernel  documentation</title>
+    <link rel="stylesheet" href="../../../_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
-      <link rel="stylesheet" href="../../../_static/theme_overrides.css" type="text/css" />
-      <link rel="stylesheet" href="../../../_static/theme_rtd_colors.css" type="text/css" />
-  <!--[if lt IE 9]>
-    <script src="../../../_static/js/html5shiv.min.js"></script>
-  <![endif]-->
-  <script id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
-        <script src="../../../_static/jquery.js"></script>
-        <script src="../../../_static/underscore.js"></script>
-        <script src="../../../_static/doctools.js"></script>
-        <script src="../../../_static/language_data.js"></script>
-    <script src="../../../_static/js/theme.js"></script>
+    <script id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+    <script src="../../../_static/jquery.js"></script>
+    <script src="../../../_static/underscore.js"></script>
+    <script src="../../../_static/doctools.js"></script>
+    <script src="../../../_static/language_data.js"></script>
+    <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" />
     <link rel="next" title="Detailed Usages" href="usage.html" />
-    <link rel="prev" title="Getting Started" href="start.html" /> 
-</head>
+    <link rel="prev" title="Getting Started" href="start.html" />
+   
+  <link rel="stylesheet" href="../../../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
 
-<body class="wy-body-for-nav"> 
-  <div class="wy-grid-for-nav">
-    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
-      <div class="wy-side-scroll">
-        <div class="wy-side-nav-search" >
-            <a href="../../../index.html" class="icon icon-home"> The Linux Kernel
-          </a>
-              <div class="version">
-                6.0.0-rc3-mm-unstable-damon
-              </div>
-<div role="search">
-  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" />
-    <input type="hidden" name="check_keywords" value="yes" />
-    <input type="hidden" name="area" value="default" />
-  </form>
-</div>
-        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
-              <ul class="current">
-<li class="toctree-l1 current"><a class="reference internal" href="index.html">DAMON: Data Access MONitor</a><ul class="current">
-<li class="toctree-l2"><a class="reference internal" href="start.html">Getting Started</a></li>
-<li class="toctree-l2 current"><a class="current reference internal" href="#">Optimization Guide</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#check-the-signs">Check The Signs</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#profile">Profile</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#optimize">Optimize</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#memory-configuration">Memory Configuration</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#program-modification">Program Modification</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#automated-damon-based-memory-operations">Automated DAMON-based Memory Operations</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#personalized-damon-application">Personalized DAMON Application</a></li>
-</ul>
-</li>
-<li class="toctree-l3"><a class="reference internal" href="#reference-practices">Reference Practices</a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="usage.html">Detailed Usages</a></li>
-<li class="toctree-l2"><a class="reference internal" href="reclaim.html">DAMON-based Reclamation</a></li>
-<li class="toctree-l2"><a class="reference internal" href="lru_sort.html">DAMON-based LRU-lists Sorting</a></li>
-</ul>
-</li>
-</ul>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="../../../mm/damon/index.html">DAMON: Data Access MONitor</a></li>
-</ul>
+  </head><body>
+  
 
-        </div>
-      </div>
-    </nav>
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
 
-    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
-          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../../../index.html">The Linux Kernel</a>
-      </nav>
-
-      <div class="wy-nav-content">
-        <div class="rst-content">
-          <div role="navigation" aria-label="Page navigation">
-  <ul class="wy-breadcrumbs">
-      <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
-          <li><a href="index.html">DAMON: Data Access MONitor</a> &raquo;</li>
-      <li>Optimization Guide</li>
-      <li class="wy-breadcrumbs-aside">
-            <a href="../../../_sources/admin-guide/mm/damon/guide.rst.txt" rel="nofollow"> View page source</a>
-      </li>
-  </ul>
-  <hr/>
-</div>
-          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
-           <div itemprop="articleBody">
-             
+          <div class="body" role="main">
+            
   <section id="optimization-guide">
 <h1>Optimization Guide<a class="headerlink" href="#optimization-guide" title="Permalink to this headline">¶</a></h1>
 <p>This document helps you estimating the amount of benefit that you could get
@@ -185,10 +127,10 @@ object in the main memory by invoking <code class="docutils literal notranslate"
 <code class="docutils literal notranslate"><span class="pre">MADV_WILLNEED</span></code>.  Or, you could proactively evict the cold object using
 <code class="docutils literal notranslate"><span class="pre">madvise()</span></code> with <code class="docutils literal notranslate"><span class="pre">MADV_COLD</span></code> or <code class="docutils literal notranslate"><span class="pre">MADV_PAGEOUT</span></code>.  Using both together
 would be also worthy.</p>
-<p>A research work <a class="footnote-reference brackets" href="#id9" id="id1">1</a> using the <code class="docutils literal notranslate"><span class="pre">mlock()</span></code> achieved up to 2.55x performance
+<p>A research work <a class="footnote-reference brackets" href="#id8" id="id1">1</a> using the <code class="docutils literal notranslate"><span class="pre">mlock()</span></code> achieved up to 2.55x performance
 speedup.</p>
 <p>Let’s see another realistic example access pattern for this kind of
-optimizations.  This <a class="reference external" href="https://damonitor.github.io/doc/html/v17/admin-guide/mm/damon/guide.html#program-modification">page</a>
+optimizations.  This <a class="reference external" href="https://damonitor.github.io/doc/html/v17/admin-guide/mm/damon/guide.html#program-modification">another page</a>
 shows the visualized access patterns of streamcluster workload in PARSEC3
 benchmark suite.  We can easily identify the 100 MiB sized hot object.</p>
 </section>
@@ -204,7 +146,7 @@ system calls inside the code will also be quite challenging.</p>
 <p>By using DAMON-based operation schemes (DAMOS) via <code class="docutils literal notranslate"><span class="pre">damo</span> <span class="pre">schemes</span></code>, you will
 be able to easily optimize your workload in such a case.  Our example schemes
 called ‘efficient THP’ and ‘proactive reclamation’ achieved significant speedup
-and memory space saves against 25 realistic workloads <a class="footnote-reference brackets" href="#id10" id="id3">2</a>.</p>
+and memory space saves against 25 realistic workloads <a class="footnote-reference brackets" href="#id9" id="id2">2</a>.</p>
 <p>That said, note that you need careful tune of the schemes (e.g., target region
 size and age) and monitoring attributes for the successful use of this
 approach.  Because the optimal values of the parameters will be dependent on
@@ -236,26 +178,26 @@ option.</p>
 <section id="reference-practices">
 <h2>Reference Practices<a class="headerlink" href="#reference-practices" title="Permalink to this headline">¶</a></h2>
 <p>Referencing previously done successful practices could help you getting the
-sense for this kind of optimizations.  There is an academic paper <a class="footnote-reference brackets" href="#id9" id="id4">1</a>
+sense for this kind of optimizations.  There is an academic paper <a class="footnote-reference brackets" href="#id8" id="id3">1</a>
 reporting the visualized access pattern and manual <a class="reference internal" href="#program-modification">Program
 Modification</a> results for a number of realistic workloads.  You can also get
-the visualized access patterns <a class="footnote-reference brackets" href="#id11" id="id5">3</a> <a class="footnote-reference brackets" href="#id12" id="id6">4</a> <a class="footnote-reference brackets" href="#id13" id="id7">5</a> and
+the visualized access patterns <a class="footnote-reference brackets" href="#id10" id="id4">3</a> <a class="footnote-reference brackets" href="#id11" id="id5">4</a> <a class="footnote-reference brackets" href="#id12" id="id6">5</a> and
 <a class="reference internal" href="#automated-damon-based-memory-operations">Automated DAMON-based Memory Operations</a> results for other realistic
-workloads that collected with latest version of DAMON <a class="footnote-reference brackets" href="#id10" id="id8">2</a> .</p>
+workloads that collected with latest version of DAMON <a class="footnote-reference brackets" href="#id9" id="id7">2</a> .</p>
 <dl class="footnote brackets">
-<dt class="label" id="id9"><span class="brackets">1</span><span class="fn-backref">(<a href="#id1">1</a>,<a href="#id4">2</a>)</span></dt>
+<dt class="label" id="id8"><span class="brackets">1</span><span class="fn-backref">(<a href="#id1">1</a>,<a href="#id3">2</a>)</span></dt>
 <dd><p><a class="reference external" href="https://dl.acm.org/doi/10.1145/3366626.3368125">https://dl.acm.org/doi/10.1145/3366626.3368125</a></p>
 </dd>
-<dt class="label" id="id10"><span class="brackets">2</span><span class="fn-backref">(<a href="#id3">1</a>,<a href="#id8">2</a>)</span></dt>
+<dt class="label" id="id9"><span class="brackets">2</span><span class="fn-backref">(<a href="#id2">1</a>,<a href="#id7">2</a>)</span></dt>
 <dd><p><a class="reference external" href="https://damonitor.github.io/test/result/perf/latest/html/">https://damonitor.github.io/test/result/perf/latest/html/</a></p>
 </dd>
-<dt class="label" id="id11"><span class="brackets"><a class="fn-backref" href="#id5">3</a></span></dt>
+<dt class="label" id="id10"><span class="brackets"><a class="fn-backref" href="#id4">3</a></span></dt>
 <dd><p><a class="reference external" href="https://damonitor.github.io/test/result/visual/latest/rec.heatmap.1.png.html">https://damonitor.github.io/test/result/visual/latest/rec.heatmap.1.png.html</a></p>
 </dd>
-<dt class="label" id="id12"><span class="brackets"><a class="fn-backref" href="#id6">4</a></span></dt>
+<dt class="label" id="id11"><span class="brackets"><a class="fn-backref" href="#id5">4</a></span></dt>
 <dd><p><a class="reference external" href="https://damonitor.github.io/test/result/visual/latest/rec.wss_sz.png.html">https://damonitor.github.io/test/result/visual/latest/rec.wss_sz.png.html</a></p>
 </dd>
-<dt class="label" id="id13"><span class="brackets"><a class="fn-backref" href="#id7">5</a></span></dt>
+<dt class="label" id="id12"><span class="brackets"><a class="fn-backref" href="#id6">5</a></span></dt>
 <dd><p><a class="reference external" href="https://damonitor.github.io/test/result/visual/latest/rec.wss_time.png.html">https://damonitor.github.io/test/result/visual/latest/rec.wss_time.png.html</a></p>
 </dd>
 </dl>
@@ -263,34 +205,76 @@ workloads that collected with latest version of DAMON <a class="footnote-referen
 </section>
 
 
-           </div>
           </div>
-          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="start.html" class="btn btn-neutral float-left" title="Getting Started" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="usage.html" class="btn btn-neutral float-right" title="Detailed Usages" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
-    </div>
-
-  <hr/>
-
-  <div role="contentinfo">
-    <p>&#169; Copyright The kernel development community.</p>
-  </div>
-
-  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
-    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
-    provided by <a href="https://readthedocs.org">Read the Docs</a>.
-   
-
-</footer>
+          
         </div>
       </div>
-    </section>
-  </div>
-  <script>
-      jQuery(function () {
-          SphinxRtdTheme.Navigation.enable(true);
-      });
-  </script> 
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../../../index.html">The Linux Kernel</a></h1>
 
-</body>
+
+
+<p class="blurb">6.1.0-mm-unstable-damon</p>
+
+
+
+
+
+
+
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+  <h3><a href="../../../index.html">Table of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Optimization Guide</a><ul>
+<li><a class="reference internal" href="#check-the-signs">Check The Signs</a></li>
+<li><a class="reference internal" href="#profile">Profile</a></li>
+<li><a class="reference internal" href="#optimize">Optimize</a><ul>
+<li><a class="reference internal" href="#memory-configuration">Memory Configuration</a></li>
+<li><a class="reference internal" href="#program-modification">Program Modification</a></li>
+<li><a class="reference internal" href="#automated-damon-based-memory-operations">Automated DAMON-based Memory Operations</a></li>
+<li><a class="reference internal" href="#personalized-damon-application">Personalized DAMON Application</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#reference-practices">Reference Practices</a></li>
+</ul>
+</li>
+</ul>
+
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../../../_sources/admin-guide/mm/damon/guide.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;The kernel development community.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 2.4.4</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="../../../_sources/admin-guide/mm/damon/guide.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
 </html>

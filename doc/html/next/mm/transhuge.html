@@ -1,75 +1,39 @@
+
 <!DOCTYPE html>
-<html class="writer-html5" lang="en" >
-<head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Transparent Hugepage Support &mdash; The Linux Kernel  documentation</title><link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+  <head>
+    <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>Transparent Hugepage Support &#8212; The Linux Kernel  documentation</title>
+    <link rel="stylesheet" href="../_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-      <link rel="stylesheet" href="../_static/theme_overrides.css" type="text/css" />
-      <link rel="stylesheet" href="../_static/theme_rtd_colors.css" type="text/css" />
-  <!--[if lt IE 9]>
-    <script src="../_static/js/html5shiv.min.js"></script>
-  <![endif]-->
-  <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
-        <script src="../_static/jquery.js"></script>
-        <script src="../_static/underscore.js"></script>
-        <script src="../_static/doctools.js"></script>
-        <script src="../_static/language_data.js"></script>
-    <script src="../_static/js/theme.js"></script>
+    <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/language_data.js"></script>
+    <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
     <link rel="index" title="Index" href="../genindex.html" />
-    <link rel="search" title="Search" href="../search.html" /> 
-</head>
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Unevictable LRU Infrastructure" href="unevictable-lru.html" />
+    <link rel="prev" title="Split page table lock" href="split_page_table_lock.html" />
+   
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
 
-<body class="wy-body-for-nav"> 
-  <div class="wy-grid-for-nav">
-    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
-      <div class="wy-side-scroll">
-        <div class="wy-side-nav-search" >
-            <a href="../index.html" class="icon icon-home"> The Linux Kernel
-          </a>
-              <div class="version">
-                6.0.0-rc3-mm-unstable-damon
-              </div>
-<div role="search">
-  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" />
-    <input type="hidden" name="check_keywords" value="yes" />
-    <input type="hidden" name="area" value="default" />
-  </form>
-</div>
-        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
-              <ul>
-<li class="toctree-l1"><a class="reference internal" href="../admin-guide/mm/damon/index.html">DAMON: Data Access MONitor</a></li>
-</ul>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="damon/index.html">DAMON: Data Access MONitor</a></li>
-</ul>
+  </head><body>
+  
 
-        </div>
-      </div>
-    </nav>
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
 
-    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
-          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../index.html">The Linux Kernel</a>
-      </nav>
-
-      <div class="wy-nav-content">
-        <div class="rst-content">
-          <div role="navigation" aria-label="Page navigation">
-  <ul class="wy-breadcrumbs">
-      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
-      <li>Transparent Hugepage Support</li>
-      <li class="wy-breadcrumbs-aside">
-            <a href="../_sources/mm/transhuge.rst.txt" rel="nofollow"> View page source</a>
-      </li>
-  </ul>
-  <hr/>
-</div>
-          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
-           <div itemprop="articleBody">
-             
+          <div class="body" role="main">
+            
   <section id="transparent-hugepage-support">
 <span id="transhuge"></span><h1>Transparent Hugepage Support<a class="headerlink" href="#transparent-hugepage-support" title="Permalink to this headline">¶</a></h1>
 <p>This document describes design principles for Transparent Hugepage (THP)
@@ -176,27 +140,16 @@ pages:</p>
 <li><p>get_page()/put_page() and GUP operate on head page’s -&gt;_refcount.</p></li>
 <li><p>-&gt;_refcount in tail pages is always zero: get_page_unless_zero() never
 succeeds on tail pages.</p></li>
-<li><p>map/unmap of the pages with PTE entry increment/decrement -&gt;_mapcount
-on relevant sub-page of the compound page.</p></li>
-<li><p>map/unmap of the whole compound page is accounted for in compound_mapcount
-(stored in first tail page). For file huge pages, we also increment
--&gt;_mapcount of all sub-pages in order to have race-free detection of
-last unmap of subpages.</p></li>
+<li><p>map/unmap of PMD entry for the whole compound page increment/decrement
+-&gt;compound_mapcount, stored in the first tail page of the compound page;
+and also increment/decrement -&gt;subpages_mapcount (also in the first tail)
+by COMPOUND_MAPPED when compound_mapcount goes from -1 to 0 or 0 to -1.</p></li>
+<li><p>map/unmap of sub-pages with PTE entry increment/decrement -&gt;_mapcount
+on relevant sub-page of the compound page, and also increment/decrement
+-&gt;subpages_mapcount, stored in first tail page of the compound page, when
+_mapcount goes from -1 to 0 or 0 to -1: counting sub-pages mapped by PTE.</p></li>
 </ul>
 </div></blockquote>
-<p>PageDoubleMap() indicates that the page is <em>possibly</em> mapped with PTEs.</p>
-<p>For anonymous pages, PageDoubleMap() also indicates -&gt;_mapcount in all
-subpages is offset up by one. This additional reference is required to
-get race-free detection of unmap of subpages when we have them mapped with
-both PMDs and PTEs.</p>
-<p>This optimization is required to lower the overhead of per-subpage mapcount
-tracking. The alternative is to alter -&gt;_mapcount in all subpages on each
-map/unmap of the whole compound page.</p>
-<p>For anonymous pages, we set PG_double_map when a PMD of the page is split
-for the first time, but still have a PMD mapping. The additional references
-go away with the last compound_mapcount.</p>
-<p>File pages get PG_double_map set on the first map of the page with PTE and
-goes away when the page gets evicted from the page cache.</p>
 <p>split_huge_page internally has to distribute the refcounts in the head
 page to the tail pages before clearing all PG_head/tail bits from the page
 structures. It can be done easily for refcounts taken by page table
@@ -235,31 +188,72 @@ interface.</p>
 </section>
 
 
-           </div>
           </div>
-          <footer>
-
-  <hr/>
-
-  <div role="contentinfo">
-    <p>&#169; Copyright The kernel development community.</p>
-  </div>
-
-  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
-    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
-    provided by <a href="https://readthedocs.org">Read the Docs</a>.
-   
-
-</footer>
+          
         </div>
       </div>
-    </section>
-  </div>
-  <script>
-      jQuery(function () {
-          SphinxRtdTheme.Navigation.enable(true);
-      });
-  </script> 
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../index.html">The Linux Kernel</a></h1>
 
-</body>
+
+
+<p class="blurb">6.1.0-mm-unstable-damon</p>
+
+
+
+
+
+
+
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+  <h3><a href="../index.html">Table of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Transparent Hugepage Support</a><ul>
+<li><a class="reference internal" href="#design-principles">Design principles</a></li>
+<li><a class="reference internal" href="#get-user-pages-and-follow-page">get_user_pages and follow_page</a></li>
+<li><a class="reference internal" href="#graceful-fallback">Graceful fallback</a></li>
+<li><a class="reference internal" href="#locking-in-hugepage-aware-code">Locking in hugepage aware code</a></li>
+<li><a class="reference internal" href="#refcounts-and-transparent-huge-pages">Refcounts and transparent huge pages</a></li>
+<li><a class="reference internal" href="#partial-unmap-and-deferred-split-huge-page">Partial unmap and deferred_split_huge_page()</a></li>
+</ul>
+</li>
+</ul>
+
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/mm/transhuge.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;The kernel development community.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 2.4.4</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="../_sources/mm/transhuge.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
 </html>

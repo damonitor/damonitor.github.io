@@ -1,97 +1,39 @@
-<!DOCTYPE html>
-<html class="writer-html5" lang="en" >
-<head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Evaluation &mdash; The Linux Kernel  documentation</title><link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+  <head>
+    <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>Evaluation &#8212; The Linux Kernel  documentation</title>
+    <link rel="stylesheet" href="../../_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
-      <link rel="stylesheet" href="../../_static/theme_overrides.css" type="text/css" />
-      <link rel="stylesheet" href="../../_static/theme_rtd_colors.css" type="text/css" />
-  <!--[if lt IE 9]>
-    <script src="../../_static/js/html5shiv.min.js"></script>
-  <![endif]-->
-  <script id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
-        <script src="../../_static/jquery.js"></script>
-        <script src="../../_static/underscore.js"></script>
-        <script src="../../_static/doctools.js"></script>
-        <script src="../../_static/language_data.js"></script>
-    <script src="../../_static/js/theme.js"></script>
+    <script id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/jquery.js"></script>
+    <script src="../../_static/underscore.js"></script>
+    <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/language_data.js"></script>
+    <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
     <link rel="next" title="API Reference" href="api.html" />
-    <link rel="prev" title="Design" href="design.html" /> 
-</head>
+    <link rel="prev" title="Design" href="design.html" />
+   
+  <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
 
-<body class="wy-body-for-nav"> 
-  <div class="wy-grid-for-nav">
-    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
-      <div class="wy-side-scroll">
-        <div class="wy-side-nav-search" >
-            <a href="../../index.html" class="icon icon-home"> The Linux Kernel
-          </a>
-              <div class="version">
-                6.0.0-rc3-mm-unstable-damon
-              </div>
-<div role="search">
-  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" />
-    <input type="hidden" name="check_keywords" value="yes" />
-    <input type="hidden" name="area" value="default" />
-  </form>
-</div>
-        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
-              <ul>
-<li class="toctree-l1"><a class="reference internal" href="../../admin-guide/mm/damon/index.html">DAMON: Data Access MONitor</a></li>
-</ul>
-<ul class="current">
-<li class="toctree-l1 current"><a class="reference internal" href="index.html">DAMON: Data Access MONitor</a><ul class="current">
-<li class="toctree-l2"><a class="reference internal" href="faq.html">Frequently Asked Questions</a></li>
-<li class="toctree-l2"><a class="reference internal" href="design.html">Design</a></li>
-<li class="toctree-l2 current"><a class="current reference internal" href="#">Evaluation</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#setup">Setup</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#measurement">Measurement</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#configurations">Configurations</a></li>
-</ul>
-</li>
-<li class="toctree-l3"><a class="reference internal" href="#results">Results</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#damon-overheads">DAMON Overheads</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#efficient-thp">Efficient THP</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#proactive-reclamation">Proactive Reclamation</a></li>
-</ul>
-</li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="api.html">API Reference</a></li>
-</ul>
-</li>
-</ul>
+  </head><body>
+  
 
-        </div>
-      </div>
-    </nav>
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
 
-    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
-          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../../index.html">The Linux Kernel</a>
-      </nav>
-
-      <div class="wy-nav-content">
-        <div class="rst-content">
-          <div role="navigation" aria-label="Page navigation">
-  <ul class="wy-breadcrumbs">
-      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
-          <li><a href="index.html">DAMON: Data Access MONitor</a> &raquo;</li>
-      <li>Evaluation</li>
-      <li class="wy-breadcrumbs-aside">
-            <a href="../../_sources/mm/damon/eval.rst.txt" rel="nofollow"> View page source</a>
-      </li>
-  </ul>
-  <hr/>
-</div>
-          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
-           <div itemprop="articleBody">
-             
+          <div class="body" role="main">
+            
   <section id="evaluation">
 <h1>Evaluation<a class="headerlink" href="#evaluation" title="Permalink to this headline">¶</a></h1>
 <p>DAMON is lightweight.  It increases system memory usage by 0.39% and slows
@@ -107,9 +49,9 @@ incurring only 1.22% runtime overhead in the best case (parsec3/freqmine).</p>
 <p>On QEMU/KVM based virtual machines utilizing 130GB of RAM and 36 vCPUs hosted
 by AWS EC2 i3.metal instances that running a kernel that v24 DAMON patchset is
 applied, I measure runtime and consumed system memory while running various
-realistic workloads with several configurations.  From each of PARSEC3 <a class="footnote-reference brackets" href="#id9" id="id1">3</a> and
-SPLASH-2X <a class="footnote-reference brackets" href="#id10" id="id2">4</a> benchmark suites I pick 12 workloads, so I use 24 workloads in
-total.  I use another wrapper scripts <a class="footnote-reference brackets" href="#id11" id="id3">5</a> for convenient setup and run of the
+realistic workloads with several configurations.  From each of PARSEC3 <a class="footnote-reference brackets" href="#id11" id="id1">3</a> and
+SPLASH-2X <a class="footnote-reference brackets" href="#id12" id="id2">4</a> benchmark suites I pick 12 workloads, so I use 24 workloads in
+total.  I use another wrapper scripts <a class="footnote-reference brackets" href="#id13" id="id3">5</a> for convenient setup and run of the
 workloads.</p>
 <section id="measurement">
 <h3>Measurement<a class="headerlink" href="#measurement" title="Permalink to this headline">¶</a></h3>
@@ -127,17 +69,17 @@ and average results.</p>
 <li><p>prec: ‘orig’ plus DAMON running with physical memory access recording</p></li>
 <li><p>thp: same with ‘orig’, but use ‘always’ THP policy</p></li>
 <li><p>ethp: ‘orig’ plus a DAMON operation scheme, ‘efficient THP’</p></li>
-<li><p>prcl: ‘orig’ plus a DAMON operation scheme, ‘proactive reclaim <a class="footnote-reference brackets" href="#id12" id="id4">6</a>’</p></li>
+<li><p>prcl: ‘orig’ plus a DAMON operation scheme, ‘proactive reclaim <a class="footnote-reference brackets" href="#id14" id="id4">6</a>’</p></li>
 </ul>
 <p>I use ‘rec’ for measurement of DAMON overheads to target workloads and system
 memory.  ‘prec’ is for physical memory monitroing and recording.  It monitors
 17GB sized ‘System RAM’ region.  The remaining configs including ‘thp’, ‘ethp’,
 and ‘prcl’ are for measurement of DAMON monitoring accuracy.</p>
 <p>‘ethp’ and ‘prcl’ are simple DAMON-based operation schemes developed for
-proof of concepts of DAMON.  ‘ethp’ reduces memory space waste of THP by using
-DAMON for the decision of promotions and demotion for huge pages, while ‘prcl’
-is as similar as the original work.  For example, those can be implemented as
-below:</p>
+proof of concepts of DAMON.  ‘ethp’ reduces memory space waste of THP <a class="footnote-reference brackets" href="#id9" id="id5">1</a>,
+<a class="footnote-reference brackets" href="#id10" id="id6">2</a> by using DAMON for the decision of promotions and demotion for huge pages,
+while ‘prcl’ is as similar as the original work.  For example, those can be
+implemented as below:</p>
 <div class="highlight-none notranslate"><div class="highlight"><pre><span></span># format: &lt;min/max size&gt; &lt;min/max frequency (0-100)&gt; &lt;min/max age&gt; &lt;action&gt;
 # ethp: Use huge pages if a region shows &gt;=5% access rate, use regular
 # pages if a region &gt;=2MB shows 0 access rate for &gt;=7 seconds
@@ -152,34 +94,34 @@ min     max     5       max     min     max     hugepage
 because those are for only proof of concepts and monitoring accuracy of DAMON.
 In other words, those are not for production.  For production use, those should
 be more tuned.  For automation of such tuning, you can use a user space tool
-called DAMOOS <a class="footnote-reference brackets" href="#id14" id="id5">8</a>.  For the evaluation, we use ‘ethp’ as same to above
+called DAMOOS <a class="footnote-reference brackets" href="#id16" id="id7">8</a>.  For the evaluation, we use ‘ethp’ as same to above
 example, but we use DAMOOS-tuned ‘prcl’ for each workload.</p>
-<p>The evaluation is done using the tests package for DAMON, <code class="docutils literal notranslate"><span class="pre">damon-tests</span></code> <a class="footnote-reference brackets" href="#id13" id="id6">7</a>.
+<p>The evaluation is done using the tests package for DAMON, <code class="docutils literal notranslate"><span class="pre">damon-tests</span></code> <a class="footnote-reference brackets" href="#id15" id="id8">7</a>.
 Using it, you can do the evaluation and generate a report on your own.</p>
 <dl class="footnote brackets">
-<dt class="label" id="id7"><span class="brackets">1</span></dt>
+<dt class="label" id="id9"><span class="brackets"><a class="fn-backref" href="#id5">1</a></span></dt>
 <dd><p>“Redis latency problems troubleshooting”, <a class="reference external" href="https://redis.io/topics/latency">https://redis.io/topics/latency</a></p>
 </dd>
-<dt class="label" id="id8"><span class="brackets">2</span></dt>
+<dt class="label" id="id10"><span class="brackets"><a class="fn-backref" href="#id6">2</a></span></dt>
 <dd><p>“Disable Transparent Huge Pages (THP)”,
 <a class="reference external" href="https://docs.mongodb.com/manual/tutorial/transparent-huge-pages/">https://docs.mongodb.com/manual/tutorial/transparent-huge-pages/</a></p>
 </dd>
-<dt class="label" id="id9"><span class="brackets"><a class="fn-backref" href="#id1">3</a></span></dt>
+<dt class="label" id="id11"><span class="brackets"><a class="fn-backref" href="#id1">3</a></span></dt>
 <dd><p>“The PARSEC Becnhmark Suite”, <a class="reference external" href="https://parsec.cs.princeton.edu/index.htm">https://parsec.cs.princeton.edu/index.htm</a></p>
 </dd>
-<dt class="label" id="id10"><span class="brackets"><a class="fn-backref" href="#id2">4</a></span></dt>
+<dt class="label" id="id12"><span class="brackets"><a class="fn-backref" href="#id2">4</a></span></dt>
 <dd><p>“SPLASH-2x”, <a class="reference external" href="https://parsec.cs.princeton.edu/parsec3-doc.htm#splash2x">https://parsec.cs.princeton.edu/parsec3-doc.htm#splash2x</a></p>
 </dd>
-<dt class="label" id="id11"><span class="brackets"><a class="fn-backref" href="#id3">5</a></span></dt>
+<dt class="label" id="id13"><span class="brackets"><a class="fn-backref" href="#id3">5</a></span></dt>
 <dd><p>“parsec3_on_ubuntu”, <a class="reference external" href="https://github.com/sjp38/parsec3_on_ubuntu">https://github.com/sjp38/parsec3_on_ubuntu</a></p>
 </dd>
-<dt class="label" id="id12"><span class="brackets"><a class="fn-backref" href="#id4">6</a></span></dt>
+<dt class="label" id="id14"><span class="brackets"><a class="fn-backref" href="#id4">6</a></span></dt>
 <dd><p>“Proactively reclaiming idle memory”, <a class="reference external" href="https://lwn.net/Articles/787611/">https://lwn.net/Articles/787611/</a></p>
 </dd>
-<dt class="label" id="id13"><span class="brackets"><a class="fn-backref" href="#id6">7</a></span></dt>
+<dt class="label" id="id15"><span class="brackets"><a class="fn-backref" href="#id8">7</a></span></dt>
 <dd><p>“damon-tests”, <a class="reference external" href="https://github.com/awslabs/damon-tests">https://github.com/awslabs/damon-tests</a></p>
 </dd>
-<dt class="label" id="id14"><span class="brackets"><a class="fn-backref" href="#id5">8</a></span></dt>
+<dt class="label" id="id16"><span class="brackets"><a class="fn-backref" href="#id7">8</a></span></dt>
 <dd><p>“DAMOOS”, <a class="reference external" href="https://github.com/awslabs/damoos">https://github.com/awslabs/damoos</a></p>
 </dd>
 </dl>
@@ -319,34 +261,77 @@ system memory usage while incurring only 1.22% runtime overhead.</p>
 </section>
 
 
-           </div>
           </div>
-          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="design.html" class="btn btn-neutral float-left" title="Design" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="api.html" class="btn btn-neutral float-right" title="API Reference" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
-    </div>
-
-  <hr/>
-
-  <div role="contentinfo">
-    <p>&#169; Copyright The kernel development community.</p>
-  </div>
-
-  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
-    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
-    provided by <a href="https://readthedocs.org">Read the Docs</a>.
-   
-
-</footer>
+          
         </div>
       </div>
-    </section>
-  </div>
-  <script>
-      jQuery(function () {
-          SphinxRtdTheme.Navigation.enable(true);
-      });
-  </script> 
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../../index.html">The Linux Kernel</a></h1>
 
-</body>
+
+
+<p class="blurb">6.1.0-mm-unstable-damon</p>
+
+
+
+
+
+
+
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+  <h3><a href="../../index.html">Table of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Evaluation</a><ul>
+<li><a class="reference internal" href="#setup">Setup</a><ul>
+<li><a class="reference internal" href="#measurement">Measurement</a></li>
+<li><a class="reference internal" href="#configurations">Configurations</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#results">Results</a><ul>
+<li><a class="reference internal" href="#damon-overheads">DAMON Overheads</a></li>
+<li><a class="reference internal" href="#efficient-thp">Efficient THP</a></li>
+<li><a class="reference internal" href="#proactive-reclamation">Proactive Reclamation</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../../_sources/mm/damon/eval.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;The kernel development community.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 2.4.4</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="../../_sources/mm/damon/eval.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
 </html>
