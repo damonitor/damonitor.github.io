@@ -27,16 +27,9 @@ commit of 'damon/next', and 'damon/next' continues development.
 Documents
 =========
 
-The documents under 'doc/html/' in this site are organized in below way.
-
-- 'latest' is the document for the 'damon/master'.
-- 'latest-(damon|damos)' are the documents for the DAMON or DAMOS patchset,
-  made by 'damon/master'.
-- 'next' is the document for the 'damon/next'.
-- 'next-(damon|damos)' are similar to 'doc/html/latest-(damon|damos)'
-- 'v13' is the document for the 'damon/master' when 'v13' of DAMON patchset is
-  posted.
-- 'v13-(damon|damos)' are similar in that way.
+This site used to host documents for DAMON before.  Now, it's deprecated.
+Please use https://damonitor.github.io, https://docs.kernel.org/next and/or
+https://docs.kernel.org/latest instead.
 </pre>
 " > $INDEX_FILE
 
