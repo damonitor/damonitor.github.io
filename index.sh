@@ -27,19 +27,10 @@ commit of 'damon/next', and 'damon/next' continues development.
 Documents
 =========
 
-This site used to host below documents for DAMON before.  Now, it's deprecated.
+This site used to host documents for DAMON before.  Now, it's deprecated.
 Please use https://damonitor.github.io, https://docs.kernel.org/next and/or
 https://docs.kernel.org/latest instead.
-</pre>
-" > $INDEX_FILE
 
-for f in `find doc -maxdepth 3 -name 'index.html' | sort`
-do
-	echo "<a href=$f>$f</a><br>" >> $INDEX_FILE
-done
-
-echo "
-<pre>
 
 Test Results
 ============
@@ -47,4 +38,4 @@ Test Results
 - <a href=./test/result/perf/index.html>Performance</a>
 - <a href=./test/result/visual/index.html>Monitoring ResultsVisaulization</a>
 </pre>
-" >> "$INDEX_FILE"
+" > "$INDEX_FILE"
