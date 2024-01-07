@@ -44,14 +44,7 @@ echo "
 Test Results
 ============
 
-The correctness / performance tests are done against 'damon/master' for major
-changes.  Therefore, version name rules that similar to that of documents are
-applied to the test results in this site, but '(damon|damos)' suffixes are not
-used.
+- <a href=./test/result/perf/index.html>Performance</a>
+- <a href=./test/result/visual/index.html>Monitoring ResultsVisaulization</a>
 </pre>
-" >> $INDEX_FILE
-
-for f in `find test -name 'index.html' | sort`
-do
-	echo "<a href=$f>$f</a><br>" >> $INDEX_FILE
-done
+" >> "$INDEX_FILE"
