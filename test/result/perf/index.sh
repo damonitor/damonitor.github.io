@@ -2,7 +2,7 @@
 
 bindir=$(dirname "$0")
 
-INDEX_FILE='index.html'
+INDEX_FILE="$bindir/index.html"
 
 echo "
 <pre>
