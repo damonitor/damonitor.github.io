@@ -1,5 +1,7 @@
 #!/bin/bash
 
+bindir=$(dirname "$0")
+
 INDEX_FILE='index.html'
 
 echo "
@@ -14,7 +16,7 @@ snapshots.  The source code for the performanced test is <a href=https://github.
 </pre>
 " > $INDEX_FILE
 
-pushd after_merge
+pushd "$bindir/after_merge"
 results=$(find . -name 'index.html' | sort --reverse --version-sort)
 popd
 
