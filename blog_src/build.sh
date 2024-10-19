@@ -2,23 +2,26 @@
 
 set -e
 
-if [ ! -d hugo_site ]
+bindir=$(dirname "$0")
+hugo_site_dir="$bindir/hugo_site"
+
+if [ ! -d "$hugo_site_dir" ]
 then
-	hugo new site hugo_site
+	hugo new site "$hugo_site_dir"
 fi
 
-cp hugo.toml ./hugo_site/
-cp -R ./content ./static ./assets ./hugo_site/
+cp "$bindir/hugo.toml" "$hugo_site_dir/"
+cp -R "$bindir/content" "$bindir/static" "$bindir/assets" "$hugo_site_dir/"
 
-pushd hugo_site
-if [ ! -d themes/hugo-blog-awesome ]
+if [ ! -d "$hugo_site_dir/themes/hugo-blog-awesome" ]
 then
-	git clone https://github.com/hugo-sid/hugo-blog-awesome.git themes/hugo-blog-awesome
+	git clone https://github.com/hugo-sid/hugo-blog-awesome.git \
+		"$hugo_site_dir/themes/hugo-blog-awesome"
 fi
+pushd "$hugo_site_dir"
 hugo
 # overwrite index page with DAMON intro post
 cp public/posts/damon/index.html public/
 popd
 
-bindir=$(dirname "$0")
-cp -R "$bindir/hugo_site/public"/* "$bindir/../"
+cp -R "$hugo_site_dir/public"/* "$bindir/../"
