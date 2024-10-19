@@ -61,26 +61,6 @@ DAMON is also currently being used in real-world products including AWS
 [Aurora Serverless v2](https://www.amazon.science/publications/resource-management-in-aurora-serverless)
 and SK hynix [HMSDK v2](https://github.com/skhynix/hmsdk/tree/hmsdk-v2.0).
 
-Table Of Contents
------------------
-
-- [Demo Video](#demo-video)
-- [Demo Screenshot](#demo-screenshot)
-- [Recent News](#recent-news)
-- [Getting Started](#getting-started)
-- [Install](#install)
-- [Source Code](#source-code)
-- [User-space Tool](#user-space-tool)
-- [Tests Package](#tests-package)
-- [Official Document](#official-document)
-- [Showcase Website](#showcase-website)
-- [Evaluation Results](#evaluation-results)
-- [DAMON-based System Optimization Guide](#damon-based-system-optimization-guide)
-- [Profile-Guided Optimization Example](#profile-guided-optimization-example)
-- [Community](#community)
-- [Contribution](#contribution)
-- [Publications and Presentations](#publications-and-presentations)
-
 
 Demo Video
 ----------
