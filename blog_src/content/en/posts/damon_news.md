@@ -8,7 +8,7 @@ authors: []
 tags: ["damon", "linux", "kernel", "mm", "projects", "news"]
 categories: ["damon"]
 date: 2023-05-06T11:27:07-07:00
-lastmod: Fri Oct 18 11:57:51 PDT 2024
+lastmod: Sun Oct 20 02:46:19 PM PDT 2024
 featured: false
 draft: false
 
@@ -38,6 +38,9 @@ sj@kernel.org and/or damon@lists.linux.dev.
 
 2024
 ----
+
+_2024-10-18_: DAMON projet site started hosting its own
+[blog](https://github.com/damonitor/damonitor.github.io/commit/817d619090d8abb02e6a4020ff5d0b9664c6464c).
 
 _2024-10-15_: DAMON debugfs interface removal RFC patch has
 [posted](https://lore.kernel.org/20241015175412.60563-1-sj@kernel.org).

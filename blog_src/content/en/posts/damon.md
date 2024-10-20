@@ -8,7 +8,7 @@ authors: []
 tags: ["damon", "linux", "kernel", "mm", "projects"]
 categories: ["damon"]
 date: 2019-12-27T18:21:07+01:00
-lastmod: Fri Oct 18 11:57:51 PDT 2024
+lastmod: Sun Oct 20 02:46:19 PM PDT 2024
 featured: false
 draft: false
 
@@ -83,6 +83,9 @@ Recent News
 Below are only a short list of recent news.  For __complete list of the news__,
 please refer to a dedicated [post]({{< ref "damon_news.md" >}}).
 
+_2024-10-18_: DAMON projet site started hosting its own
+[blog](https://github.com/damonitor/damonitor.github.io/commit/817d619090d8abb02e6a4020ff5d0b9664c6464c).
+
 _2024-10-15_: DAMON debugfs interface removal RFC patch has
 [posted](https://lore.kernel.org/20241015175412.60563-1-sj@kernel.org).
 
@@ -100,10 +103,6 @@ Memory Management Microconference'2024 are uploaded to YouTube.
 _2024-10-01_: 2024-Q3 DAMON news letter including news for new features,
 more users, repos reorganizations, and conference talks is
 [posted](https://lore.kernel.org/20241001191425.588219-1-sj@kernel.org).
-
-_2024-09-30_: DAMON User Space Tool, DAMO,
-[surpasses](https://pypistats.org/packages/damo) 4,000 monthly PyPI downloads!
-![damo_4000_monthly_downloads](/img/damo_download_4122.png)
 
 
 Getting Started
