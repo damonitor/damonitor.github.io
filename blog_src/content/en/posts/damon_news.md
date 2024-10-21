@@ -8,7 +8,7 @@ authors: []
 tags: ["damon", "linux", "kernel", "mm", "projects", "news"]
 categories: ["damon"]
 date: 2023-05-06T11:27:07-07:00
-lastmod: Sun Oct 20 02:46:19 PM PDT 2024
+lastmod: Mon Oct 21 02:38:47 PM PDT 2024
 featured: false
 draft: false
 
@@ -38,6 +38,11 @@ sj@kernel.org and/or damon@lists.linux.dev.
 
 2024
 ----
+
+_2024-10-21_: Monthly PyPI downloads of DAMON user-space tool, DAMO, doubled
+(8,000 -> 16,000) again after about ten dasys.
+[!damo_16000_monthly_downloads](/img/damo_16000_monthly_downloads.png)
+[!damo_rolling_monthly_downloads_2024-10-21](/img/damo_rolling_monthly_downloads_2024-10-21.png)
 
 _2024-10-18_: DAMON projet site started hosting its own
 [blog](https://github.com/damonitor/damonitor.github.io/commit/817d619090d8abb02e6a4020ff5d0b9664c6464c).

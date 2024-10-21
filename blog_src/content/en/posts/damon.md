@@ -8,7 +8,7 @@ authors: []
 tags: ["damon", "linux", "kernel", "mm", "projects"]
 categories: ["damon"]
 date: 2019-12-27T18:21:07+01:00
-lastmod: Sun Oct 20 02:46:19 PM PDT 2024
+lastmod: Mon Oct 21 02:38:47 PM PDT 2024
 featured: false
 draft: false
 
@@ -83,14 +83,19 @@ Recent News
 Below are only a short list of recent news.  For __complete list of the news__,
 please refer to a dedicated [post]({{< ref "damon_news.md" >}}).
 
+_2024-10-21_: Monthly PyPI downloads of DAMON user-space tool, DAMO, doubled
+(8,000 -> 16,000) again after about ten dasys.
+[!damo_16000_monthly_downloads](/img/damo_16000_monthly_downloads.png)
+[!damo_rolling_monthly_downloads_2024-10-21](/img/damo_rolling_monthly_downloads_2024-10-21.png)
+
 _2024-10-18_: DAMON projet site started hosting its own
 [blog](https://github.com/damonitor/damonitor.github.io/commit/817d619090d8abb02e6a4020ff5d0b9664c6464c).
 
 _2024-10-15_: DAMON debugfs interface removal RFC patch has
 [posted](https://lore.kernel.org/20241015175412.60563-1-sj@kernel.org).
 
-_2024-10-10_: Monthly PyPI downloads of DAMON user-space too, DAMO, doubled
-again after ten days.
+_2024-10-10_: Monthly PyPI downloads of DAMON user-space tool, DAMO, doubled
+(4,000 -> 9,000) again after ten days.
 [!damo_9000_monthly_downloads](/img/damo_download_9213.png)
 [!damo_rolling_monthly_downloads_2024-10-10](/img/damo_rolling_monthly_downloads_2024-10-10.png)
 
@@ -99,10 +104,6 @@ _2024-10-08_: Videos for
 Summit EU'2024 and
 [DAMON long-term plans](https://youtu.be/mRU1ZeNB9WY?feature=shared) at Kernel
 Memory Management Microconference'2024 are uploaded to YouTube.
-
-_2024-10-01_: 2024-Q3 DAMON news letter including news for new features,
-more users, repos reorganizations, and conference talks is
-[posted](https://lore.kernel.org/20241001191425.588219-1-sj@kernel.org).
 
 
 Getting Started
