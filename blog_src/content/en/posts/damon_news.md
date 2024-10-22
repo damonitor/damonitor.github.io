@@ -41,8 +41,8 @@ sj@kernel.org and/or damon@lists.linux.dev.
 
 _2024-10-21_: Monthly PyPI downloads of DAMON user-space tool, DAMO, doubled
 (8,000 -> 16,000) again after about ten dasys.
-[!damo_16000_monthly_downloads](/img/damo_16000_monthly_downloads.png)
-[!damo_rolling_monthly_downloads_2024-10-21](/img/damo_rolling_monthly_downloads_2024-10-21.png)
+![damo_16000_monthly_downloads](/img/damo_16000_monthly_downloads.png)
+![damo_rolling_monthly_downloads_2024-10-21](/img/damo_rolling_monthly_downloads_2024-10-21.png)
 
 _2024-10-18_: DAMON projet site started hosting its own
 [blog](https://github.com/damonitor/damonitor.github.io/commit/817d619090d8abb02e6a4020ff5d0b9664c6464c).
@@ -52,8 +52,8 @@ _2024-10-15_: DAMON debugfs interface removal RFC patch has
 
 _2024-10-10_: Monthly PyPI downloads of DAMON user-space too, DAMO, doubled
 again after ten days.
-[!damo_9000_monthly_downloads](/img/damo_download_9213.png)
-[!damo_rolling_monthly_downloads_2024-10-10](/img/damo_rolling_monthly_downloads_2024-10-10.png)
+![damo_9000_monthly_downloads](/img/damo_download_9213.png)
+![damo_rolling_monthly_downloads_2024-10-10](/img/damo_rolling_monthly_downloads_2024-10-10.png)
 
 _2024-10-08_: Videos for
 [DAMON recipes](https://youtu.be/xKJO4kLTHOI?feature=shared) at Open Source
