@@ -6,8 +6,8 @@ summary: ""
 authors: []
 tags: ["damo", "auto-tune", "example"]
 categories: ["example"]
-date: Sun Nov  3 01:02:47 PM PST 2024
-lastmod: Sun Nov  3 01:02:47 PM PST 2024
+date: Sun, 03 Nov 2024 13:15:24 -0800
+lastmod: Sun, 03 Nov 2024 13:15:24 -0800
 featured: false
 draft: false
 
