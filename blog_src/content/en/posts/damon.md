@@ -8,7 +8,7 @@ authors: []
 tags: ["damon", "linux", "kernel", "mm", "projects"]
 categories: ["damon"]
 date: 2019-12-27T18:21:07+01:00
-lastmod: Mon Oct 21 02:38:47 PM PDT 2024
+lastmod: Mon, 04 Nov 2024 15:00:37 -0800
 featured: false
 draft: false
 
@@ -83,6 +83,11 @@ Recent News
 Below are only a short list of recent news.  For __complete list of the news__,
 please refer to a dedicated [post]({{< ref "damon_news.md" >}}).
 
+_2024-11-04_: `damo`
+[v2.5.4](https://github.com/damonitor/damo/blob/v2.5.4/release_note#L4) is
+released with recency/temperature histogram visualization
+[features](https://github.com/damonitor/damo/blob/v2.5.4/USAGE.md#access-report-styles).
+
 _2024-10-21_: Monthly PyPI downloads of DAMON user-space tool, DAMO, doubled
 (8,000 -> 16,000) again after about ten dasys.
 ![damo_16000_monthly_downloads](/img/damo_16000_monthly_downloads.png)
@@ -98,12 +103,6 @@ _2024-10-10_: Monthly PyPI downloads of DAMON user-space tool, DAMO, doubled
 (4,000 -> 9,000) again after ten days.
 ![damo_9000_monthly_downloads](/img/damo_download_9213.png)
 ![damo_rolling_monthly_downloads_2024-10-10](/img/damo_rolling_monthly_downloads_2024-10-10.png)
-
-_2024-10-08_: Videos for
-[DAMON recipes](https://youtu.be/xKJO4kLTHOI?feature=shared) at Open Source
-Summit EU'2024 and
-[DAMON long-term plans](https://youtu.be/mRU1ZeNB9WY?feature=shared) at Kernel
-Memory Management Microconference'2024 are uploaded to YouTube.
 
 
 Getting Started

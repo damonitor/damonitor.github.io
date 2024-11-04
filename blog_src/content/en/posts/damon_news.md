@@ -8,7 +8,7 @@ authors: []
 tags: ["damon", "linux", "kernel", "mm", "projects", "news"]
 categories: ["damon"]
 date: 2023-05-06T11:27:07-07:00
-lastmod: Mon Oct 21 02:38:47 PM PDT 2024
+lastmod: Mon, 04 Nov 2024 15:00:37 -0800
 featured: false
 draft: false
 
@@ -38,6 +38,11 @@ sj@kernel.org and/or damon@lists.linux.dev.
 
 2024
 ----
+
+_2024-11-04_: `damo`
+[v2.5.4](https://github.com/damonitor/damo/blob/v2.5.4/release_note#L4) is
+released with recency/temperature histogram visualization
+[features](https://github.com/damonitor/damo/blob/v2.5.4/USAGE.md#access-report-styles).
 
 _2024-10-21_: Monthly PyPI downloads of DAMON user-space tool, DAMO, doubled
 (8,000 -> 16,000) again after about ten dasys.
