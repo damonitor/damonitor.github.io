@@ -8,7 +8,7 @@ authors: []
 tags: ["damon", "linux", "kernel", "mm", "projects"]
 categories: ["damon"]
 date: 2019-12-27T18:21:07+01:00
-lastmod: Mon, 04 Nov 2024 15:00:37 -0800
+lastmod: Wed, 20 Nov 2024 15:59:31 -0800
 featured: false
 draft: false
 
@@ -83,6 +83,15 @@ Recent News
 Below are only a short list of recent news.  For __complete list of the news__,
 please refer to a dedicated [post]({{< ref "damon_news.md" >}}).
 
+_2024-11-18_: `damo` [v2.5.6](https://github.com/damonitor/damo/tree/v2.5.6) is
+released with heatmap snapshot visualization
+[format](https://github.com/damonitor/damo/blob/v2.5.6/release_note#L6) and
+multiple kdamonds edit
+[feature](https://github.com/damonitor/damo/blob/v2.5.6/USAGE.md#multiple-kdamonds).
+
+_2024-11-08_: A guide to DAMON tuning and results interpretation for hot pages
+has [posted](https://lore.kernel.org/20241108232536.73843-1-sj@kernel.org).
+
 _2024-11-04_: `damo`
 [v2.5.4](https://github.com/damonitor/damo/blob/v2.5.4/release_note#L4) is
 released with recency/temperature histogram visualization
@@ -95,14 +104,6 @@ _2024-10-21_: Monthly PyPI downloads of DAMON user-space tool, DAMO, doubled
 
 _2024-10-18_: DAMON projet site started hosting its own
 [blog](https://github.com/damonitor/damonitor.github.io/commit/817d619090d8abb02e6a4020ff5d0b9664c6464c).
-
-_2024-10-15_: DAMON debugfs interface removal RFC patch has
-[posted](https://lore.kernel.org/20241015175412.60563-1-sj@kernel.org).
-
-_2024-10-10_: Monthly PyPI downloads of DAMON user-space tool, DAMO, doubled
-(4,000 -> 9,000) again after ten days.
-![damo_9000_monthly_downloads](/img/damo_download_9213.png)
-![damo_rolling_monthly_downloads_2024-10-10](/img/damo_rolling_monthly_downloads_2024-10-10.png)
 
 
 Getting Started

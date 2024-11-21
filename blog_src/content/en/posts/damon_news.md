@@ -8,7 +8,7 @@ authors: []
 tags: ["damon", "linux", "kernel", "mm", "projects", "news"]
 categories: ["damon"]
 date: 2023-05-06T11:27:07-07:00
-lastmod: Mon, 04 Nov 2024 15:00:37 -0800
+lastmod: Wed, 20 Nov 2024 15:59:31 -0800
 featured: false
 draft: false
 
@@ -38,6 +38,15 @@ sj@kernel.org and/or damon@lists.linux.dev.
 
 2024
 ----
+
+_2024-11-18_: `damo` [v2.5.6](https://github.com/damonitor/damo/tree/v2.5.6) is
+released with heatmap snapshot visualization
+[format](https://github.com/damonitor/damo/blob/v2.5.6/release_note#L6) and
+multiple kdamonds edit
+[feature](https://github.com/damonitor/damo/blob/v2.5.6/USAGE.md#multiple-kdamonds).
+
+_2024-11-08_: A guide to DAMON tuning and results interpretation for hot pages
+has [posted](https://lore.kernel.org/20241108232536.73843-1-sj@kernel.org).
 
 _2024-11-04_: `damo`
 [v2.5.4](https://github.com/damonitor/damo/blob/v2.5.4/release_note#L4) is
