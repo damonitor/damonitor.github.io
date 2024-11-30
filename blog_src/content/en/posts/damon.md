@@ -8,7 +8,7 @@ authors: []
 tags: ["damon", "linux", "kernel", "mm", "projects"]
 categories: ["damon"]
 date: 2019-12-27T18:21:07+01:00
-lastmod: Wed, 20 Nov 2024 15:59:31 -0800
+lastmod: Sat, 30 Nov 2024 13:09:56 -0800
 featured: false
 draft: false
 
@@ -83,6 +83,11 @@ Recent News
 Below are only a short list of recent news.  For __complete list of the news__,
 please refer to a dedicated [post]({{< ref "damon_news.md" >}}).
 
+_2024-11-25_: `damo` [v2.5.7](https://github.com/damonitor/damo/tree/v2.5.7) is
+releasd with tempearture-based regions filtering and formatting features.  Show a
+blog [post](https://damonitor.github.io/posts/damo_2_5_7_features/) showing the
+details of the fetures and examples on a server workload.
+
 _2024-11-18_: `damo` [v2.5.6](https://github.com/damonitor/damo/tree/v2.5.6) is
 released with heatmap snapshot visualization
 [format](https://github.com/damonitor/damo/blob/v2.5.6/release_note#L6) and
@@ -101,9 +106,6 @@ _2024-10-21_: Monthly PyPI downloads of DAMON user-space tool, DAMO, doubled
 (8,000 -> 16,000) again after about ten dasys.
 ![damo_16000_monthly_downloads](/img/damo_16000_monthly_downloads.png)
 ![damo_rolling_monthly_downloads_2024-10-21](/img/damo_rolling_monthly_downloads_2024-10-21.png)
-
-_2024-10-18_: DAMON projet site started hosting its own
-[blog](https://github.com/damonitor/damonitor.github.io/commit/817d619090d8abb02e6a4020ff5d0b9664c6464c).
 
 
 Getting Started

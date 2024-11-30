@@ -8,7 +8,7 @@ authors: []
 tags: ["damon", "linux", "kernel", "mm", "projects", "news"]
 categories: ["damon"]
 date: 2023-05-06T11:27:07-07:00
-lastmod: Wed, 20 Nov 2024 15:59:31 -0800
+lastmod: Sat, 30 Nov 2024 13:09:56 -0800
 featured: false
 draft: false
 
@@ -38,6 +38,11 @@ sj@kernel.org and/or damon@lists.linux.dev.
 
 2024
 ----
+
+_2024-11-25_: `damo` [v2.5.7](https://github.com/damonitor/damo/tree/v2.5.7) is
+releasd with tempearture-based regions filtering and formatting features.  Show a
+blog [post](https://damonitor.github.io/posts/damo_2_5_7_features/) showing the
+details of the fetures and examples on a server workload.
 
 _2024-11-18_: `damo` [v2.5.6](https://github.com/damonitor/damo/tree/v2.5.6) is
 released with heatmap snapshot visualization
