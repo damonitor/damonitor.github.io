@@ -83,6 +83,10 @@ Recent News
 Below are only a short list of recent news.  For __complete list of the news__,
 please refer to a dedicated [post]({{< ref "damon_news.md" >}}).
 
+_2024-12-02_: On Middlewar'24, a
+[paper](https://dl.acm.org/doi/10.1145/3652892.3700755) describing DAMON as a
+common cloud workload and evaluate their system for DAMON usage has presented.
+
 _2024-11-25_: `damo` [v2.5.7](https://github.com/damonitor/damo/tree/v2.5.7) is
 releasd with tempearture-based regions filtering and formatting features.  Show a
 blog [post](https://damonitor.github.io/posts/damo_2_5_7_features/) showing the
