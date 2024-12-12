@@ -83,6 +83,10 @@ Recent News
 Below are only a short list of recent news.  For __complete list of the news__,
 please refer to a dedicated [post]({{< ref "damon_news.md" >}}).
 
+_2024-12-12_: A DAMON presentation
+[proposal](https://pretalx.fosdem.org/fosdem-2025/talk/review/3UT9TYYRE3UXJMRRCRLMQLJKUHLRKVYE)
+has accepted to [FOSDEM'25](https://fosdem.org/2025/).
+
 _2024-12-02_: On Middlewar'24, a
 [paper](https://dl.acm.org/doi/10.1145/3652892.3700755) describing DAMON as a
 common cloud workload and evaluate their system for DAMON usage has presented.
@@ -351,6 +355,8 @@ mechanisms and access pattern profiling-guided optimizations.  The paper for
 HPDC'22 extends the coverage to DAMOS (automated access-aware system
 operations) and user-space driven auto-tuning.
 
+- SeongJae Park, __DAMON: Kernel Subsystem for Data Access Monitoring and
+  Access-aware System Operations.__ In FOSDEM, Feb 2025.
 - SeongJae Park, __DAMON: Long-term Plans for Kernel That {Just
   Works,Extensible}.__ In Linux Kernel Memory Management Microconferenct at
   Linux Plumbers, Sep 2024.

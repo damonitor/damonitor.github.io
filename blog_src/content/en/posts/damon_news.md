@@ -39,6 +39,10 @@ sj@kernel.org and/or damon@lists.linux.dev.
 2024
 ----
 
+_2024-12-12_: A DAMON presentation
+[proposal](https://pretalx.fosdem.org/fosdem-2025/talk/review/3UT9TYYRE3UXJMRRCRLMQLJKUHLRKVYE)
+has accepted to [FOSDEM'25](https://fosdem.org/2025/).
+
 _2024-12-02_: On Middlewar'24, a
 [paper](https://dl.acm.org/doi/10.1145/3652892.3700755) describing DAMON as a
 common cloud workload and evaluate their system for DAMON usage has presented.

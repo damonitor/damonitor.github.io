@@ -50,6 +50,8 @@ mechanisms and access pattern profiling-guided optimizations.  The paper for
 HPDC'22 extends the coverage to DAMOS (automated access-aware system
 operations) and user-space driven auto-tuning.
 
+- SeongJae Park, __DAMON: Kernel Subsystem for Data Access Monitoring and
+  Access-aware System Operations.__ In FOSDEM, Feb 2025.
 - SeongJae Park, __DAMON: Long-term Plans for Kernel That {Just
   Works,Extensible}.__ In Linux Kernel Memory Management Microconferenct at
   Linux Plumbers, Sep 2024.
