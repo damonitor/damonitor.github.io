@@ -8,7 +8,7 @@ authors: []
 tags: ["damon", "linux", "kernel", "mm", "projects"]
 categories: ["damon"]
 date: 2019-12-27T18:21:07+01:00
-lastmod: Sat, 30 Nov 2024 13:09:56 -0800
+lastmod: Tue, 24 Dec 2024 11:19:50 -0800
 featured: false
 draft: false
 
@@ -83,6 +83,12 @@ Recent News
 Below are only a short list of recent news.  For __complete list of the news__,
 please refer to a dedicated [post]({{< ref "damon_news.md" >}}).
 
+_2024-12-23_: `damo`
+[v2.6.1](https://github.com/damonitor/damo/blob/v2.6.1/release_note#L4) is
+released with page level properties based monitoring support.  Show a blog
+[post](https://damonitor.github.io/posts/damon_sz_filter_passed/) for more
+details.
+
 _2024-12-12_: A DAMON presentation
 [proposal](https://pretalx.fosdem.org/fosdem-2025/talk/review/3UT9TYYRE3UXJMRRCRLMQLJKUHLRKVYE)
 has accepted to [FOSDEM'25](https://fosdem.org/2025/).
@@ -101,19 +107,6 @@ released with heatmap snapshot visualization
 [format](https://github.com/damonitor/damo/blob/v2.5.6/release_note#L6) and
 multiple kdamonds edit
 [feature](https://github.com/damonitor/damo/blob/v2.5.6/USAGE.md#multiple-kdamonds).
-
-_2024-11-08_: A guide to DAMON tuning and results interpretation for hot pages
-has [posted](https://lore.kernel.org/20241108232536.73843-1-sj@kernel.org).
-
-_2024-11-04_: `damo`
-[v2.5.4](https://github.com/damonitor/damo/blob/v2.5.4/release_note#L4) is
-released with recency/temperature histogram visualization
-[features](https://github.com/damonitor/damo/blob/v2.5.4/USAGE.md#access-report-styles).
-
-_2024-10-21_: Monthly PyPI downloads of DAMON user-space tool, DAMO, doubled
-(8,000 -> 16,000) again after about ten dasys.
-![damo_16000_monthly_downloads](/img/damo_16000_monthly_downloads.png)
-![damo_rolling_monthly_downloads_2024-10-21](/img/damo_rolling_monthly_downloads_2024-10-21.png)
 
 
 Getting Started

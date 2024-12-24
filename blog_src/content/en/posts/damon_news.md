@@ -8,7 +8,7 @@ authors: []
 tags: ["damon", "linux", "kernel", "mm", "projects", "news"]
 categories: ["damon"]
 date: 2023-05-06T11:27:07-07:00
-lastmod: Sat, 30 Nov 2024 13:09:56 -0800
+lastmod: Tue, 24 Dec 2024 11:19:50 -0800
 featured: false
 draft: false
 
@@ -38,6 +38,12 @@ sj@kernel.org and/or damon@lists.linux.dev.
 
 2024
 ----
+
+_2024-12-23_: `damo`
+[v2.6.1](https://github.com/damonitor/damo/blob/v2.6.1/release_note#L4) is
+released with page level properties based monitoring support.  Show a blog
+[post](https://damonitor.github.io/posts/damon_sz_filter_passed/) for more
+details.
 
 _2024-12-12_: A DAMON presentation
 [proposal](https://pretalx.fosdem.org/fosdem-2025/talk/review/3UT9TYYRE3UXJMRRCRLMQLJKUHLRKVYE)
