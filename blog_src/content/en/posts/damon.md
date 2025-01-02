@@ -8,7 +8,7 @@ authors: []
 tags: ["damon", "linux", "kernel", "mm", "projects"]
 categories: ["damon"]
 date: 2019-12-27T18:21:07+01:00
-lastmod: Tue, 24 Dec 2024 11:19:50 -0800
+lastmod: Thu, 02 Jan 2025 12:21:51 -0800
 featured: false
 draft: false
 
@@ -83,30 +83,25 @@ Recent News
 Below are only a short list of recent news.  For __complete list of the news__,
 please refer to a dedicated [post]({{< ref "damon_news.md" >}}).
 
+_2025-01-01_: An LSF/MM/BPF topic proposal for gathering DAMON requirements for
+future MM has been
+[posted](https://lore.kernel.org/20250101222039.74565-1-sj@kernel.org).
+
+_2025-01-01_: DAMON debugfs interface removal patch series have been
+[posted](20250101213527.74203-1-sj@kernel.org)
+
+_204-12-26_: RFC patch series for inclusive DAMOS filters has been
+[posted](https://lore.kernel.org/20241227210819.63776-1-sj@kernel.org)
+
 _2024-12-23_: `damo`
 [v2.6.1](https://github.com/damonitor/damo/blob/v2.6.1/release_note#L4) is
 released with page level properties based monitoring support.  Show a blog
 [post](https://damonitor.github.io/posts/damon_sz_filter_passed/) for more
 details.
 
-_2024-12-12_: A DAMON presentation
-[proposal](https://pretalx.fosdem.org/fosdem-2025/talk/review/3UT9TYYRE3UXJMRRCRLMQLJKUHLRKVYE)
-has accepted to [FOSDEM'25](https://fosdem.org/2025/).
-
-_2024-12-02_: On Middlewar'24, a
-[paper](https://dl.acm.org/doi/10.1145/3652892.3700755) describing DAMON as a
-common cloud workload and evaluate their system for DAMON usage has presented.
-
-_2024-11-25_: `damo` [v2.5.7](https://github.com/damonitor/damo/tree/v2.5.7) is
-releasd with tempearture-based regions filtering and formatting features.  Show a
-blog [post](https://damonitor.github.io/posts/damo_2_5_7_features/) showing the
-details of the fetures and examples on a server workload.
-
-_2024-11-18_: `damo` [v2.5.6](https://github.com/damonitor/damo/tree/v2.5.6) is
-released with heatmap snapshot visualization
-[format](https://github.com/damonitor/damo/blob/v2.5.6/release_note#L6) and
-multiple kdamonds edit
-[feature](https://github.com/damonitor/damo/blob/v2.5.6/USAGE.md#multiple-kdamonds).
+_2024-12-18_: RFC patch series for page level properties based acces monitoing
+has been
+[posted](https://lore.kernel.org/20241219040327.61902-1-sj@kernel.org).
 
 
 Getting Started

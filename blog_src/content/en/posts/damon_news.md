@@ -8,7 +8,7 @@ authors: []
 tags: ["damon", "linux", "kernel", "mm", "projects", "news"]
 categories: ["damon"]
 date: 2023-05-06T11:27:07-07:00
-lastmod: Tue, 24 Dec 2024 11:19:50 -0800
+lastmod: Thu, 02 Jan 2025 12:21:51 -0800
 featured: false
 draft: false
 
@@ -39,15 +39,36 @@ sj@kernel.org and/or damon@lists.linux.dev.
 2024
 ----
 
+_2025-01-01_: An LSF/MM/BPF topic proposal for gathering DAMON requirements for
+future MM has been
+[posted](https://lore.kernel.org/20250101222039.74565-1-sj@kernel.org).
+
+_2025-01-01_: DAMON debugfs interface removal patch series have been
+[posted](20250101213527.74203-1-sj@kernel.org)
+
+_204-12-26_: RFC patch series for inclusive DAMOS filters has been
+[posted](https://lore.kernel.org/20241227210819.63776-1-sj@kernel.org)
+
 _2024-12-23_: `damo`
 [v2.6.1](https://github.com/damonitor/damo/blob/v2.6.1/release_note#L4) is
 released with page level properties based monitoring support.  Show a blog
 [post](https://damonitor.github.io/posts/damon_sz_filter_passed/) for more
 details.
 
+_2024-12-18_: RFC patch series for page level properties based acces monitoing
+has been
+[posted](https://lore.kernel.org/20241219040327.61902-1-sj@kernel.org).
+
 _2024-12-12_: A DAMON presentation
 [proposal](https://pretalx.fosdem.org/fosdem-2025/talk/review/3UT9TYYRE3UXJMRRCRLMQLJKUHLRKVYE)
 has accepted to [FOSDEM'25](https://fosdem.org/2025/).
+
+_2024-12-10_: DAMON sample modules have
+[posted](https://lore.kernel.org/20241210215030.85675-1-sj@kernel.org).
+
+_2024-12-02_: DAMON monitoring parameters tuning guide example on a real server
+workload has been
+[shared](https://lore.kernel.org/20241202175459.2005526-1-sj@kernel.org).
 
 _2024-12-02_: On Middlewar'24, a
 [paper](https://dl.acm.org/doi/10.1145/3652892.3700755) describing DAMON as a
