@@ -8,7 +8,7 @@ authors: []
 tags: ["damon", "linux", "kernel", "mm", "projects"]
 categories: ["damon"]
 date: 2019-12-27T18:21:07+01:00
-lastmod: Thu, 02 Jan 2025 12:21:51 -0800
+lastmod: Thu, 02 Jan 2025 14:30:55 -0800
 featured: false
 draft: false
 
@@ -82,6 +82,11 @@ Recent News
 
 Below are only a short list of recent news.  For __complete list of the news__,
 please refer to a dedicated [post]({{< ref "damon_news.md" >}}).
+
+_2025-01-02_: Two LSF/MM/BPF topic proposals for DAMON have been
+posted(
+[1](https://lore.kernel.org/20250102222317.48760-1-sj@kernel.org),
+[2](https://lore.kernel.org/20250101222039.74565-1-sj@kernel.org)).
 
 _2025-01-02_: DAMON quaterly news letter for Q4 2024 has been
 [posted](https://lore.kernel.org/20250102211811.48322-1-sj@kernel.org)
