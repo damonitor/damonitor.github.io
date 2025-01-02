@@ -83,6 +83,9 @@ Recent News
 Below are only a short list of recent news.  For __complete list of the news__,
 please refer to a dedicated [post]({{< ref "damon_news.md" >}}).
 
+_2025-01-02_: DAMON quaterly news letter for Q4 2024 has been
+[posted](https://lore.kernel.org/20250102211811.48322-1-sj@kernel.org)
+
 _2025-01-01_: An LSF/MM/BPF topic proposal for gathering DAMON requirements for
 future MM has been
 [posted](https://lore.kernel.org/20250101222039.74565-1-sj@kernel.org).
