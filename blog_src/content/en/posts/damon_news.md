@@ -36,7 +36,7 @@ sj@kernel.org and/or damon@lists.linux.dev.
 
 ---
 
-2024
+2025
 ----
 
 _2025-01-02_: DAMON quaterly news letter for Q4 2024 has been
@@ -48,6 +48,9 @@ future MM has been
 
 _2025-01-01_: DAMON debugfs interface removal patch series have been
 [posted](20250101213527.74203-1-sj@kernel.org)
+
+2024
+----
 
 _204-12-26_: RFC patch series for inclusive DAMOS filters has been
 [posted](https://lore.kernel.org/20241227210819.63776-1-sj@kernel.org)
