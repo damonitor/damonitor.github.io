@@ -8,7 +8,7 @@ authors: []
 tags: ["damon", "linux", "kernel", "mm", "projects"]
 categories: ["damon"]
 date: 2019-12-27T18:21:07+01:00
-lastmod: Thu, 02 Jan 2025 14:30:55 -0800
+lastmod: Wed, 29 Jan 2025 16:42:59 -0800
 featured: false
 draft: false
 
@@ -83,6 +83,23 @@ Recent News
 Below are only a short list of recent news.  For __complete list of the news__,
 please refer to a dedicated [post]({{< ref "damon_news.md" >}}).
 
+_2025-01-26_: MM pull request for Linux 6.14-rc1 is
+[merged](https://lore.kernel.org/173794918049.2962345.16153806964109303355.pr-tracker-bot@kernel.org)
+with DAMON changes including below six patch series.
+
+- mm/damon: add sample modules
+  ([link](https://git.kernel.org/torvalds/c/19d7c3adfdd4))
+- mm/damon: replace most damon_callback usages in sysfs with new core functions
+  ([link](https://git.kernel.org/torvalds/c/e035320fd38e))
+- mm/damon: enable page level properties based monitoring
+  ([link](https://git.kernel.org/torvalds/c/626ffabe67c2))
+- mm/damon: remove DAMON debugfs interface
+  ([link](https://git.kernel.org/torvalds/c/2a91cb2d2b33))
+- mm/damon: extend DAMOS filters for inclusion
+  ([link](https://git.kernel.org/torvalds/c/e20f52e8e3b7))
+- Docs/mm/damon: add tuning guide and misc updates
+  ([link](https://git.kernel.org/torvalds/c/82047ae18446))
+
 _2025-01-02_: Two LSF/MM/BPF topic proposals for DAMON have been
 posted(
 [1](https://lore.kernel.org/20250102222317.48760-1-sj@kernel.org),
@@ -97,19 +114,6 @@ future MM has been
 
 _2025-01-01_: DAMON debugfs interface removal patch series have been
 [posted](20250101213527.74203-1-sj@kernel.org)
-
-_204-12-26_: RFC patch series for inclusive DAMOS filters has been
-[posted](https://lore.kernel.org/20241227210819.63776-1-sj@kernel.org)
-
-_2024-12-23_: `damo`
-[v2.6.1](https://github.com/damonitor/damo/blob/v2.6.1/release_note#L4) is
-released with page level properties based monitoring support.  Show a blog
-[post](https://damonitor.github.io/posts/damon_sz_filter_passed/) for more
-details.
-
-_2024-12-18_: RFC patch series for page level properties based acces monitoing
-has been
-[posted](https://lore.kernel.org/20241219040327.61902-1-sj@kernel.org).
 
 
 Getting Started

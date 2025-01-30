@@ -8,7 +8,7 @@ authors: []
 tags: ["damon", "linux", "kernel", "mm", "projects", "news"]
 categories: ["damon"]
 date: 2023-05-06T11:27:07-07:00
-lastmod: Thu, 02 Jan 2025 14:30:55 -0800
+lastmod: Wed, 29 Jan 2025 16:42:59 -0800
 featured: false
 draft: false
 
@@ -38,6 +38,23 @@ sj@kernel.org and/or damon@lists.linux.dev.
 
 2025
 ----
+
+_2025-01-26_: MM pull request for Linux 6.14-rc1 is
+[merged](https://lore.kernel.org/173794918049.2962345.16153806964109303355.pr-tracker-bot@kernel.org)
+with DAMON changes including below six patch series.
+
+- mm/damon: add sample modules
+  ([link](https://git.kernel.org/torvalds/c/19d7c3adfdd4))
+- mm/damon: replace most damon_callback usages in sysfs with new core functions
+  ([link](https://git.kernel.org/torvalds/c/e035320fd38e))
+- mm/damon: enable page level properties based monitoring
+  ([link](https://git.kernel.org/torvalds/c/626ffabe67c2))
+- mm/damon: remove DAMON debugfs interface
+  ([link](https://git.kernel.org/torvalds/c/2a91cb2d2b33))
+- mm/damon: extend DAMOS filters for inclusion
+  ([link](https://git.kernel.org/torvalds/c/e20f52e8e3b7))
+- Docs/mm/damon: add tuning guide and misc updates
+  ([link](https://git.kernel.org/torvalds/c/82047ae18446))
 
 _2025-01-02_: Two LSF/MM/BPF topic proposals for DAMON have been
 posted(
