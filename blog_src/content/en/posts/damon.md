@@ -356,7 +356,10 @@ HPDC'22 extends the coverage to DAMOS (automated access-aware system
 operations) and user-space driven auto-tuning.
 
 - SeongJae Park, __DAMON: Kernel Subsystem for Data Access Monitoring and
-  Access-aware System Operations.__ In FOSDEM, Feb 2025.
+  Access-aware System Operations.__ In Fosdem, Feb 2025.
+  [Slides](https://fosdem.org/2025/events/attachments/fosdem-2025-4396-damon-kernel-subsystem-for-data-access-monitoring-and-access-aware-system-operations/slides/237650/damon_fos_tfIr9t8.pdf),
+  [Video](https://video.fosdem.org/2025/ud2208/fosdem-2025-4396-damon-kernel-subsystem-for-data-access-monitoring-and-access-aware-system-operations.av1.webm),
+  [Link](https://fosdem.org/2025/schedule/event/fosdem-2025-4396-damon-kernel-subsystem-for-data-access-monitoring-and-access-aware-system-operations/)
 - SeongJae Park, __DAMON: Long-term Plans for Kernel That {Just
   Works,Extensible}.__ In Linux Kernel Memory Management Microconferenct at
   Linux Plumbers, Sep 2024.
