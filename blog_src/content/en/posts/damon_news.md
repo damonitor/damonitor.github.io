@@ -8,7 +8,7 @@ authors: []
 tags: ["damon", "linux", "kernel", "mm", "projects", "news"]
 categories: ["damon"]
 date: 2023-05-06T11:27:07-07:00
-lastmod: Wed, 29 Jan 2025 16:42:59 -0800
+lastmod: Sat, 22 Feb 2025 09:14:23 -0800
 featured: false
 draft: false
 
@@ -38,6 +38,18 @@ sj@kernel.org and/or damon@lists.linux.dev.
 
 2025
 ----
+
+_2025-02-22_: An [academic
+paper](https://uu.diva-portal.org/smash/get/diva2:1927657/FULLTEXT01.pdf)
+showing DAMON-based memory tiering can be further improved using h/w-assisted
+promotion has been published.
+
+_2025-02-12_: DAMON monitoring intervals auto-tuning RFC [patch
+series](https://lore.kernel.org/20250213014438.145611-1-sj@kernel.org) has been
+posted.
+
+_2025-02-08_: FOSDEM'25 DAMON talk record video has been
+[available](https://fosdem.org/2025/schedule/event/fosdem-2025-4396-damon-kernel-subsystem-for-data-access-monitoring-and-access-aware-system-operations/).
 
 _2025-01-26_: MM pull request for Linux 6.14-rc1 is
 [merged](https://lore.kernel.org/173794918049.2962345.16153806964109303355.pr-tracker-bot@kernel.org)

@@ -8,7 +8,7 @@ authors: []
 tags: ["damon", "linux", "kernel", "mm", "projects"]
 categories: ["damon"]
 date: 2019-12-27T18:21:07+01:00
-lastmod: Wed, 29 Jan 2025 16:42:59 -0800
+lastmod: Sat, 22 Feb 2025 09:14:23 -0800
 featured: false
 draft: false
 
@@ -83,6 +83,18 @@ Recent News
 Below are only a short list of recent news.  For __complete list of the news__,
 please refer to a dedicated [post]({{< ref "damon_news.md" >}}).
 
+_2025-02-22_: An [academic
+paper](https://uu.diva-portal.org/smash/get/diva2:1927657/FULLTEXT01.pdf)
+showing DAMON-based memory tiering can be further improved using h/w-assisted
+promotion has been published.
+
+_2025-02-12_: DAMON monitoring intervals auto-tuning RFC [patch
+series](https://lore.kernel.org/20250213014438.145611-1-sj@kernel.org) has been
+posted.
+
+_2025-02-08_: FOSDEM'25 DAMON talk record video has been
+[available](https://fosdem.org/2025/schedule/event/fosdem-2025-4396-damon-kernel-subsystem-for-data-access-monitoring-and-access-aware-system-operations/).
+
 _2025-01-26_: MM pull request for Linux 6.14-rc1 is
 [merged](https://lore.kernel.org/173794918049.2962345.16153806964109303355.pr-tracker-bot@kernel.org)
 with DAMON changes including below six patch series.
@@ -104,16 +116,6 @@ _2025-01-02_: Two LSF/MM/BPF topic proposals for DAMON have been
 posted(
 [1](https://lore.kernel.org/20250102222317.48760-1-sj@kernel.org),
 [2](https://lore.kernel.org/20250101222039.74565-1-sj@kernel.org)).
-
-_2025-01-02_: DAMON quaterly news letter for Q4 2024 has been
-[posted](https://lore.kernel.org/20250102211811.48322-1-sj@kernel.org)
-
-_2025-01-01_: An LSF/MM/BPF topic proposal for gathering DAMON requirements for
-future MM has been
-[posted](https://lore.kernel.org/20250101222039.74565-1-sj@kernel.org).
-
-_2025-01-01_: DAMON debugfs interface removal patch series have been
-[posted](20250101213527.74203-1-sj@kernel.org)
 
 
 Getting Started
