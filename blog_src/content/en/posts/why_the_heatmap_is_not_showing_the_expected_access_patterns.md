@@ -77,10 +77,14 @@ region   2: 00000140730699452416-00000140730699587584 (132.000 KiB)
 
 To help easier selection, `damo report heatmap` also provides `--draw_range`
 option.  As of this writing, the option allows two inputs, namely `hottest` and
-`all`.  If `hottest` is passed to the option, `damo` will find a mapped region
-that most access has happened, and draw the heatmap for only the hottest
-region.  If `all` is passed, `damo` will draw heatmaps for all the mapped
-regions.
+`all`.  If `all` is passed, `damo` will draw heatmaps for all the mapped
+regions.  If `hottest` is passed to the option, `damo` will find a mapped
+region that most access has happened, and draw the heatmap for only the hottest
+region.
+
+As of this writing, `damo report heatmap` works as `--draw_range hottest` is
+given by default.  Note that that the default behavior could be changed in
+future.  Also, `--draw_range` option will be available from v2.7.2.
 
 Wrapup
 ------
