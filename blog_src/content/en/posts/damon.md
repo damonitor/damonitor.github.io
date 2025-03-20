@@ -8,7 +8,7 @@ authors: []
 tags: ["damon", "linux", "kernel", "mm", "projects"]
 categories: ["damon"]
 date: 2019-12-27T18:21:07+01:00
-lastmod: Sat, 22 Feb 2025 09:14:23 -0800
+lastmod: Thu, 20 Mar 2025 09:23:39 -0700
 featured: false
 draft: false
 
@@ -83,6 +83,19 @@ Recent News
 Below are only a short list of recent news.  For __complete list of the news__,
 please refer to a dedicated [post]({{< ref "damon_news.md" >}}).
 
+_2025-03-20_: DAMON session on LSF/MM/BPF 2025 has been
+[scheduled](https://docs.google.com/spreadsheets/d/1PgjzaPOnIHgRIfqgwDNiftY5Xr6aU3NLWtDs7zFoIvc/edit?gid=1852749899#gid=1852749899).
+
+_2025-03-19_: RFC patch series for self-tuned DAMON-based memory tiering has
+[posted](https://lore.kernel.org/20250320053937.57734-1-sj@kernel.org/) with an
+evaluation result, and
+[introduced](https://www.phoronix.com/news/DAMON-Self-Tuned-Memory-Tiering) by
+Phoronix.
+
+_2025-03-03_: DAMON monitoring intervals auto-tuning [patch
+series](https://lore.kernel.org/all/20250303221726.484227-1-sj@kernel.org/) has
+been posted, and queued in mm tree.
+
 _2025-02-22_: An [academic
 paper](https://uu.diva-portal.org/smash/get/diva2:1927657/FULLTEXT01.pdf)
 showing DAMON-based memory tiering can be further improved using h/w-assisted
@@ -94,28 +107,6 @@ posted.
 
 _2025-02-08_: FOSDEM'25 DAMON talk record video has been
 [available](https://fosdem.org/2025/schedule/event/fosdem-2025-4396-damon-kernel-subsystem-for-data-access-monitoring-and-access-aware-system-operations/).
-
-_2025-01-26_: MM pull request for Linux 6.14-rc1 is
-[merged](https://lore.kernel.org/173794918049.2962345.16153806964109303355.pr-tracker-bot@kernel.org)
-with DAMON changes including below six patch series.
-
-- mm/damon: add sample modules
-  ([link](https://git.kernel.org/torvalds/c/19d7c3adfdd4))
-- mm/damon: replace most damon_callback usages in sysfs with new core functions
-  ([link](https://git.kernel.org/torvalds/c/e035320fd38e))
-- mm/damon: enable page level properties based monitoring
-  ([link](https://git.kernel.org/torvalds/c/626ffabe67c2))
-- mm/damon: remove DAMON debugfs interface
-  ([link](https://git.kernel.org/torvalds/c/2a91cb2d2b33))
-- mm/damon: extend DAMOS filters for inclusion
-  ([link](https://git.kernel.org/torvalds/c/e20f52e8e3b7))
-- Docs/mm/damon: add tuning guide and misc updates
-  ([link](https://git.kernel.org/torvalds/c/82047ae18446))
-
-_2025-01-02_: Two LSF/MM/BPF topic proposals for DAMON have been
-posted(
-[1](https://lore.kernel.org/20250102222317.48760-1-sj@kernel.org),
-[2](https://lore.kernel.org/20250101222039.74565-1-sj@kernel.org)).
 
 
 Getting Started

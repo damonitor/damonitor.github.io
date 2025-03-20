@@ -8,7 +8,7 @@ authors: []
 tags: ["damon", "linux", "kernel", "mm", "projects", "news"]
 categories: ["damon"]
 date: 2023-05-06T11:27:07-07:00
-lastmod: Sat, 22 Feb 2025 09:14:23 -0800
+lastmod: Thu, 20 Mar 2025 09:23:39 -0700
 featured: false
 draft: false
 
@@ -38,6 +38,19 @@ sj@kernel.org and/or damon@lists.linux.dev.
 
 2025
 ----
+
+_2025-03-20_: DAMON session on LSF/MM/BPF 2025 has been
+[scheduled](https://docs.google.com/spreadsheets/d/1PgjzaPOnIHgRIfqgwDNiftY5Xr6aU3NLWtDs7zFoIvc/edit?gid=1852749899#gid=1852749899).
+
+_2025-03-19_: RFC patch series for self-tuned DAMON-based memory tiering has
+[posted](https://lore.kernel.org/20250320053937.57734-1-sj@kernel.org/) with an
+evaluation result, and
+[introduced](https://www.phoronix.com/news/DAMON-Self-Tuned-Memory-Tiering) by
+Phoronix.
+
+_2025-03-03_: DAMON monitoring intervals auto-tuning [patch
+series](https://lore.kernel.org/all/20250303221726.484227-1-sj@kernel.org/) has
+been posted, and queued in mm tree.
 
 _2025-02-22_: An [academic
 paper](https://uu.diva-portal.org/smash/get/diva2:1927657/FULLTEXT01.pdf)
