@@ -348,6 +348,14 @@ mechanisms and access pattern profiling-guided optimizations.  The paper for
 HPDC'22 extends the coverage to DAMOS (automated access-aware system
 operations) and user-space driven auto-tuning.
 
+- SeongJae Park, __DAMON Requirements for Access-aware MM of Future.__ and
+  Memory Tiering.__ In _Linux Storage | Filesystem | MM & BPF Summit_, Mar
+  2025.
+  [Link](https://docs.google.com/spreadsheets/d/1PgjzaPOnIHgRIfqgwDNiftY5Xr6aU3NLWtDs7zFoIvc/edit?gid=1852749899#gid=1852749899)
+- SeongJae Park, __DAMON Updates and Plans: Monitoring Parameters Auot-tuning
+  and Memory Tiering.__ In _Linux Storage | Filesystem | MM & BPF Summit_,
+  Mar 2025.
+  [Link](https://docs.google.com/spreadsheets/d/1PgjzaPOnIHgRIfqgwDNiftY5Xr6aU3NLWtDs7zFoIvc/edit?gid=1852749899#gid=1852749899)
 - SeongJae Park, __DAMON: Kernel Subsystem for Data Access Monitoring and
   Access-aware System Operations.__ In Fosdem, Feb 2025.
   [Slides](https://fosdem.org/2025/events/attachments/fosdem-2025-4396-damon-kernel-subsystem-for-data-access-monitoring-and-access-aware-system-operations/slides/237650/damon_fos_tfIr9t8.pdf),
