@@ -8,7 +8,7 @@ authors: []
 tags: ["damon", "linux", "kernel", "mm", "projects", "news"]
 categories: ["damon"]
 date: 2023-05-06T11:27:07-07:00
-lastmod: Thu, 20 Mar 2025 09:23:39 -0700
+lastmod: Wed, 02 Apr 2025 19:43:50 -0700
 featured: false
 draft: false
 
@@ -38,6 +38,22 @@ sj@kernel.org and/or damon@lists.linux.dev.
 
 2025
 ----
+
+
+_2025-04-01_: An EuroSys'25
+[paper](https://dl.acm.org/doi/10.1145/3689031.3717471) for proactive demotion
+on tiered memory managment is published.  It also shares evaluations of a
+DAMON-based tiering approach that is being used by HMSDK.
+
+_2025-04-01_: MM
+[pull request](https://lore.kernel.org/20250330165732.f4c1493615375623f67e38eb@linux-foundation.org/)
+for Linux 6.15-rc1 including below major DAMON changes is merged.
+
+- Monitoring intervals auto-tuning
+- Extending DAMOS filter types for hugepage, LRU-[in]active page, and
+  [un]mapped pages
+- DAMOS allow filters behavior improvement
+- Important cleanups and fixes of code and documents
 
 _2025-03-20_: DAMON session on LSF/MM/BPF 2025 has been
 [scheduled](https://docs.google.com/spreadsheets/d/1PgjzaPOnIHgRIfqgwDNiftY5Xr6aU3NLWtDs7zFoIvc/edit?gid=1852749899#gid=1852749899).
