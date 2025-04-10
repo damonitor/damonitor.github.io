@@ -83,6 +83,13 @@ Recent News
 Below are only a short list of recent news.  For __complete list of the news__,
 please refer to a dedicated [post]({{< ref "damon_news.md" >}}).
 
+_2025-04-10_: LWN made an excellent
+[summary](https://lwn.net/Articles/1016525/) of the two DAMON sessions that we
+had at LSFMM+BPF 2025.
+
+_2025-04-07_: DAMON talk for OSSummit North America 2025 has been accepted and
+[scheduled](https://sched.co/1zfmE).
+
 _2025-04-01_: An EuroSys'25
 [paper](https://dl.acm.org/doi/10.1145/3689031.3717471) for proactive demotion
 on tiered memory managment is published.  It also shares evaluations of a
@@ -100,28 +107,6 @@ for Linux 6.15-rc1 including below major DAMON changes is merged.
 
 _2025-03-20_: DAMON session on LSF/MM/BPF 2025 has been
 [scheduled](https://docs.google.com/spreadsheets/d/1PgjzaPOnIHgRIfqgwDNiftY5Xr6aU3NLWtDs7zFoIvc/edit?gid=1852749899#gid=1852749899).
-
-_2025-03-19_: RFC patch series for self-tuned DAMON-based memory tiering has
-[posted](https://lore.kernel.org/20250320053937.57734-1-sj@kernel.org/) with an
-evaluation result, and
-[introduced](https://www.phoronix.com/news/DAMON-Self-Tuned-Memory-Tiering) by
-Phoronix.
-
-_2025-03-03_: DAMON monitoring intervals auto-tuning [patch
-series](https://lore.kernel.org/all/20250303221726.484227-1-sj@kernel.org/) has
-been posted, and queued in mm tree.
-
-_2025-02-22_: An [academic
-paper](https://uu.diva-portal.org/smash/get/diva2:1927657/FULLTEXT01.pdf)
-showing DAMON-based memory tiering can be further improved using h/w-assisted
-promotion has been published.
-
-_2025-02-12_: DAMON monitoring intervals auto-tuning RFC [patch
-series](https://lore.kernel.org/20250213014438.145611-1-sj@kernel.org) has been
-posted.
-
-_2025-02-08_: FOSDEM'25 DAMON talk record video has been
-[available](https://fosdem.org/2025/schedule/event/fosdem-2025-4396-damon-kernel-subsystem-for-data-access-monitoring-and-access-aware-system-operations/).
 
 
 Getting Started

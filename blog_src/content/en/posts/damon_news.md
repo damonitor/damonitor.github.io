@@ -8,7 +8,7 @@ authors: []
 tags: ["damon", "linux", "kernel", "mm", "projects", "news"]
 categories: ["damon"]
 date: 2023-05-06T11:27:07-07:00
-lastmod: Wed, 02 Apr 2025 19:43:50 -0700
+lastmod: Thu, 10 Apr 2025 16:42:52 -0700
 featured: false
 draft: false
 
@@ -39,6 +39,12 @@ sj@kernel.org and/or damon@lists.linux.dev.
 2025
 ----
 
+_2025-04-10_: LWN made an excellent
+[summary](https://lwn.net/Articles/1016525/) of the two DAMON sessions that we
+had at LSFMM+BPF 2025.
+
+_2025-04-07_: DAMON talk for OSSummit North America 2025 has been accepted and
+[scheduled](https://sched.co/1zfmE).
 
 _2025-04-01_: An EuroSys'25
 [paper](https://dl.acm.org/doi/10.1145/3689031.3717471) for proactive demotion
