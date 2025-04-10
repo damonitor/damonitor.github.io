@@ -8,7 +8,7 @@ authors: []
 tags: ["damon", "linux", "kernel", "mm", "projects"]
 categories: ["damon"]
 date: 2019-12-27T18:21:07+01:00
-lastmod: Wed, 02 Apr 2025 19:43:50 -0700
+lastmod: Thu, 10 Apr 2025 16:42:52 -0700
 featured: false
 draft: false
 
@@ -363,6 +363,9 @@ mechanisms and access pattern profiling-guided optimizations.  The paper for
 HPDC'22 extends the coverage to DAMOS (automated access-aware system
 operations) and user-space driven auto-tuning.
 
+- SeongJae Park, __Self-Driving DAMON/S: Controlled and Automated Access-aware
+  Efficient Systems.__ In _Open Source Summit North America_, Jun 2025.
+  [Link](https://sched.co/1aBOg)
 - SeongJae Park, __DAMON Requirements for Access-aware MM of Future.__ In
   _Linux Storage | Filesystem | MM & BPF Summit_, Mar 2025.
   [Slides](https://github.com/damonitor/talks/blob/master/2025/lsfmmbpf/damon_requirements_lsfmmbpf_2025.pdf),
