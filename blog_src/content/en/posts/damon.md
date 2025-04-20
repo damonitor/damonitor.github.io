@@ -8,7 +8,7 @@ authors: []
 tags: ["damon", "linux", "kernel", "mm", "projects"]
 categories: ["damon"]
 date: 2019-12-27T18:21:07+01:00
-lastmod: Thu, 10 Apr 2025 16:42:52 -0700
+lastmod: Sun, 20 Apr 2025 10:23:37 -0700
 featured: false
 draft: false
 
@@ -83,6 +83,15 @@ Recent News
 Below are only a short list of recent news.  For __complete list of the news__,
 please refer to a dedicated [post]({{< ref "damon_news.md" >}}).
 
+_2025-04-19_: DAMON user-space tool feature for let users program their access
+pattern visualization in Python code, as a script or interactively on the
+Python interpreter, is
+[developed](https://github.com/damonitor/damo/blob/d0eb41035db1a870d482a14087afda0196c5980b/USAGE.md#damo-report-access-programming-visualization).
+
+_2025-04-17_: Yet another DAMON-citation from a HCDS'25
+[paper](https://www.pure.ed.ac.uk/ws/portalfiles/portal/497211278/XingandBarbalaceHDCS2025RethinkingApplications_AddressSpace.pdf)
+is found. The paper discusses h/w-based CXL coherency management.
+
 _2025-04-10_: LWN made an excellent
 [summary](https://lwn.net/Articles/1016525/) of the two DAMON sessions that we
 had at LSFMM+BPF 2025.
@@ -94,19 +103,6 @@ _2025-04-01_: An EuroSys'25
 [paper](https://dl.acm.org/doi/10.1145/3689031.3717471) for proactive demotion
 on tiered memory managment is published.  It also shares evaluations of a
 DAMON-based tiering approach that is being used by HMSDK.
-
-_2025-04-01_: MM
-[pull request](https://lore.kernel.org/20250330165732.f4c1493615375623f67e38eb@linux-foundation.org/)
-for Linux 6.15-rc1 including below major DAMON changes is merged.
-
-- Monitoring intervals auto-tuning
-- Extending DAMOS filter types for hugepage, LRU-[in]active page, and
-  [un]mapped pages
-- DAMOS allow filters behavior improvement
-- Important cleanups and fixes of code and documents
-
-_2025-03-20_: DAMON session on LSF/MM/BPF 2025 has been
-[scheduled](https://docs.google.com/spreadsheets/d/1PgjzaPOnIHgRIfqgwDNiftY5Xr6aU3NLWtDs7zFoIvc/edit?gid=1852749899#gid=1852749899).
 
 
 Getting Started

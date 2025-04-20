@@ -8,7 +8,7 @@ authors: []
 tags: ["damon", "linux", "kernel", "mm", "projects", "news"]
 categories: ["damon"]
 date: 2023-05-06T11:27:07-07:00
-lastmod: Thu, 10 Apr 2025 16:42:52 -0700
+lastmod: Sun, 20 Apr 2025 10:23:37 -0700
 featured: false
 draft: false
 
@@ -38,6 +38,15 @@ sj@kernel.org and/or damon@lists.linux.dev.
 
 2025
 ----
+
+_2025-04-19_: DAMON user-space tool feature for let users program their access
+pattern visualization in Python code, as a script or interactively on the
+Python interpreter, is
+[developed](https://github.com/damonitor/damo/blob/d0eb41035db1a870d482a14087afda0196c5980b/USAGE.md#damo-report-access-programming-visualization).
+
+_2025-04-17_: Yet another DAMON-citation from a HCDS'25
+[paper](https://www.pure.ed.ac.uk/ws/portalfiles/portal/497211278/XingandBarbalaceHDCS2025RethinkingApplications_AddressSpace.pdf)
+is found. The paper discusses h/w-based CXL coherency management.
 
 _2025-04-10_: LWN made an excellent
 [summary](https://lwn.net/Articles/1016525/) of the two DAMON sessions that we
