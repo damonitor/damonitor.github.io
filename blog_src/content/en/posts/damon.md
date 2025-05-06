@@ -8,7 +8,7 @@ authors: []
 tags: ["damon", "linux", "kernel", "mm", "projects"]
 categories: ["damon"]
 date: 2019-12-27T18:21:07+01:00
-lastmod: Sun, 20 Apr 2025 10:23:37 -0700
+lastmod: Tue, 06 May 2025 14:50:09 -0700
 featured: false
 draft: false
 
@@ -83,6 +83,15 @@ Recent News
 Below are only a short list of recent news.  For __complete list of the news__,
 please refer to a dedicated [post]({{< ref "damon_news.md" >}}).
 
+_2025-04-30_: Researchers [found](https://arxiv.org/pdf/2504.18714)
+automatically tuning parameters can improve memory tieirng performance by 2x,
+using DAMON and SK hynix' DAMON-based memory tiering solution as a part of
+their research.
+
+_2025-04-24_: Some of OpenSuse kernels will
+[apparently](https://social.kernel.org/notice/AtQ94OoroZhOGuGuAq) build-enable
+DAMON in near future.
+
 _2025-04-19_: DAMON user-space tool feature for let users program their access
 pattern visualization in Python code, as a script or interactively on the
 Python interpreter, is
@@ -95,14 +104,6 @@ is found. The paper discusses h/w-based CXL coherency management.
 _2025-04-10_: LWN made an excellent
 [summary](https://lwn.net/Articles/1016525/) of the two DAMON sessions that we
 had at LSFMM+BPF 2025.
-
-_2025-04-07_: DAMON talk for OSSummit North America 2025 has been accepted and
-[scheduled](https://sched.co/1zfmE).
-
-_2025-04-01_: An EuroSys'25
-[paper](https://dl.acm.org/doi/10.1145/3689031.3717471) for proactive demotion
-on tiered memory managment is published.  It also shares evaluations of a
-DAMON-based tiering approach that is being used by HMSDK.
 
 
 Getting Started

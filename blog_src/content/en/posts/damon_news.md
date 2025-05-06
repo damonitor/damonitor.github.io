@@ -8,7 +8,7 @@ authors: []
 tags: ["damon", "linux", "kernel", "mm", "projects", "news"]
 categories: ["damon"]
 date: 2023-05-06T11:27:07-07:00
-lastmod: Sun, 20 Apr 2025 10:23:37 -0700
+lastmod: Tue, 06 May 2025 14:50:09 -0700
 featured: false
 draft: false
 
@@ -38,6 +38,15 @@ sj@kernel.org and/or damon@lists.linux.dev.
 
 2025
 ----
+
+_2025-04-30_: Researchers [found](https://arxiv.org/pdf/2504.18714)
+automatically tuning parameters can improve memory tieirng performance by 2x,
+using DAMON and SK hynix' DAMON-based memory tiering solution as a part of
+their research.
+
+_2025-04-24_: Some of OpenSuse kernels will
+[apparently](https://social.kernel.org/notice/AtQ94OoroZhOGuGuAq) build-enable
+DAMON in near future.
 
 _2025-04-19_: DAMON user-space tool feature for let users program their access
 pattern visualization in Python code, as a script or interactively on the
