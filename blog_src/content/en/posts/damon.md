@@ -345,6 +345,9 @@ mechanisms and access pattern profiling-guided optimizations.  The paper for
 HPDC'22 extends the coverage to DAMOS (automated access-aware system
 operations) and user-space driven auto-tuning.
 
+- SeongJae Park, __Overcoming Observer Effects in Memory Management with
+  DAMON.__ In _Kernel Recipes_, Sep 2025.
+  [Link](https://kernel-recipes.org/en/2025/schedule/overcoming-observer-effects-in-memory-management-with-damon/)
 - SeongJae Park, __Self-Driving DAMON/S: Controlled and Automated Access-aware
   Efficient Systems.__ In _Open Source Summit North America_, Jun 2025.
   [Link](https://sched.co/1aBOg)
