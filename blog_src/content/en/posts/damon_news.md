@@ -39,6 +39,18 @@ sj@kernel.org and/or damon@lists.linux.dev.
 2025
 ----
 
+_2025-05-31_: DAMON patches for [more self-driven memory
+tiering](https://lore.kernel.org/all/20250531145342.383090aa5ed5bcefee0740d5@linux-foundation.org/)
+has been
+[merged](https://lore.kernel.org/all/174874604794.296823.9742582059292506586.pr-tracker-bot@kernel.org/)
+into the mainline.
+
+_2025-05-23_: DAMON talk for Kernel Recipes 2025 has been
+[updated](https://kernel-recipes.org/en/2025/schedule/overcoming-observer-effects-in-memory-management-with-damon/).
+
+_2025-05-12_: RFC for build-enabling DAMON by default has been
+[posted](https://lore.kernel.org/20250512182716.50245-1-sj@kernel.org).
+
 _2025-04-30_: Researchers [found](https://arxiv.org/pdf/2504.18714)
 automatically tuning parameters can improve memory tieirng performance by 2x,
 using DAMON and SK hynix' DAMON-based memory tiering solution as a part of

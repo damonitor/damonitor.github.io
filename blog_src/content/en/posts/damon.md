@@ -83,6 +83,18 @@ Recent News
 Below are only a short list of recent news.  For __complete list of the news__,
 please refer to a dedicated [post]({{< ref "damon_news.md" >}}).
 
+_2025-05-31_: DAMON patches for [more self-driven memory
+tiering](https://lore.kernel.org/all/20250531145342.383090aa5ed5bcefee0740d5@linux-foundation.org/)
+has been
+[merged](https://lore.kernel.org/all/174874604794.296823.9742582059292506586.pr-tracker-bot@kernel.org/)
+into the mainline.
+
+_2025-05-23_: DAMON talk for Kernel Recipes 2025 has been
+[updated](https://kernel-recipes.org/en/2025/schedule/overcoming-observer-effects-in-memory-management-with-damon/).
+
+_2025-05-12_: RFC for build-enabling DAMON by default has been
+[posted](https://lore.kernel.org/20250512182716.50245-1-sj@kernel.org).
+
 _2025-04-30_: Researchers [found](https://arxiv.org/pdf/2504.18714)
 automatically tuning parameters can improve memory tieirng performance by 2x,
 using DAMON and SK hynix' DAMON-based memory tiering solution as a part of
@@ -91,19 +103,6 @@ their research.
 _2025-04-24_: Some of OpenSuse kernels will
 [apparently](https://social.kernel.org/notice/AtQ94OoroZhOGuGuAq) build-enable
 DAMON in near future.
-
-_2025-04-19_: DAMON user-space tool feature for let users program their access
-pattern visualization in Python code, as a script or interactively on the
-Python interpreter, is
-[developed](https://github.com/damonitor/damo/blob/d0eb41035db1a870d482a14087afda0196c5980b/USAGE.md#damo-report-access-programming-visualization).
-
-_2025-04-17_: Yet another DAMON-citation from a HCDS'25
-[paper](https://www.pure.ed.ac.uk/ws/portalfiles/portal/497211278/XingandBarbalaceHDCS2025RethinkingApplications_AddressSpace.pdf)
-is found. The paper discusses h/w-based CXL coherency management.
-
-_2025-04-10_: LWN made an excellent
-[summary](https://lwn.net/Articles/1016525/) of the two DAMON sessions that we
-had at LSFMM+BPF 2025.
 
 
 Getting Started
