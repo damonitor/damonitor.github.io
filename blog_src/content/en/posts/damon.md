@@ -89,6 +89,9 @@ have been
 [merged](https://lore.kernel.org/all/174874604794.296823.9742582059292506586.pr-tracker-bot@kernel.org/)
 into the mainline.
 
+_2025-05-26_: DAMON patches for simple and practical access monitoring have
+been [posted](https://lore.kernel.org/20250526210936.2744-1-sj@kernel.org)
+
 _2025-05-23_: DAMON talk for Kernel Recipes 2025 has been
 [updated](https://kernel-recipes.org/en/2025/schedule/overcoming-observer-effects-in-memory-management-with-damon/).
 
