@@ -84,8 +84,8 @@ Below are only a short list of recent news.  For __complete list of the news__,
 please refer to a dedicated [post]({{< ref "damon_news.md" >}}).
 
 _2025-05-31_: DAMON patches for [more self-driven memory
-tiering](https://lore.kernel.org/all/20250531145342.383090aa5ed5bcefee0740d5@linux-foundation.org/)
-has been
+tiering](https://lore.kernel.org/all/20250420194030.75838-1-sj@kernel.org/)
+have been
 [merged](https://lore.kernel.org/all/174874604794.296823.9742582059292506586.pr-tracker-bot@kernel.org/)
 into the mainline.
 
