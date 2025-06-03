@@ -39,6 +39,12 @@ sj@kernel.org and/or damon@lists.linux.dev.
 2025
 ----
 
+_2025-06-02_:
+[Changes](https://lore.kernel.org/all/20250521042755.39653-1-sj@kernel.org/)
+for enabling CONFIG_DAMON by default has been
+[merged](https://lore.kernel.org/all/174891081008.961800.5493448222601669134.pr-tracker-bot@kernel.org/)
+into the mainline, by the second MM subsystem pull request for Linux 6.16-rc1.
+
 _2025-05-31_: DAMON patches for [more self-driven memory
 tiering](https://lore.kernel.org/all/20250420194030.75838-1-sj@kernel.org/)
 have been

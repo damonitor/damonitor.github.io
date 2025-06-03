@@ -83,6 +83,12 @@ Recent News
 Below are only a short list of recent news.  For __complete list of the news__,
 please refer to a dedicated [post]({{< ref "damon_news.md" >}}).
 
+_2025-06-02_:
+[Changes](https://lore.kernel.org/all/20250521042755.39653-1-sj@kernel.org/)
+for enabling CONFIG_DAMON by default has been
+[merged](https://lore.kernel.org/all/174891081008.961800.5493448222601669134.pr-tracker-bot@kernel.org/)
+into the mainline, by the second MM subsystem pull request for Linux 6.16-rc1.
+
 _2025-05-31_: DAMON patches for [more self-driven memory
 tiering](https://lore.kernel.org/all/20250420194030.75838-1-sj@kernel.org/)
 have been
@@ -97,15 +103,6 @@ _2025-05-23_: DAMON talk for Kernel Recipes 2025 has been
 
 _2025-05-12_: RFC for build-enabling DAMON by default has been
 [posted](https://lore.kernel.org/20250512182716.50245-1-sj@kernel.org).
-
-_2025-04-30_: Researchers [found](https://arxiv.org/pdf/2504.18714)
-automatically tuning parameters can improve memory tieirng performance by 2x,
-using DAMON and SK hynix' DAMON-based memory tiering solution as a part of
-their research.
-
-_2025-04-24_: Some of OpenSuse kernels will
-[apparently](https://social.kernel.org/notice/AtQ94OoroZhOGuGuAq) build-enable
-DAMON in near future.
 
 
 Getting Started
