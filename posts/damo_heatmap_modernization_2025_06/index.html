@@ -54,7 +54,7 @@
         },
         "datePublished": "2025-06-08",
         "description": "",
-        "wordCount":  1937 ,
+        "wordCount":  1968 ,
         "mainEntityOfPage": "True",
         "dateModified": "2025-06-08",
         "image": {
@@ -73,8 +73,8 @@
 
     
     <meta property="og:title" content="`damo report heatmap` modernization for snapshots, page level monitoring and intervals auto-tuning" />
-<meta property="og:description" content="TL; DR: damo report heatmap has recently advanced to support modern DAMON features including age tracking, snapshots, page level monitoring, and moniting intervals auto-tuning.
-DAMON in The Past: Full Recording based Monitoring At the beginning, DAMON was providing only access frequency of each memory region in real time. Hence heatmap visualization, which shows the access frequency of each memory area in timeline was the first and one of the best ways to see the access pattern." />
+<meta property="og:description" content="TL; DR: damo report heatmap has recently advanced to support modern DAMON features including age tracking, snapshots, page level monitoring, and monitoring intervals auto-tuning. It will help users intuitively understand the monitored access patterns at a glance.
+DAMON in The Past: Full Recording based Monitoring At the beginning, DAMON was providing only the access frequency of each memory region in real time. Hence heatmap visualization, which shows the access frequency of each memory area in the timeline was the first and one of the best ways to see the access pattern." />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://damonitor.github.io/posts/damo_heatmap_modernization_2025_06/" /><meta property="article:section" content="posts" />
 <meta property="article:published_time" content="2025-06-08T11:44:52-07:00" />
@@ -84,8 +84,8 @@ DAMON in The Past: Full Recording based Monitoring At the beginning, DAMON was p
 
     
     <meta name="twitter:card" content="summary"/><meta name="twitter:title" content="`damo report heatmap` modernization for snapshots, page level monitoring and intervals auto-tuning"/>
-<meta name="twitter:description" content="TL; DR: damo report heatmap has recently advanced to support modern DAMON features including age tracking, snapshots, page level monitoring, and moniting intervals auto-tuning.
-DAMON in The Past: Full Recording based Monitoring At the beginning, DAMON was providing only access frequency of each memory region in real time. Hence heatmap visualization, which shows the access frequency of each memory area in timeline was the first and one of the best ways to see the access pattern."/>
+<meta name="twitter:description" content="TL; DR: damo report heatmap has recently advanced to support modern DAMON features including age tracking, snapshots, page level monitoring, and monitoring intervals auto-tuning. It will help users intuitively understand the monitored access patterns at a glance.
+DAMON in The Past: Full Recording based Monitoring At the beginning, DAMON was providing only the access frequency of each memory region in real time. Hence heatmap visualization, which shows the access frequency of each memory area in the timeline was the first and one of the best ways to see the access pattern."/>
 
 
     
@@ -213,12 +213,13 @@ stroke-linejoin="round" class="feather feather-home">
     </details>
             <div class="page-content">
                 <p>TL; DR: <code>damo report heatmap</code> has recently advanced to support modern DAMON
-features including age tracking, snapshots, page level monitoring, and moniting
-intervals auto-tuning.</p>
+features including age tracking, snapshots, page level monitoring, and
+monitoring intervals auto-tuning.  It will help users intuitively understand
+the monitored access patterns at a glance.</p>
 <h2 id="damon-in-the-past-full-recording-based-monitoring">DAMON in The Past: Full Recording based Monitoring</h2>
-<p>At the beginning, DAMON was providing only access frequency of each memory
+<p>At the beginning, DAMON was providing only the access frequency of each memory
 region in real time.  Hence heatmap visualization, which shows the access
-frequency of each memory area in timeline was the first and one of the best
+frequency of each memory area in the timeline was the first and one of the best
 ways to see the access pattern.  DAMON user-space tool (<code>damo</code>) supported such
 collections and visualizations of the data via <code>damo record</code> and <code>damo report heatmap</code>, like below example.</p>
 <pre tabindex="0"><code>$ sudo damo record &#34;../masim/masim ../masim/configs/stairs.cfg&#34;
@@ -270,9 +271,9 @@ $ sudo damo report heatmap -i damon.data
 # resolution: 80x40 (1.274 MiB and 1.497 s for each character)
 </code></pre><p>Each character on the middle of the output shows when (row) what address range
 (column) of the memory was how frequently (number) accessed.  <code>masim</code> with
-<code>stairs.cfg</code> allocated 10 regions of 10 MiB sized region, and access those one
-by one.  The above heatmap is hence showing the pattern.</p>
-<p>For the visualization, however, users have to record entire DAMON-observed
+<code>stairs.cfg</code> allocated 10 regions of 10 MiB size, and accesses those one by
+one.  The above heatmap is hence showing the pattern.</p>
+<p>For the visualization, however, users have to record the entire DAMON-observed
 access frequency of each region for every moment.  For long time recording,
 storage usage of the recorded data was not negligible.  Heatmap-visualization
 of the huge record data was also time consuming.  Hence this was useful for lab
@@ -282,21 +283,21 @@ environments, but arguably not optimized for production environments.</p>
 </code></pre><h2 id="evolvement-of-snapshots-based-monitoring">Evolvement of Snapshots-based Monitoring</h2>
 <p>DAMON has evolved to provide not only access frequency of each region, but also
 how long the current access frequency of the region was kept, namely &lsquo;age&rsquo;.  It
-was mainly developed for access-aware system oprations, namely DAMON-based
+was mainly developed for access-aware system operations, namely DAMON-based
 Operation Schemes (DAMOS).  But, we found the information can also be useful
 for lightweight but practical monitoring.  We therefore made yet another DAMON
-features for getting only the current snapshot of the DAMON monitoring results.
+feature for getting only the current snapshot of the DAMON monitoring results.
 For easy capturing and visualization of the snapshot data, we implemented yet
 another user-space tool feature, namely <code>damo report access</code>.  <code>damo record</code>,
 which is the user-space tool feature for capturing entire DAMON monitoring
-results for the heatmap-like visualizations, has also updated to support only
-snapshot capturing (<code>--snapshot</code> option).  Nowadays, the snapshot based
+results for the heatmap-like visualizations, has also been updated to support
+only snapshot capturing (<code>--snapshot</code> option).  Nowadays, the snapshot based
 visualization is the main feature of DAMON user-space tool for production
 environments.</p>
 <p>For example, users can start DAMON to monitor the workload asynchronously,
 using <code>damo start</code>.</p>
 <pre tabindex="0"><code>$ sudo damo start &#34;../masim/masim ../masim/configs/stairs.cfg&#34;
-</code></pre><p>Then, users can collect and show the snapshot in vairous visualization styles,
+</code></pre><p>Then, users can collect and show the snapshot in various visualization styles,
 using <code>damo report access</code>, like below.</p>
 <pre tabindex="0"><code>$ sudo damo report access
 heatmap: 00000000000000000000000000000002777777866[...]3333333333333333333333337899965555555447[...]8
@@ -358,10 +359,11 @@ memory bw estimate: 2.317 GiB per second
 total size: 209.832 MiB
 monitoring intervals: sample 5 ms, aggr 100 ms
 </code></pre><p>Users can also periodically collect snapshots and save those as a file, using
-<code>damo record</code>.  For example, below command collects the snapshot three times
-with five seconds interval between each snapshot, and save the ouptut as
-damon.data file.  The size of the file is much smaller than the entire results
-record.  <code>damo report access</code> can be used for further visualizing the saved data.</p>
+<code>damo record</code>.  For example, the below command collects the snapshot three
+times with a five seconds interval between each snapshot, and saves the output
+as a file named <code>damon.data</code>.  The size of the file is much smaller than the
+entire results record.  <code>damo report access</code> can be used for further
+visualizing the saved data.</p>
 <pre tabindex="0"><code>$ sudo damo record --snapshot 5s 3
 [...]
 $ ls -alh ./damon.data
@@ -414,18 +416,18 @@ visualization can be useful for system observability.</p>
 <p>Meanwhile, heatmap visualization was not actively updated following the new
 DAMON features.  It was just not working at all for snapshot data.  Though
 snapshot based access visualization was proven to be useful, we recently
-learned the old style heatmap visualization is what people can get the intuivie
-glance of the access pattern in easier way.  We therefore started working on
-updating <code>damo report heatmap</code> to support the modern features, starting from
-v2.8.3.</p>
+learned the old style heatmap visualization is what allows people to get the
+intuitive glance of the access pattern in an easy way.  We therefore started
+working on updating the <code>damo report heatmap</code> to support the modern features,
+starting from v2.8.3.</p>
 <h2 id="modernized-damo-report-heatmap">Modernized <code>damo report heatmap</code></h2>
 <p>By v2.8.4, we expect <code>damo report heatmap</code> will show reliable and useful
-heatmap visualization of snapshot data.  It shows access frequency of each
+heatmap visualization of snapshot data.  It shows the access frequency of each
 memory region like it was doing before.  But if the input is the DAMON
 monitoring results of snapshot[s] rather than entire results of every moment,
-it fills timeline based on the &lsquo;age&rsquo; information of the region on the
-snapshots.  For example, the abovely collected three snapshots data can be
-visualized as a heatmap like below.</p>
+it fills the timeline based on the &lsquo;age&rsquo; information of the region on the
+snapshots.  For example, the three snapshots data, which is collected above,
+can be visualized as a heatmap like below.</p>
 <pre tabindex="0"><code>$ sudo damo report heatmap -i damon.data
 [...]
 00000000000000000000000000000000000000000000000000           0000000000000000000
@@ -439,13 +441,13 @@ visualized as a heatmap like below.</p>
 # x-axis: space [85.672 TiB, 85.672 TiB) (202.891 MiB)
 # y-axis: time [485947 h 16 m 42.456 s, 485947 h 18 m 23.239 s) (1 m 40.783 s)
 # resolution: 80x40 (2.536 MiB and 2.520 s for each character)
-</code></pre><p>The format is same to the above record-based heatmap.  But, now there are blank
-characters.  Those are memory regions that we cannot find the access
-information from the snapshot.  Each snapshot shows access freuqency of each
+</code></pre><p>The format is the same as the above record-based heatmap.  But, now there are
+blank characters.  Those are memory regions that we cannot find the access
+information from the snapshot.  Each snapshot shows the access frquency of each
 region, and how long the access frequency was kept.  Let&rsquo;s say there is an
-oldest snapshot saying first 100 MiB region was not accessed at all for 10
-seconds, and next 10 MiB region was accessed with a high access frequency level
-for 5 seconds.  Then, we cannot know what was the access frequency of the
+oldest snapshot saying the first 100 MiB region was not accessed at all for 10
+seconds, and the next 10 MiB region was accessed with a high access frequency
+level for 5 seconds.  Then, we cannot know what was the access frequency of the
 10 MiB region before the 5 seconds.  The blank columns are showing that.</p>
 <p>In more detail, The first three lines of the output are made from the first
 (oldest) snapshot.  The snapshot found about 10 MiB of the region (<code>58881</code>)
@@ -453,9 +455,9 @@ were accessed frequently, for about 2.5 seconds.  The snapshot says the access
 frequency was kept only for about 2.5 seconds, hence it&rsquo;s access frequency of
 the past is unknown, so filled with blank columns.  This matches with our
 understanding of <code>masim</code> program&rsquo;s access pattern.</p>
-<p>Next two lines (fourth and fifth) are parobably made with the second snapshot.
+<p>Next two lines (fourth and fifth) are probably made with the second snapshot.
 The third snapshot should made the last two lines.  The expected <code>masim</code>
-program&rsquo;s access pattern is continue being found there.</p>
+program&rsquo;s access pattern is continuing to be found there.</p>
 <p>The latest version of <code>damo report heatmap</code> also supports page level monitoring
 and intervals auto-tuning.  If the snapshot is captured with page level DAMOS
 filters, users can plot the heatmap for only DAMOS filters-passed pages, by
@@ -464,11 +466,11 @@ understands monitoring intervals auto-tuning feature, and hence it handles the
 dynamically changed intervals in an appropriate way, when handling the &lsquo;age&rsquo;
 information.</p>
 <h2 id="wrapup">Wrapup</h2>
-<p>The classic heatmap visualization was not actively updated since DAMON has
-changed its strategy for monitoring from full access observation records to
-partial time information-captured snapshots.  Now the classic heatmap
-visualization is modernized to support the snapshots use case, and expected to
-be useful at understanding overall access patterns in a glance.</p>
+<p>The classic heatmap visualization was not actively updated since DAMON changed
+its strategy for monitoring from full access observation records to partial
+time information-captured snapshots.  Now the classic heatmap visualization is
+modernized to support the snapshots use case, and expected to be useful at
+understanding overall access patterns at a glance.</p>
 
             </div>
         </article></main>
