@@ -322,6 +322,10 @@ understands monitoring intervals auto-tuning feature, and hence it handles the
 dynamically changed intervals in an appropriate way, when handling the 'age'
 information.
 
+The updated version of the code is available at the
+[next branch](https://github.com/damonitor/damo/tree/next), and will be
+released as v2.8.4 in near future.
+
 Wrapup
 ------
 
