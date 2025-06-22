@@ -52,10 +52,10 @@ approximately 25% speedup.
 _2025-06-15_: DAMON user-space tool added access temperature-sorted heatmap
 visualization feature.  Example output of the feature are as below.
 
-![unsorted snpashot](/img/damo_temperature_sorted_heamtp/unsorted_snapshot.png)
-![sorted snapshot](/img/damo_temperature_sorted_heamtp/sorted_snapshot.png)
-![unsorted record](/img/damo_temperature_sorted_heamtp/unsorted_record.png)
-![sorted record](/img/damo_temperature_sorted_heamtp/sorted_record.png)
+![unsorted snpashot](/img/damo_temperature_sorted_heatmap/unsorted_snapshot.png)
+![sorted snapshot](/img/damo_temperature_sorted_heatmap/sorted_snapshot.png)
+![unsorted record](/img/damo_temperature_sorted_heatmap/unsorted_record.png)
+![sorted record](/img/damo_temperature_sorted_heatmap/sorted_record.png)
 
 _2025-06-14_:
 Intel has published another excellent ArXiv
