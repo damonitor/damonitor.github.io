@@ -8,7 +8,7 @@ authors: []
 tags: ["damon", "linux", "kernel", "mm", "projects"]
 categories: ["damon"]
 date: 2019-12-27T18:21:07+01:00
-lastmod: Tue, 06 May 2025 14:50:09 -0700
+lastmod: Sun, 22 Jun 2025 09:52:26 -0700
 featured: false
 draft: false
 
@@ -83,26 +83,37 @@ Recent News
 Below are only a short list of recent news.  For __complete list of the news__,
 please refer to a dedicated [post]({{< ref "damon_news.md" >}}).
 
+_2025-06-22_: An ISCA'25
+[paper](https://dl.acm.org/doi/10.1145/3695053.3731001) for better memory
+tiering is published. The paper uses DAMON and masim for showing access
+patterns of artificial and realistic workloads.
+
+_2025_06_20_: Bijan from Micron found DAMON-based post-allocation memory
+interleaving
+[achieves](https://lore.kernel.org/20250620180458.5041-1-bijan311@gmail.com)
+approximately 25% speedup.
+
+_2025-06-15_: DAMON user-space tool added access temperature-sorted heatmap
+visualization feature.  Example output of the feature are as below.
+
+![unsorted snpashot](/img/damo_temperature_sorted_heamtp/unsorted_snapshot.png)
+![sorted snapshot](/img/damo_temperature_sorted_heamtp/sorted_snapshot.png)
+![unsorted record](/img/damo_temperature_sorted_heamtp/unsorted_record.png)
+![sorted record](/img/damo_temperature_sorted_heamtp/sorted_record.png)
+
+_2025-06-14_:
+Intel has published another excellent ArXiv
+[paper](https://arxiv.org/pdf/2506.06067) for memory tiering. The research used
+DAMON for a validation of the behavior of their approach (GPAC).
+
 _2025-06-02_:
 [Changes](https://lore.kernel.org/all/20250521042755.39653-1-sj@kernel.org/)
 for enabling CONFIG_DAMON by default has been
 [merged](https://lore.kernel.org/all/174891081008.961800.5493448222601669134.pr-tracker-bot@kernel.org/)
 into the mainline, by the second MM subsystem pull request for Linux 6.16-rc1.
-
-_2025-05-31_: DAMON patches for [more self-driven memory
-tiering](https://lore.kernel.org/all/20250420194030.75838-1-sj@kernel.org/)
-have been
-[merged](https://lore.kernel.org/all/174874604794.296823.9742582059292506586.pr-tracker-bot@kernel.org/)
-into the mainline.
-
-_2025-05-26_: DAMON patches for simple and practical access monitoring have
-been [posted](https://lore.kernel.org/20250526210936.2744-1-sj@kernel.org)
-
-_2025-05-23_: DAMON talk for Kernel Recipes 2025 has been
-[updated](https://kernel-recipes.org/en/2025/schedule/overcoming-observer-effects-in-memory-management-with-damon/).
-
-_2025-05-12_: RFC for build-enabling DAMON by default has been
-[posted](https://lore.kernel.org/20250512182716.50245-1-sj@kernel.org).
+Later, the change has reverted by Linus Torvalds with his good
+[explanation](https://lore.kernel.org/20250610173228.49109-1-sj@kernel.org) of
+the reason.
 
 
 Getting Started

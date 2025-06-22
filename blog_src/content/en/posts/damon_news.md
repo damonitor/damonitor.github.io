@@ -8,7 +8,7 @@ authors: []
 tags: ["damon", "linux", "kernel", "mm", "projects", "news"]
 categories: ["damon"]
 date: 2023-05-06T11:27:07-07:00
-lastmod: Tue, 06 May 2025 14:50:09 -0700
+lastmod: Sun, 22 Jun 2025 09:52:26 -0700
 featured: false
 draft: false
 
@@ -39,11 +39,37 @@ sj@kernel.org and/or damon@lists.linux.dev.
 2025
 ----
 
+_2025-06-22_: An ISCA'25
+[paper](https://dl.acm.org/doi/10.1145/3695053.3731001) for better memory
+tiering is published. The paper uses DAMON and masim for showing access
+patterns of artificial and realistic workloads.
+
+_2025_06_20_: Bijan from Micron found DAMON-based post-allocation memory
+interleaving
+[achieves](https://lore.kernel.org/20250620180458.5041-1-bijan311@gmail.com)
+approximately 25% speedup.
+
+_2025-06-15_: DAMON user-space tool added access temperature-sorted heatmap
+visualization feature.  Example output of the feature are as below.
+
+![unsorted snpashot](/img/damo_temperature_sorted_heamtp/unsorted_snapshot.png)
+![sorted snapshot](/img/damo_temperature_sorted_heamtp/sorted_snapshot.png)
+![unsorted record](/img/damo_temperature_sorted_heamtp/unsorted_record.png)
+![sorted record](/img/damo_temperature_sorted_heamtp/sorted_record.png)
+
+_2025-06-14_:
+Intel has published another excellent ArXiv
+[paper](https://arxiv.org/pdf/2506.06067) for memory tiering. The research used
+DAMON for a validation of the behavior of their approach (GPAC).
+
 _2025-06-02_:
 [Changes](https://lore.kernel.org/all/20250521042755.39653-1-sj@kernel.org/)
 for enabling CONFIG_DAMON by default has been
 [merged](https://lore.kernel.org/all/174891081008.961800.5493448222601669134.pr-tracker-bot@kernel.org/)
 into the mainline, by the second MM subsystem pull request for Linux 6.16-rc1.
+Later, the change has reverted by Linus Torvalds with his good
+[explanation](https://lore.kernel.org/20250610173228.49109-1-sj@kernel.org) of
+the reason.
 
 _2025-05-31_: DAMON patches for [more self-driven memory
 tiering](https://lore.kernel.org/all/20250420194030.75838-1-sj@kernel.org/)
