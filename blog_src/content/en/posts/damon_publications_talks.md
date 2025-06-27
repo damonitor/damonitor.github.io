@@ -11,6 +11,7 @@ tags: []
 categories: []
 date: 2023-05-06T12:17:00-07:00
 lastmod: Thu, 10 Apr 2025 16:42:52 -0700
+lastmod: Fri, 27 Jun 2025 10:46:56 -0700
 featured: false
 draft: false
 
@@ -55,6 +56,7 @@ operations) and user-space driven auto-tuning.
   [Link](https://kernel-recipes.org/en/2025/schedule/overcoming-observer-effects-in-memory-management-with-damon/)
 - SeongJae Park, __Self-Driving DAMON/S: Controlled and Automated Access-aware
   Efficient Systems.__ In _Open Source Summit North America_, Jun 2025.
+  [Slides](https://static.sched.com/hosted_files/ossna2025/16/damon_ossna25.pdf?_gl=1*12s7xbj*_gcl_au*OTkyNjI0NTk0LjE3NTA4Nzg1Mzg.*FPAU*OTkyNjI0NTk0LjE3NTA4Nzg1Mzg.),
   [Link](https://sched.co/1aBOg)
 - SeongJae Park, __DAMON Requirements for Access-aware MM of Future.__  In
   _Linux Storage | Filesystem | MM & BPF Summit_, Mar 2025.
