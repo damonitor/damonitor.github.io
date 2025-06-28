@@ -32,6 +32,9 @@ what you expected.  `--interactive_edit` option can also be helpful, like below.
 
 ![damo heatmap interactive edit gif](/img/damo_heatmap_interactive_edit.gif)
 
+Problem: Scoping of Huge Time/Space
+-----------------------------------
+
 `damo report heatmap` outputs sometimes show no expected access pattern.  It is
 sometimes just entirely black, or shows some access pattern but not what the
 user expected.  This post is for explaining the reason and how you can work around.
@@ -56,6 +59,9 @@ from the middle of the space.  The resulting mapping looks like below:
 If we try to draw the heatmap for the entire address space, the two wide
 unmapped regions will cover most of the graph. And it will only show black,
 because the unmapped wide regions will never get accessed.
+
+Solution: Guide, Manual, Automatic, and Interactive Scope Setup
+---------------------------------------------------------------
 
 To draw heatmap for only the address ranges that meaningful accesses were made,
 `damo report heatmap` allows users to specify what address ranges they want
