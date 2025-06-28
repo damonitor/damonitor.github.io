@@ -7,7 +7,7 @@ authors: []
 tags: ["damo", "heatmap", "tip"]
 categories: ["faq"]
 date: Sun, 16 Mar 2025 10:19:49 -0700
-lastmod: Sun, 16 Mar 2025 10:19:49 -0700
+lastmod: Sat, 28 Jun 2025 12:25:05 -0700
 featured: false
 draft: false
 
@@ -28,7 +28,9 @@ projects: []
 ---
 
 TL; DR: try `--draw_range all` option of `damo report heatmap` if it shows not
-what you expected.
+what you expected.  `--interactive_edit` option can also be helpful, like below.
+
+![damo heatmap interactive edit gif](/img/damo_heatmap_interactive_edit.gif)
 
 `damo report heatmap` outputs sometimes show no expected access pattern.  It is
 sometimes just entirely black, or shows some access pattern but not what the
@@ -85,6 +87,11 @@ region.
 As of this writing, `damo report heatmap` works as `--draw_range hottest` is
 given by default.  Note that that the default behavior could be changed in
 future.  Also, `--draw_range` option will be available from v2.7.2.
+
+Starting from v2.8.7, `damo report heatmap` will support interactive
+`--address_range` and `--time_range` modification, when `--interactive_edit`
+option is passed.  It can also help you explore the huge time/space with the
+map.
 
 Wrapup
 ------
