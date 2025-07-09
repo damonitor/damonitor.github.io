@@ -8,7 +8,7 @@ authors: []
 tags: ["damon", "linux", "kernel", "mm", "projects"]
 categories: ["damon"]
 date: 2019-12-27T18:21:07+01:00
-lastmod: Wed, 02 Jul 2025 12:46:17 -0700
+lastmod: Wed, 09 Jul 2025 04:23:30 -0700
 featured: false
 draft: false
 
@@ -83,6 +83,11 @@ Recent News
 Below are only a short list of recent news.  For __complete list of the news__,
 please refer to a dedicated [post]({{< ref "damon_news.md" >}}).
 
+_2025-07-08_: Bijan's DAMON patch
+[series](https://lore.kernel.org/20250709005952.17776-1-bijan311@gmail.com) for
+dynamic NUMA memory weighted interleaving that shows ~25% performance
+improvements on a test is now merged into mm-new.
+
 _2025-06-22_: An ISCA'25
 [paper](https://dl.acm.org/doi/10.1145/3695053.3731001) for better memory
 tiering is published. The paper uses DAMON and masim for showing access
@@ -105,15 +110,6 @@ _2025-06-14_:
 Intel has published another excellent ArXiv
 [paper](https://arxiv.org/pdf/2506.06067) for memory tiering. The research used
 DAMON for a validation of the behavior of their approach (GPAC).
-
-_2025-06-02_:
-[Changes](https://lore.kernel.org/all/20250521042755.39653-1-sj@kernel.org/)
-for enabling CONFIG_DAMON by default has been
-[merged](https://lore.kernel.org/all/174891081008.961800.5493448222601669134.pr-tracker-bot@kernel.org/)
-into the mainline, by the second MM subsystem pull request for Linux 6.16-rc1.
-Later, the change has reverted by Linus Torvalds with his good
-[explanation](https://lore.kernel.org/20250610173228.49109-1-sj@kernel.org) of
-the reason.
 
 
 Getting Started

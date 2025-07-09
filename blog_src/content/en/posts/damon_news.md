@@ -8,7 +8,7 @@ authors: []
 tags: ["damon", "linux", "kernel", "mm", "projects", "news"]
 categories: ["damon"]
 date: 2023-05-06T11:27:07-07:00
-lastmod: Sun, 22 Jun 2025 09:52:26 -0700
+lastmod: Wed, 09 Jul 2025 04:23:30 -0700
 featured: false
 draft: false
 
@@ -38,6 +38,11 @@ sj@kernel.org and/or damon@lists.linux.dev.
 
 2025
 ----
+
+_2025-07-08_: Bijan's DAMON patch
+[series](https://lore.kernel.org/20250709005952.17776-1-bijan311@gmail.com) for
+dynamic NUMA memory weighted interleaving that shows ~25% performance
+improvements on a test is now merged into mm-new.
 
 _2025-06-22_: An ISCA'25
 [paper](https://dl.acm.org/doi/10.1145/3695053.3731001) for better memory
