@@ -83,6 +83,21 @@ Recent News
 Below are only a short list of recent news.  For __complete list of the news__,
 please refer to a dedicated [post]({{< ref "damon_news.md" >}}).
 
+_2025-08-22_: A patch
+[series](https://lkml.kernel.org/r/20250822093420.2103803-2-yanquanmin1@huawei.com)
+for making DAMON supports ARM (32bit) with LPAE has just landed on mm-new tree.
+It was made by a great and joyful collaboration between I and Huawei (Quanmin
+Yan and Zuo Ze).
+
+_2025-08-10_: DAMON user-space tool added a visualization script for [cold
+memory tail](https://social.kernel.org/notice/Ax2IFjCCoj51eJgkNM)
+visualization.
+
+_2025-08-03_: A prototype of per-CPUs and write-only monitoing is implemented
+and added to damon/next tree, and an experimental support of it is
+[added](https://github.com/damonitor/damo/blob/next/USAGE.md#write-only-and-cpus-only-access-monitoring-experimental)
+to DAMON user-space tool (damo).
+
 _2025-07-08_: Bijan's DAMON patch
 [series](https://lore.kernel.org/20250709005952.17776-1-bijan311@gmail.com) for
 dynamic NUMA memory weighted interleaving that shows ~25% performance
@@ -92,24 +107,6 @@ _2025-06-22_: An ISCA'25
 [paper](https://dl.acm.org/doi/10.1145/3695053.3731001) for better memory
 tiering is published. The paper uses DAMON and masim for showing access
 patterns of artificial and realistic workloads.
-
-_2025_06_20_: Bijan from Micron found DAMON-based post-allocation memory
-interleaving
-[achieves](https://lore.kernel.org/20250620180458.5041-1-bijan311@gmail.com)
-approximately 25% speedup.
-
-_2025-06-15_: DAMON user-space tool added access temperature-sorted heatmap
-visualization feature.  Example output of the feature are as below.
-
-![unsorted snpashot](/img/damo_temperature_sorted_heatmap/unsorted_snapshot.png)
-![sorted snapshot](/img/damo_temperature_sorted_heatmap/sorted_snapshot.png)
-![unsorted record](/img/damo_temperature_sorted_heatmap/unsorted_record.png)
-![sorted record](/img/damo_temperature_sorted_heatmap/sorted_record.png)
-
-_2025-06-14_:
-Intel has published another excellent ArXiv
-[paper](https://arxiv.org/pdf/2506.06067) for memory tiering. The research used
-DAMON for a validation of the behavior of their approach (GPAC).
 
 
 Getting Started
