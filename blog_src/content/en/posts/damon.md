@@ -342,7 +342,7 @@ _What to read/cite?_
 For people who more familiar to academic papers, DAMON papers for
 [Middleware'19 Industry](https://dl.acm.org/doi/abs/10.1145/3366626.3368125)
 and
-[HPDC'22](https://dl.acm.org/doi/abs/10.1145/3502181.353146) are recommended to
+[HPDC'22](https://dl.acm.org/doi/abs/10.1145/3502181.3531466) are recommended to
 read and/or cite.  The paper for Middleware'19 covers DAMON's monitoring
 mechanisms and access pattern profiling-guided optimizations.  The paper for
 HPDC'22 extends the coverage to DAMOS (automated access-aware system
