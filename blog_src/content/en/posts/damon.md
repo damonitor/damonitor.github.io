@@ -355,7 +355,7 @@ If you are looking for a resources to start with, below talks are recommended.
 - SeongJae Park, __Overcoming Observer Effects in Memory Management with
   DAMON.__ In _Kernel Recipes_, Sep 2025.
   [Slides](https://speakerdeck.com/ennael/overcoming-observer-effects-in-memory-management-with-damon),
-  [Video](https://www.youtube.com/live/U7pZbCnJxEw?t=20525s),
+  [Video](https://youtu.be/lvRuBxli_yU?si=QfeLZOn6Cx49qqqL),
   [Link](https://kernel-recipes.org/en/2025/schedule/overcoming-observer-effects-in-memory-management-with-damon/)
 - SeongJae Park, __Self-Driving DAMON/S: Controlled and Automated Access-aware
   Efficient Systems.__ In _Open Source Summit North America_, Jun 2025.
@@ -394,7 +394,7 @@ are recommended.
 - SeongJae Park, __Overcoming Observer Effects in Memory Management with
   DAMON.__ In _Kernel Recipes_, Sep 2025.
   [Slides](https://speakerdeck.com/ennael/overcoming-observer-effects-in-memory-management-with-damon),
-  [Video](https://www.youtube.com/live/U7pZbCnJxEw?t=20525s),
+  [Video](https://youtu.be/lvRuBxli_yU?si=QfeLZOn6Cx49qqqL),
   [Link](https://kernel-recipes.org/en/2025/schedule/overcoming-observer-effects-in-memory-management-with-damon/)
 - SeongJae Park, __Self-Driving DAMON/S: Controlled and Automated Access-aware
   Efficient Systems.__ In _Open Source Summit North America_, Jun 2025.
