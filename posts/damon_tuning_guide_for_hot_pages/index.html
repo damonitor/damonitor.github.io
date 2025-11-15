@@ -1,436 +1,156 @@
-<!DOCTYPE html>
-<html lang="en-us"><head><meta charset="utf-8">
-<meta http-equiv="content-type" content="text/html">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<title itemprop="name">A guide to DAMON tuning and results interpretation for hot pages | DAMON Project</title>
-<meta property="og:title" content="A guide to DAMON tuning and results interpretation for hot pages | DAMON Project" />
-<meta name="twitter:title" content="A guide to DAMON tuning and results interpretation for hot pages | DAMON Project" />
-<meta itemprop="name" content="A guide to DAMON tuning and results interpretation for hot pages | DAMON Project" />
-<meta name="application-name" content="A guide to DAMON tuning and results interpretation for hot pages | DAMON Project" />
-<meta property="og:site_name" content="DAMON Project" />
-
-<meta name="description" content="Minimal Hugo blog for DAMON project">
-<meta itemprop="description" content="Minimal Hugo blog for DAMON project" />
-<meta property="og:description" content="Minimal Hugo blog for DAMON project" />
-<meta name="twitter:description" content="Minimal Hugo blog for DAMON project" />
-
-<meta property="og:locale" content="en-us" />
-<meta name="language" content="en-us" />
-
-
-<meta itemprop="image" content="" />
-<meta property="og:image" content="" />
-<meta name="twitter:image" content="" />
-<meta name="twitter:image:src" content="" />
-
-
-    
-    
-    
-
-    <meta property="og:type" content="article" />
-    <meta property="og:article:published_time" content=2024-11-08T17:19:32-0800 />
-    <meta property="article:published_time" content=2024-11-08T17:19:32-0800 />
-    <meta property="og:url" content="https://damonitor.github.io/posts/damon_tuning_guide_for_hot_pages/" />
-
-    
-    <meta property="og:article:author" content="SJ" />
-    <meta property="article:author" content="SJ" />
-    <meta name="author" content="SJ" />
-    
-    
-
-    
-
-    <script defer type="application/ld+json">
-    {
-        "@context": "http://schema.org",
-        "@type": "Article",
-        "headline": "A guide to DAMON tuning and results interpretation for hot pages",
-        "author": {
-        "@type": "Person",
-        "name": ""
-        },
-        "datePublished": "2024-11-08",
-        "description": "",
-        "wordCount":  3952 ,
-        "mainEntityOfPage": "True",
-        "dateModified": "2024-11-08",
-        "image": {
-        "@type": "imageObject",
-        "url": ""
-        },
-        "publisher": {
-        "@type": "Organization",
-        "name": "DAMON Project"
-        }
-    }
-    </script>
-
-
-<meta name="generator" content="Hugo 0.121.2">
-
-    
-    <meta property="og:title" content="A guide to DAMON tuning and results interpretation for hot pages" />
-<meta property="og:description" content="The initial version of this post was initially posted to DAMON mailing list as https://lore.kernel.org/20241108232536.73843-1-sj@kernel.org
+<!doctype html><html lang=en dir=auto><head><meta charset=utf-8><meta http-equiv=X-UA-Compatible content="IE=edge"><meta name=viewport content="width=device-width,initial-scale=1,shrink-to-fit=no"><meta name=robots content="index, follow"><title>A guide to DAMON tuning and results interpretation for hot pages | DAMON Project Website</title>
+<meta name=keywords content="damon,tuning,hot,aggregation interval,age,monitoring"><meta name=description content="The initial version of this post was initially posted to DAMON mailing list as https://lore.kernel.org/20241108232536.73843-1-sj@kernel.org
 Posting it here too, for visibility and after-posting updates for any needs.
 One of common issues that I received from DAMON users is that DAMON&rsquo;s monitoring results show hot regions much less than expected. Specifically, the users find regions of only zero or low &rsquo;nr_accesses&rsquo; value from the DAMON-generated access pattern snapshots.
-In some cases, it turned out the problem can be alleviated by tuning DAMON parameters or changing the way to interpret the results." />
-<meta property="og:type" content="article" />
-<meta property="og:url" content="https://damonitor.github.io/posts/damon_tuning_guide_for_hot_pages/" /><meta property="article:section" content="posts" />
-<meta property="article:published_time" content="2024-11-08T17:19:32-08:00" />
-<meta property="article:modified_time" content="2024-11-08T17:19:32-08:00" />
-
-
-
-    
-    <meta name="twitter:card" content="summary"/><meta name="twitter:title" content="A guide to DAMON tuning and results interpretation for hot pages"/>
-<meta name="twitter:description" content="The initial version of this post was initially posted to DAMON mailing list as https://lore.kernel.org/20241108232536.73843-1-sj@kernel.org
+In some cases, it turned out the problem can be alleviated by tuning DAMON parameters or changing the way to interpret the results."><meta name=author content="Me"><link rel=canonical href=https://damonitor.github.io/posts/damon_tuning_guide_for_hot_pages/><meta name=google-site-verification content="XYZabc"><meta name=yandex-verification content="XYZabc"><meta name=msvalidate.01 content="XYZabc"><link crossorigin=anonymous href=/assets/css/stylesheet.fc220c15db4aef0318bbf30adc45d33d4d7c88deff3238b23eb255afdc472ca6.css integrity="sha256-/CIMFdtK7wMYu/MK3EXTPU18iN7/MjiyPrJVr9xHLKY=" rel="preload stylesheet" as=style><link rel=icon href=https://damonitor.github.io/%3Clink%20/%20abs%20url%3E><link rel=icon type=image/png sizes=16x16 href=https://damonitor.github.io/%3Clink%20/%20abs%20url%3E><link rel=icon type=image/png sizes=32x32 href=https://damonitor.github.io/%3Clink%20/%20abs%20url%3E><link rel=apple-touch-icon href=https://damonitor.github.io/%3Clink%20/%20abs%20url%3E><link rel=mask-icon href=https://damonitor.github.io/%3Clink%20/%20abs%20url%3E><meta name=theme-color content="#2e2e33"><meta name=msapplication-TileColor content="#2e2e33"><link rel=alternate hreflang=en href=https://damonitor.github.io/posts/damon_tuning_guide_for_hot_pages/><noscript><style>#theme-toggle,.top-link{display:none}</style><style>@media(prefers-color-scheme:dark){:root{--theme:rgb(29, 30, 32);--entry:rgb(46, 46, 51);--primary:rgb(218, 218, 219);--secondary:rgb(155, 156, 157);--tertiary:rgb(65, 66, 68);--content:rgb(196, 196, 197);--code-block-bg:rgb(46, 46, 51);--code-bg:rgb(55, 56, 62);--border:rgb(51, 51, 51)}.list{background:var(--theme)}.list:not(.dark)::-webkit-scrollbar-track{background:0 0}.list:not(.dark)::-webkit-scrollbar-thumb{border-color:var(--theme)}}</style></noscript><meta property="og:title" content="A guide to DAMON tuning and results interpretation for hot pages"><meta property="og:description" content="The initial version of this post was initially posted to DAMON mailing list as https://lore.kernel.org/20241108232536.73843-1-sj@kernel.org
 Posting it here too, for visibility and after-posting updates for any needs.
 One of common issues that I received from DAMON users is that DAMON&rsquo;s monitoring results show hot regions much less than expected. Specifically, the users find regions of only zero or low &rsquo;nr_accesses&rsquo; value from the DAMON-generated access pattern snapshots.
-In some cases, it turned out the problem can be alleviated by tuning DAMON parameters or changing the way to interpret the results."/>
-
-
-    
-
-    <link rel="canonical" href="https://damonitor.github.io/posts/damon_tuning_guide_for_hot_pages/">
-    <link href="/style.min.2d921c18cf1ec555ffc03d59a8adc211c402c68c930c27d6a0c306ab175a8d09.css" rel="stylesheet">
-    <link href="/code-highlight.min.706d31975fec544a864cb7f0d847a73ea55ca1df91bf495fd12a177138d807cf.css" rel="stylesheet">
-
-    
-    <link rel="apple-touch-icon" sizes="180x180" href="/icons/apple-touch-icon.png">
-    <link rel="icon" type="image/png" sizes="32x32" href="/icons/favicon-32x32.png">
-    <link rel="icon" type="image/png" sizes="16x16" href="/icons/favicon-16x16.png">
-    <link rel="mask-icon" href="/icons/safari-pinned-tab.svg">
-    <link rel="shortcut icon" href="/favicon.ico">
-
-
-
-
-<link rel="manifest" href="https://damonitor.github.io/site.webmanifest">
-
-<meta name="msapplication-config" content="/browserconfig.xml">
-<meta name="msapplication-TileColor" content="#2d89ef">
-<meta name="theme-color" content="#434648">
-
-    
-    <link rel="icon" type="image/svg+xml" href="/icons/favicon.svg">
-
-    
-    </head>
-<body data-theme = "dark" class="notransition">
-
-<script src="/js/theme.min.8961c317c5b88b953fe27525839672c9343f1058ab044696ca225656c8ba2ab0.js" integrity="sha256-iWHDF8W4i5U/4nUlg5ZyyTQ/EFirBEaWyiJWVsi6KrA="></script>
-
-<div class="navbar" role="navigation">
-    <nav class="menu" aria-label="Main Navigation">
-        <a href="https://damonitor.github.io/" class="logo">
-            <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" 
-viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" 
-stroke-linejoin="round" class="feather feather-home">
-<title>Home</title>
-<path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
-<polyline points="9 22 9 12 15 12 15 22"></polyline>
-</svg>
-        </a>
-        <input type="checkbox" id="menu-trigger" class="menu-trigger" />
-        <label for="menu-trigger">
-            <span class="menu-icon">
-                <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" stroke="currentColor" fill="none" viewBox="0 0 14 14"><title>Menu</title><path stroke-linecap="round" stroke-linejoin="round" d="M10.595 7L3.40726 7"></path><path stroke-linecap="round" stroke-linejoin="round" d="M10.5096 3.51488L3.49301 3.51488"></path><path stroke-linecap="round" stroke-linejoin="round" d="M10.5096 10.4851H3.49301"></path><path stroke-linecap="round" stroke-linejoin="round" d="M0.5 12.5V1.5C0.5 0.947715 0.947715 0.5 1.5 0.5H12.5C13.0523 0.5 13.5 0.947715 13.5 1.5V12.5C13.5 13.0523 13.0523 13.5 12.5 13.5H1.5C0.947715 13.5 0.5 13.0523 0.5 12.5Z"></path></svg>
-            </span>
-        </label>
-
-        <div class="trigger">
-            <ul class="trigger-container">
-                
-                
-                <li>
-                    <a class="menu-link " href="/">
-                        Home
-                    </a>
-                    
-                </li>
-                
-                <li>
-                    <a class="menu-link active" href="/posts/">
-                        Posts
-                    </a>
-                    
-                </li>
-                
-                <li>
-                    <a class="menu-link " href="/tags/">
-                        Tags
-                    </a>
-                    
-                </li>
-                
-                <li>
-                    <a class="menu-link " href="/categories/">
-                        Categories
-                    </a>
-                    
-                </li>
-                
-                <li class="menu-separator">
-                    <span>|</span>
-                </li>
-                
-                
-            </ul>
-            <a id="mode" href="#">
-                <svg xmlns="http://www.w3.org/2000/svg" class="mode-sunny" width="21" height="21" viewBox="0 0 14 14" stroke-width="1">
-<title>LIGHT</title><g><circle cx="7" cy="7" r="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round"></circle><line x1="7" y1="0.5" x2="7" y2="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round"></line><line x1="2.4" y1="2.4" x2="3.82" y2="3.82" fill="none" stroke-linecap="round" stroke-linejoin="round"></line><line x1="0.5" y1="7" x2="2.5" y2="7" fill="none" stroke-linecap="round" stroke-linejoin="round"></line><line x1="2.4" y1="11.6" x2="3.82" y2="10.18" fill="none" stroke-linecap="round" stroke-linejoin="round"></line><line x1="7" y1="13.5" x2="7" y2="11.5" fill="none" stroke-linecap="round" stroke-linejoin="round"></line><line x1="11.6" y1="11.6" x2="10.18" y2="10.18" fill="none" stroke-linecap="round" stroke-linejoin="round"></line><line x1="13.5" y1="7" x2="11.5" y2="7" fill="none" stroke-linecap="round" stroke-linejoin="round"></line><line x1="11.6" y1="2.4" x2="10.18" y2="3.82" fill="none" stroke-linecap="round" stroke-linejoin="round"></line></g></svg>
-                <svg xmlns="http://www.w3.org/2000/svg" class="mode-moon" width="21" height="21" viewBox="0 0 14 14" stroke-width="1">
-<title>DARK</title><g><circle cx="7" cy="7" r="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round"></circle><line x1="7" y1="0.5" x2="7" y2="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round"></line><line x1="2.4" y1="2.4" x2="3.82" y2="3.82" fill="none" stroke-linecap="round" stroke-linejoin="round"></line><line x1="0.5" y1="7" x2="2.5" y2="7" fill="none" stroke-linecap="round" stroke-linejoin="round"></line><line x1="2.4" y1="11.6" x2="3.82" y2="10.18" fill="none" stroke-linecap="round" stroke-linejoin="round"></line><line x1="7" y1="13.5" x2="7" y2="11.5" fill="none" stroke-linecap="round" stroke-linejoin="round"></line><line x1="11.6" y1="11.6" x2="10.18" y2="10.18" fill="none" stroke-linecap="round" stroke-linejoin="round"></line><line x1="13.5" y1="7" x2="11.5" y2="7" fill="none" stroke-linecap="round" stroke-linejoin="round"></line><line x1="11.6" y1="2.4" x2="10.18" y2="3.82" fill="none" stroke-linecap="round" stroke-linejoin="round"></line></g></svg>
-            </a>
-        </div>
-    </nav>
-</div>
-
-<div class="wrapper post">
-    <main class="page-content" aria-label="Content">
-        <article>
-            <header class="header">
-                <h1 class="header-title">A guide to DAMON tuning and results interpretation for hot pages</h1>
-                
-                
-                
-                <div class="post-meta">
-                    <time datetime="2024-11-08T17:19:32-08:00" itemprop="datePublished"> Nov 8, 2024 </time>
-                </div>
-                
-            </header>
-            
-    
-    <details class="toc" ZgotmplZ>
-        <summary><b>Table of Contents</b></summary>
-        <nav id="TableOfContents">
-  <ul>
-    <li><a href="#tl-dr">TL; DR</a></li>
-    <li><a href="#problem">Problem</a></li>
-    <li><a href="#meaning-of-aggregation-interval">Meaning of &lsquo;aggregation interval&rsquo;</a></li>
-    <li><a href="#root-causes-1-suboptimal-aggregation-interval-tuning">Root Causes 1: Suboptimal Aggregation Interval Tuning</a></li>
-    <li><a href="#root-cause-2-ignorance-of-recency-age">Root Cause 2: Ignorance of Recency (&lsquo;age&rsquo;)</a></li>
-    <li><a href="#tuning-guide">Tuning Guide</a></li>
-    <li><a href="#tuning-example">Tuning Example</a>
-      <ul>
-        <li><a href="#5ms100ms-intervals-reproduce-problem">5ms/100ms intervals: Reproduce Problem</a></li>
-        <li><a href="#100ms2s-intervals-starts-showing-small-hot-regions">100ms/2s intervals: Starts Showing Small Hot Regions</a></li>
-        <li><a href="#400ms8s-intervals-pretty-improved-results">400ms/8s intervals: Pretty Improved Results</a></li>
-        <li><a href="#800ms16s-intervals-another-bias">800ms/16s intervals: Another bias</a></li>
-        <li><a href="#conclusion">Conclusion</a></li>
-      </ul>
-    </li>
-    <li><a href="#future-plans">Future Plans</a></li>
-  </ul>
-</nav>
-    </details>
-            <div class="page-content">
-                <p>The initial version of this post was initially posted to DAMON mailing list as
-<a href="https://lore.kernel.org/20241108232536.73843-1-sj@kernel.org">https://lore.kernel.org/20241108232536.73843-1-sj@kernel.org</a></p>
-<p>Posting it here too, for visibility and after-posting updates for any needs.</p>
-<hr>
-<p>One of common issues that I received from DAMON users is that DAMON&rsquo;s
-monitoring results show hot regions much less than expected.  Specifically, the
+In some cases, it turned out the problem can be alleviated by tuning DAMON parameters or changing the way to interpret the results."><meta property="og:type" content="article"><meta property="og:url" content="https://damonitor.github.io/posts/damon_tuning_guide_for_hot_pages/"><meta property="og:image" content="https://damonitor.github.io/%3Clink%20or%20path%20of%20image%20for%20opengraph,%20twitter-cards%3E"><meta property="article:section" content="posts"><meta property="article:published_time" content="2024-11-08T17:19:32-08:00"><meta property="article:modified_time" content="2024-11-08T17:19:32-08:00"><meta property="og:site_name" content="DAMON Project Website"><meta name=twitter:card content="summary_large_image"><meta name=twitter:image content="https://damonitor.github.io/%3Clink%20or%20path%20of%20image%20for%20opengraph,%20twitter-cards%3E"><meta name=twitter:title content="A guide to DAMON tuning and results interpretation for hot pages"><meta name=twitter:description content="The initial version of this post was initially posted to DAMON mailing list as https://lore.kernel.org/20241108232536.73843-1-sj@kernel.org
+Posting it here too, for visibility and after-posting updates for any needs.
+One of common issues that I received from DAMON users is that DAMON&rsquo;s monitoring results show hot regions much less than expected. Specifically, the users find regions of only zero or low &rsquo;nr_accesses&rsquo; value from the DAMON-generated access pattern snapshots.
+In some cases, it turned out the problem can be alleviated by tuning DAMON parameters or changing the way to interpret the results."><script type=application/ld+json>{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Posts","item":"https://damonitor.github.io/posts/"},{"@type":"ListItem","position":2,"name":"A guide to DAMON tuning and results interpretation for hot pages","item":"https://damonitor.github.io/posts/damon_tuning_guide_for_hot_pages/"}]}</script><script type=application/ld+json>{"@context":"https://schema.org","@type":"BlogPosting","headline":"A guide to DAMON tuning and results interpretation for hot pages","name":"A guide to DAMON tuning and results interpretation for hot pages","description":"The initial version of this post was initially posted to DAMON mailing list as https://lore.kernel.org/20241108232536.73843-1-sj@kernel.org\nPosting it here too, for visibility and after-posting updates for any needs.\nOne of common issues that I received from DAMON users is that DAMON\u0026rsquo;s monitoring results show hot regions much less than expected. Specifically, the users find regions of only zero or low \u0026rsquo;nr_accesses\u0026rsquo; value from the DAMON-generated access pattern snapshots.\nIn some cases, it turned out the problem can be alleviated by tuning DAMON parameters or changing the way to interpret the results.","keywords":["damon","tuning","hot","aggregation interval","age","monitoring"],"articleBody":"The initial version of this post was initially posted to DAMON mailing list as https://lore.kernel.org/20241108232536.73843-1-sj@kernel.org\nPosting it here too, for visibility and after-posting updates for any needs.\nOne of common issues that I received from DAMON users is that DAMON’s monitoring results show hot regions much less than expected. Specifically, the users find regions of only zero or low ’nr_accesses’ value from the DAMON-generated access pattern snapshots.\nIn some cases, it turned out the problem can be alleviated by tuning DAMON parameters or changing the way to interpret the results. I’d like to share the details and possible future improvements here.\nNote that I’m not saying this is users’ tuning fault. I admit that the real root cause of the issue is the poor interface and lack of guides that makes correct tuning difficult, and the suboptimality of DAMON’s mechanisms. We will continue working on advancing it in long term. Sharing some of the plans and status at the end of this email.\nTL; DR Users show only low or zero nr_accesses regions mainly because they set ‘aggregation intrval’ too short compared to the workload’s memory access intensiveness. Please increase the aggregation interval, or treat ’nr_accesses’ zero regions of short ‘age’ as hot regions.\nNow let’s walk through more details. The below sections assume you’re familiar with DAMON’s monitoring mechanisms including ‘Access Frequency Monitoring’, ‘Regions Based Sampling’, ‘Adaptive Regions Adjustment’, and ‘Age Tracking’. You should particularly be familiar with terms including ‘sampling interval’, ‘aggregation interval’, ’nr_accesses’, and ‘age’. If you’re not familiar with those, you can refer to the document (https://www.kernel.org/doc/html/next/mm/damon/design.html#monitoring).\nProblem Some users reported that they expected DAMON will be useful for finding both cold memory regions and hot memory regions. And they found it indeed works for finding cold memory regions. But, they found difficulties at finding hot memory regions. Some detailed reported cases are as below.\nCase 1: Proactive Reclamation\nA user tried to use DAMOS for proactively reclaiming cold memory regions. They hence specified maximum access rate (nr_accesses) and minimum age of target regions for the DAMOS scheme as zero and 2 minutes, respectively. It means asking DAMON to find regions that not accessed for two minutes or more and reclaim those as soon as found. If they use DAMON user-space tool, damo, they would used a command like below.\n# damo start --damos_action pageout --damos_access rate 0% 0% --damos_age 2m max The result was as the user expected. The user reported me that they were able to save memory without performance degradation.\nMy test setup also showed good results from similar DAMOS schemes, even though my setup was using even more aggressive approach (minimum age as 5 seconds).\nCase 2: Heatmap Visualization\nA user has recorded data access pattern of their workloads using DAMON user-space tool, damo, and draw heatmap using ‘damo report heatmap’ command. The workload was active and therefore the user expected the heatmap to show some heats. But the output was showing nearly zero heats. It was nearly always only dark.\nOn my test setup, some workloads indeed showed very dark heatmap. But on multiple workloads, meaningful access patterns were identifiable using the heatmaps (https://damonitor.github.io/test/result/visual/next/rec.heatmap.1.png.html).\nCase 3: Prioritizing Hot Pages\nA user tried to use DAMOS for finding hot memory regions and make a prioritization action like backing the regions with THP, migrating the pages from CXL node to DRAM node, or moving the page from inactive LRU list to active LRU list. They hence specified minimum access rate (nr_accesses) for the DAMOS scheme with a high value. For example, a command like below was used:\n# damo start --damos_action hugepage --damos_access_rate 50% max $(pidof workload) However, they found DAMOS is doing nearly nothing. They reduced the minimum access_rate, and situation has been better, but still DAMOS was not finding expected amount of hot memory regions.\nCase 2 and 3 mean that they expected to show regions of high ’nr_accesses’ value from DAMON-generated access pattern snapshots. But it showed only zero or low ’nr_accesses’ values.\nOn my test setup (https://damonitor.github.io/posts/damon_evaluation/), similar approach showed good results, though.\nOne common thing that I found from the reports was that they were using default values for ‘aggregation interval’, which is 100 milliseconds. My test setup is also using the default values.\nMeaning of ‘aggregation interval’ For every ‘aggregation interval’, DAMON generates one complete access pattern snapshot. That means ‘aggregation interval’ can be though of as the time amount of information that a single snapshot can contain. The value should hence be decided depending on how much information the user wants each snapshot to have. If it is too short, each snapshot contains nearly no information, so not be useful. If it is too long, each snapshot contains too much information that coarsely cumulated, so again not useful.\nThe meaningful length of time depends on the data access intensiveness of the workload. The intensiveness should be measured with two factors: frequency and footprint.\nThe frequency is how frequently the workload is making accesses. If the workload makes zero or only a low number of accesses per given ‘aggregation interval’, the snapshot will of course show zero or low number of accesses, due to ‘Access Frequency Monitoring’ mechanism.\nThe footprint is the total amount of memory that the workload has accessed at least once. Due to ‘Region Based Sampling’ mechanism, it should be meaningfully large compared to the size of total monitoring target regions. For example, if DAMON is requested to monitor 1 TiB memory and the workload is accessing 1 MiB region of it, DAMON’s sampling based approach will have difficulty at finding the 1 MiB region. ‘Adaptive Regions Adjustment’ mechanism will make DAMON to find the 1 MiB region eventually. But it will take time. The workload could stop accessing the 1 MiB region and starts accessing another 1 MiB region before the ‘Adaptive Regions Adjustment’ mechanism finds it.\nNote that the frequency and footprint of accesses from workloads would depend on not only the source code but also many factors. The system’s total memory bandwidth, the extent of load and noisy neighbor workloads could be a few examples.\nSo, if the desired maximum ’nr_accesses’ on each snapshot is fixed, ‘aggregation interval’ should be increased as the access aggressiveness is decreased, and vice versa.\nRoot Causes 1: Suboptimal Aggregation Interval Tuning I suspect in many of the reported problematic cases, the ‘aggregation interval’ was too short. The default value is good enough for my test setup, but it would need tuning on different systems. Especially on large systems having limited bandwidth, 100 millisecond ‘aggregation interval’ could be not long enough to make meaningful amount of accesses in terms of both frequency and footprint within the interval.\nI actually suggested some of the reporters to increase ‘aggregation interval’, and it was helpful at alleviating the issue in some degree. I cannot know exactly who are using DAMON with what parameters. But at least one open-sourced usage from HMSDK is setting ‘aggregation interval’ as two seconds (https://github.com/skhynix/hmsdk/blob/hmsdk-v3.0/tools/gen_migpol.py#L14).\nRoot Cause 2: Ignorance of Recency (‘age’) The ’nr_accesses’ represents the access frequency, and hence it is natural to assume hot memory regions would have high ’nr_accesses’.\nDAMON provides not only frequency. It also informs users how long the ’nr_accesses’ of the regions is maintained, namely ‘age’, using ‘Age Tracking’ mechanism. If ’nr_accesses’ is non-zero, ‘age’ can be used to calculate actual access hotness of the region (if we turn fire on for longer time, the temperature will be higher). If ’nr_accesses’ is zero, ‘age’ can represent a sort of the recency information (when the regions has last accessed).\nThe recency information can be useful for finding cold pages like case 1 (proactive reclaim). The opposite of finding cold pages is finding hot pages, so the recency information can also be used for finding relatively hot pages. In other words, if for any reason DAMON cannot generate a snapshot having enough non-zero ’nr_accesses’ divergence for given purpose, users could further differentiate hot regions among zero ’nr_accesses’ regions, using ‘age’ information. It would be not ideal, but still reasonable like a sort of LRU-based appraoches could be.\nSo I suspect some of the problems occur from not using ‘age’ for zero ’nr_accesses’ regions. Actually reports from case 3 (prioritizing hot pages), which were successful only on my test setup, were commonly using non-zero minimum ’nr_accesses’ for DAMOS schemes, so were ignoring ‘age’ of zero ’nr_accesses’ regions. Meanwhile, case 2 (proactive reclaim) was using ‘age’ information for zero ’nr_accesses’ regions, and no negative results have reported so far.\nThis might seem like not addressing case 2 (heatmap visualization), because heatmap shows ’nr_accesses’ change of regions over time. But if the record is collected for long time, regions that shown non-zero ’nr_accesses’ for a short period may look a very small dot on the low-resolution picture that not easy to shown with human eyes. The users might be able to get different results using ‘age’ information on the collected snapshot, like recency or temperation based histogram (https://github.com/damonitor/damo/blob/v2.5.4/USAGE.md#access-report-styles).\nTuning Guide Based on above root cause theories, I suggest to try below tuning guides.\nIf you show DAMON is not working well at finding hot pages,\nEnsure your workload is making meaningfully intensive data accesses. Gradually increase aggregation interval and show if it makes change. Try using ‘age’ information even if ’nr_accesses’ is zero. If nothing works, report the problem to sj@kernel.org, damon@lists.linux.dev and/or linux-mm@kvack.org. If increasing aggregation interval alleviates your problem, you can further consider increasing ‘sampling interval’. If it doesn’t harm the quality of the access pattern snapshots, having low ‘sampling interval’ will only increase DAMON’s CPU usage.\nFor using ‘age’ information of zero ’nr_accesses’ regions, different approaches could be used for profiling use case and DAMOS use case. For profiling use case, users can try reading recency or access temperature based histograms (https://github.com/damonitor/damo/blob/v2.5.4/USAGE.md#access-report-styles) of snapshots from record, or live-captured snapshots.\nIf the use case is for DAMOS, applying the ‘age’ information on DAMOS target access pattern would be straightforward. Using DAMOS Quotas together can be useful, since it provides its own under-quota-prioritization logic that utilizes ‘age’ information for zero ’nr_accesses’ regions, and further provides auto-tuning of the quota for given target metric/value.\nTuning Example The initial version of this section is also posted to the mailing list: https://lore.kernel.org/20241202175459.2005526-1-sj@kernel.org\nI tried monitoring the access patterns on the physical address space of a system running a real-world server workload. I was able to reproduce the reported poor quality of hot pages detection using default parameter. And I was also able to improve the quality following the above tuning guide. I’m sharing the details as an example.\n5ms/100ms intervals: Reproduce Problem Initially, I captured the access pattern snapshot on the physical address space using DAMON, with the default interval parameters (5 milliseconds and 100 milliseconds for the sampling and the aggregation intervals, respectively). I wait ten minutes after starting DAMON, to show a meaningful time-wise access patterns.\n# damo start # sleep 600 # damo record --snapshot 0 1 # damo stop Then, I listed the DAMON-found regions of different access patterns, sorted by the access temperature. Access temperature is calculated as a weighted sum of the access frequency and the age of the region. If the access frequency is 0 %, the temperature is multipled by minus one. That is, if a region is not accessed, it gets minus temperature and it gets lower as not accessed for longer time. The sorting is in temperature-ascendint order, so the region at the top of the list is the coldest, and the one at the bottom is the hottest one.\n# damo report access --sort_regions_by temperature 0 addr 16.052 GiB size 5.985 GiB access 0 % age 5.900 s # coldest 1 addr 22.037 GiB size 6.029 GiB access 0 % age 5.300 s 2 addr 28.065 GiB size 6.045 GiB access 0 % age 5.200 s 3 addr 10.069 GiB size 5.983 GiB access 0 % age 4.500 s 4 addr 4.000 GiB size 6.069 GiB access 0 % age 4.400 s 5 addr 62.008 GiB size 3.992 GiB access 0 % age 3.700 s 6 addr 56.795 GiB size 5.213 GiB access 0 % age 3.300 s 7 addr 39.393 GiB size 6.096 GiB access 0 % age 2.800 s 8 addr 50.782 GiB size 6.012 GiB access 0 % age 2.800 s 9 addr 34.111 GiB size 5.282 GiB access 0 % age 2.300 s 10 addr 45.489 GiB size 5.293 GiB access 0 % age 1.800 s # hottest total size: 62.000 GiB The list shows not seemingly hot regions, and only minimum access pattern diversity. Every region has zero access frequency. The number of region is 10, which is the default min_nr_regions value. Size of each region is also nearly idential. We can suspect this is because “adaptive regions adjustment” mechanism was not well working. As the guide suggested, we can get relative hotness of regions using ‘age’ as the recency information. That would be better than nothing, but given the fact that the longest age is only about 6 seconds while we waited about ten minuts, it is unclear how useful this will be.\nThe temperature ranges to total size of regions of each range histogram visualization of the results also shows no interesting distribution pattern.\n# damo report access --style temperature-sz-hist [-,590,000,000, -,549,000,000) 5.985 GiB |********** | [-,549,000,000, -,508,000,000) 12.074 GiB |********************| [-,508,000,000, -,467,000,000) 0 B | | [-,467,000,000, -,426,000,000) 12.052 GiB |********************| [-,426,000,000, -,385,000,000) 0 B | | [-,385,000,000, -,344,000,000) 3.992 GiB |******* | [-,344,000,000, -,303,000,000) 5.213 GiB |********* | [-,303,000,000, -,262,000,000) 12.109 GiB |********************| [-,262,000,000, -,221,000,000) 5.282 GiB |********* | [-,221,000,000, -,180,000,000) 0 B | | [-,180,000,000, -,139,000,000) 5.293 GiB |********* | total size: 62.000 GiB In short, the result is very similar to the reported problems: poor quality monitoring results for hot regions detection. According to the above guide, this is due to the too short aggregation interval.\n100ms/2s intervals: Starts Showing Small Hot Regions Following the guide, I increased the interval 20 times (100 milliseocnds and 2 seconds for sampling and aggregation intervals, respectively).\n# damo start -s 100ms -a 2s # sleep 600 # damo record --snapshot 0 1 # damo stop # damo report access --sort_regions_by temperature 0 addr 10.180 GiB size 6.117 GiB access 0 % age 7 m 8 s # coldest 1 addr 49.275 GiB size 6.195 GiB access 0 % age 6 m 14 s 2 addr 62.421 GiB size 3.579 GiB access 0 % age 6 m 4 s 3 addr 40.154 GiB size 6.127 GiB access 0 % age 5 m 40 s 4 addr 16.296 GiB size 6.182 GiB access 0 % age 5 m 32 s 5 addr 34.254 GiB size 5.899 GiB access 0 % age 5 m 24 s 6 addr 46.281 GiB size 2.995 GiB access 0 % age 5 m 20 s 7 addr 28.420 GiB size 5.835 GiB access 0 % age 5 m 6 s 8 addr 4.000 GiB size 6.180 GiB access 0 % age 4 m 16 s 9 addr 22.478 GiB size 5.942 GiB access 0 % age 3 m 58 s 10 addr 55.470 GiB size 915.645 MiB access 0 % age 3 m 6 s 11 addr 56.364 GiB size 6.056 GiB access 0 % age 2 m 8 s 12 addr 56.364 GiB size 4.000 KiB access 95 % age 16 s 13 addr 49.275 GiB size 4.000 KiB access 100 % age 8 m 24 s # hottest total size: 62.000 GiB # damo report access --style temperature-sz-hist [-42,800,000,000, -33,479,999,000) 22.018 GiB |***************** | [-33,479,999,000, -24,159,998,000) 27.090 GiB |********************| [-24,159,998,000, -14,839,997,000) 6.836 GiB |****** | [-14,839,997,000, -5,519,996,000) 6.056 GiB |***** | [-5,519,996,000, 3,800,005,000) 4.000 KiB |* | [3,800,005,000, 13,120,006,000) 0 B | | [13,120,006,000, 22,440,007,000) 0 B | | [22,440,007,000, 31,760,008,000) 0 B | | [31,760,008,000, 41,080,009,000) 0 B | | [41,080,009,000, 50,400,010,000) 0 B | | [50,400,010,000, 59,720,011,000) 4.000 KiB |* | total size: 62.000 GiB DAMON found two distinct 4 KiB regions that pretty hot. The regions are also well aged. The hottest 4 KiB region was keeping the access frequency for about 8 minutes, and the coldest region was keeping no access for about 7 minutes. The distribution on the histogram also looks like having a pattern.\nEspecially, the finding of the 4 KiB regions shows DAMON’s adaptive regions adjustment is working as designed.\nStill the number of regions is close to the min_nr_regions, and sizes of cold regions are similar, though. Apparently it is improved, but it still has rooms to improve.\n400ms/8s intervals: Pretty Improved Results I further increased the intervals four times (400 milliseconds and 8 seconds for sampling and aggregation intervals, respectively).\n# damo start -s 400ms -a 8s # sleep 600 # damo record --snapshot 0 1 # damo stop # damo report access --sort_regions_by temperature 0 addr 64.492 GiB size 1.508 GiB access 0 % age 6 m 48 s # coldest 1 addr 21.749 GiB size 5.674 GiB access 0 % age 6 m 8 s 2 addr 27.422 GiB size 5.801 GiB access 0 % age 6 m 3 addr 49.431 GiB size 8.675 GiB access 0 % age 5 m 28 s 4 addr 33.223 GiB size 5.645 GiB access 0 % age 5 m 12 s 5 addr 58.321 GiB size 6.170 GiB access 0 % age 5 m 4 s [...] 25 addr 6.615 GiB size 297.531 MiB access 15 % age 0 ns 26 addr 9.513 GiB size 12.000 KiB access 20 % age 0 ns 27 addr 9.511 GiB size 108.000 KiB access 25 % age 0 ns 28 addr 9.513 GiB size 20.000 KiB access 25 % age 0 ns 29 addr 9.511 GiB size 12.000 KiB access 30 % age 0 ns 30 addr 9.520 GiB size 4.000 KiB access 40 % age 0 ns [...] 41 addr 9.520 GiB size 4.000 KiB access 80 % age 56 s 42 addr 9.511 GiB size 12.000 KiB access 100 % age 6 m 16 s 43 addr 58.321 GiB size 4.000 KiB access 100 % age 6 m 24 s 44 addr 9.512 GiB size 4.000 KiB access 100 % age 6 m 48 s 45 addr 58.106 GiB size 4.000 KiB access 100 % age 6 m 48 s # hottest total size: 62.000 GiB # damo report access --style temperature-sz-hist [-40,800,000,000, -32,639,999,000) 21.657 GiB |********************| [-32,639,999,000, -24,479,998,000) 17.938 GiB |***************** | [-24,479,998,000, -16,319,997,000) 16.885 GiB |**************** | [-16,319,997,000, -8,159,996,000) 586.879 MiB |* | [-8,159,996,000, 5,000) 4.946 GiB |***** | [5,000, 8,160,006,000) 260.000 KiB |* | [8,160,006,000, 16,320,007,000) 0 B | | [16,320,007,000, 24,480,008,000) 0 B | | [24,480,008,000, 32,640,009,000) 0 B | | [32,640,009,000, 40,800,010,000) 16.000 KiB |* | [40,800,010,000, 48,960,011,000) 8.000 KiB |* | total size: 62.000 GiB The number of regions having different access patterns has significantly increased. Size of each region is also more varied. Total size of non-zero access frequency regions is also significantly increased. Maybe this is already good enough to make some meaningful memory management efficieny changes.\n800ms/16s intervals: Another bias Further doubling the intervals (800 milliseconds and 16 seconds for sampling and aggregation intervals, respectively) mor improved the hot regions detection, but starts looking degrading cold regions detection.\n# damo start -s 800ms -a 16s # sleep 600 # damo record --snapshot 0 1 # damo stop # damo report access --sort_regions_by temperature 0 addr 64.781 GiB size 1.219 GiB access 0 % age 4 m 48 s 1 addr 24.505 GiB size 2.475 GiB access 0 % age 4 m 16 s 2 addr 26.980 GiB size 504.273 MiB access 0 % age 4 m 3 addr 29.443 GiB size 2.462 GiB access 0 % age 4 m 4 addr 37.264 GiB size 5.645 GiB access 0 % age 4 m 5 addr 31.905 GiB size 5.359 GiB access 0 % age 3 m 44 s [...] 20 addr 8.711 GiB size 40.000 KiB access 5 % age 2 m 40 s 21 addr 27.473 GiB size 1.970 GiB access 5 % age 4 m 22 addr 48.185 GiB size 4.625 GiB access 5 % age 4 m 23 addr 47.304 GiB size 902.117 MiB access 10 % age 4 m 24 addr 8.711 GiB size 4.000 KiB access 100 % age 4 m 25 addr 20.793 GiB size 3.713 GiB access 5 % age 4 m 16 s 26 addr 8.773 GiB size 4.000 KiB access 100 % age 4 m 16 s total size: 62.000 GiB # damo report access --style temperature-sz-hist [-28,800,000,000, -23,359,999,000) 12.294 GiB |***************** | [-23,359,999,000, -17,919,998,000) 9.753 GiB |************* | [-17,919,998,000, -12,479,997,000) 15.131 GiB |********************| [-12,479,997,000, -7,039,996,000) 0 B | | [-7,039,996,000, -1,599,995,000) 7.506 GiB |********** | [-1,599,995,000, 3,840,006,000) 6.127 GiB |********* | [3,840,006,000, 9,280,007,000) 0 B | | [9,280,007,000, 14,720,008,000) 136.000 KiB |* | [14,720,008,000, 20,160,009,000) 40.000 KiB |* | [20,160,009,000, 25,600,010,000) 11.188 GiB |*************** | [25,600,010,000, 31,040,011,000) 4.000 KiB |* | total size: 62.000 GiB It found more non-zero access frequency regions. The number of regions is still much higher than the min_nr_regions, but it is reduced from that of the previous setup. And apparently the distribution seems bit biased to hot regions.\nConclusion Because the workload is live, the above results are not always consistent. But, the tendency of the quality for the interval changes was consistent.\nWith the above experimental tuning results, I conclude the theory and the guide makes sense to at least this workload, and could be applied to similar cases.\nThis also gives us an idea for automated tuning of the intervals. If the interval is too short, results are biased to cold regions. If the interval is too long, results are biased to hot regions. Maybe DAMON can moitor to which direction the current snapshot is biased, and adjust the intervals. I will develop the idea more.\nFuture Plans Again, I admit that the real root cause of the issue is the poor interface and lack of guides that makes correct tuning difficult, and the suboptimality of DAMON’s mechanisms. We will continue working on advancing it in long term.\nFor easy use of ‘age’ information for zero ’nr_accesses’ regions, DAMON is already providing its Quotas feature with auto-tuning. We will continue making the auto-tuning more advanced, and adding new features for ease of uses.\nOne obvious hidden root cause is the absence of the guideline. I will collect more inputs and write an official document for this. I actually thought about writing the official document first, but this writing this mail took already over two weeks. So posting this mail first.\nFor interval setting, we are planning a sort of auto-tuning. Like DAMOS quota auto-tuning, users will be able to set more intuitive knobs (e.g., how much diversity of regions they want) instead of directly setting the intervals. Then, DAMON will automatically tune the intervals and other low level knobs. This is in very early stage, so no specific design is made so far, and will take long time. Don’t expect delivery of this in near future. Use the tuning guide for short term and/or ask prioritization of this project if needed.\nIn my humble opinion, ‘Adaptive Regions Adjustment’ mechanism is not a root cause of the issue. Nonetheless, it also has many rooms for improvement that can make DAMON more lightweight and accurate. And any DAMON accuracy improvements would alleviate the hot page detection issue. We plan to do this together, and this is again a long term project that has no specific design yet. Nonetheless, we recently shared two simple short term features for this (https://lore.kernel.org/20241027204910.155254-1-sj@kernel.org). If you are interested in implementing the short term features, please step up.\n","wordCount":"3952","inLanguage":"en","image":"https://damonitor.github.io/%3Clink%20or%20path%20of%20image%20for%20opengraph,%20twitter-cards%3E","datePublished":"2024-11-08T17:19:32-08:00","dateModified":"2024-11-08T17:19:32-08:00","author":{"@type":"Person","name":"Me"},"mainEntityOfPage":{"@type":"WebPage","@id":"https://damonitor.github.io/posts/damon_tuning_guide_for_hot_pages/"},"publisher":{"@type":"Organization","name":"DAMON Project Website","logo":{"@type":"ImageObject","url":"https://damonitor.github.io/%3Clink%20/%20abs%20url%3E"}}}</script></head><body id=top><script>localStorage.getItem("pref-theme")==="dark"?document.body.classList.add("dark"):localStorage.getItem("pref-theme")==="light"?document.body.classList.remove("dark"):window.matchMedia("(prefers-color-scheme: dark)").matches&&document.body.classList.add("dark")</script><header class=header><nav class=nav><div class=logo><a href=https://damonitor.github.io/ accesskey=h title="damon (Alt + H)"><img src=https://damonitor.github.io/apple-touch-icon.png alt aria-label=logo height=35>damon</a><div class=logo-switches><button id=theme-toggle accesskey=t title="(Alt + T)"><svg id="moon" width="24" height="18" viewBox="0 0 24 24" fill="none" stroke="currentcolor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/></svg><svg id="sun" width="24" height="18" viewBox="0 0 24 24" fill="none" stroke="currentcolor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg></button></div></div><ul id=menu><li><a href=https://damonitor.github.io/posts/damon title=about><span>about</span></a></li><li><a href=https://damonitor.github.io/posts/ title=posts><span>posts</span></a></li><li><a href=https://damonitor.github.io/categories/ title=categories><span>categories</span></a></li><li><a href=https://damonitor.github.io/tags/ title=tags><span>tags</span></a></li><li><a href=https://damonitor.github.io/search/ title=search><span>search</span></a></li></ul></nav></header><main class=main><article class=post-single><header class=post-header><div class=breadcrumbs><a href=https://damonitor.github.io/>Home</a>&nbsp;»&nbsp;<a href=https://damonitor.github.io/posts/>Posts</a></div><h1 class="post-title entry-hint-parent">A guide to DAMON tuning and results interpretation for hot pages</h1><div class=post-meta><span title='2024-11-08 17:19:32 -0800 PST'>November 8, 2024</span>&nbsp;·&nbsp;19 min&nbsp;·&nbsp;3952 words&nbsp;·&nbsp;Me&nbsp;|&nbsp;<a href=https://github.com/sjp38/sjp38.github.io/tree/master/src/content/posts/damon_tuning_guide_for_hot_pages.md rel="noopener noreferrer" target=_blank>Suggest Changes</a></div></header><div class=toc><details><summary accesskey=c title="(Alt + C)"><span class=details>Table of Contents</span></summary><div class=inner><nav id=TableOfContents><ul><li><a href=#tl-dr>TL; DR</a></li><li><a href=#problem>Problem</a></li><li><a href=#meaning-of-aggregation-interval>Meaning of &lsquo;aggregation interval&rsquo;</a></li><li><a href=#root-causes-1-suboptimal-aggregation-interval-tuning>Root Causes 1: Suboptimal Aggregation Interval Tuning</a></li><li><a href=#root-cause-2-ignorance-of-recency-age>Root Cause 2: Ignorance of Recency (&lsquo;age&rsquo;)</a></li><li><a href=#tuning-guide>Tuning Guide</a></li><li><a href=#tuning-example>Tuning Example</a><ul><li><a href=#5ms100ms-intervals-reproduce-problem>5ms/100ms intervals: Reproduce Problem</a></li><li><a href=#100ms2s-intervals-starts-showing-small-hot-regions>100ms/2s intervals: Starts Showing Small Hot Regions</a></li><li><a href=#400ms8s-intervals-pretty-improved-results>400ms/8s intervals: Pretty Improved Results</a></li><li><a href=#800ms16s-intervals-another-bias>800ms/16s intervals: Another bias</a></li><li><a href=#conclusion>Conclusion</a></li></ul></li><li><a href=#future-plans>Future Plans</a></li></ul></nav></div></details></div><div class=post-content><p>The initial version of this post was initially posted to DAMON mailing list as
+<a href=https://lore.kernel.org/20241108232536.73843-1-sj@kernel.org>https://lore.kernel.org/20241108232536.73843-1-sj@kernel.org</a></p><p>Posting it here too, for visibility and after-posting updates for any needs.</p><hr><p>One of common issues that I received from DAMON users is that DAMON&rsquo;s
+monitoring results show hot regions much less than expected. Specifically, the
 users find regions of only zero or low &rsquo;nr_accesses&rsquo; value from the
-DAMON-generated access pattern snapshots.</p>
-<p>In some cases, it turned out the problem can be alleviated by tuning DAMON
-parameters or changing the way to interpret the results.  I&rsquo;d like to share the
-details and possible future improvements here.</p>
-<p>Note that I&rsquo;m not saying this is users&rsquo; tuning fault.  I admit that the real
+DAMON-generated access pattern snapshots.</p><p>In some cases, it turned out the problem can be alleviated by tuning DAMON
+parameters or changing the way to interpret the results. I&rsquo;d like to share the
+details and possible future improvements here.</p><p>Note that I&rsquo;m not saying this is users&rsquo; tuning fault. I admit that the real
 root cause of the issue is the poor interface and lack of guides that makes
-correct tuning difficult, and the suboptimality of DAMON&rsquo;s mechanisms.  We will
-continue working on advancing it in long term.  Sharing some of the plans and
-status at the end of this email.</p>
-<h2 id="tl-dr">TL; DR</h2>
-<p>Users show only low or zero nr_accesses regions mainly because they set
+correct tuning difficult, and the suboptimality of DAMON&rsquo;s mechanisms. We will
+continue working on advancing it in long term. Sharing some of the plans and
+status at the end of this email.</p><h2 id=tl-dr>TL; DR<a hidden class=anchor aria-hidden=true href=#tl-dr>#</a></h2><p>Users show only low or zero nr_accesses regions mainly because they set
 &lsquo;aggregation intrval&rsquo; too short compared to the workload&rsquo;s memory access
-intensiveness.  Please increase the aggregation interval, or treat
-&rsquo;nr_accesses&rsquo; zero regions of short &lsquo;age&rsquo; as hot regions.</p>
-<p>Now let&rsquo;s walk through more details.  The below sections assume you&rsquo;re familiar
+intensiveness. Please increase the aggregation interval, or treat
+&rsquo;nr_accesses&rsquo; zero regions of short &lsquo;age&rsquo; as hot regions.</p><p>Now let&rsquo;s walk through more details. The below sections assume you&rsquo;re familiar
 with DAMON&rsquo;s monitoring mechanisms including &lsquo;Access Frequency Monitoring&rsquo;,
 &lsquo;Regions Based Sampling&rsquo;, &lsquo;Adaptive Regions Adjustment&rsquo;, and &lsquo;Age Tracking&rsquo;.
 You should particularly be familiar with terms including &lsquo;sampling interval&rsquo;,
-&lsquo;aggregation interval&rsquo;, &rsquo;nr_accesses&rsquo;, and &lsquo;age&rsquo;.  If you&rsquo;re not familiar with
+&lsquo;aggregation interval&rsquo;, &rsquo;nr_accesses&rsquo;, and &lsquo;age&rsquo;. If you&rsquo;re not familiar with
 those, you can refer to the document
-(<a href="https://www.kernel.org/doc/html/next/mm/damon/design.html#monitoring)">https://www.kernel.org/doc/html/next/mm/damon/design.html#monitoring)</a>.</p>
-<h2 id="problem">Problem</h2>
-<p>Some users reported that they expected DAMON will be useful for finding both
-cold memory regions and hot memory regions.  And they found it indeed works for
-finding cold memory regions.  But, they found difficulties at finding hot
-memory regions.  Some detailed reported cases are as below.</p>
-<p>Case 1: Proactive Reclamation</p>
-<p>A user tried to use DAMOS for proactively reclaiming cold memory regions.  They
+(<a href=https://www.kernel.org/doc/html/next/mm/damon/design.html#monitoring)>https://www.kernel.org/doc/html/next/mm/damon/design.html#monitoring)</a>.</p><h2 id=problem>Problem<a hidden class=anchor aria-hidden=true href=#problem>#</a></h2><p>Some users reported that they expected DAMON will be useful for finding both
+cold memory regions and hot memory regions. And they found it indeed works for
+finding cold memory regions. But, they found difficulties at finding hot
+memory regions. Some detailed reported cases are as below.</p><p>Case 1: Proactive Reclamation</p><p>A user tried to use DAMOS for proactively reclaiming cold memory regions. They
 hence specified maximum access rate (nr_accesses) and minimum age of target
-regions for the DAMOS scheme as zero and 2 minutes, respectively.  It means
+regions for the DAMOS scheme as zero and 2 minutes, respectively. It means
 asking DAMON to find regions that not accessed for two minutes or more and
-reclaim those as soon as found.  If they use DAMON user-space tool, damo, they
-would used a command like below.</p>
-<pre><code># damo start --damos_action pageout --damos_access rate 0% 0% --damos_age 2m max
-</code></pre>
-<p>The result was as the user expected.  The user reported me that they were able
-to save memory without performance degradation.</p>
-<p>My test setup also showed good results from similar DAMOS schemes, even though
-my setup was using even more aggressive approach (minimum age as 5 seconds).</p>
-<p>Case 2: Heatmap Visualization</p>
-<p>A user has recorded data access pattern of their workloads using DAMON
+reclaim those as soon as found. If they use DAMON user-space tool, damo, they
+would used a command like below.</p><pre><code># damo start --damos_action pageout --damos_access rate 0% 0% --damos_age 2m max
+</code></pre><p>The result was as the user expected. The user reported me that they were able
+to save memory without performance degradation.</p><p>My test setup also showed good results from similar DAMOS schemes, even though
+my setup was using even more aggressive approach (minimum age as 5 seconds).</p><p>Case 2: Heatmap Visualization</p><p>A user has recorded data access pattern of their workloads using DAMON
 user-space tool, damo, and draw heatmap using &lsquo;damo report heatmap&rsquo; command.
 The workload was active and therefore the user expected the heatmap to show
-some heats.  But the output was showing nearly zero heats.  It was nearly
-always only dark.</p>
-<p>On my test setup, some workloads indeed showed very dark heatmap.  But on
+some heats. But the output was showing nearly zero heats. It was nearly
+always only dark.</p><p>On my test setup, some workloads indeed showed very dark heatmap. But on
 multiple workloads, meaningful access patterns were identifiable using the
 heatmaps
-(<a href="https://damonitor.github.io/test/result/visual/next/rec.heatmap.1.png.html)">https://damonitor.github.io/test/result/visual/next/rec.heatmap.1.png.html)</a>.</p>
-<p>Case 3: Prioritizing Hot Pages</p>
-<p>A user tried to use DAMOS for finding hot memory regions and make a
+(<a href=https://damonitor.github.io/test/result/visual/next/rec.heatmap.1.png.html)>https://damonitor.github.io/test/result/visual/next/rec.heatmap.1.png.html)</a>.</p><p>Case 3: Prioritizing Hot Pages</p><p>A user tried to use DAMOS for finding hot memory regions and make a
 prioritization action like backing the regions with THP, migrating the pages
 from CXL node to DRAM node, or moving the page from inactive LRU list to active
-LRU list.  They hence specified minimum access rate (nr_accesses) for the DAMOS
-scheme with a high value.  For example, a command like below was used:</p>
-<pre><code># damo start --damos_action hugepage --damos_access_rate 50% max $(pidof workload)
-</code></pre>
-<p>However, they found DAMOS is doing nearly nothing.  They reduced the minimum
+LRU list. They hence specified minimum access rate (nr_accesses) for the DAMOS
+scheme with a high value. For example, a command like below was used:</p><pre><code># damo start --damos_action hugepage --damos_access_rate 50% max $(pidof workload)
+</code></pre><p>However, they found DAMOS is doing nearly nothing. They reduced the minimum
 access_rate, and situation has been better, but still DAMOS was not finding
-expected amount of hot memory regions.</p>
-<p>Case 2 and 3 mean that they expected to show regions of high &rsquo;nr_accesses&rsquo;
-value from DAMON-generated access pattern snapshots.  But it showed only zero
-or low &rsquo;nr_accesses&rsquo; values.</p>
-<p>On my test setup (<a href="https://damonitor.github.io/posts/damon_evaluation/)">https://damonitor.github.io/posts/damon_evaluation/)</a>, similar
-approach showed good results, though.</p>
-<p>One common thing that I found from the reports was that they were using default
-values for &lsquo;aggregation interval&rsquo;, which is 100 milliseconds.  My test setup is
-also using the default values.</p>
-<h2 id="meaning-of-aggregation-interval">Meaning of &lsquo;aggregation interval&rsquo;</h2>
-<p>For every &lsquo;aggregation interval&rsquo;, DAMON generates one complete access pattern
-snapshot.  That means &lsquo;aggregation interval&rsquo; can be though of as the time
-amount of information that a single snapshot can contain.  The value should
+expected amount of hot memory regions.</p><p>Case 2 and 3 mean that they expected to show regions of high &rsquo;nr_accesses&rsquo;
+value from DAMON-generated access pattern snapshots. But it showed only zero
+or low &rsquo;nr_accesses&rsquo; values.</p><p>On my test setup (<a href=https://damonitor.github.io/posts/damon_evaluation/)>https://damonitor.github.io/posts/damon_evaluation/)</a>, similar
+approach showed good results, though.</p><p>One common thing that I found from the reports was that they were using default
+values for &lsquo;aggregation interval&rsquo;, which is 100 milliseconds. My test setup is
+also using the default values.</p><h2 id=meaning-of-aggregation-interval>Meaning of &lsquo;aggregation interval&rsquo;<a hidden class=anchor aria-hidden=true href=#meaning-of-aggregation-interval>#</a></h2><p>For every &lsquo;aggregation interval&rsquo;, DAMON generates one complete access pattern
+snapshot. That means &lsquo;aggregation interval&rsquo; can be though of as the time
+amount of information that a single snapshot can contain. The value should
 hence be decided depending on how much information the user wants each snapshot
-to have.  If it is too short, each snapshot contains nearly no information, so
-not be useful.  If it is too long, each snapshot contains too much information
-that coarsely cumulated, so again not useful.</p>
-<p>The meaningful length of time depends on the data access intensiveness of the
-workload.  The intensiveness should be measured with two factors: frequency and
-footprint.</p>
-<p>The frequency is how frequently the workload is making accesses.  If the
+to have. If it is too short, each snapshot contains nearly no information, so
+not be useful. If it is too long, each snapshot contains too much information
+that coarsely cumulated, so again not useful.</p><p>The meaningful length of time depends on the data access intensiveness of the
+workload. The intensiveness should be measured with two factors: frequency and
+footprint.</p><p>The frequency is how frequently the workload is making accesses. If the
 workload makes zero or only a low number of accesses per given &lsquo;aggregation
 interval&rsquo;, the snapshot will of course show zero or low number of accesses, due
-to &lsquo;Access Frequency Monitoring&rsquo; mechanism.</p>
-<p>The footprint is the total amount of memory that the workload has accessed at
-least once.  Due to &lsquo;Region Based Sampling&rsquo; mechanism, it should be
+to &lsquo;Access Frequency Monitoring&rsquo; mechanism.</p><p>The footprint is the total amount of memory that the workload has accessed at
+least once. Due to &lsquo;Region Based Sampling&rsquo; mechanism, it should be
 meaningfully large compared to the size of total monitoring target regions.
 For example, if DAMON is requested to monitor 1 TiB memory and the workload is
 accessing 1 MiB region of it, DAMON&rsquo;s sampling based approach will have
-difficulty at finding the 1 MiB region.  &lsquo;Adaptive Regions Adjustment&rsquo;
-mechanism will make DAMON to find the 1 MiB region eventually.  But it will
-take time.  The workload could stop accessing the 1 MiB region and starts
+difficulty at finding the 1 MiB region. &lsquo;Adaptive Regions Adjustment&rsquo;
+mechanism will make DAMON to find the 1 MiB region eventually. But it will
+take time. The workload could stop accessing the 1 MiB region and starts
 accessing another 1 MiB region before the &lsquo;Adaptive Regions Adjustment&rsquo;
-mechanism finds it.</p>
-<p>Note that the frequency and footprint of accesses from workloads would depend
-on not only the source code but also many factors.  The system&rsquo;s total memory
-bandwidth,  the extent of load and noisy neighbor workloads could be a few
-examples.</p>
-<p>So, if the desired maximum &rsquo;nr_accesses&rsquo; on each snapshot is fixed,
+mechanism finds it.</p><p>Note that the frequency and footprint of accesses from workloads would depend
+on not only the source code but also many factors. The system&rsquo;s total memory
+bandwidth, the extent of load and noisy neighbor workloads could be a few
+examples.</p><p>So, if the desired maximum &rsquo;nr_accesses&rsquo; on each snapshot is fixed,
 &lsquo;aggregation interval&rsquo; should be increased as the access aggressiveness is
-decreased, and vice versa.</p>
-<h2 id="root-causes-1-suboptimal-aggregation-interval-tuning">Root Causes 1: Suboptimal Aggregation Interval Tuning</h2>
-<p>I suspect in many of the reported problematic cases, the &lsquo;aggregation interval&rsquo;
-was too short.  The default value is good enough for my test setup, but it
-would need tuning on different systems.  Especially on large systems having
+decreased, and vice versa.</p><h2 id=root-causes-1-suboptimal-aggregation-interval-tuning>Root Causes 1: Suboptimal Aggregation Interval Tuning<a hidden class=anchor aria-hidden=true href=#root-causes-1-suboptimal-aggregation-interval-tuning>#</a></h2><p>I suspect in many of the reported problematic cases, the &lsquo;aggregation interval&rsquo;
+was too short. The default value is good enough for my test setup, but it
+would need tuning on different systems. Especially on large systems having
 limited bandwidth, 100 millisecond &lsquo;aggregation interval&rsquo; could be not long
 enough to make meaningful amount of accesses in terms of both frequency and
-footprint within the interval.</p>
-<p>I actually suggested some of the reporters to increase &lsquo;aggregation interval&rsquo;,
-and it was helpful at alleviating the issue in some degree.  I cannot know
-exactly who are using DAMON with what parameters.  But at least one
+footprint within the interval.</p><p>I actually suggested some of the reporters to increase &lsquo;aggregation interval&rsquo;,
+and it was helpful at alleviating the issue in some degree. I cannot know
+exactly who are using DAMON with what parameters. But at least one
 open-sourced usage from HMSDK is setting &lsquo;aggregation interval&rsquo; as two seconds
-(<a href="https://github.com/skhynix/hmsdk/blob/hmsdk-v3.0/tools/gen_migpol.py#L14)">https://github.com/skhynix/hmsdk/blob/hmsdk-v3.0/tools/gen_migpol.py#L14)</a>.</p>
-<h2 id="root-cause-2-ignorance-of-recency-age">Root Cause 2: Ignorance of Recency (&lsquo;age&rsquo;)</h2>
-<p>The &rsquo;nr_accesses&rsquo; represents the access frequency, and hence it is natural to
-assume hot memory regions would have high &rsquo;nr_accesses&rsquo;.</p>
-<p>DAMON provides not only frequency.  It also informs users how long the
+(<a href=https://github.com/skhynix/hmsdk/blob/hmsdk-v3.0/tools/gen_migpol.py#L14)>https://github.com/skhynix/hmsdk/blob/hmsdk-v3.0/tools/gen_migpol.py#L14)</a>.</p><h2 id=root-cause-2-ignorance-of-recency-age>Root Cause 2: Ignorance of Recency (&lsquo;age&rsquo;)<a hidden class=anchor aria-hidden=true href=#root-cause-2-ignorance-of-recency-age>#</a></h2><p>The &rsquo;nr_accesses&rsquo; represents the access frequency, and hence it is natural to
+assume hot memory regions would have high &rsquo;nr_accesses&rsquo;.</p><p>DAMON provides not only frequency. It also informs users how long the
 &rsquo;nr_accesses&rsquo; of the regions is maintained, namely &lsquo;age&rsquo;, using &lsquo;Age Tracking&rsquo;
-mechanism.  If &rsquo;nr_accesses&rsquo; is non-zero, &lsquo;age&rsquo; can be used to calculate actual
+mechanism. If &rsquo;nr_accesses&rsquo; is non-zero, &lsquo;age&rsquo; can be used to calculate actual
 access hotness of the region (if we turn fire on for longer time, the
-temperature will be higher).  If &rsquo;nr_accesses&rsquo; is zero, &lsquo;age&rsquo; can represent a
-sort of the recency information (when the regions has last accessed).</p>
-<p>The recency information can be useful for finding cold pages like case 1
-(proactive reclaim).  The opposite of finding cold pages is finding hot pages,
+temperature will be higher). If &rsquo;nr_accesses&rsquo; is zero, &lsquo;age&rsquo; can represent a
+sort of the recency information (when the regions has last accessed).</p><p>The recency information can be useful for finding cold pages like case 1
+(proactive reclaim). The opposite of finding cold pages is finding hot pages,
 so the recency information can also be used for finding relatively hot pages.
 In other words, if for any reason DAMON cannot generate a snapshot having
 enough non-zero &rsquo;nr_accesses&rsquo; divergence for given purpose, users could further
 differentiate hot regions among zero &rsquo;nr_accesses&rsquo; regions, using &lsquo;age&rsquo;
-information.  It would be not ideal, but still reasonable like a sort of
-LRU-based appraoches could be.</p>
-<p>So I suspect some of the problems occur from not using &lsquo;age&rsquo; for zero
-&rsquo;nr_accesses&rsquo; regions.  Actually reports from case 3 (prioritizing hot pages),
+information. It would be not ideal, but still reasonable like a sort of
+LRU-based appraoches could be.</p><p>So I suspect some of the problems occur from not using &lsquo;age&rsquo; for zero
+&rsquo;nr_accesses&rsquo; regions. Actually reports from case 3 (prioritizing hot pages),
 which were successful only on my test setup, were commonly using non-zero
 minimum &rsquo;nr_accesses&rsquo; for DAMOS schemes, so were ignoring &lsquo;age&rsquo; of zero
-&rsquo;nr_accesses&rsquo; regions.  Meanwhile, case 2 (proactive reclaim) was using &lsquo;age&rsquo;
+&rsquo;nr_accesses&rsquo; regions. Meanwhile, case 2 (proactive reclaim) was using &lsquo;age&rsquo;
 information for zero &rsquo;nr_accesses&rsquo; regions, and no negative results have
-reported so far.</p>
-<p>This might seem like not addressing case 2 (heatmap visualization), because
-heatmap shows &rsquo;nr_accesses&rsquo; change of regions over time.  But if the record is
+reported so far.</p><p>This might seem like not addressing case 2 (heatmap visualization), because
+heatmap shows &rsquo;nr_accesses&rsquo; change of regions over time. But if the record is
 collected for long time, regions that shown non-zero &rsquo;nr_accesses&rsquo; for a short
 period may look a very small dot on the low-resolution picture that not easy to
-shown with human eyes.  The users might be able to get different results using
+shown with human eyes. The users might be able to get different results using
 &lsquo;age&rsquo; information on the collected snapshot, like recency or temperation based
 histogram
-(<a href="https://github.com/damonitor/damo/blob/v2.5.4/USAGE.md#access-report-styles)">https://github.com/damonitor/damo/blob/v2.5.4/USAGE.md#access-report-styles)</a>.</p>
-<h2 id="tuning-guide">Tuning Guide</h2>
-<p>Based on above root cause theories, I suggest to try below tuning guides.</p>
-<p>If you show DAMON is not working well at finding hot pages,</p>
-<ol>
-<li>Ensure your workload is making meaningfully intensive data accesses.</li>
-<li>Gradually increase aggregation interval and show if it makes change.</li>
-<li>Try using &lsquo;age&rsquo; information even if &rsquo;nr_accesses&rsquo; is zero.</li>
-<li>If nothing works, report the problem to <a href="mailto:sj@kernel.org">sj@kernel.org</a>, <a href="mailto:damon@lists.linux.dev">damon@lists.linux.dev</a>
-and/or <a href="mailto:linux-mm@kvack.org">linux-mm@kvack.org</a>.</li>
-</ol>
-<p>If increasing aggregation interval alleviates your problem, you can further
-consider increasing &lsquo;sampling interval&rsquo;.  If it doesn&rsquo;t harm the quality of the
+(<a href=https://github.com/damonitor/damo/blob/v2.5.4/USAGE.md#access-report-styles)>https://github.com/damonitor/damo/blob/v2.5.4/USAGE.md#access-report-styles)</a>.</p><h2 id=tuning-guide>Tuning Guide<a hidden class=anchor aria-hidden=true href=#tuning-guide>#</a></h2><p>Based on above root cause theories, I suggest to try below tuning guides.</p><p>If you show DAMON is not working well at finding hot pages,</p><ol><li>Ensure your workload is making meaningfully intensive data accesses.</li><li>Gradually increase aggregation interval and show if it makes change.</li><li>Try using &lsquo;age&rsquo; information even if &rsquo;nr_accesses&rsquo; is zero.</li><li>If nothing works, report the problem to <a href=mailto:sj@kernel.org>sj@kernel.org</a>, <a href=mailto:damon@lists.linux.dev>damon@lists.linux.dev</a>
+and/or <a href=mailto:linux-mm@kvack.org>linux-mm@kvack.org</a>.</li></ol><p>If increasing aggregation interval alleviates your problem, you can further
+consider increasing &lsquo;sampling interval&rsquo;. If it doesn&rsquo;t harm the quality of the
 access pattern snapshots, having low &lsquo;sampling interval&rsquo; will only increase
-DAMON&rsquo;s CPU usage.</p>
-<p>For using &lsquo;age&rsquo; information of zero &rsquo;nr_accesses&rsquo; regions, different approaches
-could be used for profiling use case and DAMOS use case.  For profiling use
+DAMON&rsquo;s CPU usage.</p><p>For using &lsquo;age&rsquo; information of zero &rsquo;nr_accesses&rsquo; regions, different approaches
+could be used for profiling use case and DAMOS use case. For profiling use
 case, users can try reading recency or access temperature based histograms
-(<a href="https://github.com/damonitor/damo/blob/v2.5.4/USAGE.md#access-report-styles">https://github.com/damonitor/damo/blob/v2.5.4/USAGE.md#access-report-styles</a>)
-of snapshots from record, or live-captured snapshots.</p>
-<p>If the use case is for DAMOS, applying the &lsquo;age&rsquo; information on DAMOS target
-access pattern would be straightforward.  Using DAMOS Quotas together can be
+(<a href=https://github.com/damonitor/damo/blob/v2.5.4/USAGE.md#access-report-styles>https://github.com/damonitor/damo/blob/v2.5.4/USAGE.md#access-report-styles</a>)
+of snapshots from record, or live-captured snapshots.</p><p>If the use case is for DAMOS, applying the &lsquo;age&rsquo; information on DAMOS target
+access pattern would be straightforward. Using DAMOS Quotas together can be
 useful, since it provides its own under-quota-prioritization logic that
 utilizes &lsquo;age&rsquo; information for zero &rsquo;nr_accesses&rsquo; regions, and further provides
-auto-tuning of the quota for given target metric/value.</p>
-<h2 id="tuning-example">Tuning Example</h2>
-<p>The initial version of this section is also posted to the mailing list:
-<a href="https://lore.kernel.org/20241202175459.2005526-1-sj@kernel.org">https://lore.kernel.org/20241202175459.2005526-1-sj@kernel.org</a></p>
-<p>I tried monitoring the access patterns on the physical address space of a
-system running a real-world server workload.  I was able to reproduce the
-reported poor quality of hot pages detection using default parameter.  And I
-was also able to improve the quality following the above tuning guide.  I&rsquo;m
-sharing the details as an example.</p>
-<h3 id="5ms100ms-intervals-reproduce-problem">5ms/100ms intervals: Reproduce Problem</h3>
-<p>Initially, I captured the access pattern snapshot on the physical address
+auto-tuning of the quota for given target metric/value.</p><h2 id=tuning-example>Tuning Example<a hidden class=anchor aria-hidden=true href=#tuning-example>#</a></h2><p>The initial version of this section is also posted to the mailing list:
+<a href=https://lore.kernel.org/20241202175459.2005526-1-sj@kernel.org>https://lore.kernel.org/20241202175459.2005526-1-sj@kernel.org</a></p><p>I tried monitoring the access patterns on the physical address space of a
+system running a real-world server workload. I was able to reproduce the
+reported poor quality of hot pages detection using default parameter. And I
+was also able to improve the quality following the above tuning guide. I&rsquo;m
+sharing the details as an example.</p><h3 id=5ms100ms-intervals-reproduce-problem>5ms/100ms intervals: Reproduce Problem<a hidden class=anchor aria-hidden=true href=#5ms100ms-intervals-reproduce-problem>#</a></h3><p>Initially, I captured the access pattern snapshot on the physical address
 space using DAMON, with the default interval parameters (5 milliseconds and 100
-milliseconds for the sampling and the aggregation intervals, respectively).  I
+milliseconds for the sampling and the aggregation intervals, respectively). I
 wait ten minutes after starting DAMON, to show a meaningful time-wise access
-patterns.</p>
-<pre tabindex="0"><code># damo start
+patterns.</p><pre tabindex=0><code># damo start
 # sleep 600
 # damo record --snapshot 0 1
 # damo stop
 </code></pre><p>Then, I listed the DAMON-found regions of different access patterns, sorted by
-the access temperature.  Access temperature is
-<a href="https://github.com/damonitor/damo/blob/v2.5.8/src/damo_report_access.py#L643">calculated</a>
-as a weighted sum of the access frequency and the age of the region.  If the
-access frequency is 0 %, the temperature is multipled by minus one.  That is,
+the access temperature. Access temperature is
+<a href=https://github.com/damonitor/damo/blob/v2.5.8/src/damo_report_access.py#L643>calculated</a>
+as a weighted sum of the access frequency and the age of the region. If the
+access frequency is 0 %, the temperature is multipled by minus one. That is,
 if a region is not accessed, it gets minus temperature and it gets lower as not
-accessed for longer time.  The sorting is in temperature-ascendint order, so
+accessed for longer time. The sorting is in temperature-ascendint order, so
 the region at the top of the list is the coldest, and the one at the bottom is
-the hottest one.</p>
-<pre tabindex="0"><code># damo report access --sort_regions_by temperature
+the hottest one.</p><pre tabindex=0><code># damo report access --sort_regions_by temperature
 0   addr 16.052 GiB   size 5.985 GiB   access 0 %   age 5.900 s    # coldest
 1   addr 22.037 GiB   size 6.029 GiB   access 0 %   age 5.300 s
 2   addr 28.065 GiB   size 6.045 GiB   access 0 %   age 5.200 s
@@ -444,18 +164,16 @@ the hottest one.</p>
 10  addr 45.489 GiB   size 5.293 GiB   access 0 %   age 1.800 s    # hottest
 total size: 62.000 GiB
 </code></pre><p>The list shows not seemingly hot regions, and only minimum access pattern
-diversity.  Every region has zero access frequency.  The number of region is
-10, which is the default <code>min_nr_regions</code> value.  Size of each region is also
-nearly idential.  We can suspect this is because &ldquo;adaptive regions adjustment&rdquo;
-mechanism was not well working.  As the guide suggested, we can get relative
-hotness of regions using &lsquo;age&rsquo; as the recency information.  That would be
+diversity. Every region has zero access frequency. The number of region is
+10, which is the default <code>min_nr_regions</code> value. Size of each region is also
+nearly idential. We can suspect this is because &ldquo;adaptive regions adjustment&rdquo;
+mechanism was not well working. As the guide suggested, we can get relative
+hotness of regions using &lsquo;age&rsquo; as the recency information. That would be
 better than nothing, but given the fact that the longest age is only about 6
 seconds while we waited about ten minuts, it is unclear how useful this will
-be.</p>
-<p>The temperature ranges to total size of regions of each range histogram
-<a href="https://github.com/damonitor/damo/blob/v2.5.7/USAGE.md#access-report-styles">visualization</a>
-of the results also shows no interesting distribution pattern.</p>
-<pre tabindex="0"><code># damo report access --style temperature-sz-hist
+be.</p><p>The temperature ranges to total size of regions of each range histogram
+<a href=https://github.com/damonitor/damo/blob/v2.5.7/USAGE.md#access-report-styles>visualization</a>
+of the results also shows no interesting distribution pattern.</p><pre tabindex=0><code># damo report access --style temperature-sz-hist
 &lt;temperature&gt; &lt;total size&gt;
 [-,590,000,000, -,549,000,000) 5.985 GiB  |**********          |
 [-,549,000,000, -,508,000,000) 12.074 GiB |********************|
@@ -470,12 +188,9 @@ of the results also shows no interesting distribution pattern.</p>
 [-,180,000,000, -,139,000,000) 5.293 GiB  |*********           |
 total size: 62.000 GiB
 </code></pre><p>In short, the result is very similar to the reported problems: poor quality
-monitoring results for hot regions detection.  According to the above guide,
-this is due to the too short aggregation interval.</p>
-<h3 id="100ms2s-intervals-starts-showing-small-hot-regions">100ms/2s intervals: Starts Showing Small Hot Regions</h3>
-<p>Following the guide, I increased the interval 20 times (100 milliseocnds and 2
-seconds for sampling and aggregation intervals, respectively).</p>
-<pre tabindex="0"><code># damo start -s 100ms -a 2s
+monitoring results for hot regions detection. According to the above guide,
+this is due to the too short aggregation interval.</p><h3 id=100ms2s-intervals-starts-showing-small-hot-regions>100ms/2s intervals: Starts Showing Small Hot Regions<a hidden class=anchor aria-hidden=true href=#100ms2s-intervals-starts-showing-small-hot-regions>#</a></h3><p>Following the guide, I increased the interval 20 times (100 milliseocnds and 2
+seconds for sampling and aggregation intervals, respectively).</p><pre tabindex=0><code># damo start -s 100ms -a 2s
 # sleep 600
 # damo record --snapshot 0 1
 # damo stop
@@ -509,19 +224,14 @@ total size: 62.000 GiB
 [41,080,009,000, 50,400,010,000)   0 B        |                    |
 [50,400,010,000, 59,720,011,000)   4.000 KiB  |*                   |
 total size: 62.000 GiB
-</code></pre><p>DAMON found two distinct 4 KiB regions that pretty hot.  The regions are also
-well aged.  The hottest 4 KiB region was keeping the access frequency for about
+</code></pre><p>DAMON found two distinct 4 KiB regions that pretty hot. The regions are also
+well aged. The hottest 4 KiB region was keeping the access frequency for about
 8 minutes, and the coldest region was keeping no access for about 7 minutes.
-The distribution on the histogram also looks like having a pattern.</p>
-<p>Especially, the finding of the 4 KiB regions shows DAMON&rsquo;s adaptive regions
-adjustment is working as designed.</p>
-<p>Still the number of regions is close to the <code>min_nr_regions</code>, and sizes of cold
-regions are similar, though.  Apparently it is improved, but it still has rooms
-to improve.</p>
-<h3 id="400ms8s-intervals-pretty-improved-results">400ms/8s intervals: Pretty Improved Results</h3>
-<p>I further increased the intervals four times (400 milliseconds and 8 seconds
-for sampling and aggregation intervals, respectively).</p>
-<pre tabindex="0"><code># damo start -s 400ms -a 8s
+The distribution on the histogram also looks like having a pattern.</p><p>Especially, the finding of the 4 KiB regions shows DAMON&rsquo;s adaptive regions
+adjustment is working as designed.</p><p>Still the number of regions is close to the <code>min_nr_regions</code>, and sizes of cold
+regions are similar, though. Apparently it is improved, but it still has rooms
+to improve.</p><h3 id=400ms8s-intervals-pretty-improved-results>400ms/8s intervals: Pretty Improved Results<a hidden class=anchor aria-hidden=true href=#400ms8s-intervals-pretty-improved-results>#</a></h3><p>I further increased the intervals four times (400 milliseconds and 8 seconds
+for sampling and aggregation intervals, respectively).</p><pre tabindex=0><code># damo start -s 400ms -a 8s
 # sleep 600
 # damo record --snapshot 0 1
 # damo stop
@@ -561,15 +271,12 @@ total size: 62.000 GiB
 [40,800,010,000, 48,960,011,000)   8.000 KiB   |*                   |
 total size: 62.000 GiB
 </code></pre><p>The number of regions having different access patterns has significantly
-increased.  Size of each region is also more varied.  Total size of non-zero
-access frequency regions is also significantly increased.  Maybe this is
+increased. Size of each region is also more varied. Total size of non-zero
+access frequency regions is also significantly increased. Maybe this is
 already good enough to make some meaningful memory management efficieny
-changes.</p>
-<h3 id="800ms16s-intervals-another-bias">800ms/16s intervals: Another bias</h3>
-<p>Further doubling the intervals (800 milliseconds and 16 seconds for sampling
+changes.</p><h3 id=800ms16s-intervals-another-bias>800ms/16s intervals: Another bias<a hidden class=anchor aria-hidden=true href=#800ms16s-intervals-another-bias>#</a></h3><p>Further doubling the intervals (800 milliseconds and 16 seconds for sampling
 and aggregation intervals, respectively) mor improved the hot regions
-detection, but starts looking degrading cold regions detection.</p>
-<pre tabindex="0"><code># damo start -s 800ms -a 16s
+detection, but starts looking degrading cold regions detection.</p><pre tabindex=0><code># damo start -s 800ms -a 16s
 # sleep 600
 # damo record --snapshot 0 1
 # damo stop
@@ -603,107 +310,38 @@ total size: 62.000 GiB
 [20,160,009,000, 25,600,010,000)   11.188 GiB  |***************     |
 [25,600,010,000, 31,040,011,000)   4.000 KiB   |*                   |
 total size: 62.000 GiB
-</code></pre><p>It found more non-zero access frequency regions.  The number of regions is
+</code></pre><p>It found more non-zero access frequency regions. The number of regions is
 still much higher than the <code>min_nr_regions</code>, but it is reduced from that of the
-previous setup.  And apparently the distribution seems bit biased to hot
-regions.</p>
-<h3 id="conclusion">Conclusion</h3>
-<p>Because the workload is live, the above results are not always consistent.
-But, the tendency of the quality for the interval changes was consistent.</p>
-<p>With the above experimental tuning results, I conclude the theory and the guide
-makes sense to at least this workload, and could be applied to similar cases.</p>
-<p>This also gives us an idea for automated tuning of the intervals.  If the
-interval is too short, results are biased to cold regions.  If the interval is
-too long, results are biased to hot regions.  Maybe DAMON can moitor to which
-direction the current snapshot is biased, and adjust the intervals.  I will
-develop the idea more.</p>
-<h2 id="future-plans">Future Plans</h2>
-<p>Again, I admit that the real root cause of the issue is the poor interface and
+previous setup. And apparently the distribution seems bit biased to hot
+regions.</p><h3 id=conclusion>Conclusion<a hidden class=anchor aria-hidden=true href=#conclusion>#</a></h3><p>Because the workload is live, the above results are not always consistent.
+But, the tendency of the quality for the interval changes was consistent.</p><p>With the above experimental tuning results, I conclude the theory and the guide
+makes sense to at least this workload, and could be applied to similar cases.</p><p>This also gives us an idea for automated tuning of the intervals. If the
+interval is too short, results are biased to cold regions. If the interval is
+too long, results are biased to hot regions. Maybe DAMON can moitor to which
+direction the current snapshot is biased, and adjust the intervals. I will
+develop the idea more.</p><h2 id=future-plans>Future Plans<a hidden class=anchor aria-hidden=true href=#future-plans>#</a></h2><p>Again, I admit that the real root cause of the issue is the poor interface and
 lack of guides that makes correct tuning difficult, and the suboptimality of
-DAMON&rsquo;s mechanisms.  We will continue working on advancing it in long term.</p>
-<p>For easy use of &lsquo;age&rsquo; information for zero &rsquo;nr_accesses&rsquo; regions, DAMON is
-already providing its Quotas feature with auto-tuning.  We will continue making
-the auto-tuning more advanced, and adding new features for ease of uses.</p>
-<p>One obvious hidden root cause is the absence of the guideline.  I will collect
-more inputs and write an official document for this.  I actually thought about
+DAMON&rsquo;s mechanisms. We will continue working on advancing it in long term.</p><p>For easy use of &lsquo;age&rsquo; information for zero &rsquo;nr_accesses&rsquo; regions, DAMON is
+already providing its Quotas feature with auto-tuning. We will continue making
+the auto-tuning more advanced, and adding new features for ease of uses.</p><p>One obvious hidden root cause is the absence of the guideline. I will collect
+more inputs and write an official document for this. I actually thought about
 writing the official document first, but this writing this mail took already
-over two weeks.  So posting this mail first.</p>
-<p>For interval setting, we are planning a sort of auto-tuning.  Like DAMOS quota
+over two weeks. So posting this mail first.</p><p>For interval setting, we are planning a sort of auto-tuning. Like DAMOS quota
 auto-tuning, users will be able to set more intuitive knobs (e.g., how much
 diversity of regions they want) instead of directly setting the intervals.
 Then, DAMON will automatically tune the intervals and other low level knobs.
 This is in very early stage, so no specific design is made so far, and will
-take long time.  Don&rsquo;t expect delivery of this in near future.  Use the tuning
-guide for short term and/or ask prioritization of this project if needed.</p>
-<p>In my humble opinion, &lsquo;Adaptive Regions Adjustment&rsquo; mechanism is not a root
-cause of the issue.  Nonetheless, it also has many rooms for improvement that
-can make DAMON more lightweight and accurate.  And any DAMON accuracy
-improvements would alleviate the hot page detection issue.  We plan to do this
+take long time. Don&rsquo;t expect delivery of this in near future. Use the tuning
+guide for short term and/or ask prioritization of this project if needed.</p><p>In my humble opinion, &lsquo;Adaptive Regions Adjustment&rsquo; mechanism is not a root
+cause of the issue. Nonetheless, it also has many rooms for improvement that
+can make DAMON more lightweight and accurate. And any DAMON accuracy
+improvements would alleviate the hot page detection issue. We plan to do this
 together, and this is again a long term project that has no specific design
-yet.  Nonetheless, we recently shared two simple short term features for this
-(<a href="https://lore.kernel.org/20241027204910.155254-1-sj@kernel.org)">https://lore.kernel.org/20241027204910.155254-1-sj@kernel.org)</a>.  If you are
-interested in implementing the short term features, please step up.</p>
-
-            </div>
-        </article></main>
-</div>
-<footer class="footer">
-    <span class="footer_item"> </span>
-    &nbsp;
-
-    <div class="footer_social-icons">
-<a href="https://github.com/damonitor" target="_blank" rel="noopener noreferrer me"
-    title="Github">
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-    stroke-linecap="round" stroke-linejoin="round">
-    <path
-        d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22">
-    </path>
-</svg>
-</a>
-<a href="/index.xml" target="_blank" rel="noopener noreferrer me"
-    title="Rss">
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-    stroke-linecap="round" stroke-linejoin="round">
-    <path d="M4 11a9 9 0 0 1 9 9" />
-    <path d="M4 4a16 16 0 0 1 16 16" />
-    <circle cx="5" cy="19" r="1" />
-</svg>
-</a>
-</div>
-    <small class="footer_copyright">
-        © 2025 SJ.
-        Powered by <a href="https://github.com/hugo-sid/hugo-blog-awesome" target="_blank" rel="noopener">Hugo blog awesome</a>.
-    </small>
-</footer><a href="#" title="Go to top" id="totop">
-    <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" fill="currentColor" stroke="currentColor" viewBox="0 96 960 960">
-    <path d="M283 704.739 234.261 656 480 410.261 725.739 656 677 704.739l-197-197-197 197Z"/>
-</svg>
-
-</a>
-
-
-    
-
-
-
-
-    
-    
-        
-    
-
-    
-    
-        
-    
-
-
-
-    
-    <script src="https://damonitor.github.io/js/main.min.35f435a5d8eac613c52daa28d8af544a4512337d3e95236e4a4978417b8dcb2f.js" integrity="sha256-NfQ1pdjqxhPFLaoo2K9USkUSM30&#43;lSNuSkl4QXuNyy8="></script>
-
-    
-
-</body>
-</html>
+yet. Nonetheless, we recently shared two simple short term features for this
+(<a href=https://lore.kernel.org/20241027204910.155254-1-sj@kernel.org)>https://lore.kernel.org/20241027204910.155254-1-sj@kernel.org)</a>. If you are
+interested in implementing the short term features, please step up.</p></div><footer class=post-footer><ul class=post-tags><li><a href=https://damonitor.github.io/tags/damon/>Damon</a></li><li><a href=https://damonitor.github.io/tags/tuning/>Tuning</a></li><li><a href=https://damonitor.github.io/tags/hot/>Hot</a></li><li><a href=https://damonitor.github.io/tags/aggregation-interval/>Aggregation Interval</a></li><li><a href=https://damonitor.github.io/tags/age/>Age</a></li><li><a href=https://damonitor.github.io/tags/monitoring/>Monitoring</a></li></ul><nav class=paginav><a class=prev href=https://damonitor.github.io/posts/damo_2_5_7_features/><span class=title>« Prev</span><br><span>damo v2.5.7 new features: temperature filtering and formatting</span>
+</a><a class=next href=https://damonitor.github.io/posts/damo_autotune_example/><span class=title>Next »</span><br><span>Auto-tuning DAMOS using `damo`</span></a></nav><ul class=share-buttons><li><a target=_blank rel="noopener noreferrer" aria-label="share A guide to DAMON tuning and results interpretation for hot pages on x" href="https://x.com/intent/tweet/?text=A%20guide%20to%20DAMON%20tuning%20and%20results%20interpretation%20for%20hot%20pages&amp;url=https%3a%2f%2fdamonitor.github.io%2fposts%2fdamon_tuning_guide_for_hot_pages%2f&amp;hashtags=damon%2ctuning%2chot%2caggregationinterval%2cage%2cmonitoring"><svg viewBox="0 0 512 512" height="30" width="30" fill="currentcolor"><path d="M512 62.554V449.446C512 483.97 483.97 512 449.446 512H62.554C28.03 512 0 483.97.0 449.446V62.554C0 28.03 28.029.0 62.554.0H449.446C483.971.0 512 28.03 512 62.554zM269.951 190.75 182.567 75.216H56L207.216 272.95 63.9 436.783h61.366L235.9 310.383l96.667 126.4H456L298.367 228.367l134-153.151H371.033zM127.633 110h36.468l219.38 290.065H349.5z"/></svg></a></li><li><a target=_blank rel="noopener noreferrer" aria-label="share A guide to DAMON tuning and results interpretation for hot pages on linkedin" href="https://www.linkedin.com/shareArticle?mini=true&amp;url=https%3a%2f%2fdamonitor.github.io%2fposts%2fdamon_tuning_guide_for_hot_pages%2f&amp;title=A%20guide%20to%20DAMON%20tuning%20and%20results%20interpretation%20for%20hot%20pages&amp;summary=A%20guide%20to%20DAMON%20tuning%20and%20results%20interpretation%20for%20hot%20pages&amp;source=https%3a%2f%2fdamonitor.github.io%2fposts%2fdamon_tuning_guide_for_hot_pages%2f"><svg viewBox="0 0 512 512" height="30" width="30" fill="currentcolor"><path d="M449.446.0C483.971.0 512 28.03 512 62.554v386.892C512 483.97 483.97 512 449.446 512H62.554c-34.524.0-62.554-28.03-62.554-62.554V62.554c0-34.524 28.029-62.554 62.554-62.554h386.892zM160.461 423.278V197.561h-75.04v225.717h75.04zm270.539.0V293.839c0-69.333-37.018-101.586-86.381-101.586-39.804.0-57.634 21.891-67.617 37.266v-31.958h-75.021c.995 21.181.0 225.717.0 225.717h75.02V297.222c0-6.748.486-13.492 2.474-18.315 5.414-13.475 17.767-27.434 38.494-27.434 27.135.0 38.007 20.707 38.007 51.037v120.768H431zM123.448 88.722C97.774 88.722 81 105.601 81 127.724c0 21.658 16.264 39.002 41.455 39.002h.484c26.165.0 42.452-17.344 42.452-39.002-.485-22.092-16.241-38.954-41.943-39.002z"/></svg></a></li><li><a target=_blank rel="noopener noreferrer" aria-label="share A guide to DAMON tuning and results interpretation for hot pages on reddit" href="https://reddit.com/submit?url=https%3a%2f%2fdamonitor.github.io%2fposts%2fdamon_tuning_guide_for_hot_pages%2f&title=A%20guide%20to%20DAMON%20tuning%20and%20results%20interpretation%20for%20hot%20pages"><svg viewBox="0 0 512 512" height="30" width="30" fill="currentcolor"><path d="M449.446.0C483.971.0 512 28.03 512 62.554v386.892C512 483.97 483.97 512 449.446 512H62.554c-34.524.0-62.554-28.03-62.554-62.554V62.554c0-34.524 28.029-62.554 62.554-62.554h386.892zM446 265.638c0-22.964-18.616-41.58-41.58-41.58-11.211.0-21.361 4.457-28.841 11.666-28.424-20.508-67.586-33.757-111.204-35.278l18.941-89.121 61.884 13.157c.756 15.734 13.642 28.29 29.56 28.29 16.407.0 29.706-13.299 29.706-29.701.0-16.403-13.299-29.702-29.706-29.702-11.666.0-21.657 6.792-26.515 16.578l-69.105-14.69c-1.922-.418-3.939-.042-5.585 1.036-1.658 1.073-2.811 2.761-3.224 4.686l-21.152 99.438c-44.258 1.228-84.046 14.494-112.837 35.232-7.468-7.164-17.589-11.591-28.757-11.591-22.965.0-41.585 18.616-41.585 41.58.0 16.896 10.095 31.41 24.568 37.918-.639 4.135-.99 8.328-.99 12.576.0 63.977 74.469 115.836 166.33 115.836s166.334-51.859 166.334-115.836c0-4.218-.347-8.387-.977-12.493 14.564-6.47 24.735-21.034 24.735-38.001zM326.526 373.831c-20.27 20.241-59.115 21.816-70.534 21.816-11.428.0-50.277-1.575-70.522-21.82-3.007-3.008-3.007-7.882.0-10.889 3.003-2.999 7.882-3.003 10.885.0 12.777 12.781 40.11 17.317 59.637 17.317 19.522.0 46.86-4.536 59.657-17.321 3.016-2.999 7.886-2.995 10.885.008 3.008 3.011 3.003 7.882-.008 10.889zm-5.23-48.781c-16.373.0-29.701-13.324-29.701-29.698.0-16.381 13.328-29.714 29.701-29.714 16.378.0 29.706 13.333 29.706 29.714.0 16.374-13.328 29.698-29.706 29.698zM160.91 295.348c0-16.381 13.328-29.71 29.714-29.71 16.369.0 29.689 13.329 29.689 29.71.0 16.373-13.32 29.693-29.689 29.693-16.386.0-29.714-13.32-29.714-29.693z"/></svg></a></li><li><a target=_blank rel="noopener noreferrer" aria-label="share A guide to DAMON tuning and results interpretation for hot pages on facebook" href="https://facebook.com/sharer/sharer.php?u=https%3a%2f%2fdamonitor.github.io%2fposts%2fdamon_tuning_guide_for_hot_pages%2f"><svg viewBox="0 0 512 512" height="30" width="30" fill="currentcolor"><path d="M449.446.0C483.971.0 512 28.03 512 62.554v386.892C512 483.97 483.97 512 449.446 512H342.978V319.085h66.6l12.672-82.621h-79.272v-53.617c0-22.603 11.073-44.636 46.58-44.636H425.6v-70.34s-32.71-5.582-63.982-5.582c-65.288.0-107.96 39.569-107.96 111.204v62.971h-72.573v82.621h72.573V512h-191.104c-34.524.0-62.554-28.03-62.554-62.554V62.554c0-34.524 28.029-62.554 62.554-62.554h386.892z"/></svg></a></li><li><a target=_blank rel="noopener noreferrer" aria-label="share A guide to DAMON tuning and results interpretation for hot pages on whatsapp" href="https://api.whatsapp.com/send?text=A%20guide%20to%20DAMON%20tuning%20and%20results%20interpretation%20for%20hot%20pages%20-%20https%3a%2f%2fdamonitor.github.io%2fposts%2fdamon_tuning_guide_for_hot_pages%2f"><svg viewBox="0 0 512 512" height="30" width="30" fill="currentcolor"><path d="M449.446.0C483.971.0 512 28.03 512 62.554v386.892C512 483.97 483.97 512 449.446 512H62.554c-34.524.0-62.554-28.03-62.554-62.554V62.554c0-34.524 28.029-62.554 62.554-62.554h386.892zm-58.673 127.703c-33.842-33.881-78.847-52.548-126.798-52.568-98.799.0-179.21 80.405-179.249 179.234-.013 31.593 8.241 62.428 23.927 89.612l-25.429 92.884 95.021-24.925c26.181 14.28 55.659 21.807 85.658 21.816h.074c98.789.0 179.206-80.413 179.247-179.243.018-47.895-18.61-92.93-52.451-126.81zM263.976 403.485h-.06c-26.734-.01-52.954-7.193-75.828-20.767l-5.441-3.229-56.386 14.792 15.05-54.977-3.542-5.637c-14.913-23.72-22.791-51.136-22.779-79.287.033-82.142 66.867-148.971 149.046-148.971 39.793.014 77.199 15.531 105.329 43.692 28.128 28.16 43.609 65.592 43.594 105.4-.034 82.149-66.866 148.983-148.983 148.984zm81.721-111.581c-4.479-2.242-26.499-13.075-30.604-14.571-4.105-1.495-7.091-2.241-10.077 2.241-2.986 4.483-11.569 14.572-14.182 17.562-2.612 2.988-5.225 3.364-9.703 1.12-4.479-2.241-18.91-6.97-36.017-22.23C231.8 264.15 222.81 249.484 220.198 245s-.279-6.908 1.963-9.14c2.016-2.007 4.48-5.232 6.719-7.847 2.24-2.615 2.986-4.484 4.479-7.472 1.493-2.99.747-5.604-.374-7.846-1.119-2.241-10.077-24.288-13.809-33.256-3.635-8.733-7.327-7.55-10.077-7.688-2.609-.13-5.598-.158-8.583-.158-2.986.0-7.839 1.121-11.944 5.604-4.105 4.484-15.675 15.32-15.675 37.364.0 22.046 16.048 43.342 18.287 46.332 2.24 2.99 31.582 48.227 76.511 67.627 10.685 4.615 19.028 7.371 25.533 9.434 10.728 3.41 20.492 2.929 28.209 1.775 8.605-1.285 26.499-10.833 30.231-21.295 3.732-10.464 3.732-19.431 2.612-21.298-1.119-1.869-4.105-2.99-8.583-5.232z"/></svg></a></li><li><a target=_blank rel="noopener noreferrer" aria-label="share A guide to DAMON tuning and results interpretation for hot pages on telegram" href="https://telegram.me/share/url?text=A%20guide%20to%20DAMON%20tuning%20and%20results%20interpretation%20for%20hot%20pages&amp;url=https%3a%2f%2fdamonitor.github.io%2fposts%2fdamon_tuning_guide_for_hot_pages%2f"><svg viewBox="2 2 28 28" height="30" width="30" fill="currentcolor"><path d="M26.49 29.86H5.5a3.37 3.37.0 01-2.47-1 3.35 3.35.0 01-1-2.47V5.48A3.36 3.36.0 013 3 3.37 3.37.0 015.5 2h21A3.38 3.38.0 0129 3a3.36 3.36.0 011 2.46V26.37a3.35 3.35.0 01-1 2.47 3.38 3.38.0 01-2.51 1.02zm-5.38-6.71a.79.79.0 00.85-.66L24.73 9.24a.55.55.0 00-.18-.46.62.62.0 00-.41-.17q-.08.0-16.53 6.11a.59.59.0 00-.41.59.57.57.0 00.43.52l4 1.24 1.61 4.83a.62.62.0 00.63.43.56.56.0 00.4-.17L16.54 20l4.09 3A.9.9.0 0021.11 23.15zM13.8 20.71l-1.21-4q8.72-5.55 8.78-5.55c.15.0.23.0.23.16a.18.18.0 010 .06s-2.51 2.3-7.52 6.8z"/></svg></a></li><li><a target=_blank rel="noopener noreferrer" aria-label="share A guide to DAMON tuning and results interpretation for hot pages on ycombinator" href="https://news.ycombinator.com/submitlink?t=A%20guide%20to%20DAMON%20tuning%20and%20results%20interpretation%20for%20hot%20pages&u=https%3a%2f%2fdamonitor.github.io%2fposts%2fdamon_tuning_guide_for_hot_pages%2f"><svg width="30" height="30" viewBox="0 0 512 512" fill="currentcolor" xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"><path d="M449.446.0C483.971.0 512 28.03 512 62.554V449.446C512 483.97 483.97 512 449.446 512H62.554C28.03 512 0 483.97.0 449.446V62.554C0 28.03 28.029.0 62.554.0H449.446zM183.8767 87.9921h-62.034L230.6673 292.4508V424.0079h50.6655V292.4508L390.1575 87.9921H328.1233L256 238.2489z"/></svg></a></li></ul></footer></article></main><footer class=footer><span>&copy; 2025 <a href=https://damonitor.github.io/>DAMON Project Website</a></span> ·
+<span>Powered by
+<a href=https://gohugo.io/ rel="noopener noreferrer" target=_blank>Hugo</a> &
+        <a href=https://github.com/adityatelange/hugo-PaperMod/ rel=noopener target=_blank>PaperMod</a></span></footer><a href=#top aria-label="go to top" title="Go to Top (Alt + G)" class=top-link id=top-link accesskey=g><svg viewBox="0 0 12 6" fill="currentcolor"><path d="M12 6H0l6-6z"/></svg>
+</a><script>let menu=document.getElementById("menu");menu&&(menu.scrollLeft=localStorage.getItem("menu-scroll-position"),menu.onscroll=function(){localStorage.setItem("menu-scroll-position",menu.scrollLeft)}),document.querySelectorAll('a[href^="#"]').forEach(e=>{e.addEventListener("click",function(e){e.preventDefault();var t=this.getAttribute("href").substr(1);window.matchMedia("(prefers-reduced-motion: reduce)").matches?document.querySelector(`[id='${decodeURIComponent(t)}']`).scrollIntoView():document.querySelector(`[id='${decodeURIComponent(t)}']`).scrollIntoView({behavior:"smooth"}),t==="top"?history.replaceState(null,null," "):history.pushState(null,null,`#${t}`)})})</script><script>var mybutton=document.getElementById("top-link");window.onscroll=function(){document.body.scrollTop>800||document.documentElement.scrollTop>800?(mybutton.style.visibility="visible",mybutton.style.opacity="1"):(mybutton.style.visibility="hidden",mybutton.style.opacity="0")}</script><script>document.getElementById("theme-toggle").addEventListener("click",()=>{document.body.className.includes("dark")?(document.body.classList.remove("dark"),localStorage.setItem("pref-theme","light")):(document.body.classList.add("dark"),localStorage.setItem("pref-theme","dark"))})</script></body></html>
