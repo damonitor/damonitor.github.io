@@ -25,6 +25,8 @@ fi
 
 pushd "$hugo_site_dir"
 hugo
+# overwrite index page with DAMON intro post
+cp public/posts/damon/index.html public/
 popd
 
 cp -R "$hugo_site_dir/public"/* "$bindir/../"
