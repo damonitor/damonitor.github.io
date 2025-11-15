@@ -26,6 +26,7 @@ fi
 pushd "$hugo_site_dir"
 hugo
 # overwrite index page with DAMON intro post
+cp public/index.html public/site_about.html
 cp public/posts/damon/index.html public/
 popd
 
