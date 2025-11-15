@@ -391,6 +391,17 @@ are recommended.
 
 ### Upcoming and recent 10 talks
 
+- SeongJae Park, __Page-level and Fleet-wide Data Access Monitoring for Meta.__
+  In _Linux Plumbers Refereed Track_, Dec 2025.
+  [Link](https://lpc.events/event/19/contributions/2075/)
+- SeongJae Park, __Actionable Data Access Monitoring Output Data and Format.__
+  In _Linux System Monitoring and Observability MC at Linux Plumbers_, Dec
+  2025.
+  [Link](https://lpc.events/event/19/contributions/2059/)
+- SeongJae Park, __DAMON-based Pages Migration for {C,G,X}PU [un]attached NUMA
+  nodes.__ In _Device and Specific PurposeMemory MC at Linux Plumbers_, Dec
+  2025.
+  [Link](https://lpc.events/event/19/contributions/2066/)
 - SeongJae Park, __Overcoming Observer Effects in Memory Management with
   DAMON.__ In _Kernel Recipes_, Sep 2025.
   [Slides](https://speakerdeck.com/ennael/overcoming-observer-effects-in-memory-management-with-damon),
@@ -427,15 +438,3 @@ are recommended.
   [Slides 2](https://static.sched.com/hosted_files/osseu2024/68/damon_recipes_osseu_hmsdk.pdf?_gl=1*9ygnyb*_gcl_au*MTE4NTExNjkzLjE3MjU5MjQ4NzQ.*FPAU*MTk0NDY0NTM3LjE3MjI0MzA5MjA.),
   [Video](https://youtu.be/xKJO4kLTHOI?feature=shared),
   [Link](https://sched.co/1ej2S)
-- Jonathan Corbet, __An update and future plans for DAMON.__ In Linux Weekly
-  News, May 2024.
-  [Article](https://lwn.net/Articles/973702/)
-- SeongJae Park, __DAMON Updates and Plans: Automation of DAMON tuning,
-  tiering, and VM guest scaling.__
-  In _Linux Storage | Filesystem | MM & BPF Summit_, May 2024.
-  [Slides](https://github.com/damonitor/talks/blob/master/2024/lsfmmbpf/damon_lsfmmbpf_2024.pdf),
-  [Video](https://youtu.be/ywmwXq01ySA?feature=shared),
-  [Link](https://docs.google.com/spreadsheets/d/176LXLys9Uh6A-Eal2flrzcbUSJMUXGkGwyihr9jAAaQ/edit?usp=sharing)
-- Jonathan Corbet, __An update and future plans for DAMON.__ In Linux Weekly
-  News, May 2024.
-  [Article](https://lwn.net/Articles/973702/)

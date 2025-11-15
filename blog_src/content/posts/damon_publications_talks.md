@@ -50,6 +50,17 @@ mechanisms and access pattern profiling-guided optimizations.  The paper for
 HPDC'22 extends the coverage to DAMOS (automated access-aware system
 operations) and user-space driven auto-tuning.
 
+- SeongJae Park, __Page-level and Fleet-wide Data Access Monitoring for Meta.__
+  In _Linux Plumbers Refereed Track_, Dec 2025.
+  [Link](https://lpc.events/event/19/contributions/2075/)
+- SeongJae Park, __Actionable Data Access Monitoring Output Data and Format.__
+  In _Linux System Monitoring and Observability MC at Linux Plumbers_, Dec
+  2025.
+  [Link](https://lpc.events/event/19/contributions/2059/)
+- SeongJae Park, __DAMON-based Pages Migration for {C,G,X}PU [un]attached NUMA
+  nodes.__ In _Device and Specific PurposeMemory MC at Linux Plumbers_, Dec
+  2025.
+  [Link](https://lpc.events/event/19/contributions/2066/)
 - SeongJae Park, __Overcoming Observer Effects in Memory Management with
   DAMON.__ In _Kernel Recipes_, Sep 2025.
   [Slides](https://speakerdeck.com/ennael/overcoming-observer-effects-in-memory-management-with-damon),
