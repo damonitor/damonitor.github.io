@@ -39,6 +39,41 @@ sj@kernel.org and/or damon@lists.linux.dev.
 2025
 ----
 
+_2025-10-13_: An idea for DAMON-based CXL memory management aiming both
+  bandwidth and capacity efficiency, which motivated by recent works from
+  Micron and SK Hynix, has
+  [shared](https://lore.kernel.org/all/20251114014255.72884-1-sj@kernel.org/).
+
+_2025-10-03_: DAMON changes including below two have been merged into Linux
+6.18-rc1, via memory management subsystem [pull
+request](https://lore.kernel.org/20251001190218.f33f695b869696c2df9e841d@linux-foundation.org).
+- virtual address space page level monitoring
+  [support](https://lkml.kernel.org/r/cover.1754135312.git.pyyjason@gmail.com),
+  which was developed by Yueyang Pan (Meta).
+- 32-bit ARM LAPE
+  [support](https://lore.kernel.org/https://lkml.kernel.org/r/20250828171242.59810-1-sj@kernel.org),
+  which was collaboratively developed by Meta and
+  Huawei people (Quanmin Yan and Ze Zuo).
+
+_2025-09-23_: DAMON has
+[presented](https://kernel-recipes.org/en/2025/schedule/overcoming-observer-effects-in-memory-management-with-damon/)
+at Kernel Recipes.
+
+_2025-08-22_: A patch
+[series](https://lkml.kernel.org/r/20250822093420.2103803-2-yanquanmin1@huawei.com)
+for making DAMON supports ARM (32bit) with LPAE has just landed on mm-new tree.
+It was made by a great and joyful collaboration between I and Huawei (Quanmin
+Yan and Zuo Ze).
+
+_2025-08-10_: DAMON user-space tool added a visualization script for [cold
+memory tail](https://social.kernel.org/notice/Ax2IFjCCoj51eJgkNM)
+visualization.
+
+_2025-08-03_: A prototype of per-CPUs and write-only monitoing is implemented
+and added to damon/next tree, and an experimental support of it is
+[added](https://github.com/damonitor/damo/blob/next/USAGE.md#write-only-and-cpus-only-access-monitoring-experimental)
+to DAMON user-space tool (damo).
+
 _2025-07-08_: Bijan's DAMON patch
 [series](https://lore.kernel.org/20250709005952.17776-1-bijan311@gmail.com) for
 dynamic NUMA memory weighted interleaving that shows ~25% performance
