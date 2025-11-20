@@ -61,7 +61,7 @@ for proactive reclamation and SK hynix
 tiering.  A number of academic researches are also utilizing DAMON for
 profiling and prototyping, as show by citations of the two
 ([1](https://scholar.google.com/scholar?oi=bibs&hl=en&cites=5046280136836673051&as_sdt=5),
-[2](https://scholar.google.com/citations?view_op=view_citation&hl=en&user=jJIiF3AAAAAJ&citation_for_view=jJIiF3AAAAAJ:zYLM7Y9cAGgC))
+[2](https://scholar.google.com/scholar?oi=bibs&hl=en&cites=12959341493842439999&as_sdt=5))
 DAMON intro papers.
 
 DAMON is available on Linux mainline since v5.15, and multiple major
