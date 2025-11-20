@@ -30,26 +30,23 @@ projects: ["damon"]
 
 With increasingly data-intensive workloads and limited DRAM capacity, optimal
 memory management based on dynamic access patterns is becoming increasingly
-important. Such mechanisms are only possible if accurate and efficient dynamic
+important.  Such mechanisms are only possible if accurate and efficient dynamic
 access pattern monitoring is available.
 
-DAMON is a Data Access MONitoring framework subsystem for the Linux kernel
-developed for such memory management.  It is designed with some key mechanism
-(refer to [Design](https://docs.kernel.org/mm/damon/design.html) for the
-detail) that make it
+DAMON is a Linux kernel subsystem for such data access monitoring and
+access-aware system operations.  It is designed with its key
+[mechanisms](https://docs.kernel.org/mm/damon/design.html) for the detail) that
+make it
 
-- accurate (the monitoring output is useful enough for DRAM level memory
-  management; It might not be appropriate for CPU Cache levels, though),
-- light-weight (the monitoring overhead is low enough to be applied online),
-  and
-- scalable (the upper-bound of the overhead is in constant range regardless of
-  the size of target workloads).
+- accurate (for DRAM level memory management),
+- light-weight (enough to be applied online in production), and
+- scalable (keeps above properties regardless of memory size).
 
-Therefore, DAMON can be used to develop memory management based on any access
-pattern. To make it easier to develop such systems, DAMON provides a feature
-called DAMON-based Operation Schemes (DAMOS). This allows DAMON users to
-develop and execute access-aware memory management without code but with a
-simple setup.
+Therefore, DAMON users can develop memory management mechanisms based on
+DAMON-provided access pattern information.  To make it easier to develop such
+systems, DAMON provides a feature called DAMON-based Operation Schemes (DAMOS).
+This allows DAMON users to develop and execute access-aware memory management
+without code but a simple setup.
 
 Simple mechanisms based on DAMOS can
 [achieve](https://www.amazon.science/publications/daos-data-access-aware-operating-system)
@@ -57,9 +54,20 @@ up to 12% performance improvement and 91% memory savings.  Detailed evaluation
 of DAMON and DAMON-based system optimizations are available at another
 [post]({{< ref "damon_evaluation.md" >}}).
 
-DAMON is also currently being used in real-world products including AWS
-[Aurora Serverless v2](https://www.amazon.science/publications/resource-management-in-aurora-serverless)
-and SK hynix [HMSDK v2](https://github.com/skhynix/hmsdk/tree/hmsdk-v2.0).
+DAMON is being used in real-world products including AWS [Aurora Serverless
+v2](https://www.amazon.science/publications/resource-management-in-aurora-serverless)
+for proactive reclamation and SK hynix
+[HMSDK v2](https://github.com/skhynix/hmsdk/tree/hmsdk-v2.0) for CXL memory
+tiering.  A number of academic researches are also utilizing DAMON for
+profiling and prototyping, as show by citations of the two
+([1](https://scholar.google.com/scholar?oi=bibs&hl=en&cites=5046280136836673051&as_sdt=5),
+[2](https://scholar.google.com/citations?view_op=view_citation&hl=en&user=jJIiF3AAAAAJ&citation_for_view=jJIiF3AAAAAJ:zYLM7Y9cAGgC))
+DAMON intro papers.
+
+DAMON is available on Linux mainline since v5.15, and multiple major
+[distros](https://oracle.github.io/kconfigs/?config=UTS_RELEASE&config=DAMON)
+including Alma, Amazon, Android, Arch, CentOS, Debian, Fedora, open SUSE,
+Oracle.
 
 
 Demo Video
