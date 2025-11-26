@@ -132,8 +132,72 @@ Depending on your system and your desired use case, you might need to
 You can also [participate](#contribution) in DAMON development.
 
 
-Install
--------
+User-space Tool
+---------------
+
+A user-space tool for DAMON, which is called DAMO (Data Access Monitoring
+Operator), is available at
+[Github](https://github.com/damonitor/damo) and
+[PyPi](https://pypi.org/project/damo/).  You may start using DAMON by following
+the [Getting Started](https://github.com/damonitor/damo#getting-started) of the
+tool for start.
+
+
+Official Document
+-----------------
+
+The official document of DAMON in the latest mainline for
+[users/sysadmins](https://docs.kernel.org/admin-guide/mm/damon/index.html) and
+[kernel programmers](https://docs.kernel.org/mm/damon/index.html) are
+available.  Those for next major release are also available([users/sysadmins
+doc](https://docs.kernel.org/next/admin-guide/mm/damon/index.html), [kernel
+programmers doc](https://docs.kernel.org/next/mm/damon/index.html)).
+
+
+Community
+---------
+
+DAMON is maintained and developed by its own community, which is a sub-set of
+the linux kernel development community.
+
+The community is mainly driven by the mailing list (damon@lists.linux.dev).
+All the patches are posted there and reviewed.  Almost every discussions are
+also made there.
+
+For easy communication, a mailing tool called
+[HacKerMaiL](https://github.com/sjp38/hackermail) is recommended.  The tool
+is maintained by DAMON maintainer and committed to support DAMON community.
+
+If you prefer web-based interface for reading the mails, you can use
+[lore](https://lore.kernel.org/damon/).  If you prefer the traditional
+subscription based mailing workflow, you can subscribe to the mailing list via
+[subspace.kernel.org](https://subspace.kernel.org/lists.linux.dev.html)
+following the [instruction](https://subspace.kernel.org/#subscribing).
+
+The community also have an open, regular, and informal virtual bi-weekly
+meeting series for DAMON community called DAMON Beer/Coffee/Tea chat
+[series](https://lore.kernel.org/damon/20220810225102.124459-1-sj@kernel.org/).
+
+
+Contribution
+------------
+
+DAMON and its related projects including
+[`damo`](https://github.com/damonitor/damo) and
+[`hackermail`](https://github.com/sjp38/hackermail) are open source projects.
+You can contribute to the development following the guidelines.  Please refer
+to below contribution guidelines of each project to further look into the
+process.
+
+- [DAMON](https://www.kernel.org/doc/html/latest/mm/damon/maintainer-profile.html)
+- [damo](https://github.com/damonitor/damo/blob/next/CONTRIBUTING)
+- [hkml](https://github.com/sjp38/hackermail/blob/master/CONTRIBUTING)
+
+
+Setup for Advanced Use Cases
+----------------------------
+
+### Install
 
 DAMON is implemented in the Linux kernel, so you should install DAMON-enabled
 Linux kernel to use it.
@@ -170,8 +234,7 @@ DAMON, depending on your demands.  For example:
     $ sudo make modules_install install
 
 
-Source Code
------------
+### Source Code
 
 There are several Linux kernel source trees having DAMON for different users.
 You may pick one among those based on your needs.
@@ -209,19 +272,7 @@ The source code of DAPTRACE, which is a prototype of DAMON, is also
 [available](https://github.com/daptrace).
 
 
-User-space Tool
----------------
-
-A user-space tool for DAMON, which is called DAMO (Data Access Monitoring
-Operator), is available at
-[Github](https://github.com/damonitor/damo) and
-[PyPi](https://pypi.org/project/damo/).  You may start using DAMON by following
-the [Getting Started](https://github.com/damonitor/damo#getting-started) of the
-tool for start.
-
-
-Tests Package
--------------
+### Tests Package
 
 There is a [tests suite](https://github.com/damonitor/damon-tests) for
 correctness verification and performance evaluation of DAMON.  Those are
@@ -235,17 +286,6 @@ about what to do next, running the tests would be a good start.  If any test
 fails, please report that to the maintainer via mail (sj@kernel.org or
 damon@lists.linux.dev) or
 [github](https://github.com/damonitor/damon-tests/issues).
-
-
-Official Document
------------------
-
-The official document of DAMON in the latest mainline for
-[users/sysadmins](https://docs.kernel.org/admin-guide/mm/damon/index.html) and
-[kernel programmers](https://docs.kernel.org/mm/damon/index.html) are
-available.  Those for next major release are also available([users/sysadmins
-doc](https://docs.kernel.org/next/admin-guide/mm/damon/index.html), [kernel
-programmers doc](https://docs.kernel.org/next/mm/damon/index.html)).
 
 
 Showcase Website
@@ -272,65 +312,25 @@ The site hosts
   [results](https://damonitor.github.io/test/result/perf/index.html).
 
 
-Evaluation Results
-------------------
+Goo to Read
+-----------
+
+### Evaluation Results
 
 Evaluation of DAMON and DAMON-based system optimizations are
 [available]({{< ref "damon_evaluation.md" >}}).
 
 
-DAMON-based System Optimization Guide
--------------------------------------
+### DAMON-based System Optimization Guide
 
 A guide for DAMON-based system optimizations are also
 [available]({{< ref "damon_optimization_guide.md" >}}).
 
 
-Profile-Guided Optimization Example
------------------------------------
+### Profile-Guided Optimization Example
 
 An example of DAMON-based profile-guided optimization is also
 [available]({{<ref "damon_profile_callstack_example.md" >}}).
-
-
-Community
----------
-
-DAMON is maintained and developed by its own community, which is a sub-set of
-the linux kernel development community.
-
-The community is mainly driven by the mailing list (damon@lists.linux.dev).
-All the patches are posted there and reviewed.  Almost every discussions are
-also made there.
-
-For easy communication, a mailing tool called
-[HacKerMaiL](https://github.com/sjp38/hackermail) is recommended.  The tool
-is maintained by DAMON maintainer and committed to support DAMON community.
-
-If you prefer web-based interface for reading the mails, you can use
-[lore](https://lore.kernel.org/damon/).  If you prefer the traditional
-subscription based mailing workflow, you can subscribe to the mailing list via
-[subspace.kernel.org](https://subspace.kernel.org/lists.linux.dev.html)
-following the [instruction](https://subspace.kernel.org/#subscribing).  
-
-The community also have an open, regular, and informal virtual bi-weekly
-meeting series for DAMON community called DAMON Beer/Coffee/Tea chat
-[series](https://lore.kernel.org/damon/20220810225102.124459-1-sj@kernel.org/).
-
-
-Contribution
-------------
-
-DAMON and its related projects including
-[`damo`](https://github.com/damonitor/damo) and
-[`hackermail`](https://github.com/sjp38/hackermail) are open source projects.
-You can contribute to the development following the guidelines.  Please refer
-to below contribution guidelines of each project to further look into the
-process.
-
-- [DAMON](https://www.kernel.org/doc/html/latest/mm/damon/maintainer-profile.html)
-- [damo](https://github.com/damonitor/damo/blob/next/CONTRIBUTING)
-- [hkml](https://github.com/sjp38/hackermail/blob/master/CONTRIBUTING)
 
 
 Publications and Presentations
