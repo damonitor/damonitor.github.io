@@ -143,8 +143,13 @@ Install
 -------
 
 DAMON is implemented in the Linux kernel, so you should install DAMON-enabled
-Linux kernel to use it.  To check if you're already running DAMON-enabled
-kernel, you could:
+Linux kernel to use it.
+
+As of 2025-11-25, kernels of major Linux distros including Alma Linux, Amazon
+Linux, Android, Arch, CentOS, Debian, Fedora, openSUSE and Oracle Linux
+[enabled](https://oracle.github.io/kconfigs/?config=UTS_RELEASE&config=DAMON)
+DAMON.  If you are using one of the kernels, you can skip this section.  To
+check if you're already running DAMON-enabled kernel, you could:
 
     $ if grep -q '^CONFIG_DAMON=y' /boot/config-$(uname -r);
     then
@@ -152,14 +157,6 @@ kernel, you could:
     else
         echo "not installed"
     fi
-
-As of 2024-09-23, kernels of Linux distros including Amazon Linux, Android,
-Arch, CentOS, Debian, Fedora, and Oracle Linux are known to have enabled DAMON.
-
-You could further find a list of DAMON-enabled Linux kernels from Oracle's
-kconfigs
-[tool](https://oracle.github.io/kconfigs/?config=UTS_RELEASE&config=DAMON).
-The tool doesn't support every distros at the moment, though.
 
 If your package system doesn't support DAMON-enabled kernel, you can
 fetch a DAMON-merged Linux kernel [source tree](#source-code), build, and
@@ -175,6 +172,7 @@ DAMON, depending on your demands.  For example:
     $ echo 'CONFIG_DAMON_DBGFS=y' >> ./.config
     $ echo 'CONFIG_DAMON_RECLAIM=y' >> ./.config
     $ echo 'CONFIG_DAMON_LRU_SORT=y' >> ./.config
+    $ echo 'CONFIG_DAMON_STAT=y' >> ./.config
     $ make -j$(nproc)
     $ sudo make modules_install install
 
