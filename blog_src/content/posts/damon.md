@@ -35,7 +35,7 @@ access pattern monitoring is available.
 
 DAMON is a Linux kernel subsystem for such data access monitoring and
 access-aware system operations.  It is designed with its key
-[mechanisms](https://docs.kernel.org/mm/damon/design.html) for the detail) that
+[mechanisms](https://docs.kernel.org/mm/damon/design.html) that
 make it
 
 - accurate (for DRAM level memory management),
