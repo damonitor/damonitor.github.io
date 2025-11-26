@@ -1,7 +1,7 @@
 +++
 title = 'Citations'
 date = 2025-11-26T06:43:33-08:00
-draft = true
+draft = false
 +++
 
 This post lists research papers and news articles citing DAMON.  The list is
