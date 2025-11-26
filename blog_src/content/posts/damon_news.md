@@ -39,7 +39,7 @@ sj@kernel.org and/or damon@lists.linux.dev.
 2025
 ----
 
-_2025-10-13_: An idea for DAMON-based CXL memory management aiming both
+_2025-11-13_: An idea for DAMON-based CXL memory management aiming both
   bandwidth and capacity efficiency, which motivated by recent works from
   Micron and SK Hynix, has
   [shared](https://lore.kernel.org/all/20251114014255.72884-1-sj@kernel.org/).
