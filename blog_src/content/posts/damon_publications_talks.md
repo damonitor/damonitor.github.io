@@ -93,7 +93,8 @@ are recommended.
   [Link](https://lpc.events/event/18/contributions/1768/)
 
 
-### Full list of upcoming and past publications and talks
+Full list of upcoming and past publications and talks
+-----------------------------------------------------
 
 - SeongJae Park, __Page-level and Fleet-wide Data Access Monitoring for Meta.__
   In _Linux Plumbers Refereed Track_, Dec 2025.
