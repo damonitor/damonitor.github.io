@@ -34,19 +34,15 @@ important.  Such mechanisms are only possible if accurate and efficient dynamic
 access pattern monitoring is available.
 
 DAMON is a Linux kernel subsystem for such data access monitoring and
-access-aware system operations.  It is designed with its key
-[mechanisms](https://docs.kernel.org/mm/damon/design.html) that
-make it
+access-aware system operations.  It is designed with its key access monitroing
+[mechanisms](https://docs.kernel.org/mm/damon/design.html) and a major feature
+called [DAMOS](https://docs.kernel.org/mm/damon/design.html#operation-schemes),
+that make it
 
 - accurate (for DRAM level memory management),
-- light-weight (enough to be applied online in production), and
-- scalable (keeps above properties regardless of memory size).
-
-Therefore, DAMON users can develop memory management mechanisms based on
-DAMON-provided access pattern information.  To make it easier to develop such
-systems, DAMON provides a feature called DAMON-based Operation Schemes (DAMOS).
-This allows DAMON users to develop and execute access-aware memory management
-without code but a simple setup.
+- light-weight (enough to be applied online in production),
+- scalable (keeps above properties regardless of memory size) and
+- automated (tuning and access-aware memory maangement operations).
 
 Simple mechanisms based on DAMOS can
 [achieve](https://www.amazon.science/publications/daos-data-access-aware-operating-system)
@@ -54,12 +50,11 @@ up to 12% performance improvement and 91% memory savings.  Detailed evaluation
 of DAMON and DAMON-based system optimizations are available at another
 [post]({{< ref "damon_evaluation.md" >}}).
 
-DAMON is being used in real-world products including AWS [Aurora Serverless
-v2](https://www.amazon.science/publications/resource-management-in-aurora-serverless)
-for proactive reclamation and SK hynix
-[HMSDK v2](https://github.com/skhynix/hmsdk/tree/hmsdk-v2.0) for CXL memory
-tiering.  A number of academic researches are also utilizing DAMON for
-profiling and prototyping, as show by citations of the two
+DAMON is being used in real-world products including AWS [Aurora
+Serverless](https://www.amazon.science/publications/resource-management-in-aurora-serverless)
+and SK hynix [HMSDK](https://github.com/skhynix/hmsdk/) for proactive
+reclamation and CXL memory tiering.  A number of academic researches are also
+utilizing DAMON for profiling and prototyping, as show by citations of the two
 ([1](https://scholar.google.com/scholar?oi=bibs&hl=en&cites=5046280136836673051&as_sdt=5),
 [2](https://scholar.google.com/scholar?oi=bibs&hl=en&cites=12959341493842439999&as_sdt=5))
 DAMON intro papers.
