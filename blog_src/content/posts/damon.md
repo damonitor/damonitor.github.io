@@ -126,17 +126,15 @@ Getting Started
 ---------------
 
 You can start using DAMON by
-- installing [DAMON-enabled kernel](#install) and its
-  [user-space tool](#user-space-tool),
-- following the [tutorial](https://github.com/damonitor/damo#getting-started) of
-  the user-space tool, and
+- installing its [user-space tool](#user-space-tool) and
+- following the [tutorial](https://github.com/damonitor/damo#getting-started)
+  of the user-space tool.
+
+Depending on your system and your desired use case, you might need to
+- install [DAMON-enabled and newer kernel](#install), and/or
 - run the automated [tests suite](#tests-package).
 
-By following those, you will be able to know if DAMON works on your machine and
-how you can use it.
-
-You can also [participate](#contribution) in the development if you're
-interested.
+You can also [participate](#contribution) in DAMON development.
 
 
 Install
