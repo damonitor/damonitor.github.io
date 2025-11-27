@@ -143,9 +143,11 @@ User-space Tool
 
 A user-space tool for DAMON, which is called DAMO (Data Access Monitoring
 Operator), is available at
-[Github](https://github.com/damonitor/damo) and
-[PyPi](https://pypi.org/project/damo/).  You may start using DAMON by following
-the [Getting Started](https://github.com/damonitor/damo#getting-started) of the
+[Github](https://github.com/damonitor/damo),
+[PyPi](https://pypi.org/project/damo/) and Linux distro [package
+systems](https://repology.org/project/damo/versions).  You may start using
+DAMON by following the
+[Getting Started](https://github.com/damonitor/damo#getting-started) of the
 tool for start.
 
 
