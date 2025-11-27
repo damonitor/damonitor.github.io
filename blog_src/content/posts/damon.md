@@ -331,15 +331,16 @@ A guide for DAMON-based system optimizations are also
 ### Profile-Guided Optimization Example
 
 An example of DAMON-based profile-guided optimization is also
-[available]({{<ref "damon_profile_callstack_example.md" >}}).
+[available]({{<ref
+"damon_profile_callstack_example.md#full-list-of-upcoming-and-past-publications-and-talks"
+>}}).
 
 
 Publications and Presentations
 ------------------------------
 
-Below are featured and/or upcoming publications and presentations covering
-DAMON.
-For __more complete list__ of those, please refer to another
+Below are featured publications and presentations covering DAMON.  For __full
+list__ of the past and upcoming presentations, please refer to another
 dedicated [post]({{< ref "damon_publications_talks.md" >}}).
 
 ### Academic papers
@@ -393,53 +394,3 @@ are recommended.
   [Slides](https://lpc.events/event/18/contributions/1768/attachments/1637/3383/damon_longtern_plans_kmm_mc_lpc.pdf),
   [Video](https://youtu.be/mRU1ZeNB9WY?feature=shared),
   [Link](https://lpc.events/event/18/contributions/1768/)
-
-### Upcoming and recent 10 talks
-
-- SeongJae Park, __Page-level and Fleet-wide Data Access Monitoring for Meta.__
-  In _Linux Plumbers Refereed Track_, Dec 2025.
-  [Link](https://lpc.events/event/19/contributions/2075/)
-- SeongJae Park, __Actionable Data Access Monitoring Output Data and Format.__
-  In _Linux System Monitoring and Observability MC at Linux Plumbers_, Dec
-  2025.
-  [Link](https://lpc.events/event/19/contributions/2059/)
-- SeongJae Park, __DAMON-based Pages Migration for {C,G,X}PU [un]attached NUMA
-  nodes.__ In _Device and Specific PurposeMemory MC at Linux Plumbers_, Dec
-  2025.
-  [Link](https://lpc.events/event/19/contributions/2066/)
-- SeongJae Park, __Overcoming Observer Effects in Memory Management with
-  DAMON.__ In _Kernel Recipes_, Sep 2025.
-  [Slides](https://github.com/damonitor/talks/blob/master/2025/kernel_recipes/damon_kernel_recipes2025.pdf),
-  [Video](https://youtu.be/lvRuBxli_yU?si=QfeLZOn6Cx49qqqL),
-  [Link](https://kernel-recipes.org/en/2025/schedule/overcoming-observer-effects-in-memory-management-with-damon/)
-- SeongJae Park, __Self-Driving DAMON/S: Controlled and Automated Access-aware
-  Efficient Systems.__ In _Open Source Summit North America_, Jun 2025.
-  [Slides](https://static.sched.com/hosted_files/ossna2025/16/damon_ossna25.pdf?_gl=1*12s7xbj*_gcl_au*OTkyNjI0NTk0LjE3NTA4Nzg1Mzg.*FPAU*OTkyNjI0NTk0LjE3NTA4Nzg1Mzg.),
-  [Video](https://youtu.be/Ou4BQQ0Ved8?si=ZrhjCGI4gRyJmODn),
-  [Link](https://sched.co/1zfmE)
-- SeongJae Park, __DAMON Requirements for Access-aware MM of Future.__ In
-  _Linux Storage | Filesystem | MM & BPF Summit_, Mar 2025.
-  [Slides](https://github.com/damonitor/talks/blob/master/2025/lsfmmbpf/damon_requirements_lsfmmbpf_2025.pdf),
-  [Link](https://docs.google.com/spreadsheets/d/1PgjzaPOnIHgRIfqgwDNiftY5Xr6aU3NLWtDs7zFoIvc/edit?gid=1852749899#gid=1852749899)
-- SeongJae Park, __DAMON Updates and Plans: Monitoring Parameters Auot-tuning
-  and Memory Tiering.__ In _Linux Storage | Filesystem | MM & BPF Summit_,
-  Mar 2025.
-  [Slides](https://github.com/damonitor/talks/blob/master/2025/lsfmmbpf/damon_updates_plans_lsfmmbpf_2025.pdf),
-  [Link](https://docs.google.com/spreadsheets/d/1PgjzaPOnIHgRIfqgwDNiftY5Xr6aU3NLWtDs7zFoIvc/edit?gid=1852749899#gid=1852749899)
-- SeongJae Park, __DAMON: Kernel Subsystem for Data Access Monitoring and
-  Access-aware System Operations.__ In Fosdem, Feb 2025.
-  [Slides](https://archive.fosdem.org/2025/events/attachments/fosdem-2025-4396-damon-kernel-subsystem-for-data-access-monitoring-and-access-aware-system-operations/slides/238776/damon_fos_tfIr9t8.pdf),
-  [Video](https://video.fosdem.org/2025/ud2208/fosdem-2025-4396-damon-kernel-subsystem-for-data-access-monitoring-and-access-aware-system-operations.av1.webm),
-  [Link](https://fosdem.org/2025/schedule/event/fosdem-2025-4396-damon-kernel-subsystem-for-data-access-monitoring-and-access-aware-system-operations/)
-- SeongJae Park, __DAMON: Long-term Plans for Kernel That {Just
-  Works,Extensible}.__ In Linux Kernel Memory Management Microconferenct at
-  Linux Plumbers, Sep 2024.
-  [Slides](https://lpc.events/event/18/contributions/1768/attachments/1637/3383/damon_longtern_plans_kmm_mc_lpc.pdf),
-  [Video](https://youtu.be/mRU1ZeNB9WY?feature=shared),
-  [Link](https://lpc.events/event/18/contributions/1768/)
-- SeongJae Park, __DAMON Recipes: Ways to Save Memory Using a Linux Kernel
-  Subsystem in the Real World.__ In Open Source Summit Europe, Sep 2024.
-  [Slides 1](https://static.sched.com/hosted_files/osseu2024/50/damon_recipes_osseu_2024_overall.pdf?_gl=1*9ygnyb*_gcl_au*MTE4NTExNjkzLjE3MjU5MjQ4NzQ.*FPAU*MTk0NDY0NTM3LjE3MjI0MzA5MjA.),
-  [Slides 2](https://static.sched.com/hosted_files/osseu2024/68/damon_recipes_osseu_hmsdk.pdf?_gl=1*9ygnyb*_gcl_au*MTE4NTExNjkzLjE3MjU5MjQ4NzQ.*FPAU*MTk0NDY0NTM3LjE3MjI0MzA5MjA.),
-  [Video](https://youtu.be/xKJO4kLTHOI?feature=shared),
-  [Link](https://sched.co/1ej2S)
