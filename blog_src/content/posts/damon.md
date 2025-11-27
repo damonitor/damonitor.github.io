@@ -65,16 +65,17 @@ including Alma, Amazon, Android, Arch, CentOS, Debian, Fedora, open SUSE,
 Oracle.
 
 
-Demo Video
-----------
+Demo Video/Screenshots
+----------------------
+
+### Demo Video
 
 ![damo monitor for water_nsquared](/img/damo_monitor_water_nsquared.gif)
 
 {{< youtube l63eqbVBZRY >}}
 
 
-Demo Screenshot
----------------
+### Demo Screenshot
 
 ![masim stairs snapshot](/img/masim_stairs_snapshot.png)
 ![masim stairs heatmap in ascii](/img/masim_stairs_heatmap_ascii.png)
