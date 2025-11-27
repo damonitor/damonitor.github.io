@@ -31,14 +31,12 @@ projects: []
 ---
 
 This post provides lists of publications and presentations that cover DAMON.
-This lists are not exhaustive and is compiled to the best of our ability, as
-some publications or presentations may have been made without the knowledge of
-the DAMON maintainers. If you find a publication or announcement that should be
-added to this list, please let us know at sj@kernel.org and/or
-damon@lists.linux.dev.
 
 Featured Publications and Talks
 -------------------------------
+
+There are quite amount of publications and talks.  Below are featured ones for
+people who unsure what among the resources to use.
 
 ### Academic papers
 
@@ -95,6 +93,13 @@ are recommended.
 
 Full list of upcoming and past publications and talks
 -----------------------------------------------------
+
+Below is a list of past and upcoming publications and talks covering DAMON.
+The list is not exhaustive and is compiled to the best of our ability, as some
+publications or presentations may have been made without the knowledge of the
+DAMON maintainers. If you find a publication or announcement that should be
+added to this list, please let us know at sj@kernel.org and/or
+damon@lists.linux.dev.
 
 - SeongJae Park, __Page-level and Fleet-wide Data Access Monitoring for Meta.__
   In _Linux Plumbers Refereed Track_, Dec 2025.
