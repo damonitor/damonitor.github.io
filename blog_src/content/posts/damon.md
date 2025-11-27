@@ -265,14 +265,10 @@ Setup for Advanced Use Cases
 
 ### Install
 
-DAMON is implemented in the Linux kernel, so you should install DAMON-enabled
-Linux kernel to use it.
+DAMON is a part of Linux kernel.  To use DAMON, therefore, you should ensure
+your system is running with a DAMON-enabled Linux kernel.
 
-As of 2025-11-25, kernels of major Linux distros including Alma Linux, Amazon
-Linux, Android, Arch, CentOS, Debian, Fedora, openSUSE and Oracle Linux
-[enabled](https://oracle.github.io/kconfigs/?config=UTS_RELEASE&config=DAMON)
-DAMON.  If you are using one of the kernels, you can skip this section.  To
-check if you're already running DAMON-enabled kernel, you could:
+To check if your kernel is a DAMON-enabled one, you could:
 
     $ if grep -q '^CONFIG_DAMON=y' /boot/config-$(uname -r);
     then
@@ -280,6 +276,12 @@ check if you're already running DAMON-enabled kernel, you could:
     else
         echo "not installed"
     fi
+
+As of 2025-11-25, kernels of major Linux distros including Alma Linux, Amazon
+Linux, Android, Arch, CentOS, Debian, Fedora, openSUSE and Oracle Linux
+[enabled](https://oracle.github.io/kconfigs/?config=UTS_RELEASE&config=DAMON)
+DAMON.  If your distro provides an appropriate DAMON-enabled kernel, install it
+using the package manager of the distro.
 
 If your package system doesn't support DAMON-enabled kernel, you can
 fetch a DAMON-merged Linux kernel [source tree](#source-code), build, and
@@ -306,36 +308,14 @@ There are several Linux kernel source trees having DAMON for different users.
 You may pick one among those based on your needs.
 
 For users who want a __stable__ version of DAMON, Linus Torvalds'
-[mainline tree](https://git.kernel.org/torvalds/h/master) is recommended.
+[mainline tree](https://git.kernel.org/torvalds/h/master) or [stable
+kernels](https://www.kernel.org/category/releases.html) are recommended.
+Note that DAMON has merged into mainline since v5.15.
 
-If you have interests in DAMON features under __development__, below trees will
-be appropriate.  These trees contain latest version of DAMON which having
-features under development.
-
-- [mm-unstable](https://git.kernel.org/akpm/mm/h/mm-unstable) contains the
-  latest DAMON patches, which are under testing with other unstable memory
-  management subsystem patches.  So this tree is likely unstable and frequently
-  updated, but would be a good baseline for your DAMON development.
-- [damon/next](https://git.kernel.org/sj/h/damon/next) contains the latest
-  changes, which might not tested at all.  So this tree is likely more unstable
-  and frequently updated than mm-unstable.  This tree also contains some
-  changes that exist only for DAMON hacks itself rather than eventually be
-  merged in the mainline.
-
-For people who have interest in DAMON features under development but use LTS
-kernels as their baseline, three _were_ trees that based on three latest LTS
-kernels.
-
-NOTE: Below trees were continuously getting DAMON backports on latest 5.4.y,
-5.10.y, and 5.15.y.  But those are deprecated as of 2022-09-03, and therefore
-there will be no update to the trees.
-
-- [damon/for-v5.15.y](https://git.kernel.org/sj/h/damon/for-v5.15.y)
-- [damon/for-v5.10.y](https://git.kernel.org/sj/h/damon/for-v5.10.y)
-- [damon/for-v5.4.y](https://git.kernel.org/sj/h/damon/for-v5.4.y)
-
-The source code of DAPTRACE, which is a prototype of DAMON, is also
-[available](https://github.com/daptrace).
+If you have interests in DAMON features under __development__, refer to
+developement source trees
+[section](https://www.kernel.org/doc/html/latest/mm/damon/maintainer-profile.html#scm-trees)
+of DAMON official documents.
 
 
 ### Tests Package
