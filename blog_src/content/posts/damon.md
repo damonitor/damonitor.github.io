@@ -176,7 +176,7 @@ following the [instruction](https://subspace.kernel.org/#subscribing).
 
 The community also have an open, regular, and informal virtual bi-weekly
 meeting series for DAMON community called DAMON Beer/Coffee/Tea chat
-[series](https://lore.kernel.org/damon/20220810225102.124459-1-sj@kernel.org/).
+[series](https://docs.google.com/document/d/1v43Kcj3ly4CYqmAkMaZzLiM2GEnWfgdGbZAH3mi2vpM/edit?usp=sharing).
 
 
 Contribution
