@@ -98,15 +98,15 @@ project.
 References
 ----------
 
-[1] https://damonitor.github.io/posts/write_only_cpus_only_monitoring/
-[2] https://lore.kernel.org/linux-mm/cover.1645024354.git.xhao@linux.alibaba.com/
-[3] https://lore.kernel.org/lkml/20220203131237.298090-1-pedrodemargomes@gmail.com/
-[4] https://lore.kernel.org/damon/20250129044041.25884-1-pedrodemargomes@gmail.com/
-[5] https://lore.kernel.org/all/aJAfTUh-49pYuhbg@3c06303d853a/
-[6] https://lpc.events/event/19/contributions/2066/
-[7] https://lore.kernel.org/all/20250727201813.53858-1-sj@kernel.org/
-[8] https://damonitor.github.io/posts/write_only_cpus_only_monitoring/#cautions-and-plan-to-drop-experimental-tag
-[9] https://lwn.net/Articles/1016525/
-[10] https://lore.kernel.org/all/20250727201813.53858-6-sj@kernel.org/
-[11] https://lpc.events/event/19/
-[12] https://events.linuxfoundation.org/lsfmmbpf/
+[1] https://damonitor.github.io/posts/write_only_cpus_only_monitoring/  
+[2] https://lore.kernel.org/linux-mm/cover.1645024354.git.xhao@linux.alibaba.com/  
+[3] https://lore.kernel.org/lkml/20220203131237.298090-1-pedrodemargomes@gmail.com/  
+[4] https://lore.kernel.org/damon/20250129044041.25884-1-pedrodemargomes@gmail.com/  
+[5] https://lore.kernel.org/all/aJAfTUh-49pYuhbg@3c06303d853a/  
+[6] https://lpc.events/event/19/contributions/2066/  
+[7] https://lore.kernel.org/all/20250727201813.53858-1-sj@kernel.org/  
+[8] https://damonitor.github.io/posts/write_only_cpus_only_monitoring/#cautions-and-plan-to-drop-experimental-tag  
+[9] https://lwn.net/Articles/1016525/  
+[10] https://lore.kernel.org/all/20250727201813.53858-6-sj@kernel.org/  
+[11] https://lpc.events/event/19/  
+[12] https://events.linuxfoundation.org/lsfmmbpf/  
