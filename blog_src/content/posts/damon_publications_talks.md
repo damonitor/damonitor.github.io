@@ -104,16 +104,19 @@ damon@lists.linux.dev.
 - SeongJae Park, __Page-level and Fleet-wide Data Access Monitoring for Meta.__
   In _Linux Plumbers Refereed Track_, Dec 2025.
   [Slides](https://lpc.events/event/19/contributions/2075/attachments/1914/4138/damon_pagelevel_fleetwide_observability_lpc25.pdf),
+  [Video](https://youtu.be/GolUxZZrVsU?si=qdPFE1RZAaNZ0lsY),
   [Link](https://lpc.events/event/19/contributions/2075/)
 - SeongJae Park, __Actionable Data Access Monitoring Output Data and Format.__
   In _Linux System Monitoring and Observability MC at Linux Plumbers_, Dec
   2025.
   [Slides](https://lpc.events/event/19/contributions/2059/attachments/1785/3982/damon_access_patern_format_lpc25.pdf),
+  [Video](https://youtu.be/xCrVjjbBFME?si=opsy-OJxnW7QTgNF),
   [Link](https://lpc.events/event/19/contributions/2059/)
 - SeongJae Park, __DAMON-based Pages Migration for {C,G,X}PU [un]attached NUMA
   nodes.__ In _Device and Specific PurposeMemory MC at Linux Plumbers_, Dec
   2025.
   [Slides](https://lpc.events/event/19/contributions/2059/attachments/1785/3982/damon_access_patern_format_lpc25.pdf),
+  [Video](https://youtu.be/0jWF8Ogi4Fk?si=k6cpJy3ALo2H6lA1),
   [Link](https://lpc.events/event/19/contributions/2066/)
 - SeongJae Park, __Overcoming Observer Effects in Memory Management with
   DAMON.__ In _Kernel Recipes_, Sep 2025.
