@@ -28,6 +28,11 @@ image:
 projects: ["damon"]
 ---
 
+2025-12-08 update: The RFC v3 is
+[posted](https://lore.kernel.org/damon/20251208062943.68824-1-sj@kernel.org/).
+
+---
+
 From the very early days of DAMON, there were attempts to extend it for
 cpus-aware monitoring and write-only monitoring.
 
