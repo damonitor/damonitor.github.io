@@ -39,6 +39,29 @@ sj@kernel.org and/or damon@lists.linux.dev.
 2025
 ----
 
+_2025-12-08_: Third RFC [patch
+series](https://lore.kernel.org/damon/20251208062943.68824-1-sj@kernel.org/)
+for per-CPU/threads/read/write monitoring is posted.
+
+_2025-12-05_: DAMON changes for Linux 6.19-rc1 has merged as a part of MM
+subsystem [pull
+rquest](https://lore.kernel.org/20251203212918.82f1c9d3947940aeae263878@linux-foundation.org).
+Major changes include but not limited to:
+- Per-memcg per-node memory usage based DAMOS auto-tuning ([patch
+  series](https://lore.kernel.org/20251017212706.183502-1-sj@kernel.org)). This
+  allows cgroup-level NUMA memory management, such as hot pages promotion, cold
+  pages demotion and reclaim. This was developed as a collaboration with my
+  now-ex-colleagues at Meta.
+- Address alignment fix for DAMON modules ([patch
+  series](https://lore.kernel.org/20251020130125.2875164-1-yanquanmin1@huawei.com)).
+  This was developed as a followup fix of ARM32 LAPE support, by Quanmin from
+  Huawei.
+- Pin-point targets removal ([patch
+  series](https://lore.kernel.org/20251023012535.69625-1-sj@kernel.org)). This
+  was developed as a
+  [collaboration](https://github.com/damonitor/damo/issues/36), as a followup
+  of his vaddr-based DAMOS-migration to multi-destination nodes.
+
 _2025-11-13_: An idea for DAMON-based CXL memory management aiming both
   bandwidth and capacity efficiency, which motivated by recent works from
   Micron and SK Hynix, has
