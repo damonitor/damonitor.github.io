@@ -39,6 +39,9 @@ sj@kernel.org and/or damon@lists.linux.dev.
 2025
 ----
 
+_2025-12-29_: DAMON user-space tool v3.0.9 is released with support of
+`trace-cmd` for access pattern recording.
+
 _2025-12-08_: Third RFC [patch
 series](https://lore.kernel.org/damon/20251208062943.68824-1-sj@kernel.org/)
 for per-CPU/threads/read/write monitoring is posted.
