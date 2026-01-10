@@ -28,6 +28,11 @@ image:
 projects: ["damon"]
 ---
 
+DAMON is a Linux kernel subsystem for efficient data access monitoring and
+access-aware system operations.
+
+---
+
 With increasingly data-intensive workloads and limited DRAM capacity, optimal
 memory management based on dynamic access patterns is becoming increasingly
 important.  Such mechanisms are only possible if accurate and efficient dynamic
