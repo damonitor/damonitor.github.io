@@ -92,6 +92,32 @@ Recent News
 Below are only a short list of recent news.  For __complete list of the news__,
 please refer to a dedicated [post]({{< ref "damon_news.md" >}}).
 
+_2025-12-29_: DAMON user-space tool v3.0.9 is released with support of
+`trace-cmd` for access pattern recording.
+
+_2025-12-08_: Third RFC [patch
+series](https://lore.kernel.org/damon/20251208062943.68824-1-sj@kernel.org/)
+for per-CPU/threads/read/write monitoring is posted.
+
+_2025-12-05_: DAMON changes for Linux 6.19-rc1 has merged as a part of MM
+subsystem [pull
+rquest](https://lore.kernel.org/20251203212918.82f1c9d3947940aeae263878@linux-foundation.org).
+Major changes include but not limited to:
+- Per-memcg per-node memory usage based DAMOS auto-tuning ([patch
+  series](https://lore.kernel.org/20251017212706.183502-1-sj@kernel.org)). This
+  allows cgroup-level NUMA memory management, such as hot pages promotion, cold
+  pages demotion and reclaim. This was developed as a collaboration with my
+  now-ex-colleagues at Meta.
+- Address alignment fix for DAMON modules ([patch
+  series](https://lore.kernel.org/20251020130125.2875164-1-yanquanmin1@huawei.com)).
+  This was developed as a followup fix of ARM32 LAPE support, by Quanmin from
+  Huawei.
+- Pin-point targets removal ([patch
+  series](https://lore.kernel.org/20251023012535.69625-1-sj@kernel.org)). This
+  was developed as a
+  [collaboration](https://github.com/damonitor/damo/issues/36), as a followup
+  of his vaddr-based DAMOS-migration to multi-destination nodes.
+
 _2025-11-13_: An idea for DAMON-based CXL memory management aiming both
   bandwidth and capacity efficiency, which motivated by recent works from
   Micron and SK Hynix, has
@@ -107,20 +133,6 @@ request](https://lore.kernel.org/20251001190218.f33f695b869696c2df9e841d@linux-f
   [support](https://lore.kernel.org/https://lkml.kernel.org/r/20250828171242.59810-1-sj@kernel.org),
   which was collaboratively developed by Meta and
   Huawei people (Quanmin Yan and Ze Zuo).
-
-_2025-09-23_: DAMON has
-[presented](https://kernel-recipes.org/en/2025/schedule/overcoming-observer-effects-in-memory-management-with-damon/)
-at Kernel Recipes.
-
-_2025-08-22_: A patch
-[series](https://lkml.kernel.org/r/20250822093420.2103803-2-yanquanmin1@huawei.com)
-for making DAMON supports ARM (32bit) with LPAE has just landed on mm-new tree.
-It was made by a great and joyful collaboration between I and Huawei (Quanmin
-Yan and Zuo Ze).
-
-_2025-08-10_: DAMON user-space tool added a visualization script for [cold
-memory tail](https://social.kernel.org/notice/Ax2IFjCCoj51eJgkNM)
-visualization.
 
 
 Getting Started
