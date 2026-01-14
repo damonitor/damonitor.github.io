@@ -7,6 +7,14 @@ tags = ["development plan", "CPUs/write-only monitoring", "Write-only",
 categories = ["development plan"]
 +++
 
+Updates after initial posting.
+
+2026-01-13 update: The RFC v3 has
+[posted](https://lore.kernel.org/damon/20251208062943.68824-1-sj@kernel.org/)
+to the mailing list.
+
+---
+
 Below is also sent as a
 [mail](https://lore.kernel.org/20251128193947.80866-1-sj@kernel.org) to DAMON
 mailing list and relevant people.
