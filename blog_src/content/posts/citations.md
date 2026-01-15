@@ -4,9 +4,16 @@ date = 2025-11-26T06:43:33-08:00
 draft = false
 +++
 
-This post lists research papers and news articles citing DAMON.  The list is
-best effort collection of the papers and articles, so may not be perfect.
+This post lists research papers and news articles citing DAMON in a meaningful
+way.  The list is best effort collection of the papers and articles, so may not
+be perfect.
 
+- Tong Xing, Jiaxun Yang, Javier Picorel, and Antonio Barbalace. 2026.
+  Rethinking Tiered Memory Management in Cloud Data Centers. In Proceedings of
+  the 2025 ACM Symposium on Cloud Computing (SoCC '25). Association for
+  Computing Machinery, New York, NY, USA, 74–87.
+  https://doi.org/10.1145/3772052.3772213
+  - Summary is TBD.
 - Taehyung Lee, Sumit Monga, Young Ik Eom, and Changwoo Min. 2025. Harnessing
 Page Access Frequency Distribution for Efficient Memory Tiering. ACM Trans.
 Comput. Syst. Just Accepted (November 2025). https://doi.org/10.1145/3777549
