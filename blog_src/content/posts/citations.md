@@ -8,6 +8,11 @@ This post lists research papers and news articles citing DAMON in a not just
 simple listing way.  The list is best effort collection of the papers and
 articles, so may not be perfect.
 
+Yet another way to get the list would be using the Google Scholar for DAMON
+author-published paper ciataions
+([1](https://scholar.google.com/scholar?oi=bibs&hl=en&cites=5046280136836673051&as_sdt=5),
+[2](https://scholar.google.com/scholar?oi=bibs&hl=en&cites=12959341493842439999&as_sdt=5)).
+
 - Tong Xing, Jiaxun Yang, Javier Picorel, and Antonio Barbalace. 2026.
   Rethinking Tiered Memory Management in Cloud Data Centers. In Proceedings of
   the 2025 ACM Symposium on Cloud Computing (SoCC '25). Association for
