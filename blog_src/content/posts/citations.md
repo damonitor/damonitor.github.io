@@ -4,9 +4,9 @@ date = 2025-11-26T06:43:33-08:00
 draft = false
 +++
 
-This post lists research papers and news articles citing DAMON in a meaningful
-way.  The list is best effort collection of the papers and articles, so may not
-be perfect.
+This post lists research papers and news articles citing DAMON in a not just
+simple listing way.  The list is best effort collection of the papers and
+articles, so may not be perfect.
 
 - Tong Xing, Jiaxun Yang, Javier Picorel, and Antonio Barbalace. 2026.
   Rethinking Tiered Memory Management in Cloud Data Centers. In Proceedings of
