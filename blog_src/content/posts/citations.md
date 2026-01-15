@@ -23,3 +23,22 @@ Comput. Syst. Just Accepted (November 2025). https://doi.org/10.1145/3777549
     with heatmaps of a workload (654.roms) that generated with multiple DAMON
     parameter combinations.  It doesn't explore the monitoring intervals
     auto-tuning, though.
+- Baumstark, Alexander; Paradies, Marcus; Sattler, Kai-Uwe (2025): Lightweight
+  Memory Access Monitoring for Dynamic Data Placement in Tiered Memory Systems.
+  Datenbanksysteme für Business, Technologie und Web (BTW 2025). DOI:
+  10.18420/BTW2025-12. Gesellschaft für Informatik, Bonn. EISSN: 2944-7682. pp.
+  265-276. Research Track. Bamberg. 3.-7. März 2025
+- Jie Ren, Dong Xu, Junhee Ryu, Kwangsik Shin, Daewoo Kim, and Dong Li. 2024.
+  MTM: Rethinking Memory Profiling and Migration for Multi-Tiered Large Memory.
+  In Proceedings of the Nineteenth European Conference on Computer Systems
+  (EuroSys '24). Association for Computing Machinery, New York, NY, USA,
+  803–817. https://doi.org/10.1145/3627703.3650075
+- Nair, Alan, SANDEEP KUMAR, and ARAVINDA PRASAD. "Telescope: Profiling Memory
+  Access Patterns at the Terabyte-scale." 2024 USENIX Annual Technical
+  Conference (USENIX ATC 24). 2024.
+- Sai Sha, Chuandong Li, Yingwei Luo, Xiaolin Wang, and Zhenlin Wang. 2023.
+  VTMM: Tiered Memory Management for Virtual Machines. In Proceedings of the
+  Eighteenth European Conference on Computer Systems (EuroSys '23). Association
+  for Computing Machinery, New York, NY, USA, 283–297.
+  https://doi.org/10.1145/3552326.3587449
+
