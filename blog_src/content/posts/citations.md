@@ -17,6 +17,10 @@ author-published paper ciataions
 2026
 ====
 
+- Kanellis, Konstantinos, et al. "From Good to Great: Parameter Tuning in
+  Memory Tiering Systems." IEEE Transactions on Computers (2026).
+  DOI: 10.1109/TC.2026.3656472
+  https://ieeexplore.ieee.org/document/11359582
 - Tong Xing, Jiaxun Yang, Javier Picorel, and Antonio Barbalace. 2026.
   Rethinking Tiered Memory Management in Cloud Data Centers. In Proceedings of
   the 2025 ACM Symposium on Cloud Computing (SoCC '25). Association for
