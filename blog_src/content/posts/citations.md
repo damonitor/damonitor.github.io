@@ -59,6 +59,12 @@ author-published paper ciataions
 2024
 ====
 
+- Yuhong Zhong, Daniel S. Berger, Carl Waldspurger, Ryan Wee, Ishwar Agarwal,
+  Rajat Agarwal, Frank Hady, Karthik Kumar, Mark D. Hill, Mosharaf Chowdhury,
+  and Asaf Cidon. 2024. Managing memory tiers with CXL in virtualized
+  environments. In Proceedings of the 18th USENIX Conference on Operating
+  Systems Design and Implementation (OSDI'24). USENIX Association, USA, Article
+  3, 37–56. https://www.usenix.org/conference/osdi24/presentation/zhong-yuhong
 - Jie Ren, Dong Xu, Junhee Ryu, Kwangsik Shin, Daewoo Kim, and Dong Li. 2024.
   MTM: Rethinking Memory Profiling and Migration for Multi-Tiered Large Memory.
   In Proceedings of the Nineteenth European Conference on Computer Systems
