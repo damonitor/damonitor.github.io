@@ -225,7 +225,7 @@ are recommended.
 - SeongJae Park, __DAMON-based Pages Migration for {C,G,X}PU [un]attached NUMA
   nodes.__ In _Device and Specific PurposeMemory MC at Linux Plumbers_, Dec
   2025.
-  [Slides](https://lpc.events/event/19/contributions/2059/attachments/1785/3982/damon_access_patern_format_lpc25.pdf),
+  [slides](https://lpc.events/event/19/contributions/2066/attachments/1775/3961/damon_numa_migrate_lpc25.pdf),
   [Video](https://youtu.be/0jWF8Ogi4Fk?si=k6cpJy3ALo2H6lA1),
   [Link](https://lpc.events/event/19/contributions/2066/)
 - SeongJae Park, __DAMON Requirements for Access-aware MM of Future.__ In
