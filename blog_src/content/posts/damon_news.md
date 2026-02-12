@@ -36,6 +36,21 @@ sj@kernel.org and/or damon@lists.linux.dev.
 
 ---
 
+2026
+----
+
+_2026-02-10_: An LSF/MM/BPF topic proposal for DAMON-based access-aware
+Transparent Hugepages is
+[posted](https://lore.kernel.org/20260211022845.68865-1-sj@kernel.org).
+
+_2026-02-10_: DAMON has
+[nominated](https://lore.kernel.org/c24a209d5a4af0c4cc08f30098998ce16c668b58.camel@ibm.com)
+as one of Linux kernel ML library demonstration targets.
+
+_2026-01-18_: DAMON user-space tool will start command line
+[auto-completion](https://github.com/damonitor/damo/blob/next/USAGE.md#command-line-auto-completion)
+support.
+
 2025
 ----
 

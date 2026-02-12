@@ -92,47 +92,24 @@ Recent News
 Below are only a short list of recent news.  For __complete list of the news__,
 please refer to a dedicated [post]({{< ref "damon_news.md" >}}).
 
+_2026-02-10_: An LSF/MM/BPF topic proposal for DAMON-based access-aware
+Transparent Hugepages is
+[posted](https://lore.kernel.org/20260211022845.68865-1-sj@kernel.org).
+
+_2026-02-10_: DAMON has
+[nominated](https://lore.kernel.org/c24a209d5a4af0c4cc08f30098998ce16c668b58.camel@ibm.com)
+as one of Linux kernel ML library demonstration targets.
+
+_2026-01-18_: DAMON user-space tool will start command line
+[auto-completion](https://github.com/damonitor/damo/blob/next/USAGE.md#command-line-auto-completion)
+support.
+
 _2025-12-29_: DAMON user-space tool v3.0.9 is released with support of
 `trace-cmd` for access pattern recording.
 
 _2025-12-08_: Third RFC [patch
 series](https://lore.kernel.org/damon/20251208062943.68824-1-sj@kernel.org/)
 for per-CPU/threads/read/write monitoring is posted.
-
-_2025-12-05_: DAMON changes for Linux 6.19-rc1 has merged as a part of MM
-subsystem [pull
-rquest](https://lore.kernel.org/20251203212918.82f1c9d3947940aeae263878@linux-foundation.org).
-Major changes include but not limited to:
-- Per-memcg per-node memory usage based DAMOS auto-tuning ([patch
-  series](https://lore.kernel.org/20251017212706.183502-1-sj@kernel.org)). This
-  allows cgroup-level NUMA memory management, such as hot pages promotion, cold
-  pages demotion and reclaim. This was developed as a collaboration with my
-  now-ex-colleagues at Meta.
-- Address alignment fix for DAMON modules ([patch
-  series](https://lore.kernel.org/20251020130125.2875164-1-yanquanmin1@huawei.com)).
-  This was developed as a followup fix of ARM32 LAPE support, by Quanmin from
-  Huawei.
-- Pin-point targets removal ([patch
-  series](https://lore.kernel.org/20251023012535.69625-1-sj@kernel.org)). This
-  was developed as a
-  [collaboration](https://github.com/damonitor/damo/issues/36), as a followup
-  of his vaddr-based DAMOS-migration to multi-destination nodes.
-
-_2025-11-13_: An idea for DAMON-based CXL memory management aiming both
-  bandwidth and capacity efficiency, which motivated by recent works from
-  Micron and SK Hynix, has
-  [shared](https://lore.kernel.org/all/20251114014255.72884-1-sj@kernel.org/).
-
-_2025-10-03_: DAMON changes including below two have been merged into Linux
-6.18-rc1, via memory management subsystem [pull
-request](https://lore.kernel.org/20251001190218.f33f695b869696c2df9e841d@linux-foundation.org).
-- virtual address space page level monitoring
-  [support](https://lkml.kernel.org/r/cover.1754135312.git.pyyjason@gmail.com),
-  which was developed by Yueyang Pan (Meta).
-- 32-bit ARM LAPE
-  [support](https://lore.kernel.org/https://lkml.kernel.org/r/20250828171242.59810-1-sj@kernel.org),
-  which was collaboratively developed by Meta and
-  Huawei people (Quanmin Yan and Ze Zuo).
 
 
 Getting Started
