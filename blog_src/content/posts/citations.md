@@ -17,6 +17,9 @@ author-published paper ciataions
 2026
 ====
 
+- Hamid Hadian, Jinshu Liu*, Hanchen Xu*, Hansen Idden, Huaicheng Li,
+  "PACT: A Criticality-First Design for Tiered Memory." ASPLOS 2026,
+  https://huaicheng.github.io/p/asplos26-pact.pdf
 - Kanellis, Konstantinos, et al. "From Good to Great: Parameter Tuning in
   Memory Tiering Systems." IEEE Transactions on Computers (2026).
   DOI: 10.1109/TC.2026.3656472
