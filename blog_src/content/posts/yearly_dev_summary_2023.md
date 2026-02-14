@@ -6,6 +6,12 @@ tags = ['statistic', 'yearly_development_statistics',
 'yearly_development_summary']
 +++
 
+This is also
+[posted](https://lore.kernel.org/damon/20231231222250.140364-1-sj@kernel.org/)
+to DAMON mailing list.
+
+---
+
 Hello,
 
 
@@ -314,32 +320,32 @@ SJ
 References
 ==========
 
-[1] 2022 retrospect: https://lore.kernel.org/damon/20221229171209.162356-1-sj@kernel.org/
-[2] DAMON user-space tool, damo: https://github.com/awslabs/damo
-[3] ArchLinux damo package: https://aur.archlinux.org/packages/damo
-[4] Fedora damo package: https://packages.fedoraproject.org/pkgs/python-damo/damo/
-[5] damo packaging status: https://repology.org/project/damo/versions
-[6] 100th damo release: https://lore.kernel.org/damon/20230807202044.98700-1-sj@kernel.org/
-[7] LWN article about DAMOS filter: https://lwn.net/Articles/924384/
-[8] LWN article about DAMON LSFMM discussion: https://lwn.net/Articles/931769/
-[9] Hocus article: https://hocus.dev/blog/qemu-vs-firecracker/
-[10] arXiv paper exploring DAMON: https://arxiv.org/pdf/2302.09468.pdf
-[11] arXiv paper exploring DAMON: https://arxiv.org/pdf/2309.01736.pdf
-[12] SOSP paper exploring DAMON: https://dl.acm.org/doi/10.1145/3600006.3613167
-[13] arXiv paper improving DAMON: https://arxiv.org/pdf/2311.10275.pdf
-[14] LSFMM DAMON talk: https://www.youtube.com/watch?v=bbC23ApPvow
-[15] Ksummit DAMON talk: https://lpc.events/event/17/contributions/1624/
-[16] OSSNA DAMON talk: https://ossna2023.sched.com/event/1K5HS
-[17] OSSEU DAMON talk: https://osseu2023.sched.com/event/1OGf9
-[18] LPC DAMON meetup: https://lpc.events/event/17/contributions/1652/
-[19] DAMON's stable rc kernel test results report: https://lore.kernel.org/damon/20230802173033.108621-1-sj@kernel.org/
-[20] DAMOS tried regions: https://lore.kernel.org/damon/20221101220328.95765-1-sj@kernel.org/
-[21] DAMOS filters: https://lore.kernel.org/damon/20221205230830.144349-1-sj@kernel.org/
-[22] DAMOS filters extension: https://lore.kernel.org/damon/20230802214312.110532-1-sj@kernel.org/
-[23] DAMON pseudo-moving snapshot: https://lore.kernel.org/damon/20230915025251.72816-1-sj@kernel.org/
-[24] DAMOS apply interval: https://lore.kernel.org/damon/20230916020945.47296-1-sj@kernel.org/
-[25] Goal-oriented feedback-driven DAMOS auto-tuning: https://lore.kernel.org/damon/20231130023652.50284-1-sj@kernel.org/
-[26] Statistics tool: https://github.com/sjp38/lazybox
-[27] Statistics tool 2: https://git.kernel.org/sj/damon-hack/h/master
-[28] SK HMSDK v2 release: https://github.com/skhynix/hmsdk/releases/tag/hmsdk-v2.0
-[29] 2023 DAMON News: https://sjp38.github.io/post/damon_news/#2023
+[1] 2022 retrospect: https://lore.kernel.org/damon/20221229171209.162356-1-sj@kernel.org/<br>
+[2] DAMON user-space tool, damo: https://github.com/awslabs/damo<br>
+[3] ArchLinux damo package: https://aur.archlinux.org/packages/damo<br>
+[4] Fedora damo package: https://packages.fedoraproject.org/pkgs/python-damo/damo/<br>
+[5] damo packaging status: https://repology.org/project/damo/versions<br>
+[6] 100th damo release: https://lore.kernel.org/damon/20230807202044.98700-1-sj@kernel.org/<br>
+[7] LWN article about DAMOS filter: https://lwn.net/Articles/924384/<br>
+[8] LWN article about DAMON LSFMM discussion: https://lwn.net/Articles/931769/<br>
+[9] Hocus article: https://hocus.dev/blog/qemu-vs-firecracker/<br>
+[10] arXiv paper exploring DAMON: https://arxiv.org/pdf/2302.09468.pdf<br>
+[11] arXiv paper exploring DAMON: https://arxiv.org/pdf/2309.01736.pdf<br>
+[12] SOSP paper exploring DAMON: https://dl.acm.org/doi/10.1145/3600006.3613167<br>
+[13] arXiv paper improving DAMON: https://arxiv.org/pdf/2311.10275.pdf<br>
+[14] LSFMM DAMON talk: https://www.youtube.com/watch?v=bbC23ApPvow<br>
+[15] Ksummit DAMON talk: https://lpc.events/event/17/contributions/1624/<br>
+[16] OSSNA DAMON talk: https://ossna2023.sched.com/event/1K5HS<br>
+[17] OSSEU DAMON talk: https://osseu2023.sched.com/event/1OGf9<br>
+[18] LPC DAMON meetup: https://lpc.events/event/17/contributions/1652/<br>
+[19] DAMON's stable rc kernel test results report: https://lore.kernel.org/damon/20230802173033.108621-1-sj@kernel.org/<br>
+[20] DAMOS tried regions: https://lore.kernel.org/damon/20221101220328.95765-1-sj@kernel.org/<br>
+[21] DAMOS filters: https://lore.kernel.org/damon/20221205230830.144349-1-sj@kernel.org/<br>
+[22] DAMOS filters extension: https://lore.kernel.org/damon/20230802214312.110532-1-sj@kernel.org/<br>
+[23] DAMON pseudo-moving snapshot: https://lore.kernel.org/damon/20230915025251.72816-1-sj@kernel.org/<br>
+[24] DAMOS apply interval: https://lore.kernel.org/damon/20230916020945.47296-1-sj@kernel.org/<br>
+[25] Goal-oriented feedback-driven DAMOS auto-tuning: https://lore.kernel.org/damon/20231130023652.50284-1-sj@kernel.org/<br>
+[26] Statistics tool: https://github.com/sjp38/lazybox<br>
+[27] Statistics tool 2: https://git.kernel.org/sj/damon-hack/h/master<br>
+[28] SK HMSDK v2 release: https://github.com/skhynix/hmsdk/releases/tag/hmsdk-v2.0<br>
+[29] 2023 DAMON News: https://sjp38.github.io/post/damon_news/#2023<br>
