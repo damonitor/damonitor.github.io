@@ -5,7 +5,8 @@ title: "Summary of DAMON Development in 2022"
 subtitle: ""
 summary: ""
 authors: []
-tags: ["linux", "kernel", "damon", "mm", "statistics", "2022"]
+tags: ["linux", "kernel", "damon", "mm", "statistics", "2022",
+"yearly_development_statistics", "yearly_development_summary"]
 categories: ["damon"]
 date: 2022-12-29T19:35:00-08:00
 lastmod: 2022-12-29T19:35:00-08:00
