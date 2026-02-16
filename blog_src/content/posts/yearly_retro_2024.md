@@ -3,7 +3,7 @@ title = 'DAMON Yearly Retrospect (2024)'
 date = 2026-02-16T13:23:14-08:00
 draft = true
 tags = ['statistic', 'yearly_retro']
-category = 'yearly_retro'
+categories = ['yearly_retro']
 +++
 
 This is also

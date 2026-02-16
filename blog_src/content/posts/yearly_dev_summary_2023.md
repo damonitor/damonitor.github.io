@@ -2,8 +2,8 @@
 title = 'Looking back on DAMON development in 2023'
 date = 2026-02-13T07:50:39-08:00
 draft = false
-tags = ['statistic', 'yearly_development_statistics',
-'yearly_development_summary']
+tags = ['statistic', 'yearly_retro']
+categories = ['yearly_retro']
 +++
 
 This is also
