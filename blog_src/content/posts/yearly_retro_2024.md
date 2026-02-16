@@ -202,19 +202,19 @@ itself for more use cases.
 References
 ==========
 
-[1] 2022 retrospect: https://lore.kernel.org/20221229171209.162356-1-sj@kernel.org/<br>
-[2] 2023 retrospect: https://lore.kernel.org/20231231222250.140364-1-sj@kernel.org/<br>
-[3] DAMOS auto-tune: https://git.kernel.org/torvalds/c/9294a037c01564786<br>
-[4] DAMOS self-tune: https://git.kernel.org/torvalds/c/78f2f60377ee43b7f<br>
-[5] OSSummit NA talk: https://ossna2024.sched.com/event/1aBOg<br>
-[6] DAMOS memory-tiering: https://git.kernel.org/torvalds/c/a00ce85af2a1be49<br>
-[7] VLDB AWS paper: https://www.amazon.science/publications/resource-management-in-aurora-serverless<br>
-[8] awslabs to damonitor GitHub repos move: https://lore.kernel.org/all/20240813232158.83903-1-sj@kernel.org/<br>
-[9] OSSummit EU talk: https://osseu2024.sched.com/event/1ej2S<br>
-[10] LPC talk: https://lpc.events/event/18/contributions/1768/<br>
-[11] Debian DAMON enablement: https://salsa.debian.org/kernel-team/linux/-/merge_requests/1172<br>
-[12] DAMON tuning guide: https://lore.kernel.org/all/20241202175459.2005526-1-sj@kernel.org/<br>
-[13] https://github.com/sjp38/lazybox/blob/master/version_control/authors.py<br>
-[14] 2019 DAMON paper: https://dl.acm.org/doi/abs/10.1145/3366626.3368125<br>
-[15] 2022 DAMON paper: https://dl.acm.org/doi/abs/10.1145/3502181.3531466<br>
-[16] hkml: https://github.com/sjp38/hackermail<br>
+[1] 2022 retrospect: https://lore.kernel.org/20221229171209.162356-1-sj@kernel.org/  
+[2] 2023 retrospect: https://lore.kernel.org/20231231222250.140364-1-sj@kernel.org/  
+[3] DAMOS auto-tune: https://git.kernel.org/torvalds/c/9294a037c01564786  
+[4] DAMOS self-tune: https://git.kernel.org/torvalds/c/78f2f60377ee43b7f  
+[5] OSSummit NA talk: https://ossna2024.sched.com/event/1aBOg  
+[6] DAMOS memory-tiering: https://git.kernel.org/torvalds/c/a00ce85af2a1be49  
+[7] VLDB AWS paper: https://www.amazon.science/publications/resource-management-in-aurora-serverless  
+[8] awslabs to damonitor GitHub repos move: https://lore.kernel.org/all/20240813232158.83903-1-sj@kernel.org/  
+[9] OSSummit EU talk: https://osseu2024.sched.com/event/1ej2S  
+[10] LPC talk: https://lpc.events/event/18/contributions/1768/  
+[11] Debian DAMON enablement: https://salsa.debian.org/kernel-team/linux/-/merge_requests/1172  
+[12] DAMON tuning guide: https://lore.kernel.org/all/20241202175459.2005526-1-sj@kernel.org/  
+[13] https://github.com/sjp38/lazybox/blob/master/version_control/authors.py  
+[14] 2019 DAMON paper: https://dl.acm.org/doi/abs/10.1145/3366626.3368125  
+[15] 2022 DAMON paper: https://dl.acm.org/doi/abs/10.1145/3502181.3531466  
+[16] hkml: https://github.com/sjp38/hackermail  
