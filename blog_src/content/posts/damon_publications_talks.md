@@ -100,6 +100,8 @@ DAMON maintainers. If you find a publication or announcement that should be
 added to this list, please let us know at sj@kernel.org and/or
 damon@lists.linux.dev.
 
+__2025__
+
 - SeongJae Park, __Page-level and Fleet-wide Data Access Monitoring for Meta.__
   In _Linux Plumbers Refereed Track_, Dec 2025.
   [Slides](https://lpc.events/event/19/contributions/2075/attachments/1914/4138/damon_pagelevel_fleetwide_observability_lpc25.pdf),
@@ -141,6 +143,9 @@ damon@lists.linux.dev.
   [Slides](https://fosdem.org/2025/events/attachments/fosdem-2025-4396-damon-kernel-subsystem-for-data-access-monitoring-and-access-aware-system-operations/slides/237650/damon_fos_tfIr9t8.pdf),
   [Video](https://video.fosdem.org/2025/ud2208/fosdem-2025-4396-damon-kernel-subsystem-for-data-access-monitoring-and-access-aware-system-operations.av1.webm),
   [Link](https://fosdem.org/2025/schedule/event/fosdem-2025-4396-damon-kernel-subsystem-for-data-access-monitoring-and-access-aware-system-operations/)
+
+__2024__
+
 - SeongJae Park, __DAMON: Long-term Plans for Kernel That {Just
   Works,Extensible}.__ In Linux Kernel Memory Management Microconferenct at
   Linux Plumbers, Sep 2024.
@@ -167,6 +172,9 @@ damon@lists.linux.dev.
   [Slides](https://static.sched.com/hosted_files/ossna2024/ff/damo_damon_damos_ossummit_na_2024.pdf),
   [Video](https://youtu.be/vP5x5P47S1U?feature=shared),
   [Link](https://sched.co/1aBOg)
+
+__2023__
+
 - SeongJae Park, __DAMON: Current Status and Future Plans.__
   In Kernel Summit, Nov 2023.
   [Slides](https://lpc.events/event/17/contributions/1624/attachments/1340/2732/damon_status_and_plans_kernel_summit_2023_11_15.pdf),
@@ -192,6 +200,9 @@ damon@lists.linux.dev.
   [Slides](https://github.com/damonitor/talks/blob/master/2023/lsfmmbpf/damon_lsfmmbpf_2023.pdf),
   [Video](https://www.youtube.com/watch?v=bbC23ApPvow),
   [Link](https://events.linuxfoundation.org/lsfmm/program/schedule-at-a-glance/)
+
+__2022__
+
 - SeongJae Park, __Current Status and Future Plans of DAMON.__
   In _The Linux Kernel Summit_, September 2022.
   [Slides](https://lpc.events/event/16/contributions/1224/attachments/1107/2137/damon_status_plan_ksummit_2022.pdf),
@@ -208,6 +219,9 @@ damon@lists.linux.dev.
   [Paper](https://www.amazon.science/publications/daos-data-access-aware-operating-system),
   [Slides](https://damonitor.github.io/misc/daos_hpdc_2022_slides.pdf),
   [Poster](https://damonitor.github.io/misc/daos_hpdc_2022_poster.pdf)
+
+__2021__
+
 - SeongJae Park, __Writing a fine-grained access pattern oriented lightweight
   kernel module using DAMON/DAMOS in 10 minutes.__
   In _The Linux Kernel Summit_, September 2021.
@@ -216,6 +230,9 @@ damon@lists.linux.dev.
   [Link](https://linuxplumbersconf.org/event/11/contributions/984/)
 - Jonathan Corbet, __Using DAMON for proactive reclaim.__ In Linux Weekly News,
   July 2021.  [Article](https://lwn.net/Articles/863753/)
+
+__2020__
+
 - SeongJae Park, __DAMON: Data Access Monitoring Framework for Fun and Memory
   Management Optimizations,__ In _The Linux Kernel Summit_, August 2020.
   [Slides](https://www.linuxplumbersconf.org/event/7/contributions/659/attachments/503/1195/damon_ksummit_2020.pdf),
@@ -227,6 +244,9 @@ damon@lists.linux.dev.
 - Jonathan Corbet, __Memory-management optimization with DAMON.__ In Linux
   Weekly News, February 2020.
   [Article](https://lwn.net/Articles/812707/)
+
+__2019__
+
 - SeongJae Park, Yunjae Lee, Heon Y. Yeom, __Profiling Dynamic Data Access
   Patterns with Controlled Overhead and Quality.__ In 20th ACM/IFIP
   International Middleware Conference Industry, December 2019.
