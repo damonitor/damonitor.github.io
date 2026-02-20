@@ -9,6 +9,10 @@ categories = ["development plan"]
 
 Updates after initial posting.
 
+2026-02-18 update: LSF/MM/BPF topic for discussing the NUMA hinting faults
+reuse is
+[posted](https://lore.kernel.org/all/20260218054320.4570-1-sj@kernel.org/).
+
 2026-01-13 update: The RFC v3 has
 [posted](https://lore.kernel.org/damon/20251208062943.68824-1-sj@kernel.org/)
 to the mailing list.

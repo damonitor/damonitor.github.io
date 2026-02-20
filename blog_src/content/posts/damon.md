@@ -92,6 +92,14 @@ Recent News
 Below are only a short list of recent news.  For __complete list of the news__,
 please refer to a dedicated [post]({{< ref "damon_news.md" >}}).
 
+
+_2026-02-17_: LSF/MM/BPF topic for extending DAMON for
+per-CPUs/threads/reads/writes monitoring is
+[proposed](https://lore.kernel.org/all/20260218054320.4570-1-sj@kernel.org/).
+
+_2026-02-16_: DAMON yearly retrospect for 2024 has
+[posted](https://lore.kernel.org/20260216210625.68098-1-sj@kernel.org).
+
 _2026-02-10_: An LSF/MM/BPF topic proposal for DAMON-based access-aware
 Transparent Hugepages is
 [posted](https://lore.kernel.org/20260211022845.68865-1-sj@kernel.org).
@@ -103,13 +111,6 @@ as one of Linux kernel ML library demonstration targets.
 _2026-01-18_: DAMON user-space tool will start command line
 [auto-completion](https://github.com/damonitor/damo/blob/next/USAGE.md#command-line-auto-completion)
 support.
-
-_2025-12-29_: DAMON user-space tool v3.0.9 is released with support of
-`trace-cmd` for access pattern recording.
-
-_2025-12-08_: Third RFC [patch
-series](https://lore.kernel.org/damon/20251208062943.68824-1-sj@kernel.org/)
-for per-CPU/threads/read/write monitoring is posted.
 
 
 Getting Started

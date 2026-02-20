@@ -39,6 +39,13 @@ sj@kernel.org and/or damon@lists.linux.dev.
 2026
 ----
 
+_2026-02-17_: LSF/MM/BPF topic for extending DAMON for
+per-CPUs/threads/reads/writes monitoring is
+[proposed](https://lore.kernel.org/all/20260218054320.4570-1-sj@kernel.org/).
+
+_2026-02-16_: DAMON yearly retrospect for 2024 has
+[posted](https://lore.kernel.org/20260216210625.68098-1-sj@kernel.org).
+
 _2026-02-10_: An LSF/MM/BPF topic proposal for DAMON-based access-aware
 Transparent Hugepages is
 [posted](https://lore.kernel.org/20260211022845.68865-1-sj@kernel.org).
