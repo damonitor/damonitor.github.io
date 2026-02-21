@@ -190,8 +190,8 @@ I published two academic papers introducing DAMON in 2019 [14] and 2022 [15].
 
 The number of citations for the two papers have quite increased, as below.
 
-2019-published paper: 6 (2023) -> 10 (2024)
-2022-published paper: 4 (2023) -> 7  (2024)
+    2019-published paper: 6 (2023) -> 10 (2024)
+    2022-published paper: 4 (2023) -> 7  (2024)
 
 Conclusion
 ==========
