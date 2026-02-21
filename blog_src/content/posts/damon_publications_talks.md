@@ -83,12 +83,14 @@ are recommended.
 - SeongJae Park, __DAMON Requirements for Access-aware MM of Future.__ In
   _Linux Storage | Filesystem | MM & BPF Summit_, Mar 2025.
   [Slides](https://github.com/damonitor/talks/blob/master/2025/lsfmmbpf/damon_requirements_lsfmmbpf_2025.pdf),
-  [Link](https://docs.google.com/spreadsheets/d/1PgjzaPOnIHgRIfqgwDNiftY5Xr6aU3NLWtDs7zFoIvc/edit?gid=1852749899#gid=1852749899)
+  [Link](https://docs.google.com/spreadsheets/d/1PgjzaPOnIHgRIfqgwDNiftY5Xr6aU3NLWtDs7zFoIvc/edit?gid=1852749899#gid=1852749899),
+  [LWN article](https://lwn.net/Articles/1016525/)
 - SeongJae Park, __DAMON Updates and Plans: Monitoring Parameters Auot-tuning
   and Memory Tiering.__ In _Linux Storage | Filesystem | MM & BPF Summit_,
   Mar 2025.
   [Slides](https://github.com/damonitor/talks/blob/master/2025/lsfmmbpf/damon_updates_plans_lsfmmbpf_2025.pdf),
-  [Link](https://docs.google.com/spreadsheets/d/1PgjzaPOnIHgRIfqgwDNiftY5Xr6aU3NLWtDs7zFoIvc/edit?gid=1852749899#gid=1852749899)
+  [Link](https://docs.google.com/spreadsheets/d/1PgjzaPOnIHgRIfqgwDNiftY5Xr6aU3NLWtDs7zFoIvc/edit?gid=1852749899#gid=1852749899),
+  [LWN article](https://lwn.net/Articles/1016525/)
 
 Full list of upcoming and past publications and talks
 -----------------------------------------------------
@@ -124,6 +126,9 @@ __2025__
   [Slides](https://speakerdeck.com/ennael/overcoming-observer-effects-in-memory-management-with-damon),
   [Video](https://youtu.be/lvRuBxli_yU?si=QfeLZOn6Cx49qqqL),
   [Link](https://kernel-recipes.org/en/2025/schedule/overcoming-observer-effects-in-memory-management-with-damon/)
+- Asier Gutierrez, __Hybrid THP Mechanism. Selective Use of Huge Pages by Hot Applications.__ In _Open Source Summit Europe_, Aug 2025.
+  [Video](https://youtu.be/Rv89O_dyjUI?si=_BuHpz2NPIum2GxH),
+  [Link](https://sched.co/25Vrh)
 - SeongJae Park, __Self-Driving DAMON/S: Controlled and Automated Access-aware
   Efficient Systems.__ In _Open Source Summit North America_, Jun 2025.
   [Slides](https://static.sched.com/hosted_files/ossna2025/16/damon_ossna25.pdf?_gl=1*12s7xbj*_gcl_au*OTkyNjI0NTk0LjE3NTA4Nzg1Mzg.*FPAU*OTkyNjI0NTk0LjE3NTA4Nzg1Mzg.),
@@ -137,12 +142,14 @@ __2025__
   and Memory Tiering.__ In _Linux Storage | Filesystem | MM & BPF Summit_,
   Mar 2025.
   [Slides](https://lpc.events/event/19/contributions/2066/attachments/1775/3961/damon_numa_migrate_lpc25.pdf),
-  [Link](https://docs.google.com/spreadsheets/d/1PgjzaPOnIHgRIfqgwDNiftY5Xr6aU3NLWtDs7zFoIvc/edit?gid=1852749899#gid=1852749899)
+  [Link](https://docs.google.com/spreadsheets/d/1PgjzaPOnIHgRIfqgwDNiftY5Xr6aU3NLWtDs7zFoIvc/edit?gid=1852749899#gid=1852749899),
+  [LWN article](https://lwn.net/Articles/1016525/)
 - SeongJae Park, __DAMON: Kernel Subsystem for Data Access Monitoring and
   Access-aware System Operations.__ In Fosdem, Feb 2025.
   [Slides](https://fosdem.org/2025/events/attachments/fosdem-2025-4396-damon-kernel-subsystem-for-data-access-monitoring-and-access-aware-system-operations/slides/237650/damon_fos_tfIr9t8.pdf),
   [Video](https://video.fosdem.org/2025/ud2208/fosdem-2025-4396-damon-kernel-subsystem-for-data-access-monitoring-and-access-aware-system-operations.av1.webm),
-  [Link](https://fosdem.org/2025/schedule/event/fosdem-2025-4396-damon-kernel-subsystem-for-data-access-monitoring-and-access-aware-system-operations/)
+  [Link](https://fosdem.org/2025/schedule/event/fosdem-2025-4396-damon-kernel-subsystem-for-data-access-monitoring-and-access-aware-system-operations/),
+  [LWN article](https://lwn.net/Articles/1016525/)
 
 __2024__
 
