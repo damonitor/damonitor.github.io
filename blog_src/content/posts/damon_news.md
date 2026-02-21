@@ -92,6 +92,10 @@ _2025-11-13_: An idea for DAMON-based CXL memory management aiming both
   Micron and SK Hynix, has
   [shared](https://lore.kernel.org/all/20251114014255.72884-1-sj@kernel.org/).
 
+_2025-10-13_: `DAMON_STAT` is
+[build-enabled](https://salsa.debian.org/kernel-team/linux/-/merge_requests/1616)
+on Debian kernels.
+
 _2025-10-03_: DAMON changes including below two have been merged into Linux
 6.18-rc1, via memory management subsystem [pull
 request](https://lore.kernel.org/20251001190218.f33f695b869696c2df9e841d@linux-foundation.org).
