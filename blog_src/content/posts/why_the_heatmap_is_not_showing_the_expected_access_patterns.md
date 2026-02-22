@@ -70,12 +70,12 @@ draw heampa for, using `--address_range` option.
 Because it is not easy to know to what address range specific data objects of
 the program is mapped, the command also provides a few features for helping it.
 
-`damo report heatmap --guide` or `damo record_info` shows high level
+`damo report record_info` shows high level
 information about the record file.  The three address ranges excepting the two
 huge gaps are included there.  For example:
 
 ```
-$ sudo ./damo record_info --info ./damon.data
+$ sudo ./damo report record_info --info ./damon.data
 target_id:0
 time: 67900017466000-67959790343999 (59.773 s)
 region   0: 00000093925306740736-00000093925678731264 (354.758 MiB)
