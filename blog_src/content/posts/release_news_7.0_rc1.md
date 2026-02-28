@@ -227,26 +227,26 @@ and documentation cleanup were landed, including below series.
 References
 ==========
 
-[1] 2024 Q1 news: https://lore.kernel.org//20240402191224.92305-1-sj@kernel.org/
-[2] 2024 Q2 news: https://lore.kernel.org/20241001002449.515043-1-sj@kernel.org/
-[3] 2024 Q3 news: https://lore.kernel.org/20241001191425.588219-1-sj@kernel.org/
-[4] 2024 Q4 news: https://lore.kernel.org/20250102211811.48322-1-sj@kernel.org/
-[5] loadable module support: https://lore.kernel.org/20251215142057.588500-1-lienze@kylinos.cn
-[6] THP-ing hot processes: https://lore.kernel.org/20260202145650.1795854-1-gutierrez.asier@huawei-partners.com
-[7] perf event based access check: https://lore.kernel.org/20260123021014.26915-1-akinobu.mita@gmail.com
-[8] node_target_[in]eligible_mem_bp: https://lore.kernel.org/20260123045733.6954-1-ravis.opensrc@gmail.com
-[9] ML library: https://lore.kernel.org/all/c24a209d5a4af0c4cc08f30098998ce16c668b58.camel@ibm.com/
-[10] DAMON for THP, LSFMMBPF: https://lore.kernel.org/all/20260211022845.68865-1-sj@kernel.org/
-[11] DAMON for faults, LSFMMBPF: https://lore.kernel.org/all/20260218054320.4570-1-sj@kernel.org/
-[12] damo trace-cmd support: https://damonitor.github.io/posts/damo_support_trace_cmd/
-[13] damo cli auto-completion: https://github.com/damonitor/damo/blob/next/USAGE.md#command-line-auto-completion
-[14] DAMON yearly restrospects, 2024: https://lore.kernel.org/all/20260216210625.68098-1-sj@kernel.org/
-[15] DAMON yearly retrospects, 2025: https://lore.kernel.org/all/20260222210102.153347-1-sj@kernel.org/
-[16] https://github.com/sjp38/lazybox/blob/master/version_control/authors.py
-[17] 6.19-rc1 mm pr 1/2: https://lore.kernel.org/20251203212918.82f1c9d3947940aeae263878@linux-foundation.org/
-[18] 6.19-rc1 mm pr 2/2: https://lore.kernel.org/20251211131127.defed99e5b82e49af605108a@linux-foundation.org/
-[19] 7.0-rc1 mm pr: https://lore.kernel.org/20260211192351.6684a77b8c70cc032a3e7a27@linux-foundation.org/
-[20] https://docs.kernel.org/process/email-clients.html#hackermail-tui
+[1] 2024 Q1 news: https://lore.kernel.org//20240402191224.92305-1-sj@kernel.org/  
+[2] 2024 Q2 news: https://lore.kernel.org/20241001002449.515043-1-sj@kernel.org/  
+[3] 2024 Q3 news: https://lore.kernel.org/20241001191425.588219-1-sj@kernel.org/  
+[4] 2024 Q4 news: https://lore.kernel.org/20250102211811.48322-1-sj@kernel.org/  
+[5] loadable module support: https://lore.kernel.org/20251215142057.588500-1-lienze@kylinos.cn  
+[6] THP-ing hot processes: https://lore.kernel.org/20260202145650.1795854-1-gutierrez.asier@huawei-partners.com  
+[7] perf event based access check: https://lore.kernel.org/20260123021014.26915-1-akinobu.mita@gmail.com  
+[8] node_target_[in]eligible_mem_bp: https://lore.kernel.org/20260123045733.6954-1-ravis.opensrc@gmail.com  
+[9] ML library: https://lore.kernel.org/all/c24a209d5a4af0c4cc08f30098998ce16c668b58.camel@ibm.com/  
+[10] DAMON for THP, LSFMMBPF: https://lore.kernel.org/all/20260211022845.68865-1-sj@kernel.org/  
+[11] DAMON for faults, LSFMMBPF: https://lore.kernel.org/all/20260218054320.4570-1-sj@kernel.org/  
+[12] damo trace-cmd support: https://damonitor.github.io/posts/damo_support_trace_cmd/  
+[13] damo cli auto-completion: https://github.com/damonitor/damo/blob/next/USAGE.md#command-line-auto-completion  
+[14] DAMON yearly restrospects, 2024: https://lore.kernel.org/all/20260216210625.68098-1-sj@kernel.org/  
+[15] DAMON yearly retrospects, 2025: https://lore.kernel.org/all/20260222210102.153347-1-sj@kernel.org/  
+[16] https://github.com/sjp38/lazybox/blob/master/version_control/authors.py  
+[17] 6.19-rc1 mm pr 1/2: https://lore.kernel.org/20251203212918.82f1c9d3947940aeae263878@linux-foundation.org/  
+[18] 6.19-rc1 mm pr 2/2: https://lore.kernel.org/20251211131127.defed99e5b82e49af605108a@linux-foundation.org/  
+[19] 7.0-rc1 mm pr: https://lore.kernel.org/20260211192351.6684a77b8c70cc032a3e7a27@linux-foundation.org/  
+[20] https://docs.kernel.org/process/email-clients.html#hackermail-tui  
 
 
 Thanks,
