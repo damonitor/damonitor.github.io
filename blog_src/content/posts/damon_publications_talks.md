@@ -141,7 +141,7 @@ __2025__
 - SeongJae Park, __DAMON Updates and Plans: Monitoring Parameters Auot-tuning
   and Memory Tiering.__ In _Linux Storage | Filesystem | MM & BPF Summit_,
   Mar 2025.
-  [Slides](https://lpc.events/event/19/contributions/2066/attachments/1775/3961/damon_numa_migrate_lpc25.pdf),
+  [Slides](https://github.com/damonitor/talks/blob/master/2025/lsfmmbpf/damon_updates_plans_lsfmmbpf_2025.pdf),
   [Link](https://docs.google.com/spreadsheets/d/1PgjzaPOnIHgRIfqgwDNiftY5Xr6aU3NLWtDs7zFoIvc/edit?gid=1852749899#gid=1852749899),
   [LWN article](https://lwn.net/Articles/1016525/)
 - SeongJae Park, __DAMON: Kernel Subsystem for Data Access Monitoring and
