@@ -102,6 +102,21 @@ DAMON maintainers. If you find a publication or announcement that should be
 added to this list, please let us know at sj@kernel.org and/or
 damon@lists.linux.dev.
 
+__2026__
+
+- SeongJae Park, __DAMON Updates: Tiering, Pagel Level Monitoring and
+  DAMON-X.__ In _Linux Storage | Filesystem | MM & BPF Summit_, May 2026.
+  [Link 1](https://lore.kernel.org/20260307210250.204245-1-sj@kernel.org/),
+  [Link 2](https://docs.google.com/spreadsheets/d/1mGEdDrWskp7Ua91jGXzquQGinorcD58DAVXhOiRp2Gg/edit?gid=1852749899#gid=1852749899)
+- SeongJae Park, __Allowing NUMA hinting faults or alternatives to DAMON.__ In
+  _Linux Storage | Filesystem | MM & BPF Summit_, May 2026.
+  [Link 1](https://lore.kernel.org/20260218054320.4570-1-sj@kernel.org/),
+  [Link 2](https://docs.google.com/spreadsheets/d/1mGEdDrWskp7Ua91jGXzquQGinorcD58DAVXhOiRp2Gg/edit?gid=1852749899#gid=1852749899)
+- SeongJae Park, __Data Access-aware Transparent Hugepages.__ In _Linux Storage
+  | Filesystem | MM & BPF Summit_, May 2026.
+  [Link 1](https://lore.kernel.org/20260211022845.68865-1-sj@kernel.org/),
+  [Link 2](https://docs.google.com/spreadsheets/d/1mGEdDrWskp7Ua91jGXzquQGinorcD58DAVXhOiRp2Gg/edit?gid=1852749899#gid=1852749899)
+
 __2025__
 
 - SeongJae Park, __Page-level and Fleet-wide Data Access Monitoring for Meta.__
