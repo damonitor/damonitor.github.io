@@ -92,25 +92,19 @@ Recent News
 Below are only a short list of recent news.  For __complete list of the news__,
 please refer to a dedicated [post]({{< ref "damon_news.md" >}}).
 
+_2026-04-28_: DAMON news letter for 7.1-rc1 release cycle is [posted](https://lore.kernel.org/20260428150817.125575-1-sj@kernel.org).
 
-_2026-02-17_: LSF/MM/BPF topic for extending DAMON for
-per-CPUs/threads/reads/writes monitoring is
-[proposed](https://lore.kernel.org/all/20260218054320.4570-1-sj@kernel.org/).
+_2026-04-26_: Data attributes monitoring RFC patch series is
+[posted](https://lore.kernel.org/all/20260426205222.93895-1-sj@kernel.org/).
 
-_2026-02-16_: DAMON yearly retrospect for 2024 has
-[posted](https://lore.kernel.org/20260216210625.68098-1-sj@kernel.org).
+_2026-04-25_: All DAMON topics for LSF/MM/BPF are accepted and
+[scheduled](https://docs.google.com/spreadsheets/d/1mGEdDrWskp7Ua91jGXzquQGinorcD58DAVXhOiRp2Gg/edit?gid=1852749899#gid=1852749899).
 
-_2026-02-10_: An LSF/MM/BPF topic proposal for DAMON-based access-aware
-Transparent Hugepages is
-[posted](https://lore.kernel.org/20260211022845.68865-1-sj@kernel.org).
+_2026-04-11_: AI review usage guideline for DAMON is
+[published](https://lore.kernel.org/20260411174906.79491-1-sj@kernel.org/).
 
-_2026-02-10_: DAMON has
-[nominated](https://lore.kernel.org/c24a209d5a4af0c4cc08f30098998ce16c668b58.camel@ibm.com)
-as one of Linux kernel ML library demonstration targets.
-
-_2026-01-18_: DAMON user-space tool will start command line
-[auto-completion](https://github.com/damonitor/damo/blob/next/USAGE.md#command-line-auto-completion)
-support.
+_2026-03-07_: The third DAMON topic for LSF/MM/BPF discussion is
+[posted](https://lore.kernel.org/20260307210250.204245-1-sj@kernel.org).
 
 
 Getting Started

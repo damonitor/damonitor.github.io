@@ -39,6 +39,26 @@ sj@kernel.org and/or damon@lists.linux.dev.
 2026
 ----
 
+_2026-04-28_: DAMON news letter for 7.1-rc1 release cycle is [posted](https://lore.kernel.org/20260428150817.125575-1-sj@kernel.org).
+
+_2026-04-26_: Data attributes monitoring RFC patch series is
+[posted](https://lore.kernel.org/all/20260426205222.93895-1-sj@kernel.org/).
+
+_2026-04-25_: All DAMON topics for LSF/MM/BPF are accepted and
+[scheduled](https://docs.google.com/spreadsheets/d/1mGEdDrWskp7Ua91jGXzquQGinorcD58DAVXhOiRp2Gg/edit?gid=1852749899#gid=1852749899).
+
+_2026-04-11_: AI review usage guideline for DAMON is
+[published](https://lore.kernel.org/20260411174906.79491-1-sj@kernel.org/).
+
+_2026-03-07_: The third DAMON topic for LSF/MM/BPF discussion is
+[posted](https://lore.kernel.org/20260307210250.204245-1-sj@kernel.org).
+
+_2026-02-28_: DAMON news letter for 7.0-rc1 release cycle is
+[posted](https://lore.kernel.org/20260228194805.97228-1-sj@kernel.org).
+
+_2026-02-22_: DAMON yearly retrospect for 2025 has
+[posted[(https://lore.kernel.org/all/20260222210102.153347-1-sj@kernel.org/).
+
 _2026-02-17_: LSF/MM/BPF topic for extending DAMON for
 per-CPUs/threads/reads/writes monitoring is
 [proposed](https://lore.kernel.org/all/20260218054320.4570-1-sj@kernel.org/).
