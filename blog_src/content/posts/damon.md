@@ -194,21 +194,30 @@ If you are looking for a resources to start with, below talks are recommended.
 If you want to track recent DAMON developmeent status and plans, below talks
 are recommended.
 
+- SeongJae Park, __DAMON Updates: Tiering, Pagel Level Monitoring and
+  DAMON-X.__ In _Linux Storage | Filesystem | MM & BPF Summit_, May 2026.
+  [LWN article](https://lwn.net/Articles/1071256/),
+  [Slides](https://github.com/damonitor/talks/blob/master/2026/lsfmmbpf/damon_lsfmmbpf_2026.pdf),
+  [Link 1](https://lore.kernel.org/20260307210250.204245-1-sj@kernel.org/),
+  [Link 2](https://docs.google.com/spreadsheets/d/1mGEdDrWskp7Ua91jGXzquQGinorcD58DAVXhOiRp2Gg/edit?gid=1852749899#gid=1852749899)
+- SeongJae Park, __Allowing NUMA hinting faults or alternatives to DAMON.__ In
+  _Linux Storage | Filesystem | MM & BPF Summit_, May 2026.
+  [LWN article](https://lwn.net/Articles/1071256/),
+  [Slides](https://github.com/damonitor/talks/blob/master/2026/lsfmmbpf/damon_lsfmmbpf_2026.pdf),
+  [Link 1](https://lore.kernel.org/20260218054320.4570-1-sj@kernel.org/),
+  [Link 2](https://docs.google.com/spreadsheets/d/1mGEdDrWskp7Ua91jGXzquQGinorcD58DAVXhOiRp2Gg/edit?gid=1852749899#gid=1852749899)
+- SeongJae Park, __Data Access-aware Transparent Hugepages.__ In _Linux Storage
+  | Filesystem | MM & BPF Summit_, May 2026.
+  [LWN article](https://lwn.net/Articles/1071256/),
+  [Slides](https://github.com/damonitor/talks/blob/master/2026/lsfmmbpf/damon_lsfmmbpf_2026.pdf),
+  [Link 1](https://lore.kernel.org/20260211022845.68865-1-sj@kernel.org/),
+  [Link 2](https://docs.google.com/spreadsheets/d/1mGEdDrWskp7Ua91jGXzquQGinorcD58DAVXhOiRp2Gg/edit?gid=1852749899#gid=1852749899)
 - SeongJae Park, __DAMON-based Pages Migration for {C,G,X}PU [un]attached NUMA
   nodes.__ In _Device and Specific PurposeMemory MC at Linux Plumbers_, Dec
   2025.
-  [slides](https://lpc.events/event/19/contributions/2066/attachments/1775/3961/damon_numa_migrate_lpc25.pdf),
+  [Slides](https://lpc.events/event/19/contributions/2066/attachments/1775/3961/damon_numa_migrate_lpc25.pdf),
   [Video](https://youtu.be/0jWF8Ogi4Fk?si=k6cpJy3ALo2H6lA1),
   [Link](https://lpc.events/event/19/contributions/2066/)
-- SeongJae Park, __DAMON Requirements for Access-aware MM of Future.__ In
-  _Linux Storage | Filesystem | MM & BPF Summit_, Mar 2025.
-  [Slides](https://github.com/damonitor/talks/blob/master/2025/lsfmmbpf/damon_requirements_lsfmmbpf_2025.pdf),
-  [Link](https://docs.google.com/spreadsheets/d/1PgjzaPOnIHgRIfqgwDNiftY5Xr6aU3NLWtDs7zFoIvc/edit?gid=1852749899#gid=1852749899)
-- SeongJae Park, __DAMON Updates and Plans: Monitoring Parameters Auot-tuning
-  and Memory Tiering.__ In _Linux Storage | Filesystem | MM & BPF Summit_,
-  Mar 2025.
-  [Slides](https://github.com/damonitor/talks/blob/master/2025/lsfmmbpf/damon_updates_plans_lsfmmbpf_2025.pdf),
-  [Link](https://docs.google.com/spreadsheets/d/1PgjzaPOnIHgRIfqgwDNiftY5Xr6aU3NLWtDs7zFoIvc/edit?gid=1852749899#gid=1852749899)
 
 Community
 ---------
