@@ -9,6 +9,9 @@ categories = ["development plan"]
 
 Updates after initial posting.
 
+2026-05-25 update: A roadmap for a part of this project is
+[posted](https://lore.kernel.org/20260525225208.1179-1-sj@kernel.org/)
+
 2026-02-18 update: LSF/MM/BPF topic for discussing the NUMA hinting faults
 reuse is
 [posted](https://lore.kernel.org/all/20260218054320.4570-1-sj@kernel.org/).
