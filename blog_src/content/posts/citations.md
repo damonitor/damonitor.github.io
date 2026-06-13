@@ -17,6 +17,12 @@ author-published paper ciataions
 2026
 ====
 
+- Bijan Tabatabai, Eishan Mirakhur, Ravi Shankar Jonnalagadda, Vinicius
+  Petrucci, Rohit Sehgal, Jus Singh, and Michael M. Swift. 2026. Bandwidth
+  Speaks, We Listen: Dynamic Memory Interleaving for Tiering. In Proceedings of
+  the 2026 ACM SIGPLAN International Symposium on Memory Management (ISMM '26).
+  Association for Computing Machinery, New York, NY, USA, 108–122.
+  https://doi.org/10.1145/3814942.3816137
 - Hamid Hadian, Jinshu Liu*, Hanchen Xu*, Hansen Idden, Huaicheng Li,
   "PACT: A Criticality-First Design for Tiered Memory." ASPLOS 2026,
   https://huaicheng.github.io/p/asplos26-pact.pdf
