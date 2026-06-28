@@ -26,7 +26,7 @@ TLDR
 ====
 
 The last development cycle for DAMON was the busiest cycle of its mainline
-history (~6 years, since 2021 September).  12 Authors landed 106 DAMON patches
+history (~5 years, since 2021 September).  12 Authors landed 106 DAMON patches
 for a number of changes including 7 new features on the mainline.  A roadmap
 for extending DAMON to utilize AMD IBS, Intel PEBS like h/w features and do
 per-CPUs/threads/reads/writes monitoring is made.
@@ -136,7 +136,7 @@ The numbers for the last seven release cycles are like below:
     6.15  fixes:  0   6.16  changes:  22
 
 The 6.17 development cycle was the busiest DAMON development cycle in history
-(~6 years since 5.15).  This cycle broke the record.
+(~5 years since 5.15).  This cycle broke the record.
 
 Contributors
 ------------
