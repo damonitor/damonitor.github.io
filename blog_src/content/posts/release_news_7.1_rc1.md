@@ -215,28 +215,28 @@ References
 ----------
 
 [1] 7.0-rc1 news:
-    https://lore.kernel.org/all/20260228194805.97228-1-sj@kernel.org/ 
+    https://lore.kernel.org/all/20260228194805.97228-1-sj@kernel.org/  
 [2] MM PR for 7.1-rc1:
-     https://lore.kernel.org/20260413214952.62836ac9df0eb348ee4aeb2b@linux-foundation.org/ 
+     https://lore.kernel.org/20260413214952.62836ac9df0eb348ee4aeb2b@linux-foundation.org/  
 [3] Second MM PR for 7.1-rc1:
-     https://lore.kernel.org/20260418223823.b45ef6a83267fa886d182ed7@linux-foundation.org/ 
-[4] authors.py: https://github.com/sjp38/lazybox/blob/master/version_control/authors.py 
-[5] hkml: https://github.com/hackermail 
+     https://lore.kernel.org/20260418223823.b45ef6a83267fa886d182ed7@linux-foundation.org/  
+[4] authors.py: https://github.com/sjp38/lazybox/blob/master/version_control/authors.py  
+[5] hkml: https://github.com/hackermail  
 [6] Sashiko announcement:
-    https://lore.kernel.org/all/7ia4o6kmpj5s.fsf@castle.c.googlers.com/ 
+    https://lore.kernel.org/all/7ia4o6kmpj5s.fsf@castle.c.googlers.com/  
 [7] node_eligible_mem_bp v8:
-    https://lore.kernel.org/20260426003245.2687-1-ravis.opensrc@gmail.com 
+    https://lore.kernel.org/20260426003245.2687-1-ravis.opensrc@gmail.com  
 [8] DAMOS_COLLAPSE:
-    https://lore.kernel.org/20260409150128.1566835-1-gutierrez.asier@huawei-partners.com/ 
+    https://lore.kernel.org/20260409150128.1566835-1-gutierrez.asier@huawei-partners.com/  
 [9] perf events based DAMON extension:
-    https://lore.kernel.org/20260423004211.7037-1-akinobu.mita@gmail.com/ 
+    https://lore.kernel.org/20260423004211.7037-1-akinobu.mita@gmail.com/  
 [10] Data Attributes Monitoring:
-     https://lore.kernel.org/20260426205222.93895-1-sj@kernel.org/ 
+     https://lore.kernel.org/20260426205222.93895-1-sj@kernel.org/  
 [11] LSF/MM/BPF topic for access-aware THP:
-     https://lore.kernel.org/20260211022845.68865-1-sj@kernel.org/ 
+     https://lore.kernel.org/20260211022845.68865-1-sj@kernel.org/  
 [12] LSF/MM/BPF topic for allowing NUMA hinting faults to DAMON:
-     https://lore.kernel.org/20260218054320.4570-1-sj@kernel.org/ 
+     https://lore.kernel.org/20260218054320.4570-1-sj@kernel.org/  
 [13] LSF/MM/BPF topic for DAMON updates:
-     https://lore.kernel.org/20260307210250.204245-1-sj@kernel.org/ 
+     https://lore.kernel.org/20260307210250.204245-1-sj@kernel.org/  
 [14] LSF/MM/BPF schedule:
-     https://docs.google.com/spreadsheets/d/1mGEdDrWskp7Ua91jGXzquQGinorcD58DAVXhOiRp2Gg/edit?gid=1852749899#gid=1852749899 
+     https://docs.google.com/spreadsheets/d/1mGEdDrWskp7Ua91jGXzquQGinorcD58DAVXhOiRp2Gg/edit?gid=1852749899#gid=1852749899  

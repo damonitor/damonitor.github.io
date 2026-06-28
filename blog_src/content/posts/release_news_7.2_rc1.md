@@ -256,35 +256,35 @@ mail to sj@kernel.org) to [b]cc you for each newsletter posting.
 References
 ==========
 
-[1] 7.1-rc1 news: https://lore.kernel.org/20260428150817.125575-1-sj@kernel.org 
+[1] 7.1-rc1 news: https://lore.kernel.org/20260428150817.125575-1-sj@kernel.org  
 [2] First MM PR for 7.2-rc1:
-    https://lore.kernel.org/20260618093027.803700be945480575260b0f3@linux-foundation.org/ 
+    https://lore.kernel.org/20260618093027.803700be945480575260b0f3@linux-foundation.org/  
 [3] Second MM PR for 7.2-rc1:
-    https://lore.kernel.org/20260623085840.0819c7694831ca2055e6a733@linux-foundation.org/ 
-[4] authors.py: https://github.com/sjp38/lazybox/blob/master/version_control/authors.py 
-[5] hkml: https://github.com/hackermail 
+    https://lore.kernel.org/20260623085840.0819c7694831ca2055e6a733@linux-foundation.org/  
+[4] authors.py: https://github.com/sjp38/lazybox/blob/master/version_control/authors.py  
+[5] hkml: https://github.com/hackermail  
 [6] DAMOS_QUOTA_ELIGIBLE_MEM_BP patch:
-    https://lore.kernel.org/20260428030520.701-1-ravis.opensrc@gmail.com 
-[7] LWN artile for LSFMMBPF'26 DAMON session: https://lwn.net/Articles/1071256/ 
+    https://lore.kernel.org/20260428030520.701-1-ravis.opensrc@gmail.com  
+[7] LWN artile for LSFMMBPF'26 DAMON session: https://lwn.net/Articles/1071256/  
 [8] perf event extension:
-    https://lore.kernel.org/20260423004211.7037-1-akinobu.mita@gmail.com 
+    https://lore.kernel.org/20260423004211.7037-1-akinobu.mita@gmail.com  
 [9] H/W sampled access repors:
-    https://lore.kernel.org/20260529165640.820-1-ravis.opensrc@gmail.com 
+    https://lore.kernel.org/20260529165640.820-1-ravis.opensrc@gmail.com  
 [10] DAMON extension roadmap:
-     https://lore.kernel.org/all/20260525225208.1179-1-sj@kernel.org/ 
-[11] Dynamic interleaving paper: https://dl.acm.org/doi/10.1145/3814942.3816137 
+     https://lore.kernel.org/all/20260525225208.1179-1-sj@kernel.org/  
+[11] Dynamic interleaving paper: https://dl.acm.org/doi/10.1145/3814942.3816137  
 [12] DAMOS_HUGEPAGE_MEM_BP:
-     https://lore.kernel.org/20260616150316.580819-1-gutierrez.asier@huawei-partners.com 
+     https://lore.kernel.org/20260616150316.580819-1-gutierrez.asier@huawei-partners.com  
 [13] mTHP and ARM SPE:
-     https://lore.kernel.org/20260618094838.32805-1-lianux.mm@gmail.com 
-[14] DAMON tlb flush poste: https://damonitor.github.io/posts/tlb_flush_policy/ 
+     https://lore.kernel.org/20260618094838.32805-1-lianux.mm@gmail.com  
+[14] DAMON tlb flush poste: https://damonitor.github.io/posts/tlb_flush_policy/  
 [15] Chinese kernel meetup:
-     https://www.linkedin.com/posts/wang-lian-03b180271_linuxkernel-opensource-kerneldevelopment-share-7475789130229223425-CCk9/?utm_source=share&utm_medium=member_desktop&rcm=ACoAAAuQ2s0BFPM2rGjEAKbwpwDB53YY6CCA9lY 
-[16] dama: https://lore.kernel.org/20260628085155.20828-1-aethernet65535@gmail.com 
-[17] DAMON mailing list: https://lore.kernel.org/damon 
-[18] News letter on project blog: https://damonitor.github.io/tags/release_news/ 
+     https://www.linkedin.com/posts/wang-lian-03b180271_linuxkernel-opensource-kerneldevelopment-share-7475789130229223425-CCk9/?utm_source=share&utm_medium=member_desktop&rcm=ACoAAAuQ2s0BFPM2rGjEAKbwpwDB53YY6CCA9lY  
+[16] dama: https://lore.kernel.org/20260628085155.20828-1-aethernet65535@gmail.com  
+[17] DAMON mailing list: https://lore.kernel.org/damon  
+[18] News letter on project blog: https://damonitor.github.io/tags/release_news/  
 [18] Mailing list subscription guide:
-     https://subspace.kernel.org/subscribing.html 
+     https://subspace.kernel.org/subscribing.html  
 
 
 Thanks,
