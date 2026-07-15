@@ -92,6 +92,8 @@ Recent News
 Below are only a short list of recent news.  For __complete list of the news__,
 please refer to a dedicated [post]({{< ref "damon_news.md" >}}).
 
+_2026-06-28_: DAMON news letter for 7.2-rc1 release cycle is [posted](https://lore.kernel.org/20260628211904.94361-1-sj@kernel.org/).
+
 _2026-04-28_: DAMON news letter for 7.1-rc1 release cycle is [posted](https://lore.kernel.org/20260428150817.125575-1-sj@kernel.org).
 
 _2026-04-26_: Data attributes monitoring RFC patch series is
@@ -102,9 +104,6 @@ _2026-04-25_: All DAMON topics for LSF/MM/BPF are accepted and
 
 _2026-04-11_: AI review usage guideline for DAMON is
 [published](https://lore.kernel.org/20260411174906.79491-1-sj@kernel.org/).
-
-_2026-03-07_: The third DAMON topic for LSF/MM/BPF discussion is
-[posted](https://lore.kernel.org/20260307210250.204245-1-sj@kernel.org).
 
 
 Getting Started
