@@ -11,6 +11,7 @@ Landed Changes
 
 ```
 <version>  <nr_authors>  <nr_commits>  <nr_lines>
+v7.3-rc1   21            162           2283
 v7.2-rc1   14            109           3311
 v7.1-rc1   9             77            1070
 v7.0-rc1   12            75            1279
@@ -46,6 +47,7 @@ Mailing List Traffic
 
 ```
 <version>  <nr_mails>  <nr_threads>  <nr_new_threads>  <nr_patches>  <nr_series>
+v7.3-rc1   2019        183           180               871           148
 v7.2-rc1   1486        164           142               671           126
 v7.1-rc1   1098        152           147               450           129
 v7.0-rc1   426         111           58                223           43
