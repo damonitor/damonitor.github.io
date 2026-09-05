@@ -9,6 +9,9 @@ categories = ["development plan"]
 
 Updates after initial posting.
 
+2026-09-05 update: The milestone 1 is nearly done, and the milestone 2 is
+[started](https://lore.kernel.org/20260905171537.84217-1-sj@kernel.org/).
+
 2026-05-25 update: A roadmap for a part of this project is
 [posted](https://lore.kernel.org/20260525225208.1179-1-sj@kernel.org/)
 
