@@ -53,27 +53,32 @@ operations) and user-space driven auto-tuning.
 
 If you are looking for a resources to start with, below talks are recommended.
 
+- SJ Park, __You're Measuring Memory Wrong: The Right Ways With DAMON.__ In
+  _Open Source Summit Europe_, Oct 2026.
+  [Slides](https://hosted-files.sched.co/osselceu2026/67/damon_howto.pdf?_gl=1*1dml5iu*_gcl_au*MTM5ODk2ODM5LjE3OTE1Mzg3NDA.*FPAU*MTM5ODk2ODM5LjE3OTE1Mzg3NDA.),
+  [Link](https://sched.co/2RaXh)
+- SJ Park, __DAMOS: The Smart Cruise Control for RAM.__ In _Kernel Recipes_, Sep
+  2026.
+  [Video](https://youtu.be/cFGxYJ_oeVM?si=27MtCfYyCl9UHlPq),
+  [Slides](https://speakerdeck.com/ennael/damos-the-smart-cruise-control-for-ram),
+  [Link](https://kernel-recipes.org/en/2026/schedule/damos-the-smart-cruise-control-for-ram/)
 - SeongJae Park, __Page-level and Fleet-wide Data Access Monitoring for Meta.__
   In _Linux Plumbers Refereed Track_, Dec 2025.
   [Slides](https://lpc.events/event/19/contributions/2075/attachments/1914/4138/damon_pagelevel_fleetwide_observability_lpc25.pdf),
   [Video](https://youtu.be/GolUxZZrVsU?si=qdPFE1RZAaNZ0lsY),
   [Link](https://lpc.events/event/19/contributions/2075/)
-- SeongJae Park, __Overcoming Observer Effects in Memory Management with
-  DAMON.__ In _Kernel Recipes_, Sep 2025.
-  [Slides](https://github.com/damonitor/talks/blob/master/2025/kernel_recipes/damon_kernel_recipes2025.pdf),
-  [Video](https://youtu.be/lvRuBxli_yU?si=QfeLZOn6Cx49qqqL),
-  [Link](https://kernel-recipes.org/en/2025/schedule/overcoming-observer-effects-in-memory-management-with-damon/)
-- SeongJae Park, __DAMON: Kernel Subsystem for Data Access Monitoring and
-  Access-aware System Operations.__ In Fosdem, Feb 2025.
-  [Slides](https://archive.fosdem.org/2025/events/attachments/fosdem-2025-4396-damon-kernel-subsystem-for-data-access-monitoring-and-access-aware-system-operations/slides/238776/damon_fos_tfIr9t8.pdf),
-  [Video](https://video.fosdem.org/2025/ud2208/fosdem-2025-4396-damon-kernel-subsystem-for-data-access-monitoring-and-access-aware-system-operations.av1.webm),
-  [Link](https://fosdem.org/2025/schedule/event/fosdem-2025-4396-damon-kernel-subsystem-for-data-access-monitoring-and-access-aware-system-operations/)
 
 ### Talks for experts and developers
 
 If you want to track recent DAMON developmeent status and plans, below talks
 are recommended.
 
+- SJ Park, __DAMON (Data Attributes Monitoring/Operations Engine)-based
+  {C,G,X}PU [un]attached NUMA Pages Migration.__ In _Device and Specific
+  PurposeMemory MC at Linux Plumbers_, Oct 2026.
+  [Video](https://www.youtube.com/live/OPRciCSsdS4?si=ntGw388L3eEqHfbQ&t=10526),
+  [Slides](https://lpc.events/event/20/contributions/2518/attachments/2107/4676/damon_for_cgxpu_numa.pdf),
+  [Link](https://lpc.events/event/20/contributions/2518/)
 - SeongJae Park, __DAMON Updates: Tiering, Pagel Level Monitoring and
   DAMON-X.__ In _Linux Storage | Filesystem | MM & BPF Summit_, May 2026.
   [LWN article](https://lwn.net/Articles/1071256/),
@@ -92,12 +97,6 @@ are recommended.
   [Slides](https://github.com/damonitor/talks/blob/master/2026/lsfmmbpf/damon_lsfmmbpf_2026.pdf),
   [Link 1](https://lore.kernel.org/20260211022845.68865-1-sj@kernel.org/),
   [Link 2](https://docs.google.com/spreadsheets/d/1mGEdDrWskp7Ua91jGXzquQGinorcD58DAVXhOiRp2Gg/edit?gid=1852749899#gid=1852749899)
-- SeongJae Park, __DAMON-based Pages Migration for {C,G,X}PU [un]attached NUMA
-  nodes.__ In _Device and Specific PurposeMemory MC at Linux Plumbers_, Dec
-  2025.
-  [Slides](https://lpc.events/event/19/contributions/2066/attachments/1775/3961/damon_numa_migrate_lpc25.pdf),
-  [Video](https://youtu.be/0jWF8Ogi4Fk?si=k6cpJy3ALo2H6lA1),
-  [Link](https://lpc.events/event/19/contributions/2066/)
 
 Full list of upcoming and past publications and talks
 -----------------------------------------------------
