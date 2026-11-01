@@ -48,6 +48,7 @@ Mailing List Traffic
 
 ```
 <version>  <nr_mails>  <nr_threads>  <nr_new_threads>  <nr_patches>  <nr_series>
+v7.4-rc1   2132        255           245               749           180
 v7.3-rc1   2019        183           180               871           148
 v7.2-rc1   1486        164           142               671           126
 v7.1-rc1   1098        152           147               450           129
