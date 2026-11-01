@@ -11,6 +11,7 @@ Landed Changes
 
 ```
 <version>  <nr_authors>  <nr_commits>  <nr_lines>
+v7.4-rc1   23            159           3260
 v7.3-rc1   21            162           2283
 v7.2-rc1   14            109           3311
 v7.1-rc1   9             77            1070
