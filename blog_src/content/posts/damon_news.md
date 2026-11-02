@@ -39,6 +39,12 @@ sj@kernel.org and/or damon@lists.linux.dev.
 2026
 ----
 
+_2026-11-01_: DAMON news letter for 7.4-rc1 release cycle is
+[posted](https://lore.kernel.org/20261101235500.102023-1-sj@kernel.org/).
+
+_2026-08-30_: DAMON news letter for 7.3-rc1 release cycle is
+[posted](https://lore.kernel.org/20260830235014.64406-1-sj@kernel.org/).
+
 _2026-06-28_: DAMON news letter for 7.2-rc1 release cycle is [posted](https://lore.kernel.org/20260628211904.94361-1-sj@kernel.org/).
 
 _2026-04-28_: DAMON news letter for 7.1-rc1 release cycle is [posted](https://lore.kernel.org/20260428150817.125575-1-sj@kernel.org).
