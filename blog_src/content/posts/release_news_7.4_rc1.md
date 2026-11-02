@@ -1,5 +1,5 @@
 +++
-title = 'DAMON Release Newsletter for v7.7-rc1'
+title = 'DAMON Release Newsletter for v7.4-rc1'
 date = 2026-11-01T15:56:00-07:00
 draft = false
 categories = ['release_news']
